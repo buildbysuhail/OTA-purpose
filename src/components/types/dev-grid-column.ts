@@ -15,7 +15,7 @@ export const initialGridPreference: GridPreference = {
 export interface DevGridColumn {
     dataField?: string;
     caption?: string;
-    dataType?: "string" | "number" | "date" | "boolean" | "object" | "datetime" | undefined
+    dataType?: "string" | "number" | "date" | "boolean" | "object" | "datetime";
     allowSorting?: boolean;
     allowSearch?: boolean;
     allowFiltering?: boolean;

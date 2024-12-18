@@ -15,6 +15,7 @@ import {
   setApplicationSettingsWithType,
 } from "../../redux/slices/app/application-settings-reducer";
 import { ApplicationSettingsInitialState } from "../../redux/slices/app/application-settings-types";
+import { modelToBase64 } from "../jsonConverter";
 
 const api = new APIClient();
 export const useApplicationSetting = (): UseApplicationSettingReturnType => {
@@ -209,7 +210,9 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
           () => {
             
             console.log("Settings updated successfully.");
-            setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
+            const strSet = JSON.stringify(applicationSettings);
+            localStorage.setItem('as', modelToBase64(applicationSettings))
+            setSettingsPrev(JSON.parse(strSet));
           },
           () => {
             console.warn("Failed to update settings.");

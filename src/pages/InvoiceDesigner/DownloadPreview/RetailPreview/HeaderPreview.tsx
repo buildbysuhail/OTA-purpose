@@ -13,8 +13,8 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, currencySymbol, cur
   const numberField = docTitle && headerState?.numberField;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
 
   /// font size and color
   const fontSize = template?.propertiesState?.font_size || 12;

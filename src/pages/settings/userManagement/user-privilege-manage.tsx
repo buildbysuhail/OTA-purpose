@@ -71,6 +71,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       'E': userRights.filter(item => item.formCode === 'E').map(item => item.id),
       'X': userRights.filter(item => item.formCode === 'X').map(item => item.id),
       'D': userRights.filter(item => item.formCode === 'D').map(item => item.id),
+      'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
       // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
     };
     const selectedPermissionIds = permissionMap[permission] || [];
@@ -121,9 +122,10 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   }, [userRightTypes, userRights]);
 
   const onSelectionChanged = useCallback((e: TreeListTypes.SelectionChangedEvent) => {
-    
+    debugger;
     const selectedData = e.component?.getSelectedRowsData(selectionMode)?.map(x => x.id) ?? [];
     setSelectedRowKeys(selectedData);
+
   }, []);
 
   const dispatch = useDispatch();
@@ -280,7 +282,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           keyExpr="id"
           parentIdExpr="headId"
           onSelectionChanged={onSelectionChanged}>
-          <Selection recursive={true} mode="multiple" />
+          <Selection recursive={false} mode="multiple" />
           <Column dataField="fullName" caption="" />
         </TreeList>
       </div>

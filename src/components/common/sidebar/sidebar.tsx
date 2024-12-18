@@ -11,7 +11,7 @@ import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
 import { useAppState } from "../../../utilities/hooks/useAppState";
-import { MENUITEMS } from "./sidemenu/sidemenu";
+import { exludedRoutes, MENUITEMS } from "./sidemenu/sidemenu";
 import { AccountSettingsMenuItems } from "./sidemenu/account-settings";
 import { WorkspaceSettingsMenuItems } from "./sidemenu/workspace-settings";
 import { SettingsMenuItems } from "./sidemenu/settings";
@@ -20,6 +20,8 @@ import ErpAvatar from "../../ERPComponents/erp-avatar";
 import { useTranslation } from "react-i18next";
 import { ReportsMenuItems } from "./sidemenu/reports-routes";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTableDesigner";
+import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }
@@ -27,11 +29,11 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-  
+const {getAllowedFormCodes}=useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     console.log(`type${type}`);
     console.log(`type${SettingsMenuItems}`);
-    
+
     switch (type) {
       case "erp":
         return MENUITEMS;
@@ -50,7 +52,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   useEffect(() => {
     if (type == "settings") {
       let st: [] = []
-      debugger;
       if (userSession.userTypeCode == "BA") {
         st = menuitems.filter((x: any) => x.title != 'branches');
       }
@@ -60,34 +61,68 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       const sd = st.map((x: any) => x.children?.map((item: any) => {
         item.visible = true;
         item.disabled = false;
-        if(item.title === "refresh_all_branches") {
-          if(userSession.userTypeCode !== "CA" && applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory != true) {
+        if (item.title === "refresh_all_branches") {
+          if (userSession.userTypeCode !== "CA" && applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory != true) {
             item.disabled = true;
           }
         }
-        
-        if(item.title === "company_profile_india" && userSession.countryId != Countries.India) {
+
+        if (item.title === "company_profile_india" && userSession.countryId != Countries.India) {
           item.visible = false;
         }
-        
-        if(item.title === "hide_account_ledger" && userSession.countryId == Countries.India) {
+
+        if (item.title === "hide_account_ledger" && userSession.countryId == Countries.India) {
           item.visible = false;
         }
-        if(item.title === "company_profile_others" && userSession.countryId == Countries.India) {
+        if (item.title === "company_profile_others" && userSession.countryId == Countries.India) {
           item.visible = false;
         }
-        if(item.title === "upi" || item.title === "qr_pay") {
-          
+        if (item.title === "upi" || item.title === "qr_pay") {
+
         }
-        if(item.title === "upi" && userSession.countryId != Countries.India) {
+        if (item.title === "upi" && userSession.countryId != Countries.India) {
           item.visible = false;
         }
-        if(item.title === "qr_pay" && userSession.countryId == Countries.India) {
+        if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
+          item.visible = false;
+        }
+        debugger;
+        if (exludedRoutes.find(route => route.countries.find(x => x == userSession.countryId) != undefined)) {
+          debugger;
+
+        }
+        if (exludedRoutes.find(route =>
+          route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined
+        )) {
           item.visible = false;
         }
       }))
       setMenuitems(st);
     }
+    else if (type == "erp") {
+      let st: [] = []
+      
+      st = menuitems;
+
+      const allowedFormCodes= getAllowedFormCodes( menuitems.map((x: any) =>
+        x.children ? x.children.map((item: any) => item.rights) : []),UserAction.Show);
+
+      const sd = st.map((x: any) => x.children?.map((item: any) => {
+        item.visible = true;
+        item.disabled = false;
+
+        if(!allowedFormCodes.find(x=>x==item.rights)){
+          item.visible=false;
+        }
+        if (exludedRoutes.find(route =>
+          route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined
+        )) {
+          item.visible = false;
+        }
+      }))
+      setMenuitems(st);
+    }
+
   }, [userSession.userTypeCode]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
@@ -730,15 +765,15 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           onMouseEnter={() => Onhover()}
           onMouseLeave={() => Outhover()}
         >
-          <div className="main-sidebar-header"> 
-          <Link to={import.meta.env.BASE_URL} className="header-logo" >
+          <div className="main-sidebar-header">
+            <Link to={import.meta.env.BASE_URL} className="header-logo" >
               <img src={logo1} alt="logo" className="desktop-logo" />
               <img src={logo2} alt="logo" className="toggle-logo" />
               <img src={logo3} alt="logo" className="desktop-dark" />
               <img src={logo4} alt="logo" className="toggle-dark" />
               <img src={logo5} alt="logo" className="desktop-white" />
               <img src={logo6} alt="logo" className="toggle-white" />
-         </Link>
+            </Link>
           </div>
           <SimpleBar className="main-sidebar" id="sidebar-scroll">
             <nav className="main-menu-container nav nav-pills flex-column sub-open">
@@ -765,10 +800,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                   <Fragment key={Math.random()}>
                     <li
                       className={`${levelone.menutitle
-                          ? "slide__category"
-                          : levelone.menutitle_lg
-                            ? "slide__category slide__category__lg"
-                            : ""
+                        ? "slide__category"
+                        : levelone.menutitle_lg
+                          ? "slide__category slide__category__lg"
+                          : ""
                         } ${levelone.hasTopBorder === true
                           ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""

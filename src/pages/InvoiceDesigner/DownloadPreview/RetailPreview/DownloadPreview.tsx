@@ -32,10 +32,10 @@ const DownloadRetailPreview = ({
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";
 
   /// Padings
-  const paddingTop = template?.propertiesState?.margins?.top || 25;
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
-  const paddingBottom = template?.propertiesState?.margins?.bottom || 25;
+  const paddingTop = template?.propertiesState?.padding?.top || 25;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingBottom = template?.propertiesState?.padding?.bottom || 25;
 
   // Selection of paper size from the template
 

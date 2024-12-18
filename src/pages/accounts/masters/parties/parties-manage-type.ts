@@ -79,7 +79,7 @@ export const initialPartiesData = {
     address4: "",
     officePhone: "",
     workPhone: "",
-    mobilePhone: "",
+    mobilePhone: "", 
     contactPhone: "",
     faxNumber: "",
     webURL: "",
@@ -87,6 +87,7 @@ export const initialPartiesData = {
     billwiseBillApplicable: false,
     creditDays: 0,
     creditAmount: 0,
+    opBalance: 0,
     priceCategoryID: 0,
     formTypeID: 0,
     partyPhoto: "",
@@ -132,6 +133,7 @@ export const initialPartiesData = {
     createdUserID: 0,
     visitSequenceNo: 0,
     accGroupID: 0
+    
   },
   validations: {
     partyID: "",

@@ -28,7 +28,7 @@ const DefaultVCTemplates: DeafultTemplateProps[] = [
         label_font_weight: 400,
         pageSize: "A4",
 
-        margins: {
+        padding: {
           top: 40,
           bottom: 40,
           left: 30,

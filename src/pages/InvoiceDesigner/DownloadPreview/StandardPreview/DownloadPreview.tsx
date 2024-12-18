@@ -43,8 +43,8 @@ const DownloadStandardPreview = ({
   const footerFontColor = template?.footerState?.footerFontColor || "#000";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
 
   // Selection of paper size from the template
 

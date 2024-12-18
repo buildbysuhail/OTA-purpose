@@ -8,8 +8,8 @@ const TotalSummaryPreview = ({ template, data, currencySymbol, totalAmountInword
   const itemTableState = template?.itemTableState;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
 
   const totalSummaryBackgroundColor = template?.totalState?.totalBgColor || "#fff";
   const wordsBackgroudColor = template?.totalState?.balanceBgColor || "#fff";

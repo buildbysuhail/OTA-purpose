@@ -124,8 +124,8 @@ export const MENUITEMS = [
     rights: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-payments`, type: 'link', active: false, selected: false, title: 'cash_payments', rights: 'CP' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-receipts`, type: 'link', active: false, selected: false, title: 'cash_receipts', rights: 'CR' },
+      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-payment`, type: 'link', active: false, selected: false, title: 'cash_payments', rights: 'CP' },
+      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-receipt`, type: 'link', active: false, selected: false, title: 'cash_receipts', rights: 'CR' },
       { path: `${import.meta.env.BASE_URL}accounts/transactions/bank-payment-contra`, type: 'link', active: false, selected: false, title: 'bank_payment_contra', rights: 'BP' },
       { path: `${import.meta.env.BASE_URL}accounts/transactions/bank-receipt-contra`, type: 'link', active: false, selected: false, title: 'bank_receipt_contra', rights: 'BR' },
       { path: `${import.meta.env.BASE_URL}accounts/transactions/cheque-payment-contra`, type: 'link', active: false, selected: false, title: 'cheque_payment_contra', rights: 'CQP',  },

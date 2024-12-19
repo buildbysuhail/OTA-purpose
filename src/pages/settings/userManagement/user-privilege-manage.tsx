@@ -1,15 +1,24 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Urls from "../../../redux/urls";
-import { toggleUserTypePrivilegePopup, } from "../../../redux/slices/popup-reducer";
+import { toggleUserTypePrivilegePopup } from "../../../redux/slices/popup-reducer";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
-import { initialUserTypePrivilegeManageData, UserRightData, UserTypePrivilegeManageData } from "./rights-interface";
-import { TreeList, Selection, Column, TreeListTypes, } from 'devextreme-react/tree-list';
+import {
+  initialUserTypePrivilegeManageData,
+  UserRightData,
+  UserTypePrivilegeManageData,
+} from "./rights-interface";
+import {
+  TreeList,
+  Selection,
+  Column,
+  TreeListTypes,
+} from "devextreme-react/tree-list";
 import { UserRight, userRights } from "./data";
 import dxTreeList from "devextreme/ui/tree_list";
 
@@ -36,25 +45,30 @@ interface DynamicFormProps {
 const api = new APIClient();
 const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const expandedRowKeys = [1, 2, 10];
-  const [postData, setPostData] = useState<UserTypePrivilegeManageData>(initialUserTypePrivilegeManageData);
+  const [postData, setPostData] = useState<UserTypePrivilegeManageData>(
+    initialUserTypePrivilegeManageData
+  );
   const gridRef = useRef<dxTreeList>(null);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
   const [cloning, setCloning] = useState<boolean>(false);
-  const [inherit_rights_from_usertype, set_inherit_rights_from_usertype] = useState<boolean>(false);
-  const [userTypeForClone, setUserTypeForClone] = useState<string>('');
-  const [userRightTypes, setUserRightTypes] = useState<any>(); const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
+  const [inherit_rights_from_usertype, set_inherit_rights_from_usertype] =
+    useState<boolean>(false);
+  const [userTypeForClone, setUserTypeForClone] = useState<string>("");
+  const [userRightTypes, setUserRightTypes] = useState<any>();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [recursive, setRecursive] = useState(false);
-  const [selectionMode, setSelectionMode] = useState('all');
+  const [selectionMode, setSelectionMode] = useState("all");
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
-    
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
-    let sdsd = rights.filter(right => !rights.some(child => child.headId === right.id))
-    let sds = sdsd.map(endNode => endNode.headId)
+    let sdsd = rights.filter(
+      (right) => !rights.some((child) => child.headId === right.id)
+    );
+    let sds = sdsd.map((endNode) => endNode.headId);
     const endNodeIds = new Set(
       sds // Get the `headId` of each end-level node (immediate parent id)
     );
     // Step 2: Filter rights to get only the nodes with ids in `endNodeIds`
-    return rights.filter(right => endNodeIds.has(right.id));
+    return rights.filter((right) => endNodeIds.has(right.id));
   };
   // const handleSelectAll = () => {
   //   const allKeys = userRights.map(item => item.id);
@@ -66,75 +80,194 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const handleSelectSpecific = (permission: string, checked: boolean) => {
     // Map of permissions to user rights IDs
     const permissionMap: Record<string, number[]> = {
-      'A': userRights.filter(item => item.formCode === 'A').map(item => item.id),
-      'P': userRights.filter(item => item.formCode === 'P').map(item => item.id),
-      'E': userRights.filter(item => item.formCode === 'E').map(item => item.id),
-      'X': userRights.filter(item => item.formCode === 'X').map(item => item.id),
-      'D': userRights.filter(item => item.formCode === 'D').map(item => item.id),
-      'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
+      A: userRights
+        .filter((item) => item.formCode === "A")
+        .map((item) => item.id),
+      P: userRights
+        .filter((item) => item.formCode === "P")
+        .map((item) => item.id),
+      E: userRights
+        .filter((item) => item.formCode === "E")
+        .map((item) => item.id),
+      X: userRights
+        .filter((item) => item.formCode === "X")
+        .map((item) => item.id),
+      D: userRights
+        .filter((item) => item.formCode === "D")
+        .map((item) => item.id),
+      S: userRights
+        .filter((item) => item.formCode === "S")
+        .map((item) => item.id),
       // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
     };
     const selectedPermissionIds = permissionMap[permission] || [];
-    
+
     // Ensure that prevKeys is an array before proceeding
     setSelectedRowKeys((prevKeys: number[]) => {
-      
       if (!Array.isArray(prevKeys)) {
         // Fallback if prevKeys is not an array, return empty array
         return checked ? selectedPermissionIds : [];
       }
       if (checked) {
         // If checked, add new permission IDs
-        const arr = Array.from(new Set([...prevKeys, ...selectedPermissionIds]));
+        const arr = Array.from(
+          new Set([...prevKeys, ...selectedPermissionIds])
+        );
         return arr;
       } else {
         // If unchecked, remove permission IDs
-        const arr = prevKeys.filter(id => !selectedPermissionIds.includes(id));
+        const arr = prevKeys.filter(
+          (id) => !selectedPermissionIds.includes(id)
+        );
         return arr;
       }
     });
   };
 
-  const calculateInitialSelectedKeys = (userRightTypes: UserRightData[], userRights: UserRight[]) => {
-    const immediateParentsOfEndNodes = getImmediateParentsOfEndNodes(userRights);
-    return userRightTypes?.map((item: UserRightData) => {
-      const matchingParent = immediateParentsOfEndNodes.find(parent =>
-        parent.formCode === item.formCode
-      );
-      if (matchingParent && typeof item.userRights === 'string') {
-        const rightsIds = Array.from(item.userRights).map((permission: string) => {
-          const permissionRight = userRights.find(right =>
-            right.headId === matchingParent.id && right.formCode === permission
-          );
-          return permissionRight ? permissionRight.id : null;
-        });
-        // Filter out null values and return
-        return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
-      }
-      return [];
-    }).flat(); // Flatten the array
-  };
+  // const calculateInitialSelectedKeys = (
+  //   userRightTypes: UserRightData[],
+  //   userRights: UserRight[]
+  // ) => {
+  //   const immediateParentsOfEndNodes =
+  //     getImmediateParentsOfEndNodes(userRights);
+  //   return userRightTypes
+  //     ?.map((item: UserRightData) => {
+  //       const matchingParent = immediateParentsOfEndNodes.find(
+  //         (parent) => parent.formCode === item.formCode
+  //       );
+  //       debugger;
+  //       if (matchingParent && typeof item.userRights === "string") {
+  //         const rightsIds = Array.from(item.userRights).map(
+  //           (permission: string) => {
+  //             const permissionRight = userRights.find(
+  //               (right) =>
+  //                 right.headId === matchingParent.id &&
+  //                 right.formCode === permission
+  //             );
+  //             return permissionRight ? permissionRight.id : null;
+  //           }
+  //         );
+  //         // Filter out null values and return
+  //         return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
+  //       }
+  //       return [];
+  //     })
+  //     .flat(); // Flatten the array
+  // };
+  const calculateInitialSelectedKeys = (
+    userRightTypes: UserRightData[],
+    userRights: UserRight[]
+  ) => {
+    const immediateParentsOfEndNodes =
+      getImmediateParentsOfEndNodes(userRights);
 
+    // Helper function to collect all ancestor IDs up to the root node
+    const getAncestorIds = (parentId: number): number[] => {
+      const ancestorIds: number[] = [];
+      let currentParentId = parentId;
+
+      while (currentParentId) {
+        const parent = userRights.find((node) => node.id === currentParentId);
+
+        if (parent) {
+          // Move to the next parent up the hierarchy
+          if (!ancestorIds.includes(parent.id)) {
+            ancestorIds.push(parent.id);
+            currentParentId = parent.headId;
+          }
+        } else {
+          break; // Stop if no more ancestors are found
+        }
+      }
+
+      return ancestorIds;
+    };
+
+    return userRightTypes
+      ?.map((item: UserRightData) => {
+        const matchingParent = immediateParentsOfEndNodes.find(
+          (parent) => parent.formCode === item.formCode
+        );
+
+        if (matchingParent && typeof item.userRights === "string") {
+          const rightsIds = Array.from(item.userRights).map(
+            (permission: string) => {
+              const permissionRight = userRights.find(
+                (right) =>
+                  right.headId === matchingParent.id &&
+                  right.formCode === permission
+              );
+              return permissionRight ? permissionRight.id : null;
+            }
+          );
+
+          // Include matchingParent.id if it's not already in rightsIds
+          if (!rightsIds.includes(matchingParent.id)) {
+            rightsIds.push(matchingParent.id);
+          }
+
+          // Add all ancestors of the matching parent up to the root node
+          const ancestorIds = getAncestorIds(matchingParent.headId);
+          rightsIds.push(...ancestorIds);
+
+          // Filter out null values and return
+          return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
+        }
+
+        return [];
+      })
+      .flat(); // Flatten the array
+  };
   useEffect(() => {
     // Calculate initial selected keys and set state
-    const initialSelectedKeys = calculateInitialSelectedKeys(userRightTypes, userRights);
+    const initialSelectedKeys = calculateInitialSelectedKeys(
+      userRightTypes,
+      userRights
+    );
     setSelectedRowKeys(initialSelectedKeys); // This should now be number[]
   }, [userRightTypes, userRights]);
 
-  const onSelectionChanged = useCallback((e: TreeListTypes.SelectionChangedEvent) => {
-    debugger;
-    const selectedData = e.component?.getSelectedRowsData(selectionMode)?.map(x => x.id) ?? [];
-    setSelectedRowKeys(selectedData);
-
-  }, []);
-
+  const onSelectionChanged = useCallback(
+    (e: TreeListTypes.SelectionChangedEvent) => {
+      debugger;
+      const selectedData =
+        e.component?.getSelectedRowsData(selectionMode)?.map((x) => x.id) ?? [];
+      setSelectedRowKeys(selectedData);
+      debugger;
+      if (e.currentSelectedRowKeys.length == 1) {
+        const key = e.currentSelectedRowKeys[0];
+        const parent = userRights.find((x) => x.id == key)?.headId;
+        if (
+          parent != undefined &&
+          selectedRowKeys.find((x) => x == parent) == undefined
+        ) {
+          attachParentToSelected(parent, selectedData);
+        }
+      }
+    },
+    []
+  );
+  const attachParentToSelected = async (id: number, selectedData: any[]) => {
+    selectedData.push(id);
+    const parent = userRights.find((x) => x.id == id)?.headId;
+    if (
+      parent != undefined &&
+      selectedRowKeys.find((x) => x == parent) == undefined
+    ) {
+      attachParentToSelected(parent, selectedData);
+    } else {
+      setSelectedRowKeys(selectedData);
+    }
+  };
   const dispatch = useDispatch();
-  const generatePostData = async (): Promise<{
-    userTypeCode: string;
-    formCode: string;
-    userRights: string;
-    treeNodeIndex: number;
-  }[]> => {
+  const generatePostData = async (): Promise<
+    {
+      userTypeCode: string;
+      formCode: string;
+      userRights: string;
+      treeNodeIndex: number;
+    }[]
+  > => {
     const dataForPost: {
       userTypeCode: string;
       formCode: string;
@@ -142,22 +275,33 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       treeNodeIndex: number;
     }[] = [];
 
-    const selectedKeys = gridRef.current?.instance()?.getSelectedRowsData(selectionMode)?.map(x => x.id) ?? [];
-    const immediateParentsOfEndNodes = getImmediateParentsOfEndNodes(userRights);
+    const selectedKeys =
+      gridRef.current
+        ?.instance()
+        ?.getSelectedRowsData(selectionMode)
+        ?.map((x) => x.id) ?? [];
+    const immediateParentsOfEndNodes =
+      getImmediateParentsOfEndNodes(userRights);
     // Map to aggregate data by formCode
-    const groupedDataMap = new Map<string, { userTypeCode: string; userRights: string; treeNodeIndex: number }>();
+    const groupedDataMap = new Map<
+      string,
+      { userTypeCode: string; userRights: string; treeNodeIndex: number }
+    >();
+    debugger ; 
 
-    immediateParentsOfEndNodes.forEach(parent => {
-      
-      const childNodes = userRights.filter(child => child.headId === parent.id);
-      let parentUserRights = '';
+    immediateParentsOfEndNodes.forEach((parent) => {
+      const childNodes = userRights.filter(
+        (child) => child.headId === parent.id
+      );
+      let parentUserRights = "";
       let hasSelectedRights = false;
-      childNodes.forEach(child => {
+      childNodes.forEach((child) => {
         if (selectedKeys.includes(child.id)) {
           hasSelectedRights = true;
           parentUserRights += child.formCode;
         }
       });
+      debugger ; 
 
       if (hasSelectedRights) {
         const formCode = parent.formCode;
@@ -175,13 +319,15 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
         let currentParentId = parent.headId;
         while (currentParentId) {
-          const grandParent = userRights.find(right => right.id === currentParentId);
+          const grandParent = userRights.find(
+            (right) => right.id === currentParentId
+          );
           if (grandParent) {
             const grandParentFormCode = grandParent.formCode;
             if (!groupedDataMap.has(grandParentFormCode)) {
               groupedDataMap.set(grandParentFormCode, {
                 userTypeCode: postData?.data?.userType,
-                userRights: 'S',
+                userRights: "S",
                 treeNodeIndex: grandParent.treeNode,
               });
             }
@@ -206,43 +352,48 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   };
 
   useEffect(() => {
-    
     if (postData.data.userType) {
       loadUserType();
     }
   }, [postData?.data?.userType]);
 
   const loadUserType = async () => {
-    const res: any[] = await api.getAsync(`${Urls.user_rights}${postData.data.userType}`);
+    const res: any[] = await api.getAsync(
+      `${Urls.user_rights}${postData.data.userType}`
+    );
     setUserRightTypes(res);
   };
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
-    
+
     if (!userRightTypes) {
       setUserRightTypes([]);
     }
-    generatePostData().then(async (dataForPost) => {
-      console.log(dataForPost);
-      console.log(gridRef);
-      if (dataForPost) {
-        const response = await api.postAsync(`${Urls.user_rights}${postData.data.userType}`, dataForPost);
+    generatePostData()
+      .then(async (dataForPost) => {
+        console.log(dataForPost);
+        console.log(gridRef);
+        if (dataForPost) {
+          const response = await api.postAsync(
+            `${Urls.user_rights}${postData.data.userType}`,
+            dataForPost
+          );
+          setPostUserTypeLoading(false);
+          handleResponse(
+            response,
+            () => {
+              // Handle success, e.g., dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
+            },
+            () => {
+              setPostData((prevData: any) => ({
+                ...prevData,
+                validations: response.validations,
+              }));
+            }
+          );
+        }
         setPostUserTypeLoading(false);
-        handleResponse(
-          response,
-          () => {
-            // Handle success, e.g., dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
-          },
-          () => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              validations: response.validations,
-            }));
-          }
-        );
-      }
-      setPostUserTypeLoading(false);
-    })
+      })
       .catch((error) => {
         setPostUserTypeLoading(false);
         console.error("Error during data generation or API call:", error);
@@ -252,17 +403,20 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   }, [postData?.data]);
   const handleClone = useCallback(async () => {
     setCloning(true);
-    const res: any[] = await api.getAsync(`${Urls.user_rights}${userTypeForClone}`);
+    const res: any[] = await api.getAsync(
+      `${Urls.user_rights}${userTypeForClone}`
+    );
     if (res) {
       // Calculate initial selected keys and set state
       const initialSelectedKeys = calculateInitialSelectedKeys(res, userRights);
       setSelectedRowKeys(initialSelectedKeys); // This should now be number[]
     }
     setCloning(false);
-
   }, [userTypeForClone]);
   const onClose = useCallback(() => {
-    dispatch(toggleUserTypePrivilegePopup({ isOpen: false, key: null,reload: false }));
+    dispatch(
+      toggleUserTypePrivilegePopup({ isOpen: false, key: null, reload: false })
+    );
   }, []);
   const { t } = useTranslation("userManage");
 
@@ -281,7 +435,8 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           selectedRowKeys={selectedRowKeys}
           keyExpr="id"
           parentIdExpr="headId"
-          onSelectionChanged={onSelectionChanged}>
+          onSelectionChanged={onSelectionChanged}
+        >
           <Selection recursive={false} mode="multiple" />
           <Column dataField="fullName" caption="" />
         </TreeList>
@@ -308,13 +463,13 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           validation={postData.validations.userType}
           data={postData?.data}
           defaultData={postData?.data}
-        // value={
-        //   postData != undefined &&
-        //     postData?.data != undefined &&
-        //     postData?.data?.userType != undefined
-        //     ? postData?.data?.userType
-        //     : 0
-        // }
+          // value={
+          //   postData != undefined &&
+          //     postData?.data != undefined &&
+          //     postData?.data?.userType != undefined
+          //     ? postData?.data?.userType
+          //     : 0
+          // }
         />
         {/* Checkbox options */}
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5">
@@ -331,7 +486,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                   showAllAdd: !prev.data.showAllAdd,
                 },
               }));
-              handleSelectSpecific('A', data.showAllAdd);
+              handleSelectSpecific("A", data.showAllAdd);
             }}
             validation={postData.validations.showAllAdd}
           />
@@ -348,7 +503,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                   showAllPrint: !prev.data.showAllPrint,
                 },
               }));
-              handleSelectSpecific('P', data.showAllPrint);
+              handleSelectSpecific("P", data.showAllPrint);
             }}
             validation={postData.validations.showAllPrint}
           />
@@ -365,7 +520,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                   showAllEdit: !prev.data.showAllEdit,
                 },
               }));
-              handleSelectSpecific('E', data.showAllEdit);
+              handleSelectSpecific("E", data.showAllEdit);
             }}
             validation={postData.validations.showAllEdit}
           />
@@ -382,7 +537,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                   showAllExport: !prev.data.showAllExport,
                 },
               }));
-              handleSelectSpecific('X', data.showAllExport);
+              handleSelectSpecific("X", data.showAllExport);
             }}
             validation={postData.validations.showAllExport}
           />
@@ -399,7 +554,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                   showAllDelete: !prev.data.showAllDelete,
                 },
               }));
-              handleSelectSpecific('D', data.showAllDelete);
+              handleSelectSpecific("D", data.showAllDelete);
             }}
             validation={postData.validations.showAllDelete}
           />
@@ -429,8 +584,9 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           onChangeData={(data) => {
             set_inherit_rights_from_usertype(!inherit_rights_from_usertype);
           }}
-          validation={postData.validations.userRightType}/>
-        {inherit_rights_from_usertype == true &&
+          validation={postData.validations.userRightType}
+        />
+        {inherit_rights_from_usertype == true && (
           <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
             <ERPDataCombobox
               id="userTypeForClone"
@@ -443,7 +599,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
               }}
               label={t("user_type")}
               onChangeData={(data: any) => {
-                setUserTypeForClone(data.userTypeForClone)
+                setUserTypeForClone(data.userTypeForClone);
               }}
               validation={postData.validations.userType2}
               data={{ userTypeForClone: userTypeForClone }}
@@ -451,20 +607,31 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             <ERPButton
               title={t("load_rights")}
               variant="secondary"
-              disabled={postDataLoading || postData.data.userType == undefined || postData.data.userType == null || postData.data.userType == ''
-                || userTypeForClone == undefined || userTypeForClone == null || userTypeForClone == ''
+              disabled={
+                postDataLoading ||
+                postData.data.userType == undefined ||
+                postData.data.userType == null ||
+                postData.data.userType == "" ||
+                userTypeForClone == undefined ||
+                userTypeForClone == null ||
+                userTypeForClone == ""
               }
               loading={postDataLoading}
               onClick={handleClone}
             />
           </div>
-        }
+        )}
         {/* Form Buttons */}
         <div className="flex justify-end mt-6 space-x-2">
           <ERPButton
             title={t("save")}
             variant="primary"
-            disabled={postDataLoading || postData.data.userType == undefined || postData.data.userType == null || postData.data.userType == ''}
+            disabled={
+              postDataLoading ||
+              postData.data.userType == undefined ||
+              postData.data.userType == null ||
+              postData.data.userType == ""
+            }
             loading={postDataLoading}
             onClick={handleSubmit}
           />

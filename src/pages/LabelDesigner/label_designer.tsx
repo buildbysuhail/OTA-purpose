@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Settings,
@@ -14,6 +13,7 @@ import {
   X,
   Image,
   Table,
+  SquareDashed ,
   QrCode as QrCodeIcon,
 } from "lucide-react";
 // Import the images
@@ -283,6 +283,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [selectedComponent, setSelectedComponent] =
     useState<PlacedComponent | null>(null);
   const [nextId, setNextId] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [draggingComponent, setDraggingComponent] =
     useState<PlacedComponent | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -330,8 +331,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         ...prevData,
         propertiesState: {
           ...prevData.propertiesState,
-          width: size.width,
-          height: size.height,
+          width: size.width.toString(),
+          height: size.height.toString(),
         },
       };
       return updated;
@@ -421,6 +422,12 @@ export default function ExtendedPDFBarcodeDesigner() {
       icon: <QrCodeIcon className="w-4 h-4" />,
       defaultContent: "QrCode",
     },
+    {
+      id: DesignerElementType.area,
+      label: "Area",
+      icon: <SquareDashed className="w-4 h-4" />,
+      defaultContent: "Area",
+    },
   ];
 
   const handleDragStart = (
@@ -491,6 +498,12 @@ export default function ExtendedPDFBarcodeDesigner() {
               width: 16,
               excavate: true,
             }
+          },
+          areaProps:{
+            bgColor: "#FFFFFF",
+            isRepeat:true,
+            width:"300",
+            height:"300",
           }
         };
 
@@ -717,6 +730,37 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
   
+  const handleAreaPropertyChange = (
+    property: any,
+    value: string | number | boolean
+  ) => {
+    if (
+      selectedComponent &&
+      selectedComponent.type === DesignerElementType.area &&
+      selectedComponent.areaProps
+    ) {
+      const updatedComponents =
+        templateData?.barcodeState?.placedComponents?.map((comp) =>
+          comp.id === selectedComponent.id && comp.areaProps
+            ? {
+                ...comp,
+                areaProps: { ...comp.areaProps, [property]: value },
+              }
+            : comp
+        );
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: {
+          ...prev.barcodeState,
+          placedComponents: updatedComponents || [],
+        },
+      }));
+      setSelectedComponent({
+        ...selectedComponent,
+        areaProps: { ...selectedComponent.areaProps, [property]: value },
+      });
+    }
+  };
   
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     const canvasRect = canvasRef.current?.getBoundingClientRect();
@@ -760,21 +804,22 @@ export default function ExtendedPDFBarcodeDesigner() {
     setDraggingComponent(null);
   };
 
-  const [loading, setLoading] = useState(false);
   const handleSave = async (dataUrl: string) => {
-    setIsSaveDialogOpen(true);
-
     setLoading(true);
-
-    const outData = { ...templateData, thumbImage: dataUrl };
-    var res = await api.postAsync(Urls.templates, outData);
-
-    setLoading(false);
-    handleResponse(res, () => {
-      navigate(`/templates?template_group=barcode`);
-    });
-    setLoading(false);
+    try {
+      const outData = { ...templateData, thumbImage: dataUrl };
+      const res = await api.postAsync(Urls.templates, outData);
+      handleResponse(res, () => {
+        navigate(`/templates?template_group=${templateGroup}`);
+      });
+    } catch (error) {
+      console.error("Error saving the template:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+  
+
   const manageSaveTemplate = async () => {
     if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
@@ -1293,7 +1338,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             />
           </div>
         );
-        case DesignerElementType.qrCode:
+      case DesignerElementType.qrCode:
           return (
           <div
             key={component.id}
@@ -1323,6 +1368,28 @@ export default function ExtendedPDFBarcodeDesigner() {
           </div>
         );
 
+        case DesignerElementType.area:
+          return (
+          <div
+            key={component.id}
+            style={{
+              ...style,
+              width: `${component.areaProps?.width??500}pt`,
+              height: `${component.areaProps?.height??500}pt`,
+              backgroundColor: `${component.areaProps?.bgColor??"white"}`,
+          }}
+            onClick={() => handleComponentClick(component)}
+            onMouseDown={(e) => handleMouseDown(e, component)}
+          >
+          
+            <DeleteButton
+              id={component.id}
+              isSelected={isSelected}
+              handleDelete={handleDelete}
+            />
+          </div>
+        );
+     
     }
   };
 
@@ -1381,34 +1448,30 @@ export default function ExtendedPDFBarcodeDesigner() {
           </div>
           <div className="flex items-center space-x-2">
             <ERPButton
-              startIcon="ri-arrow-go-back-line"
               title="Clear"
               onClick={() => {
                 setTemplateData((prev: TemplateState) => ({
                   ...prev,
                   barcodeState: {
                     ...prev.barcodeState,
-                    placedComponents: [], // Use an empty array if undefined
+                    placedComponents: [], 
                   },
                 }));
                 setSelectedComponent(null);
               }}
               variant="secondary"
-              loading={loading}
             ></ERPButton>
             <ERPButton
               startIcon="ri-arrow-go-back-line"
               title="undo"
               onClick={() => undoChanges("undo")}
               variant="secondary"
-              loading={loading}
             ></ERPButton>
             <ERPButton
               startIcon="ri-arrow-go-forward-line"
               title="redo"
               onClick={() => undoChanges("redo")}
               variant="secondary"
-              loading={loading}
             ></ERPButton>
 
             <ERPButton
@@ -1513,8 +1576,8 @@ export default function ExtendedPDFBarcodeDesigner() {
             </ResizableBox>
           ) : templateData?.propertiesState?.pageSize === "Custom" ? (
             <ResizableBox
-              width={templateData.propertiesState.width ?? 300}
-              height={templateData.propertiesState.height ?? 300}
+              width={Number(templateData.propertiesState.width) || 300}
+              height={Number(templateData.propertiesState.height) || 300}
               minConstraints={[50, 50]}
               maxConstraints={[1400, 1000]}
               resizeHandles={["se"]}
@@ -1612,7 +1675,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                 >
 
                   {selectedComponent.type !== DesignerElementType.table &&
-                    selectedComponent.type !== DesignerElementType.line && (
+                    selectedComponent.type !== DesignerElementType.line && selectedComponent.type !== DesignerElementType.area &&(
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type ===
                         DesignerElementType.field ? (
@@ -1802,7 +1865,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     </Box>
                   )}
 
-{selectedComponent && selectedComponent.type === DesignerElementType.qrCode && (
+                {selectedComponent && selectedComponent.type === DesignerElementType.qrCode && (
                    <Box sx={{ mb: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
                       <Box>
                         <ERPSlider
@@ -1955,7 +2018,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
                     </Box>
                   ) : (
-                    (selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode) && (
+                    (selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode && 
+                      selectedComponent.type !== DesignerElementType.area) && (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
@@ -2067,8 +2131,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                     </div>
                   )}
 
-                  {selectedComponent.type !== DesignerElementType.line &&
-                    selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode && (
+                  {(selectedComponent.type !== DesignerElementType.line &&
+                    selectedComponent.type !== DesignerElementType.table && 
+                    selectedComponent.type !== DesignerElementType.qrCode && selectedComponent.type !== DesignerElementType.area) &&  (
+                 
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
@@ -2106,6 +2172,107 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
                     )}
 
+                   {selectedComponent.type === DesignerElementType.area && selectedComponent.areaProps &&(
+                    <>
+                    
+                    <Box
+                        sx={{ mb: 1 }}
+                        className="flex justify-start gap-2 items-center"
+                      >
+                        <Box className="basis-2/3">
+                          <ERPSlider
+                            label="Height"
+                            value={selectedComponent.areaProps?.height}
+                            onChange={(e) =>
+                              handleAreaPropertyChange(
+                                "height",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={100}
+                            max={1400}
+                          />
+                        </Box>
+
+                        <Box className="basis-1/3">
+                          <ERPInput
+                            id="height"
+                            type="number"
+                            noLabel
+                            value={selectedComponent.areaProps?.height}
+                            data={selectedComponent.areaProps}
+                            onChange={(e) =>
+                              handleAreaPropertyChange(
+                                "height",
+                                parseInt(e.target.value, 10)
+                              )
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    
+                      <Box
+                        sx={{ mb: 1 }}
+                        className="flex justify-start gap-2 items-center"
+                      >
+                        <Box className="basis-2/3">
+                          <ERPSlider
+                            label="Width"
+                            value={selectedComponent.areaProps?.width}
+                            onChange={(e) =>
+                              handleAreaPropertyChange(
+                                "width",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={100}
+                            max={1400}
+                          />
+                        </Box>
+
+                        <Box className="basis-1/3">
+                          <ERPInput
+                            id="width"
+                            type="number"
+                            noLabel
+                            value={selectedComponent.areaProps?.width}
+                            data={selectedComponent.areaProps}
+                            onChange={(e) =>
+                              handleAreaPropertyChange(
+                                "width",
+                                parseInt(e.target.value, 10)
+                              )
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    <Box sx={{mb:1}}>
+                    <ERPInput
+                      id="bgColor"
+                      label="Background Color"
+                      type="color"
+                      value={selectedComponent.areaProps?.bgColor}
+                      data={selectedComponent.areaProps}
+                      onChange={(e) =>
+                        handleAreaPropertyChange(
+                          "bgColor",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </Box>
+                  <Box sx={{mb:1}}>
+                  <ERPCheckbox
+                    id="isRepeat"
+                    label="Repeat On Each Page"
+                    data={selectedComponent.areaProps}
+                    checked={selectedComponent.areaProps?.isRepeat ?? true}
+                    onChange={(e) => handleAreaPropertyChange("isRepeat", e.target.checked)}
+                  />
+                 </Box>
+                  </>
+                    
+                   )}
                   <Box sx={{ mb: 1 }}>
                     {(selectedComponent.type == DesignerElementType.text ||
                       selectedComponent.type == DesignerElementType.field) && (
@@ -2835,7 +3002,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) => {
                           handlePagePropsChange(
                             "width",
-                            parseInt(e.target.value)
+                             String(parseInt(e.target.value,10))
                           );
                         }}
                       />
@@ -2848,7 +3015,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) =>
                           handlePagePropsChange(
                             "height",
-                            parseInt(e.target.value)
+                             String(parseInt(e.target.value,10))
                           )
                         }
                       />

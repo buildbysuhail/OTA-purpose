@@ -386,6 +386,12 @@ export default function ExtendedPDFBarcodeDesigner() {
               width: 16,
               excavate: true,
             }
+          },
+          areaProps:{
+            bgColor: "#FFFFFF",
+            isRepeat:true,
+            width:"300",
+            height:"300",
           }
         };
 

@@ -126,7 +126,7 @@ interface ERPDevGridProps {
     drillDownCells: string,
     bodyProps?: string,
     enableFilter?: boolean,
-    enable?: boolean
+    enableFn?: (data: any) => boolean
   }
 }
 const api = new APIClient();
@@ -301,7 +301,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     drillDownCells: '',
     bodyProps: '',
     enableFilter: false,
-    enable: true
   }
 }) => {
   const { t } = useTranslation("main");
@@ -562,7 +561,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     // Check if the clicked cell's field matches childPopupProps.drillDownCells
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
     const _drillDownCell = _drillDownCells.find((x: string) => x == event.column?.dataField)
-    if (_drillDownCell != undefined) {
+    if ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(event.data))) {
       const updatedBodyProps: { [key: string]: any } = {};
       // Ensure childPopupProps.bodyProps is a string before splitting and iterating over it
       childPopupProps?.bodyProps?.split(',').forEach((prop: string) => {
@@ -579,7 +578,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const onCellPrepared = useCallback((e: any) => {
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
     const _drillDownCell = _drillDownCells.find((x: string) => x == e.column.dataField)
-    if (e.rowType === "data" && _drillDownCell != undefined) {
+    if ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(e.row?.data))) {
       e.cellElement.innerHTML = `<a href="#" style="color: #1976d2; text-decoration: underline;">${e.row?.data?.[e.column.dataField]}</a>`;
       e.cellElement.onclick = (event: any) => {
         event.preventDefault();

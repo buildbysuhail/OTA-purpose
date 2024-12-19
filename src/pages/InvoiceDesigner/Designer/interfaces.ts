@@ -55,9 +55,9 @@ export interface LabelState {
   };
   gap?: {
     hgap?: number;
-    vgap?: number;
-    
+    vgap?: number; 
   };
+  orientation?:"landscape"|"portrait"
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];
@@ -106,7 +106,7 @@ export interface PlacedComponent {
     textMargin: number;
     fontStyle: "normal" | "bold" | "italic";
   };
- tableProps?: {
+ tableProps: {
     showBorder: boolean;
     columns: tableColumns[]
   };
@@ -844,7 +844,8 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "barcode",
       templateName: "Barcode 1",
-      pageSize: "Custom",
+      pageSize: "A4",
+      orientation:"portrait",
       height:'300',
       width:'300',
       padding: { top: 0, bottom: 0, left: 0, right: 0 },

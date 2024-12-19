@@ -1,5 +1,6 @@
 import { Path } from "@react-pdf/renderer";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { transactionRoutes } from "../../content/transaction-routes";
 
 
 export const MENUITEMS = [
@@ -124,22 +125,15 @@ export const MENUITEMS = [
     rights: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-payments`, type: 'link', active: false, selected: false, title: 'cash_payments', rights: 'CP' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-receipts`, type: 'link', active: false, selected: false, title: 'cash_receipts', rights: 'CR' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/bank-payment-contra`, type: 'link', active: false, selected: false, title: 'bank_payment_contra', rights: 'BP' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/bank-receipt-contra`, type: 'link', active: false, selected: false, title: 'bank_receipt_contra', rights: 'BR' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cheque-payment-contra`, type: 'link', active: false, selected: false, title: 'cheque_payment_contra', rights: 'CQP',  },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/cheque-receipt-contra`, type: 'link', active: false, selected: false, title: 'cheque_receipt_contra', rights: 'CQR',  },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/opening-balance`, type: 'link', active: false, selected: false, title: 'opening_balance', rights: 'OB' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/journal-entry`, type: 'link', active: false, selected: false, title: 'journal_entry', rights: 'JV' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/debit-note`, type: 'link', active: false, selected: false, title: 'debit_note', rights: 'DBN' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/credit-note`, type: 'link', active: false, selected: false, title: 'credit_note', rights: 'CRN' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/bank-reconciliation`, type: 'link', active: false, selected: false, title: 'bank_reconciliation', rights:'BRC' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/closing-balance`, type: 'link', active: false, selected: false, title: 'closing_balance', rights: 'CB' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/multi-journal-entry`, type: 'link', active: false, selected: false, title: 'multi_journal_entry', rights: 'MJV' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/tax-on-expense`, type: 'link', active: false, selected: false, title: 'tax_on_expense', rights: 'TXP' },
-      { path: `${import.meta.env.BASE_URL}accounts/transactions/post-dated-cheques`, type: 'link', active: false, selected: false, title: 'post_dated_cheques',rights:'PDC' }
-    ]
+      ...transactionRoutes.map((route) => ({
+        path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}`,
+        type: "link",
+        active: false,
+        selected: false,
+        title: route.title,
+        rights: route.formCode,
+      })),
+        ]
   },
 
   {

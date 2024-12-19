@@ -55,9 +55,9 @@ export interface LabelState {
   };
   gap?: {
     hgap?: number;
-    vgap?: number;
-    
+    vgap?: number; 
   };
+  orientation?:"landscape"|"portrait"
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];
@@ -70,7 +70,8 @@ export enum DesignerElementType {
   table= 4,
   line = 5,
   image = 6,
-  qrCode=7
+  qrCode=7,
+  area=8,
 }
 
 export interface PlacedComponent {
@@ -105,11 +106,12 @@ export interface PlacedComponent {
     textMargin: number;
     fontStyle: "normal" | "bold" | "italic";
   };
- tableProps?: {
+ tableProps: {
     showBorder: boolean;
     columns: tableColumns[]
   };
   qrCodeProps: QRCodeProps;
+  areaProps:AreaProps;
 }
 export type QRCodeProps = {
   value: string;
@@ -125,6 +127,13 @@ export type QRCodeProps = {
     excavate: boolean;
   };
 };
+
+export type AreaProps = {
+  bgColor: string;
+  isRepeat: boolean;
+  height: string;
+  width: string;
+};
  export interface tableColumns {
     caption?: string;
     field: string;
@@ -135,6 +144,7 @@ export type QRCodeProps = {
     width: number;
     textColor:string;
     bgColor:string;
+    isRepeat?:boolean;
   };
 export interface PropertiesState {
   template_type?: TemplateTypes;
@@ -143,8 +153,8 @@ export interface PropertiesState {
 
   templateName?: string;
   pageSize?: string;
-  width?: number;
-  height?: number;
+  width?:string;
+  height?:string;
   orientation?: "portrait" | "landscape";
   // Martgins
   padding?: {
@@ -834,7 +844,10 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "barcode",
       templateName: "Barcode 1",
-      pageSize: "Custom",
+      pageSize: "A4",
+      orientation:"portrait",
+      height:'300',
+      width:'300',
       padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
     },

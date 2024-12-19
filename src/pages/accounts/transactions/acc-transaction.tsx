@@ -56,8 +56,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   title,
   drCr,
   voucherNo,
+  transactionType
 }) => {
-  const { transactionType } = useParams();
   const { t } = useTranslation();
   const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${voucherType}`);
   const dispatch = useDispatch();
@@ -603,6 +603,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   return (
     <div className="relative">
+      <h1>{transactionType}</h1>
       {!deviceInfo?.isMobile && (
         <div className="space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">

@@ -373,6 +373,10 @@ export default function ExtendedPDFBarcodeDesigner() {
               fontStyle: "normal",
             },
           }),
+          tableProps:{
+            showBorder: true,
+            columns: []
+          },
           qrCodeProps: {
             value: "",
             size: 0,
@@ -386,6 +390,12 @@ export default function ExtendedPDFBarcodeDesigner() {
               width: 16,
               excavate: true,
             }
+          },
+          areaProps:{
+            bgColor: "#FFFFFF",
+            isRepeat:true,
+            width:"300",
+            height:"300",
           }
         };
 

@@ -1,6 +1,7 @@
 // AccTransaction interface
 export interface AccTransactionProps {
   voucherType: string;
+  transactionType: string;
   formCode: string;
   voucherPrefix: string;
   formType: string;

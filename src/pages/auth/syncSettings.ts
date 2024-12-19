@@ -17,7 +17,7 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
-debugger;
+
   dispatch(setUserBranches(userSession.branches));
   dispatch(setUserSession({...userSession, branches:[]}));
   dispatch(setUserBranches(userSession.branches));

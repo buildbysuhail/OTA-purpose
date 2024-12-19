@@ -61,7 +61,7 @@ const Login = () => {
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
         localStorage.setItem("ur", login.item.useRights);
-        debugger;
+        
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
         const _userRights = atob(login.item.userRights);

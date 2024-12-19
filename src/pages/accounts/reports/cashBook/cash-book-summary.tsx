@@ -102,11 +102,9 @@ const CashBookSummary = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   enablefilter={true}
-                  // showFilterInitially={true}
                   filterContent={<CashBookReportFilter/>}
                   filterInitialData={CashBookReportFilterInitialState}
                   reload={true} 
-                  // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={

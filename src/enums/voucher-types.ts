@@ -48,7 +48,9 @@ enum VoucherType {
   AssetDepreciation = "DEP",
   PurchaseEstimation = "PE",
   PurchaseQuotation = "PQ",
-  StockTransferExcessSpecial = "EX_SP"
+  StockTransferExcessSpecial = "EX_SP",
+  PurchaseOrderTransist = "POT",
+  RequestForQuotation = "RFQ",
 }
 
 export default VoucherType;

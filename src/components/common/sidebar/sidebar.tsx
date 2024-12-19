@@ -29,7 +29,7 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-const {getAllowedFormCodes}=useUserRights();
+  const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     console.log(`type${type}`);
     console.log(`type${SettingsMenuItems}`);
@@ -86,9 +86,9 @@ const {getAllowedFormCodes}=useUserRights();
         if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
           item.visible = false;
         }
-        debugger;
+        
         if (exludedRoutes.find(route => route.countries.find(x => x == userSession.countryId) != undefined)) {
-          debugger;
+          
 
         }
         if (exludedRoutes.find(route =>
@@ -101,18 +101,28 @@ const {getAllowedFormCodes}=useUserRights();
     }
     else if (type == "erp") {
       let st: [] = []
-      
+
       st = menuitems;
 
-      const allowedFormCodes= getAllowedFormCodes( menuitems.map((x: any) =>
-        x.children ? x.children.map((item: any) => item.rights) : []),UserAction.Show);
+      const allowedFormCodes = getAllowedFormCodes(
+        menuitems.flatMap((item: any) =>
+          item.children
+            ? item.children
+                .filter((child: any) => child.rights !== undefined)
+                .map((child: any) => child.rights)
+            : []
+        ),
+        UserAction.Show
+      );
+      console.log(allowedFormCodes);
+      
 
       const sd = st.map((x: any) => x.children?.map((item: any) => {
         item.visible = true;
         item.disabled = false;
 
-        if(!allowedFormCodes.find(x=>x==item.rights)){
-          item.visible=false;
+        if (!allowedFormCodes.find(x => x == item.rights)) {
+          item.visible = false;
         }
         if (exludedRoutes.find(route =>
           route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined

@@ -54,7 +54,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     
     onLoadingChange(false);
     if (response.isOk == true) {   
-     debugger;
+     
       localStorage.setItem("token", response.item.token); 
       localStorage.setItem("up", response.item.userProfileDetails); 
       localStorage.setItem("ut", response.item.userThemes); 
@@ -66,7 +66,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const _userThemes = atob(response.item.userThemes);
       const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
-      debugger;
+      
       syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);  
       const settings = await api.getAsync(Urls.application_setting);
       dispatch(setApplicationSettings(

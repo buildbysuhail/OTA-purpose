@@ -29,10 +29,10 @@ export const useApplicationMainSettings = (settings?: any) => {
     }, [_settings?.mainSettings?.oTPEmail, _settings?.mainSettings?.oTPVerification]);
 
     const sendOtp = useCallback(async () => {
-        debugger;
+        
         console.log(settings?.mainSettings);
         
-        debugger;
+        
         try {
             setOtpSending(true);
             const response = await api.post(Urls.SendEmailToken, {

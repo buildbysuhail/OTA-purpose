@@ -33,7 +33,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
   const handleTranslation = async () => {
     try {
-      debugger;
+      
       const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${'en'}&tl=${'ar'}&dt=t&q=${encodeURIComponent(formState.data.accGroupName)}`);
       if (!response.ok) {
         //throw new Error(HTTP error! status: ${response.status});

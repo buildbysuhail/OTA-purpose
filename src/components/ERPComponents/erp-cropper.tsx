@@ -103,7 +103,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
     handleResponse(res, () => {
       setIsOpen(false);
       setImgSrc("");
-debugger;
+
       onImageSuccess(res.payload.item);
       setIsOpen(false);
     });

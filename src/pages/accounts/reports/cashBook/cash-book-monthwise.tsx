@@ -23,7 +23,7 @@ interface CashBookMonthWiseProps {
 
 
 const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , contentProps}) => {
-  debugger;
+  
 // interface CashBookMonthWiseFilters {
 //   from: Date
 // }

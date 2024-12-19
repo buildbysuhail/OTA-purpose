@@ -11,12 +11,14 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import TrialBalanceReportFilter, { TrialBalanceReportFilterInitialState } from "./trial-balance-report-filter";
+import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 
 interface TrialBalance {
 
   from: Date
 }
 const TrialBalance = () => {
+        const [filter, setFilter] = useState<any>(TrialBalanceReportFilterInitialState);
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -24,7 +26,7 @@ const TrialBalance = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<TrialBalance>({from: new Date()});
+  // const [filter, setFilter] =useState<TrialBalance>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
      {
@@ -135,6 +137,19 @@ const TrialBalance = () => {
                   showFilterInitially={true}
                   filterContent={<TrialBalanceReportFilter />}
                   filterInitialData={TrialBalanceReportFilterInitialState}
+                  childPopupProps={{
+                    content: <CashBookMonthWise postData={
+                      {asOnDate: filter.toDate,
+                        ledgerId:"ledgerID"
+                      }
+                    }
+                      />,
+                    title: t("cash_book_monthwise"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "ledgerName,",
+                    bodyProps: "ledgerID" 
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

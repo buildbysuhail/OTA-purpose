@@ -46,7 +46,7 @@ export const useNumberFormat = () => {
   }
   
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = false): string {
-    debugger;
+    
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))
     {
       return '';

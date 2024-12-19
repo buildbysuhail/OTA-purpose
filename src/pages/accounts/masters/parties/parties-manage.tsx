@@ -125,7 +125,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     };
 
     const handleDownload = async (fileData: string) => {
-      debugger;
+      
       ERPToast.show("Download started...", "success");
       try {
         const parts = fileData.split("-");
@@ -142,7 +142,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           const res = await api.getNativeAsync(url, undefined, {
             responseType: "blob", // Ensure the response is treated as a binary blob
           });
-          debugger;
+          
           if (res) {
             link.href = url;
           }

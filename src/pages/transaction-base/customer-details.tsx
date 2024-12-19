@@ -18,7 +18,7 @@ const CustomerDetailsSidebar: React.FC<customerDetailsSidebarProps> = ({
      
       <button
         className="fixed top-[3.5rem] right-[0px] p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
-        onClick={() => {setIsOpen((pre: boolean) =>{debugger; return !pre})}}
+        onClick={() => {setIsOpen((pre: boolean) =>{ return !pre})}}
       >
         Toggle ERP Attachment safvan
       </button>

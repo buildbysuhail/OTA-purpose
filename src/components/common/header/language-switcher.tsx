@@ -63,7 +63,7 @@ const setLocaleInStorage = (locale: Locale) => {
   
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
-  debugger;
+  
   localStorage.setItem("up", modelToBase64(userProfileDetails));
   localStorage.setItem("ut", modelToBase64(userThemes));
 

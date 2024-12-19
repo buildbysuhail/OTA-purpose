@@ -86,9 +86,9 @@ const {getAllowedFormCodes}=useUserRights();
         if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
           item.visible = false;
         }
-        debugger;
+        
         if (exludedRoutes.find(route => route.countries.find(x => x == userSession.countryId) != undefined)) {
-          debugger;
+          
 
         }
         if (exludedRoutes.find(route =>

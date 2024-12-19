@@ -106,7 +106,7 @@ function App() {
   
     let appSettings: ApplicationSettingsType;
     try {
-      debugger;
+      
       if (ass != undefined && ass != null && ass != "") {
         appSettings = customJsonParse(atob(ass));
         dispatch(setApplicationSettings(

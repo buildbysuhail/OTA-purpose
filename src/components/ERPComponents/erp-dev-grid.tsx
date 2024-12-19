@@ -174,10 +174,11 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
 
       try {
+        debugger;
         const result = method === ActionType.GET
           ? await api.get(dataUrl, queryString)
           : method === ActionType.POST
-            ? await api.postAsync(dataUrl, filterData ?? postData ?? {}, queryString)
+            ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
         return result
@@ -433,7 +434,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const switchPdf = useCallback((e: any) => {
     setIsPdfMode((prevpdf: boolean) => {
       setGridCols((prev: any) => {
-        debugger;
+        
         if (!prevpdf) {
           // to pdf
           if (preferences) {

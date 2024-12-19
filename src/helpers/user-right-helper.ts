@@ -53,7 +53,7 @@ export const useUserRights = () => {
     action: UserAction
   ): string[] => {
     const userTypeCode = userSession.userTypeCode;
-debugger;
+
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
       return formCodes;

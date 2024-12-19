@@ -354,7 +354,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const pxToPoint = (px: number) => px * (72 / 96);
 
   let paperWidth, paperHeight;
-  const paperSize = templateData?.propertiesState?.pageSize || "Custom";
+  const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":
@@ -485,6 +485,10 @@ export default function ExtendedPDFBarcodeDesigner() {
               fontStyle: "normal",
             },
           }),
+          tableProps:{
+            showBorder: true,
+            columns: []
+          },
           qrCodeProps: {
             value: "",
             size: 0,
@@ -1381,7 +1385,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-          
+           
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
@@ -1497,14 +1501,14 @@ export default function ExtendedPDFBarcodeDesigner() {
                   (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
                 : templateData?.propertiesState?.pageSize === "Custom"
                 ? templateData.propertiesState?.width
-                : paperWidth,
+                : templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight,
             maxHeight:
               templateGroup === "barcode"
                 ? (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
                   (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
                 : templateData?.propertiesState?.pageSize === "Custom"
                 ? templateData.propertiesState?.height
-                : paperHeight,
+                : templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth,
           }}
         >
           {templateGroup === "barcode" ? (
@@ -1596,6 +1600,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   height: "100%",
                 }}
               >
+               
                 {templateData?.barcodeState?.placedComponents?.map(
                   renderComponent
                 )}
@@ -1610,8 +1615,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                width: `${paperWidth}`,
-                height: `${paperHeight}`,
+                width: "100%",
+                height: "100%",
               }}
             >
               {templateData?.barcodeState?.placedComponents?.map(
@@ -1696,7 +1701,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             handlePropertyChange("content", data.content)
                           }
                         />
-                        ) :selectedComponent.type === DesignerElementType.image ?
+                        ):selectedComponent.type === DesignerElementType.image ?
                         (
                           <ERPDataCombobox
                             id="content"
@@ -1714,14 +1719,24 @@ export default function ExtendedPDFBarcodeDesigner() {
                           />
                         )
                         :selectedComponent.type === DesignerElementType.qrCode ?(
-                          
-                          <ERPInput
+                          <ERPDataCombobox
                           id="value"
-                          label="QR Code Value"
-                          value={selectedComponent.qrCodeProps?.value}
                           data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("value", e.target.value)}
+                          label="QR Code Value"
+                          field={{
+                            id: "value",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={fields?.map((field, index) => ({
+                            value: field,
+                            label: field,
+                          }))}
+                          onChangeData={(data) =>
+                            handleQRCodePropertyChange("value", data.value)
+                          }
                         />
+                
                         ):(
                           <ERPInput
                             id="content"
@@ -2968,6 +2983,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                 </Box>
 
                 {templateGroup !== "barcode" && (
+                  <>
                   <Box sx={{ mb: 1 }}>
                     <ERPDataCombobox
                       defaultValue={
@@ -2988,6 +3004,34 @@ export default function ExtendedPDFBarcodeDesigner() {
                       label="Page Size"
                     />
                   </Box>
+                  {templateData?.propertiesState?.pageSize !== "Custom" && (
+                    <Box sx={{ mb: 1 }}>
+                    <ERPDataCombobox
+                      defaultValue={
+                        templateData?.propertiesState?.orientation ?? "landscape"
+                      }
+                      field={{
+                        id: "orientation",
+                        required: true,
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      data={templateData?.propertiesState}
+                      onChangeData={(data: any) => {
+                        handlePagePropsChange("orientation", data.orientation);
+                      }}
+                      id="orientation"
+                      options={[
+                        { value: "landscape", label: "landscape" },
+                        { value: "portrait", label: "portrait" },
+                       
+                      ]}
+                      label="Orientation"
+                    />
+                    </Box>
+                  )}
+                  </>
+                  
                 )}
 
                 {templateData?.propertiesState?.pageSize === "Custom" && (

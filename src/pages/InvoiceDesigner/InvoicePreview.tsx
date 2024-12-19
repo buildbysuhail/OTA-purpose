@@ -241,12 +241,7 @@ const InvoicePreview = ({
             Update Logo & Address
           </Popover.Button>
         )}
-        {/* <Popover.Button className={`p-2 cursor-pointer rounded hover:bg-accent hover:text-white text-left`}>
-          <a onClick={warning}>Manage Custom Fields</a>
-        </Popover.Button> */}
-        {/* <Popover.Button className={`p-2 cursor-pointer rounded hover:bg-accent hover:text-white text-left`}>
-          <a onClick={warning}>Terms and Conditions</a>
-        </Popover.Button> */}
+       
 
         {templateGroupId === "sales_invoice" && (
           <>

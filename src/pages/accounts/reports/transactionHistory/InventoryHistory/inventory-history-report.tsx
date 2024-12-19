@@ -151,7 +151,7 @@ const InventoryHistoryReport = () => {
                   // childPopupProps={{
                   //   content: <InventoryHistoryPopup/>,
                   //   title: t("inventory_transaction_history_popup"),
-                  //   isForm: false,
+                  //   isForm: true,
                   //   width: "mw-100",
                   //   drillDownCells: "vchNo",
                   //   bodyProps: "oldInvTransactionID",
@@ -159,7 +159,7 @@ const InventoryHistoryReport = () => {
                   childPopupProps= {{
                     content: <InventoryHistoryDetails/>,
                     title: t("inventory_transaction_history_details"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "details",
                     bodyProps: "invTransactionMasterID"

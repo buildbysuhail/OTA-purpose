@@ -43,7 +43,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -56,7 +56,7 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.debit}
         </span>
       ),
@@ -69,7 +69,7 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.credit}
         </span>
       ),
@@ -82,7 +82,7 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-  <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
@@ -113,7 +113,7 @@ const DayBookSummary = () => {
                   childPopupProps={{
                     content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "voucherType",
                     bodyProps: "dateFrom,dateTo,costCenterID,voucherType"

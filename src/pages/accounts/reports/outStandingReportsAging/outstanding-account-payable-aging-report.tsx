@@ -187,12 +187,13 @@ const OutstandingAccountPayableAgingReport = () => {
                   enablefilter={true}
                   filterWidth="100"
                   showFilterInitially={true}
+                  remoteOperations={{paging:false,filtering:false,sorting:false}}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
                   childPopupProps={{
                     content: <OutstandingAccountAgingAnalysis />,
                     title: t("account_aging_analysis"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
                     bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"

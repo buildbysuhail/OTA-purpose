@@ -185,6 +185,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                   hideGridAddButton={true}
                   reload={true}
                   filterWidth="100"
+                  remoteOperations={{paging:false,filtering:false,sorting:false}}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<OutstandingAgingReportFilter />}
@@ -192,7 +193,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                   childPopupProps={{
                     content: <OutstandingAccountAgingAnalysis />,
                     title: t("account_aging_analysis"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
                     bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"

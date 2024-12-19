@@ -121,11 +121,11 @@ import TrialBalancePeriodwiseReportFilter from '../../../pages/accounts/reports/
 import TrialBalancePeriodwise from '../../../pages/accounts/reports/trialBalance/trial-balance-detailed';
 import ProfitAndLossDetailedReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed';
 import BalancesheetVertical from '../../../pages/accounts/reports/balanceSheet/balancesheet-vertical';
-const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
-const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
-const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
-const OpeningStock = lazy(() => import('../../../pages/accounts/reports/tax-report/opening-stock/opening-stock-report'));
-const StockFlow = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-flow/stock-flow-report'));
+const PriceList = lazy(() => import('../../../pages/inventory/reports/price-list/price-list-report'));
+const StockLedger = lazy(() => import('../../../pages/inventory/reports/stock-ledger/stock-ledger-report'));
+const DailyBalanceAmount = lazy(() => import('../../../pages/inventory/reports/daily-balance/daily-balance-report'));
+const OpeningStock = lazy(() => import('../../../pages/inventory/reports/opening-stock/opening-stock-report'));
+const StockFlow = lazy(() => import('../../../pages/inventory/reports/stock-flow/stock-flow-report'));
 const TransactionAnalysisReport = lazy(() => import('../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report'));
 
 interface ContentProps { }

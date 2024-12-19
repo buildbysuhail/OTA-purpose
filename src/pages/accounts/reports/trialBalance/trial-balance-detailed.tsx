@@ -13,15 +13,17 @@ import { useSearchParams } from "react-router-dom";
 import TrialBalanceReportFilter, { TrialBalanceReportFilterInitialState } from "./trial-balance-report-filter";
 import TrialBalancePeriodwiseReportFilter, { TrialBalancePeriodwiseReportFilterInitialState } from "./trial-balance-report-filter-periodwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 
 interface TrialBalancePeriodwise {
   from: Date
 }
 const TrialBalancePeriodwise = () => {
   const dispatch = useAppDispatch();
+  const [filter, setFilter] = useState<any>(TrialBalancePeriodwiseReportFilterInitialState);
   const { t } = useTranslation();
   const { getFormattedValue} = useNumberFormat()
-  const [filter, setFilter] = useState<TrialBalancePeriodwise>({ from: new Date() });
+  // const [filter, setFilter] = useState<TrialBalancePeriodwise>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -256,6 +258,18 @@ const TrialBalancePeriodwise = () => {
                   showFilterInitially={true }
                   filterContent={<TrialBalancePeriodwiseReportFilter />}
                   filterInitialData={TrialBalancePeriodwiseReportFilterInitialState}
+                  childPopupProps={{
+                    content: <CashBookMonthWise postData={
+                      {asOnDate: filter.toDate}
+                    }
+                      />,
+                    title: t("cash_book_monthwise"),
+                    isForm: true,
+                    width: "mw-100",
+                    drillDownCells: "ledgerName",
+                    bodyProps: "ledgerID", 
+                    enableFn: (data: any) => data?.isGroup == false && data?.ledgerName!="TOTAL"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

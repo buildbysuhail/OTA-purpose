@@ -124,7 +124,7 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
                   childPopupProps={{
                     content: <CashBookDetailed/>,
                     title: t("cash_book_detailed"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "transactionDate",
                     bodyProps: "transactionDate,year,monthNum,ledgerID",

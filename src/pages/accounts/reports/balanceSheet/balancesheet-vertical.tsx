@@ -13,6 +13,7 @@ import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sh
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import BalancesheetDetails from "./balancesheet-details";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 
 
 
@@ -144,30 +145,23 @@ const BalancesheetVertical = () => {
                   method={ActionType.POST}
                   // postData={postdata}
                   gridId="grd_balancesheet_vertical"
+                  childPopupProps={{
+                    content: <CashBookMonthWise postData={
+                      {asOnDate: filter.asOnDate}
+                    }
+                      />,
+                    title: t("cash_book_monthwise"),
+                    isForm: true,
+                    width: "mw-100",
+                    drillDownCells: "particulars",
+                    bodyProps: "ledgerID,", 
+                    enableFn: (data: any) =>data?.ledgerName!="TOTAL"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
-        <ERPModal
-        isOpen={isOpenDetails.isOpen}
-        // title={t("bank_cards")}
-        title="Balance Sheet"
-        width="w-full max-w-[90%]"
-        isForm={true}
-        closeModal={() => {
-          setIsOpenDetails({ isOpen: false, key: 0 });
-        }}
-        content={
-          <BalancesheetDetails
-            postData={{
-              accGroupID: isOpenDetails.key,
-              asOnDate: filter.asOnDate,
-            }}
-            groupName={isOpenDetails.groupName}
-          />
-        }
-      />
       </div>
     </Fragment>
   );

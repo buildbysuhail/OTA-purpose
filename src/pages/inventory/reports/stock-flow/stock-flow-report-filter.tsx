@@ -1,11 +1,11 @@
-import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import ErpInput from "../../../../../components/ERPComponents/erp-input";
-import Urls from "../../../../../redux/urls";
-import productCategory from "../../../../inventory/masters/product-category/product-category";
-import warehouse from "../../../../inventory/masters/warehouse/warehouse";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ErpInput from "../../../../components/ERPComponents/erp-input";
+import Urls from "../../../../redux/urls";
+import productCategory from "../../masters/product-category/product-category";
+import warehouse from "../../masters/warehouse/warehouse";
 
 
 

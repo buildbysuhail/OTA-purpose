@@ -158,7 +158,7 @@ const AccountsHistoryReport = () => {
                   childPopupProps={{
                     content: <AccountsHistoryPopup/>,
                     title: t("accounts_transaction_history_popup"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID"

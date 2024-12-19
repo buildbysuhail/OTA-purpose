@@ -307,7 +307,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         const formCode = parent.formCode;
         if (groupedDataMap.has(formCode)) {
           // Append rights to the existing entry
-          groupedDataMap.get(formCode)!.userRights += parentUserRights;
+          groupedDataMap.get(formCode)!.userRights = parentUserRights;
         } else {
           // Create a new entry in the map
           groupedDataMap.set(formCode, {

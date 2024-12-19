@@ -48,7 +48,7 @@ export const useUserRights = () => {
 
     return result;
   };
- const getAllowedFormCodes = (
+  const getAllowedFormCodes = (
     formCodes: string[],
     action: UserAction
   ): string[] => {
@@ -66,10 +66,11 @@ export const useUserRights = () => {
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode
         );
-        const out =
+      
+        return (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.includes(action);
-        return out;
+          filteredRows[0]?.userRights?.includes(action)
+        );
       });
     } catch (error) {
       console.error("Error checking user rights:", error);

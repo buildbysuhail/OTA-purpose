@@ -11,9 +11,6 @@ import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-b
 import CashBookMonthWise from "./cash-book-monthwise";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-// interface DayBookSummary {
-//   from: Date
-// }
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()
@@ -24,7 +21,6 @@ const CashBookSummary = () => {
     }>({ isOpen: false, key: 0 });
       const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { t } = useTranslation();
-  // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -113,7 +109,8 @@ const CashBookSummary = () => {
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
-                    bodyProps: "ledgerID" 
+                    bodyProps: "ledgerID" ,
+                    enableFn: (data: any) => data?.ledgerID != 0
                   }}
                 ></ErpDevGrid>
               </div>

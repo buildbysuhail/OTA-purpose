@@ -12,21 +12,13 @@ import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import TrialBalanceReportFilter, { TrialBalanceReportFilterInitialState } from "./trial-balance-report-filter";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
-
 interface TrialBalance {
-
   from: Date
 }
 const TrialBalance = () => {
-        const [filter, setFilter] = useState<any>(TrialBalanceReportFilterInitialState);
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+  const [filter, setFilter] = useState<any>(TrialBalanceReportFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  // const [filter, setFilter] =useState<TrialBalance>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
      {
@@ -128,7 +120,7 @@ const TrialBalance = () => {
                   gridHeader={t("trial_balance")}
                   dataUrl= {Urls.acc_reports_trial_balance}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_trial_balance"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
@@ -139,16 +131,15 @@ const TrialBalance = () => {
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      {asOnDate: filter.toDate,
-                        ledgerId:"ledgerID"
-                      }
+                      {asOnDate: filter.toDate}
                     }
                       />,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "ledgerName,",
-                    bodyProps: "ledgerID" 
+                    drillDownCells: "particulars",
+                    bodyProps: "ledgerID", 
+                    enableFn: (data: any) => data?.isGroup == false
                   }}
                 ></ErpDevGrid>
               </div>
@@ -156,7 +147,6 @@ const TrialBalance = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

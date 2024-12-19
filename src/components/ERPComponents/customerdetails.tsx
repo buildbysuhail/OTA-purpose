@@ -31,7 +31,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             </div>
           </div>
         </div>
-        <button className="text-gray-500 hover:text-gray-700" onClick={() => {debugger; setIsOpen(false)}} >
+        <button className="text-gray-500 hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
           <X className="h-5 w-5" />
         </button>
       </div>

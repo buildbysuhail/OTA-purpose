@@ -218,6 +218,17 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       })
       .flat(); // Flatten the array
   };
+  const getSelectedKeys = () => {
+    return gridRef.current
+    ?.instance()
+    ?.getSelectedRowsData(selectionMode)
+    ?.map((x) => x.id) ?? []
+  }
+  const selectedKeys =
+      gridRef.current
+        ?.instance()
+        ?.getSelectedRowsData(selectionMode)
+        ?.map((x) => x.id) ?? [];
   useEffect(() => {
     // Calculate initial selected keys and set state
     const initialSelectedKeys = calculateInitialSelectedKeys(
@@ -238,8 +249,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         const key = e.currentSelectedRowKeys[0];
         const parent = userRights.find((x) => x.id == key)?.headId;
         if (
-          parent != undefined &&
-          selectedRowKeys.find((x) => x == parent) == undefined
+          parent != undefined
         ) {
           attachParentToSelected(parent, selectedData);
         }
@@ -247,19 +257,34 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
     },
     []
   );
-  const attachParentToSelected = async (id: number, selectedData: any[]) => {
+  const attachParentToSelected = (id: number, selectedData: any[]): any[] => {
     selectedData.push(id);
     const parent = userRights.find((x) => x.id == id)?.headId;
     if (
-      parent != undefined &&
-      selectedRowKeys.find((x) => x == parent) == undefined
+      parent != undefined
     ) {
-      attachParentToSelected(parent, selectedData);
+      const sd = attachParentToSelected(parent, selectedData);
+      return sd
     } else {
-      setSelectedRowKeys(selectedData);
+      return selectedData;
     }
   };
   const dispatch = useDispatch();
+  const hasAnyMissingParent = (node: any): boolean => {
+    const keys = getSelectedKeys();
+    if(keys.find(x => x == node.id) == undefined) {
+      return true;
+    }
+    const parentNode = userRights.find(x => x.id == node.headId);
+    if(parentNode != undefined)
+    {
+      const hasMissing = hasAnyMissingParent(parentNode);
+      return hasMissing;
+    }
+    else{
+      return false
+    }
+  }
   const generatePostData = async (): Promise<
     {
       userTypeCode: string;
@@ -275,11 +300,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       treeNodeIndex: number;
     }[] = [];
 
-    const selectedKeys =
-      gridRef.current
-        ?.instance()
-        ?.getSelectedRowsData(selectionMode)
-        ?.map((x) => x.id) ?? [];
+    
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRights);
     // Map to aggregate data by formCode
@@ -293,21 +314,26 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       const childNodes = userRights.filter(
         (child) => child.headId === parent.id
       );
-      let parentUserRights = "";
+      debugger;
+      const hasMissing = hasAnyMissingParent(parent);
+      const keys = getSelectedKeys();
+      let parentUserRights = keys.find(x => x == parent.id) != undefined && !hasMissing ? "S" : "";
       let hasSelectedRights = false;
-      childNodes.forEach((child) => {
-        if (selectedKeys.includes(child.id)) {
-          hasSelectedRights = true;
-          parentUserRights += child.formCode;
-        }
-      });
+      if(parentUserRights == "S") {
+        childNodes.forEach((child) => {
+          if (keys.includes(child.id)) {
+            hasSelectedRights = true;
+            parentUserRights += child.formCode;
+          }
+        });
+      }
       debugger ; 
 
       if (hasSelectedRights) {
         const formCode = parent.formCode;
         if (groupedDataMap.has(formCode)) {
           // Append rights to the existing entry
-          groupedDataMap.get(formCode)!.userRights += parentUserRights;
+          groupedDataMap.get(formCode)!.userRights = parentUserRights;
         } else {
           // Create a new entry in the map
           groupedDataMap.set(formCode, {

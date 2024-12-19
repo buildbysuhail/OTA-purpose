@@ -406,7 +406,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
     const sizeStyles = getSizeStyles();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      debugger;
+      
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
       if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {

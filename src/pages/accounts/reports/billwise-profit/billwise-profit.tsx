@@ -120,7 +120,7 @@ const BillwiseProfit = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         const productName = cellElement.data?.productName;
         const salesPrice = cellElement.data?.salesPrice;
-    debugger;
+    
         // Apply special formatting only for "Grand Total" and "Disc+AddAmt"
         if (productName === "Grand Total" || productName === "Disc+AddAmt") {
           const formattedValue =
@@ -218,7 +218,7 @@ const BillwiseProfit = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         const productName = cellElement.data?.productName;
         const vat = cellElement.data?.vat;
-    debugger;
+    
         // Apply special formatting only for "Grand Total" and "Disc+AddAmt"
         if (productName === "Grand Total" || productName === "Disc+AddAmt") {
           const formattedValue =

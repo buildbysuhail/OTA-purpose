@@ -23,7 +23,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
 }) => {
   const [sidebarWidth, setSidebarWidth] = useState(initialWidth);
     const appState = useAppState();
-    debugger;
+    
 
   return (
     <>

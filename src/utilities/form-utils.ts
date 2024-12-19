@@ -19,7 +19,7 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
     value = _value || "";
   }
   if(type == "int" && value != undefined && value != undefined && !Number.isNaN(value)) {
-    debugger;
+    
     const str = value.toString();
     if(str.includes('.'))
     {
@@ -27,7 +27,7 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
     }
   }
   if(type == "decimal" && value != undefined && value != undefined && !Number.isNaN(value)) {
-    debugger;
+    
     const str = value.toString();
     
   }

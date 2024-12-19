@@ -48,7 +48,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
     let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
     let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
-    debugger;
+    
     setPreferences((prevPreferences: any) => {
       return {
         ...prevPreferences,
@@ -68,7 +68,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    debugger;
+    
     setPreferences(getInitialPreference(gridId, columns));
 
   }, [gridId, columns, onApplyPreferences]);
@@ -129,7 +129,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleApplyPreferences = async () => {
-    debugger;
+    
     const preference = JSON.stringify(preferences)
     // Save preferences to localStorage
     localStorage.setItem(

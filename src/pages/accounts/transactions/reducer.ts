@@ -278,7 +278,7 @@ const accTransactionSlice = createSlice({
       // Use Object.entries to get key-value pairs
       Object.entries(fields).forEach(([key, fieldValue]) => {
         // Assert the key as keyof AccTransactionRow
-        debugger;
+        
         const isDateField =
           (state.row[
             key as keyof AccTransactionRow

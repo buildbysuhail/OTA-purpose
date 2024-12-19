@@ -117,11 +117,30 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-    {`${cellElement.data?.salesPrice == 0 || cellElement.data?.salesPrice == null ? '' : cellElement.data.salesPrice < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.salesPrice) : getFormattedValue(cellElement.data.salesPrice)}`}
-    </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any) => {
+        const productName = cellElement.data?.productName;
+        const salesPrice = cellElement.data?.salesPrice;
+    debugger;
+        // Apply special formatting only for "Grand Total" and "Disc+AddAmt"
+        if (productName === "Grand Total" || productName === "Disc+AddAmt") {
+          const formattedValue =
+            salesPrice == null
+              ? '0'
+              : salesPrice < 0
+              ? getFormattedValue(-1 * salesPrice)
+              : getFormattedValue(salesPrice);
+    
+          return (
+            <span className="font-bold text-red">
+              {formattedValue}
+            </span>
+          );
+        }
+    
+        // For other rows, display the salesPrice as it is (with decimal points from the API)
+        // return <span>{salesPrice != null ? salesPrice.toFixed(2) : '0.00'}</span>;
+        return <span>{salesPrice || '0'}</span>;
+      },
     },
     {
       dataField: "totCost",
@@ -196,12 +215,32 @@ const BillwiseProfit = () => {
       visible: false,
       allowFiltering: true,
       width: 120,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-   {`${cellElement.data?.vat == 0 || cellElement.data?.vat == null ? '' : cellElement.data.vat < 0 && (cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt")? getFormattedValue(-1 * cellElement.data.vat) : getFormattedValue(cellElement.data.vat)}`}
-   </span>
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        const productName = cellElement.data?.productName;
+        const vat = cellElement.data?.vat;
+    debugger;
+        // Apply special formatting only for "Grand Total" and "Disc+AddAmt"
+        if (productName === "Grand Total" || productName === "Disc+AddAmt") {
+          const formattedValue =
+          vat == null
+              ? '0'
+              : vat < 0
+              ? getFormattedValue(-1 * vat)
+              : getFormattedValue(vat);
+    
+          return (
+            <span className="font-bold text-red">
+              {formattedValue}
+            </span>
+          );
+        }
+    
+        // For other rows, display the salesPrice as it is (with decimal points from the API)
+        // return <span>{vat != null ? vat.toFixed(2) : '0.00'}</span>;
+          // Return the default value for other rows
+    return <span>{vat || '0'}</span>;
+      },
+    }
   ];
   return (
     <Fragment>

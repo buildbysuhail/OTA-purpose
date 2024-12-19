@@ -32,7 +32,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.accGroupID}
 </span>
       ),
@@ -53,7 +53,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.accGroupName}
 </span>
       ),
@@ -65,7 +65,7 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.ledgerName==="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.ledgerName==="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.ledgerName}
 </span>
       ),
@@ -78,7 +78,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'font-bold text-red': ''}`}>
     {`${cellElement.data?.openingDebit == 0 || cellElement.data?.openingDebit == null ? '' : cellElement.data.openingDebit < 0 ? getFormattedValue(-1* cellElement.data.openingDebit) : getFormattedValue(cellElement.data.openingDebit)}`}
 </span>
       ),
@@ -91,7 +91,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'font-bold text-red': ''}`}>
             {`${cellElement.data?.openingCredit == 0 || cellElement.data?.openingCredit == null ? '' : cellElement.data.openingCredit < 0 ? getFormattedValue(-1* cellElement.data.openingCredit) : getFormattedValue(cellElement.data.openingCredit)}`}
 </span>
       ),
@@ -104,7 +104,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
    {`${cellElement.data?.openingBalance == 0 || cellElement.data?.openingBalance == null ? '' : cellElement.data.openingBalance < 0 ? getFormattedValue(-1* cellElement.data.openingBalance) : getFormattedValue(cellElement.data.openingBalance)} ${cellElement.data?.openingBalance == 0 || cellElement.data?.openingBalance == null ? '' : cellElement.data?.openingBalance >= 0 ? 'Dr' : 'Cr' }`}
 </span>
       ),
@@ -117,7 +117,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red ' : ''}`}>
          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
 
         </span>
@@ -131,7 +131,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
                 {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -144,7 +144,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {`${cellElement.data?.periodBalance == 0 || cellElement.data?.periodBalance == null ? '' : cellElement.data.periodBalance < 0 ? getFormattedValue(-1* cellElement.data.periodBalance) : getFormattedValue(cellElement.data.periodBalance)} ${cellElement.data?.periodBalance == 0 || cellElement.data?.periodBalance == null ? '' : cellElement.data?.periodBalance >= 0 ? 'Dr' : 'Cr' }`}
 </span>
       ),
@@ -157,7 +157,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {`${cellElement.data?.closingDebit == 0 || cellElement.data?.closingDebit == null ? '' : cellElement.data.closingDebit < 0 ? getFormattedValue(-1* cellElement.data.closingDebit) : getFormattedValue(cellElement.data.closingDebit)}`}
 
 </span>
@@ -171,7 +171,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
            {`${cellElement.data?.closingCredit == 0 || cellElement.data?.closingCredit == null ? '' : cellElement.data.closingCredit < 0 ? getFormattedValue(-1* cellElement.data.closingCredit) : getFormattedValue(cellElement.data.closingCredit)}`}
 </span>
       ),
@@ -184,7 +184,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1* cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr' }`}
 </span>
       ),
@@ -197,7 +197,7 @@ const TrialBalancePeriodwise = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
           {cellElement.data.isGroup}
         </span>
       ),
@@ -209,7 +209,7 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
           {cellElement.data.groupNameInArabic}
         </span>
       ),
@@ -221,7 +221,7 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.ledgerNameInArabic}
 </span>
       ),

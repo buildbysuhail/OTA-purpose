@@ -12,6 +12,7 @@ import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import OutstandingAgingReportFilter, { OutstandingAgingReportFilterInitialState } from "./outstanding-aging-report-filter";
 import OutstandingAccountAgingAnalysis from "./outstanding-account-aging-analysis";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 
 const OutstandingAccountReceivableAgingReport = () => {
@@ -22,6 +23,7 @@ const OutstandingAccountReceivableAgingReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+    const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] = useState<OutstandingAccountReceivableAgingReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -70,7 +72,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
     },
@@ -83,7 +85,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period1}
+    {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
   </span>
       ),
     },
@@ -96,7 +98,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period2}
+  {`${cellElement.data?.period2 == 0 || cellElement.data?.period2 == null ? '' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
   </span>
       ),
     },
@@ -109,7 +111,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period3}
+   {`${cellElement.data?.period3 == 0 || cellElement.data?.period3 == null ? '' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
   </span>
       ),
     },
@@ -122,7 +124,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period4}
+  {`${cellElement.data?.period4 == 0 || cellElement.data?.period4 == null ? '' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
   </span>
       ),
     },
@@ -135,7 +137,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period5}
+  {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
   </span>
       ),
     },
@@ -148,7 +150,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period6}
+  {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
   </span>
       ),
     },
@@ -160,8 +162,8 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.period7}
+  <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+    {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
   </span>
       ),
     },

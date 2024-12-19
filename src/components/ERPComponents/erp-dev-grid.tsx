@@ -578,7 +578,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const onCellPrepared = useCallback((e: any) => {
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
     const _drillDownCell = _drillDownCells.find((x: string) => x == e.column.dataField)
-    if ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(e.row?.data))) {
+    if (e.rowType == 'data' && ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(e.row?.data)))) {
       e.cellElement.innerHTML = `<a href="#" style="color: #1976d2; text-decoration: underline;">${e.row?.data?.[e.column.dataField]}</a>`;
       e.cellElement.onclick = (event: any) => {
         event.preventDefault();

@@ -10,6 +10,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface OutstandingAccountAgingAnalysisProps {
   contentProps?: any
@@ -18,6 +19,7 @@ interface OutstandingAccountAgingAnalysisProps {
 const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+    const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -87,11 +89,10 @@ const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:O
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
     },
-  
   ];
   return (
     <Fragment>

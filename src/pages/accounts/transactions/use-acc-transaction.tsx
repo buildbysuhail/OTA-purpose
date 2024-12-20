@@ -174,7 +174,7 @@ export const useAccTransaction = (transactionType: string) => {
         voucherType ? voucherType : "null"
       }&prefix=${prefix ? prefix : "null"}`
     );
-
+debugger;
     const nextVoucherNumber = response || 1;
 
     return nextVoucherNumber;
@@ -488,11 +488,19 @@ export const useAccTransaction = (transactionType: string) => {
       const params = {
         master: attachMaster(),
         details: [...formState.transaction.details],
+        attachment: [...formState.transaction.attachments],
       };
-      await api.postAsync(
+      const saveRes = await api.postAsync(
         `Urls.acc_transaction_base${transactionType}`,
         params
       );
+      if(saveRes.isOk == true)
+      {
+
+      }
+      else{
+        dcbn
+      }
     }
   };
   const clearControls = async () => {

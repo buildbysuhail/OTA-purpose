@@ -1,5 +1,6 @@
 import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
+import { TransactionTitles } from "./transaction-titles";
 
 export interface TransactionRoute {
   formCode: string;
@@ -19,174 +20,166 @@ export const transactionRoutes: TransactionRoute[] = [
     voucherType: "CP",
     transactionType: "CashPayment",
     formType: "",
-    title: "Cash Payment",
+    title: TransactionTitles.CashPayment,
     drCr: "Dr",
   },
-  // Cash Receipt
   {
     formCode: "CR",
     action: UserAction.Show,
     voucherType: "CR",
     transactionType: "CashReceipt",
     formType: "",
-    title: "Cash Receipt",
-    drCr: "Cr"
+    title: TransactionTitles.CashReceipt,
+    drCr: "Cr",
   },
-
-  // Cash Payment Estimate
   {
     formCode: "CPE",
     action: UserAction.Show,
     voucherType: "CPE",
     transactionType: "CashPaymentEstimate",
     formType: "",
-    title: "Cash Payment Estimate",
+    title: TransactionTitles.CashPaymentEstimate,
     drCr: "Dr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
-  // Cash Receipt Estimate
   {
     formCode: "CRE",
     action: UserAction.Show,
     voucherType: "CRE",
     transactionType: "CashReceiptEstimate",
     formType: "",
-    title: "Cash Receipt Estimate",
+    title: TransactionTitles.CashReceiptEstimate,
     drCr: "Cr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
-  // Bank Payment
   {
     formCode: "BP",
     action: UserAction.Show,
     voucherType: "BP",
     transactionType: "BankPayment",
     formType: "",
-    title: "Bank Payment",
-    drCr: "Dr"
+    title: TransactionTitles.BankPayment,
+    drCr: "Dr",
   },
-  // Bank Receipt
   {
     formCode: "BR",
     action: UserAction.Show,
     voucherType: "BR",
     transactionType: "BankReceipt",
     formType: "",
-    title: "Bank Receipt",
-    drCr: "Cr"
+    title: TransactionTitles.BankReceipt,
+    drCr: "Cr",
   },
-  // Cheque Payment
   {
     formCode: "CQP",
     action: UserAction.Show,
     voucherType: "CQP",
     transactionType: "ChequePayment",
     formType: "",
-    title: "Cheque Payment",
+    title: TransactionTitles.ChequePayment,
     drCr: "Dr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
-  // Cheque Receipt 
   {
     formCode: "CQR",
     action: UserAction.Show,
     voucherType: "CQR",
     transactionType: "ChequeReceipt",
     formType: "",
-    title: "Cheque Receipt",
+    title: TransactionTitles.ChequeReceipt,
     drCr: "Cr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
-  // Opening Balance
   {
     formCode: "OB",
     action: UserAction.Show,
     voucherType: "OB",
     transactionType: "OpeningBalance",
     formType: "",
-    title: "Opening Balance",
-    drCr: ""
+    title: TransactionTitles.OpeningBalance,
+    drCr: "",
   },
-  // Journal Entry
   {
     formCode: "JV",
     action: UserAction.Show,
     voucherType: "JV",
     transactionType: "JournalEntry",
     formType: "",
-    title: "Journal Entry",
-    drCr: ""
+    title: TransactionTitles.JournalEntry,
+    drCr: "",
   },
-  // Multi Journal Entry
   {
     formCode: "MJV",
     action: UserAction.Show,
     voucherType: "MJV",
     transactionType: "MultiJournalEntry",
     formType: "",
-    title: "Multi Journal Entry",
-    drCr: ""
+    title: TransactionTitles.MultiJournalEntry,
+    drCr: "",
   },
-  // Journal Entry Special
   {
     formCode: "JVSP",
     action: UserAction.Show,
     voucherType: "JVSP",
     transactionType: "JournalEntrySpecial",
     formType: "",
-    title: "Journal Entry Special",
+    title: TransactionTitles.JournalEntrySpecial,
     drCr: "",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
-  // Debit Note
   {
     formCode: "DN",
     action: UserAction.Show,
     voucherType: "DN",
     transactionType: "DebitNote",
     formType: "",
-    title: "Debit Note",
-    drCr: "Dr"
+    title: TransactionTitles.DebitNote,
+    drCr: "Dr",
   },
-  // Credit Note
   {
     formCode: "CN",
     action: UserAction.Show,
     voucherType: "CN",
     transactionType: "CreditNote",
     formType: "",
-    title: "Credit Note",
-    drCr: "Cr"
+    title: TransactionTitles.CreditNote,
+    drCr: "Cr",
   },
-  // TX Payment
   {
     formCode: "TXP",
     action: UserAction.Show,
     voucherType: "TXP",
     transactionType: "TXPayment",
     formType: "VAT",
-    title: "Tax On Expense Payment",
+    title: TransactionTitles.TaxOnExpensePayment,
     drCr: "Dr",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi
+    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
   },
-  // Bank Reconciliation
   {
     formCode: "BRC",
     action: UserAction.Show,
     voucherType: "",
     transactionType: "BankReconciliation",
     formType: "",
-    title: "Bank Reconciliation",
-    drCr: ""
+    title: TransactionTitles.BankReconciliation,
+    drCr: "",
   },
-  // Post Dated Cheques
   {
     formCode: "PDC",
     action: UserAction.Show,
     voucherType: "",
     transactionType: "PDC",
     formType: "",
-    title: "Post Dated Cheques",
-    drCr: ""
+    title: TransactionTitles.PostDatedCheques,
+    drCr: "",
   },
 ];
+
+export const exludedRoutes=[
+  {title:TransactionTitles.ChequePayment,countries:[Countries.Saudi]},
+  {title:TransactionTitles.ChequeReceipt,countries:[Countries.Saudi]},
+]
+export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [
+  {title:TransactionTitles.CashPayment,countries:[Countries.India]},
+].find(x => userSession.countryId != undefined &&  x.title == title && 
+  (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId)!= undefined)) )

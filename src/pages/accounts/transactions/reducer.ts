@@ -7,6 +7,7 @@ import {
   AccTransactionMaster,
   AccTransactionRowInitialData,
   FormElementsState,
+  accTransactionInitialData,
 } from "./acc-transaction-types";
 import { useAccTransaction } from "./use-acc-transaction";
 import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
@@ -387,6 +388,7 @@ const accTransactionSlice = createSlice({
 
     builder.addCase(loadAccVoucher.rejected, (state) => {
       state.transactionLoading = false;
+      state.transaction = accTransactionInitialData;
     });
 
     builder.addCase(loadAccVoucher.pending, (state) => {

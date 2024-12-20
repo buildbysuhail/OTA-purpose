@@ -164,7 +164,3 @@ export const MENUITEMS = [
   },
 
 ];
-export const exludedRoutes=[
-  {title:'cheque_payment_contra',countries:[Countries.Saudi]},
-  {title:'cheque_receipt_contra',countries:[Countries.Saudi]},
-]

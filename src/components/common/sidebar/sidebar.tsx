@@ -11,7 +11,7 @@ import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import Menuloop from "../../ui/menuloop";
 import { useAppState } from "../../../utilities/hooks/useAppState";
-import { exludedRoutes, MENUITEMS } from "./sidemenu/sidemenu";
+import { MENUITEMS } from "./sidemenu/sidemenu";
 import { AccountSettingsMenuItems } from "./sidemenu/account-settings";
 import { WorkspaceSettingsMenuItems } from "./sidemenu/workspace-settings";
 import { SettingsMenuItems } from "./sidemenu/settings";
@@ -22,6 +22,7 @@ import { ReportsMenuItems } from "./sidemenu/reports-routes";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTableDesigner";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
+import { exludedRoutes } from "../content/transaction-routes";
 interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }

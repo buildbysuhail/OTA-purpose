@@ -239,7 +239,9 @@ import ProfitAndLossDetailedReport from "../../../pages/accounts/reports/profitA
 import BalancesheetVertical from "../../../pages/accounts/reports/balanceSheet/balancesheet-vertical";
 import RouteGuard from "../../../utilities/route-guard";
 import { UserAction } from "../../../helpers/user-right-helper";
-import { TransactionRoute, transactionRoutes } from "./transaction-routes";
+import { transactionRoutes } from "./transaction-routes";
+import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
+
 const PriceList = lazy(
   () =>
     import(
@@ -452,14 +454,15 @@ const Content: FC<ContentProps> = () => {
               path={`/accounts/transactions/${route.transactionType}`}
               element={
                 <RouteGuard formCode={route.formCode} action={route.action}>
-                  <AccTransaction
+                  <AccTransactionFormContainer
                     voucherType={route.voucherType}
                     transactionType={route.transactionType}
                     formCode={route.formCode}
-                    voucherPrefix={route.voucherPrefix}
+                    voucherPrefix={""}
                     formType={route.formType}
                     title={route.title}
                     drCr={route.drCr}
+                    voucherNo={0}
                   />
                 </RouteGuard>
               }
@@ -469,14 +472,15 @@ const Content: FC<ContentProps> = () => {
               path={`/accounts/transactions/${route.transactionType}/:voucherNo`}
               element={
                 <RouteGuard formCode={route.formCode} action={route.action}>
-                  <AccTransaction
+                  <AccTransactionFormContainer
                     voucherType={route.voucherType}
                     transactionType={route.transactionType}
                     formCode={route.formCode}
-                    voucherPrefix={route.voucherPrefix}
+                    voucherPrefix={""}
                     formType={route.formType}
                     title={route.title}
                     drCr={route.drCr}
+                    voucherNo={0}
                   />
                 </RouteGuard>
               }

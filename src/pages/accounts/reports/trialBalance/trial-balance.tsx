@@ -12,6 +12,7 @@ import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import TrialBalanceReportFilter, { TrialBalanceReportFilterInitialState } from "./trial-balance-report-filter";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface TrialBalance {
   from: Date
 }
@@ -20,13 +21,14 @@ const TrialBalance = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
+  const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
-     {
+    {
       dataField: "ledgerID",
       caption: t("ledger_id"),
       dataType: "number",
       allowSearch: true,
-      visible:false,
+      visible: false,
       allowFiltering: true,
       width: 150,
     },
@@ -37,9 +39,9 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
-  {cellElement.data.particulars}
-</span>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -50,20 +52,20 @@ const TrialBalance = () => {
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
-  {cellElement.data.groupNameInArabic}
-</span>
+          {cellElement.data.groupNameInArabic}
+        </span>
       ),
     },
     {
       dataField: "ledgerNameInArabic",
       caption: t("account_name_in_arabic"),
-      dataType: "string", 
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
-  {cellElement.data.ledgerNameInArabic}
-</span>
+          {cellElement.data.ledgerNameInArabic}
+        </span>
       ),
     },
     {
@@ -74,9 +76,9 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
-  {cellElement.data.debit}
-</span>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -87,9 +89,9 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
-  {cellElement.data.credit}
-</span>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -97,13 +99,13 @@ const TrialBalance = () => {
       caption: t("is_group"),
       dataType: "boolean",
       allowSearch: true,
-      visible:false,
+      visible: false,
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
-  {cellElement.data.isGroup}
-</span>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+          {cellElement.data.isGroup}
+        </span>
       ),
     },
   ];
@@ -116,9 +118,9 @@ const TrialBalance = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   gridHeader={t("trial_balance")}
-                  dataUrl= {Urls.acc_reports_trial_balance}
+                  dataUrl={Urls.acc_reports_trial_balance}
                   method={ActionType.POST}
                   gridId="grd_trial_balance"
                   popupAction={toggleCostCentrePopup}
@@ -131,15 +133,15 @@ const TrialBalance = () => {
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      {asOnDate: filter.toDate}
+                      { asOnDate: filter.toDate }
                     }
-                      />,
+                    />,
                     title: t("cash_book_monthwise"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "particulars",
-                    bodyProps: "ledgerID", 
-                    enableFn: (data: any) => data?.isGroup == false
+                    bodyProps: "ledgerID",
+                    enableFn: (data: any) => data?.isGroup == false && data?.particulars != "TOTAL"
                   }}
                 ></ErpDevGrid>
               </div>

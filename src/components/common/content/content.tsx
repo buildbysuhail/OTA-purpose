@@ -245,31 +245,31 @@ import AccTransactionFormContainer from "../../../pages/accounts/transactions/ac
 const PriceList = lazy(
   () =>
     import(
-      "../../../pages/accounts/reports/tax-report/price-list/price-list-report"
+      "../../../pages/inventory/reports/price-list/price-list-report"
     )
 );
 const StockLedger = lazy(
   () =>
     import(
-      "../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report"
+      "../../../pages/inventory/reports/stock-ledger/stock-ledger-report"
     )
 );
 const DailyBalanceAmount = lazy(
   () =>
     import(
-      "../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report"
+      "../../../pages/inventory/reports/daily-balance/daily-balance-report"
     )
 );
 const OpeningStock = lazy(
   () =>
     import(
-      "../../../pages/accounts/reports/tax-report/opening-stock/opening-stock-report"
+      "../../../pages/inventory/reports/opening-stock/opening-stock-report"
     )
 );
 const StockFlow = lazy(
   () =>
     import(
-      "../../../pages/accounts/reports/tax-report/stock-flow/stock-flow-report"
+      "../../../pages/inventory/reports/stock-flow/stock-flow-report"
     )
 );
 const TransactionAnalysisReport = lazy(

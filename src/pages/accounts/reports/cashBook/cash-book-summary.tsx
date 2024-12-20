@@ -106,7 +106,7 @@ const CashBookSummary = () => {
                     content: <CashBookMonthWise postData={
                       {asOnDate: filter.asonDate}}/>,
                     title: t("cash_book_monthwise"),
-                    isForm: false,
+                    isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID" ,

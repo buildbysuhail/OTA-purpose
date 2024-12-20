@@ -13,6 +13,7 @@ import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 
 interface ProfitAndLossSubledgerwiseViewProps {
@@ -27,9 +28,10 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
     key: number;
     ledgerName?: string;
   }>({ isOpen: false, key: 0 });
-  const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
+  const [filter, setFilter] = useState<any>(postData);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+    const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -84,8 +86,8 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
     },
@@ -97,8 +99,8 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -110,8 +112,9 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+ 
   </span>
       ),
     },
@@ -148,37 +151,25 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
                   enablefilter={false}
                   showFilterInitially={true}
                   method={ActionType.POST}
-   
-                  gridId="grd_profit_and_loss_detailed"
-                  // popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  // gridAddButtonType="popup"
+                  gridId="grd_profit_and_loss_drill_down"
                   reload={true}
+                  childPopupProps={{
+                    content: <CashBookMonthWise postData={
+                      {asOnDate: filter.asOnDate,
+                        fromDate:filter.dateFrom
+                      }}/>,
+                    title: t("cash_book_monthwise"),
+                    isForm: true,
+                    width: "mw-100",
+                    drillDownCells: "ledgerName,",
+                    bodyProps: "ledgerID" ,
+                    enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
-        <ERPModal
-        isOpen={isOpenDetails.isOpen}
-        // title={t("bank_cards")}
-        title="Monthwise ledger Report"
-        width="w-full max-w-[90%]" 
-        isForm={true}
-        closeModal={() => {
-          setIsOpenDetails({ isOpen: false, key: 0 });
-        }}
-        content={
-          <CashBookMonthWise
-            postData={{
-              fromDate: filter.fromDate,
-              asOnDate: filter.toDate,
-              AccLedger:isOpenDetails.key,
-            }}
-             groupName={isOpenDetails.ledgerName}
-          />
-        }
-      />
       </div>
       
     </Fragment>

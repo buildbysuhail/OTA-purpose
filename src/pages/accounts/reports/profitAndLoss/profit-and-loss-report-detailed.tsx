@@ -22,6 +22,8 @@ import ProfitAndLossReportFilter, { ProfitAndLossReportFilterInitialState } from
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
+import CashBookMonthWise from "../cashBook/cash-book-monthwise";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 // import { MouseEventHandler } from "@types/react";
 
 
@@ -31,6 +33,7 @@ const ProfitAndLossRow: React.FC<{
   item: any;
   setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
+  const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation();
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
@@ -46,11 +49,11 @@ const ProfitAndLossRow: React.FC<{
     <tr>
       <td
         className={`py-2 ${
-          item.groupID == 0 ? "text-[#03070f]" : "text-[#3b82f6]"
+          item.title == "M" ? "text-[#8B4513]" : item.title == "L"||item.title == "G"?"": item.groupName=="TOTAL"?"text-[#FF0000]": "text-[#3b82f6]"
         }`}
         style={{
-          paddingLeft: item.groupID == 0 ? "0px" : "10px",
-          fontWeight: item.groupID == 0 ? "bold" : "normal",
+          paddingLeft: item.title == "M" ? "0px" :item.title == "G"?"50px": "20px",
+          fontWeight: item.title == "M" ? "bold" : "normal",
         }}
       >
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
@@ -59,12 +62,19 @@ const ProfitAndLossRow: React.FC<{
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
-          <a
+         <a
             href="#"
             // onClick={handleClick}
-            className="text-[#3b82f6] hover:text-[#1d4ed8]"
+            className={`py-2 hover:text-[#1d4ed8] ${
+              item.title == "M" ? "text-[#8B4513]" : item.title == "L"||item.title == "G"?"": item.groupName=="TOTAL"?"text-[#FF0000]": "text-[#3b82f6]"
+            }`}
+            style={{
+              paddingRight: item.title == "M" ? "0px" :item.title == ""?"50px":item.title == "L"?"100px": "100px",
+              fontWeight: item.title == "M" ? "bold" : "normal",
+            }}
+            // className="text-[#3b82f6] hover:text-[#1d4ed8]"
           >
-            {item.total}
+            {getFormattedValue(item.total)}
           </a>
         </td>
       )}
@@ -85,7 +95,7 @@ const HorizontalProfitAndLoss: React.FC<{
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <h3 className="text-lg font-bold mb-2">{t("expense")}</h3>
+        {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
@@ -125,7 +135,7 @@ const HorizontalProfitAndLoss: React.FC<{
         </table>
       </div> */}
       <div>
-        <h3 className="text-lg font-bold mb-2">{t("income")}</h3>
+        {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
@@ -159,6 +169,7 @@ const ProfitAndLossDetailedReport = () => {
     isOpen: boolean;
     key: number;
     groupName?: string;
+    title?: string;
   }>({ isOpen: false, key: 0 });
   const { t } = useTranslation();
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
@@ -292,7 +303,9 @@ const ProfitAndLossDetailedReport = () => {
         </div>
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
-        <p className="text-center mb-4">As of December 20, 2023</p>
+        <p className="text-center mb-4">
+  As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+</p>
         {loading ? (
           <>
             <div className="bg-white">
@@ -357,7 +370,17 @@ const ProfitAndLossDetailedReport = () => {
               valuationUsing: filter.valuationUsing,
             }}
             groupName={isOpenDetails.groupName}
-          />: 
+          />: isOpenDetails.title=="L"?
+          <CashBookMonthWise
+          postData={{
+            // accGroupID: isOpenDetails.key,
+            // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
+            // dateFrom: filter.fromDate,
+            asOnDate: filter.toDate,
+            ledgerID:isOpenDetails.key,
+          }}
+          groupName={isOpenDetails.groupName}
+        />:
           <ProfitAndLossSubledgerwiseView
           postData={{
             accGroupID: isOpenDetails.key,

@@ -128,6 +128,16 @@ interface ERPDevGridProps {
     enableFilter?: boolean,
     enableFn?: (data: any) => boolean
   }
+  dynamiChildPopupProps?: (data: any) => {
+    title: string,
+    width: string,
+    isForm: boolean,
+    content: any,
+    drillDownCells: string,
+    bodyProps?: string,
+    enableFilter?: boolean,
+    enableFn?: (data: any) => boolean
+  }
 }
 const api = new APIClient();
 const createStore = async (

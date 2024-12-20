@@ -10,13 +10,11 @@ import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface DailySummary {
-
     transactionDate: Date;
     counterID: number;
     costCentreID: number;
     counterShiftId: number;
     employeeID: number;
-
 }
 const DailySummary = () => {
   const dispatch = useAppDispatch();

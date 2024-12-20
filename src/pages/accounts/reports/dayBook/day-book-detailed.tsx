@@ -54,7 +54,7 @@ const DayBookDetailed = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.particulars}
   </span>
       ),
@@ -87,12 +87,16 @@ const DayBookDetailed = () => {
       dataField: "debit",
       caption: t('debit'),
       dataType: "number",
-      allowSearch: true,
+      allowSearch: true, 
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  {`${cellElement.data?.debit == null ||cellElement.data?.debit == 0 
+            ? '' 
+            : cellElement.data.particulars==="TOTAL"
+            ? getFormattedValue(cellElement.data.debit)  
+            : cellElement.data.debit}`}
   </span>
       ),
     },
@@ -104,8 +108,12 @@ const DayBookDetailed = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
+ {`${cellElement.data?.credit == null ||cellElement.data?.credit == 0 
+            ? '' 
+            : cellElement.data.particulars==="TOTAL"
+            ? getFormattedValue(cellElement.data.credit)  
+            : cellElement.data.credit}`}
   </span>
       ),
     },

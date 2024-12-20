@@ -40,6 +40,7 @@ import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 import { isChooseVoucherEnabled } from "../../../components/common/content/transaction-routes";
 import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
+import VoucherSelector from "../../transaction-base/voucher-selector";
 
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   voucherType,
@@ -86,7 +87,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             width="500px" 
             closeTitle={t("close")}
             title={t("voucher_selector")}
-            content={<></>}
+            content={<VoucherSelector voucherType={voucherType}></VoucherSelector>}
             closeModal={() => {setOpenVoucherSelector(false)}}
             onSubmit={() => {
               setOpenVoucherSelector(false)}}

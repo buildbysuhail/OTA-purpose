@@ -192,7 +192,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       newFormElements.btnEdit.disabled = true;
       newFormElements.btnPrint.disabled = true;
       newFormElements.foreignCurrency.visible =
-        applicationSettings.accountsSettings.maintainMultiCurrencyTransactions;
+        applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       newFormElements.lblGroupName.label = "";
       if (!formState.isInvoker && (voucherNo == undefined || voucherNo <= 0)) {
         dispatch(
@@ -281,7 +281,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       setFormElements(newFormElements);
     };
     initializeFormElements();
-    loadAccTransVoucher();
+    // loadAccTransVoucher();
     setUserRight();
   }, []);
   useEffect(() => {

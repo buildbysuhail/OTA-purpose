@@ -1,8 +1,7 @@
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
-import Urls from "../../../../../redux/urls";
-import productCategory from "../../../../inventory/masters/product-category/product-category";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import Urls from "../../../../redux/urls";
+
 
 
 
@@ -14,7 +13,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
         className="basis-1/3"
           {...getFieldProps("isProductGroup")}
           label={t("product_group")}
-          onChangeData={(data) => handleFieldChange('isProductGroup', data.isProductGroup)}
+          onChangeData={(data:any) => handleFieldChange('isProductGroup', data.isProductGroup)}
         />
           <ERPDataCombobox
           className="basis-2/3"
@@ -26,7 +25,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('productGroup', data.productGroup)}
+          onChangeData={(data:any) => handleFieldChange('productGroup', data.productGroup)}
         />
         </div>
     
@@ -35,7 +34,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
         className="basis-1/3"
           {...getFieldProps("isBrand")}
           label={t("brand")}
-          onChangeData={(data) => handleFieldChange('isBrand', data.isBrand)}
+          onChangeData={(data:any) => handleFieldChange('isBrand', data.isBrand)}
         />
           <ERPDataCombobox
             className="basis-2/3"
@@ -47,7 +46,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('brand', data.brand)}
+          onChangeData={(data:any) => handleFieldChange('brand', data.brand)}
         />
         </div>
 
@@ -57,7 +56,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
           className="basis-1/3"
           {...getFieldProps("isProduct")}
           label={t("product")}
-          onChangeData={(data) => handleFieldChange('isProduct', data.isProduct)}
+          onChangeData={(data:any) => handleFieldChange('isProduct', data.isProduct)}
         />
           <ERPDataCombobox
             className="basis-2/3"
@@ -69,7 +68,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('product', data.product)}
+          onChangeData={(data:any) => handleFieldChange('product', data.product)}
         />
         </div>
 
@@ -79,7 +78,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
         className="basis-1/3"
           {...getFieldProps("isProductCategory")}
           label={t("product_category")}
-          onChangeData={(data) => handleFieldChange('isProductCategory', data.isProductCategory)}
+          onChangeData={(data:any) => handleFieldChange('isProductCategory', data.isProductCategory)}
         />
           <ERPDataCombobox
              className="basis-2/3"
@@ -91,7 +90,7 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('productCategory', data.productCategory)}
+          onChangeData={(data:any) => handleFieldChange('productCategory', data.productCategory)}
         />
         </div>
       </div>

@@ -6,7 +6,6 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import PriceListReportFilter, { PriceListReportFilterInitialState } from "../../../accounts/reports/tax-report/price-list/price-list-report-filter";
 
 
 interface CashSummary {

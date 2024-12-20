@@ -1,12 +1,11 @@
-import { Fragment, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
-import { useRootState } from "../../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
-import { ActionType } from "../../../../../redux/types";
-import Urls from "../../../../../redux/urls";
+import { Fragment } from "react/jsx-runtime";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { ActionType } from "../../../../redux/types";
+import Urls from "../../../../redux/urls";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
 import OpeningStockReportFilter, { OpeningStockReportFilterInitialState } from "./opening-stock-report-filter";
 
 const OpeningStock = () => {

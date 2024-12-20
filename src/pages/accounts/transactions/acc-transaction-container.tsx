@@ -59,12 +59,13 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     const [readyToShowVoucher, setReadyToShowVoucher] =
       useState<boolean>(false);
   useEffect(() => {
+    debugger;
     if (isChooseVoucherEnabled(title, userSession)) {
       setOpenVoucherSelector(true);
     } else {
       setReadyToShowVoucher(true);
     }
-  },[]);
+  },[voucherType]);
   return (
     <>
       {!openVoucherSelector ? (

@@ -180,6 +180,6 @@ export const exludedRoutes=[
   {title:TransactionTitles.ChequeReceipt,countries:[Countries.Saudi]},
 ]
 export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [
-  {title:TransactionTitles.CashPayment,countries:[Countries.Saudi]},
+  {title:TransactionTitles.CashPayment,countries:[Countries.India]},
 ].find(x => userSession.countryId != undefined &&  x.title == title && 
   (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId)!= undefined)) )

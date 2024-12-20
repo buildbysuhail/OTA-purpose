@@ -65,10 +65,11 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType }) => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {`${Urls.acc_reports_aging_payable}/${voucherType}`}
+                  dataUrl= {`${Urls.voucher_selector}${voucherType}`}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
+                  remoteOperations={{paging: false,filtering: false,  sorting: false}}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

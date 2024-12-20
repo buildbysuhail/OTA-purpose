@@ -22,10 +22,10 @@ export const AccTransactionUserConfig = () => {
   useEffect(() => {
     const fetchUserConfig = async () => {
       try {
-        const response = await api.get(Urls.acc_user_config); 
-        const _userConfig = atob(response.data); 
-        const userConfig: any = customJsonParse(_userConfig);
-        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+        // const response = await api.get(Urls.acc_user_config); 
+        // const _userConfig = atob(response.data); 
+        // const userConfig: any = customJsonParse(_userConfig);
+        // dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
       } catch (error) {
         console.error("Error fetching user config:", error);
       }

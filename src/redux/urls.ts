@@ -15,7 +15,7 @@ const Urls = {
   user: "/user",
   imgBaseUrl: "/",
   host: `${domain}/`,
-  baseUrl: `${domain}/api`,
+  baseUrl: `${domain}`,
 
   // Dropdown - core
   data_countries: "/Data/Countries/",
@@ -159,7 +159,7 @@ const Urls = {
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
   //setting/system
-  get_userLedger_by_user_id:"/api/Accounts/AccLedger/GetUserLedgerByUserID/",
+  get_userLedger_by_user_id:"/Accounts/AccLedger/GetUserLedgerByUserID/",
   
   counter_settings: "/Core/CounterSettings/",
   counter_settings_current_data: "/Core/CounterSettings/GetCurrentCounter/",
@@ -283,7 +283,7 @@ inv_reports_stock_flow:"",
 
   // Transaction
   
-  acc_transaction_base: "/api/Accounts/",
+  acc_transaction_base: "/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
 
   // Accounts End
@@ -320,10 +320,10 @@ inv_reports_stock_flow:"",
 
   //Transaction
     // common
-    get_last_voucher_no: "/api/Core/Transaction/GetNextVoucherNumber/",
-    get_ledger_balance: "/api/Core/Transaction/GetLedgerBalance/",
-    upsert_bill_modified_history: "/api/Core/Transaction/UpsertBillModifiedHistory/",
-    unlock_acc_transaction_master: "/api/Core/Transaction/UnlockAccTransactionMaster/",
+    get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
+    get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
+    upsert_bill_modified_history: "/Core/TransactionBase/UpsertBillModifiedHistory/",
+    unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
 
 };
 

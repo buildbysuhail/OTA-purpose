@@ -128,7 +128,7 @@ interface ERPDevGridProps {
     enableFilter?: boolean,
     enableFn?: (data: any) => boolean
   }
-  dynamiChildPopupProps?: (data: any) => {
+  childPopupPropsDynamic?: (data: any) => {
     title: string,
     width: string,
     isForm: boolean,
@@ -136,7 +136,7 @@ interface ERPDevGridProps {
     drillDownCells: string,
     bodyProps?: string,
     enableFilter?: boolean,
-    enableFn?: (data: any) => boolean
+    enableFn?: () => boolean
   }
 }
 const api = new APIClient();

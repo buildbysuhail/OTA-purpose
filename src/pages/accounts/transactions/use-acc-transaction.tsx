@@ -536,7 +536,7 @@ debugger;
         visible: false,
       },
     }));
-    getNextVoucherNumber(
+   getNextVoucherNumber (
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix

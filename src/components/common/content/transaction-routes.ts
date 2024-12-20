@@ -181,5 +181,13 @@ export const exludedRoutes=[
 ]
 export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [
   {title:TransactionTitles.CashPayment,countries:[Countries.Saudi]},
+  {title:TransactionTitles.CashReceipt,countries:[Countries.Saudi]},
+  {title:TransactionTitles.BankPayment,countries:[Countries.Saudi]},
+  {title:TransactionTitles.BankReceipt,countries:[Countries.Saudi]},
+  {title:TransactionTitles.OpeningBalance,countries:[Countries.Saudi]},
+  {title:TransactionTitles.JournalEntry,countries:[Countries.Saudi]},
+  {title:TransactionTitles.DebitNote,countries:[Countries.Saudi]},
+  {title:TransactionTitles.CreditNote,countries:[Countries.Saudi]},
+  {title:TransactionTitles.MultiJournalEntry,countries:[Countries.Saudi]},
 ].find(x => userSession.countryId != undefined &&  x.title == title && 
   (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId)!= undefined)) )

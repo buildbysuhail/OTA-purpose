@@ -211,7 +211,7 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  acc_user_config:" ",
+  acc_user_config:"",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start

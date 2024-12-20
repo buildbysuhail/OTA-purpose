@@ -925,7 +925,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     field={{
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: Urls.data_projects,
+                      getListUrl: Urls.data_projects_by_ledgerid,
+                      params: `LedgerID=${formState.row.ledgerId}`
+
                     }}
                     onChange={(e) =>
                       dispatch(

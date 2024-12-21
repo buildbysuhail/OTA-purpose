@@ -44,7 +44,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
             id="notesLabel"
             label="Notes Label"
             value={footerState?.notesLabel}
-            onChange={(e) => onChange({ ...footerState, notesLabel: e.target.value })}
+            onChange={(e) => onChange({ ...footerState, notesLabel: e.target?.value })}
           />
 
           <ERPStepInput
@@ -82,7 +82,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
           id="onlinePaymentLink"
           label="Online Payment Link"
           value={footerState?.onlinePaymentLink}
-          onChange={(e) => onChange({ ...footerState, onlinePaymentLink: e.target.value })}
+          onChange={(e) => onChange({ ...footerState, onlinePaymentLink: e.target?.value })}
         />
       )}
 
@@ -127,7 +127,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
                 id="termsLabel"
                 label="Label"
                 value={footerState?.termsLabel ?? "Terms And Conditions"}
-                onChange={(e) => onChange({ ...footerState, termsLabel: e.target.value })}
+                onChange={(e) => onChange({ ...footerState, termsLabel: e.target?.value })}
               />
               <ERPStepInput
                 min={8}
@@ -166,7 +166,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
                 id="signatureLabel"
                 label="Label"
                 value={footerState?.signatureLabel}
-                onChange={(e) => onChange({ ...footerState, signatureLabel: e.target.value })}
+                onChange={(e) => onChange({ ...footerState, signatureLabel: e.target?.value })}
               />
 
               <div className="text-xs ">Signature image</div>
@@ -219,7 +219,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
                 label="Name"
                 id="signatureName"
                 value={footerState?.signatureName}
-                onChange={(e) => onChange({ ...footerState, signatureName: e.target.value })}
+                onChange={(e) => onChange({ ...footerState, signatureName: e.target?.value })}
               />
               {/** */}
               {!["payment_receipts", "payment_made"]?.includes(templateGroup!) && <>
@@ -236,13 +236,13 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
                     label="Label"
                     id="additionalSignatureLabel"
                     value={footerState?.additionalSignatureLabel}
-                    onChange={(e) => onChange({ ...footerState, additionalSignatureLabel: e.target.value })}
+                    onChange={(e) => onChange({ ...footerState, additionalSignatureLabel: e.target?.value })}
                   />
                   <ERPInput
                     label="Name"
                     id="additionalSignatureName"
                     value={footerState?.additionalSignatureName}
-                    onChange={(e) => onChange({ ...footerState, additionalSignatureName: e.target.value })}
+                    onChange={(e) => onChange({ ...footerState, additionalSignatureName: e.target?.value })}
                   />
                 </>
               )}

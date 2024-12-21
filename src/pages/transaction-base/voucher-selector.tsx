@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
@@ -8,12 +8,28 @@ import ErpDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../redux/urls";
 import { ActionType } from "../../redux/types";
 import { toggleCostCentrePopup } from "../../redux/slices/popup-reducer";
+import { APIClient } from "../../helpers/api-client";
 
 interface VoucherSelectorProps {
-  voucherType: string;      
+  voucherType: string;  
+  onRowDblClick?: (e: any) => void;    
 }
-const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType }) => {
+const api = new APIClient();
+const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType, onRowDblClick }) => {
   const { t } = useTranslation();
+  const [data,setData] = useState<{data: any, totalCount: number}>();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.getAsync(`${Urls.voucher_selector}${voucherType}`);
+        setData(res);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [voucherType]);
   const columns: DevGridColumn[] = [
     {
       dataField: "formType",
@@ -21,7 +37,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "lastPrefix",
@@ -52,7 +68,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType }) => {
       dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
   ];
   return (
@@ -64,9 +80,10 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType }) => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  onRowDblClick={onRowDblClick}
+                  heightToAdjustOnWindows={300}
                   gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {`${Urls.voucher_selector}${voucherType}`}
-                  method={ActionType.POST}
+                  data={data}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   remoteOperations={{paging: false,filtering: false,  sorting: false}}

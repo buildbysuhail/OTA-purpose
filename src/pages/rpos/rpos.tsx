@@ -191,7 +191,7 @@ export default function Component() {
                         <input
                           type="text"
                           value={selectedTable}
-                          onChange={(e) => setSelectedTable(e.target.value)}
+                          onChange={(e) => setSelectedTable(e.target?.value)}
                           placeholder="1"
                           className="w-20 p-2 border rounded-md text-center me-[6px]"
                         />
@@ -621,7 +621,7 @@ export default function Component() {
               placeholder={t("search_item")}
               className="w-full p-2 rounded rounded-md"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target?.value)}
             />
           </div>
           <div className="w-[40%] flex space-x-2">
@@ -904,7 +904,7 @@ export default function Component() {
                         name="paymentMethod"
                         value={method.toLowerCase()}
                         checked={paymentMethod === method.toLowerCase()}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        onChange={(e) => setPaymentMethod(e.target?.value)}
                         className="form-radio text-[#f90303]"
                       />
                       <span className="text-white pr-1">{t(method)}</span>

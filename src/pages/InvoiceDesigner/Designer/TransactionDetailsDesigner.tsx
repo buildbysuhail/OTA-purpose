@@ -56,7 +56,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
               label="Logo Size"
               defaultValue={headerState?.logoSize}
               onChange={(e) => {
-                onChange({ ...headerState, logoSize: e.target.valueAsNumber });
+                onChange({ ...headerState, logoSize: e.target?.valueAsNumber });
               }}
             />
           </div>
@@ -72,7 +72,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
             />
             <ERPInput
               value={headerState?.OrganizationFontColor}
-              onChange={(e) => onChange?.({ ...headerState, OrganizationFontColor: e.target.value })}
+              onChange={(e) => onChange?.({ ...headerState, OrganizationFontColor: e.target?.value })}
               label="Font Color"
               id="bg_color"
               type="color"
@@ -134,7 +134,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
               noLabel
               id="receivedFromLabel"
               value={headerState?.receivedFromLabel}
-              onChange={(e) => onChange({ ...headerState, receivedFromLabel: e.target.value })}
+              onChange={(e) => onChange({ ...headerState, receivedFromLabel: e.target?.value })}
             />
           </>
         }
@@ -145,7 +145,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
           placeholder=""
           label="Font Color"
           value={headerState?.customerNameFontColor}
-          onChange={(e) => onChange?.({ ...headerState, customerNameFontColor: e.target.value })}
+          onChange={(e) => onChange?.({ ...headerState, customerNameFontColor: e.target?.value })}
         />
 
         <ERPStepInput
@@ -172,7 +172,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
             id="billTo"
             label="Bill To"
             value={headerState?.billTo ?? "Bill To"}
-            onChange={(e) => onChange({ ...headerState, billTo: e.target.value })}
+            onChange={(e) => onChange({ ...headerState, billTo: e.target?.value })}
           />
         </>
         }
@@ -190,7 +190,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
             id="ship_to"
             label="Ship To"
             value={headerState?.shipTo ?? "Ship To"}
-            onChange={(e) => onChange({ ...headerState, shipTo: e.target.value })}
+            onChange={(e) => onChange({ ...headerState, shipTo: e.target?.value })}
           />
         </>}
 
@@ -222,7 +222,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="docTitle"
                   noLabel
                   value={headerState?.docTitle}
-                  onChange={(e) => onChange({ ...headerState, docTitle: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, docTitle: e.target?.value })}
                 />
               )}
             </div>
@@ -230,7 +230,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
 
           <ERPInput
             value={headerState?.docTitleFontColor}
-            onChange={(e) => onChange?.({ ...headerState, docTitleFontColor: e.target.value })}
+            onChange={(e) => onChange?.({ ...headerState, docTitleFontColor: e.target?.value })}
             label="Font Color"
             id="bg_color"
             type="color"
@@ -269,14 +269,14 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
             id="phone"
             label="Phone"
             value={headerState?.phoneLabel}
-            onChange={(e) => onChange({ ...headerState, phoneLabel: e.target.value })}
+            onChange={(e) => onChange({ ...headerState, phoneLabel: e.target?.value })}
           />
 
           <ERPInput
             id="fax"
             label="Fax Number"
             value={headerState?.faxLabel}
-            onChange={(e) => onChange({ ...headerState, faxLabel: e.target.value })}
+            onChange={(e) => onChange({ ...headerState, faxLabel: e.target?.value })}
           />
 
           {headerState?.recieptInfo?.showReceiptTable && <ReceiptHeaderDesigner template={template} headerState={headerState} onChange={onChange} />}
@@ -299,7 +299,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="numberField"
                   label="Invoice #"
                   value={headerState?.numberField}
-                  onChange={(e) => onChange({ ...headerState, numberField: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, numberField: e.target?.value })}
                 />
               )}
             </div>
@@ -322,7 +322,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="reasonId"
                   value={headerState?.reasonLabel}
-                  onChange={(e) => onChange({ ...headerState, reasonLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, reasonLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -341,7 +341,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="accountId"
                   value={headerState?.accountLabel}
-                  onChange={(e) => onChange({ ...headerState, accountLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, accountLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -360,7 +360,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="adjTypeId"
                   value={headerState?.adjTypeLabel}
-                  onChange={(e) => onChange({ ...headerState, adjTypeLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, adjTypeLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -379,7 +379,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="branchLabel"
                   value={headerState?.branchLabel ?? "Branch"}
-                  onChange={(e) => onChange({ ...headerState, branchLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, branchLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -398,7 +398,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="userCreateId"
                   value={headerState?.createUserLabel}
-                  onChange={(e) => onChange({ ...headerState, createUserLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, createUserLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -421,7 +421,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   label="Date"
                   id="dateField"
                   value={headerState?.dateField}
-                  onChange={(e) => onChange({ ...headerState, dateField: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, dateField: e.target?.value })}
                 />
               )}
             </div>
@@ -448,7 +448,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   label="Due Date"
                   value={headerState?.due_date}
                   noLabel
-                  onChange={(e) => onChange({ ...headerState, due_date: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, due_date: e.target?.value })}
                 />
               )}
             </div>
@@ -475,7 +475,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="terms"
                   label="Terms"
                   value={headerState?.terms}
-                  onChange={(e) => onChange({ ...headerState, terms: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, terms: e.target?.value })}
                 />
               )}
             </div>
@@ -497,7 +497,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="shipmentDateLabel"
                   label="Shipment Date"
                   value={headerState?.shipmentDateLabel ?? "Shipment Date"}
-                  onChange={(e) => onChange({ ...headerState, shipmentDateLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, shipmentDateLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -520,7 +520,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                 id="reference"
                 label="Reference"
                 value={headerState?.reference}
-                onChange={(e) => onChange({ ...headerState, reference: e.target.value })}
+                onChange={(e) => onChange({ ...headerState, reference: e.target?.value })}
               />
             )}
           </div>
@@ -538,7 +538,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="notesLabel"
                   value={headerState?.notesLabel ?? "Notes"}
-                  onChange={(e) => onChange({ ...headerState, notesLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, notesLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -556,7 +556,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   noLabel
                   id="amountLabel"
                   value={headerState?.amountLabel ?? "Amount"}
-                  onChange={(e) => onChange({ ...headerState, amountLabel: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, amountLabel: e.target?.value })}
                 />
               )}
             </div>
@@ -582,7 +582,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="salesPerson"
                   label="Sales Person"
                   value={headerState?.salesPerson}
-                  onChange={(e) => onChange({ ...headerState, salesPerson: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, salesPerson: e.target?.value })}
                 />
               )}
             </div>
@@ -608,7 +608,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="transactionType"
                   label="Transaction Type"
                   value={headerState?.transactionType ?? "Transaction Type"}
-                  onChange={(e) => onChange({ ...headerState, transactionType: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, transactionType: e.target?.value })}
                 />
               )}
             </div>}
@@ -633,7 +633,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="subject"
                   label="Subject"
                   value={headerState?.subject}
-                  onChange={(e) => onChange({ ...headerState, subject: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, subject: e.target?.value })}
                 />
               )}
             </div>
@@ -676,7 +676,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
                   id="supplyDate"
                   value={headerState?.supplyDate}
                   label="Supply Date"
-                  onChange={(e) => onChange({ ...headerState, supplyDate: e.target.value })}
+                  onChange={(e) => onChange({ ...headerState, supplyDate: e.target?.value })}
                 />
               )}
             </div>}
@@ -746,7 +746,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
             maxLength={20}
             id="voucherNumber"
             value={headerState?.recieptInfo?.receiptNumberLabel}
-            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptNumberLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptNumberLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -764,7 +764,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
             id="voucherMode"
             maxLength={20}
             value={headerState?.recieptInfo?.receiptDateLabel}
-            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptDateLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptDateLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -782,7 +782,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
             id="referenceNo"
             maxLength={20}
             value={headerState?.recieptInfo?.receiptReferenceLabel}
-            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptReferenceLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptReferenceLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -800,7 +800,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
             id="voucherMode"
             maxLength={20}
             value={headerState?.recieptInfo?.receiptModeLabel}
-            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptModeLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptModeLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -818,7 +818,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
             id="voucherMode"
             maxLength={20}
             value={headerState?.recieptInfo?.receiptAmountLabel}
-            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptAmountLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, receiptAmountLabel: e.target?.value } })}
           />
         )} */}
       </div>
@@ -831,7 +831,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
           id="amtReceivedLabel"
           maxLength={25}
           value={headerState?.recieptInfo?.amtReceivedLabel}
-          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedLabel: e.target.value } })}
+          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedLabel: e.target?.value } })}
         />
       </div>
 
@@ -854,7 +854,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
           type="number"
           id="font_Size"
           value={headerState?.recieptInfo?.amtReceivedFontSize}
-          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedFontSize: e.target.valueAsNumber } })}
+          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedFontSize: e.target?.valueAsNumber } })}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -862,7 +862,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
           type="color"
           id="font_color"
           value={headerState?.recieptInfo?.amtReceivedFontColor}
-          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedFontColor: e.target.value } })}
+          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedFontColor: e.target?.value } })}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -870,7 +870,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
           type="color"
           id="background_color"
           value={headerState?.recieptInfo?.amtReceivedBgColor}
-          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedBgColor: e.target.value } })}
+          onChange={(e) => onChange({ ...headerState, recieptInfo: { ...headerState?.recieptInfo, amtReceivedBgColor: e.target?.value } })}
         />
       </div>
       <div className="h-20"></div>
@@ -887,7 +887,7 @@ const AccountSummaryInformation = ({ template, headerState, onChange }: HeaderDe
           label="Account Summary label"
           id="accountSummaryLabel"
           value={headerState?.accountSummary?.accountSummaryLabel}
-          onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, accountSummaryLabel: e.target.value } })}
+          onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, accountSummaryLabel: e.target?.value } })}
         />
       </div>
       {/* */}
@@ -905,7 +905,7 @@ const AccountSummaryInformation = ({ template, headerState, onChange }: HeaderDe
             noLabel
             id="openBalance"
             value={headerState?.accountSummary?.openingBalanceLabel}
-            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, openingBalanceLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, openingBalanceLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -924,7 +924,7 @@ const AccountSummaryInformation = ({ template, headerState, onChange }: HeaderDe
             noLabel
             id="invoicedAmount"
             value={headerState?.accountSummary?.invoicedAmountLabel}
-            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, invoicedAmountLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, invoicedAmountLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -943,7 +943,7 @@ const AccountSummaryInformation = ({ template, headerState, onChange }: HeaderDe
             noLabel
             id="amtPaidLbl"
             value={headerState?.accountSummary?.amountPaidLabel}
-            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, amountPaidLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, amountPaidLabel: e.target?.value } })}
           />
         )}
       </div>
@@ -962,7 +962,7 @@ const AccountSummaryInformation = ({ template, headerState, onChange }: HeaderDe
             noLabel
             id="balanceDue"
             value={headerState?.accountSummary?.balanceDueLabel}
-            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, balanceDueLabel: e.target.value } })}
+            onChange={(e) => onChange({ ...headerState, accountSummary: { ...headerState?.accountSummary, balanceDueLabel: e.target?.value } })}
           />
         )}
       </div>

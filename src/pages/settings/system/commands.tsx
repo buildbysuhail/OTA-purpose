@@ -81,7 +81,7 @@ const CommandsManage = () => {
   };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
+    const newValue = e.target?.value;
     setQuery(newValue);
     setDisplayText(checked ? newValue.replace(/./g, '•') : newValue);
   };

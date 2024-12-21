@@ -70,6 +70,7 @@ interface ERPDevGridProps {
   | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
   onCellClick?: (e: any) => void;
+  onRowDblClick?: (e: any) => void;
   onSelectionChanged?: () => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
@@ -203,6 +204,7 @@ const createStore = async (
             groupCount: 0,
           };
       } catch (err) {
+        debugger;
         console.error("Load failed:", err);
         return {
           data: [],
@@ -261,6 +263,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   remoteOperations = true,
   onRowClick,
   onCellClick,
+  onRowDblClick,
   onSelectionChanged,
   onExporting,
   onContentReady,
@@ -567,6 +570,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   },
     [onExporting, gridId, preferences, gridCols]
   );
+  
   const handleCellClick = useCallback((event: any) => {
     // Check if the clicked cell's field matches childPopupProps.drillDownCells
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
@@ -619,6 +623,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           showRowLines={showRowLines}
           rowAlternationEnabled={true}
           onCellClick={handleCellClick}
+          onRowDblClick={onRowDblClick}
           onCellPrepared={onCellPrepared}
           // columnRenderingMode={columnRenderingMode}
           // rowRenderingMode={rowRenderingMode}

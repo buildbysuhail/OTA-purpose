@@ -112,7 +112,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
                 id="content"
                 name="content"
                 value={formState.content}
-                onChange={(e) => handleFieldChange("content", e.target.value)}
+                onChange={(e) => handleFieldChange("content", e.target?.value)}
                 rows={5}
                 placeholder="Enter template content"
                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

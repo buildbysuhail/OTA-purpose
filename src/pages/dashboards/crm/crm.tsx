@@ -268,7 +268,7 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <div>
-                      <input className="ti-form-control form-control-sm" type="text" placeholder="Search Here" onChange={(ele) => { myfunction(ele.target.value); }}
+                      <input className="ti-form-control form-control-sm" type="text" placeholder="Search Here" onChange={(ele) => { myfunction(ele.target?.value); }}
                         aria-label=".form-control-sm example" />
                     </div>
                     <div className="hs-dropdown ti-dropdown">

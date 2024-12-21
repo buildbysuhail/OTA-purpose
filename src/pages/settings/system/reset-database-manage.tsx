@@ -165,7 +165,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  from: e.target.value,
+                  from: e.target?.value,
                 },
               }));
             }}
@@ -183,7 +183,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  to: e.target.value,
+                  to: e.target?.value,
                 },
               }));
             }}

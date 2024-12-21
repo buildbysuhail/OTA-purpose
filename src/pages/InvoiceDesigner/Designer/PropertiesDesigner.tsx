@@ -75,7 +75,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           </label>
           <ERPInput
             value={propertiesState?.templateName}
-            onChange={(e) => onChange?.({ ...propertiesState, templateName: e.target.value })}
+            onChange={(e) => onChange?.({ ...propertiesState, templateName: e.target?.value })}
             label="Template Name"
             id="template_name"
             noLabel
@@ -142,8 +142,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             <ERPInput
               value={propertiesState?.padding?.top}
               onChange={(e) => {
-                if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: e.target.valueAsNumber } });
+                if (!(e.target?.valueAsNumber > 60)) {
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: e.target?.valueAsNumber } });
                 }
               }}
               label="Top"
@@ -157,8 +157,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             <ERPInput
               value={propertiesState?.padding?.bottom}
               onChange={(e) => {
-                if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: e.target.valueAsNumber } });
+                if (!(e.target?.valueAsNumber > 60)) {
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: e.target?.valueAsNumber } });
                 }
               }}
               label="Bottom"
@@ -172,8 +172,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             <ERPInput
               value={propertiesState?.padding?.left}
               onChange={(e) => {
-                if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: e.target.valueAsNumber } });
+                if (!(e.target?.valueAsNumber > 60)) {
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: e.target?.valueAsNumber } });
                 }
               }}
               label="Left"
@@ -187,8 +187,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             <ERPInput
               value={propertiesState?.padding?.right}
               onChange={(e) => {
-                if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: e.target.valueAsNumber } });
+                if (!(e.target?.valueAsNumber > 60)) {
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: e.target?.valueAsNumber } });
                 }
               }}
               label="Right"
@@ -217,13 +217,13 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 label="Payment Stub"
                 id="payment_stub_label"
                 value={propertiesState?.payment_stub_label ?? "Payment Stub"}
-                onChange={(e) => onChange?.({ ...propertiesState, payment_stub_label: e.target.value })}
+                onChange={(e) => onChange?.({ ...propertiesState, payment_stub_label: e.target?.value })}
               />
               <ERPInput
                 label="Amount Enclosed"
                 id="amount_enclosed_label"
                 value={propertiesState?.amount_enclosed_label ?? "Amount Enclosed"}
-                onChange={(e) => onChange?.({ ...propertiesState, amount_enclosed_label: e.target.value })}
+                onChange={(e) => onChange?.({ ...propertiesState, amount_enclosed_label: e.target?.value })}
               />
               <ERPDataCombobox
                 id="Payment Stub Position"
@@ -276,7 +276,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           />
           <ERPInput
             value={propertiesState?.font_color}
-            onChange={(e) => onChange?.({ ...propertiesState, font_color: e.target.value })}
+            onChange={(e) => onChange?.({ ...propertiesState, font_color: e.target?.value })}
             label="Font Color"
             id="font_color"
             placeholder=" "
@@ -284,7 +284,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           />
           <ERPInput
             value={propertiesState?.label_font_color}
-            onChange={(e) => onChange?.({ ...propertiesState, label_font_color: e.target.value })}
+            onChange={(e) => onChange?.({ ...propertiesState, label_font_color: e.target?.value })}
             label="Label Color"
             id="label_font_color"
             placeholder=" "
@@ -383,7 +383,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
           <ERPInput
             value={propertiesState?.bg_color}
-            onChange={(e) => {onChange?.({ ...propertiesState, bg_color: e.target.value })}}
+            onChange={(e) => {onChange?.({ ...propertiesState, bg_color: e.target?.value })}}
             label="Color"
             id="bg_color"
             type="color"

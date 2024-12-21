@@ -692,11 +692,11 @@ const Themeprimarycolor: React.FC<actionfunctionProps> = ({ actionfunction, appS
     const [state, updateState] = useState("#FFFFFF");
 
     const handleInput = (e: any) => {
-        const rgb = hexToRgb(e.target.value);
+        const rgb = hexToRgb(e.target?.value);
 
         if (rgb !== null) {
             const { r, g, b } = rgb;
-            updateState(e.target.value);
+            updateState(e.target?.value);
             actionfunction({
                 ...appState,
                 "colorPrimaryRgb": `${r},  ${g},  ${b}`,
@@ -724,8 +724,8 @@ export const Themebackgroundcolor : React.FC<actionfunctionProps> = ({ actionfun
     
     const [state, updateState] = useState("#FFFFFF");
     const handleInput = (e: any) => {
-        const { r, g, b }: any = hexToRgb(e.target.value);
-        updateState(e.target.value);
+        const { r, g, b }: any = hexToRgb(e.target?.value);
+        updateState(e.target?.value);
         actionfunction({
             ...appState,
             "bodyBg": `${r} ${g} ${b}`,

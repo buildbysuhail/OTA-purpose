@@ -505,7 +505,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                         ...prev,
                         data: {
                           ...prev.data,
-                          dob: e.target.value,
+                          dob: e.target?.value,
                         },
                       }));
                     }}

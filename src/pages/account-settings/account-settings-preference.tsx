@@ -1030,7 +1030,7 @@ const resetInputBox = async ()=>{
                                   <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
                                     <ColorPicker
                                       onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
+                                        const rgb = hexToRgb(e.target?.value);
 
                                         if (rgb !== null) {
                                           const { r, g, b } = rgb;
@@ -1108,7 +1108,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.scrollbarColor}
                                   onChange={(e) => {
-                                    const rgb = hexToRgb(e.target.value);
+                                    const rgb = hexToRgb(e.target?.value);
                                     if (rgb) {
                                       handleScrollbarChange(
                                         "scrollbarColor",
@@ -1215,7 +1215,7 @@ const resetInputBox = async ()=>{
                               onChange={(e) => {
                                 setDemo((prevTheme) => ({
                                   ...prevTheme,             
-                                  inputBox: e.target.value  
+                                  inputBox: e.target?.value  
                                 }));
                               }}
                               value={demo.inputBox}
@@ -1227,7 +1227,7 @@ const resetInputBox = async ()=>{
                               onChange={(e) => {
                                 setDemo((prevTheme) => ({
                                   ...prevTheme,             
-                                  dateBox: e.target.value  
+                                  dateBox: e.target?.value  
                                 }));
                               }}
                               value={demo.dateBox}
@@ -1470,7 +1470,7 @@ const resetInputBox = async ()=>{
                                 className="bg-slate-300"
                                 value={appState.inputBox?.borderRadius}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10);
+                                  const newValue = parseInt(e.target?.value, 10);
                                   handleInputBoxStyleChange(
                                     "borderRadius",
                                     newValue
@@ -1489,7 +1489,7 @@ const resetInputBox = async ()=>{
                                 value={appState.inputBox?.borderRadius}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10);
+                                  const newValue = parseInt(e.target?.value, 10);
                                   handleInputBoxStyleChange(
                                     "borderRadius",
                                     newValue
@@ -1511,7 +1511,7 @@ const resetInputBox = async ()=>{
                                   className="bg-slate-300"
                                   value={appState.inputBox?.marginBottom}
                                   onChange={(e) => {
-                                    const newValue = parseInt(e.target.value);
+                                    const newValue = parseInt(e.target?.value);
 
                                     handleInputBoxStyleChange(
                                       "marginBottom",
@@ -1531,7 +1531,7 @@ const resetInputBox = async ()=>{
                                   className="bg-slate-300"
                                   value={appState.inputBox?.marginTop}
                                   onChange={(e) => {
-                                    const newValue = parseInt(e.target.value);
+                                    const newValue = parseInt(e.target?.value);
 
                                     handleInputBoxStyleChange(
                                       "marginTop",
@@ -1565,7 +1565,7 @@ const resetInputBox = async ()=>{
                                   value={appState.inputBox?.fontSize}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1587,7 +1587,7 @@ const resetInputBox = async ()=>{
                                   data={appState.inputBox}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1611,7 +1611,7 @@ const resetInputBox = async ()=>{
                                   value={appState.inputBox?.labelFontSize}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1633,7 +1633,7 @@ const resetInputBox = async ()=>{
                                   data={appState.inputBox}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1656,7 +1656,7 @@ const resetInputBox = async ()=>{
                                   value={appState.inputBox?.fontWeight}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1679,7 +1679,7 @@ const resetInputBox = async ()=>{
                                   data={appState.inputBox}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1702,7 +1702,7 @@ const resetInputBox = async ()=>{
                                   className="bg-slate-300"
                                   value={appState.inputBox?.inputHeight}
                                   onChange={(e) => {
-                                    const newValue = parseFloat(e.target.value);
+                                    const newValue = parseFloat(e.target?.value);
 
                                     handleInputBoxStyleChange(
                                       "inputHeight",
@@ -1723,7 +1723,7 @@ const resetInputBox = async ()=>{
                                   data={appState.inputBox}
                                   onChange={(e) => {
                                     const newValue = parseInt(
-                                      e.target.value,
+                                      e.target?.value,
                                       10
                                     );
 
@@ -1749,7 +1749,7 @@ const resetInputBox = async ()=>{
                                   className="bg-slate-300"
                                   value={appState.inputBox?.adjustA}
                                   onChange={(e) => {
-                                    const newValue = parseInt(e.target.value);
+                                    const newValue = parseInt(e.target?.value);
 
                                     handleInputBoxStyleChange(
                                       "adjustA",
@@ -1769,7 +1769,7 @@ const resetInputBox = async ()=>{
                                   className="bg-slate-300"
                                   value={appState.inputBox?.adjustB}
                                   onChange={(e) => {
-                                    const newValue = parseInt(e.target.value);
+                                    const newValue = parseInt(e.target?.value);
 
                                     handleInputBoxStyleChange(
                                       "adjustB",
@@ -1792,7 +1792,7 @@ const resetInputBox = async ()=>{
                                     className="bg-slate-300"
                                     value={appState.inputBox?.adjustC}
                                     onChange={(e) => {
-                                      const newValue = parseInt(e.target.value);
+                                      const newValue = parseInt(e.target?.value);
 
                                       handleInputBoxStyleChange(
                                         "adjustC",
@@ -1812,7 +1812,7 @@ const resetInputBox = async ()=>{
                                     className="bg-slate-300"
                                     value={appState.inputBox?.adjustD}
                                     onChange={(e) => {
-                                      const newValue = parseInt(e.target.value);
+                                      const newValue = parseInt(e.target?.value);
 
                                       handleInputBoxStyleChange(
                                         "adjustD",
@@ -1857,7 +1857,7 @@ const resetInputBox = async ()=>{
                                   value={appState.inputBox?.borderColor}
                                   onChange={(e) => {
                                     
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
                                         "borderColor",
@@ -1894,7 +1894,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.fontColor}
                                   onChange={(e) => {
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
                                         "fontColor",
@@ -1931,7 +1931,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.labelColor}
                                   onChange={(e) => {
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
                                         "labelColor",
@@ -1968,7 +1968,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.borderFocus}
                                   onChange={(e) => {
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
                                         "borderFocus",
@@ -2007,7 +2007,7 @@ const resetInputBox = async ()=>{
                                   value={appState.inputBox?.selectColor}
                                   onChange={(e) => {
                                     
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
                                         "selectColor",

@@ -33,7 +33,7 @@ const LayoutEditor = ({ totalState, onChange }: TotalDesignerProps) => {
         label="Font Color"
         type="color"
         value={totalState?.totalFontColor}
-        onChange={(e) => onChange?.({ ...totalState, totalFontColor: e.target.value })}
+        onChange={(e) => onChange?.({ ...totalState, totalFontColor: e.target?.value })}
       />
       <ERPCheckbox
         checked={totalState?.showTotalBgColor}
@@ -47,7 +47,7 @@ const LayoutEditor = ({ totalState, onChange }: TotalDesignerProps) => {
           label="Background Color"
           type="color"
           value={totalState?.totalBgColor}
-          onChange={(e) => onChange?.({ ...totalState, totalBgColor: e.target.value })}
+          onChange={(e) => onChange?.({ ...totalState, totalBgColor: e.target?.value })}
         />
       )}
       <h1>Balance Due</h1>
@@ -67,7 +67,7 @@ const LayoutEditor = ({ totalState, onChange }: TotalDesignerProps) => {
         label="Font Color"
         type="color"
         value={totalState?.balanceFontColor}
-        onChange={(e) => onChange?.({ ...totalState, balanceFontColor: e.target.value })}
+        onChange={(e) => onChange?.({ ...totalState, balanceFontColor: e.target?.value })}
       />
 
       <ERPCheckbox
@@ -82,7 +82,7 @@ const LayoutEditor = ({ totalState, onChange }: TotalDesignerProps) => {
           label="Background Color"
           type="color"
           value={totalState?.balanceBgColor}
-          onChange={(e) => onChange?.({ ...totalState, balanceBgColor: e.target.value })}
+          onChange={(e) => onChange?.({ ...totalState, balanceBgColor: e.target?.value })}
         />
       )}
     </div>
@@ -121,7 +121,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
               noLabel
               type="text"
               value={totalState?.subTotalLabel}
-              onChange={(e) => onChange?.({ ...totalState, subTotalLabel: e.target.value })}
+              onChange={(e) => onChange?.({ ...totalState, subTotalLabel: e.target?.value })}
             />
           )}
 
@@ -131,7 +131,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
               label="Shipping Charges"
               type="text"
               value={totalState?.shippingLabel}
-              onChange={(e) => onChange?.({ ...totalState, shippingLabel: e.target.value })}
+              onChange={(e) => onChange?.({ ...totalState, shippingLabel: e.target?.value })}
             />
           }
           {!["retainer_invoice"].includes(templateGroup!) &&
@@ -159,7 +159,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
               id="totalTaxableAmountlabel"
               disabled={!totalState?.showTotalTaxableAmount}
               value={totalState?.totalTaxableAmountlabel ?? "Total Taxable Amount"}
-              onChange={(e) => onChange?.({ ...totalState, totalTaxableAmountlabel: e.target.value })}
+              onChange={(e) => onChange?.({ ...totalState, totalTaxableAmountlabel: e.target?.value })}
             />
           )}
 
@@ -185,7 +185,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
               type="text"
               id="paymentDueLabel"
               value={totalState?.totalInfoLabel ?? "Total"}
-              onChange={(e) => onChange?.({ ...totalState, totalInfoLabel: e.target.value })}
+              onChange={(e) => onChange?.({ ...totalState, totalInfoLabel: e.target?.value })}
             />
           )}
 
@@ -222,7 +222,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
               label="Items in Total"
               id="quantityInfoLabel"
               value={totalState?.quantityInfoLabel ?? "Total"}
-              onChange={(e) => onChange?.({ ...totalState, quantityInfoLabel: e.target.value })}
+              onChange={(e) => onChange?.({ ...totalState, quantityInfoLabel: e.target?.value })}
             />
           )}
 
@@ -243,7 +243,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Payment Made"
                   id="paymentDetailLabel"
                   value={totalState?.paymentMadeLabel ?? "Payment Made"}
-                  onChange={(e) => onChange?.({ ...totalState, paymentMadeLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, paymentMadeLabel: e.target?.value })}
                 />
               }
 
@@ -253,7 +253,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Credits Applied"
                   id="creditsAppliedLabel"
                   value={totalState?.creditsAppliedLabel ?? "Credits Applied"}
-                  onChange={(e) => onChange?.({ ...totalState, creditsAppliedLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, creditsAppliedLabel: e.target?.value })}
                 />
               }
 
@@ -263,7 +263,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Refund"
                   id="creditsAppliedLabel"
                   value={totalState?.refundLabel ?? "Refund"}
-                  onChange={(e) => onChange?.({ ...totalState, refundLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, refundLabel: e.target?.value })}
                 />
               }
 
@@ -273,7 +273,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Credits Remaining"
                   id="creditsRemainingLabel"
                   value={totalState?.creditsRemainingLabel ?? "Credits Remaining"}
-                  onChange={(e) => onChange?.({ ...totalState, creditsRemainingLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, creditsRemainingLabel: e.target?.value })}
                 />
               }
 
@@ -283,7 +283,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Write Off Amount"
                   id="creditsAppliedLabel"
                   value={totalState?.writeOffAmountLabel ?? "Write Off Amount"}
-                  onChange={(e) => onChange?.({ ...totalState, writeOffAmountLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, writeOffAmountLabel: e.target?.value })}
                 />
               }
 
@@ -293,7 +293,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
                   label="Balance Due"
                   id="paymentDueLabel"
                   value={totalState?.balanceAmountLabel ?? "Balance Due"}
-                  onChange={(e) => onChange?.({ ...totalState, balanceAmountLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...totalState, balanceAmountLabel: e.target?.value })}
                 />
               }
             </>
@@ -332,7 +332,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       label="Tax Summary Title"
       disabled={!totalState?.showTaxSummaryTable}
       value={totalState?.taxSummaryTitle ?? "Tax Summary"}
-      onChange={(e) => onChange?.({ ...totalState, taxSummaryTitle: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, taxSummaryTitle: e.target?.value })}
     />
     <ERPInput
       type="text"
@@ -340,7 +340,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       id="taxDetailsLabel"
       disabled={!totalState?.showTaxSummaryTable}
       value={totalState?.taxDetailsLabel ?? "Tax Details"}
-      onChange={(e) => onChange?.({ ...totalState, taxDetailsLabel: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, taxDetailsLabel: e.target?.value })}
     />
     <ERPCheckbox
       label="Taxable Amount"
@@ -355,7 +355,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       id="taxableAmountLabel"
       value={totalState?.taxableAmountLabel ?? "Taxable Amount"}
       disabled={!totalState?.showTaxSummaryTable || !totalState?.showTaxableAmountLabel}
-      onChange={(e) => onChange?.({ ...totalState, taxableAmountLabel: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, taxableAmountLabel: e.target?.value })}
     />
 
     <ERPCheckbox
@@ -371,7 +371,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       id="taxAmountLabel"
       value={totalState?.taxAmountLabel ?? "Tax Amount"}
       disabled={!totalState?.showTaxSummaryTable || !totalState?.showTaxAmountLabel}
-      onChange={(e) => onChange?.({ ...totalState, taxAmountLabel: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, taxAmountLabel: e.target?.value })}
     />
 
     <ERPCheckbox
@@ -387,7 +387,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       id="totalAmountLabel"
       value={totalState?.totalAmountLabel ?? "Total Amount"}
       disabled={!totalState?.showTaxSummaryTable || !totalState?.showTotalAmountLabel}
-      onChange={(e) => onChange?.({ ...totalState, totalAmountLabel: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, totalAmountLabel: e.target?.value })}
     />
 
     <ERPInput
@@ -396,7 +396,7 @@ const TaxesTableManager = ({ totalState, onChange }: TotalDesignerProps) => {
       id="totalLabel"
       disabled={!totalState?.showTaxSummaryTable}
       value={totalState?.totalLabel ?? "Total"}
-      onChange={(e) => onChange?.({ ...totalState, totalLabel: e.target.value })}
+      onChange={(e) => onChange?.({ ...totalState, totalLabel: e.target?.value })}
     />
   </div>
 }

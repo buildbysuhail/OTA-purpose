@@ -64,7 +64,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                     type="color"
                     label="Background Color"
                     value={headerState?.bgColor}
-                    onChange={(e) => handleChange("header", "bgColor", e.target.value)}
+                    onChange={(e) => handleChange("header", "bgColor", e.target?.value)}
                 />
 
                 <div className="flex flex-col gap-3">
@@ -141,8 +141,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                     <ERPInput
                         value={headerState?.headerHeight ?? 20}
                         onChange={(e) => {
-                            if (!(e.target.valueAsNumber > 60)) {
-                                handleChange("header", "headerHeight", e.target.valueAsNumber)
+                            if (!(e.target?.valueAsNumber > 60)) {
+                                handleChange("header", "headerHeight", e.target?.valueAsNumber)
                             }
                         }}
                         label="Header height for first page"
@@ -190,14 +190,14 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         label="Font Color"
                         id="footerFontColor"
                         value={footerState?.footerFontColor}
-                        onChange={(e) => handleChange("footer", "footerFontColor", e.target.value)}
+                        onChange={(e) => handleChange("footer", "footerFontColor", e.target?.value)}
                     />
                     <ERPInput
                         type="color"
                         id="bg_color"
                         label="Background Color"
                         value={footerState?.bg_color}
-                        onChange={(e) => handleChange("footer", "bg_color", e.target.value)}
+                        onChange={(e) => handleChange("footer", "bg_color", e.target?.value)}
                     />
                     <div className="flex flex-col gap-3">
                         <div className="text-xs">Background Image</div>

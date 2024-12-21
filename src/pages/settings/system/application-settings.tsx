@@ -96,7 +96,7 @@ const ApplicationSettings: React.FC = () => {
               ref={searchInputRef}
               className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target?.value)}
               placeholder="Search settings..."
             />
             {searchTerm && (

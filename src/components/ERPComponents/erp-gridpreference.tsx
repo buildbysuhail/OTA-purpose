@@ -146,7 +146,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   // ==================================================================
   const onClose = () => { };
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
-  //   const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
+  //   const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target?.value;
   //   setTableBody(prevState => {
   //     const updatedTableBody = [...prevState];
   //     updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
@@ -228,7 +228,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                       <input
                         type="number"
                         value={column.width || ''}
-                        onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target.value) || undefined)}
+                        onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target?.value) || undefined)}
                         disabled={column.isLocked}
                         className="border rounded p-1 w-16 mh-[27px]"
                       />

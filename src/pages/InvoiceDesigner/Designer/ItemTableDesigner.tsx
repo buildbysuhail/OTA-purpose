@@ -31,7 +31,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
           label="Border Color"
           type="color"
           value={itemTableState?.tableBorderColor}
-          onChange={(e) => onChange?.({ ...itemTableState, tableBorderColor: e.target.value })}
+          onChange={(e) => onChange?.({ ...itemTableState, tableBorderColor: e.target?.value })}
         />
       )}
       <h1>Table Header</h1>
@@ -63,7 +63,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
           type="color"
           value={itemTableState?.tableHeaderBgColor}
           onChange={(e) => {
-            onChange?.({ ...itemTableState, tableHeaderBgColor: e.target.value });
+            onChange?.({ ...itemTableState, tableHeaderBgColor: e.target?.value });
           }}
         />
       )}
@@ -74,7 +74,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
         type="color"
         value={itemTableState?.headerFontColor}
         onChange={(e) => {
-          onChange?.({ ...itemTableState, headerFontColor: e.target.value });
+          onChange?.({ ...itemTableState, headerFontColor: e.target?.value });
         }}
       />
 
@@ -106,7 +106,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
         type="color"
         value={itemTableState?.itemRowBgColor}
         onChange={(e) => {
-          onChange?.({ ...itemTableState, itemRowBgColor: e.target.value });
+          onChange?.({ ...itemTableState, itemRowBgColor: e.target?.value });
         }}
       />
       <ERPInput
@@ -115,7 +115,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
         type="color"
         value={itemTableState?.itemRowFontColor}
         onChange={(e) => {
-          onChange?.({ ...itemTableState, itemRowFontColor: e.target.value });
+          onChange?.({ ...itemTableState, itemRowFontColor: e.target?.value });
         }}
       />
 
@@ -137,7 +137,7 @@ const LayoutEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
           label="Font Color"
           type="color"
           value={itemTableState?.itemDescriptionFontColor}
-          onChange={(e) => onChange?.({ ...itemTableState, itemDescriptionFontColor: e.target.value })}
+          onChange={(e) => onChange?.({ ...itemTableState, itemDescriptionFontColor: e.target?.value })}
         />
       </>}
     </div>
@@ -168,13 +168,13 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
             label="Width"
             className="w-20"
             value={itemTableState?.lineItemNumberWidth}
-            onChange={(e) => onChange?.({ ...itemTableState, lineItemNumberWidth: e.target.value })}
+            onChange={(e) => onChange?.({ ...itemTableState, lineItemNumberWidth: e.target?.value })}
           />
           <ERPInput
             id="lineItemNumberLabel"
             label="Line Item Number"
             value={itemTableState?.lineItemNumberLabel}
-            onChange={(e) => onChange?.({ ...itemTableState, lineItemNumberLabel: e.target.value })}
+            onChange={(e) => onChange?.({ ...itemTableState, lineItemNumberLabel: e.target?.value })}
           />
         </div>
       )}
@@ -197,13 +197,13 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
             label="Width"
             className="w-20"
             value={itemTableState?.lineItemWidth}
-            onChange={(e) => onChange?.({ ...itemTableState, lineItemWidth: e.target.value })}
+            onChange={(e) => onChange?.({ ...itemTableState, lineItemWidth: e.target?.value })}
           />
           <ERPInput
             id="lineItemLabel"
             label="Item"
             value={itemTableState?.lineItemLabel}
-            onChange={(e) => onChange?.({ ...itemTableState, lineItemLabel: e.target.value })}
+            onChange={(e) => onChange?.({ ...itemTableState, lineItemLabel: e.target?.value })}
           />
         </div>
       )}
@@ -226,7 +226,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
               id="lineItemWidth"
               className="w-20"
               value={itemTableState?.lineItemWidth}
-              onChange={(e) => onChange?.({ ...itemTableState, lineItemWidth: e.target.value })}
+              onChange={(e) => onChange?.({ ...itemTableState, lineItemWidth: e.target?.value })}
             />
           )}
           <ERPInput
@@ -235,7 +235,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
             className=" w-full"
             value={itemTableState?.discriptionLabel}
             onChange={(e) => {
-              onChange?.({ ...itemTableState, discriptionLabel: e.target.value });
+              onChange?.({ ...itemTableState, discriptionLabel: e.target?.value });
             }}
           />
         </div>
@@ -260,7 +260,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
             className="w-20"
             value={itemTableState?.accountDetailsWidth}
             onChange={(e) => {
-              onChange?.({ ...itemTableState, accountDetailsWidth: e.target.value });
+              onChange?.({ ...itemTableState, accountDetailsWidth: e.target?.value });
             }}
           />
           <ERPInput
@@ -268,7 +268,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
             label="Account Details"
             value={itemTableState?.accountDetailsLabel ?? "Account"}
             onChange={(e) => {
-              onChange?.({ ...itemTableState, accountDetailsLabel: e.target.value });
+              onChange?.({ ...itemTableState, accountDetailsLabel: e.target?.value });
             }}
           />
         </div>
@@ -297,7 +297,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.quantityWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, quantityWidth: e.target.value });
+                    onChange?.({ ...itemTableState, quantityWidth: e.target?.value });
                   }}
                 />
                 <div className="space-y-2">
@@ -306,7 +306,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                     label="Quantity"
                     value={itemTableState?.quantityLabel}
                     onChange={(e) => {
-                      onChange?.({ ...itemTableState, quantityLabel: e.target.value });
+                      onChange?.({ ...itemTableState, quantityLabel: e.target?.value });
                     }}
                   />
                   {![""]?.includes(templateGroup!) &&
@@ -352,7 +352,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.rateWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, rateWidth: e.target.value });
+                    onChange?.({ ...itemTableState, rateWidth: e.target?.value });
                   }}
                 />
                 <ERPInput
@@ -360,7 +360,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   label="Rate"
                   value={itemTableState?.rateLabel}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, rateLabel: e.target.value });
+                    onChange?.({ ...itemTableState, rateLabel: e.target?.value });
                   }}
                 />
               </div>
@@ -392,7 +392,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                     className="w-20"
                     value={itemTableState?.taxWidth}
                     onChange={(e) => {
-                      onChange?.({ ...itemTableState, taxWidth: e.target.value });
+                      onChange?.({ ...itemTableState, taxWidth: e.target?.value });
                     }}
                   />
                   <ERPInput
@@ -400,7 +400,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                     label="Taxable Amount"
                     value={itemTableState?.taxLabel}
                     onChange={(e) => {
-                      onChange?.({ ...itemTableState, taxLabel: e.target.value });
+                      onChange?.({ ...itemTableState, taxLabel: e.target?.value });
                     }}
                   />
                 </div>
@@ -425,7 +425,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.taxPercentageWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, taxPercentageWidth: e.target.value });
+                    onChange?.({ ...itemTableState, taxPercentageWidth: e.target?.value });
                   }}
                 />
                 <ERPInput
@@ -433,7 +433,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   label="Tax (%)"
                   value={itemTableState?.taxPercentageLabel ?? "Tax (%)"}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, taxPercentageLabel: e.target.value });
+                    onChange?.({ ...itemTableState, taxPercentageLabel: e.target?.value });
                   }}
                 />
               </div>
@@ -458,7 +458,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.taxAmountWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, taxAmountWidth: e.target.value });
+                    onChange?.({ ...itemTableState, taxAmountWidth: e.target?.value });
                   }}
                 />
                 <ERPInput
@@ -466,7 +466,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   label="Tax Amount"
                   value={itemTableState?.taxAmountLabel ?? "Tax Amount"}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, taxAmountLabel: e.target.value });
+                    onChange?.({ ...itemTableState, taxAmountLabel: e.target?.value });
                   }}
                 />
               </div>
@@ -490,7 +490,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.discountWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, discountWidth: e.target.value });
+                    onChange?.({ ...itemTableState, discountWidth: e.target?.value });
                   }}
                 />
                 <ERPInput
@@ -498,7 +498,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   label="Discount"
                   value={itemTableState?.discountLabel}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, discountLabel: e.target.value });
+                    onChange?.({ ...itemTableState, discountLabel: e.target?.value });
                   }}
                 />
               </div>
@@ -522,7 +522,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                   className="w-20"
                   value={itemTableState?.amountWidth}
                   onChange={(e) => {
-                    onChange?.({ ...itemTableState, amountWidth: e.target.value });
+                    onChange?.({ ...itemTableState, amountWidth: e.target?.value });
                   }}
                 />
                 <div className="space-y-1">
@@ -531,7 +531,7 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                     label="Label"
                     value={itemTableState?.amountLabel}
                     onChange={(e) => {
-                      onChange?.({ ...itemTableState, amountLabel: e.target.value });
+                      onChange?.({ ...itemTableState, amountLabel: e.target?.value });
                     }}
                   />
                   {!["sales_order", "retainer_invoice"]?.includes(templateGroup!) &&
@@ -586,14 +586,14 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                 label="Width"
                 className="w-20"
                 value={itemTableState?.qtyAdjustmentWidth}
-                onChange={(e) => onChange?.({ ...itemTableState, qtyAdjustmentWidth: e.target.value })}
+                onChange={(e) => onChange?.({ ...itemTableState, qtyAdjustmentWidth: e.target?.value })}
               />
               <div className="space-y-2">
                 <ERPInput
                   id="qtyAdjLabel"
                   label="Label"
                   value={itemTableState?.qtyAdjustmentLabel}
-                  onChange={(e) => onChange?.({ ...itemTableState, qtyAdjustmentLabel: e.target.value })}
+                  onChange={(e) => onChange?.({ ...itemTableState, qtyAdjustmentLabel: e.target?.value })}
                 />
                 {![""]?.includes(templateGroup!) &&
                   <div>
@@ -627,13 +627,13 @@ const LabelsEditor = ({ itemTableState, onChange }: ItemTableDesignerProps) => {
                 label="Width"
                 className="w-20"
                 value={itemTableState?.valueAdjustmentWidth}
-                onChange={(e) => onChange?.({ ...itemTableState, valueAdjustmentWidth: e.target.value })}
+                onChange={(e) => onChange?.({ ...itemTableState, valueAdjustmentWidth: e.target?.value })}
               />
               <ERPInput
                 id="valueAdjLabel"
                 label="Label"
                 value={itemTableState?.valueAdjustmentLabel}
-                onChange={(e) => onChange?.({ ...itemTableState, valueAdjustmentLabel: e.target.value })}
+                onChange={(e) => onChange?.({ ...itemTableState, valueAdjustmentLabel: e.target?.value })}
               />
             </div>
           )}
@@ -660,7 +660,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             noLabel
             className="w-full"
             value={itemTableState?.statementTable?.dateFieldLabel}
-            onChange={(e) => onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, dateFieldLabel: e.target.value } })}
+            onChange={(e) => onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, dateFieldLabel: e.target?.value } })}
           />
         </div>
       )}
@@ -681,7 +681,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             className="w-full"
             value={itemTableState?.statementTable?.transactionTypeFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, transactionTypeFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, transactionTypeFieldLabel: e.target?.value } })
             }
           />
         </div>
@@ -703,7 +703,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             className="w-full"
             value={itemTableState?.statementTable?.transactionDetailsFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, transactionDetailsFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, transactionDetailsFieldLabel: e.target?.value } })
             }
           />
         </div>
@@ -723,7 +723,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             className="w-full"
             value={itemTableState?.statementTable?.amountFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, amountFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, amountFieldLabel: e.target?.value } })
             }
           />
         </div>
@@ -743,7 +743,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             className="w-full"
             value={itemTableState?.statementTable?.paymentFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, paymentFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, paymentFieldLabel: e.target?.value } })
             }
           />
         </div>
@@ -763,7 +763,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             className="w-full"
             value={itemTableState?.statementTable?.refundFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, refundFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, refundFieldLabel: e.target?.value } })
             }
           />
         </div>
@@ -783,7 +783,7 @@ const StatementTableController = ({ itemTableState, onChange }: ItemTableDesigne
             noLabel
             value={itemTableState?.statementTable?.balanceFieldLabel}
             onChange={(e) =>
-              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, balanceFieldLabel: e.target.value } })
+              onChange?.({ ...itemTableState, statementTable: { ...itemTableState?.statementTable, balanceFieldLabel: e.target?.value } })
             }
           />
         </div>

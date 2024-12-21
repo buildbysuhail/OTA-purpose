@@ -427,7 +427,7 @@ const userTheme = () => {
                                 >
                                   <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
                                     <ColorPicker onChange={(e: any) => {
-                                const rgb = hexToRgb(e.target.value);
+                                const rgb = hexToRgb(e.target?.value);
 
                                 if (rgb !== null) {
                                     const { r, g, b } = rgb;

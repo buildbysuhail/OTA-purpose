@@ -89,7 +89,7 @@ interface AddColumnsManageProps {
         label={`Width (${ColumnData?.width})`}
         value={ColumnData?.width}
         onChange={(e) =>
-            handleFieldChange("width", e.target.valueAsNumber )
+            handleFieldChange("width", e.target?.valueAsNumber )
         }
         min={0}
         max={500}
@@ -99,7 +99,7 @@ interface AddColumnsManageProps {
         label={`Font Size (${ColumnData?.fontSize})`}
         value={ColumnData?.fontSize}
         onChange={(e) =>
-            handleFieldChange("fontSize", e.target.valueAsNumber )
+            handleFieldChange("fontSize", e.target?.valueAsNumber )
         }
         min={5}
         max={30}

@@ -272,7 +272,7 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
                     defaultValue={value == undefined ? "" : value}
                     value={value == undefined ? "" : value}
                     aria-labelledby="radio-buttons-group-label"
-                    onChange={(e) => handleChange(field?.id, e.target.value)}
+                    onChange={(e) => handleChange(field?.id, e.target?.value)}
                   >
                     {field?.items?.map((item: any, index: number) => (
                       <FormControlLabel

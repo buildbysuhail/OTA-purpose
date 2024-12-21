@@ -328,7 +328,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                     onChange={(e) => {
                       setSystemCodeAddData({
                         ...SystemCodeAddData,
-                        systemCode: e.target.value,
+                        systemCode: e.target?.value,
                       });
                     }}
                     placeholder={t('enter_new_system_code')}

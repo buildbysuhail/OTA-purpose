@@ -215,7 +215,7 @@ export default function SettingsPage() {
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
-    setInputValue(e.target.value);
+    setInputValue(e.target?.value);
   };
 
   // const handleUpdateGridClass = async () => {

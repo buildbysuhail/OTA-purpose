@@ -112,7 +112,7 @@ const PostDatedCheques = () => {
                 // onChange={(e) => {
                 //   setDemo((prevTheme) => ({
                 //     ...prevTheme,
-                //     dateBox: e.target.value,
+                //     dateBox: e.target?.value,
                 //   }));
                 // }}
                 // value={demo.dateBox}
@@ -123,7 +123,7 @@ const PostDatedCheques = () => {
                 // onChange={(e) => {
                 //   setDemo((prevTheme) => ({
                 //     ...prevTheme,
-                //     dateBox: e.target.value,
+                //     dateBox: e.target?.value,
                 //   }));
                 // }}
                 // value={demo.dateBox}
@@ -277,7 +277,7 @@ const PostDatedCheques = () => {
         // onChange={(e) => {
         // setDemo((prevTheme) => ({
         //     ...prevTheme,             
-        //     inputBox: e.target.value  
+        //     inputBox: e.target?.value  
         // }));
         // }}
         // value={demo.inputBox}

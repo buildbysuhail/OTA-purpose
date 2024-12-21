@@ -84,7 +84,7 @@ const ERPStepInput = ({
       }}
       onChange={(e) => {
         console.log(`ERPStepInput,  : `);
-        const nValue = parseInt(e.target.value);
+        const nValue = parseInt(e.target?.value);
         onChange?.(nValue);
       }}
       prefix={<MinusIcon className=" cursor-pointer w-4 h-4" />}

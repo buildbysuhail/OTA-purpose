@@ -44,7 +44,7 @@
 //       defaultData={defaultData}
 //       data={data}
 //       defaultValue={value === undefined ? "" : value}
-//       onChange={(e: any) => handleChange(field?.id, e.target.value)}
+//       onChange={(e: any) => handleChange(field?.id, e.target?.value)}
 //       handleBulkChange={handleChangeBulkData}
 //     />
 //   );

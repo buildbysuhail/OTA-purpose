@@ -162,7 +162,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               value={formState.content?.Subject || ""}
               data={formState.content}
               label="Subject"
-              onChange={(e) => handleFieldChange("Subject", e.target.value)}
+              onChange={(e) => handleFieldChange("Subject", e.target?.value)}
             />
             <div className="form-group">
               <HtmlEditor

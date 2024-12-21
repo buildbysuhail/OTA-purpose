@@ -147,7 +147,7 @@ const handleClear = async ()=>{
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      systemName: e.target.value,
+                      systemName: e.target?.value,
                     }));
                   }}
             
@@ -163,7 +163,7 @@ const handleClear = async ()=>{
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      systemCode: e.target.value,
+                      systemCode: e.target?.value,
                     }));
                   }}
                 />

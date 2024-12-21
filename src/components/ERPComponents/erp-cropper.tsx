@@ -347,7 +347,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
             step="0.1"
             value={scale}
             disabled={!imgSrc}
-            onChange={(e) => setScale(Number(e.target.value))}
+            onChange={(e) => setScale(Number(e.target?.value))}
           />
         </div>
         <div>
@@ -358,7 +358,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
             value={rotate}
             disabled={!imgSrc}
             onChange={(e) =>
-              setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
+              setRotate(Math.min(180, Math.max(-180, Number(e.target?.value))))
             }
           />
         </div>

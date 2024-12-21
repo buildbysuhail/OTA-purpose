@@ -454,7 +454,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
                     onChange={(e) => {
                       setSystemCodeAddData({
                         ...SystemCodeAddData,
-                        systemCode: e.target.value,
+                        systemCode: e.target?.value,
                       });
                     }}
                     placeholder={"enter_new_system_code"}

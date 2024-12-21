@@ -120,7 +120,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
           ref={ref}
           onChange={(e) => {
             if (onChangeData && data) {
-              onChangeData({ ...data, [id]: e.target.value });
+              onChangeData({ ...data, [id]: e.target?.value });
             }
             onChange && onChange(e);
           }}

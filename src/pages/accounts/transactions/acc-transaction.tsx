@@ -646,7 +646,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
-                            fields: { voucherPrefix: e.target.value },
+                            fields: { voucherPrefix: e.target?.value },
                           })
                         )
                       }
@@ -665,7 +665,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
-                            fields: { voucherNumber: e.target.value },
+                            fields: { voucherNumber: e.target?.value },
                           })
                         )
                       }
@@ -686,7 +686,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateHandleFieldChange({
-                            fields: { masterAccountID: e.target.value },
+                            fields: { masterAccountID: e.target?.value },
                           })
                         )
                       }
@@ -718,7 +718,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { chequeNumber: e.target.value },
+                            fields: { chequeNumber: e.target?.value },
                           })
                         )
                       }
@@ -737,7 +737,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { bankDate: e.target.value },
+                            fields: { bankDate: e.target?.value },
                           })
                         )
                       }
@@ -782,7 +782,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { exchangeRate: e.target.value },
+                            fields: { exchangeRate: e.target?.value },
                           })
                         )
                       }
@@ -806,7 +806,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { referenceNumber: e.target.value },
+                          fields: { referenceNumber: e.target?.value },
                         })
                       )
                     }
@@ -824,7 +824,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { transactionDate: e.target.value },
+                          fields: { transactionDate: e.target?.value },
                         })
                       )
                     }
@@ -844,7 +844,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { referenceDate: e.target.value },
+                          fields: { referenceDate: e.target?.value },
                         })
                       )
                     }
@@ -862,7 +862,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { employeeId: e.target.value },
+                          fields: { employeeId: e.target?.value },
                         })
                       )
                     }
@@ -888,7 +888,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { remarks: e.target.value },
+                          fields: { remarks: e.target?.value },
                         })
                       )
                     }
@@ -907,7 +907,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
-                          fields: { commonNarration: e.target.value },
+                          fields: { commonNarration: e.target?.value },
                         })
                       )
                     }
@@ -932,7 +932,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { projectId: e.target.value },
+                          fields: { projectId: e.target?.value },
                         })
                       )
                     }
@@ -958,7 +958,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { ledgerCode: e.target.value },
+                        fields: { ledgerCode: e.target?.value },
                       })
                     )
                   }
@@ -1006,7 +1006,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { amount: e.target.value },
+                        fields: { amount: e.target?.value },
                       })
                     )
                   }
@@ -1045,7 +1045,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { discount: e.target.value },
+                        fields: { discount: e.target?.value },
                       })
                     )
                   }
@@ -1075,7 +1075,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { narration: e.target.value },
+                        fields: { narration: e.target?.value },
                       })
                     )
                   }
@@ -1129,7 +1129,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onChange={(e) =>
                   dispatch(
                     accFormStateTransactionMasterHandleFieldChange({
-                      fields: { drCr: e.target.value },
+                      fields: { drCr: e.target?.value },
                     })
                   )
                 }
@@ -1158,7 +1158,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               onChange={(e) =>
                 dispatch(
                   accFormStateRowHandleFieldChange({
-                    fields: { drCr: e.target.value },
+                    fields: { drCr: e.target?.value },
                   })
                 )
               }
@@ -1189,7 +1189,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { nameOnCheque: e.target.value },
+                          fields: { nameOnCheque: e.target?.value },
                         })
                       )
                     }
@@ -1220,7 +1220,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { bankName: e.target.value },
+                          fields: { bankName: e.target?.value },
                         })
                       )
                     }
@@ -1249,7 +1249,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onChange={(e) =>
                   dispatch(
                     accFormStateRowHandleFieldChange({
-                      fields: { costCentreId: e.target.value },
+                      fields: { costCentreId: e.target?.value },
                     })
                   )
                 }

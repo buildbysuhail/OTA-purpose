@@ -44,20 +44,22 @@ import VoucherSelector from "../../transaction-base/voucher-selector";
 
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   voucherType,
-  voucherPrefix,
   formType,
   formCode,
   title,
   drCr,
-  voucherNo,
   transactionType,
 }) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =
     useState<boolean>(false);
-    const [readyToShowVoucher, setReadyToShowVoucher] =
-      useState<boolean>(false);
+  const [data, setData] = useState<{
+    voucherPrefix: string;
+    formType: string;
+    voucherNo: number;
+  }>({ voucherPrefix: "", formType: formType, voucherNo: 1 });
+  const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   useEffect(() => {
     debugger;
     if (isChooseVoucherEnabled(title, userSession)) {
@@ -65,34 +67,53 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     } else {
       setReadyToShowVoucher(true);
     }
-  },[voucherType]);
+  }, [voucherType]);
+
+  const onRowDblClick = useCallback((event: any) => {
+    debugger;
+    setData((prev: any) => ({
+      ...prev,
+      formType: event.data.formType,
+      voucherNo: event.data.lastVNo,
+      voucherPrefix: event.data.lastPrefix,
+    }));
+    setOpenVoucherSelector(false);
+    setReadyToShowVoucher(true);
+  }, []);
   return (
     <>
       {!openVoucherSelector ? (
         <AccTransactionForm
           voucherType={voucherType}
-          voucherPrefix={voucherPrefix}
-          formType={formType}
+          voucherPrefix={data.voucherPrefix}
+          formType={data.formType}
           formCode={formCode}
           title={title}
           drCr={drCr}
-          voucherNo={voucherNo}
+          voucherNo={data.voucherNo}
           transactionType={transactionType}
         />
-      ) : readyToShowVoucher == true && (
-        <ERPModal
+      ) : (
+        readyToShowVoucher == true && (
+          <ERPModal
             isForm
             isFullHeight
             isOpen={readyToShowVoucher == true}
             hasSubmit={false}
-            width="500px" 
+            width="w-[700px]"
             closeTitle={t("close")}
             title={t("voucher_selector")}
-            content={<VoucherSelector voucherType={voucherType}></VoucherSelector>}
-            closeModal={() => {setOpenVoucherSelector(false)}}
+            content={
+              <VoucherSelector voucherType={voucherType} onRowDblClick={onRowDblClick}></VoucherSelector>
+            }
+            closeModal={() => {
+              setOpenVoucherSelector(false);
+            }}
             onSubmit={() => {
-              setOpenVoucherSelector(false)}}
-                    />
+              setOpenVoucherSelector(false);
+            }}
+          />
+        )
       )}
     </>
   );

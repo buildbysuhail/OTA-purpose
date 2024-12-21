@@ -180,7 +180,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.branch.isOpen || false}
         title={t("branch_info")}
         width="w-full max-w-[800px]"
-        isForm={true}
+        isForm={false}
+        isButton={false}
         closeModal={() => {
           dispatch(toggleBranchPopup({ isOpen: false }));
         }}

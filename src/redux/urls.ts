@@ -211,7 +211,7 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  acc_user_config:" ",
+  acc_user_config:"",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start
@@ -320,10 +320,11 @@ inv_reports_stock_flow:"",
 
   //Transaction
     // common
-    get_last_voucher_no: "/api/Core/Transaction/GetNextVoucherNumber/",
-    get_ledger_balance: "/api/Core/Transaction/GetLedgerBalance/",
-    upsert_bill_modified_history: "/api/Core/Transaction/UpsertBillModifiedHistory/",
-    unlock_acc_transaction_master: "/api/Core/Transaction/UnlockAccTransactionMaster/",
+    get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
+    get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
+    upsert_bill_modified_history: "/Core/TransactionBase/UpsertBillModifiedHistory/",
+    unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
+    voucher_selector: "/Core/VoucherSelector/",
 
 };
 

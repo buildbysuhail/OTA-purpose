@@ -8,6 +8,7 @@ import {
   Slice,
   SliceCaseReducers,
   Draft,
+  getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 
 import LoginReducer from "../redux/slices/auth/login/reducer";
@@ -183,7 +184,11 @@ class DynamicReduxManager {
 
     // Create the store
     this.store = configureStore({
-      reducer: combineReducers(rootReducer),
+      reducer: rootReducer,
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          serializableCheck: false,
+        }),
     });
   }
 

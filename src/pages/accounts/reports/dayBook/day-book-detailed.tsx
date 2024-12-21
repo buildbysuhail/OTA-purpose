@@ -127,7 +127,7 @@ const DayBookDetailed = () => {
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
           className={`${
-               "font-bold text-red text-lg"
+               "font-bold text-red"
           }`}
         >
           {`${cellElement.data?.balance == null 

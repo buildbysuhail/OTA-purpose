@@ -82,7 +82,29 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, []);
   return (
     <>
-      {!openVoucherSelector ? (
+    safva
+    {openVoucherSelector.toString()}
+    {readyToShowVoucher.toString()}
+      {openVoucherSelector == true ? (
+        <ERPModal
+        isForm
+        isFullHeight
+        isOpen={true}
+        hasSubmit={false}
+        width="w-[700px]"
+        closeTitle={t("close")}
+        title={t("voucher_selector")}
+        content={
+          <VoucherSelector voucherType={voucherType} onRowDblClick={onRowDblClick}></VoucherSelector>
+        }
+        closeModal={() => {
+          setOpenVoucherSelector(false);
+        }}
+        onSubmit={() => {
+          setOpenVoucherSelector(false);
+        }}
+      />
+      ) : (
         <AccTransactionForm
           voucherType={voucherType}
           voucherPrefix={data.voucherPrefix}
@@ -93,27 +115,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           voucherNo={data.voucherNo}
           transactionType={transactionType}
         />
-      ) : (
-        readyToShowVoucher == true && (
-          <ERPModal
-            isForm
-            isFullHeight
-            isOpen={readyToShowVoucher == true}
-            hasSubmit={false}
-            width="w-[700px]"
-            closeTitle={t("close")}
-            title={t("voucher_selector")}
-            content={
-              <VoucherSelector voucherType={voucherType} onRowDblClick={onRowDblClick}></VoucherSelector>
-            }
-            closeModal={() => {
-              setOpenVoucherSelector(false);
-            }}
-            onSubmit={() => {
-              setOpenVoucherSelector(false);
-            }}
-          />
-        )
+        
       )}
     </>
   );

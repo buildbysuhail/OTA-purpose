@@ -8,15 +8,16 @@ import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-report-filter";
-import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
+import LedgerReportFilter, {
+  LedgerReportFilterInitialState,
+} from "../ledger-report-filter";
+import BalanceSheetFilter, {
+  BalanceSheetFilterInitialState,
+} from "./balance-sheet-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import BalancesheetDetails from "./balancesheet-details";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
-
-
-
 
 const BalancesheetVertical = () => {
   const [isOpenDetails, setIsOpenDetails] = useState<{
@@ -28,7 +29,7 @@ const BalancesheetVertical = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-    const { getFormattedValue} = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
     {
       dataField: "accGroupID",
@@ -51,9 +52,22 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-  {cellElement.data.accGroup}
-</span>
+        <span
+          className={`${
+            cellElement.data.isSubTotal == true
+              ? "font-bold text-black"
+              : cellElement.data.isTotal == true
+              ? "font-bold text-blue"
+              : cellElement.data.isGroup == true &&
+                cellElement.data.isSubGroup == true
+              ? "font-bold text-green"
+              : cellElement.data.isGroup == true
+              ? "pl-4 font-bold text-red"
+              : ""
+          }`}
+        >
+          {cellElement.data.accGroup}
+        </span>
       ),
     },
     {
@@ -78,9 +92,22 @@ const BalancesheetVertical = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-  {cellElement.data.debit}
-</span>
+        <span
+          className={`${
+            cellElement.data.isSubTotal == true
+              ? "font-bold text-black"
+              : cellElement.data.isTotal == true
+              ? "font-bold text-blue"
+              : cellElement.data.isGroup == true &&
+                cellElement.data.isSubGroup == true
+              ? "font-bold text-green"
+              : cellElement.data.isGroup == true
+              ? "pl-4 font-bold text-red"
+              : ""
+          }`}
+        >
+          {cellElement.data.debit}
+        </span>
       ),
     },
     {
@@ -91,9 +118,22 @@ const BalancesheetVertical = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-  {cellElement.data.credit}
-</span>
+        <span
+          className={`${
+            cellElement.data.isSubTotal == true
+              ? "font-bold text-black"
+              : cellElement.data.isTotal == true
+              ? "font-bold text-blue"
+              : cellElement.data.isGroup == true &&
+                cellElement.data.isSubGroup == true
+              ? "font-bold text-green"
+              : cellElement.data.isGroup == true
+              ? "pl-4 font-bold text-red"
+              : ""
+          }`}
+        >
+          {cellElement.data.credit}
+        </span>
       ),
     },
     {
@@ -104,9 +144,22 @@ const BalancesheetVertical = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-  {cellElement.data.isGroup}
-</span>
+        <span
+          className={`${
+            cellElement.data.isSubTotal == true
+              ? "font-bold text-black"
+              : cellElement.data.isTotal == true
+              ? "font-bold text-blue"
+              : cellElement.data.isGroup == true &&
+                cellElement.data.isSubGroup == true
+              ? "font-bold text-green"
+              : cellElement.data.isGroup == true
+              ? "pl-4 font-bold text-red"
+              : ""
+          }`}
+        >
+          {cellElement.data.isGroup}
+        </span>
       ),
     },
     {
@@ -117,9 +170,34 @@ const BalancesheetVertical = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-        {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
-</span>
+        <span
+          className={`${
+            cellElement.data.isSubTotal == true
+              ? "font-bold text-black"
+              : cellElement.data.isTotal == true
+              ? "font-bold text-blue"
+              : cellElement.data.isGroup == true &&
+                cellElement.data.isSubGroup == true
+              ? "font-bold text-green"
+              : cellElement.data.isGroup == true
+              ? "pl-4 font-bold text-red"
+              : ""
+          }`}
+        >
+          {`${
+            cellElement.data?.amount == 0 || cellElement.data?.amount == null
+              ? ""
+              : cellElement.data.amount < 0
+              ? getFormattedValue(-1 * cellElement.data.amount)
+              : getFormattedValue(cellElement.data.amount)
+          } ${
+            cellElement.data?.amount == 0 || cellElement.data?.amount == null
+              ? ""
+              : cellElement.data?.amount >= 0
+              ? "Dr"
+              : "Cr"
+          }`}
+        </span>
       ),
     },
   ];
@@ -145,40 +223,38 @@ const BalancesheetVertical = () => {
                   method={ActionType.POST}
                   // postData={postdata}
                   gridId="grd_balancesheet_vertical"
-      //             {(Data.accGroupID!=0&&
-      //               <ERPModal
-      //   isOpen={isOpenDetails.isOpen}
-      //   // title={t("bank_cards")}
-      //   title="Balance Sheet"
-      //   width="w-full max-w-[90%]"
-      //   isForm={true}
-      //   closeModal={() => {
-      //     setIsOpenDetails({ isOpen: false, key: 0 });
-      //   }}
-      //   content={
-      //     <BalancesheetDetails
-      //       postData={{
-      //         accGroupID: isOpenDetails.key,
-      //         asOnDate: filter.asOnDate,
-      //       }}
-      //       groupName={isOpenDetails.groupName}
-      //     />
-      //   }
-      // />:
-                  
-                  childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                      {asOnDate: filter.asOnDate}
-                    }
-                      />,
-                    title: t("cash_book_monthwise"),
-                    isForm: true, 
-                    width: "mw-100",
-                    drillDownCells: "particulars",
-                    bodyProps: "ledgerID,", 
-                    enableFn: (data: any) =>data?.particulars!=null&&data.ledgerID!=0
-                  }}
-                // )}
+                  //             {(Data.accGroupID!=0&&
+                  //               <ERPModal
+                  //   isOpen={isOpenDetails.isOpen}
+                  //   // title={t("bank_cards")}
+                  //   title="Balance Sheet"
+                  //   width="w-full max-w-[90%]"
+                  //   isForm={true}
+                  //   closeModal={() => {
+                  //     setIsOpenDetails({ isOpen: false, key: 0 });
+                  //   }}
+                  //   content={
+                  //     <BalancesheetDetails
+                  //       postData={{
+                  //         accGroupID: isOpenDetails.key,
+                  //         asOnDate: filter.asOnDate,
+                  //       }}
+                  //       groupName={isOpenDetails.groupName}
+                  //     />
+                  //   }
+                  // />:
+
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title: `Dynamic Popup for ${dataField}`,
+                    width: "700px",
+                    isForm: false,
+                    content: <div>Details for </div>,
+                    drillDownCells: "accGroupID,ledgerID",
+                    bodyProps: "accGroupID",
+                    // enableFn: () => data?.status === "active", // Corrected to match expected type
+                  })}
+                 
+                  // )}
                 ></ErpDevGrid>
               </div>
             </div>

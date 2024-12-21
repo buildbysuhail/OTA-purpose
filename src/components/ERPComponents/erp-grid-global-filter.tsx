@@ -66,6 +66,8 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
       setIsOpen(true)
     }
   },[toogleFilter])
+  console.log('ErpGridGlobalFilter');
+  
   return (
     <>
       <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px]">

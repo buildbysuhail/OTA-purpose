@@ -15,67 +15,67 @@ export interface AccTransactionData {
   attachments: any[];
 }
 
-const initialFormElements = {
-  foreignCurrency: {
-    visible: true,
-    disabled: false,
-    label: "Foreign Currency",
-  },
-  voucherPrefix: { visible: true, disabled: false, label: "Prefix" },
-  voucherNumber: { visible: true, disabled: false, label: "Voucher Number" },
-  btnDown: { visible: true, disabled: false, label: "" },
-  transactionDate: {
-    visible: true,
-    disabled: false,
-    label: "Transaction Date",
-  },
-  referenceNumber: {
-    visible: true,
-    disabled: false,
-    label: "Reference Number",
-  },
-  pnlMasters: { visible: true, disabled: false, label: "" },
-  dxGrid: { visible: true, disabled: false, label: "" },
-  referenceDate: { visible: true, disabled: false, label: "Reference Date" },
-  masterAccount: { visible: true, disabled: false, label: "Default Account" },
-  jvDrCr: { visible: false, disabled: false, label: "Dr/Cr" },
-  employee: { visible: true, disabled: false, label: "Employee" },
-  remarks: { visible: true, disabled: false, label: "Remarks" },
-  commonNarration: { visible: true, disabled: false, label: "Notes" },
-  ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
-  ledgerId: { visible: true, disabled: false, label: "Ledger" },
-  amount: { visible: true, disabled: false, label: "Amount" },
-  drCr: { visible: false, disabled: false, label: "Amount" },
-  narration: { visible: true, disabled: false, label: "Narration" },
-  currencyID: { visible: true, disabled: false, label: "Currency" },
-  exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },
-  hasDiscount: { visible: true, disabled: false, label: "Has Discount" },
-  discount: { visible: true, disabled: false, label: "Discount" },
-  chequeNumber: { visible: true, disabled: false, label: "Cheque Number" },
-  bankDate: { visible: false, disabled: false, label: "Bank Date" },
-  nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
-  bankName: { visible: true, disabled: false, label: "Bank Name" },
-  projectId: { visible: false, disabled: false, label: "Project" },
-  costCentreId: { visible: false, disabled: false, label: "Cost Centre" },
-  lblGroupName: { visible: true, disabled: false, label: "Group Name" },
-  printOnSave: { visible: true, disabled: false, label: "Print on Save" },
-  printPreview: { visible: true, disabled: false, label: "Print Preview" },
-  printCheque: { visible: true, disabled: false, label: "Print Cheque" },
-  keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
-  btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
-  btnAdd: { visible: true, disabled: false, label: "Add" },
-  btnEdit: { visible: true, disabled: false, label: "Edit" },
-  btnDelete: { visible: true, disabled: false, label: "Delete" },
-  btnPrint: { visible: true, disabled: false, label: "Print" },
-  btnRef: { visible: true, disabled: false, label: "..." },
-  btnSave: { visible: true, disabled: false, label: "Save" },
-  btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
-  btnAttachment: { visible: true, disabled: false, label: "Attachments" },
-  lnkUnlockVoucher: { visible: false, disabled: false, label: "Unlock" },
-};
-export type FormElementsState = {
-  [key in keyof typeof initialFormElements]: FormElementState;
-};
+// const initialFormElements = {
+//   foreignCurrency: {
+//     visible: true,
+//     disabled: false,
+//     label: "Foreign Currency",
+//   },
+//   voucherPrefix: { visible: true, disabled: false, label: "Prefix" },
+//   voucherNumber: { visible: true, disabled: false, label: "Voucher Number" },
+//   btnDown: { visible: true, disabled: false, label: "" },
+//   transactionDate: {
+//     visible: true,
+//     disabled: false,
+//     label: "Transaction Date",
+//   },
+//   referenceNumber: {
+//     visible: true,
+//     disabled: false,
+//     label: "Reference Number",
+//   },
+//   pnlMasters: { visible: true, disabled: false, label: "" },
+//   dxGrid: { visible: true, disabled: false, label: "" },
+//   referenceDate: { visible: true, disabled: false, label: "Reference Date" },
+//   masterAccount: { visible: true, disabled: false, label: "Default Account" },
+//   jvDrCr: { visible: false, disabled: false, label: "Dr/Cr" },
+//   employee: { visible: true, disabled: false, label: "Employee" },
+//   remarks: { visible: true, disabled: false, label: "Remarks" },
+//   commonNarration: { visible: true, disabled: false, label: "Notes" },
+//   ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
+//   ledgerId: { visible: true, disabled: false, label: "Ledger" },
+//   amount: { visible: true, disabled: false, label: "Amount" },
+//   drCr: { visible: false, disabled: false, label: "Amount" },
+//   narration: { visible: true, disabled: false, label: "Narration" },
+//   currencyID: { visible: true, disabled: false, label: "Currency" },
+//   exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },
+//   hasDiscount: { visible: true, disabled: false, label: "Has Discount" },
+//   discount: { visible: true, disabled: false, label: "Discount" },
+//   chequeNumber: { visible: true, disabled: false, label: "Cheque Number" },
+//   bankDate: { visible: false, disabled: false, label: "Bank Date" },
+//   nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
+//   bankName: { visible: true, disabled: false, label: "Bank Name" },
+//   projectId: { visible: false, disabled: false, label: "Project" },
+//   costCentreId: { visible: false, disabled: false, label: "Cost Centre" },
+//   lblGroupName: { visible: true, disabled: false, label: "Group Name" },
+//   printOnSave: { visible: true, disabled: false, label: "Print on Save" },
+//   printPreview: { visible: true, disabled: false, label: "Print Preview" },
+//   printCheque: { visible: true, disabled: false, label: "Print Cheque" },
+//   keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
+//   btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
+//   btnAdd: { visible: true, disabled: false, label: "Add" },
+//   btnEdit: { visible: true, disabled: false, label: "Edit" },
+//   btnDelete: { visible: true, disabled: false, label: "Delete" },
+//   btnPrint: { visible: true, disabled: false, label: "Print" },
+//   btnRef: { visible: true, disabled: false, label: "..." },
+//   btnSave: { visible: true, disabled: false, label: "Save" },
+//   btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
+//   btnAttachment: { visible: true, disabled: false, label: "Attachments" },
+//   lnkUnlockVoucher: { visible: false, disabled: false, label: "Unlock" },
+// };
+// export type FormElementsState = {
+//   [key in keyof typeof initialFormElements]: FormElementState;
+// };
 
 
 interface FormElementState {
@@ -441,7 +441,7 @@ export interface AccTransactionFormState {
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
-  formElements: FormElementsState,
+  // formElements: FormElementsState,
   userConfig: AccUserConfig;
 }
 export const accTransactionFormStateInitialData: AccTransactionFormState = {
@@ -488,5 +488,5 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   total: 0,
   previousNarration: [],
   isRowEdit: false,
-  formElements: initialFormElements
+  // formElements: initialFormElements
 }

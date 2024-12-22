@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { FC, Fragment, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
@@ -72,6 +72,7 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , contentProps})
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "debit",

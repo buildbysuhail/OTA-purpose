@@ -185,7 +185,6 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
 
       try {
-        debugger;
         const result = method === ActionType.GET
           ? await api.get(dataUrl, queryString)
           : method === ActionType.POST
@@ -204,7 +203,6 @@ const createStore = async (
             groupCount: 0,
           };
       } catch (err) {
-        debugger;
         console.error("Load failed:", err);
         return {
           data: [],
@@ -403,7 +401,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         setStore(null);
         return;
       }
-      debugger
       if (filterShowCount === 0 && enablefilter && showFilterInitially) {
         setShowFilter(true);
         return;
@@ -441,7 +438,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       }
     };
     fetchStore();
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData, isPdfMode]);
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload,  isPdfMode]);
   const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
   const memoizedStore = useMemo(() => store, [store]);
 
@@ -574,7 +571,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   );
   
   const handleCellClick = useCallback((event: any) => {
-    debugger;
     const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic(event.column?.dataField) : childPopupProps;
     
     // Check if the clicked cell's field matches dynamicProps.drillDownCells
@@ -586,34 +582,46 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       const updatedBodyProps: { [key: string]: any } = {};
   
       // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-      dynamicProps?.bodyProps?.split(',').forEach((prop: string) => {
+      dynamicProps?.bodyProps != undefined ? dynamicProps?.bodyProps?.split(',').forEach((prop: string) => {
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-      });
+      }): {};
   
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      dynamicProps?.bodyProps && setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell});
+      setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell});
+      // const sd = 223;
     }
   }, []);
   
-  const onCellPrepared = useCallback((e: any) => {
-    const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
-  
-    const _drillDownCells = dynamicProps?.drillDownCells.split(',');
-    const _drillDownCell = _drillDownCells.find((x: string) => x === e.column.dataField);
-  const val = e.row?.data?.[e.column.dataField];
-    if (e.rowType === 'data' &&  val != undefined &&
-        ((_drillDownCell !== undefined && dynamicProps?.enableFn == undefined) || 
-         (_drillDownCell !== undefined && dynamicProps?.enableFn != undefined && dynamicProps?.enableFn(e.row?.data)))) {
-      e.cellElement.innerHTML = `<a href="#" style="color: #1976d2; text-decoration: underline;">${e.row?.data?.[e.column.dataField]}</a>`;
-      e.cellElement.onclick = (event: any) => {
-        event.preventDefault();
-      };
-    }
-  }, []);
-  
+const onCellPrepared = useCallback((e: any) => {
+//   // Get dynamic properties
+//   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
+
+//   // Check if the column is drill-down enabled
+//   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
+//   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
+//   const val = e.row?.data?.[e.column.dataField];
+
+//   if (
+//     e.rowType === 'data' &&
+//     val !== undefined &&
+//     ((_drillDownCell && !dynamicProps?.enableFn) || 
+//     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
+//   ) {
+//     debugger;
+//     const dfd = e.cellElement.innerHTML;
+//     const isIn = (e.cellElement.innerHTML as string).includes('<span');
+//     if (e.cellElement && isIn == true) {
+//       e.cellElement.style.cursor = 'pointer';
+//       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
+      
+//     } else {
+//       console.error('Cell element not found');
+//     }
+//   }
+}, []);
   return (
     <Fragment>
       <div className={className}>
@@ -809,4 +817,24 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     </Fragment>
   );
 };
+const _DrillDownCellTemplate = ({ data }: { data: any }) => {
+  if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
+    return (
+      <a
+        href="#"
+        style={{ color: '#1976d2', textDecoration: 'underline' }}
+        onClick={(e) => {
+          e.preventDefault();
+          // Handle drill-down logic here
+        }}
+      >
+        {data.value}
+      </a>
+    );
+  }
+
+  return <span>{data.value}</span>;
+};
+const DrillDownCellTemplate = React.memo(_DrillDownCellTemplate);
 export default React.memo(ERPDevGrid);
+export { DrillDownCellTemplate };

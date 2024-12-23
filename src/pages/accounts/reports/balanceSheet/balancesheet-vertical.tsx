@@ -234,23 +234,31 @@ const BalancesheetVertical = () => {
                   //     setIsOpenDetails({ isOpen: false, key: 0 });
                   //   }}
                   //   content={
-                  //     <BalancesheetDetails
-                  //       postData={{
-                  //         accGroupID: isOpenDetails.key,
-                  //         asOnDate: filter.asOnDate,
-                  //       }}
-                  //       groupName={isOpenDetails.groupName}
-                  //     />
+                      // <BalancesheetDetails
+                      //   postData={{
+                      //     accGroupID: isOpenDetails.key,
+                      //     asOnDate: filter.asOnDate,
+                      //   }}
+                      //   groupName={isOpenDetails.groupName}
+                      // />
                   //   }
                   // />:
 
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title: `Dynamic Popup for ${dataField}`,
+                    title:dataField=="accGroupID"? `balance_detailed`:`monthwise_balance`,
                     width: "700px",
                     isForm: false,
-                    content: <div>Details for </div>,
+                    content:dataField=="accGroupID"?  <BalancesheetDetails
+                    postData={{
+                      // accGroupID: isOpenDetails.key,
+                      asOnDate: filter.asOnDate,
+                    }}
+                    groupName={isOpenDetails.groupName}
+                  /> :<CashBookMonthWise postData={
+                    {asOnDate: filter.asOnDate
+                    }}/>,
                     drillDownCells: "accGroupID,ledgerID",
-                    bodyProps: "accGroupID",
+                    bodyProps: "ledgerID,accGroupID",
                     // enableFn: () => data?.status === "active", // Corrected to match expected type
                   })}
                  

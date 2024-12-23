@@ -1832,7 +1832,7 @@ const resetInputBox = async ()=>{
                           </div>
                         )}
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 switcher-style">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div className="flex items-center ">
                             <label
                               htmlFor="borderColor"
@@ -1981,15 +1981,14 @@ const resetInputBox = async ()=>{
                               </div>
                             </div>
                           </div>
-                        
-                        </div>
-                        <div className="flex items-center justify-start px-[1.563rem]">
+
+                          <div className="flex items-center ">
                             <label
                               htmlFor="selectColor"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
                             >
                               {" "}
-                             Active Select Box Color
+                             Active Select Box
                             </label>
                             <div className="ti-form-radio">
                               <div
@@ -2020,6 +2019,85 @@ const resetInputBox = async ()=>{
                               </div>
                             </div>
                           </div>
+
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="selectColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                             Foucs Baground
+                            </label>
+                            <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.selectColor ??
+                                    "128, 128, 128"
+                                  })`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.selectColor}
+                                  onChange={(e) => {
+                                    
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "selectColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="selectColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                             Active Select Box
+                            </label>
+                            <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.selectColor ??
+                                    "128, 128, 128"
+                                  })`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.selectColor}
+                                  onChange={(e) => {
+                                    
+                                    const rgb = hexToRgb(e.target?.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "selectColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                   
                       
                       </div>
 

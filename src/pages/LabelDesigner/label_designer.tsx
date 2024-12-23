@@ -88,6 +88,7 @@ import { EditButton } from "./edit-button";
 import { QRCodeSVG } from "qrcode.react";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
 import { dir } from "i18next";
+import { useTranslation } from "react-i18next";
 
 
 interface SaveDialogProps {
@@ -310,7 +311,7 @@ export default function PDFBarcodeDesigner() {
   const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const pxToPoint = (px: number) => px * (72 / 96);
-
+ const { t } = useTranslation("labelDesigner");
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
@@ -1456,14 +1457,14 @@ export default function PDFBarcodeDesigner() {
       >
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center">
             <div className=" ">
               <ERPPreviousUrlButton size="37px" />
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <ERPButton
-              title="Clear"
+              title={t("clear")}
               onClick={() => {
                 setTemplateData((prev: TemplateState) => ({
                   ...prev,
@@ -1478,19 +1479,19 @@ export default function PDFBarcodeDesigner() {
             ></ERPButton>
             <ERPButton
               startIcon="ri-arrow-go-back-line"
-              title="undo"
+              title={t("undo")}
               onClick={() => undoChanges("undo")}
               variant="secondary"
             ></ERPButton>
             <ERPButton
               startIcon="ri-arrow-go-forward-line"
-              title="redo"
+              title={t("redo")}
               onClick={() => undoChanges("redo")}
               variant="secondary"
             ></ERPButton>
 
             <ERPButton
-              title="Save"
+              title={t("save")}
               onClick={manageSaveTemplate}
               variant="primary"
               loading={loading}

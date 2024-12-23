@@ -7,7 +7,7 @@ import applicationSettingsEn from "./locales/en/applicationSettings-En.json";
 import systemEn from "./locales/en/system-En.json";
 import integrationEn from "./locales/en/integration-En.json";
 import accountsReportEn from "./locales/en/accountsReport-En.json";
-
+import labelDesignerEn from "./locales/en/labelDesigner-En.json";
 declare module "i18next" {
   interface CustomTypeOptions {
     defaultNS: "main";
@@ -20,6 +20,7 @@ declare module "i18next" {
       system: typeof systemEn;
       integration: typeof integrationEn;
       accountsReport:typeof accountsReportEn;
+      labelDesigner:typeof labelDesignerEn;
     };
   }
 }

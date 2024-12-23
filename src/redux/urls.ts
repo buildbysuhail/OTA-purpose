@@ -91,6 +91,7 @@ const Urls = {
   getUserAppSetting: "/User/getUserAppSetting/",
   updateUserAppSetting: "/User/updateUserAppSetting",
 
+  
   // AccountSettings/Profile
   uploadUserImage: "/Subscription/Profile/UploadUserImage/",
   changeEmailRequest_profile: "/Subscription/Profile/ChangeEmailRequest/",

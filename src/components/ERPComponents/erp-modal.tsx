@@ -29,6 +29,7 @@ type ERPModalProps = {
   hasSubmit?: boolean;
   isForm?: boolean;
   isButton?: boolean;
+  isMaximize?: boolean;
   closeTitle?: string;
   className?: string;
   isFullHeight?: boolean;
@@ -53,6 +54,7 @@ const ERPModal = React.memo(
     onSubmit,
     isForm = false,
     isButton = true,
+    isMaximize = true,
     onSubmitModel,
     hasSubmit = true,
     closeButton = "LeftArrow",
@@ -187,17 +189,19 @@ const ERPModal = React.memo(
                         </div>
                       )}
                       <div className="flex items-center space-x-2">
-                        <button
-                          className="p-2 hover:bg-gray-200 rounded-full"
-                          onClick={() => setIsMaximized(!isMaximized)}
-                          aria-label={isMaximized ? "Restore" : "Maximize"}
-                        >
-                          {isMaximized ? (
-                            <Minimize2 size={18} />
-                          ) : (
-                            <Maximize2 size={18} />
-                          )}
-                        </button>
+                        {isMaximize ? (
+                          <button
+                            className="p-2 hover:bg-gray-200 rounded-full"
+                            onClick={() => setIsMaximized(!isMaximized)}
+                            aria-label={isMaximized ? "Restore" : "Maximize"}
+                          >
+                            {isMaximized ? (
+                              <Minimize2 size={18} />
+                            ) : (
+                              <Maximize2 size={18} />
+                            )}
+                          </button>
+                        ) : null}
                         <button
                           className="p-2 hover:bg-gray-200 rounded-full"
                           onClick={handleClose}

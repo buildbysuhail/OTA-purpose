@@ -35,6 +35,7 @@ export interface TableState {
 }
 
 export interface AppState {
+  direction: string;
   dir: "ltr" | "rtl";
   decimals: number;
   mode: "light" | "dark";

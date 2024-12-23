@@ -211,7 +211,7 @@ const Row = ({
           className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
             }`}
           onClick={(e) => { e.stopPropagation(); handleSelect(item) }}>
-          <div className="flex-shrink-0 w-5">
+          <div className="flex-shrink-0 w-5 pe-[23px]">
             {isSelected && (
               <CheckIcon
                 className={`${sizeClasses?.icons
@@ -238,9 +238,9 @@ const ComboboxList = React.forwardRef<
     onSelect: (item: Option) => void;
     activeIndex: number;
     customSize?: "sm" | "md" | "lg" | "customize";
-  }>
+  } & { appState: "rtl"|"ltr" }>
   ((props, ref) => {
-    const { items, selectedValue, onSelect, activeIndex, customSize } = props;
+    const { items, selectedValue, onSelect, activeIndex, customSize, appState } = props;
     const itemData = {
       items,
       selectedValue,
@@ -257,8 +257,11 @@ const ComboboxList = React.forwardRef<
         width="100%"
         ref={ref}
         itemData={itemData}
-        className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+        className={`scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400`}
+        style={{ direction: appState }}
+        >
         {Row}
+    
       </List>
     );
   });
@@ -932,6 +935,7 @@ export default function ERPDataCombobox({
                   </React.Fragment>
                 ),
               }}
+              appState={appState}
             />
           )}
           renderOption={(props, option) => (
@@ -1075,13 +1079,31 @@ export default function ERPDataCombobox({
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
             />
             <div
-              className={`absolute inset-y-0 right-0 flex items-center m-[2px] pr-1`}
+              className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
               style={{
-                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== ''
-                  ? `rgb(${appState?.inputBox?.selectColor})`
-                  : '#f9f9f9',
-                borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
-                borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
+                background:
+                  initial?.value !== undefined &&
+                  initial?.value !== null &&
+                  initial?.value !== ""
+                    ? `rgb(${appState?.inputBox?.selectColor})`
+                    : "#f9f9f9",
+                ...(document.documentElement.dir === "rtl"
+                  ? {
+                      borderTopLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                      borderBottomLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                    }
+                  : {
+                      borderTopRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                      borderBottomRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                    }),
               }}
             >
               {/* Dropdown button */}
@@ -1124,13 +1146,14 @@ export default function ERPDataCombobox({
                   </div>
                 ) : (
                   <ComboboxList
-                    ref={listRef}
-                    items={filteredItems}
-                    selectedValue={initial}
-                    onSelect={handleItemClick}
-                    activeIndex={activeIndex}
-                    customSize={_customSize}
-                  />
+                        ref={listRef}
+                        items={filteredItems}
+                        selectedValue={initial}
+                        onSelect={handleItemClick}
+                        activeIndex={activeIndex}
+                        customSize={_customSize} 
+                        appState={appState.dir}                  
+                 />
                 )}
               </div>,
               document.body // Render to body to escape parent constraints

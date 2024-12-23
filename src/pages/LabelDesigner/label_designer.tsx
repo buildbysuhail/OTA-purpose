@@ -86,7 +86,8 @@ import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategor
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { QRCodeSVG } from "qrcode.react";
-import QRCode from 'qrcode.react';
+import LanguageSwitcher from "../../components/common/header/language-switcher";
+import { dir } from "i18next";
 
 
 interface SaveDialogProps {
@@ -274,7 +275,7 @@ const fields = [
 ];
 
 const api = new APIClient();
-export default function ExtendedPDFBarcodeDesigner() {
+export default function PDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get(
@@ -300,6 +301,15 @@ export default function ExtendedPDFBarcodeDesigner() {
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [templateData, setTemplateData] = useState<TemplateState>(
+    initialBacodeTemplateState.data
+  );
+  const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
+  const [historyIndex, setHistoryIndex] = useState<number>(-1);
+  const pxToPoint = (px: number) => px * (72 / 96);
 
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
@@ -343,15 +353,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     setActiveTab(newValue);
   };
 
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [templateData, setTemplateData] = useState<TemplateState>(
-    initialBacodeTemplateState.data
-  );
-  const [historyData, setHistoryData] = useState<HistoryComponent[]>([]);
-  const [historyIndex, setHistoryIndex] = useState<number>(-1);
-  const pxToPoint = (px: number) => px * (72 / 96);
+
 
   let paperWidth, paperHeight;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
@@ -530,6 +532,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const handleComponentClick = (component: PlacedComponent) => {
     setSelectedComponent(component);
     setActiveTab("element");
+
   };
 
   const handleBarcodePropertyChange = (
@@ -1123,6 +1126,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={style}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
@@ -1158,6 +1162,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={style}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
@@ -1174,6 +1179,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={{
               ...style,
               border:
@@ -1281,6 +1287,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={{
               ...style,
               width: `${component.lineHeight}px`,
@@ -1316,6 +1323,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={{
               ...style,
               border:  selectedComponent?.id === component.id
@@ -1346,6 +1354,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={{
               ...style,
             height:"auto",width:"auto",
@@ -1376,6 +1385,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           return (
           <div
             key={component.id}
+            id={`component-${component.id}`}
             style={{
               ...style,
               width: `${component.areaProps?.width??500}pt`,
@@ -1399,7 +1409,8 @@ export default function ExtendedPDFBarcodeDesigner() {
 
   return (
     <div
-      className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden"
+    className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : "dir-rtl"}`}
+     
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -1409,18 +1420,18 @@ export default function ExtendedPDFBarcodeDesigner() {
         height={Infinity}
         minConstraints={[150, Infinity]}
         maxConstraints={[400, Infinity]}
-        resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
+        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e"]}
         handle={
           <div
             className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "rtl" : "ltr"
+              templateData.propertiesState?.language_prefer === "Arb" ? "rtl" : "ltr"
             }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
       >
-        <div className="bg-white border-r border-gray-200 p-4">
-          <div className="mb-4">
+        <div className=" border-r border-gray-200  p-4">
+          <div className=" bg-[] border-b border-dashed pb-2 mb-1 border-gray-600">
             <h2 className="text-sm font-semibold text-gray-700">Components</h2>
           </div>
           <div className="space-y-2">
@@ -1519,7 +1530,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               }
               minConstraints={[50, 50]}
               maxConstraints={[1400, 1000]}
-              resizeHandles={["se"]}
+              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handleContentLabelResize}
             >
@@ -1573,6 +1584,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   backgroundRepeat: "no-repeat",
                 }}
               >
+                 
                 {templateData?.barcodeState?.placedComponents?.map(
                   renderComponent
                 )}
@@ -1584,7 +1596,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               height={Number(templateData.propertiesState.height) || 300}
               minConstraints={[50, 50]}
               maxConstraints={[1400, 1000]}
-              resizeHandles={["se"]}
+              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handlePageResize}
             >
@@ -1600,7 +1612,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   height: "100%",
                 }}
               >
-               
+                
                 {templateData?.barcodeState?.placedComponents?.map(
                   renderComponent
                 )}
@@ -1618,7 +1630,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                 width: "100%",
                 height: "100%",
               }}
-            >
+            > 
+              
               {templateData?.barcodeState?.placedComponents?.map(
                 renderComponent
               )}
@@ -1633,11 +1646,11 @@ export default function ExtendedPDFBarcodeDesigner() {
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
         maxConstraints={[400, Infinity]} // Maximum width
-        resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
+        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ?  "e" : "w"]}
         handle={
           <div
             className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "ltr" : "rtl"
+              templateData.propertiesState?.language_prefer === "Arb" ?  "ltr" : "rtl"
             }`}
           />
         }
@@ -1744,7 +1757,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             value={selectedComponent.content}
                             data={selectedComponent}
                             onChange={(e) =>
-                              handlePropertyChange("content", e.target?.value)
+                              handlePropertyChange("content", e.target.value)
                             }
                           />
                         )}
@@ -1759,7 +1772,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       value={Math.round(selectedComponent.x)}
                       data={selectedComponent}
                       onChange={(e) =>
-                        handlePropertyChange("x", parseInt(e.target?.value, 10))
+                        handlePropertyChange("x", parseInt(e.target.value, 10))
                       }
                     />
                   </Box>
@@ -1771,7 +1784,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       value={Math.round(selectedComponent.y)}
                       data={selectedComponent}
                       onChange={(e) =>
-                        handlePropertyChange("y", parseInt(e.target?.value, 10))
+                        handlePropertyChange("y", parseInt(e.target.value, 10))
                       }
                     />
                   </Box>
@@ -1818,7 +1831,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                     customStyle={{
                       position: "absolute",
                       top: `${100}px`,
-                      right: `${10}px`,
+                         // Conditionally set left or right based on language preference
+                      ...(templateData.propertiesState?.language_prefer === "Arb"
+                        ? { left: `${10}px` }
+                        : { right: `${10}px` }),
                       width: `${sidebarWidth - 40}px`,
                       height: "auto",
                       maxHeight: "80%",
@@ -1854,7 +1870,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           onChange={(e) =>
                             handlePropertyChange(
                               "rotate",
-                              e.target?.valueAsNumber
+                              e.target.valueAsNumber
                             )
                           }
                           min={0}
@@ -1872,7 +1888,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           onChange={(e) =>
                             handlePropertyChange(
                               "rotate",
-                              parseInt(e.target?.value, 10)
+                              parseInt(e.target.value, 10)
                             )
                           }
                         />
@@ -1886,7 +1902,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         <ERPSlider
                           label="QR Code Size"
                           value={selectedComponent.qrCodeProps?.size || 128}
-                          onChange={(e) => handleQRCodePropertyChange("size", e.target?.valueAsNumber)}
+                          onChange={(e) => handleQRCodePropertyChange("size", e.target.valueAsNumber)}
                           min={64}
                           max={512}
                         />
@@ -1918,7 +1934,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           type="color"
                           value={selectedComponent.qrCodeProps?.bgColor || "#FFFFFF"}
                           data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("bgColor", e.target?.value)}
+                          onChange={(e) => handleQRCodePropertyChange("bgColor", e.target.value)}
                         />
                       </Box>
                       <Box>
@@ -1928,7 +1944,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           type="color"
                           value={selectedComponent.qrCodeProps?.fgColor || "#000000"}
                           data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("fgColor", e.target?.value)}
+                          onChange={(e) => handleQRCodePropertyChange("fgColor", e.target.value)}
                         />
                       </Box>
                       <Box>
@@ -1939,7 +1955,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           data={selectedComponent.qrCodeProps}
                           onChange={(e) => handleQRCodePropertyChange("imageSettings", {
                             ...selectedComponent.qrCodeProps?.imageSettings,
-                            src: e.target?.value,
+                            src: e.target.value,
                           })}
                         />
                       </Box>
@@ -1951,7 +1967,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                               value={selectedComponent.qrCodeProps?.imageSettings?.width}
                               onChange={(e) => handleQRCodePropertyChange("imageSettings", {
                                 ...selectedComponent.qrCodeProps?.imageSettings,
-                                width: e.target?.valueAsNumber,
+                                width: e.target.valueAsNumber,
                               })}
                               min={10}
                               max={30}
@@ -1963,7 +1979,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                               value={selectedComponent.qrCodeProps?.imageSettings?.height || 24}
                               onChange={(e) => handleQRCodePropertyChange("imageSettings", {
                                 ...selectedComponent.qrCodeProps?.imageSettings,
-                                height: e.target?.valueAsNumber,
+                                height: e.target.valueAsNumber,
                               })}
                               min={10}
                               max={30}
@@ -1990,7 +2006,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           type="number"
                           value={selectedComponent.qrCodeProps?.marginSize || 0}
                           data={selectedComponent.qrCodeProps}
-                          onChange={(e) => handleQRCodePropertyChange("marginSize", parseInt(e.target?.value, 10))}
+                          onChange={(e) => handleQRCodePropertyChange("marginSize", parseInt(e.target.value, 10))}
                         />
                       </Box>
                     
@@ -2009,7 +2025,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           onChange={(e) =>
                             handlePropertyChange(
                               "lineHeight",
-                              e.target?.valueAsNumber
+                              e.target.valueAsNumber
                             )
                           }
                           min={10}
@@ -2026,7 +2042,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           onChange={(e) =>
                             handlePropertyChange(
                               "lineHeight",
-                              parseInt(e.target?.value, 10)
+                              parseInt(e.target.value, 10)
                             )
                           }
                         />
@@ -2046,7 +2062,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "width",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={10}
@@ -2063,7 +2079,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "width",
-                                parseInt(e.target?.value, 10)
+                                parseInt(e.target.value, 10)
                               )
                             }
                           />
@@ -2085,7 +2101,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "lineThickness",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={1}
@@ -2103,7 +2119,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "lineThickness",
-                                parseInt(e.target?.value, 10)
+                                parseInt(e.target.value, 10)
                               )
                             }
                           />
@@ -2139,7 +2155,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           value={selectedComponent?.lineColor}
                           data={selectedComponent}
                           onChange={(e) =>
-                            handlePropertyChange("lineColor", e.target?.value)
+                            handlePropertyChange("lineColor", e.target.value)
                           }
                         />
                       </Box>
@@ -2161,7 +2177,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "height",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={10}
@@ -2179,7 +2195,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "height",
-                                parseInt(e.target?.value, 10)
+                                parseInt(e.target.value, 10)
                               )
                             }
                           />
@@ -2201,7 +2217,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleAreaPropertyChange(
                                 "height",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={100}
@@ -2219,7 +2235,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleAreaPropertyChange(
                                 "height",
-                                parseInt(e.target?.value, 10)
+                                parseInt(e.target.value, 10)
                               )
                             }
                           />
@@ -2237,7 +2253,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleAreaPropertyChange(
                                 "width",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={100}
@@ -2255,7 +2271,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleAreaPropertyChange(
                                 "width",
-                                parseInt(e.target?.value, 10)
+                                parseInt(e.target.value, 10)
                               )
                             }
                           />
@@ -2271,7 +2287,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       onChange={(e) =>
                         handleAreaPropertyChange(
                           "bgColor",
-                          e.target?.value
+                          e.target.value
                         )
                       }
                     />
@@ -2373,7 +2389,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "fontSize",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={0}
@@ -2471,7 +2487,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "barWidth",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={1}
@@ -2486,7 +2502,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "margin",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={0}
@@ -2504,7 +2520,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "background",
-                                e.target?.value
+                                e.target.value
                               )
                             }
                           />
@@ -2520,7 +2536,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "lineColor",
-                                e.target?.value
+                                e.target.value
                               )
                             }
                           />
@@ -2696,7 +2712,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "fontSize",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={0}
@@ -2711,7 +2727,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             onChange={(e) =>
                               handleBarcodePropertyChange(
                                 "textMargin",
-                                e.target?.valueAsNumber
+                                e.target.valueAsNumber
                               )
                             }
                             min={-10}
@@ -2735,7 +2751,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     }
                     data={templateData}
                     onChange={(e) =>
-                      handleLabelPropsChange("columnsPerRow", e.target?.value)
+                      handleLabelPropsChange("columnsPerRow", e.target.value)
                     }
                   />
                 </Box>
@@ -2747,7 +2763,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.barcodeState?.labelState?.rowsPerPage}
                     data={templateData}
                     onChange={(e) => {
-                      handleLabelPropsChange("rowsPerPage", e.target?.value);
+                      handleLabelPropsChange("rowsPerPage", e.target.value);
                     }}
                   />
                 </Box>
@@ -2758,7 +2774,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.barcodeState?.labelState?.labelWidth}
                     data={templateData}
                     onChange={(e) => {
-                      handleLabelPropsChange("labelWidth", e.target?.value);
+                      handleLabelPropsChange("labelWidth", e.target.value);
                     }}
                   />
                 </Box>
@@ -2769,7 +2785,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.barcodeState?.labelState?.labelHeight}
                     data={templateData}
                     onChange={(e) =>
-                      handleLabelPropsChange("labelHeight", e.target?.value)
+                      handleLabelPropsChange("labelHeight", e.target.value)
                     }
                   />
                 </Box>
@@ -2915,7 +2931,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) =>
                           handleLabelPropsChange("padding", {
                             ...templateData?.barcodeState?.labelState?.padding,
-                            [side]: parseInt(e.target?.value),
+                            [side]: parseInt(e.target.value),
                           })
                         }
                       />
@@ -2958,7 +2974,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) =>
                           handleLabelPropsChange("gap", {
                             ...templateData?.barcodeState?.labelState?.gap,
-                            [side]: parseInt(e.target?.value),
+                            [side]: parseInt(e.target.value),
                           })
                         }
                       />
@@ -2977,7 +2993,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.propertiesState?.templateName}
                     data={templateData?.propertiesState}
                     onChange={(e) =>
-                      handlePagePropsChange("templateName", e.target?.value)
+                      handlePagePropsChange("templateName", e.target.value)
                     }
                   />
                 </Box>
@@ -3046,7 +3062,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) => {
                           handlePagePropsChange(
                             "width",
-                             String(parseInt(e.target?.value,10))
+                             String(parseInt(e.target.value,10))
                           );
                         }}
                       />
@@ -3059,7 +3075,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) =>
                           handlePagePropsChange(
                             "height",
-                             String(parseInt(e.target?.value,10))
+                             String(parseInt(e.target.value,10))
                           )
                         }
                       />
@@ -3103,14 +3119,38 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChange={(e) =>
                           handlePagePropsChange("padding", {
                             ...templateData?.propertiesState?.padding,
-                            [side]: parseInt(e.target?.value),
+                            [side]: parseInt(e.target.value),
                           })
                         }
                       />
                     ))}
                   </Box>
                 </Box>
-
+               
+                <Box sx={{ mb: 1 }}>
+                <ERPDataCombobox
+                      defaultValue={
+                        templateData?.propertiesState?.language_prefer ?? "Eng"
+                      }
+                      field={{
+                        id: "language_prefer",
+                        required: true,
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      data={templateData?.propertiesState}
+                      onChangeData={(data: any) => {
+                        handlePagePropsChange("language_prefer", data.language_prefer);
+                      }}
+                      id="language_prefer"
+                      options={[
+                        { value: "Eng", label: "English" },
+                        { value: "Arb", label: "Arabic" },
+                       
+                      ]}
+                      label="Language Prefer"
+                    />
+                </Box> 
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
                     id="printer"
@@ -3135,7 +3175,7 @@ export default function ExtendedPDFBarcodeDesigner() {
       </ResizableBox>
 
       {/* Save Dialog */}
-
+     
       {/* Preview Dialog */}
       <ERPModal
         title="Preview"

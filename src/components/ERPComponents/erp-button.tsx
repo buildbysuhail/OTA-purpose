@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { useEffect, useState, useRef, KeyboardEvent } from "react";
+import { useEffect, useState, useRef, KeyboardEvent, forwardRef } from "react";
 import { handleNavigation } from "../../utilities/shortKeys";
 
 type StatusType = {
@@ -24,27 +24,31 @@ type ERPButtonProps = {
   jumpTo?: string;
   jumpTarget?: string;
   onEnterPress?: () => void;
-};
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const ERPButton = ({
-  title,
-  disabled,
-  loading,
-  startIcon,
-  onClick,
-  className = "",
-  customVariant,
-  variant = "secondary",
-  type = "button",
-  tabIndex,
-  status,
-  rounded = "md",
-  skip = false,
-  jumpTo,
-  jumpTarget,
-}: ERPButtonProps) => {
+const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
+  (
+    {
+      title,
+      disabled,
+      loading,
+      startIcon,
+      onClick,
+      className = "",
+      customVariant,
+      variant = "secondary",
+      type = "button",
+      tabIndex,
+      status,
+      rounded = "md",
+      skip = false,
+      jumpTo,
+      jumpTarget,
+      ...props
+    }
+  ) => {
   const [variantType, setVariantType] = useState<string>();
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  // const buttonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (variant === "status" && status) {
       setVariantType(status.color);
@@ -92,9 +96,12 @@ const ERPButton = ({
       </div>
     );
   };
+  const commonProps = {
+    ...props,
+  };
   return (
     <button
-      ref={buttonRef}
+      {...commonProps}
       tabIndex={tabIndex}
       type={type}
       disabled={disabled}
@@ -113,12 +120,13 @@ const ERPButton = ({
         font-medium 
         ${variantType} 
         ${variant === "status" ? "text-white" : ""} 
+        "focus:bg-red-500"
         ${className}`
         .trim()
         .replace(/\s+/g, " ")}>
       {getButtonContent()}
     </button>
   );
-};
+});
 
 export default ERPButton;

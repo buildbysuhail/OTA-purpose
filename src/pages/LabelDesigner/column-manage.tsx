@@ -12,6 +12,7 @@ import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { tableColumns } from "../InvoiceDesigner/Designer/interfaces";
 import ERPFormButtons from "../../components/ERPComponents/erp-form-buttons";
+import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 interface AddColumnsManageProps {
     onSubmit: (columnData: tableColumns) => void;
     onDelete?: () => void;
@@ -261,7 +262,15 @@ interface AddColumnsManageProps {
             handleFieldChange("bgColor", data.bgColor  )
         }
     />
-
+    <ERPCheckbox
+        id="isRepeat"
+        label="Repeat On Each Page"
+        data={ColumnData}
+        checked={ColumnData?.isRepeat ?? true}
+        onChangeData={(data) =>
+            handleFieldChange("isRepeat", data.isRepeat  )
+        }
+        />
       <ERPFormButtons
          onSubmit={handleSubmit}
          

@@ -78,8 +78,8 @@ const setLocaleInStorage = (locale: Locale) => {
     <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3" aria-labelledby="dropdown-flag">
       <div className="ti-dropdown-divider divide-y divide-gray-200 dark:divide-white/10">
         <div className="py-2 first:pt-0 last:pb-0">
-        {languagesData.map((language) => (
-          <div className="ti-dropdown-item !p-[0.65rem] ">
+        {languagesData.map((language,index) => (
+          <div key={index} className="ti-dropdown-item !p-[0.65rem] ">
             <a  onClick={() => handleLanguageSelect(language)} className="flex items-center cursor-pointer space-x-2 rtl:space-x-reverse w-full">
               <div className="h-[1.375rem] flex items-center w-[1.375rem] rounded-full">
                 <img src={language?.flag} alt="flag-img"

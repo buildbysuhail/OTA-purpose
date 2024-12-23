@@ -129,7 +129,7 @@ interface ERPDevGridProps {
     enableFilter?: boolean,
     enableFn?: (data: any) => boolean
   }
-  childPopupPropsDynamic?: (data: any) => {
+  childPopupPropsDynamic?: (data?: any) => {
     title: string,
     width: string,
     isForm: boolean,
@@ -185,7 +185,6 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
 
       try {
-        debugger;
         const result = method === ActionType.GET
           ? await api.get(dataUrl, queryString)
           : method === ActionType.POST
@@ -204,7 +203,6 @@ const createStore = async (
             groupCount: 0,
           };
       } catch (err) {
-        debugger;
         console.error("Load failed:", err);
         return {
           data: [],
@@ -314,7 +312,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     drillDownCells: '',
     bodyProps: '',
     enableFilter: false,
-  }
+  },
+  childPopupPropsDynamic
 }) => {
   const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
@@ -332,7 +331,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
   const [filter, setFilter] = useState<any>({});
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any }>({ isOpen: false, props: {} });
+  const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any, key?: string }>({ isOpen: false, props: {}, key:"" });
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
@@ -439,7 +438,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       }
     };
     fetchStore();
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData, isPdfMode]);
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload,  isPdfMode]);
   const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
   const memoizedStore = useMemo(() => store, [store]);
 
@@ -553,7 +552,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const workbook = new Workbook();
         const worksheet = workbook.addWorksheet(gridHeader);
 
-        exportDataGridToExcel({
+        exportDataGridToExcel({ 
           component: e.component,
           worksheet,
           autoFilterEnabled: true,
@@ -572,34 +571,57 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   );
   
   const handleCellClick = useCallback((event: any) => {
-    // Check if the clicked cell's field matches childPopupProps.drillDownCells
-    const _drillDownCells = childPopupProps?.drillDownCells.split(',')
-    const _drillDownCell = _drillDownCells.find((x: string) => x == event.column?.dataField)
-    if ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(event.data))) {
+    const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic(event.column?.dataField) : childPopupProps;
+    
+    // Check if the clicked cell's field matches dynamicProps.drillDownCells
+    const _drillDownCells = dynamicProps?.drillDownCells.split(',');
+    const _drillDownCell = _drillDownCells.find((x: string) => x === event.column?.dataField);
+  
+    if ((_drillDownCell !== undefined && dynamicProps?.enableFn == undefined) || 
+        (_drillDownCell !== undefined && dynamicProps?.enableFn != undefined && dynamicProps?.enableFn(event.data))) {
       const updatedBodyProps: { [key: string]: any } = {};
-      // Ensure childPopupProps.bodyProps is a string before splitting and iterating over it
-      childPopupProps?.bodyProps?.split(',').forEach((prop: string) => {
+  
+      // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
+      dynamicProps?.bodyProps != undefined ? dynamicProps?.bodyProps?.split(',').forEach((prop: string) => {
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-      });
-
+      }): {};
+  
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      childPopupProps?.bodyProps && setIsChildOpen({ isOpen: true, props: updatedBodyProps });
-    }
-  }, []);
-  const onCellPrepared = useCallback((e: any) => {
-    const _drillDownCells = childPopupProps?.drillDownCells.split(',')
-    const _drillDownCell = _drillDownCells.find((x: string) => x == e.column.dataField)
-    if (e.rowType == 'data' && ((_drillDownCell != undefined && childPopupProps?.enableFn == undefined) || (_drillDownCell != undefined && childPopupProps?.enableFn != undefined && childPopupProps?.enableFn(e.row?.data)))) {
-      e.cellElement.innerHTML = `<a href="#" style="color: #1976d2; text-decoration: underline;">${e.row?.data?.[e.column.dataField]}</a>`;
-      e.cellElement.onclick = (event: any) => {
-        event.preventDefault();
-      };
+      setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell});
+      // const sd = 223;
     }
   }, []);
   
+const onCellPrepared = useCallback((e: any) => {
+//   // Get dynamic properties
+//   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
+
+//   // Check if the column is drill-down enabled
+//   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
+//   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
+//   const val = e.row?.data?.[e.column.dataField];
+
+//   if (
+//     e.rowType === 'data' &&
+//     val !== undefined &&
+//     ((_drillDownCell && !dynamicProps?.enableFn) || 
+//     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
+//   ) {
+//     debugger;
+//     const dfd = e.cellElement.innerHTML;
+//     const isIn = (e.cellElement.innerHTML as string).includes('<span');
+//     if (e.cellElement && isIn == true) {
+//       e.cellElement.style.cursor = 'pointer';
+//       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
+      
+//     } else {
+//       console.error('Cell element not found');
+//     }
+//   }
+}, []);
   return (
     <Fragment>
       <div className={className}>
@@ -684,7 +706,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             {!hideDefaultExportButton && allowExport && (
               <Item name="exportButton" />
             )}
-            {enablefilter == true &&
+            
+            {enablefilter == true &&  
               <Item>
                 <ErpGridGlobalFilter
                   width={filterWidth}
@@ -698,7 +721,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                   onApplyFilters={(filters) => onApplyFilter(filters)}
                   onClose={onCloseFilter}
                 />
-              </Item>}
+              </Item>
+              }
             <Item>
               <GridPreferenceChooser
                 columns={columns}
@@ -771,18 +795,46 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           )}
         </DataGrid>
       </div>
-      {childPopupProps &&
-        <ERPModal
-          isOpen={isChildOpen.isOpen}
-          title={childPopupProps.title}
-          width={childPopupProps.width}
-          isForm={childPopupProps.isForm}
-          closeModal={() => { setIsChildOpen({ isOpen: false, props: {} }); }}
-          content={childPopupProps.content}
-          contentProps={isChildOpen.props}
-        />
-      }
+      {(childPopupProps || childPopupPropsDynamic) && (
+  <ERPModal
+    isOpen={isChildOpen.isOpen}
+    title={childPopupPropsDynamic 
+      ? childPopupPropsDynamic(isChildOpen.key).title 
+      : childPopupProps?.title}
+    width={childPopupPropsDynamic 
+      ? childPopupPropsDynamic(isChildOpen.key).width 
+      : childPopupProps?.width}
+    isForm={childPopupPropsDynamic 
+      ? childPopupPropsDynamic(isChildOpen.key).isForm 
+      : childPopupProps?.isForm}
+    closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
+    content={childPopupPropsDynamic 
+      ? childPopupPropsDynamic(isChildOpen.key).content 
+      : childPopupProps?.content}
+    contentProps={isChildOpen.props}
+  />
+)}
     </Fragment>
   );
 };
+const _DrillDownCellTemplate = ({ data }: { data: any }) => {
+  if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
+    return (
+      <a
+        href="#"
+        style={{ color: '#1976d2', textDecoration: 'underline' }}
+        onClick={(e) => {
+          e.preventDefault();
+          // Handle drill-down logic here
+        }}
+      >
+        {data.value}
+      </a>
+    );
+  }
+
+  return <span>{data.value}</span>;
+};
+const DrillDownCellTemplate = React.memo(_DrillDownCellTemplate);
 export default React.memo(ERPDevGrid);
+export { DrillDownCellTemplate };

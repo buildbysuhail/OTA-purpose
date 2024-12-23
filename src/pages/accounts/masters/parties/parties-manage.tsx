@@ -116,7 +116,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       };
       try {
         const res = await api.postAsync(Urls.acc_attachment_upload, payload);
-        handleFieldChange(key, res.item.fileData);
+        handleFieldChange(key, res.item.fileKey);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
@@ -124,44 +124,45 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       }
     };
 
-    const handleDownload = async (fileData: string) => {
-      
+    const handleDownload = async (fileData: number) => {
       ERPToast.show("Download started...", "success");
       try {
-        const parts = fileData.split("-");
-        let fileType = parts[parts.length - 1];
-        parts.pop();
-        const link = document.createElement("a");
-        if (fileType == "FileUrl") {
-          link.href = parts.join("-");
+        const url = `${Urls.acc_attachmentInfo_download}?fileKey=${encodeURIComponent(fileData)}`;
+    
+        const res = await api.getNativeAsync(url, undefined, {
+          responseType: "blob", // Ensure the response is treated as a binary blob
+        });
+        
+        if (res && res instanceof Blob) {
+          // Create a blob URL from the response data
+          const blobUrl = URL.createObjectURL(res);
+    
+          // Create a link element
+          const link = document.createElement("a");
+          link.href = blobUrl;
+    
+          // Set the file name
+          // If you have a way to get the file name from the server response, use that instead
+          const suggestedFileName = "downloaded_file";
+          link.setAttribute("download", suggestedFileName);
+    
+          // Append to the document, click, and remove
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+    
+          // Revoke the blob URL to free up resources
+          URL.revokeObjectURL(blobUrl);
+        } else {
+          throw new Error("Invalid response from server");
         }
-        else {
-          const url = `${Urls.acc_attachmentInfo_download
-            }?fileData=${encodeURIComponent(fileData)}`;
-
-          const res = await api.getNativeAsync(url, undefined, {
-            responseType: "blob", // Ensure the response is treated as a binary blob
-          });
-          
-          if (res) {
-            link.href = url;
-          }
-        }
-        // Fallback to the provided fileName or a default name
-        const suggestedFileName = parts.join("-") || "download";
-
-        link.setAttribute("download", suggestedFileName);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
+    
       } catch (error) {
         console.error("Error downloading file:", error);
         ERPToast.show("Download failed.", "error");
       } finally {
         setFileLoading(false);
-      }
-    };
+      }};
 
     return (
       <div className="w-full bordered-tab relative pb-16">
@@ -712,13 +713,13 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   <div className="flex gap-2 ">
                     <input
                       type="file"
-                      id="document1String"
-                      name="document1String"
+                      id="document1Key"
+                      name="document1Key"
                       onChange={(e) => {
                         const files = e.target.files;
                         if (files != undefined && files.length > 0) {
                           convertFileToBase64(files[0]).then((base64) => {
-                            handleFileUpload("document1String", base64);
+                            handleFileUpload("document1Key", base64);
                           });
                         }
                       }}
@@ -736,7 +737,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     )}
                   </div>
 
-                  {formState?.data?.document1String && (
+                  {formState?.data?.document1Key && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700">
                         Uploaded file:
@@ -744,7 +745,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       <a
                         href="#"
                         onClick={() =>
-                          handleDownload(formState?.data?.document1String)
+                          handleDownload(formState?.data?.document1Key)
                         }
                         download
                         className="text-blue-600 hover:text-blue-800 underline"
@@ -761,25 +762,28 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </label>
                   <input
                     type="file"
-                    id="document2String"
-                    name="document2String"
+                    id="document2Key"
+                    name="document2Key"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
                         convertFileToBase64(files[0]).then((base64) => {
-                          handleFileUpload("document2String", base64);
+                          handleFileUpload("document2Key", base64);
                         });
                       }
                     }}
                     className="border rounded-lg p-2"
                   />
-                  {formState?.data?.document2String && (
+                 {formState?.data?.document2Key && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700">
                         Uploaded file:
                       </span>
                       <a
-                        href={formState?.data?.document2String}
+                        href="#"
+                        onClick={() =>
+                          handleDownload(formState?.data?.document2Key)
+                        }
                         download
                         className="text-blue-600 hover:text-blue-800 underline"
                       >

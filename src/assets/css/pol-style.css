@@ -29,7 +29,11 @@
   padding-left: .5rem !important;
   padding-right: .5rem !important;
 } */
-
+.drill-down-link {
+  color: #1976d2; /* Link color */
+  text-decoration: underline; /* Underline for the link */
+  cursor: pointer; /* Pointer cursor for better UX */
+}
 .grid-preference-form input {
   max-height: 27px !important;
 }

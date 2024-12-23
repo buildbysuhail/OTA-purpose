@@ -8,14 +8,25 @@ import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import { useAppDispatch, useAppSelector, } from "../../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
-import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionMasterHandleFieldChange, } from "./reducer";
+import {
+  accFormStateHandleFieldChange,
+  accFormStateRowHandleFieldChange,
+  accFormStateTransactionDetailsRowAdd,
+  accFormStateTransactionMasterHandleFieldChange,
+} from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../helpers/api-client";
-import { ApplicationMainSettings, ApplicationMainSettingsInitialState, } from "../../settings/system/application-settings-types/application-settings-types-main";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "../../settings/system/application-settings-types/application-settings-types-main";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
@@ -56,10 +67,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   title,
   drCr,
   voucherNo,
-  transactionType
+  transactionType,
 }) => {
   const { t } = useTranslation();
-  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${voucherType}`);
+  const [gridCode, setGridCode] = useState<string>(
+    `grd_acc_transaction_${voucherType}`
+  );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -68,13 +81,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     undoEditMode,
     getNextVoucherNumber,
     loadAccTransVoucher,
-    clearControlForNew,
     formElements,
     setFormElements,
     setUserRight,
     enableControls,
     disableControls,
-    changeComboVisibility,
     ledgerCodeRef,
     validate,
   } = useAccTransaction(transactionType ?? "");
@@ -164,8 +175,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             formState.userConfig.presetCostenterId > 0
               ? formState.userConfig.presetCostenterId
               : userSession.dbIdValue == "SAMAPLASTICS"
-                ? 0
-                : null,
+              ? 0
+              : null,
         },
       })
     );
@@ -174,11 +185,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const fetchBillwise = async () => {
       if (formState.showbillwise && formState.row.ledgerId) {
         try {
-          const billwise = await api.getAsync(`${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerId}&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${formState.row.accTransactionDetailId ?? 0}`);
-          dispatch(accFormStateHandleFieldChange({ fields: { billwiseData: billwise } }));
-        } catch (error) {
-
-        }
+          const billwise = await api.getAsync(
+            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
+              formState.row.ledgerId
+            }&DrCr=${
+              formState.transaction.master.drCr
+            }&AccTransactionDetailID=${
+              formState.row.accTransactionDetailId ?? 0
+            }`
+          );
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: { billwiseData: billwise },
+            })
+          );
+        } catch (error) {}
       }
     };
 
@@ -210,7 +231,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               fields: {
                 masterAccountID:
                   userSession.counterwiseCashLedgerId > 0 &&
-                    applicationSettings.accountsSettings.allowSalesCounter
+                  applicationSettings.accountsSettings.allowSalesCounter
                     ? userSession.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings.defaultCashAcc,
               },
@@ -282,7 +303,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
     initializeFormElements();
     // loadAccTransVoucher();
-    setUserRight();
+    if(voucherNo != undefined && voucherNo > 0)
+    {setUserRight();}
+    
   }, []);
   useEffect(() => {
     if (!voucherType) return;
@@ -686,7 +709,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onChange={(e) =>
                         dispatch(
                           accFormStateHandleFieldChange({
-                            fields: { masterAccountID: e.target?.value },
+                            fields: { masterAccountID: e.value },
                           })
                         )
                       }
@@ -705,6 +728,36 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <span className="text-xs text-gray-500">
                         Bal: {formState.masterBalance || "0.00"}
                       </span>
+                    </div>
+                    <div className="flex flex-wrap gap-4">  
+                      {formElements.drCr.visible && (
+                        <ERPDataCombobox
+                          id="drCr"
+                          className="w-[70px]"
+                          label={formElements.drCr.label}
+                          value={formState.transaction.master.drCr}
+                          data={formState.transaction.master}
+                          onChange={(e) =>
+                            dispatch(
+                              accFormStateTransactionMasterHandleFieldChange({
+                                fields: { drCr: e.target?.value },
+                              })
+                            )
+                          }
+                          field={{
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: "Dr", label: "Debit" },
+                            { value: "Cr", label: "Credit" },
+                          ]}
+                          disabled={
+                            formElements.drCr?.disabled ||
+                            formElements.pnlMasters?.disabled
+                          }
+                        />
+                      )}
                     </div>
                   </div>
                 )}
@@ -753,18 +806,31 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formElements.currencyID.visible && (
                     <ERPDataCombobox
                       id="currencyID"
+                      data={formState.row}
                       label={formElements.currencyID.label}
+                      value={formState.transaction.master.currencyId}
                       field={{
                         valueKey: "id",
                         labelKey: "name",
                         getListUrl: Urls.data_currencies,
                       }}
-                      onChangeData={(e) =>
+                      onChange={(e) =>
+                      {
+                        debugger;
+                        dispatch(
+                          accFormStateTransactionMasterHandleFieldChange({
+                            fields: {
+                              currencyId: e.value,
+                            },
+                          }));
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { currencyId: e.value, currencyName: e.label },
+                            fields: {
+                              currencyName: e.label,
+                            },
                           })
                         )
+                      }
                       }
                       disabled={
                         formElements.currencyID?.disabled ||
@@ -776,6 +842,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formElements.exchangeRate.visible && (
                     <ERPInput
                       id="exchangeRate"
+                      min={0}
                       label={formElements.exchangeRate.label}
                       type="number"
                       value={formState.row.exchangeRate}
@@ -820,7 +887,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPDateInput
                     id="transactionDate"
                     label={formElements.transactionDate.label}
-                    value={new Date(formState.transaction.master.transactionDate)}
+                    value={
+                      new Date(formState.transaction.master.transactionDate)
+                    }
                     onChange={(e) =>
                       dispatch(
                         accFormStateTransactionMasterHandleFieldChange({
@@ -926,13 +995,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       valueKey: "id",
                       labelKey: "name",
                       getListUrl: Urls.data_projects_by_ledgerid,
-                      params: `LedgerID=${formState.row.ledgerId}`
-
+                      params: `LedgerID=${formState.row.ledgerId}`,
                     }}
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { projectId: e.target?.value },
+                          fields: { projectId: e.value },
                         })
                       )
                     }
@@ -1109,7 +1177,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   type="button"
                   onClick={() => {
                     // validate()
-                    dispatch(accFormStateTransactionDetailsRowAdd(formState.row));
+                    dispatch(
+                      accFormStateTransactionDetailsRowAdd(formState.row)
+                    );
                   }}
                 />
               </div>
@@ -1117,36 +1187,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="text-red-600 font-bold text-sm">
               Amount in Words: {formState.amountInWords}
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            {formElements.drCr.visible && (
-              <ERPDataCombobox
-                id="drCr"
-                className="w-[70px]"
-                label={formElements.drCr.label}
-                value={formState.transaction.master.drCr}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { drCr: e.target?.value },
-                    })
-                  )
-                }
-                field={{
-                  valueKey: "value",
-                  labelKey: "label",
-                }}
-                options={[
-                  { value: "Dr", label: "Debit" },
-                  { value: "Cr", label: "Credit" },
-                ]}
-                disabled={
-                  formElements.drCr?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
           </div>
 
           {formElements.drCr.visible && (
@@ -1158,7 +1198,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               onChange={(e) =>
                 dispatch(
                   accFormStateRowHandleFieldChange({
-                    fields: { drCr: e.target?.value },
+                    fields: { drCr: e.value },
                   })
                 )
               }
@@ -1171,8 +1211,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 { value: "Cr", label: "Credit" },
               ]}
               disabled={
-                formElements.drCr?.disabled ||
-                formElements.pnlMasters?.disabled
+                formElements.drCr?.disabled || formElements.pnlMasters?.disabled
               }
             />
           )}
@@ -1212,7 +1251,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       params: {
                         ledgerID:
                           formState.row.ledgerId != undefined &&
-                            formState.row.ledgerId != null
+                          formState.row.ledgerId != null
                             ? formState.row.ledgerId
                             : 0,
                       },
@@ -1220,7 +1259,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { bankName: e.target?.value },
+                          fields: { bankName: e.value },
                         })
                       )
                     }
@@ -1249,7 +1288,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onChange={(e) =>
                   dispatch(
                     accFormStateRowHandleFieldChange({
-                      fields: { costCentreId: e.target?.value },
+                      fields: { costCentreId: e.value },
                     })
                   )
                 }
@@ -1269,10 +1308,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-          // summary={[
-          //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
-          //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
-          // ]}
+            // summary={[
+            //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
+            //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
+            // ]}
           />
           {formState.showSaveDialog && (
             <ERPAlert
@@ -1587,7 +1626,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                  // size={16}
+                    // size={16}
                   >
                     {" "}
                     Add Items{" "}
@@ -1618,18 +1657,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div> */}
 
               {/* ======= */}
-
             </div>
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title="Save & New"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title="Save"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />
@@ -1643,9 +1681,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         isOpen={formState.showbillwise ?? false}
         title="Billwise"
         closeModal={() => {
-          dispatch(accFormStateHandleFieldChange({ fields: { showbillwise: false } }));
+          dispatch(
+            accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+          );
         }}
-
         width="!w-[80rem] !max-w-[60rem]"
         content={<BillWisePopup />}
       />
@@ -1792,12 +1831,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         </span>
                       </div>
                       <div>
-                        <span className="text-sm  font-semibold">
-                          ₹
-                        </span>
-                        <span className="text-sm font-semibold">
-                          200.00
-                        </span>
+                        <span className="text-sm  font-semibold">₹</span>
+                        <span className="text-sm font-semibold">200.00</span>
                       </div>
                     </div>
                   </div>
@@ -1884,13 +1919,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
                   title="Save & New"
-                  onClick={() => { }}
+                  onClick={() => {}}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
                   title="Save"
-                  onClick={() => { }}
+                  onClick={() => {}}
                   variant="primary"
                   className="flex-1 !m-0 !rounded-none"
                 />
@@ -1899,7 +1934,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
         />
       </div>
-      <CustomerDetailsSidebar ></CustomerDetailsSidebar>
+      <CustomerDetailsSidebar></CustomerDetailsSidebar>
       <AttachmentSidebar></AttachmentSidebar>
       <ActivityLogSidebar></ActivityLogSidebar>
       <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
@@ -1910,7 +1945,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               label={formElements.printOnSave.label}
               checked={formState.printOnSave}
               onChange={(e) =>
-                dispatch(accFormStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))
+                dispatch(
+                  accFormStateHandleFieldChange({
+                    fields: { printOnSave: e.target.checked },
+                  })
+                )
               }
               disabled={
                 formElements.printOnSave?.disabled ||
@@ -1924,7 +1963,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               label={formElements.printPreview.label}
               checked={formState.printPreview}
               onChange={(e) =>
-                dispatch(accFormStateHandleFieldChange({ fields: { printPreview: e.target.checked }, }))
+                dispatch(
+                  accFormStateHandleFieldChange({
+                    fields: { printPreview: e.target.checked },
+                  })
+                )
               }
               disabled={
                 formElements.printPreview?.disabled ||
@@ -1939,7 +1982,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 label={formElements.printCheque.label}
                 checked={formState.printCheque}
                 onChange={(e) =>
-                  dispatch(accFormStateHandleFieldChange({ fields: { printCheque: e.target.checked }, }))
+                  dispatch(
+                    accFormStateHandleFieldChange({
+                      fields: { printCheque: e.target.checked },
+                    })
+                  )
                 }
                 disabled={
                   formElements.printCheque?.disabled ||
@@ -1953,7 +2000,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               label={formElements.keepNarration.label}
               checked={formState.keepNarration}
               onChange={(e) =>
-                dispatch(accFormStateHandleFieldChange({ fields: { keepNarration: e.target.checked }, }))
+                dispatch(
+                  accFormStateHandleFieldChange({
+                    fields: { keepNarration: e.target.checked },
+                  })
+                )
               }
               disabled={
                 formElements.keepNarration?.disabled ||
@@ -1970,7 +2021,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }}
             />
           )}
-          <button className="text-blue-600 hover:underline" onClick={() => { }}>
+          <button className="text-blue-600 hover:underline" onClick={() => {}}>
             {/* Handle attachments */}
             Attachments
           </button>

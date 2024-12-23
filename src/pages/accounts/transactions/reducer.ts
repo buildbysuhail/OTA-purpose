@@ -6,7 +6,6 @@ import {
   AccTransactionRow,
   AccTransactionMaster,
   AccTransactionRowInitialData,
-  FormElementsState,
   accTransactionInitialData,
 } from "./acc-transaction-types";
 import { useAccTransaction } from "./use-acc-transaction";
@@ -27,24 +26,6 @@ const accTransactionSlice = createSlice({
       action: PayloadAction<AccTransactionFormState>
     ) => {
       return action.payload;
-    },
-    setUserRightInReducer: (state, action: PayloadAction<{userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean }>) => {
-      const { userSession, hasRight } = action.payload;
-
-      const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
-
-      state.formElements.btnSave.visible = !isFinancialYearClosed && 
-        hasRight(state.formCode, UserAction.Add) && 
-        state?.transaction?.details?.length > 0;
-
-        state.formElements.btnEdit.visible = !isFinancialYearClosed && 
-        hasRight(state.formCode, UserAction.Edit);
-
-        state.formElements.btnDelete.visible = !isFinancialYearClosed && 
-        hasRight(state.formCode, UserAction.Delete);
-
-        state.formElements.btnPrint.visible = !isFinancialYearClosed && 
-        hasRight(state.formCode, UserAction.Print);
     },
     // clear entire for new voucher
     clearState: (state,
@@ -76,15 +57,6 @@ const accTransactionSlice = createSlice({
       state.printOnSave = true;
       state.transaction.master.isLocked = false;
 
-      state.formElements.pnlMasters.disabled = false;
-      state.formElements.dxGrid.disabled = false;
-
-      state.formElements.bankDate.disabled = true;
-      state.formElements.btnEdit.visible = false;
-      state.formElements.btnDelete.visible = false;
-      state.formElements.btnSave.disabled = true;
-      state.formElements.btnPrint.disabled = true;
-      state.formElements.amount.disabled = false;
 
       if (
         counterwiseCashLedgerId > 0 &&
@@ -95,12 +67,10 @@ const accTransactionSlice = createSlice({
           state.transaction.master.voucherType == "CR"
         ) {
           state.masterAccountID = counterwiseCashLedgerId;
-  
-          if (state.userConfig.counterAssignedCashLedgerId > 0) {
-            state.formElements.masterAccount.disabled = true;
-          }
         }
       }
+      state.transaction.master.employeeId = userSession.employeeId > 0 ? userSession.employeeId: 0
+      state.transaction.master.costCentreId = state.userConfig.presetCostenterId > 0 ? state.userConfig.presetCostenterId: 0
       // {
       //   if (userSession.presetCostCenterId > 0)
       //     cbEmployee.SelectedValue =
@@ -152,25 +122,7 @@ const accTransactionSlice = createSlice({
       (state.transaction[key] as typeof value) = value;
     },
 
-    accFormStateFormElementHandleFieldChange: (
-      state,
-      action: PayloadAction<{
-        fields: { [fieldId in keyof FormElementsState]?: any };
-      }>
-    ) => {
-      const { fields } = action.payload;
-
-      // Check if 'fields' is an object (multiple fields)
-      Object.keys(fields).forEach((key) => {
-        // Update the corresponding field in the state
-        const fieldValue = fields[key as keyof FormElementsState];
-        
-        // Convert Date fields to ISO strings
-        (state.formElements[
-          key as keyof FormElementsState
-        ] as typeof fieldValue) = fieldValue;
-      });
-    },
+   
     // Update a specific field in the master object within the transaction
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: "voucherPrefix", value: "INV123" }));
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: { voucherPrefix: "INV123", referenceNumber: "REF456" } }));
@@ -301,6 +253,7 @@ const accTransactionSlice = createSlice({
       const payload = action.payload;
 
       if (payload) {
+        state.row = { ...AccTransactionRowInitialData };
         // Handle master data
         state.transaction.master = {
           ...state.transaction.master, // Retain existing state
@@ -425,7 +378,6 @@ export const {
   accFormStateReset,
   accFormStateClearRowForNew,
   clearState,
-  setUserRightInReducer
 } = accTransactionSlice.actions;
 
 export default accTransactionSlice.reducer;

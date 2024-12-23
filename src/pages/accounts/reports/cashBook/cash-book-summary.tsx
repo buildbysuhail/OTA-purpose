@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
@@ -29,11 +29,12 @@ const CashBookSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {cellElement.data.ledgerName}
-  </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any) => {
+       return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
+        {cellElement.data.ledgerName}
+        </span>):
+         <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      }
     },
     {
       dataField: "debit",

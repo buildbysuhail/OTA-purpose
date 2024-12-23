@@ -24,7 +24,10 @@ import { loadAccVoucher } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
-import { AccTransactionMaster } from "./acc-transaction-types";
+import {
+  AccTransactionData,
+  AccTransactionMaster,
+} from "./acc-transaction-types";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -52,10 +55,9 @@ export const useAccTransaction = (transactionType: string) => {
     (state: RootState) => state.ClientSession
   );
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
-  const clearControlForNew = async () => {
-    undoEditMode();
-    dispatch(accFormStateClearRowForNew);
-  };
+  // const clearControlForNew = async () => {
+
+  // };
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
@@ -127,7 +129,8 @@ export const useAccTransaction = (transactionType: string) => {
   const [formElements, setFormElements] =
     useState<FormElementsState>(initialFormElements);
   const loadAccTransVoucher = async (usingManualInvNumber: boolean = false) => {
-    clearControlForNew();
+    // clearControlForNew();
+    undoEditMode();
     try {
       const params = {
         VoucherNumber: formState.transaction?.master?.voucherNumber,
@@ -141,6 +144,7 @@ export const useAccTransaction = (transactionType: string) => {
       await appDispatch(
         loadAccVoucher({ params: params, transactionType: transactionType })
       );
+      setUserRight();
     } catch (error) {
       return null;
     }
@@ -174,7 +178,7 @@ export const useAccTransaction = (transactionType: string) => {
         voucherType ? voucherType : "null"
       }&prefix=${prefix ? prefix : "null"}`
     );
-debugger;
+    debugger;
     const nextVoucherNumber = response || 1;
 
     return nextVoucherNumber;
@@ -240,35 +244,7 @@ debugger;
       },
     }));
   };
-  const changeComboVisibility = (visibility: boolean) => {
-    setFormElements((prev) => ({
-      ...prev,
-      employee: {
-        ...prev.employee,
-        disabled: visibility,
-      },
-      jvDrCr: {
-        ...prev.jvDrCr,
-        disabled: visibility,
-      },
-      masterAccount: {
-        ...prev.masterAccount,
-        disabled: visibility,
-      },
-      referenceDate: {
-        ...prev.referenceDate,
-        disabled: visibility,
-      },
-      transactionDate: {
-        ...prev.transactionDate,
-        disabled: visibility,
-      },
-      btnEdit: {
-        ...prev.btnEdit,
-        disabled: visibility,
-      },
-    }));
-  };
+
   const validate = (): boolean => {
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
@@ -389,35 +365,32 @@ debugger;
 
     return true;
   };
-  const attachMaster = (): AccTransactionMaster | undefined => {
-    try {
-      const master = { ...formState.transaction.master };
+  const attachMaster = (): AccTransactionMaster => {
+    const master = { ...formState.transaction.master };
 
-      master.accTransMasterID = formState.isEdit ? master.accTransMasterID : 0;
-      master.bankDate = new Date().toISOString();
-      master.checkBouncedDate = new Date().toISOString();
-      master.dueDate = master.transactionDate;
-      const totalAmount = formState.total || 0;
-      if (master.drCr === "Cr") {
-        master.totalCredit = totalAmount;
-        master.totalDebit = 0;
-      } else if (master.drCr === "Dr") {
-        master.totalDebit = totalAmount;
-        master.totalCredit = 0;
-      } else {
-        master.totalDebit = master.totalCredit = totalAmount;
-      }
-
-      if (master.voucherType === "JV" || master.voucherType === "MJV") {
-        master.totalDebit = master.totalCredit = totalAmount;
-      }
-      dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
-      return master;
-    } catch (error) {
-      console.error("Error saving transaction:", error);
-      return undefined;
+    master.accTransMasterID = formState.isEdit ? master.accTransMasterID : 0;
+    master.bankDate = new Date().toISOString();
+    master.checkBouncedDate = new Date().toISOString();
+    master.dueDate = master.transactionDate;
+    const totalAmount = formState.total || 0;
+    if (master.drCr === "Cr") {
+      master.totalCredit = totalAmount;
+      master.totalDebit = 0;
+    } else if (master.drCr === "Dr") {
+      master.totalDebit = totalAmount;
+      master.totalCredit = 0;
+    } else {
+      master.totalDebit = master.totalCredit = totalAmount;
     }
+
+    if (master.voucherType === "JV" || master.voucherType === "MJV") {
+      master.totalDebit = master.totalCredit = totalAmount;
+    }
+    dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+    return master;
   };
+  const PrintPaymentReceiptAdvice = (voucher: AccTransactionData) => {};
+  const PrintVoucher = (voucher: AccTransactionData) => {};
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -485,115 +458,170 @@ debugger;
   };
   const save = async () => {
     if (validate() == true) {
-      const params = {
+      const params: AccTransactionData = {
         master: attachMaster(),
         details: [...formState.transaction.details],
-        attachment: [...formState.transaction.attachments],
+        attachments: [...formState.transaction.attachments],
       };
       const saveRes = await api.postAsync(
         `Urls.acc_transaction_base${transactionType}`,
         params
       );
-      if(saveRes.isOk == true)
-      {
-
-      }
-      else{
-        // dcbn
+      if (saveRes.isOk == true) {
+        if (formState.printOnSave == true) {
+          if (
+            userSession.dbIdValue.trim() == "BAHAMDOON" &&
+            !formState.isBahamdoonPOSReceipt
+          ) {
+            PrintPaymentReceiptAdvice(params);
+          } else {
+            PrintVoucher(params);
+          }
+        }
+        if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
+          clearControls();
+        } else {
+          const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
+    
+          setFormElements((prev) => ({
+            ...prev,
+            pnlMasters: {
+              ...prev.pnlMasters,
+              disabled: false,
+            },
+            dxGrid: {
+              ...prev.dxGrid,
+              disabled: false,
+            },
+            btnSave: {
+              ...prev.btnSave,
+              disabled: true,
+            },
+            btnEdit: {
+              ...prev.btnEdit,
+              disabled: !isFinancialYearClosed && hasRight(formState.formCode, UserAction.Edit) ? false : true,
+            },
+            btnDelete: {
+              ...prev.btnDelete,
+              disabled: true,
+            },
+            btnPrint: {
+              ...prev.btnPrint,
+              disabled: true,
+            },
+          }));
+        }
+      } else {
+        ERPAlert.show({
+          icon: "warning",
+          title: saveRes.message,
+        });
       }
     }
   };
   const clearControls = async () => {
-    dispatch(clearState({
-      userSession, softwareDate, defaultCostCenterID: applicationSettings.accountsSettings.defaultCostCenterID,
-      counterwiseCashLedgerId: 0,
-      allowSalesCounter: 0
-    }));
-    setFormElements((prev) => ({
-      ...prev,
-      amount: {
-        ...prev.amount,
-        disabled: false,
-      },
-      btnSave: {
-        ...prev.btnSave,
-        disabled: false,
-      },
-      btnEdit: {
-        ...prev.btnEdit,
-        disabled: false,
-      },
-      btnDelete: {
-        ...prev.btnDelete,
-        disabled: false,
-      },
-      btnPrint: {
-        ...prev.btnPrint,
-        disabled: false,
-      },
-      lnkUnlockVoucher: {
-        ...prev.lnkUnlockVoucher,
-        visible: false,
-      },
-    }));
-   getNextVoucherNumber (
+    await undoEditMode();
+    dispatch(
+      clearState({
+        userSession,
+        softwareDate,
+        defaultCostCenterID:
+          applicationSettings.accountsSettings.defaultCostCenterID,
+        counterwiseCashLedgerId: 0,
+        allowSalesCounter: 0,
+      })
+    );
+    setFormElements((prev: any) => {
+      
+      const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
+      let updatedFormElements = {
+        ...prev,
+        amount: {
+          ...prev.amount,
+          disabled: false,
+        },
+        btnSave: {
+          ...prev.btnSave,
+          disabled: true,
+        },
+        btnEdit: {
+          ...prev.btnEdit,
+          disabled: !isFinancialYearClosed && hasRight(formState.formCode, UserAction.Edit) ? false : true,
+        },
+        btnDelete: {
+          ...prev.btnDelete,
+          disabled: true,
+        },
+        btnPrint: {
+          ...prev.btnPrint,
+          disabled: true,
+        },
+        lnkUnlockVoucher: {
+          ...prev.lnkUnlockVoucher,
+          visible: false,
+        },
+        pnlMasters: {
+          ...prev.pnlMasters,
+          disabled: false,
+        },
+        masterAccount: {
+          ...prev.masterAccount,
+          disabled:
+            userSession.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings?.allowSalesCounter &&
+            (formState.transaction.master.voucherType === "CP" ||
+              formState.transaction.master.voucherType === "CR") &&
+            userSession.counterAssignedCashLedgerId > 0
+              ? true
+              : prev.masterAccount.disabled,
+        },
+        costCentreId: {
+          ...prev.costCentreId,
+          disabled:
+            formState.userConfig.presetCostenterId > 0
+              ? formState.userConfig.presetCostenterId
+              : userSession.dbIdValue == "SAMAPLASTICS"
+              ? 0
+              : prev.costCentreId,
+        },
+        employee: {
+          ...prev.employee,
+          disabled: false,
+        },
+        jvDrCr: {
+          ...prev.jvDrCr,
+          disabled: false,
+        },
+        referenceDate: {
+          ...prev.referenceDate,
+          disabled: false,
+        },
+        transactionDate: {
+          ...prev.transactionDate,
+          disabled: false,
+        },
+      };
+
+      return updatedFormElements;
+    });
+    getNextVoucherNumber(
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
       formState.transaction.master.voucherPrefix
     );
-    enableControls();
     focusLedgerCode();
-
-    changeComboVisibility(true);
-    // if (
-    //   userSession.counterwiseCashLedgerId > 0 &&
-    //   applicationSettings.accountsSettings.allowSalesCounter
-    // ) {
-    //   if (
-    //     formState.transaction.master.voucherType == "CP" ||
-    //     formState.transaction.master.voucherType == "CR"
-    //   ) {
-    //     cbMasterAccount.SelectedValue =
-    //       PolosysFrameWork.General.COUNTERWISECASHLEDGERID;
-
-    //     if (PolosysFrameWork.General.COUNTERASSIGNEDCASHLEDGERID > 0) {
-    //       cbMasterAccount.Enabled = false;
-    //     }
-    //   }
-    // }
-    //else
-    //{
-    //    cbMasterAccount.SelectedValue = Settings.AccountsSettings.DefaultCashLedgerID;
-    //}
-    //   if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON")
-    // {
-    //   if (PolosysFrameWork.General.EMPLOYEEID > 0)
-    //     cbEmployee.SelectedValue =
-    //       PolosysFrameWork.General.EMPLOYEEID.ToString();
-    // }
-    // if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
-    //   cbCostCentre.SelectedValue =
-    //     PolosysFrameWork.General.PRESET_COSTCENTER_ID;
-    //   cbCostCentre.Enabled = false;
-    // } else {
-    //   if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
-    //     cbCostCentre.SelectedIndex = -1;
-    //     cbCostCentre.SelectedValue = 0;
-    //   }
-    // }
   };
+
 
   return {
     undoEditMode,
     getNextVoucherNumber,
     loadAccTransVoucher,
-    clearControlForNew,
     formElements,
     setFormElements,
     setUserRight,
     enableControls,
     disableControls,
-    changeComboVisibility,
     validate,
     setupBahamdoonPOSReceipts,
     save,

@@ -1,6 +1,8 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState, useRef, KeyboardEvent, forwardRef } from "react";
 import { handleNavigation } from "../../utilities/shortKeys";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
 
 type StatusType = {
   label: string;
@@ -47,70 +49,78 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       ...props
     }
   ) => {
-  const [variantType, setVariantType] = useState<string>();
-  // const buttonRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (variant === "status" && status) {
-      setVariantType(status.color);
-      return;
-    }
-    switch (variant) {
-      case "primary":
-        setVariantType("ti-btn-primary-full");
-        break;
-      case "custom":
-        setVariantType(customVariant || "");
-        break;
-      case "secondary":
-      default:
-        setVariantType("bg-slate-100 hover:bg-slate-200 text-black");
-        break;
-    }
-  }, [variant, customVariant, status]);
+    const [variantType, setVariantType] = useState<string>();
+    const [isFocused, setIsFocused] = useState(false);
 
-  const getRoundedClass = () => {
-    switch (rounded) {
-      case "full":
-        return "rounded-full";
-      case "md":
-        return "rounded-md";
-      case "none":
-        return "";
-      default:
-        return "rounded-md";
-    }
-  };
-  const getButtonContent = () => {
-    if (variant === "status" && status) {
-      return status.label;
-    }
+    const appState = useAppSelector((state: RootState) => state.AppState?.appState) || {};
+    // const buttonRef = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+      if (variant === "status" && status) {
+        setVariantType(status.color);
+        return;
+      }
+      switch (variant) {
+        case "primary":
+          setVariantType("ti-btn-primary-full");
+          break;
+        case "custom":
+          setVariantType(customVariant || "");
+          break;
+        case "secondary":
+        default:
+          setVariantType("bg-slate-100 hover:bg-slate-200 text-black");
+          break;
+      }
+    }, [variant, customVariant, status]);
+
+    const getRoundedClass = () => {
+      switch (rounded) {
+        case "full":
+          return "rounded-full";
+        case "md":
+          return "rounded-md";
+        case "none":
+          return "";
+        default:
+          return "rounded-md";
+      }
+    };
+    const getButtonContent = () => {
+      if (variant === "status" && status) {
+        return status.label;
+      }
+      return (
+        <div className="flex gap-2 items-center">
+          {typeof startIcon === "string" && <i className={startIcon}></i>}
+          {title}
+          {loading && (
+            <div className="flex items-center">
+              <CircularProgress className="" color="inherit" size={14} />
+            </div>
+          )}
+        </div>
+      );
+    };
+    const commonProps = {
+      ...props,
+    };
     return (
-      <div className="flex gap-2 items-center">
-        {typeof startIcon === "string" && <i className={startIcon}></i>}
-        {title}
-        {loading && (
-          <div className="flex items-center">
-            <CircularProgress className="" color="inherit" size={14} />
-          </div>
-        )}
-      </div>
-    );
-  };
-  const commonProps = {
-    ...props,
-  };
-  return (
-    <button
-      {...commonProps}
-      tabIndex={tabIndex}
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      onKeyDown={handleNavigation}
-      data-skip={skip}
-      data-jump-to={jumpTo}
-      data-jump-target={jumpTarget}
-      className={`
+      <button
+        {...commonProps}
+        tabIndex={tabIndex}
+        type={type}
+        disabled={disabled}
+        onClick={onClick}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onKeyDown={handleNavigation}
+        data-skip={skip}
+        data-jump-to={jumpTo}
+        data-jump-target={jumpTarget}
+        style={{
+          backgroundColor: isFocused ? appState?.inputBox?.focusBgColor : " ",
+        }}
+        className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 
         py-2 
         ${variant === "status" ? "px-8" : "px-4"} 
@@ -122,11 +132,11 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         ${variant === "status" ? "text-white" : ""} 
         "focus:bg-red-500"
         ${className}`
-        .trim()
-        .replace(/\s+/g, " ")}>
-      {getButtonContent()}
-    </button>
-  );
-});
+          .trim()
+          .replace(/\s+/g, " ")}>
+        {getButtonContent()}
+      </button>
+    );
+  });
 
 export default ERPButton;

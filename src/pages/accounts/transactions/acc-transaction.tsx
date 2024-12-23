@@ -8,25 +8,14 @@ import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
-import {
-  accFormStateHandleFieldChange,
-  accFormStateRowHandleFieldChange,
-  accFormStateTransactionDetailsRowAdd,
-  accFormStateTransactionMasterHandleFieldChange,
-} from "./reducer";
+import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../helpers/api-client";
-import {
-  ApplicationMainSettings,
-  ApplicationMainSettingsInitialState,
-} from "../../settings/system/application-settings-types/application-settings-types-main";
+import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "../../settings/system/application-settings-types/application-settings-types-main";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
@@ -71,14 +60,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionType,
 }) => {
   const { t } = useTranslation();
-  const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${voucherType}`
-  );
+  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${voucherType}`);
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const {
@@ -93,11 +79,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     validate,
     addOrEditRow
   } = useAccTransaction(transactionType ?? "", btnSaveRef, ledgerCodeRef);
-
   const { validateTransactionDate } = useTransaction(transactionType ?? "");
-  const applicationSettings = useAppSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [gridHeight, setGridHeight] = useState(200);
 
   useEffect(() => {
@@ -179,8 +162,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             formState.userConfig.presetCostenterId > 0
               ? formState.userConfig.presetCostenterId
               : userSession.dbIdValue == "SAMAPLASTICS"
-              ? 0
-              : null,
+                ? 0
+                : null,
         },
       })
     );
@@ -198,12 +181,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       try {
         if (formState.showbillwise && formState.row.ledgerId) {
           const billwise = await api.getAsync(
-            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-              formState.row.ledgerId
-            }&DrCr=${
-              formState.transaction.master.drCr
-            }&AccTransactionDetailID=${
-              formState.row.accTransactionDetailId ?? 0
+            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerId
+            }&DrCr=${formState.transaction.master.drCr
+            }&AccTransactionDetailID=${formState.row.accTransactionDetailId ?? 0
             }`
           );
           dispatch(
@@ -212,7 +192,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             })
           );
         }
-      } catch (error) {}
+      } catch (error) { }
     };
 
     loadLedgerData();
@@ -238,10 +218,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 (formState.isRowEdit && formElements.amount.disabled == false)
               ) {
                 const IsBillwiseTransAdjustmentExists = await api.getAsync(
-                  `${
-                    Urls.acc_transaction_is_bill_wise_trans_adjustment_exists
-                  }?LedgerId=${formState.row.ledgerId}&DrCr=${
-                    formState.transaction.master.drCr
+                  `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists
+                  }?LedgerId=${formState.row.ledgerId}&DrCr=${formState.transaction.master.drCr
                   }&AccTransactionDetailID=${0}`
                 );
                 dispatch(
@@ -270,7 +248,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             );
           }
         }
-      } catch (error) {}
+      } catch (error) { }
     };
 
     loadLedgerData();
@@ -301,7 +279,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               fields: {
                 masterAccountID:
                   userSession.counterwiseCashLedgerId > 0 &&
-                  applicationSettings.accountsSettings.allowSalesCounter
+                    applicationSettings.accountsSettings.allowSalesCounter
                     ? userSession.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings.defaultCashAcc,
               },
@@ -586,7 +564,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   ];
 
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
-
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
@@ -1243,6 +1220,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <ERPButton
                   title="Add"
                   variant="primary"
+                  jumpTo="save"
                   loading={formState.rowProcessing}
                   type="button"
                   onClick={addOrEditRow}
@@ -1320,7 +1298,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       params: {
                         ledgerID:
                           formState.row.ledgerId != undefined &&
-                          formState.row.ledgerId != null
+                            formState.row.ledgerId != null
                             ? formState.row.ledgerId
                             : 0,
                       },
@@ -1377,10 +1355,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-            // summary={[
-            //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
-            //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
-            // ]}
+          // summary={[
+          //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
+          //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
+          // ]}
           />
           {formState.showSaveDialog && (
             <ERPAlert
@@ -1695,7 +1673,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                    // size={16}
+                  // size={16}
                   >
                     {" "}
                     Add Items{" "}
@@ -1730,13 +1708,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title="Save & New"
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title="Save"
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />
@@ -1988,13 +1966,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
                   title="Save & New"
-                  onClick={() => {}}
+                  onClick={() => { }}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
                   title="Save"
-                  onClick={() => {}}
+                  onClick={() => { }}
                   variant="primary"
                   className="flex-1 !m-0 !rounded-none"
                 />
@@ -2090,7 +2068,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }}
             />
           )}
-          <button className="text-blue-600 hover:underline" onClick={() => {}}>
+          <button className="text-blue-600 hover:underline" onClick={() => { }}>
             {/* Handle attachments */}
             Attachments
           </button>
@@ -2098,8 +2076,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         Total: {formState.transaction.master.totalAmount}
         <div>
           <ERPButton
-          ref={btnSaveRef}
+            ref={btnSaveRef}
             title="save"
+            jumpTarget="save"
             variant="primary"
             onClick={addOrEditRow}
           />

@@ -1,68 +1,71 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppInitialState, AppState, Locale, TableState,inputBox } from './types';
+import { AppInitialState, AppState, Locale, TableState, inputBox } from './types';
 import { getAppState, uploadAppState } from './thunk';
 import usFlag from '../../../assets/images/flags/us_flag.png'
 
- export const appInitialState: AppState = {
-   dir: 'ltr',
-   decimals: 2,
-   mode: 'light',
-   class: "light",
-   dataMenuStyles: "dark",
-   dataNavLayout: "vertical",
-   dataHeaderStyles: "color",
-   dataVerticalStyle: "overlay",
-   toggled: "",
-   dataNavStyle: "",
-   horStyle: "",
-   dataPageStyle: "regular",
-   dataWidth: "fullwidth",
-   dataMenuPosition: "fixed",
-   dataHeaderPosition: "fixed",
-   loader: "disable",
-   iconOverlay: "",
-   colorPrimaryRgb: "",
-   colorPrimary: "",
-   bodyBg: "",
-   Light: "",
-   darkBg: "",
-   inputBorder: "",
-   bgImg: "",
-   iconText: "",
-   body: {
-     class: ""
-   },
-   scrollbarWidth: "sm",
-   scrollbarColor: '128, 128, 128',
-   inputBox: {
-     inputStyle: "normal",
-     inputSize: "sm",
-     checkButtonInputSize: "sm",
-     inputHeight: 2.0,
-     fontSize: 13,
-     fontWeight: 400,
-     labelFontSize: 13,
-     otherLabelFontSize: 13,
-     borderColor: '128, 128, 128',
-     selectColor:'128, 128, 128', 
-     fontColor: '128, 128, 128',
-     labelColor:'128, 128, 128',
-     borderFocus: '128, 128, 128',
-     borderRadius: 5,
-     adjustA: 0,
-     adjustB: 0,
-     adjustC: 0,
-     adjustD: 0,
-     marginTop: 0,
-     marginBottom: 0,
-   },
-   locale: { code: 'en', name: 'English', rtl: false, flag:usFlag },
- }
- export const initialState: AppInitialState = {
-   syncing: false,
-   appState: appInitialState,
-   softwareDate: ''
- };
+export const appInitialState: AppState = {
+  dir: 'ltr',
+  decimals: 2,
+  mode: 'light',
+  class: "light",
+  dataMenuStyles: "dark",
+  dataNavLayout: "vertical",
+  dataHeaderStyles: "color",
+  dataVerticalStyle: "overlay",
+  toggled: "",
+  dataNavStyle: "",
+  horStyle: "",
+  dataPageStyle: "regular",
+  dataWidth: "fullwidth",
+  dataMenuPosition: "fixed",
+  dataHeaderPosition: "fixed",
+  loader: "disable",
+  iconOverlay: "",
+  colorPrimaryRgb: "",
+  colorPrimary: "",
+  bodyBg: "",
+  Light: "",
+  darkBg: "",
+  inputBorder: "",
+  bgImg: "",
+  iconText: "",
+  body: {
+    class: ""
+  },
+  scrollbarWidth: "sm",
+  scrollbarColor: '128, 128, 128',
+  inputBox: {
+    inputStyle: "normal",
+    inputSize: "sm",
+    focusForeColor: "white",
+    focusBgColor: "gold",
+    defaultBgColor: "transparent",
+    checkButtonInputSize: "sm",
+    inputHeight: 2.0,
+    fontSize: 13,
+    fontWeight: 400,
+    labelFontSize: 13,
+    otherLabelFontSize: 13,
+    borderColor: '128, 128, 128',
+    selectColor: '128, 128, 128',
+    fontColor: '128, 128, 128',
+    labelColor: '128, 128, 128',
+    borderFocus: '128, 128, 128',
+    borderRadius: 5,
+    adjustA: 0,
+    adjustB: 0,
+    adjustC: 0,
+    adjustD: 0,
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  locale: { code: 'en', name: 'English', rtl: false, flag: usFlag },
+}
+export const initialState: AppInitialState = {
+  syncing: false,
+  appState: appInitialState,
+  softwareDate: ''
+};
 
 const appStateSlice = createSlice({
   name: 'appState',
@@ -83,10 +86,10 @@ const appStateSlice = createSlice({
       state.appState.dataHeaderStyles = action.payload;
       state.appState.darkBg = "";
       state.appState.bodyBg = "";
-      state.appState.dataMenuStyles = action.payload == "dark" ? "dark" :state.appState.dataNavLayout == 'horizontal' ? 'light' : "dark";
+      state.appState.dataMenuStyles = action.payload == "dark" ? "dark" : state.appState.dataNavLayout == 'horizontal' ? 'light' : "dark";
       state.appState.inputBorder = "";
-      state.appState.Light = "";      
-      
+      state.appState.Light = "";
+
     },
     setClass: (state, action: PayloadAction<string>) => {
       state.appState.class = action.payload;
@@ -159,7 +162,7 @@ const appStateSlice = createSlice({
     },
     setLocale: (state, action: PayloadAction<Locale>) => {
       state.appState.locale = action.payload;
-      
+
     },
     setScrollbarWidth: (state, action: PayloadAction<"sm" | "md" | "lg">) => {
       state.appState.scrollbarWidth = action.payload;

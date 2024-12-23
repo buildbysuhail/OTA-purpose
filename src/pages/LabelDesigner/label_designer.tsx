@@ -86,6 +86,8 @@ import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategor
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { QRCodeSVG } from "qrcode.react";
+import LanguageSwitcher from "../../components/common/header/language-switcher";
+import { dir } from "i18next";
 
 
 interface SaveDialogProps {
@@ -273,7 +275,7 @@ const fields = [
 ];
 
 const api = new APIClient();
-export default function ExtendedPDFBarcodeDesigner123() {
+export default function PDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get(
@@ -1407,7 +1409,8 @@ export default function ExtendedPDFBarcodeDesigner123() {
 
   return (
     <div
-      className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden"
+    className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : "dir-rtl"}`}
+     
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -1417,18 +1420,18 @@ export default function ExtendedPDFBarcodeDesigner123() {
         height={Infinity}
         minConstraints={[150, Infinity]}
         maxConstraints={[400, Infinity]}
-        resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
+        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e"]}
         handle={
           <div
             className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "rtl" : "ltr"
+              templateData.propertiesState?.language_prefer === "Arb" ? "rtl" : "ltr"
             }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
       >
-        <div className="bg-white border-r border-gray-200 p-4">
-          <div className="mb-4">
+        <div className=" border-r border-gray-200  p-4">
+          <div className=" bg-[] border-b border-dashed pb-2 mb-1 border-gray-600">
             <h2 className="text-sm font-semibold text-gray-700">Components</h2>
           </div>
           <div className="space-y-2">
@@ -1527,7 +1530,7 @@ export default function ExtendedPDFBarcodeDesigner123() {
               }
               minConstraints={[50, 50]}
               maxConstraints={[1400, 1000]}
-              resizeHandles={["se"]}
+              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handleContentLabelResize}
             >
@@ -1593,7 +1596,7 @@ export default function ExtendedPDFBarcodeDesigner123() {
               height={Number(templateData.propertiesState.height) || 300}
               minConstraints={[50, 50]}
               maxConstraints={[1400, 1000]}
-              resizeHandles={["se"]}
+              resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "sw" : "se"]}
               className="box"
               onResize={handlePageResize}
             >
@@ -1643,11 +1646,11 @@ export default function ExtendedPDFBarcodeDesigner123() {
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
         maxConstraints={[400, Infinity]} // Maximum width
-        resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
+        resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ?  "e" : "w"]}
         handle={
           <div
             className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "ltr" : "rtl"
+              templateData.propertiesState?.language_prefer === "Arb" ?  "ltr" : "rtl"
             }`}
           />
         }
@@ -1828,7 +1831,10 @@ export default function ExtendedPDFBarcodeDesigner123() {
                     customStyle={{
                       position: "absolute",
                       top: `${100}px`,
-                      right: `${10}px`,
+                         // Conditionally set left or right based on language preference
+                      ...(templateData.propertiesState?.language_prefer === "Arb"
+                        ? { left: `${10}px` }
+                        : { right: `${10}px` }),
                       width: `${sidebarWidth - 40}px`,
                       height: "auto",
                       maxHeight: "80%",
@@ -3120,7 +3126,31 @@ export default function ExtendedPDFBarcodeDesigner123() {
                     ))}
                   </Box>
                 </Box>
-
+               
+                <Box sx={{ mb: 1 }}>
+                <ERPDataCombobox
+                      defaultValue={
+                        templateData?.propertiesState?.language_prefer ?? "Eng"
+                      }
+                      field={{
+                        id: "language_prefer",
+                        required: true,
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      data={templateData?.propertiesState}
+                      onChangeData={(data: any) => {
+                        handlePagePropsChange("language_prefer", data.language_prefer);
+                      }}
+                      id="language_prefer"
+                      options={[
+                        { value: "Eng", label: "English" },
+                        { value: "Arb", label: "Arabic" },
+                       
+                      ]}
+                      label="Language Prefer"
+                    />
+                </Box> 
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
                     id="printer"

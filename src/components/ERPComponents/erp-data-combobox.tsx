@@ -1061,6 +1061,7 @@ export default function ERPDataCombobox({
                 outline: "none",
                 transition: "border-color 0.2s ease-in-out",
                 borderRadius: `${appState?.inputBox?.borderRadius}px`,
+                backgroundColor: isFocused ?  appState?.inputBox?.focusBgColor : appState?.inputBox?.defaultBgColor,
               }}
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}

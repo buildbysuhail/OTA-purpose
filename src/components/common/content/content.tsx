@@ -161,6 +161,7 @@ const WhatsappIntegration = lazy(
 const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
+const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 
 // Inventory Masters
 const ProductGroup = lazy(
@@ -279,7 +280,7 @@ const TransactionAnalysisReport = lazy(
     )
 );
 
-interface ContentProps {}
+interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
@@ -371,6 +372,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/test" element={<Test />} />
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
+        <Route path="/integration/test-input-button" element={<TestInputButton />} />
         {/* Integration End */}
 
         {/* Templates starts */}

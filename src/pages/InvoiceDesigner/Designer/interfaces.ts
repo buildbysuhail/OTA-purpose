@@ -150,7 +150,7 @@ export interface PropertiesState {
   template_type?: TemplateTypes;
   template_kind?: TemplateKindType;
   template_group?: TemplateGroupTypes;
-
+  language_prefer?:"Eng"|"Arb";
   templateName?: string;
   pageSize?: string;
   width?:string;

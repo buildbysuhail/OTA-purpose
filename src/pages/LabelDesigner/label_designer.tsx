@@ -86,6 +86,7 @@ import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategor
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { QRCodeSVG } from "qrcode.react";
+import LanguageSwitcher from "../../components/common/header/language-switcher";
 
 
 interface SaveDialogProps {
@@ -1407,7 +1408,7 @@ export default function ExtendedPDFBarcodeDesigner123() {
 
   return (
     <div
-      className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden"
+      className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden "
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -3120,7 +3121,31 @@ export default function ExtendedPDFBarcodeDesigner123() {
                     ))}
                   </Box>
                 </Box>
-
+               
+                <Box sx={{ mb: 1 }}>
+                <ERPDataCombobox
+                      defaultValue={
+                        templateData?.propertiesState?.language_prefer ?? "Eng"
+                      }
+                      field={{
+                        id: "language_prefer",
+                        required: true,
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      data={templateData?.propertiesState}
+                      onChangeData={(data: any) => {
+                        handlePagePropsChange("language_prefer", data.language_prefer);
+                      }}
+                      id="language_prefer"
+                      options={[
+                        { value: "Eng", label: "English" },
+                        { value: "Arb", label: "Arabic" },
+                       
+                      ]}
+                      label="Language Prefer"
+                    />
+                </Box> 
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
                     id="printer"

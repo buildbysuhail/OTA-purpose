@@ -4,37 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { updateTransactionEditMode } from "./acc-transaction-functions";
 import { useDispatch } from "react-redux";
-import {
-  accFormStateClearRowForNew,
-  accFormStateHandleFieldChange,
-  accFormStateRowHandleFieldChange,
-  accFormStateTransactionDetailsRowAdd,
-  accFormStateTransactionMasterHandleFieldChange,
-  accFormStateTransactionUpdate,
-  clearState,
-} from "./reducer";
+import { accFormStateClearRowForNew, accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionMasterHandleFieldChange, accFormStateTransactionUpdate, clearState } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { loadAccVoucher } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
-import {
-  AccTransactionData,
-  AccTransactionMaster,
-} from "./acc-transaction-types";
+import {  AccTransactionData,  AccTransactionMaster,} from "./acc-transaction-types";
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
-export interface AccUserConfig {
-  keepNarrationForJV: boolean;
-  clearDetailsAfterSaveAccounts: boolean;
-  mnuShowConfirmationForEditOnAccounts: boolean;
-}
+export interface AccUserConfig {  keepNarrationForJV: boolean;  clearDetailsAfterSaveAccounts: boolean;  mnuShowConfirmationForEditOnAccounts: boolean;}
 
 interface FormElementState {
   visible: boolean;
@@ -43,7 +25,7 @@ interface FormElementState {
 }
 
 const api = new APIClient();
-export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledgerCodeRef: any) => {
+export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledgerCodeRef: any) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -61,6 +43,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
   // };
   const focusBtnSave = () => {
     if (btnSaveRef.current) {
+      // btnSaveRef.current.style.backgroundColor = '#000'
       btnSaveRef.current.focus();
     }
   };
@@ -180,8 +163,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : "null"}&voucherType= ${
-        voucherType ? voucherType : "null"
+      `formType=${formType ? formType : "null"}&voucherType= ${voucherType ? voucherType : "null"
       }&prefix=${prefix ? prefix : "null"}`
     );
     debugger;
@@ -198,7 +180,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
           userSession.financialYearStatus == "Closed"
             ? false
             : hasRight(formState.formCode, UserAction.Add) &&
-              formState?.transaction?.details?.length > 0,
+            formState?.transaction?.details?.length > 0,
       },
       btnEdit: {
         ...prev.btnEdit,
@@ -262,11 +244,11 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
 
       const daysUntilExpiry = Math.floor(
         (demoExpiryDate.getTime() - transactionDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
       const daysSinceSoftwareDate = Math.floor(
         (transactionDate.getTime() - softwareDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
 
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
@@ -395,8 +377,8 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
-  const PrintPaymentReceiptAdvice = (voucher: AccTransactionData) => {};
-  const PrintVoucher = (voucher: AccTransactionData) => {};
+  const PrintPaymentReceiptAdvice = (voucher: AccTransactionData) => { };
+  const PrintVoucher = (voucher: AccTransactionData) => { };
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -426,7 +408,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
     } else if (master.voucherType === "CR") {
       const cashLedgerID =
         userSession.counterwiseCashLedgerId > 0 &&
-        applicationSettings.accountsSettings.allowSalesCounter
+          applicationSettings.accountsSettings.allowSalesCounter
           ? userSession.counterwiseCashLedgerId
           : applicationSettings.accountsSettings.defaultCashAcc;
 
@@ -508,7 +490,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
               ...prev.btnEdit,
               disabled:
                 !isFinancialYearClosed &&
-                hasRight(formState.formCode, UserAction.Edit)
+                  hasRight(formState.formCode, UserAction.Edit)
                   ? false
                   : true,
             },
@@ -559,7 +541,7 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
           ...prev.btnEdit,
           disabled:
             !isFinancialYearClosed &&
-            hasRight(formState.formCode, UserAction.Edit)
+              hasRight(formState.formCode, UserAction.Edit)
               ? false
               : true,
         },
@@ -583,10 +565,10 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
           ...prev.masterAccount,
           disabled:
             userSession.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter &&
-            (formState.transaction.master.voucherType === "CP" ||
-              formState.transaction.master.voucherType === "CR") &&
-            userSession.counterAssignedCashLedgerId > 0
+              applicationSettings.accountsSettings?.allowSalesCounter &&
+              (formState.transaction.master.voucherType === "CP" ||
+                formState.transaction.master.voucherType === "CR") &&
+              userSession.counterAssignedCashLedgerId > 0
               ? true
               : prev.masterAccount.disabled,
         },
@@ -596,8 +578,8 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
             formState.userConfig.presetCostenterId > 0
               ? formState.userConfig.presetCostenterId
               : userSession.dbIdValue == "SAMAPLASTICS"
-              ? 0
-              : prev.costCentreId,
+                ? 0
+                : prev.costCentreId,
         },
         employee: {
           ...prev.employee,
@@ -630,9 +612,9 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       debugger;
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
-        if(!formState.isRowEdit) {
-          if(formState.row.BillwiseDetails == "") {
-            if(formState.IsBillwiseTransAdjustmentExists) {
+        if (!formState.isRowEdit) {
+          if (formState.row.BillwiseDetails == "") {
+            if (formState.IsBillwiseTransAdjustmentExists) {
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
@@ -644,8 +626,8 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
             }
           }
         }
-        else{
-          if(formElements.amount.disabled == false && formState.IsBillwiseTransAdjustmentExists == true) {
+        else {
+          if (formElements.amount.disabled == false && formState.IsBillwiseTransAdjustmentExists == true) {
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -670,27 +652,26 @@ export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledg
       });
       return false;
     }
-    if(hasRight(formState.formCode, UserAction.Add)) {
+    if (hasRight(formState.formCode, UserAction.Add)) {
       setFormElements((prev) => ({
         ...prev,
         btnSave: {
           ...prev.btnSave,
           disabled: false
         }
-    }))
+      }))
     }
-    if(isNullOrUndefinedOrZero(formState.row.amount)  
-        && !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)) {
-          focusLedgerCode();
+    if (isNullOrUndefinedOrZero(formState.row.amount)
+      && !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)) {
+      focusBtnSave();
       return false;
     }
-    else
-    {
+    else {
       focusLedgerCode();
       return false;
     }
-    
-    if(formState.row.amount == 0  ) {
+
+    if (formState.row.amount == 0) {
       focusBtnSave();
       return false;
     }

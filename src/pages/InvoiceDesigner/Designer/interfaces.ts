@@ -848,6 +848,7 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       orientation:"portrait",
       height:'300',
       width:'300',
+      language_prefer:"Eng",
       padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
     },

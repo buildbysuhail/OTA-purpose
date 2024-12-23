@@ -171,6 +171,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/account_group_test`, type: 'link', active: false, selected: false, title: 'Account Group test' },
       { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 

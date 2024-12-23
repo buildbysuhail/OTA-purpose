@@ -406,7 +406,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
     const sizeStyles = getSizeStyles();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      
+
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
       if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
@@ -560,6 +560,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       }px`,
                     borderBottomRightRadius: `${!suffix ? appState?.inputBox?.borderRadius : 0
                       }px`,
+                    backgroundColor: isFocused ?  appState?.inputBox?.focusBgColor : appState?.inputBox?.defaultBgColor,
                     ...(!prefix &&
                       !suffix && {
                       borderRadius: `${appState?.inputBox?.borderRadius ?? 5

@@ -408,6 +408,11 @@ export interface AccTransactionFormState {
   isEntryControl: boolean; // IsEntryControl
   isEdit: boolean; // isEdit
   isRowEdit: boolean; // isRowEdit
+  IsBillwiseTransAdjustmentExists: boolean;
+  ledgerDataLoading: boolean;
+  ledgerBillWiseLoading: boolean;
+  ledgerData: any;
+  ledgerIsBillWiseAdjustExistLoading: boolean;
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
@@ -488,5 +493,15 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   total: 0,
   previousNarration: [],
   isRowEdit: false,
+  IsBillwiseTransAdjustmentExists: false
   // formElements: initialFormElements
+  ,
+
+
+
+
+  ledgerDataLoading: false,
+  ledgerBillWiseLoading: false,
+  ledgerIsBillWiseAdjustExistLoading: false,
+  ledgerData: undefined
 }

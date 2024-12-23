@@ -15,6 +15,7 @@ import {
   accFormStateClearRowForNew,
   accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
+  accFormStateTransactionDetailsRowAdd,
   accFormStateTransactionMasterHandleFieldChange,
   accFormStateTransactionUpdate,
   clearState,
@@ -28,6 +29,7 @@ import {
   AccTransactionData,
   AccTransactionMaster,
 } from "./acc-transaction-types";
+import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -41,7 +43,7 @@ interface FormElementState {
 }
 
 const api = new APIClient();
-export const useAccTransaction = (transactionType: string) => {
+export const useAccTransaction = (transactionType: string , btnSaveRef: any,ledgerCodeRef: any) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -54,10 +56,14 @@ export const useAccTransaction = (transactionType: string) => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
-  const ledgerCodeRef = useRef<HTMLInputElement>(null);
   // const clearControlForNew = async () => {
 
   // };
+  const focusBtnSave = () => {
+    if (btnSaveRef.current) {
+      btnSaveRef.current.focus();
+    }
+  };
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
@@ -481,8 +487,9 @@ export const useAccTransaction = (transactionType: string) => {
         if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
           clearControls();
         } else {
-          const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
-    
+          const isFinancialYearClosed =
+            userSession.financialYearStatus === "Closed";
+
           setFormElements((prev) => ({
             ...prev,
             pnlMasters: {
@@ -499,7 +506,11 @@ export const useAccTransaction = (transactionType: string) => {
             },
             btnEdit: {
               ...prev.btnEdit,
-              disabled: !isFinancialYearClosed && hasRight(formState.formCode, UserAction.Edit) ? false : true,
+              disabled:
+                !isFinancialYearClosed &&
+                hasRight(formState.formCode, UserAction.Edit)
+                  ? false
+                  : true,
             },
             btnDelete: {
               ...prev.btnDelete,
@@ -532,8 +543,8 @@ export const useAccTransaction = (transactionType: string) => {
       })
     );
     setFormElements((prev: any) => {
-      
-      const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
+      const isFinancialYearClosed =
+        userSession.financialYearStatus === "Closed";
       let updatedFormElements = {
         ...prev,
         amount: {
@@ -546,7 +557,11 @@ export const useAccTransaction = (transactionType: string) => {
         },
         btnEdit: {
           ...prev.btnEdit,
-          disabled: !isFinancialYearClosed && hasRight(formState.formCode, UserAction.Edit) ? false : true,
+          disabled:
+            !isFinancialYearClosed &&
+            hasRight(formState.formCode, UserAction.Edit)
+              ? false
+              : true,
         },
         btnDelete: {
           ...prev.btnDelete,
@@ -611,7 +626,82 @@ export const useAccTransaction = (transactionType: string) => {
     );
     focusLedgerCode();
   };
+  const addOrEditRow = async () => {
+    if (applicationSettings.accountsSettings?.billwiseMandatory) {
+      debugger;
+      if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
+        if(!formState.isRowEdit) {
+          if(formState.row.BillwiseDetails == "") {
+            if(formState.IsBillwiseTransAdjustmentExists) {
+              dispatch(
+                accFormStateHandleFieldChange({
+                  fields: {
+                    showbillwise: true
+                  },
+                })
+              );
+              return false;
+            }
+          }
+        }
+        else{
+          if(formElements.amount.disabled == false && formState.IsBillwiseTransAdjustmentExists == true) {
+            dispatch(
+              accFormStateHandleFieldChange({
+                fields: {
+                  showbillwise: true
+                },
+              })
+            );
+            return false;
+          }
+        }
+      } else {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Please select Ledger..!",
+        });
+      }
+    }
+    if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
+      ERPAlert.show({
+        icon: "warning",
+        title: "Please select Ledger..!",
+      });
+      return false;
+    }
+    if(hasRight(formState.formCode, UserAction.Add)) {
+      setFormElements((prev) => ({
+        ...prev,
+        btnSave: {
+          ...prev.btnSave,
+          disabled: false
+        }
+    }))
+    }
+    if(isNullOrUndefinedOrZero(formState.row.amount)  
+        && !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)) {
+          focusLedgerCode();
+      return false;
+    }
+    else
+    {
+      focusLedgerCode();
+      return false;
+    }
+    
+    if(formState.row.amount == 0  ) {
+      focusBtnSave();
+      return false;
+    }
 
+
+    // dispatch(
+    //   accFormStateHandleFieldChange({
+    //     fields: { showSaveDialog: true },
+    //   })
+    // )
+  };
 
   return {
     undoEditMode,
@@ -626,6 +716,6 @@ export const useAccTransaction = (transactionType: string) => {
     setupBahamdoonPOSReceipts,
     save,
     clearControls,
-    ledgerCodeRef,
+    addOrEditRow
   };
 };

@@ -285,6 +285,7 @@ inv_reports_stock_flow:"",
   
   acc_transaction_base: "/api/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
+  acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/IsBillwiseTransAdjustmentExists",
 
   // Accounts End
   //Grid Preference
@@ -324,6 +325,7 @@ inv_reports_stock_flow:"",
     get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
     upsert_bill_modified_history: "/Core/TransactionBase/UpsertBillModifiedHistory/",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
+    ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
 
 };

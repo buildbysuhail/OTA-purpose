@@ -35,11 +35,12 @@ const Urls = {
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
   data_cashLedger: "/Data/CashLedgers/",
+
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
-   data_acc_ledgers_Code: "/Accounts/Data/LedgerCode/",
+  data_acc_ledgers_Code: "/Accounts/Data/LedgerCode/",
   data_costcentres: "/Accounts/Data/CostCentres/",
   data_parties: "/Accounts/Data/Parties/",
   data_party_categories: "/Accounts/Data/PartyCategories/",
@@ -62,7 +63,7 @@ const Urls = {
   data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
   data_BranchRecPayAccount: "/Accounts/Data/BranchRecPayAccount/",
   data_CustSupp: "/Accounts/Data/CustomerAndSupplier/",
-
+  data_party_color:"",
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",
@@ -90,6 +91,7 @@ const Urls = {
   application_setting: "/Core/ApplicationSettings/",
   getUserAppSetting: "/User/getUserAppSetting/",
   updateUserAppSetting: "/User/updateUserAppSetting",
+
 
   // AccountSettings/Profile
   uploadUserImage: "/Subscription/Profile/UploadUserImage/",
@@ -285,7 +287,7 @@ inv_reports_stock_flow:"",
   
   acc_transaction_base: "/api/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
-  acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/IsBillwiseTransAdjustmentExists",
+  acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
 
   // Accounts End
   //Grid Preference

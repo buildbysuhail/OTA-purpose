@@ -818,6 +818,7 @@ const onCellPrepared = useCallback((e: any) => {
   );
 };
 const _DrillDownCellTemplate = ({ data }: { data: any }) => {
+  debugger;
   if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
     return (
       <a
@@ -828,7 +829,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
           // Handle drill-down logic here
         }}
       >
-        {data.value}
+        {data.value.toString()}
       </a>
     );
   }

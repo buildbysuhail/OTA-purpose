@@ -95,7 +95,7 @@ const CashBookSummary = () => {
                   columns={columns}
                   filterWidth="100"
                   gridHeader={t("day_book_summary")}
-                 dataUrl= {Urls.acc_reports_cash_book}
+                  dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   enablefilter={true}
@@ -118,25 +118,6 @@ const CashBookSummary = () => {
             </div>
           </div>
         </div>
-        {/* <ERPModal
-        isOpen={isOpenDetails.isOpen}
-        // title={t("bank_cards")}
-        title="Balance Sheet"
-        width="w-full max-w-[90%]"
-        isForm={true}
-        closeModal={() => {
-          setIsOpenDetails({ isOpen: false, key: 0 });
-        }}
-        content={
-          <CashBookMonthWise
-            postData={{
-              ledgerID: isOpenDetails.key,
-              asOnDate: filter.asOnDate,
-            }}
-            groupName={isOpenDetails.groupName}
-          />
-        }
-      /> */}
       </div>
     </Fragment>
   );

@@ -5,7 +5,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
@@ -72,12 +72,13 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.ledgerName}
-  </span>
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+         {cellElement.data.ledgerName}
+         </span>):
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+       }
+     },
     {
       dataField: "debit",
       caption: t('debit'),

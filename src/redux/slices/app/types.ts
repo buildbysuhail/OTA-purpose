@@ -12,7 +12,7 @@ export interface Locale {
 
 export const languagesData: Locale[] = [
   { code: 'en', name: 'English', flag: usFlag, rtl: false },
-  { code: 'ar', name: 'Arabic', flag: arFlag, rtl: true},
+  { code: 'ar', name: 'Arabic', flag: arFlag, rtl: true },
 ]
 export interface TableState {
   _items_items: Record<string, boolean>;
@@ -35,6 +35,7 @@ export interface TableState {
 }
 
 export interface AppState {
+  direction?: string;
   dir: "ltr" | "rtl";
   decimals: number;
   mode: "light" | "dark";
@@ -64,7 +65,7 @@ export interface AppState {
     class: string;
   };
   locale: Locale;
-  scrollbarWidth:  "sm"|"md"|"lg";
+  scrollbarWidth: "sm" | "md" | "lg";
   scrollbarColor: string;
   inputBox: inputBox;
 }
@@ -83,26 +84,29 @@ export const initialThemeData: Theme = {
   scrollbarWidth: "sm",
   scrollbarColor: '219,223,225',
   inputBox: {
-    inputStyle: "normal",  
-    inputSize:"sm", 
-    checkButtonInputSize:"sm",
-    inputHeight:2.0,    
-    fontSize: 13, 
-    fontWeight: 400, 
-    labelFontSize:13,
-    otherLabelFontSize:13,        
-    borderColor: '128, 128, 128', 
-    selectColor:'128, 128, 128', 
+    inputStyle: "normal",
+    inputSize: "sm",
+    checkButtonInputSize: "sm",
+    inputHeight: 2.0,
+    fontSize: 13,
+    fontWeight: 400,
+    labelFontSize: 13,
+    otherLabelFontSize: 13,
+    borderColor: '128, 128, 128',
+    selectColor: '128, 128, 128',
     borderFocus: '128, 128, 128',
-    fontColor:'128, 128, 128',
-    labelColor:'128, 128, 128',
-    borderRadius: 5, 
-    adjustA:0,
-    adjustB:0,
-    adjustC:0,
-    adjustD:0, 
-    marginTop:0,
-    marginBottom:0,    
+    fontColor: '128, 128, 128',
+    labelColor: '128, 128, 128',
+    borderRadius: 5,
+    adjustA: 0,
+    adjustB: 0,
+    adjustC: 0,
+    adjustD: 0,
+    marginTop: 0,
+    marginBottom: 0,
+    focusForeColor: "white",
+    focusBgColor: "gold",
+    defaultBgColor: "transparent",
   },
 };
 export interface Theme {
@@ -117,32 +121,35 @@ export interface Theme {
   menuPosition: string | null;
   headerPosition: string;
   colorPrimaryRgb: string;
-  scrollbarWidth:  "sm" | "md" | "lg" ;
+  scrollbarWidth: "sm" | "md" | "lg";
   scrollbarColor: string;
-  inputBox:inputBox;
+  inputBox: inputBox;
 
 }
-export interface inputBox{
-  inputStyle:  "normal"|"filled" | "outlined" | "standard";
-  inputSize:"sm"|"md"|"lg"|"customize",
-  checkButtonInputSize:  "sm" | "md" | "lg" ;
-  inputHeight:number,
-  fontSize:number;
-  fontWeight:number;
-  labelFontSize:number;
-  otherLabelFontSize:number;
+export interface inputBox {
+  inputStyle: "normal" | "filled" | "outlined" | "standard";
+  inputSize: "sm" | "md" | "lg" | "customize",
+  checkButtonInputSize: "sm" | "md" | "lg";
+  inputHeight: number,
+  fontSize: number;
+  fontWeight: number;
+  labelFontSize: number;
+  otherLabelFontSize: number;
   borderColor: string;
   selectColor: string;
-  fontColor:string;
-  labelColor:string;
+  fontColor: string;
+  labelColor: string;
   borderFocus: string;
-  borderRadius:number;
-  adjustA:number;
-  adjustB:number;
-  adjustC:number;
-  adjustD:number;
-  marginTop:number;
-  marginBottom:number;
+  borderRadius: number;
+  adjustA: number;
+  adjustB: number;
+  adjustC: number;
+  adjustD: number;
+  marginTop: number;
+  marginBottom: number;
+  focusForeColor: string,
+  focusBgColor: string,
+  defaultBgColor?: string;
 }
 export interface AppInitialState {
   syncing: boolean;

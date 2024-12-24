@@ -9,6 +9,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import { initialPartyCategory, PartyCategoryData, } from "./party-category-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 
 export const PartyCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -45,6 +46,21 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("remarks", data.remarks)
           }
+        />
+        <ERPDataCombobox
+          {...getFieldProps("partyColor")}
+          field={{
+            id: "partyColor",
+            required: true,
+            getListUrl: Urls.data_party_color,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("partyColor", data.partyColor);
+          }}
+        
+          label={t("party_color")}
         />
         <ERPCheckbox
           {...getFieldProps("isEdit")}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css"; // Ensure you include ResizableBox's styles
-// import "./erp-resizable-sidebar.css"; // Move styles specific to this component here
+import "./erp-resizable-sidebar.css"; 
 import { useAppState } from "../../utilities/hooks/useAppState";
 
 interface ERPResizableSidebarProps {
@@ -36,7 +36,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
           resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
           handle={<div className={`custom-handle ${ appState.appState.dir === "rtl" ? "ltr" : "rtl"}`} />}
           onResize={(e, { size }) => setSidebarWidth(size.width)}
-          className="resizable-sidebar  h-svh"
+          className="resizable-sidebar resizable-sidebar-custom  h-svh"
         >
           {children}
         </ResizableBox>

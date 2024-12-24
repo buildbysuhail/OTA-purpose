@@ -675,6 +675,7 @@ export const useAccTransaction = (
         });
       }
     }
+  }
     if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
       ERPAlert.show({
         icon: "warning",
@@ -741,7 +742,9 @@ export const useAccTransaction = (
     //     fields: { showSaveDialog: true },
     //   })
     // )
-  };
+ 
+       } };
+      }
 
   return {
     undoEditMode,

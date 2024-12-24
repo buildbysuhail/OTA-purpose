@@ -133,29 +133,23 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }, [appState?.inputBox?.inputSize]);
 
     const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
-    const [bgColor,setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.focusBgColor})` : `rgb(${appState?.inputBox?.defaultBgColor})`} `)
+    const [bgColor,setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
     useEffect(() => {
       let border, bgCol;
       if (appState?.mode === 'dark') {
-        if (isFocused || isHovered) {
-          border = '#ffffff';
-          bgCol = '#ffffff';
-        } else {
-          border = '#ffffff1a';
-          bgCol = '#ffffff1a';
-        }
+        border = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
+        bgCol = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
       } else {
-        if (isFocused || isHovered) {
-          border = `rgb(${appState?.inputBox?.borderFocus})`;
-          bgCol = `rgb(${appState?.inputBox?.focusBgColor})`;
-        } else {
-          border = `rgb(${appState?.inputBox?.borderColor})`;
-          bgCol = `rgb(${appState?.inputBox?.defaultBgColor})`;
-        }
+        border = isFocused || isHovered 
+          ? `rgb(${appState?.inputBox?.borderFocus})` 
+          : `rgb(${appState?.inputBox?.borderColor})`;
+        bgCol = isFocused || isHovered 
+          ? `rgb(${appState?.inputBox?.focusBgColor})` 
+          : ``;
       }
       setBorderStyles(border);
       setBgColor(bgCol);
-    }, [appState.mode, isFocused, isHovered, appState.inputBox?.borderColor, appState.inputBox?.borderFocus, appState.inputBox?.focusBgColor, appState.inputBox?.defaultBgColor])
+    }, [appState.mode, isFocused, isHovered, appState.inputBox?.borderColor, appState.inputBox?.borderFocus, appState.inputBox?.focusBgColor, appState.inputBox?.defaultBgColor]);
 
     useEffect(() => {
       if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
@@ -530,6 +524,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             )}
             <div className="flex-1">
               <input
+
+              
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
@@ -538,9 +534,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {
                   setIsFocused(true);
+                  onFocus && onFocus(e);
                 }}
                 onBlur={(e) => {
                   setIsFocused(false);
+                  onBlur && onBlur(e);
                 }}
                 style={
                   {
@@ -560,7 +558,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       }px`,
                     borderBottomRightRadius: `${!suffix ? appState?.inputBox?.borderRadius : 0
                       }px`,
-                    backgroundColor: bgColor,
+                    backgroundColor:bgColor,
                     ...(!prefix &&
                       !suffix && {
                       borderRadius: `${appState?.inputBox?.borderRadius ?? 5

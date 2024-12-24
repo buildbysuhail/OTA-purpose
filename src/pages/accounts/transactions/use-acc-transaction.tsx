@@ -31,10 +31,10 @@ const api = new APIClient();
 export const useAccTransaction = (
   transactionType: string,
   btnSaveRef: any,
-  ledgerCodeRef: any,
-  masterAccountRef: any,
-  costCenterRef: any,
-  amountRef: any
+  ledgerCodeRef?: any,
+  masterAccountRef?: any,
+  costCenterRef?: any,
+  amountRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();

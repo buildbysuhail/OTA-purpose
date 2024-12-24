@@ -18,7 +18,7 @@ interface ERPAlertProps {
   position?: 'center'|'center-end'|'center-start' | 'top' | 'top-start' | 'top-end' | 'bottom'   
   confirmButtonText?: string
   cancelButtonText?: string
-  onConfirm?: () => void
+  onConfirm?: (result?: any) => void
   onCancel?: () => void
 }
 

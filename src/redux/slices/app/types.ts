@@ -35,7 +35,7 @@ export interface TableState {
 }
 
 export interface AppState {
-  direction: string;
+  direction?: string;
   dir: "ltr" | "rtl";
   decimals: number;
   mode: "light" | "dark";
@@ -149,7 +149,7 @@ export interface inputBox {
   marginBottom: number;
   focusForeColor: string,
   focusBgColor: string,
-  defaultBgColor: string;
+  defaultBgColor?: string;
 }
 export interface AppInitialState {
   syncing: boolean;

@@ -165,6 +165,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       adjustD: 0,
       marginTop: 0,
       marginBottom: 0,
+      focusForeColor:  "128, 128, 128",
+      focusBgColor:  "128, 128, 128",
     },
   });
 
@@ -2022,7 +2024,7 @@ const resetInputBox = async ()=>{
 
                           <div className="flex items-center ">
                             <label
-                              htmlFor="selectColor"
+                              htmlFor="focusBgColor"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
                             >
                               {" "}
@@ -2033,7 +2035,7 @@ const resetInputBox = async ()=>{
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
                                   backgroundColor: `rgb(${
-                                    appState.inputBox?.selectColor ??
+                                    appState.inputBox?.focusBgColor ??
                                     "128, 128, 128"
                                   })`,
                                 }}
@@ -2041,13 +2043,13 @@ const resetInputBox = async ()=>{
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={appState.inputBox?.selectColor}
+                                  value={appState.inputBox?.focusBgColor}
                                   onChange={(e) => {
                                     
                                     const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
-                                        "selectColor",
+                                        "focusBgColor",
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }
@@ -2060,18 +2062,18 @@ const resetInputBox = async ()=>{
 
                           <div className="flex items-center ">
                             <label
-                              htmlFor="selectColor"
+                              htmlFor="focusForeColor"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
                             >
                               {" "}
-                             Active Select Box
+                              Focus Fore Color
                             </label>
                             <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
                                   backgroundColor: `rgb(${
-                                    appState.inputBox?.selectColor ??
+                                    appState.inputBox?.focusForeColor ??
                                     "128, 128, 128"
                                   })`,
                                 }}
@@ -2079,13 +2081,13 @@ const resetInputBox = async ()=>{
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={appState.inputBox?.selectColor}
+                                  value={appState.inputBox?.focusForeColor}
                                   onChange={(e) => {
                                     
                                     const rgb = hexToRgb(e.target?.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
-                                        "selectColor",
+                                        "focusForeColor",
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }

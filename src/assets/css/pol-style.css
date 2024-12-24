@@ -196,3 +196,15 @@
 .dx-scrollbar-vertical .dx-scrollable-scroll {
   width: 15px !important;
 }
+
+/* .css-p1olib-MuiAutocomplete-endAdornment{
+  left: 0 !important;
+} */
+ 
+:dir(ltr) .css-p1olib-MuiAutocomplete-endAdornment{
+  right: 0 !important;
+}
+:dir(rtl) .css-p1olib-MuiAutocomplete-endAdornment{
+  left: 0 !important;
+  right: auto !important;
+}

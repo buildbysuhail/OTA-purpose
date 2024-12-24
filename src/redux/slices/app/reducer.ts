@@ -37,9 +37,9 @@ export const appInitialState: AppState = {
   inputBox: {
     inputStyle: "normal",
     inputSize: "sm",
-    focusForeColor: "white",
-    focusBgColor: "gold",
-    defaultBgColor: "transparent",
+    focusForeColor: '128, 128, 128',
+    focusBgColor: '128, 128, 128',
+    defaultBgColor: '250, 250, 250',
     checkButtonInputSize: "sm",
     inputHeight: 2.0,
     fontSize: 13,

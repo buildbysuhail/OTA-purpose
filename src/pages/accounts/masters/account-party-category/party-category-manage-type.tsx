@@ -2,6 +2,7 @@ export interface PartyCategoryData {
     partyCategoryID: number;
     branchId: number;
     partyCategoryName: string;
+    partyColor:string;
     remarks: string;
     createdUserId: number;
     modifiedUserId: number;
@@ -15,6 +16,7 @@ export const initialPartyCategory = {
       partyCategoryID: 0,
       branchId: 0,
       partyCategoryName: '',
+      partyColor: '',
       remarks: '',
       createdUserId: 0,
       modifiedUserId: 0,
@@ -25,6 +27,7 @@ export const initialPartyCategory = {
       partyCategoryID: '',
       branchId: '',
       partyCategoryName: '',
+      partyColor: '',
       remarks: '',
       createdUserId: '',
       modifiedUserId: '',

@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../../redux/types";
@@ -84,12 +84,13 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.ledgerName}
-        </span>
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+         {cellElement.data.ledgerName}
+         </span>):
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+       }
+     },
   ];
   return (
     <Fragment>

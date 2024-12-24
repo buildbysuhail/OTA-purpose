@@ -4,7 +4,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
@@ -64,14 +64,15 @@ const TrialBalancePeriodwise = () => {
       dataField: "ledgerName",
       caption: t("account_name"),
       dataType: "string",
-      allowSearch: true,
+      allowSearch: true, 
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.ledgerName==="TOTAL"?'pl-4 font-bold text-red': ''}`}>
-  {cellElement.data.ledgerName}
-</span>
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return  cellElement.data.ledgerName==="TOTAL" ? (  <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.ledgerName==="TOTAL"?'pl-4 font-bold text-red': ''}`}>
+          {cellElement.data.ledgerName}
+        </span>):
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+       }
+     },
     {
       dataField: "openingDebit",
       caption: t("opening_debit"),

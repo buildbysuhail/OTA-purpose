@@ -4,7 +4,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
@@ -40,12 +40,19 @@ const OutstandingAccountPayableAgingReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {cellElement.data.ledgername}
-  </span>
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
+         {`${cellElement.data?.ledgername}`}
+         </span>):
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+       }
+     },
+  //     cellRender: (cellElement: any, cellInfo: any) => (
+  //       <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  // {cellElement.data.ledgername}
+  // </span>
+  //     ),
+  //   },
     // {
     //   dataField: "debit",
     //   caption: t('debit'),
@@ -196,7 +203,8 @@ const OutstandingAccountPayableAgingReport = () => {
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
-                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"
+                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,",
+                    enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
                 ></ErpDevGrid>
               </div>

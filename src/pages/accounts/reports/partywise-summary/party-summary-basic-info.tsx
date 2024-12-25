@@ -7,6 +7,9 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+import { CircularProgress, Tab, Tabs } from "@mui/material";
+import PartySummaryCollection from "./party-summary-collection";
+import PartySummaryLedger from "./party-summary-ledger";
 interface PartySummaryBasicInfo {
 
   from: Date
@@ -19,7 +22,7 @@ const PartySummaryBasicInfo = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummaryBasicInfo>({from: new Date()});
+  const [filter, setFilter] = useState<PartySummaryBasicInfo>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -39,7 +42,7 @@ const PartySummaryBasicInfo = () => {
     },
     {
       dataField: "displayName",
-      caption:  t("display_name"),
+      caption: t("display_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -109,8 +112,8 @@ const PartySummaryBasicInfo = () => {
       allowFiltering: true,
       width: 150,
     },
-  
-   
+
+
     {
       dataField: "faxNumber",
       caption: t("fax_number"),
@@ -199,7 +202,7 @@ const PartySummaryBasicInfo = () => {
       allowFiltering: true,
       width: 150,
     },
-   {
+    {
       dataField: "billwiseBillApplicable",
       caption: t("billwise_bill_applicable"),
       dataType: "boolean",
@@ -207,7 +210,7 @@ const PartySummaryBasicInfo = () => {
       allowFiltering: true,
       width: 150,
     },
- {
+    {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
@@ -216,6 +219,10 @@ const PartySummaryBasicInfo = () => {
       width: 150,
     },
   ];
+  const [activeTab, setActiveTab] = useState("address");
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -223,24 +230,33 @@ const PartySummaryBasicInfo = () => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("basic_info")}
-                  dataUrl= {Urls.acc_reports_party_summary_basic_info}
-                  method={ActionType.POST}
-                  gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
+                <Tabs value={activeTab} onChange={handleTabChange}>
+                  <Tab label="Address" value="address" />
+                  <Tab label="Bank" value="bank" />
+                  <Tab label="Details" value="details" />
+                  <Tab label="More" value="more" />
+                  {/* <Tab label="Project/Job" value="project_job" /> */}
+                  {/* {userSession.countryId != Countries.India &&
+                    applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
+                    true && <Tab label="Other" value="other_details" />} */}
+                </Tabs>
+                <div className="pt-4">
+                  {activeTab === "address" && (
+                    <PartySummaryCollection></PartySummaryCollection>
+
+                  )}
+                  {activeTab === "bank" && (
+                    <PartySummaryLedger></PartySummaryLedger>
+
+                  )}
+
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      
+        </div>
+
     </Fragment>
   );
 };

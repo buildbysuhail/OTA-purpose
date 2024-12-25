@@ -15,7 +15,10 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
 import {  AccTransactionData,  AccTransactionMaster,} from "./acc-transaction-types";
-import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
+import {
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../utilities/Utils";
 export interface AccUserConfig {  keepNarrationForJV: boolean;  clearDetailsAfterSaveAccounts: boolean;  mnuShowConfirmationForEditOnAccounts: boolean;}
 
 interface FormElementState {
@@ -25,7 +28,14 @@ interface FormElementState {
 }
 
 const api = new APIClient();
-export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledgerCodeRef: any) => {
+export const useAccTransaction = (
+  transactionType: string,
+  btnSaveRef: any,
+  ledgerCodeRef?: any,
+  masterAccountRef?: any,
+  costCenterRef?: any,
+  amountRef?: any
+) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -45,6 +55,21 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
     if (btnSaveRef.current) {
       // btnSaveRef.current.style.backgroundColor = '#000'
       btnSaveRef.current.focus();
+    }
+  };
+  const focusAmount = () => {
+    if (amountRef.current) {
+      amountRef.current.focus();
+    }
+  };
+  const focusMasterAccount = () => {
+    if (masterAccountRef.current) {
+      masterAccountRef.current.focus();
+    }
+  };
+  const focusCostCenterRef = () => {
+    if (costCenterRef.current) {
+      costCenterRef.current.focus();
     }
   };
   const focusLedgerCode = () => {
@@ -615,23 +640,28 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
         if (!formState.isRowEdit) {
           if (formState.row.BillwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
+        if (!formState.isRowEdit) {
+          if (formState.row.BillwiseDetails == "") {
+            if (formState.IsBillwiseTransAdjustmentExists) {
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
-                    showbillwise: true
+                    showbillwise: true,
                   },
                 })
               );
               return false;
             }
           }
-        }
-        else {
-          if (formElements.amount.disabled == false && formState.IsBillwiseTransAdjustmentExists == true) {
+        } else {
+          if (
+            formElements.amount.disabled == false &&
+            formState.IsBillwiseTransAdjustmentExists == true
+          ) {
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
-                  showbillwise: true
+                  showbillwise: true,
                 },
               })
             );
@@ -645,6 +675,7 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
         });
       }
     }
+  }
     if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
       ERPAlert.show({
         icon: "warning",
@@ -652,27 +683,56 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
       });
       return false;
     }
-    if (hasRight(formState.formCode, UserAction.Add)) {
-      setFormElements((prev) => ({
-        ...prev,
-        btnSave: {
-          ...prev.btnSave,
-          disabled: false
-        }
-      }))
-    }
-    if (isNullOrUndefinedOrZero(formState.row.amount)
-      && !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)) {
-      focusBtnSave();
-      return false;
-    }
-    else {
+    if (
+      isNullOrUndefinedOrZero(formState.row.amount) &&
+      !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
+    ) {
+      if (hasRight(formState.formCode, UserAction.Add)) {
+        setFormElements((prev) => ({
+          ...prev,
+          btnSave: {
+            ...prev.btnSave,
+            disabled: false,
+          },
+        }));
+      }
+      ERPAlert.show({
+        title: "Are you sure save now?",
+        icon: "warning",
+        confirmButtonText: "Yes, Save now!",
+        cancelButtonText: "Cancel",
+        onConfirm: (result: any) => {
+          if (result.isConfirmed) {
+            save();
+            return false;
+          }
+        },
+      });
       focusLedgerCode();
       return false;
     }
-
-    if (formState.row.amount == 0) {
-      focusBtnSave();
+    if (isNullOrUndefinedOrZero(formState.row.amount)) {
+      ERPAlert.show({
+        icon:"info",
+        title: "Please Enter the Amount..!"
+      })
+      focusAmount();
+      return false;
+    }
+    if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
+      ERPAlert.show({
+        icon:"info",
+        title: "Please select master account..!"
+      })
+      focusMasterAccount();
+      return false;
+    }
+    if (isNullOrUndefinedOrZero(formState.row.costCentreId) && formElements.costCentreId.visible == true) {
+      ERPAlert.show({
+        icon:"info",
+        title: "Please select a cost center..!"
+      })
+      focusCostCenterRef();
       return false;
     }
 
@@ -682,7 +742,9 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
     //     fields: { showSaveDialog: true },
     //   })
     // )
-  };
+ 
+       } };
+      }
 
   return {
     undoEditMode,
@@ -697,6 +759,6 @@ export const useAccTransaction = (transactionType: string, btnSaveRef: any, ledg
     setupBahamdoonPOSReceipts,
     save,
     clearControls,
-    addOrEditRow
+    addOrEditRow,
   };
 };

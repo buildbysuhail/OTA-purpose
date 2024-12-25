@@ -44,17 +44,37 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   );
 
   // Handle field value changes
+  // const handleFieldChange = useCallback(
+  //   (fields: { [fieldId: string]: any } | string, value?: any) => {
+      
+      
+  //     // Convert single field updates to multi-field format
+  //     const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: formState})
+  //     setFormState(updatedData);
+  //   },
+  //   [formState]
+  // );
   const handleFieldChange = useCallback(
-    (fields: { [fieldId: string]: any } | string, value?: any) => {
-      
-      
-      // Convert single field updates to multi-field format
-      const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: formState})
+    (
+      fields: { [fieldId: string]: any } | string,
+      value?: any
+    ) => {
+      // Normalize fields into an object for single or multiple field updates
+      const fieldsToUpdate =
+        typeof fields === "string" ? { [fields]: value } : fields;
+  
+      // Merge the updates into the current form state
+      const updatedData = {
+        ...formState,
+        ...fieldsToUpdate,
+      };
+  
+      // Update the state and trigger global change handler if needed
       setFormState(updatedData);
+      handleFieldChangeGlobal({ fields: fieldsToUpdate, formState });
     },
     [formState]
   );
-
   // Apply filters callback
   const handleApply = () => {
     if (onApplyFilters) onApplyFilters(formState??{});

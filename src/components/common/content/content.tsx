@@ -17,7 +17,7 @@ import DayBookDetailed from "../../../pages/accounts/reports/dayBook/day-book-de
 import DayBookSummary from "../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary";
 import PaymentReport from "../../../pages/accounts/reports/payment-report";
 import CollectionReport from "../../../pages/accounts/reports/collection-report";
-import TransactionReport from "../../../pages/accounts/reports/transaction-report";
+import TransactionReport from "../../../pages/accounts/reports/transactionReport/transaction-report";
 import AccountsHistoryReport from "../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
 import DailySummary from "../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary";
 import BillwiseProfit from "../../../pages/accounts/reports/billwise-profit/billwise-profit";

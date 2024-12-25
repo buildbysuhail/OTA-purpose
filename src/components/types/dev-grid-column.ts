@@ -10,7 +10,8 @@ export const initialGridPreference: GridPreference = {
     gridLine: "rgb(25,118,210,1)",
     backgroundColor: "rgb(25,118,210,1)",
     foreColor: "rgb(25,118,210,1)",
-    columnPreferences: []
+    columnPreferences: [],
+    // groupIndex:0
   };
 export interface DevGridColumn {
     dataField?: string;
@@ -28,6 +29,7 @@ export interface DevGridColumn {
     showInPdf?: boolean | false;
     allowEditing?: boolean;
     visible?: boolean;
+    groupIndex?:any;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
   }
@@ -44,7 +46,8 @@ export interface DevGridColumn {
     fontColor: "#000000",               // string: font color in hex
     fontSize: 12,   
     showInPdf: true,                    // number: font size
-    displayOrder: 1                  // number: the order in which the column appears
+    displayOrder: 1  ,                // number: the order in which the column appears
+    groupIndex:0
   };
   export interface Preferences {
     [dataField: string]: ColumnPreference;
@@ -63,6 +66,7 @@ export interface DevGridColumn {
     fontSize: number;
     showInPdf: boolean;
     displayOrder: number;
+    groupIndex:any
   }
   export interface GridPreference {
     font: string;

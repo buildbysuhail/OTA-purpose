@@ -242,6 +242,7 @@ import RouteGuard from "../../../utilities/route-guard";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
+import PartySummaryMaster from "../../../pages/accounts/reports/partywise-summary/party-summary-master";
 
 const PriceList = lazy(
   () =>
@@ -550,7 +551,7 @@ const Content: FC<ContentProps> = () => {
         />
         <Route
           path="/accounts/partywise_summary"
-          element={<PartySummaryBasicInfo />}
+          element={<PartySummaryMaster />}
         />
         <Route
           path="/accounts/outstanding_payable"

@@ -115,6 +115,8 @@ const CollectionReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                allowGrouping ={true}
+                grop
                   columns={columns}
                   gridHeader={t("collection_report")}
                   dataUrl= {Urls.acc_reports_collection}

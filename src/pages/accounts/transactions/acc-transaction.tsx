@@ -721,13 +721,13 @@ setIsTemplateOpen(true)
                 />
               )}
             </div>
-            <h2 className="text-xl font-bold text-center text-blue">
+            <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
             </h2>
             <div className="w-[100px]"></div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-8 !mt-12">
             <div className="">
               <div className="grid grid-cols-1 leading-none lg:w-3/4">
                 <div className="flex items-center gap-2">
@@ -935,14 +935,14 @@ setIsTemplateOpen(true)
             </div>
 
             <div className="flex justify-end">
-              <div className="grid grid-cols-1 leading-none lg:w-3/4">
+              <div className="grid grid-cols-1 leading-none lg:full">
                 <div className="grid grid-cols-2 gap-2">
                   {formElements.referenceNumber.visible && (
                     <ERPInput
                       id="referenceNumber"
                       label={formElements.referenceNumber.label}
                       value={formState.transaction.master.referenceNumber}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -960,7 +960,7 @@ setIsTemplateOpen(true)
                     <ERPDateInput
                       id="transactionDate"
                       label={formElements.transactionDate.label}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       value={
                         new Date(formState.transaction.master.transactionDate)
                       }
@@ -983,7 +983,7 @@ setIsTemplateOpen(true)
                     <ERPDateInput
                       id="referenceDate"
                       label={formElements.referenceDate.label}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       value={new Date(formState.transaction.master.referenceDate)}
                       onChange={(e) =>
                         dispatch(
@@ -1003,7 +1003,7 @@ setIsTemplateOpen(true)
                       id="employeeId"
                       label={formElements.employee.label}
                       value={formState.masterAccountID}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({

@@ -160,28 +160,30 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<AccTransactionRow[]>
     ) => {
-      const serializedRows = action.payload.map((row) => ({
-        ...row,
-        chqDate: new Date(row.chqDate).toISOString(),
-        bankDate: new Date(row.bankDate).toISOString(),
-      }));
-      state.transaction.details.push(...serializedRows);
+      // const serializedRows = action.payload.map((row) => ({
+      //   ...row,
+      //   chqDate: new Date(row.chqDate).toISOString(),
+      //   bankDate: new Date(row.bankDate).toISOString(),
+      //   amount: state.f
+      // }));
+      // state.transaction.details.push(...serializedRows);
     },
 
     // Add single row to the transaction details
     accFormStateTransactionDetailsRowAdd: (
       state,
-      action: PayloadAction<AccTransactionRow>
+      action: PayloadAction<{row: AccTransactionRow, isForeignCurrencyEnabled: boolean}>
     ) => {
-      
-      const serializedRow = {
-        ...action.payload,
-        chqDate: action.payload.chqDate
-          ? new Date(action.payload.chqDate).toISOString()
+      const data = action.payload.row;
+      const serializedRow: AccTransactionRow = {
+        ...data,
+        chqDate: data.chqDate
+          ? new Date(data.chqDate).toISOString()
           : "",
-        bankDate: action.payload.bankDate
-          ? new Date(action.payload.bankDate).toISOString()
+        bankDate: data.bankDate
+          ? new Date(data.bankDate).toISOString()
           : "",
+          amount: action.payload.isForeignCurrencyEnabled ? data.amount * data.exchangeRate
       };
       state.transaction.details.push(serializedRow);
     },

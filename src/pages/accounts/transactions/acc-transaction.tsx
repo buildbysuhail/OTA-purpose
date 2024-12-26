@@ -371,7 +371,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           newFormElements.employee.label =
             voucherType === "CR" ? "Collected By" : "Paid By";
           newFormElements.discount.visible = true;
-          newFormElements.costCentreId.visible = true;
+          newFormElements.costCentreId.visible = applicationSettings.accountsSettings.maintainCostCenter == true;
           newFormElements.chequeNumber.visible = false;
           newFormElements.bankDate.visible = false;
           break;

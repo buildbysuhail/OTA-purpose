@@ -9,7 +9,6 @@ import { ActionType } from "../../../redux/types";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
-import ErpGridGlobalFilter from "../../../components/ERPComponents/erp-grid-global-filter";
 
 interface LedgerReport {
   from: Date
@@ -18,7 +17,7 @@ const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
   const [data, setData] = useState<any[]>([]);
-  const { t } = useTranslation("accountsReport");
+  const { t } = useTranslation('accountsReport');
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);

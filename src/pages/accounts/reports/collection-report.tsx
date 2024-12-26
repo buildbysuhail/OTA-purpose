@@ -2,15 +2,11 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import { useSearchParams } from "react-router-dom";
-import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 interface CollectionReport {
@@ -18,9 +14,9 @@ interface CollectionReport {
 }
 const CollectionReport = () => {
   const dispatch = useAppDispatch();
-      const { getFormattedValue} = useNumberFormat()
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<CollectionReport>({from: new Date()});
+  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<CollectionReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -30,11 +26,11 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      groupIndex:0,
+      groupIndex: 0,
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -56,9 +52,9 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -85,9 +81,9 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
+        </span>
       ),
     },
   ];
@@ -99,16 +95,16 @@ const CollectionReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-              allowGrouping={true}
+                  allowGrouping={true}
                   columns={columns}
                   gridHeader={t("collection_report")}
-                  dataUrl= {Urls.acc_reports_collection}
+                  dataUrl={Urls.acc_reports_collection}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<CollectionReportFilter/>}
+                  filterContent={<CollectionReportFilter />}
                   filterInitialData={CollectionReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}

@@ -2,24 +2,20 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 
 interface TransactionReport {
-
   from: Date
 }
 const TransactionReport = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<TransactionReport>({from: new Date()});
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<TransactionReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -32,7 +28,7 @@ const TransactionReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -61,9 +57,9 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -71,7 +67,7 @@ const TransactionReport = () => {
       caption: t("ref_no"),
       dataType: "string",
       allowSearch: true,
-      visible:false,
+      visible: false,
       allowFiltering: true,
       width: 150,
     },
@@ -80,7 +76,7 @@ const TransactionReport = () => {
       caption: t("ref_date"),
       dataType: "date",
       allowSearch: true,
-      visible:false,
+      visible: false,
       allowFiltering: true,
       width: 150,
     },
@@ -100,9 +96,9 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {cellElement.data.debit}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.debit}
+        </span>
       ),
     },
     {
@@ -113,9 +109,9 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {cellElement.data.credit}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.credit}
+        </span>
       ),
     },
   ];
@@ -129,7 +125,7 @@ const TransactionReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("transaction_report")}
-                  dataUrl= {Urls.acc_reports_transaction}
+                  dataUrl={Urls.acc_reports_transaction}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -140,7 +136,7 @@ const TransactionReport = () => {
                   filterWidth="400"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<TransactionReportFilter/>}
+                  filterContent={<TransactionReportFilter />}
                   filterInitialData={TransactionReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
@@ -148,9 +144,7 @@ const TransactionReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default TransactionReport;

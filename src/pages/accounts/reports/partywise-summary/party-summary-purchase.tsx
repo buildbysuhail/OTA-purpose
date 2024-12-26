@@ -7,19 +7,13 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface PartySummaryPurchase {
+import { PartySummaryFilter } from "./party-summary-master";
 
-  from: Date
-}
-const PartySummaryPurchase = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummaryPurchase>({from: new Date()});
+  // const [filter, setFilter] =useState<PartySummaryPurchase>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -174,7 +168,7 @@ const PartySummaryPurchase = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  postData={filter}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}

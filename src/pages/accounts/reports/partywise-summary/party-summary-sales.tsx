@@ -7,14 +7,13 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface PartySummarySales {
+import { PartySummaryFilter } from "./party-summary-master";
 
-  from: Date
-}
-const PartySummarySales = () => {
+const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummarySales>({from: new Date()});
+  // const [filter, setFilter] =useState<PartySummarySales>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -169,7 +168,7 @@ const PartySummarySales = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  postData={filter}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}

@@ -1943,7 +1943,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       <CustomerDetailsSidebar></CustomerDetailsSidebar>
       <AttachmentSidebar></AttachmentSidebar>
       <ActivityLogSidebar></ActivityLogSidebar>
-      <div className="absolute top-[-26px] right-[27.8%]">
+      <div className="fixed top-[3.4rem] right-[465px]">
       <AccTransactionUserConfig />
       </div>
       <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">

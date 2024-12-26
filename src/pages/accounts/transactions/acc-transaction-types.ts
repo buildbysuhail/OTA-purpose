@@ -237,11 +237,12 @@ export interface AccTransactionRow {
   ledgerId: number;
   ledgerCode: string;
   ledgerName: string;
+  groupName: string;
   ledger: string;
   drCr: string;
   relatedLedgerId: number;
   amount?: number;
-  AmountFC?: number;
+  amountFC?: number;
   hasDiscount?: boolean;
   discount?: number;
   debit?: number;
@@ -270,7 +271,7 @@ export interface AccTransactionRow {
   costCentreId: number;
   costCentreName: number;
   projectId: number;
-  ProjectName: number;
+  projectName: string;
 
   bankName: string;
   nameOnCheque: string;
@@ -318,10 +319,11 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   drCr: "",
   ledgerName: "",
   currencyName: "",
-  ProjectName: 0,
+  projectName: "",
   costCentreName: 0,
   BillwiseDetails: "",
-  chqDate: ""
+  chqDate: "",
+  groupName: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {

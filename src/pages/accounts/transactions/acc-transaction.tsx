@@ -1075,10 +1075,10 @@ setIsTemplateOpen(true)
                         getListUrl: Urls.data_projects_by_ledgerid,
                         params: `LedgerID=${formState.row.ledgerId}`,
                       }}
-                      onChange={(e) =>
+                      onSelectItem={(e) =>
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { projectId: e.value },
+                            fields: { projectId: e.value, projectName: e.label },
                           })
                         )
                       }
@@ -1207,7 +1207,7 @@ setIsTemplateOpen(true)
 
             <div className="flex flex-wrap gap-4">
               <span className="text-blue-600 font-bold self-center">
-                Group Name:
+                Group Name: {formState.row.groupName}
               </span>
             </div>
           </div>
@@ -1325,6 +1325,7 @@ setIsTemplateOpen(true)
                     className="min-w-[180px] max-w-[200px]"
                     label={formElements.bankName.label}
                     value={formState.row.bankName}
+                    options={isNullOrUndefinedOrZero(formState.row.ledgerId) ? []: undefined}
                     field={{
                       valueKey: "id",
                       labelKey: "name",
@@ -1366,10 +1367,10 @@ setIsTemplateOpen(true)
                   formState.userConfig.presetCostenterId > 0 ||
                   formElements.costCentreId.disabled
                 }
-                onChange={(e) =>
+                onSelectItem={(e) =>
                   dispatch(
                     accFormStateRowHandleFieldChange({
-                      fields: { costCentreId: e.value },
+                      fields: { costCentreId: e.value, costCentreName: e.label },
                     })
                   )
                 }

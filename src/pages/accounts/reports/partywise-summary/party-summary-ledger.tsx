@@ -7,19 +7,13 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface PartySummaryLedger {
-
-  from: Date
-}
-const PartySummaryLedger = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+import { PartySummaryFilter } from "./party-summary-master";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummaryLedger>({from: new Date()});
+    const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -76,9 +70,12 @@ const PartySummaryLedger = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
+      ),
     },
-    
-   
     {
       dataField: "debit",
       caption: t('debit'),
@@ -86,6 +83,11 @@ const PartySummaryLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
+      ),
     },
     {
       dataField: "credit",
@@ -94,6 +96,11 @@ const PartySummaryLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
+      ),
     },
     {
       dataField: "balance",
@@ -102,6 +109,18 @@ const PartySummaryLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span
+          className={`${"font-bold text-red"
+            }`}
+        >
+          {`${cellElement.data?.balance == null
+            ? '0'
+            : cellElement.data.balance < 0
+              ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+        </span>
+      ),
     },
     {
       dataField: "ledger",
@@ -190,6 +209,7 @@ const PartySummaryLedger = () => {
                   dataUrl= {Urls.acc_reports_party_summary_ledger}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
+                  postData={filter}
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}

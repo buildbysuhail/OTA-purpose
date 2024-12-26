@@ -7,11 +7,10 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface PartySummaryBasicInfo {
+import { PartySummaryFilter } from "./party-summary-master";
 
-  from: Date
-}
-const PartySummaryBasicInfo = () => {
+const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
+}) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -19,7 +18,6 @@ const PartySummaryBasicInfo = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummaryBasicInfo>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -228,11 +226,10 @@ const PartySummaryBasicInfo = () => {
                   gridHeader={t("basic_info")}
                   dataUrl= {Urls.acc_reports_party_summary_basic_info}
                   method={ActionType.POST}
+                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>

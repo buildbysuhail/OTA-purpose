@@ -88,7 +88,6 @@ const DayBookSummary = () => {
   </span>
       ),
     },
-
   ];
   return (
     <Fragment>

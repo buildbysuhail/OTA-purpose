@@ -7,19 +7,12 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface DailySummaryReceiptDetails {
-
-  from: Date
-}
-const DailySummaryReceiptDetails = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+import DailySummaryFilter from "./daily-summary-master";
+const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DailySummaryReceiptDetails>({from: new Date()});
+  // const [filter, setFilter] =useState<DailySummaryReceiptDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -150,6 +143,7 @@ const DailySummaryReceiptDetails = () => {
                   gridHeader={t("daily_summary_receipt_details")}
                   dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
                   method={ActionType.POST}
+                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

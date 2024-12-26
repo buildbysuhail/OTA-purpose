@@ -13,16 +13,10 @@ import { useSearchParams } from "react-router-dom";
 import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
-
 interface CollectionReport {
   from: Date
 }
 const CollectionReport = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
       const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
@@ -54,14 +48,6 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 180,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true, 
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
       dataField: "particulars",
       caption: t("account"),
@@ -135,5 +121,4 @@ const CollectionReport = () => {
     </Fragment>
   );
 };
-
 export default CollectionReport;

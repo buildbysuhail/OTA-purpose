@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
-import "react-resizable/css/styles.css"; // Ensure you include ResizableBox's styles
+import "react-resizable/css/styles.css"; 
 import "./erp-resizable-sidebar.css"; 
 import { useAppState } from "../../utilities/hooks/useAppState";
 
@@ -41,7 +41,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
           {children}
         </ResizableBox>
       )}
-{isOpen.toString()}
+     {isOpen.toString()}
       <button
         className="toggle-sidebar-button"
         onClick={() => setIsOpen(!isOpen)}

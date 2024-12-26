@@ -446,6 +446,7 @@ export interface AccTransactionFormState {
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
+  template?: any,
   // formElements: FormElementsState,
   userConfig: AccUserConfig;
 }
@@ -493,15 +494,10 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   total: 0,
   previousNarration: [],
   isRowEdit: false,
-  IsBillwiseTransAdjustmentExists: false
+  IsBillwiseTransAdjustmentExists: false,
   // formElements: initialFormElements
-  ,
-
-
-
-
   ledgerDataLoading: false,
   ledgerBillWiseLoading: false,
   ledgerIsBillWiseAdjustExistLoading: false,
-  ledgerData: undefined
+  ledgerData: undefined,
 }

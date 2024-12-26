@@ -1694,29 +1694,11 @@ export default function PDFBarcodeDesigner() {
                 >
 
                   {selectedComponent.type !== DesignerElementType.table &&
-                    selectedComponent.type !== DesignerElementType.line && selectedComponent.type !== DesignerElementType.area &&(
+                    selectedComponent.type !== DesignerElementType.line &&
+                    selectedComponent.type !== DesignerElementType.area &&
+                    selectedComponent.type !== DesignerElementType.image && (
                       <Box sx={{ mb: 1 }}>
-                        {selectedComponent.type ===
-                        DesignerElementType.field ? (
-                          <ERPDataCombobox
-                          id="content"
-                          data={selectedComponent}
-                          label="Content"
-                          field={{
-                            id: "content",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={fields?.map((field, index) => ({
-                            value: field,
-                            label: field,
-                          }))}
-                          onChangeData={(data) =>
-                            handlePropertyChange("content", data.content)
-                          }
-                        />
-                        ):selectedComponent.type === DesignerElementType.image ?
-                        (
+                        {selectedComponent.type === DesignerElementType.field ? (
                           <ERPDataCombobox
                             id="content"
                             data={selectedComponent}
@@ -1726,32 +1708,33 @@ export default function PDFBarcodeDesigner() {
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={imgContent}
+                            options={fields?.map((field, index) => ({
+                              value: field,
+                              label: field,
+                            }))}
                             onChangeData={(data) =>
                               handlePropertyChange("content", data.content)
                             }
                           />
-                        )
-                        :selectedComponent.type === DesignerElementType.qrCode ?(
+                        ) : selectedComponent.type === DesignerElementType.qrCode ? (
                           <ERPDataCombobox
-                          id="value"
-                          data={selectedComponent.qrCodeProps}
-                          label="QR Code Value"
-                          field={{
-                            id: "value",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={fields?.map((field, index) => ({
-                            value: field,
-                            label: field,
-                          }))}
-                          onChangeData={(data) =>
-                            handleQRCodePropertyChange("value", data.value)
-                          }
-                        />
-                
-                        ):(
+                            id="value"
+                            data={selectedComponent.qrCodeProps}
+                            label="QR Code Value"
+                            field={{
+                              id: "value",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={fields?.map((field, index) => ({
+                              value: field,
+                              label: field,
+                            }))}
+                            onChangeData={(data) =>
+                              handleQRCodePropertyChange("value", data.value)
+                            }
+                          />
+                        ) : (
                           <ERPInput
                             id="content"
                             label="Content"
@@ -1764,7 +1747,24 @@ export default function PDFBarcodeDesigner() {
                         )}
                       </Box>
                     )}
-
+                     <Box sx={{ mb: 1 }}>
+                          {selectedComponent.type === DesignerElementType.image && (
+                           <ERPDataCombobox
+                           id="content"
+                           data={selectedComponent}
+                           label="Content"
+                           field={{
+                             id: "content",
+                             valueKey: "value",
+                             labelKey: "label",
+                           }}
+                           options={imgContent}
+                           onChangeData={(data) =>
+                             handlePropertyChange("content", data.content)
+                           }
+                         />
+                        ) }
+                        </Box>
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
                       id="x"
@@ -1822,6 +1822,7 @@ export default function PDFBarcodeDesigner() {
                     )}
                   <ERPModal
                     title={editingColumnData ? "Edit Column" : "Add Column"}
+                    isMaximize={false}
                     isOpen={isAddColumnModalOpen}
                     closeModal={() => {
                       setIsAddColumnModalOpen(false);

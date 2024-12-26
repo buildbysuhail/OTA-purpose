@@ -27,7 +27,10 @@ import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import AttachmentSidebar from "../../transaction-base/Attachment-button";
 import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
-
+import DownloadPreview from "../../LabelDesigner/download-preview";
+import { DummyInvoiceData, DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 interface BilledItem {
   id?: number;
   name: string;
@@ -67,6 +70,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const {
     undoEditMode,
     getNextVoucherNumber,
@@ -168,6 +172,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, []);
+
   useEffect(() => {
     const loadLedgerData = async () => {
       dispatch(
@@ -194,7 +199,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       } catch (error) { }
     };
-
     loadLedgerData();
   }, [formState.showbillwise]);
 
@@ -355,6 +359,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       setUserRight();
     }
   }, []);
+
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
@@ -443,6 +448,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, [formType, voucherType, voucherPrefix]);
+
+
+const selectTemplates = useCallback(async() => {
+setTemplateLoad(true)
+setIsTemplateOpen(true)
+  try {
+    const response = await api.getAsync(`${Urls.templates}?template_group${formState.transaction.master.voucherType}`);
+    dispatch(accFormStateHandleFieldChange({fields:{template:response}}));
+    }
+  catch (error) {
+    console.log(error,"acc-transaction template select error");
+   }
+   finally{
+    setTemplateLoad(false)
+   }
+},[])
 
   const columns: DevGridColumn[] = [
     {
@@ -570,6 +591,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     { id: 2, name: "Banana", price: 50, quantity: 3, discount: 0, tax: 0 },
   ]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  const [templateLoad, setTemplateLoad] = useState(false);
   const [showPopup, setShowPopup] = React.useState(false);
 
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
@@ -1885,83 +1908,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
                 </div>
               </div>
-              {/* <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2 pr-[52px]"> */}
-              {/* <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
-                  <ERPButton
-                    title="Save &amp; New"
-                    onClick={() => {
-                      // Handle Save & New
-                    }}
-                    variant="primary"
-                    className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
-                  ></ERPButton>
-                  <ERPButton
-                    title="Save"
-                    onClick={() => {
-                      // deleteWorkspacePopup({isOpen: false});
-                    }}
-                    variant="primary"
-                    className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
-                  ></ERPButton>
-                </div> */}
-              {/* <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
-                  <ERPButton
-                    title="Save & New"
-                    onClick={() => {}}
-                    variant="secondary"
-                    className="flex-1 !m-0 !rounded-none"
-                  />
-                  <ERPButton
-                    title="Save"
-                    onClick={() => {}}
-                    variant="primary"
-                    className="flex-1 !m-0 !rounded-none"
-                  />
-                </div> */}
+            
               <div>
-                {/* Totals & Taxes Popup */}
-                {/* {showTotalsPopup && ( */}
-                {/* <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                    <div className=" pt-1">
-                    
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-gray-600">Discount</span>
-                        <div className="flex items-center">
-                          <input
-                            type="number"
-                            defaultValue="0"
-                            className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
-                          />
-                          <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                            %
-                          </button>
-                          <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                            ₹
-                          </button>
-                          <input
-                            type="number"
-                            defaultValue="0"
-                            className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
-                        <div>
-                          <span className="text-sm font-semibold">
-                            Total Amount:
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-sm  font-semibold">₹</span>
-                          <span className="text-sm font-semibold">
-                            200.00
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
-                {/* )} */}
+               
               </div>
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
@@ -2068,10 +2017,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }}
             />
           )}
-          <button className="text-blue-600 hover:underline" onClick={() => { }}>
-            {/* Handle attachments */}
-            Attachments
-          </button>
+         <button className="text-blue-600">
+          Template: 'Elite Template'
+          <span
+            className="hover:underline text-[#0ea5e9] capitalize ml-1"
+            onClick={selectTemplates}
+          >
+            Change
+          </span>
+        </button>
+
         </div>
         Total: {formState.transaction.master.totalAmount}
         <div>
@@ -2084,6 +2039,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           />
         </div>
       </div>
+
+      {/* {formState.transaction && formState.template &&
+        <ERPModal
+          isOpen={formState.printPreview
+          }
+          title={t("barcode_print")}
+          isForm={true}
+          closeModal={() => {
+            dispatch(accFormStateHandleFieldChange({fields:{printPreview:false}}));
+          }}
+          content={<DownloadPreview template={formState?.template} data={DummyVoucherData}/>}>
+        </ERPModal>
+      } */}
+
+       <ERPResizableSidebar 
+       isOpen={formState.printPreview && isTemplateOpen}   
+       setIsOpen={setIsTemplateOpen}
+       children={"prev doc"}>
+       </ERPResizableSidebar>
     </div>
   );
 };

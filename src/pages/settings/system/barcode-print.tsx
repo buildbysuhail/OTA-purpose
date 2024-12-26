@@ -735,7 +735,7 @@ const BarcodePrint: React.FC = () => {
           closeModal={() => {
             setShowPrint(false);
           }}
-          content={<DownloadPreview template={template} data={data} />}>
+          content={<DownloadPreview template={template} data={data}/>}>
         </ERPModal>
       }
     </Fragment>

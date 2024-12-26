@@ -82,13 +82,14 @@ import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
 import { handleSetTemplateBarcodeLabelBackgroundImage } from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
-import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
+// import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
 import { QRCodeSVG } from "qrcode.react";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
 import { dir } from "i18next";
 import { useTranslation } from "react-i18next";
+import VoucherType from "../../enums/voucher-types";
 
 
 interface SaveDialogProps {
@@ -281,7 +282,7 @@ export default function PDFBarcodeDesigner() {
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get(
     "template_group"
-  )! as TemplateGroupTypes;
+  )! as  VoucherType | string;
   const [selectedComponent, setSelectedComponent] =
     useState<PlacedComponent | null>(null);
   const [nextId, setNextId] = useState(1);
@@ -332,6 +333,19 @@ export default function PDFBarcodeDesigner() {
       return updated;
     });
   };
+
+useEffect (() => {
+  setTemplateData((prevData: TemplateState) => {
+    const updated = {
+      ...prevData,
+      propertiesState:{
+        ...prevData.propertiesState,
+        template_group:templateGroup
+      }
+    };
+    return updated;
+  });
+},[])
 
   const handlePageResize = (
     e: React.SyntheticEvent,

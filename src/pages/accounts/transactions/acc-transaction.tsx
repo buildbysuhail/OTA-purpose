@@ -454,8 +454,8 @@ const selectTemplates = useCallback(async() => {
 setTemplateLoad(true)
 setIsTemplateOpen(true)
   try {
-    const response = await api.getAsync(`${Urls.templates}?template_group${formState.transaction.master.voucherType}`);
-    dispatch(accFormStateHandleFieldChange({fields:{template:response}}));
+    const response = await api.getAsync(`${Urls.templates}?template_group=${voucherType       }`);
+    dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
     }
   catch (error) {
     console.log(error,"acc-transaction template select error");

@@ -5,8 +5,8 @@ import TopPreview from "./HeaderPreview";
 import ItemTablePreview from "./ItemTablePreview";
 import TotalSummaryPreview from "./TotalSummaryPreview";
 import { TemplateState } from "../../Designer/interfaces";
-import { TemplateGroupTypes } from "../../constants/TemplateCategories";
 import { TemplateReducerState } from "../../../../redux/reducers/TemplateReducer";
+import VoucherType from "../../../../enums/voucher-types";
 
 export interface DownloadPreviewProps {
   data: any;
@@ -15,7 +15,7 @@ export interface DownloadPreviewProps {
   currencySymbol?: string;
   template?: TemplateState;
   totalAmountInwords?: string;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
   templateImages?: any;
   taxInfo?: any;
   currentBranch?: any;

@@ -14,7 +14,6 @@ import { DummyInvoiceData } from "./constants/DummyData";
 import ItemTableDesigner from "./Designer/ItemTableDesigner";
 import PropertiesDesigner from "./Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
-import { TemplateGroupTypes } from "./constants/TemplateCategories";
 import TransactionDetailsDesigner from "./Designer/TransactionDetailsDesigner";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
@@ -26,6 +25,7 @@ import { getDetailAction, postAction, patchAction } from "../../redux/slices/app
 import Urls from "../../redux/urls";
 import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
+import VoucherType from "../../enums/voucher-types";
 
 interface DesignSectionType {
   id: number;
@@ -113,7 +113,7 @@ const InvoiceDesigner = () => {
   const [currentSection, setSection] = useState(designSections[0]);
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
-  const templateGroup = searchParams?.get("template_group")! as TemplateGroupTypes; 
+  const templateGroup = searchParams?.get("template_group")! as VoucherType | string; 
 
   /* ####################################################################### */
 

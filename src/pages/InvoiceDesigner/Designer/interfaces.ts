@@ -1,5 +1,5 @@
+import VoucherType from "../../../enums/voucher-types";
 import { ActionState } from "../../../redux/slices/templates/thunk";
-import { TemplateGroupTypes } from "../constants/TemplateCategories";
 
 type TemplateTypes =
   | "standard"
@@ -149,7 +149,7 @@ export type AreaProps = {
 export interface PropertiesState {
   template_type?: TemplateTypes;
   template_kind?: TemplateKindType;
-  template_group?: TemplateGroupTypes;
+  template_group?: VoucherType | string;
   language_prefer?:"Eng"|"Arb";
   templateName?: string;
   pageSize?: string;

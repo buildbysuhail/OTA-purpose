@@ -31,6 +31,8 @@ import DownloadPreview from "../../LabelDesigner/download-preview";
 import { DummyInvoiceData, DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
+import TemplatesView from "./acc-templates";
+import { handleResponse } from "../../../utilities/HandleResponse";
 interface BilledItem {
   id?: number;
   name: string;
@@ -371,7 +373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           newFormElements.employee.label =
             voucherType === "CR" ? "Collected By" : "Paid By";
           newFormElements.discount.visible = true;
-          newFormElements.costCentreId.visible = true;
+          newFormElements.costCentreId.visible = applicationSettings.accountsSettings.maintainCostCenter == true;
           newFormElements.chequeNumber.visible = false;
           newFormElements.bankDate.visible = false;
           break;
@@ -454,7 +456,7 @@ const selectTemplates = useCallback(async() => {
 setTemplateLoad(true)
 setIsTemplateOpen(true)
   try {
-    const response = await api.getAsync(`${Urls.templates}?template_group=${voucherType       }`);
+    const response = await api.getAsync(`${Urls.templates}?template_group=SI`);
     dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
     }
     catch (error) {
@@ -464,6 +466,8 @@ setIsTemplateOpen(true)
       setTemplateLoad(false)
     }
   }, [])
+
+
 
   const columns: DevGridColumn[] = [
     {
@@ -2068,9 +2072,10 @@ setIsTemplateOpen(true)
       } */}
 
       <ERPResizableSidebar
+        minWidth={350}
         isOpen={formState.printPreview && isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
-        children={"prev doc"}>
+        children={<TemplatesView  setIsOpen={setIsTemplateOpen}/>   }>
       </ERPResizableSidebar>
     </div>
   );

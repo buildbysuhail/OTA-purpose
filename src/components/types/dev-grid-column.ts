@@ -29,6 +29,8 @@ export interface DevGridColumn {
     showInPdf?: boolean | false;
     allowEditing?: boolean;
     visible?: boolean;
+    visibleDynamic?: (filter: any) => boolean;
+    captionDynamic?: (filter: any) => string;
     groupIndex?:any;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;

@@ -1,10 +1,10 @@
+import VoucherType from "../../../../enums/voucher-types";
 import { TemplateState } from "../../Designer/interfaces";
-import { TemplateGroupTypes } from "../../constants/TemplateCategories";
 
 interface ItemTableProps {
   template?: TemplateState;
   data?: any;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
 }
 
 const ItemTable = ({ template, data }: ItemTableProps) => {

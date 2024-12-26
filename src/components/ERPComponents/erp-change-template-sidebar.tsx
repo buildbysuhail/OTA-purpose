@@ -4,7 +4,6 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
-import { TemplateGroupTypes } from "../../pages/InvoiceDesigner/constants/TemplateCategories";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import { TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import { parseAddressTemplate } from "../../pages/InvoiceDesigner/utils";
@@ -17,6 +16,7 @@ import ERPToast from "./erp-toast";
 import PSModel from "../common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getAction, getDetailAction, patchAction } from "../../redux/slices/app-thunks";
+import VoucherType from "../../enums/voucher-types";
 
 interface previewState {
   show: boolean;
@@ -27,7 +27,7 @@ interface ERPChangeTemplateSidebarProps {
   data?: any;
   onClose: any;
   type?: "form" | "detail_page";
-  templateId: TemplateGroupTypes;
+  templateId: VoucherType | string;
 
   // used for form change Template
   onChangeData?: any;

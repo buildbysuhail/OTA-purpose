@@ -105,7 +105,7 @@ export const initialThemeData: Theme = {
     marginTop: 0,
     marginBottom: 0,
     focusForeColor: "white",
-    focusBgColor: "gold",
+    focusBgColor: "255, 204, 88",
     defaultBgColor: "transparent",
   },
 };

@@ -29,6 +29,8 @@ export interface DevGridColumn {
     showInPdf?: boolean | false;
     allowEditing?: boolean;
     visible?: boolean;
+    visibleDynamic?: (filter: any) => boolean;
+    captionDynamic?: (filter: any) => string;
     groupIndex?:any;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
@@ -66,7 +68,7 @@ export interface DevGridColumn {
     fontSize: number;
     showInPdf: boolean;
     displayOrder: number;
-    groupIndex:any
+    groupIndex?:any
   }
   export interface GridPreference {
     font: string;

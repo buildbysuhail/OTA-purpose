@@ -2,14 +2,11 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface CashSummary {
@@ -17,9 +14,9 @@ interface CashSummary {
 }
 const CashSummary = () => {
   const dispatch = useAppDispatch();
-       const { getFormattedValue} = useNumberFormat()
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashSummary>({from: new Date()});
+  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<CashSummary>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -29,9 +26,9 @@ const CashSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party==="CLOSING BALANCE"?'font-bold text-red text-lg':''}`}>
-  {cellElement.data.party}
-  </span>
+        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.party}
+        </span>
       ),
     },
     {
@@ -41,9 +38,9 @@ const CashSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party==="CLOSING BALANCE"?'font-bold text-red text-lg':''}`}>
-  {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1* cellElement.data.billed) : getFormattedValue(cellElement.data.billed)}`}
-  </span>
+        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1 * cellElement.data.billed) : getFormattedValue(cellElement.data.billed)}`}
+        </span>
       ),
     },
   ];
@@ -57,7 +54,7 @@ const CashSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("cash_summary")}
-                  dataUrl= {Urls.acc_reports_cash_summary}
+                  dataUrl={Urls.acc_reports_cash_summary}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -66,7 +63,7 @@ const CashSummary = () => {
                   enablefilter={true}
                   filterWidth="100"
                   showFilterInitially={true}
-                  filterContent={<CashSummaryReportFilter/>}
+                  filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
@@ -77,5 +74,4 @@ const CashSummary = () => {
     </Fragment>
   );
 };
-
 export default CashSummary;

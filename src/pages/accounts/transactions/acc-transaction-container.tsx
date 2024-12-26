@@ -82,9 +82,6 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, []);
   return (
     <>
-    safva
-    {openVoucherSelector.toString()}
-    {readyToShowVoucher.toString()}
       {openVoucherSelector == true ? (
         <ERPModal
         isForm

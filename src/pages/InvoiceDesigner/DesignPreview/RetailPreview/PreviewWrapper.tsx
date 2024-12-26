@@ -3,7 +3,7 @@ import ItemTable from "./ItemTable";
 import Total from "./Total";
 import Footer from "./Footer";
 import { TemplateState } from "../../Designer/interfaces";
-import { TemplateGroupTypes } from "../../constants/TemplateCategories";
+import VoucherType from "../../../../enums/voucher-types";
 
 export interface RetailPreviewProps {
   data: any;
@@ -11,7 +11,7 @@ export interface RetailPreviewProps {
   docTitle?: string;
   docIDKey?: string;
   template?: TemplateState;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
 }
 
 const RetailPreviewWrapper = ({ data, templateGroupId, docTitle, docIDKey, template, currency }: RetailPreviewProps) => {

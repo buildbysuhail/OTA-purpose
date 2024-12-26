@@ -13,10 +13,10 @@ interface CashBookDetailedProps {
   contentProps?: any
   enablefilter?: boolean;
 }
-const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedProps) => {
+const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-   const { getFormattedValue} = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<CashBookDetailed>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -37,7 +37,7 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
     },
     {
       dataField: "vType",
-      caption:  t("voucher_type"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -50,9 +50,9 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -63,9 +63,9 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)} ${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data?.debit >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)} ${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data?.debit >= 0 ? 'Dr' : 'Cr'}`}
+        </span>
       ),
     },
     {
@@ -76,9 +76,9 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-{`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)} ${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data?.credit >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)} ${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data?.credit >= 0 ? 'Dr' : 'Cr'}`}
+        </span>
       ),
     },
     {
@@ -89,9 +89,9 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr'}`}
+        </span>
       ),
     },
     {
@@ -127,13 +127,13 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 heightToAdjustOnWindows={window.innerHeight-649}
+                  heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={t("cash_book_detailed")}
-                  dataUrl= {Urls.acc_reports_cash_book_transactionwise}
+                  dataUrl={Urls.acc_reports_cash_book_transactionwise}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  postData = {contentProps}
+                  postData={contentProps}
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
@@ -143,7 +143,6 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

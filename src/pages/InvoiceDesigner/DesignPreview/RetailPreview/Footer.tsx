@@ -1,10 +1,10 @@
+import VoucherType from "../../../../enums/voucher-types";
 import { TemplateState } from "../../Designer/interfaces";
-import { TemplateGroupTypes } from "../../constants/TemplateCategories";
 
 interface FooterProps {
   data?: any;
   template?: TemplateState;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
 }
 
 const Footer = ({ template, data }: FooterProps) => {

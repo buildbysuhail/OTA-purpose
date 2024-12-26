@@ -31,6 +31,8 @@ import DownloadPreview from "../../LabelDesigner/download-preview";
 import { DummyInvoiceData, DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
+import TemplatesView from "./acc-templates";
+import { handleResponse } from "../../../utilities/HandleResponse";
 interface BilledItem {
   id?: number;
   name: string;
@@ -371,7 +373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           newFormElements.employee.label =
             voucherType === "CR" ? "Collected By" : "Paid By";
           newFormElements.discount.visible = true;
-          newFormElements.costCentreId.visible = true;
+          newFormElements.costCentreId.visible = applicationSettings.accountsSettings.maintainCostCenter == true;
           newFormElements.chequeNumber.visible = false;
           newFormElements.bankDate.visible = false;
           break;
@@ -450,12 +452,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formType, voucherType, voucherPrefix]);
 
 
-  const selectTemplates = useCallback(async () => {
-    setTemplateLoad(true)
-    setIsTemplateOpen(true)
-    try {
-      const response = await api.getAsync(`${Urls.templates}?template_group${formState.transaction.master.voucherType}`);
-      dispatch(accFormStateHandleFieldChange({ fields: { template: response } }));
+const selectTemplates = useCallback(async() => {
+setTemplateLoad(true)
+setIsTemplateOpen(true)
+  try {
+    const response = await api.getAsync(`${Urls.templates}?template_group=SI`);
+    dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
     }
     catch (error) {
       console.log(error, "acc-transaction template select error");
@@ -464,6 +466,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       setTemplateLoad(false)
     }
   }, [])
+
+
 
   const columns: DevGridColumn[] = [
     {
@@ -698,7 +702,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className="space-y-6 p-4">
+        <div className="bg-white space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -721,13 +725,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
               )}
             </div>
-            <h2 className="text-xl font-bold text-center text-blue">
+            <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
             </h2>
             <div className="w-[100px]"></div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-8 !mt-12">
             <div className="">
               <div className="grid grid-cols-1 leading-none lg:w-3/4">
                 <div className="flex items-center gap-2">
@@ -935,14 +939,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
 
             <div className="flex justify-end">
-              <div className="grid grid-cols-1 leading-none lg:w-3/4">
+              <div className="grid grid-cols-1 leading-none lg:full">
                 <div className="grid grid-cols-2 gap-2">
                   {formElements.referenceNumber.visible && (
                     <ERPInput
                       id="referenceNumber"
                       label={formElements.referenceNumber.label}
                       value={formState.transaction.master.referenceNumber}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -960,7 +964,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPDateInput
                       id="transactionDate"
                       label={formElements.transactionDate.label}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       value={
                         new Date(formState.transaction.master.transactionDate)
                       }
@@ -983,7 +987,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPDateInput
                       id="referenceDate"
                       label={formElements.referenceDate.label}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       value={new Date(formState.transaction.master.referenceDate)}
                       onChange={(e) =>
                         dispatch(
@@ -1003,7 +1007,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       id="employeeId"
                       label={formElements.employee.label}
                       value={formState.masterAccountID}
-                       className="max-w-full"
+                       className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -1197,6 +1201,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     )
                   }
                   disabled={
+                    formState.row.hasDiscount != true ||
                     formElements.discount?.disabled ||
                     formElements.pnlMasters?.disabled
                   }
@@ -2067,9 +2072,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       } */}
 
       <ERPResizableSidebar
+        minWidth={350}
         isOpen={formState.printPreview && isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
-        children={"prev doc"}>
+        children={<TemplatesView  setIsOpen={setIsTemplateOpen}/>   }>
       </ERPResizableSidebar>
     </div>
   );

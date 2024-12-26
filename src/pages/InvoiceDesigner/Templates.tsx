@@ -9,7 +9,7 @@ import { TemplateState } from "./Designer/interfaces";
 import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
-import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategories";
+import { TemplateTypes } from "./constants/TemplateCategories";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
@@ -24,6 +24,7 @@ import { t } from "i18next";
 import { Url } from "devextreme-react/cjs/chart";
 import { useTranslation } from "react-i18next";
 import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
+import VoucherType from "../../enums/voucher-types";
 
 interface previewState {
   show: boolean;
@@ -41,8 +42,11 @@ const Templates = ({ }) => {
   const [tempCrmData, setTempCRMData] = useState([]);
   const [showPreview, setShowPreview] = useState<previewState>({ show: false });
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true);
-  const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
-    (searchParams?.get("template_group")! as TemplateGroupTypes) ?? "sales_invoice"
+  // const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
+  //   (searchParams?.get("template_group")! as TemplateGroupTypes) ?? "sales_invoice"
+  // );
+  const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
+    (searchParams?.get("template_group")! as VoucherType | string) ?? "SI"
   );
   const [accountVoucher,setAccountVoucher]=useState(DummyVoucherData)
   /* ########################################################################################### */
@@ -99,7 +103,7 @@ const Templates = ({ }) => {
     }
   };
 
-  const getTemplates = async () => {
+  const getTemplates = async () => {0
     setLoading(true);
     var res = await api.getAsync(Urls.templates, `template_group=${templateGroup}`);
     handlePlainResponse(res, () => {
@@ -215,7 +219,7 @@ const Templates = ({ }) => {
                               <PencilIcon
                                 title={t("edit")}
                                 className="w-3 text-accent cursor-pointer"
-                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
+                                onClick={() => navigate(`/label-designer/${temp?.id}`)}
                               />
                             </div>
                             <div>
@@ -308,7 +312,7 @@ const Templates = ({ }) => {
 export default Templates;
 
 interface ChooseTemplateProps {
-  templateGroup: TemplateGroupTypes;
+  templateGroup: VoucherType | string;
   setShowTemplateListing: any;
   tempData: any;
 }
@@ -319,7 +323,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
-
     const newTData = {
       signature_image: null,
       background_image: null,
@@ -343,7 +346,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    // templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
      navigate(`/label-designer/new?template_group=${templateGroup}`) 
 
   };

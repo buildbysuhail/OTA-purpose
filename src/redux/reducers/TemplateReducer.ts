@@ -1,14 +1,14 @@
 
 import { TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import DefaultSITemplates from "../../pages/InvoiceDesigner/DefaultTemplates/invoiceTemplates";
-import { TemplateGroupTypes } from "../../pages/InvoiceDesigner/constants/TemplateCategories";
 import { Actions } from "../types";
 import ActionTypes from "../actions/ActionTypes";
+import VoucherType from "../../enums/voucher-types";
 
 export interface TemplateReducerState {
   activeTemplate: TemplateState;
   data?: {
-    voucher_type: TemplateGroupTypes;
+    voucher_type: VoucherType | string;
     content: TemplateState;
     is_default: boolean;
     is_primary: boolean;

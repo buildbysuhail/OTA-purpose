@@ -9,14 +9,14 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
-import { TemplateGroupTypes } from "../constants/TemplateCategories";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { handleSetTemplateBackgroundImage, setTemplateBackgroundImage, setTemplatePropertiesState, setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
+import VoucherType from "../../../enums/voucher-types";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
-  templateGroup?: TemplateGroupTypes;
+  templateGroup?: VoucherType | string;
   onChange?: (propertiesState: PropertiesState) => void;
   tempImages: {
     setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,

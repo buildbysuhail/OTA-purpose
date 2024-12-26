@@ -14,7 +14,6 @@ import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 import DownloadStandardPreview from "./DownloadPreview/StandardPreview/DownloadPreview";
 import DownloadRetailPreview from "./DownloadPreview/RetailPreview/DownloadPreview";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
-import { TemplateGroupTypes } from "./constants/TemplateCategories";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import DNPSTemplate from "./DownloadPreview/DeliveryNote_PackingSlip";
 import { TemplateState } from "./Designer/interfaces";
@@ -41,13 +40,14 @@ import Urls from "../../redux/urls";
 import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
+import VoucherType from "../../enums/voucher-types";
 
 interface InvoicePreviewProps {
   data?: any;
   docTitle?: string;
   docIDKey?: string;
   showOptions?: boolean;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
   endpointUrl?: string;
 }
 

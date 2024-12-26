@@ -6,21 +6,16 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
-import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 import CashBookMonthWise from "./cash-book-monthwise";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { getFormattedValue} = useNumberFormat()
-  const [isOpenDetails, setIsOpenDetails] = useState<{
-      isOpen: boolean;
-      key: number;
-      groupName?: string;
-    }>({ isOpen: false, key: 0 });
-      const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
-  const { t } = useTranslation();
+  const { getFormattedValue } = useNumberFormat()
+  const [isOpenDetails, setIsOpenDetails] = useState<{ isOpen: boolean; key: number; groupName?: string }>({ isOpen: false, key: 0 });
+  const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -30,10 +25,10 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-       return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-        {cellElement.data.ledgerName}
-        </span>):
-         <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.ledgerName}
+        </span>) :
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
       }
     },
     {
@@ -44,9 +39,9 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
- {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -57,9 +52,9 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
- {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -70,14 +65,14 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+        </span>
       ),
     },
     {
       dataField: "branch",
-      caption:  t("branch"),
+      caption: t("branch"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -95,22 +90,22 @@ const CashBookSummary = () => {
                   columns={columns}
                   filterWidth="100"
                   gridHeader={t("day_book_summary")}
-                  dataUrl= {Urls.acc_reports_cash_book}
+                  dataUrl={Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   enablefilter={true}
-                  filterContent={<CashBookReportFilter/>}
+                  filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      {asOnDate: filter.asonDate}}/>,
+                      { asOnDate: filter.asonDate }} />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
-                    bodyProps: "ledgerID" ,
+                    bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0
                   }}
                 ></ErpDevGrid>

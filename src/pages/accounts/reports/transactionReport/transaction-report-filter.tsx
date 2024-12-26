@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
-import TransactionFormsCheckboxes from "../../../settings/system/reset-database-transaction-forms-checkboxes";
 import { APIClient } from "../../../../helpers/api-client";
 import TransactionReportfilterCheckboxes from "./transaction-report-filter-forms-checkboxes";
+import { useTranslation } from "react-i18next";
 
-const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: any) => {
+const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+  const { t } = useTranslation('accountsReport')
   const api = new APIClient();
   const [allTransactions, setAllTransactions] = useState<any>();
   useEffect(() => {
@@ -21,7 +19,6 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formStat
       ...tr, // Spread existing properties
       checked: false, // Add new `checked` property
     }));
-
     setAllTransactions(updatedVouchers);
   };
   return (
@@ -29,12 +26,12 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formStat
       {/* <div className="flex items-center gap-4"> */}
       <ERPDateInput
         {...getFieldProps("dateFrom")}
-        label={t("From")}
+        label={t("from")}
         onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
       />
       <ERPDateInput
         {...getFieldProps("dateTo")}
-        label={t("To")}
+        label={t("to")}
         onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
       />
       {/* </div> */}
@@ -57,9 +54,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formStat
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
-
               const updates: { [key: string]: any } = {};
-
               if (frmState.allChecked) {
                 debugger;
                 updates["vTypes"] = "All";
@@ -72,7 +67,6 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formStat
                   ?.join(',');
                 updates["vTypes"] = sds || '';
               }
-
               if (frmState.isDr && frmState.isCr) {
                 updates["drCr"] = "drCr";
               } else if (frmState.isDr) {
@@ -82,12 +76,10 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, t, formStat
               } else {
                 updates["drCr"] = "drCr";
               }
-
               // Call handleFieldChange once with all updates
               handleFieldChange(updates);
-
             }}
-            filter={formState}
+              filter={formState}
               allTransactions={allTransactions}
               setAllTransactions={setAllTransactions}
             />

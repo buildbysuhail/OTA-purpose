@@ -133,18 +133,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }, [appState?.inputBox?.inputSize]);
 
     const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
-    const [bgColor,setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
+    const [bgColor, setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true ? '#ffffff' : '#ffffff1a') : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
     useEffect(() => {
       let border, bgCol;
       if (appState?.mode === 'dark') {
         border = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
-        bgCol = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
+        bgCol = isFocused ? '#ffffff' : '#ffffff1a';
       } else {
-        border = isFocused || isHovered 
-          ? `rgb(${appState?.inputBox?.borderFocus})` 
+        border = isFocused || isHovered
+          ? `rgb(${appState?.inputBox?.borderFocus})`
           : `rgb(${appState?.inputBox?.borderColor})`;
-        bgCol = isFocused || isHovered 
-          ? `rgb(${appState?.inputBox?.focusBgColor})` 
+        bgCol = isFocused
+          ? `rgb(${appState?.inputBox?.focusBgColor})`
           : ``;
       }
       setBorderStyles(border);
@@ -518,14 +518,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onClick={onClickPrefix}
                 className={`${onClickPrefix && "cursor-pointer"
                   } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-                style={{ height, fontSize, fontWeight, color, borderColor: borderStyles,backgroundColor: bgColor }}>
+                style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor }}>
                 {prefix}
               </div>
             )}
             <div className="flex-1">
               <input
 
-              
+
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
@@ -558,7 +558,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       }px`,
                     borderBottomRightRadius: `${!suffix ? appState?.inputBox?.borderRadius : 0
                       }px`,
-                    backgroundColor:bgColor,
+                    backgroundColor: bgColor,
                     ...(!prefix &&
                       !suffix && {
                       borderRadius: `${appState?.inputBox?.borderRadius ?? 5
@@ -585,7 +585,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onClick={onClickSuffix}
                 className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
                   } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-                style={{ height, fontSize, borderColor: borderStyles, color, backgroundColor: bgColor}}>
+                style={{ height, fontSize, borderColor: borderStyles, color,  backgroundColor: isFocused ? appState?.inputBox?.focusBgColor : appState?.inputBox?.defaultBgColor, }}>
                 {suffix}
               </div>
             )}

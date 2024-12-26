@@ -1,5 +1,5 @@
+import VoucherType from "../../../../enums/voucher-types";
 import { TemplateState } from "../../Designer/interfaces";
-import { TemplateGroupTypes } from "../../constants/TemplateCategories";
 import Footer from "./Footer";
 import Header from "./Header";
 import ItemTable from "./ItemTable";
@@ -18,7 +18,7 @@ export interface AccountPreviewProps {
   docTitle?: string;
   docIDKey?: string;
   template?: TemplateState;
-  templateGroupId?: TemplateGroupTypes;
+  templateGroupId?: VoucherType | string;
 }
 
 const AccountPreviewWrapper = ({

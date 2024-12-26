@@ -183,7 +183,7 @@ const accTransactionSlice = createSlice({
         bankDate: data.bankDate
           ? new Date(data.bankDate).toISOString()
           : "",
-          amount: action.payload.isForeignCurrencyEnabled ? data.amount * data.exchangeRate
+          // amount: action.payload.isForeignCurrencyEnabled ? data.amount * data.exchangeRate
       };
       state.transaction.details.push(serializedRow);
     },

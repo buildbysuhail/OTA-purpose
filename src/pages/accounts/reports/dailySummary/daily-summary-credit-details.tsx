@@ -7,14 +7,12 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface DailySummaryCreditDetails {
-
-  from: Date
-}
-const DailySummaryCreditDetails = () => {
+import DailySummaryFilter from "./daily-summary-master";
+const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
+  // const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -163,7 +161,7 @@ const DailySummaryCreditDetails = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  postData={filter}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}

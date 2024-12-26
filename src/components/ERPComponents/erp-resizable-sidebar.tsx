@@ -3,6 +3,7 @@ import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css"; 
 import "./erp-resizable-sidebar.css"; 
 import { useAppState } from "../../utilities/hooks/useAppState";
+import { ERPScrollArea } from "./erp-scrollbar";
 
 interface ERPResizableSidebarProps {
   children: React.ReactNode; // Content to render inside the sidebar
@@ -11,6 +12,7 @@ interface ERPResizableSidebarProps {
   minWidth?: number; // Minimum width for the sidebar
   maxWidth?: number; // Maximum width for the sidebar
   initialWidth?: number; // Initial width of the sidebar
+  childrenHeight?:number
 }
 
 const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
@@ -20,6 +22,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
   minWidth = 200,
   maxWidth = 800,
   initialWidth = 400,
+  childrenHeight = 800,
 }) => {
   const [sidebarWidth, setSidebarWidth] = useState(initialWidth);
     const appState = useAppState();
@@ -36,9 +39,12 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
           resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
           handle={<div className={`custom-handle ${ appState.appState.dir === "rtl" ? "ltr" : "rtl"}`} />}
           onResize={(e, { size }) => setSidebarWidth(size.width)}
-          className="resizable-sidebar resizable-sidebar-custom  h-svh"
-        >
+          className="resizable-sidebar resizable-sidebar-custom  max-h-[calc(100vh-8rem)]"
+        > 
+        <ERPScrollArea className="w-full  overflow-y-auto max-h-[calc(100vh-8rem)]">
           {children}
+        </ERPScrollArea>
+          
         </ResizableBox>
       )}
      {isOpen.toString()}

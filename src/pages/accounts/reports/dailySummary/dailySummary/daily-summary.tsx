@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
@@ -8,20 +8,23 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { DailySummaryFilter } from "../daily-summary-master";
 
 interface DailySummary {
-    transactionDate: Date;
-    counterID: number;
-    costCentreID: number;
-    counterShiftId: number;
-    employeeID: number;
+  transactionDate: Date;
+  counterID: number;
+  costCentreID: number;
+  counterShiftId: number;
+  employeeID: number;
 }
-const DailySummary = () => {
+const DailySummary: React.FC<DailySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
-  const { getFormattedValue} = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
-  const [voucherType, setVoucherType] =useState<string>("");
+  // const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
+  const [voucherType, setVoucherType] = useState<string>();
+  const [reload, setReload] = useState<boolean>(false);
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -30,12 +33,12 @@ const DailySummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
-   {cellElement.data.cType}
-  </span>
+        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.cType}
+        </span>
       ),
     },
     {
@@ -45,158 +48,204 @@ const DailySummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
-   {cellElement.data.description}
-  </span>
+        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.description}
+        </span>
       ),
     },
     {
       dataField: "amount",
-      caption:  t("amount"),
+      caption: t("amount"),
       dataType: "number",
-      allowSearch: true, 
+      allowSearch: true,
       allowFiltering: true,
-  //     cellRender: (cellElement: any, cellInfo: any) => (
-  //       <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
-  // {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
-  // </span>
-  //     ),
+      //     cellRender: (cellElement: any, cellInfo: any) => (
+      //       <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+      // {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
+      // </span>
+      //     ),
     },
   ];
-  const detailsColumns: DevGridColumn[] = [
-    {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "vrType",
-      caption: t("voucher_type"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "voucherPrefix",
-      caption:  t("voucher_prefix"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "voucherNumber",
-      caption: t("voucher_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "partyName",
-      caption: t("party_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "total",
-      caption: t("total"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "cashAmount",
-      caption: t("cash_amount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "creditAmount",
-      caption: t('credit_amount'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "bankAmount",
-      caption: t("bank_amount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "salesMan",
-      caption: t("sales_man"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-  ];
-  const handleCellClick = useCallback((event: any) => {
+  const detailColumnsTemp = [{
+    dataField: "date",
+    caption: t("date"),
+    dataType: "date",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 50,
+  },
+  {
+    dataField: "vrType",
+    caption: t("voucher_type"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+  },
+  {
+    dataField: "voucherPrefix",
+    caption: t("voucherPrefix"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "voucherNumber",
+    caption: t("voucher_number"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "partyName",
+    caption: t("party_name"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "total",
+    caption: t("total"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "cashAmount",
+    caption: t("cash_amount"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "creditAmount",
+    caption: t("credit_amount"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "bankAmount",
+    caption: t("bank_amount"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "salesMan",
+    caption: t("sales_man"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "amount",
+    caption: t("amount"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "discount",
+    caption: t("discount"),
+    dataType: "number",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "employee",
+    caption: t("employee"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  },
+  {
+    dataField: "ledgerName",
+    caption: t("ledgerName"),
+    dataType: "string",
+    allowSearch: true,
+    allowFiltering: true,
+    width: 150,
+  }];
+  const [detailsColumns, setDetailsColumns] = useState<any>(detailColumnsTemp);
+
+
+  useEffect(() => {
+    const updatedColumns = [...detailColumnsTemp]
+    const filteredColumns = updatedColumns.filter((column) => {
+      // Add logic for filtering based on voucherType
+      if (["CR", "CP", "BR", "BP"].includes(voucherType ?? "")) {
+        return !["total", "partyName", "cashAmount", "creditAmount", "bankAmount", "salesMan"].includes(column.dataField);
+      } else {
+        return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
+      }
+    });
+    debugger;
+    setDetailsColumns(filteredColumns);
+  }, [voucherType]);
+  const onRowClick = useCallback((event: any) => {
+    debugger;
     setVoucherType(event.data?.cType);
+    setReload(true)
   }, []);
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6">
-  <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-    <div className="p-4">
-      <div className="grid grid-cols-1 gap-3">
-        <ErpDevGrid
-          columns={columns}
-          showSerialNo={true}
-          gridHeader={t("daily_summary_report")}
-          dataUrl={Urls.acc_reports_daily_summary}
-          postData={filter}
-          method={ActionType.POST}
-          gridId="grd_cost_centre"
-          popupAction={toggleCostCentrePopup}
-          onCellClick={handleCellClick}
-          remoteOperations={{ filtering: false, paging: false, sorting: false }}
-          hideGridAddButton={true}
-          childPopupProps={{
-            content: null,
-            title: '',
-            isForm: false,
-            width: "mw-100",
-            drillDownCells: "description",
-          }}
-          reload={true}
-        ></ErpDevGrid>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                columns={columns}
+                showSerialNo={true}
+                gridHeader={t("daily_summary_report")}
+                dataUrl={Urls.acc_reports_daily_summary}
+                postData={filter}
+                onRowClick={onRowClick}
+                method={ActionType.POST}
+                gridId="grd_cost_centre"
+                popupAction={toggleCostCentrePopup}
+                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                hideGridAddButton={true}
+              ></ErpDevGrid>
+            </div>
+          </div>
+        </div>
+        <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                columns={detailsColumns}
+                gridHeader={t("daily_summary_detailed")}
+                dataUrl={Urls.acc_reports_daily_summary_detailed}
+                postData={{
+                  ...filter,
+                  voucherType: voucherType
+                }}
+                method={ActionType.POST}
+                changeReload={(reload: any) => {
+                  if (!reload) {
+                    setReload(reload);
+                  }
+                }}
+                gridId="grd_cost_centre_detailed"
+                popupAction={toggleCostCentrePopup}
+                hideGridAddButton={true}
+                reload={reload}
+              ></ErpDevGrid>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-    <div className="p-4">
-      <div className="grid grid-cols-1 gap-3">
-        <ErpDevGrid
-          columns={columns}
-          gridHeader={t("daily_summary_detailed")}
-          dataUrl={Urls.acc_reports_daily_summary_detailed}
-          postData={{... filter,
-            voucherType: voucherType}}
-          method={ActionType.POST}
-          gridId="grd_cost_centre"
-          popupAction={toggleCostCentrePopup}
-          hideGridAddButton={true}
-          reload={true}
-        ></ErpDevGrid>
-      </div>
-    </div>
-  </div>
-</div>
     </Fragment>
   );
 };

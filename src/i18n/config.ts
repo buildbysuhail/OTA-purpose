@@ -16,6 +16,8 @@ import integrationEn from "./locales/en/integration-En.json";
 import integrationAr from "./locales/ar/integration-Ar.json";
 import labelDesignerEn from "./locales/en/labelDesigner_En.json";
 import labelDesignerAr from "./locales/ar/labelDesigner-Ar.json";
+import accountsReportEn from "./locales/en/accountsReport-En.json";
+import accountsReportAr from "./locales/ar/accountsReport-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
@@ -32,8 +34,8 @@ i18n.use(initReactI18next).init({
       applicationSettings: applicationSettingsEn,
       system: systemEn,
       integration: integrationEn,
-      labelDesigner:labelDesignerEn
-      
+      labelDesigner:labelDesignerEn,
+      accountsReport:accountsReportEn
     },
     ar: {
       main: mainAr,
@@ -43,7 +45,8 @@ i18n.use(initReactI18next).init({
       applicationSettings: applicationSettingsAr,
       system: systemAr,
       integration: integrationAr,
-      labelDesigner:labelDesignerAr
+      labelDesigner:labelDesignerAr,
+      accountsReport:accountsReportAr
     },
   },
 });

@@ -192,17 +192,27 @@ const createStore = async (
             ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
-        return result
-          ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
-          : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+            debugger;
+
+        return result != undefined 
+                            ?  result.isOk != undefined && result.isOk == false 
+                                ? {
+                                    data: [],
+                                    totalCount:-1,
+                                    summary: {},
+                                    groupCount: 0,
+                                  } 
+                                : 
+                                  {
+                                    data: result.data,
+                                    totalCount: result.totalCount,
+                                  }
+                            : {
+                              data: [],
+                              totalCount: -1,
+                              summary: {},
+                              groupCount: 0,
+                            };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -316,6 +326,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   },
   childPopupPropsDynamic
 }) => {
+  debugger;
   const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
@@ -341,6 +352,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   useEffect(() => {
     set_reload(reload);
   }, [reload]);
+  useEffect(() => {
+    setGridCols(columns);
+  }, []);
   useEffect(() => {
     if (filterInitialData && Object.keys(filter).length === 0) {
       setFilter(filterInitialData);
@@ -442,26 +456,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload,  isPdfMode]);
   const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
   const memoizedStore = useMemo(() => store, [store]);
-
-  const switchPdf = useCallback((e: any) => {
-    setIsPdfMode((prevpdf: boolean) => {
-      setGridCols((prev: any) => {
+//SAfvan
+  // const switchPdf = useCallback((e: any) => {
+  //   setIsPdfMode((prevpdf: boolean) => {
+  //     setGridCols((prev: any) => {
         
-        if (!prevpdf) {
-          // to pdf
-          if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
-          }
-        } else {
-          if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == false)
-          }
-        }
-        return prev;
-      })
-      return !prevpdf;  // Return the previous value if no change
-    });
-  }, [preferences, gridInstance]);
+  //       if (!prevpdf) {
+  //         // to pdf
+  //         if (preferences) {
+  //           return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
+  //         }
+  //       } else {
+  //         if (preferences) {
+  //           return preferences.columnPreferences.filter(x => x.visible == false)
+  //         }
+  //       }
+  //       return prev;
+  //     })
+  //     return !prevpdf;  // Return the previous value if no change
+  //   });
+  // }, [preferences, gridInstance]);
   const switchToPdf = useCallback(() => {
     setGridCols((prev: any) => {
       if (preferences) {
@@ -800,6 +814,7 @@ const onCellPrepared = useCallback((e: any) => {
         allowCollapsing={false}
     />
         </DataGrid>
+        {JSON.stringify(gridCols)}
       </div>
       {(childPopupProps || childPopupPropsDynamic) && (
   <ERPModal

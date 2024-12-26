@@ -1,12 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
 
@@ -21,7 +20,7 @@ const AccountsHistoryReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -59,22 +58,21 @@ const AccountsHistoryReport = () => {
     // },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "form",
-      caption:  t("voucher_type"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
-
     {
       dataField: "accountName",
       caption: t("account"),
@@ -91,7 +89,6 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 200,
     },
-
     {
       dataField: "debit",
       caption: t('debit'),
@@ -143,7 +140,7 @@ const AccountsHistoryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("accounts_transaction_history")}
-                  dataUrl= {Urls.acc_reports_accounts_history}
+                  dataUrl={Urls.acc_reports_accounts_history}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   // popupAction={toggleCostCentrePopup}
@@ -151,13 +148,13 @@ const AccountsHistoryReport = () => {
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<TransactrionHistoryReportFilter/>}
+                  filterContent={<TransactrionHistoryReportFilter />}
                   filterInitialData={TransactrionHistoryReportFilterInitialState}
                   filterWidth="150"
                   // gridAddButtonType="popup"
                   reload={true}
                   childPopupProps={{
-                    content: <AccountsHistoryPopup/>,
+                    content: <AccountsHistoryPopup />,
                     title: t("accounts_transaction_history_popup"),
                     isForm: true,
                     width: "mw-100",
@@ -170,7 +167,6 @@ const AccountsHistoryReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

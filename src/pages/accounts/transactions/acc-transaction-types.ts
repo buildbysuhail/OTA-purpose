@@ -449,7 +449,7 @@ export interface AccTransactionFormState {
   keepNarration: boolean
   amountInWords: string,
   template?: any,
-  templates?: any,
+  templates?: [],
   userConfig: AccUserConfig;
 }
 export const accTransactionFormStateInitialData: AccTransactionFormState = {

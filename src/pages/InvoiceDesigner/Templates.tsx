@@ -323,7 +323,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
-
     const newTData = {
       signature_image: null,
       background_image: null,

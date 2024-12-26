@@ -7,7 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import DailySummaryFilter from "./daily-summary-master";
+import { DailySummaryFilter } from "./daily-summary-master";
 const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();

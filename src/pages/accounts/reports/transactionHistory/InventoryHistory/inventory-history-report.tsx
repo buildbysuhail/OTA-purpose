@@ -1,14 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
-import InventoryHistoryPopup from "./inventory-history-popup";
 import InventoryHistoryDetails from "./inventory-history-details";
 
 
@@ -19,7 +17,7 @@ const InventoryHistoryReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -56,16 +54,16 @@ const InventoryHistoryReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "form",
-      caption:  t("voucher_type"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -138,13 +136,13 @@ const InventoryHistoryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("inventory_transaction_history")}
-                  dataUrl= {Urls.acc_reports_inventory_history}
+                  dataUrl={Urls.acc_reports_inventory_history}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   // popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<TransactrionHistoryReportFilter/>}
+                  filterContent={<TransactrionHistoryReportFilter />}
                   filterInitialData={TransactrionHistoryReportFilterInitialState}
                   filterWidth="150"
                   hideGridAddButton={true}
@@ -157,8 +155,8 @@ const InventoryHistoryReport = () => {
                   //   drillDownCells: "vchNo",
                   //   bodyProps: "oldInvTransactionID",
                   // }}
-                  childPopupProps= {{
-                    content: <InventoryHistoryDetails/>,
+                  childPopupProps={{
+                    content: <InventoryHistoryDetails />,
                     title: t("inventory_transaction_history_details"),
                     isForm: true,
                     width: "mw-100",
@@ -171,7 +169,6 @@ const InventoryHistoryReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

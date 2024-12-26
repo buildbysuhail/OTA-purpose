@@ -14,7 +14,6 @@ import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface PaymentReport {
-
   from: Date
 }
 const PaymentReport = () => {
@@ -23,10 +22,10 @@ const PaymentReport = () => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
+  const { t } = useTranslation('accountsReport');
   const dispatch = useAppDispatch();
-    const { getFormattedValue} = useNumberFormat()
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<PaymentReport>({from: new Date()});
+  const { getFormattedValue } = useNumberFormat()
+  const [filter, setFilter] = useState<PaymentReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -39,7 +38,7 @@ const PaymentReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -61,9 +60,9 @@ const PaymentReport = () => {
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -90,10 +89,10 @@ const PaymentReport = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
 
-  </span>
+        </span>
       ),
     },
   ];
@@ -107,13 +106,13 @@ const PaymentReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("payment_report")}
-                  dataUrl= {Urls.acc_reports_payment}
+                  dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<PaymentReportFilter/>}
+                  filterContent={<PaymentReportFilter />}
                   filterInitialData={PaymentReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
@@ -123,9 +122,7 @@ const PaymentReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default PaymentReport;

@@ -238,7 +238,7 @@ const ComboboxList = React.forwardRef<
     onSelect: (item: Option) => void;
     activeIndex: number;
     customSize?: "sm" | "md" | "lg" | "customize";
-  } & { appState: "rtl"|"ltr" }>
+  } & { appState: "rtl" | "ltr" }>
   ((props, ref) => {
     const { items, selectedValue, onSelect, activeIndex, customSize, appState } = props;
     const itemData = {
@@ -259,9 +259,9 @@ const ComboboxList = React.forwardRef<
         itemData={itemData}
         className={`scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400`}
         style={{ direction: appState }}
-        >
+      >
         {Row}
-    
+
       </List>
     );
   });
@@ -363,27 +363,23 @@ export default function ERPDataCombobox({
   }, [initial]);
 
   const [borderStyles, setBorderStyles] = useState<string>(appState?.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
-  useEffect(() => {
-    let style;
-    if (appState?.mode === 'dark') {
-      if (isFocused || isHovered) {
-        style = '#ffffff';
-        console?.log('Dark mode, focused or hovered: ', style);
+  const [bgColor, setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true ? '#ffffff' : '#ffffff1a') : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
+   useEffect(() => {
+      let border, bgCol;
+      if (appState?.mode === 'dark') {
+        border = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
+        bgCol = isFocused ? '#ffffff' : '#ffffff1a';
       } else {
-        style = '#ffffff1a';
-        console?.log('Dark mode, not focused or hovered: ', style);
+        border = isFocused || isHovered
+          ? `rgb(${appState?.inputBox?.borderFocus})`
+          : `rgb(${appState?.inputBox?.borderColor})`;
+        bgCol = isFocused
+          ? `rgb(${appState?.inputBox?.focusBgColor})`
+          : ``;
       }
-    } else {
-      if (isFocused || isHovered) {
-        style = `rgb(${appState?.inputBox?.borderFocus})`;
-        console?.log('Light mode, focused or hovered: ', style);
-      } else {
-        style = `rgb(${appState?.inputBox?.borderColor})`;
-        console?.log('Light mode, not focused or hovered: ', style);
-      }
-    }
-    setBorderStyles(style);
-  }, [appState?.mode, isFocused, isHovered, appState?.inputBox?.borderColor, appState?.inputBox?.borderFocus])
+      setBorderStyles(border);
+      setBgColor(bgCol);
+    }, [appState.mode, isFocused, isHovered, appState.inputBox?.borderColor, appState.inputBox?.borderFocus, appState.inputBox?.focusBgColor, appState.inputBox?.defaultBgColor]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -1061,7 +1057,7 @@ export default function ERPDataCombobox({
                 outline: "none",
                 transition: "border-color 0.2s ease-in-out",
                 borderRadius: `${appState?.inputBox?.borderRadius}px`,
-                backgroundColor: isFocused ?  appState?.inputBox?.focusBgColor : appState?.inputBox?.defaultBgColor,
+                backgroundColor: bgColor,
               }}
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
@@ -1084,27 +1080,23 @@ export default function ERPDataCombobox({
               style={{
                 background:
                   initial?.value !== undefined &&
-                  initial?.value !== null &&
-                  initial?.value !== ""
+                    initial?.value !== null &&
+                    initial?.value !== ""
                     ? `rgb(${appState?.inputBox?.selectColor})`
                     : "#f9f9f9",
                 ...(document.documentElement.dir === "rtl"
                   ? {
-                      borderTopLeftRadius: `${
-                        appState?.inputBox?.borderRadius ?? 5
+                    borderTopLeftRadius: `${appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                      borderBottomLeftRadius: `${
-                        appState?.inputBox?.borderRadius ?? 5
+                    borderBottomLeftRadius: `${appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                    }
+                  }
                   : {
-                      borderTopRightRadius: `${
-                        appState?.inputBox?.borderRadius ?? 5
+                    borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                      borderBottomRightRadius: `${
-                        appState?.inputBox?.borderRadius ?? 5
+                    borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                    }),
+                  }),
               }}
             >
               {/* Dropdown button */}
@@ -1147,14 +1139,14 @@ export default function ERPDataCombobox({
                   </div>
                 ) : (
                   <ComboboxList
-                        ref={listRef}
-                        items={filteredItems}
-                        selectedValue={initial}
-                        onSelect={handleItemClick}
-                        activeIndex={activeIndex}
-                        customSize={_customSize} 
-                        appState={appState.dir}                  
-                 />
+                    ref={listRef}
+                    items={filteredItems}
+                    selectedValue={initial}
+                    onSelect={handleItemClick}
+                    activeIndex={activeIndex}
+                    customSize={_customSize}
+                    appState={appState.dir}
+                  />
                 )}
               </div>,
               document.body // Render to body to escape parent constraints

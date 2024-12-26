@@ -769,7 +769,7 @@ const onCellPrepared = useCallback((e: any) => {
               allowEditing={column.allowEditing || false}
               key={column.dataField}
               dataField={column.dataField}
-              caption={column.caption}
+              caption={column.captionDynamic != undefined ? column.captionDynamic(filter) : column.caption}
               dataType={column.dataType}
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
@@ -779,7 +779,7 @@ const onCellPrepared = useCallback((e: any) => {
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visible || false}
+              visible={column.visibleDynamic != undefined ? column.visibleDynamic(filter) :  column.visible || false}
             />
           ))}
           {summaryItems.length > 0 && (

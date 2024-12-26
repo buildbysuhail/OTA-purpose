@@ -2021,7 +2021,7 @@ setIsTemplateOpen(true)
           Template: 'Elite Template'
           <span
             className="hover:underline text-[#0ea5e9] capitalize ml-1"
-            onClick={selectTemplate}
+            onClick={selectTemplates}
           >
             Change
           </span>

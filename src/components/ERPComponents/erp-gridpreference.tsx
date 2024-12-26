@@ -85,7 +85,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
     fontColor: '',
     fontSize: 0,
     displayOrder: index,
-    showInPdf: column.showInPdf || false
+    showInPdf: column.showInPdf || false,
+    groupIndex: undefined
   });
 
   const handlePreferenceChange = (

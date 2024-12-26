@@ -66,7 +66,7 @@ export interface DevGridColumn {
     fontSize: number;
     showInPdf: boolean;
     displayOrder: number;
-    groupIndex:any
+    groupIndex?:any
   }
   export interface GridPreference {
     font: string;

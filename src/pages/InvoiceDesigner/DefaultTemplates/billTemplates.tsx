@@ -1,11 +1,11 @@
+import VoucherType from "../../../enums/voucher-types";
 import { TemplateState } from "../Designer/interfaces";
-import { TemplateGroupTypes } from "../constants/TemplateCategories";
 
 export interface DeafultTemplateProps {
   content: TemplateState;
   is_default: boolean;
   is_primary: boolean;
-  voucher_type: TemplateGroupTypes;
+  voucher_type: VoucherType | string;
 
   status?: "current";
   logo?: string | null;

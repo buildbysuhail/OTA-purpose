@@ -111,7 +111,7 @@ export const useAccTransaction = (
     narration: { visible: true, disabled: false, label: "Narration" },
     currencyID: { visible: true, disabled: false, label: "Currency" },
     exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },
-    hasDiscount: { visible: true, disabled: false, label: "Has Discount" },
+    hasDiscount: { visible: true, disabled: false, label: "Discount" },
     discount: { visible: true, disabled: false, label: "Discount" },
     chequeNumber: { visible: true, disabled: false, label: "Cheque Number" },
     bankDate: { visible: false, disabled: false, label: "Bank Date" },

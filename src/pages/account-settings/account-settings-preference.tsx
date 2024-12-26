@@ -165,8 +165,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       adjustD: 0,
       marginTop: 0,
       marginBottom: 0,
-      focusForeColor:  "128, 128, 128",
-      focusBgColor:  "128, 128, 128",
+      focusForeColor:  "black",
+      focusBgColor:  "255, 204, 88",
     },
   });
 
@@ -2036,7 +2036,7 @@ const resetInputBox = async ()=>{
                                 style={{
                                   backgroundColor: `rgb(${
                                     appState.inputBox?.focusBgColor ??
-                                    "128, 128, 128"
+                                    "255, 204, 88"
                                   })`,
                                 }}
                               >
@@ -2074,7 +2074,7 @@ const resetInputBox = async ()=>{
                                 style={{
                                   backgroundColor: `rgb(${
                                     appState.inputBox?.focusForeColor ??
-                                    "128, 128, 128"
+                                    "black"
                                   })`,
                                 }}
                               >

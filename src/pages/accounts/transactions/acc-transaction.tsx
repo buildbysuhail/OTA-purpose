@@ -698,7 +698,7 @@ setIsTemplateOpen(true)
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className="space-y-6 p-4">
+        <div className="bg-white space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -1197,6 +1197,7 @@ setIsTemplateOpen(true)
                     )
                   }
                   disabled={
+                    formState.row.hasDiscount != true ||
                     formElements.discount?.disabled ||
                     formElements.pnlMasters?.disabled
                   }

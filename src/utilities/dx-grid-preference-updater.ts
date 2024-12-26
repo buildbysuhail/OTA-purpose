@@ -51,7 +51,8 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     fontColor: '',
     fontSize: 0,
     displayOrder: index,
-    showInPdf: column.showInPdf?? false
+    showInPdf: column.showInPdf?? false,
+    
     }
   };
 export function getInitialPreference(gridId: any, columns: any) {

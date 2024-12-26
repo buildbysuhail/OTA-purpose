@@ -17,7 +17,7 @@ import DayBookDetailed from "../../../pages/accounts/reports/dayBook/day-book-de
 import DayBookSummary from "../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary";
 import PaymentReport from "../../../pages/accounts/reports/payment-report";
 import CollectionReport from "../../../pages/accounts/reports/collection-report";
-import TransactionReport from "../../../pages/accounts/reports/transaction-report";
+import TransactionReport from "../../../pages/accounts/reports/transactionReport/transaction-report";
 import AccountsHistoryReport from "../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
 import DailySummary from "../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary";
 import BillwiseProfit from "../../../pages/accounts/reports/billwise-profit/billwise-profit";
@@ -242,6 +242,7 @@ import RouteGuard from "../../../utilities/route-guard";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
+import PartySummaryMaster from "../../../pages/accounts/reports/partywise-summary/party-summary-master";
 
 const PriceList = lazy(
   () =>
@@ -550,7 +551,7 @@ const Content: FC<ContentProps> = () => {
         />
         <Route
           path="/accounts/partywise_summary"
-          element={<PartySummaryBasicInfo />}
+          element={<PartySummaryMaster />}
         />
         <Route
           path="/accounts/outstanding_payable"

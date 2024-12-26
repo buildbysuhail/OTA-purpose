@@ -1,15 +1,16 @@
 import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../redux/types";
+import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 
 interface TransactionReport {
 
@@ -136,11 +137,11 @@ const TransactionReport = () => {
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
-                  filterWidth="100"
-                  // enablefilter={true}
-                  // showFilterInitially={true}
-                  // filterContent={<TrialBalancePeriodwiseReportFilter />}
-                  // filterInitialData={TrialBalancePeriodwiseReportFilterInitialState}
+                  filterWidth="400"
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<TransactionReportFilter/>}
+                  filterInitialData={TransactionReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

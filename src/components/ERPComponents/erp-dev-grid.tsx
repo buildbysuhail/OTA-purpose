@@ -21,6 +21,7 @@ import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
 import dxDataGrid from "devextreme/ui/data_grid";
+// import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -626,6 +627,7 @@ const onCellPrepared = useCallback((e: any) => {
     <Fragment>
       <div className={className}>
         <DataGrid
+     
           // wordWrapEnabled={wordWrapEnabled}
           onInitialized={onGridReady}
           dataSource={memoizedStore}
@@ -793,6 +795,10 @@ const onCellPrepared = useCallback((e: any) => {
               ))}
             </Summary>
           )}
+             <Grouping
+        autoExpandAll={true}
+        allowCollapsing={false}
+    />
         </DataGrid>
       </div>
       {(childPopupProps || childPopupPropsDynamic) && (

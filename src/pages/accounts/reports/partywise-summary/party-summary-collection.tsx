@@ -7,18 +7,18 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface PartySummaryCollection {
-  from: Date
-}
-const PartySummaryCollection = () => {
+import { PartySummaryFilter } from "./party-summary-master";
+
+const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter
+}) => {
+  debugger;
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartySummaryCollection>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -34,7 +34,7 @@ const PartySummaryCollection = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -58,7 +58,7 @@ const PartySummaryCollection = () => {
     },
     {
       dataField: "amount",
-      caption: t('amount'),
+      caption: t("amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -66,7 +66,7 @@ const PartySummaryCollection = () => {
     },
     {
       dataField: "discount",
-      caption: t('discount'),
+      caption: t("discount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -80,7 +80,7 @@ const PartySummaryCollection = () => {
       allowFiltering: true,
       width: 300,
     },
-     {
+    {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
@@ -163,8 +163,9 @@ const PartySummaryCollection = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_summary_collection_report")}
-                  dataUrl= {Urls.acc_reports_party_summary_collections }
+                  dataUrl={Urls.acc_reports_party_summary_collections}
                   method={ActionType.POST}
+                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}

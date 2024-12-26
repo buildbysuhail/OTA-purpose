@@ -15,7 +15,6 @@ import CollectionReportFilter, { CollectionReportFilterInitialState } from "./co
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface CollectionReport {
-
   from: Date
 }
 const CollectionReport = () => {
@@ -37,8 +36,8 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      groupIndex:0,
     },
-  
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
@@ -102,7 +101,6 @@ const CollectionReport = () => {
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
    {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
-
   </span>
       ),
     },
@@ -115,6 +113,7 @@ const CollectionReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+              allowGrouping={true}
                   columns={columns}
                   gridHeader={t("collection_report")}
                   dataUrl= {Urls.acc_reports_collection}
@@ -133,7 +132,6 @@ const CollectionReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

@@ -133,7 +133,7 @@ const Urls = {
   // AccountSettings/Preferences
   updateLanguage: "/Core/Preferences/UpdateLanguage/",
   updatePreference: "/Core/Preferences/UpdatePreference/",
-  updateDateRegion: "/Core/Preferences/UpdateDateRegion/",
+  UpdateLocalSettings: "/Core/Preferences/UpdateLocalSettings/",
   updateUserThemes: "/Core/Preferences/UpdateUserThemes/",
   getLanguage: "/Core/Preferences/GetLanguage/",
   getPreference: "/Core/Preferences/GetPreference/",

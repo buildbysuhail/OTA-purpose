@@ -147,6 +147,7 @@ const DailySummary : React.FC<DailySummaryFilter> = ({ filter
     },
   ];
   const onRowClick = useCallback((event: any) => {   
+    debugger;
     setVoucherType(event.data?.cType);
   }, []);
   return (
@@ -165,7 +166,6 @@ const DailySummary : React.FC<DailySummaryFilter> = ({ filter
           method={ActionType.POST}
           gridId="grd_cost_centre"
           popupAction={toggleCostCentrePopup}
-          // onCellClick={handleCellClick}
           remoteOperations={{ filtering: false, paging: false, sorting: false }}
           hideGridAddButton={true}
           reload={true}

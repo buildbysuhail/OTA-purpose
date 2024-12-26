@@ -192,17 +192,27 @@ const createStore = async (
             ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
-        return result
-          ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
-          : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+            debugger;
+
+        return result != undefined 
+                            ?  result.isOk != undefined && result.isOk == false 
+                                ? {
+                                    data: [],
+                                    totalCount:-1,
+                                    summary: {},
+                                    groupCount: 0,
+                                  } 
+                                : 
+                                  {
+                                    data: result.data,
+                                    totalCount: result.totalCount,
+                                  }
+                            : {
+                              data: [],
+                              totalCount: -1,
+                              summary: {},
+                              groupCount: 0,
+                            };
       } catch (err) {
         console.error("Load failed:", err);
         return {

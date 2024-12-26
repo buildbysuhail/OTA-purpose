@@ -8,6 +8,7 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { DailySummaryFilter } from "../daily-summary-master";
 
 interface DailySummary {
     transactionDate: Date;
@@ -16,11 +17,12 @@ interface DailySummary {
     counterShiftId: number;
     employeeID: number;
 }
-const DailySummary = () => {
+const DailySummary : React.FC<DailySummaryFilter> = ({ filter
+}) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
+  // const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
   const [voucherType, setVoucherType] =useState<string>("");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -144,7 +146,7 @@ const DailySummary = () => {
       width: 150,
     },
   ];
-  const handleCellClick = useCallback((event: any) => {
+  const onRowClick = useCallback((event: any) => {   
     setVoucherType(event.data?.cType);
   }, []);
   return (
@@ -159,19 +161,13 @@ const DailySummary = () => {
           gridHeader={t("daily_summary_report")}
           dataUrl={Urls.acc_reports_daily_summary}
           postData={filter}
+          onRowClick={onRowClick}
           method={ActionType.POST}
           gridId="grd_cost_centre"
           popupAction={toggleCostCentrePopup}
-          onCellClick={handleCellClick}
+          // onCellClick={handleCellClick}
           remoteOperations={{ filtering: false, paging: false, sorting: false }}
           hideGridAddButton={true}
-          childPopupProps={{
-            content: null,
-            title: '',
-            isForm: false,
-            width: "mw-100",
-            drillDownCells: "description",
-          }}
           reload={true}
         ></ErpDevGrid>
       </div>

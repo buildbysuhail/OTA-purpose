@@ -243,6 +243,7 @@ import { UserAction } from "../../../helpers/user-right-helper";
 import { transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
 import PartySummaryMaster from "../../../pages/accounts/reports/partywise-summary/party-summary-master";
+import DailySummaryMaster from "../../../pages/accounts/reports/dailySummary/daily-summary-master";
 
 const PriceList = lazy(
   () =>
@@ -535,7 +536,7 @@ const Content: FC<ContentProps> = () => {
             userSession.countryId === Countries.India ? (
               <DailySummaryGlobal />
             ) : (
-              <DailySummary />
+              <DailySummaryMaster />
             )
           }
         />

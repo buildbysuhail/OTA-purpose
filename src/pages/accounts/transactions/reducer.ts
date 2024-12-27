@@ -15,6 +15,7 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { UserModel } from "../../../redux/slices/user-session/reducer";
 import { UserAction } from "../../../helpers/user-right-helper";
+import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -52,7 +53,7 @@ const accTransactionSlice = createSlice({
       state.row.ledgerId = 0;
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailId = 0;
-      state.previousNarration = [];
+      state.previousNarration = '';
       state.row.checkStatus = "P";
       state.row.exchangeRate = 1;
       state.row.currencyId = 0;
@@ -188,6 +189,8 @@ const accTransactionSlice = createSlice({
         row: AccTransactionRow;
         isForeignCurrencyEnabled: boolean;
         exchangeRate: number;
+        applicationSettings: ApplicationSettingsType;
+        userSession: UserModel;
       }>
     ) => {
       const data = action.payload.row;
@@ -213,10 +216,12 @@ const accTransactionSlice = createSlice({
       state.row.amount = 0;      
       state.row.discount = 0;
       state.row.bankName = "",
-      state.row.narration = state.transaction.master.voucherType == VoucherType.MultiJournal ? state.userConfig.keepNarrationForJV != true ? "" : state.row.narration : "";
-
-
-
+      state.previousNarration = state.row.narration,
+      state.row.narration = state.transaction.master.voucherType == VoucherType.JournalVoucher ? state.userConfig.keepNarrationForJV != true ? "" : state.row.narration : "";
+      state.row.chequeNumber = "";
+      state.isRowEdit = false;
+      state.row.costCentreId = state.userConfig.presetCostenterId > 0 ? state.userConfig.presetCostenterId : action.payload.applicationSettings.accountsSettings.defaultCostCenterID;
+      
     },
 
     // Update a specific row in the transaction details

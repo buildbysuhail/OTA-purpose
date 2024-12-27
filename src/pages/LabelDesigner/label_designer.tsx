@@ -90,6 +90,7 @@ import LanguageSwitcher from "../../components/common/header/language-switcher";
 import { dir } from "i18next";
 import { useTranslation } from "react-i18next";
 import VoucherType from "../../enums/voucher-types";
+import { AccountMasterFields, fields } from "./fields";
 
 
 interface SaveDialogProps {
@@ -181,100 +182,7 @@ const imgContent = [
   { label: "img1", value: usFlag },
 ];
 
-const fields = [
-  "[Footer1]",
-  "[Footer10]",
-  "[Footer2]",
-  "[Footer3]",
-  "[Footer4]",
-  "[Footer5]",
-  "[Footer6]",
-  "[Footer7]",
-  "[Footer8]",
-  "[Footer9]",
-  "[Header1]",
-  "[Header10]",
-  "[Header2]",
-  "[Header3]",
-  "[Header4]",
-  "[Header5]",
-  "[Header6]",
-  "[Header7]",
-  "[Header8]",
-  "[Header9]",
-  "AliasName",
-  "ArabicName",
-  "AutoBarcode",
-  "AutoBarcodeText",
-  "BarCode",
-  "BarCodeText",
-  "Batch",
-  "BatchNo",
-  "Cost",
-  "ExpDate",
-  "ExpDays",
-  "ExpiryDate",
-  "ExpiryDescription",
-  "GroupName",
-  "MBarcode",
-  "MBarcodeBarcode",
-  "MBarcodeBarCode2",
-  "MfdDate",
-  "MfgDate",
-  "MRP",
-  "MRPCode",
-  "MRPPerUnit",
-  "MSP",
-  "MSPCode",
-  "NetWeight",
-  "Nutrient01",
-  "Nutrient02",
-  "Nutrient03",
-  "Nutrient04",
-  "Nutrient05",
-  "Nutrient06",
-  "Nutrient07",
-  "Nutrient08",
-  "Nutrient09",
-  "Nutrient10",
-  "PackingDate",
-  "PackingQty2",
-  "PackingQty3",
-  "PartyCode",
-  "PCodeBarCode",
-  "PrintDate",
-  "PrintTime",
-  "ProductCategoryName",
-  "ProductCode",
-  "ProductDescription",
-  "ProductName",
-  "ProductName2",
-  "ProductName3",
-  "PurchaseCostCode",
-  "PurchasePriceCode",
-  "Qty",
-  "salesPrice",
-  "SalesPrice2",
-  "SalesPrice3",
-  "SalesPriceCode",
-  "SalesPricePerUnit",
-  "SalesPriceWithVAT",
-  "SINo",
-  "SINo/Qty",
-  "Size",
-  "Specification",
-  "TextOnly",
-  "TransDate",
-  "Unit",
-  "Unit2AutoBarcode",
-  "Unit2Barcode",
-  "Unit2BarcodeBarCode",
-  "Unit3AutoBarcode",
-  "Unit3Barcode",
-  "Unit3BarcodeBarCode",
-  "VAT%",
-  "VocuherNo",
-];
+
 
 const api = new APIClient();
 export default function PDFBarcodeDesigner() {
@@ -1713,23 +1621,46 @@ useEffect (() => {
                     selectedComponent.type !== DesignerElementType.image && (
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type === DesignerElementType.field ? (
+                          <>
+                         {templateGroup === "barcode" && 
+                           <ERPDataCombobox
+                           id="content"
+                           data={selectedComponent}
+                           label="Content"
+                           field={{
+                             id: "content",
+                             valueKey: "value",
+                             labelKey: "label",
+                           }}
+                           options={fields?.map((field, index) => ({
+                             value: field,
+                             label: field,
+                           }))}
+                           onChangeData={(data) =>
+                             handlePropertyChange("content", data.content)
+                           }
+                           />
+                         }
                           <ERPDataCombobox
-                            id="content"
-                            data={selectedComponent}
-                            label="Content"
-                            field={{
-                              id: "content",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={fields?.map((field, index) => ({
-                              value: field,
-                              label: field,
-                            }))}
-                            onChangeData={(data) =>
-                              handlePropertyChange("content", data.content)
-                            }
+                           id="content"
+                           data={selectedComponent}
+                           label="Content"
+                           field={{
+                             id: "content",
+                             valueKey: "value",
+                             labelKey: "label",
+                           }}
+                           options={AccountMasterFields?.map((field, index) => ({
+                             value: field,
+                             label: field,
+                           }))}
+                           onChangeData={(data) =>
+                             handlePropertyChange("content", data.content)
+                           }
                           />
+                           
+                          </>
+                       
                         ) : selectedComponent.type === DesignerElementType.qrCode ? (
                           <ERPDataCombobox
                             id="value"

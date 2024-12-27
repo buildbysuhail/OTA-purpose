@@ -30,7 +30,7 @@ export default function ERPAlert({
   hideAnimation='animate__fadeOutDown',
   icon = 'warning',
   position='center',
-  confirmButtonText = 'Confirm',
+  confirmButtonText = 'Ok',
   cancelButtonText = 'Cancel',
   onConfirm,
   onCancel
@@ -76,7 +76,7 @@ ERPAlert.show = (options: ERPAlertProps) => {
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: options.confirmButtonText || 'Confirm',
+    confirmButtonText: options.confirmButtonText || 'Ok',
     cancelButtonText: options.cancelButtonText || 'Cancel',
     position: options.position || 'center',
     showClass: {

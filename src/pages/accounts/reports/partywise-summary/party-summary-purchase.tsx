@@ -10,8 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
     const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation();
@@ -20,7 +19,7 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
   const columns: DevGridColumn[] = [
     {
       dataField: "vNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -58,7 +57,7 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 50,
     },
-     {
+    {
       dataField: "address1",
       caption: t('address1'),
       dataType: "string",
@@ -73,8 +72,8 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
     },
-   
-   
+
+
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -194,7 +193,7 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_purchase")}
-                  dataUrl= {Urls.acc_reports_party_summary_purchase}
+                  dataUrl={Urls.acc_reports_party_summary_purchase}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -208,7 +207,7 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
           </div>
         </div>
       </div>
-      
+
     </Fragment>
   );
 };

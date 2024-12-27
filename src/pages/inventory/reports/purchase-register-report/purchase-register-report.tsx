@@ -9,7 +9,7 @@ interface PurchaseRegisterReport {
   from: Date
 }
 const PurchaseRegisterReport = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PurchaseRegisterReport>({ from: new Date() });
   const columns: DevGridColumn[] = [
     {

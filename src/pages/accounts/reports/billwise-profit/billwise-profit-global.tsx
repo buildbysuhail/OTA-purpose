@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -17,8 +17,8 @@ const BillwiseProfitGlobal = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-     const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -30,8 +30,8 @@ const BillwiseProfitGlobal = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={'font-bold text-blue'}>
-  {cellElement.data.description}
-  </span>
+          {cellElement.data.description}
+        </span>
       ),
     },
     {
@@ -48,15 +48,15 @@ const BillwiseProfitGlobal = () => {
     },
     {
       dataField: "qty",
-      caption:  t("qty"),
+      caption: t("qty"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
- {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' : cellElement.data.qty < 0 ? getFormattedValue(-1 * cellElement.data.qty) : getFormattedValue(cellElement.data.qty)}`}
-  </span>
+          {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' : cellElement.data.qty < 0 ? getFormattedValue(-1 * cellElement.data.qty) : getFormattedValue(cellElement.data.qty)}`}
+        </span>
       ),
     },
     {
@@ -94,8 +94,8 @@ const BillwiseProfitGlobal = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
-   {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : cellElement.data.grossAmount < 0 ? getFormattedValue(-1 * cellElement.data.grossAmount) : getFormattedValue(cellElement.data.grossAmount)}`}
-  </span>
+          {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : cellElement.data.grossAmount < 0 ? getFormattedValue(-1 * cellElement.data.grossAmount) : getFormattedValue(cellElement.data.grossAmount)}`}
+        </span>
       ),
     },
     {
@@ -146,8 +146,6 @@ const BillwiseProfitGlobal = () => {
   </span>
       ),
     },
-  
-   
     {
       dataField: "profit",
       caption: t("profit"),
@@ -174,7 +172,7 @@ const BillwiseProfitGlobal = () => {
   </span>
       ),
     },
- {
+    {
       dataField: "marginPerc",
       caption: t("margin_perc"),
       dataType: "number",
@@ -277,16 +275,16 @@ const BillwiseProfitGlobal = () => {
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("billwise_profit_report_sales")}
-                  dataUrl= {Urls.acc_reports_billwise_profit_global}
+                  dataUrl={Urls.acc_reports_billwise_profit_global}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
                   enablefilter={true}
-                   filterWidth="200"
+                  filterWidth="200"
                   showFilterInitially={true}
-                  filterContent={<BillwiseProfitReportFilter/>}
+                  filterContent={<BillwiseProfitReportFilter />}
                   filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
@@ -294,9 +292,7 @@ const BillwiseProfitGlobal = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default BillwiseProfitGlobal;

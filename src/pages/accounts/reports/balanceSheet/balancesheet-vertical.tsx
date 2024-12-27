@@ -1,22 +1,15 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import LedgerReportFilter, {
-  LedgerReportFilterInitialState,
-} from "../ledger-report-filter";
-import BalanceSheetFilter, {
-  BalanceSheetFilterInitialState,
-} from "./balance-sheet-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import BalancesheetDetails from "./balancesheet-details";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 
 const BalancesheetVertical = () => {
@@ -24,10 +17,11 @@ const BalancesheetVertical = () => {
     isOpen: boolean;
     key: number;
     groupName?: string;
-  }>({ isOpen: false, key: 0 });
+  }>
+    ({ isOpen: false, key: 0 });
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
@@ -53,18 +47,17 @@ const BalancesheetVertical = () => {
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${
-            cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
+          className={`${cellElement.data.isSubTotal == true
+            ? "font-bold text-black"
+            : cellElement.data.isTotal == true
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-              ? "font-bold text-green"
-              : cellElement.data.isGroup == true
-              ? "pl-4 font-bold text-red"
-              : ""
-          }`}
+                ? "font-bold text-green"
+                : cellElement.data.isGroup == true
+                  ? "pl-4 font-bold text-red"
+                  : ""
+            }`}
         >
           {cellElement.data.accGroup}
         </span>
@@ -93,18 +86,17 @@ const BalancesheetVertical = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${
-            cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
+          className={`${cellElement.data.isSubTotal == true
+            ? "font-bold text-black"
+            : cellElement.data.isTotal == true
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-              ? "font-bold text-green"
-              : cellElement.data.isGroup == true
-              ? "pl-4 font-bold text-red"
-              : ""
-          }`}
+                ? "font-bold text-green"
+                : cellElement.data.isGroup == true
+                  ? "pl-4 font-bold text-red"
+                  : ""
+            }`}
         >
           {cellElement.data.debit}
         </span>
@@ -119,18 +111,17 @@ const BalancesheetVertical = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${
-            cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
+          className={`${cellElement.data.isSubTotal == true
+            ? "font-bold text-black"
+            : cellElement.data.isTotal == true
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-              ? "font-bold text-green"
-              : cellElement.data.isGroup == true
-              ? "pl-4 font-bold text-red"
-              : ""
-          }`}
+                ? "font-bold text-green"
+                : cellElement.data.isGroup == true
+                  ? "pl-4 font-bold text-red"
+                  : ""
+            }`}
         >
           {cellElement.data.credit}
         </span>
@@ -145,18 +136,17 @@ const BalancesheetVertical = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${
-            cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
+          className={`${cellElement.data.isSubTotal == true
+            ? "font-bold text-black"
+            : cellElement.data.isTotal == true
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-              ? "font-bold text-green"
-              : cellElement.data.isGroup == true
-              ? "pl-4 font-bold text-red"
-              : ""
-          }`}
+                ? "font-bold text-green"
+                : cellElement.data.isGroup == true
+                  ? "pl-4 font-bold text-red"
+                  : ""
+            }`}
         >
           {cellElement.data.isGroup}
         </span>
@@ -171,32 +161,29 @@ const BalancesheetVertical = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${
-            cellElement.data.isSubTotal == true
-              ? "font-bold text-black"
-              : cellElement.data.isTotal == true
+          className={`${cellElement.data.isSubTotal == true
+            ? "font-bold text-black"
+            : cellElement.data.isTotal == true
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-              ? "font-bold text-green"
-              : cellElement.data.isGroup == true
-              ? "pl-4 font-bold text-red"
-              : ""
-          }`}
+                ? "font-bold text-green"
+                : cellElement.data.isGroup == true
+                  ? "pl-4 font-bold text-red"
+                  : ""
+            }`}
         >
-          {`${
-            cellElement.data?.amount == 0 || cellElement.data?.amount == null
-              ? ""
-              : cellElement.data.amount < 0
+          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null
+            ? ""
+            : cellElement.data.amount < 0
               ? getFormattedValue(-1 * cellElement.data.amount)
               : getFormattedValue(cellElement.data.amount)
-          } ${
-            cellElement.data?.amount == 0 || cellElement.data?.amount == null
+            } ${cellElement.data?.amount == 0 || cellElement.data?.amount == null
               ? ""
               : cellElement.data?.amount >= 0
-              ? "Dr"
-              : "Cr"
-          }`}
+                ? "Dr"
+                : "Cr"
+            }`}
         </span>
       ),
     },
@@ -234,35 +221,36 @@ const BalancesheetVertical = () => {
                   //     setIsOpenDetails({ isOpen: false, key: 0 });
                   //   }}
                   //   content={
-                      // <BalancesheetDetails
-                      //   postData={{
-                      //     accGroupID: isOpenDetails.key,
-                      //     asOnDate: filter.asOnDate,
-                      //   }}
-                      //   groupName={isOpenDetails.groupName}
-                      // />
+                  // <BalancesheetDetails
+                  //   postData={{
+                  //     accGroupID: isOpenDetails.key,
+                  //     asOnDate: filter.asOnDate,
+                  //   }}
+                  //   groupName={isOpenDetails.groupName}
+                  // />
                   //   }
                   // />:
 
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title:dataField=="accGroupID"? `balance_detailed`:`monthwise_balance`,
+                    title: dataField == t("accGroupID") ? t(`balance_detailed`) : t(`monthwise_balance`),
                     width: "700px",
                     isForm: false,
-                    content:dataField=="accGroupID"?  <BalancesheetDetails
-                    postData={{
-                      // accGroupID: isOpenDetails.key,
-                      asOnDate: filter.asOnDate,
-                    }}
-                    groupName={isOpenDetails.groupName}
-                  /> :<CashBookMonthWise postData={
-                    {asOnDate: filter.asOnDate
-                    }}/>,
+                    content: dataField == "accGroupID" ? <BalancesheetDetails
+                      postData={{
+                        // accGroupID: isOpenDetails.key,
+                        asOnDate: filter.asOnDate,
+                      }}
+                      groupName={isOpenDetails.groupName}
+                    /> : <CashBookMonthWise postData={
+                      {
+                        asOnDate: filter.asOnDate
+                      }} />,
                     drillDownCells: "accGroupID,ledgerID",
                     bodyProps: "ledgerID,accGroupID",
                     // enableFn: () => data?.status === "active", // Corrected to match expected type
                   })}
-                 
-                  // )}
+
+                // )}
                 ></ErpDevGrid>
               </div>
             </div>
@@ -272,5 +260,4 @@ const BalancesheetVertical = () => {
     </Fragment>
   );
 };
-
 export default BalancesheetVertical;

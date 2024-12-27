@@ -3,12 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-report-filter";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
@@ -17,11 +15,11 @@ interface BalancesheetDetailsProps {
   postData: any;
   groupName?: string;
 }
-const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName }) => {
   const dispatch = useAppDispatch();
-    const [filter, setFilter] = useState<any>(postData);
-  const { t } = useTranslation();
-    const { getFormattedValue } = useNumberFormat()
+  const [filter, setFilter] = useState<any>(postData);
+  const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -40,13 +38,13 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       width: 90,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },
     {
       dataField: "branch",
-      caption:  t("branch"),
+      caption: t("branch"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -60,8 +58,8 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red': ''}`}>
-           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
@@ -73,7 +71,7 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red': ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -85,12 +83,12 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-         {cellElement.data.ledgerName}
-         </span>):
+        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.ledgerName}
+        </span>) :
           <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-       }
-     },
+      }
+    },
   ];
   return (
     <Fragment>
@@ -100,30 +98,26 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 heightToAdjustOnWindows={window.innerHeight-649}
+                  heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={groupName}
-                  dataUrl= {Urls.acc_reports_account_ledger_balance_view}
+                  dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
                   showFilterInitially={true}
                   method={ActionType.POST}
                   gridId="grd_balancesheet_details"
-
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                      {asOnDate: filter.asOnDate}
-                    }
-                      />,
+                    content: <CashBookMonthWise postData={{ asOnDate: filter.asOnDate }} />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName",
-                    bodyProps: "ledgerID,", 
-                    enableFn: (data: any) =>data?.ledgerName!="TOTAL"
-                  }}
-                ></ErpDevGrid>
+                    bodyProps: "ledgerID,",
+                    enableFn: (data: any) => data?.ledgerName != "TOTAL"
+                  }}>
+                </ErpDevGrid>
               </div>
             </div>
           </div>
@@ -132,5 +126,4 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
     </Fragment>
   );
 };
-
 export default BalancesheetDetails;

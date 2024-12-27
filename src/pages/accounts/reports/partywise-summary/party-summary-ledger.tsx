@@ -9,11 +9,10 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-    const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -34,7 +33,7 @@ const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -110,10 +109,7 @@ const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${"font-bold text-red"
-            }`}
-        >
+        <span className={`${"font-bold text-red"}`}>
           {`${cellElement.data?.balance == null
             ? '0'
             : cellElement.data.balance < 0
@@ -194,7 +190,6 @@ const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 170,
     },
-
   ];
   return (
     <Fragment>
@@ -206,7 +201,7 @@ const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_summary_ledger_report")}
-                  dataUrl= {Urls.acc_reports_party_summary_ledger}
+                  dataUrl={Urls.acc_reports_party_summary_ledger}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   postData={filter}
@@ -221,9 +216,7 @@ const PartySummaryLedger : React.FC<PartySummaryFilter> = ({ filter
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default PartySummaryLedger;

@@ -94,6 +94,7 @@ export interface PlacedComponent {
   imgFit?:string;
   barcodeProps?: {
     format: string;
+    field:string;
     barWidth: number;
     height: number;
     margin: number;

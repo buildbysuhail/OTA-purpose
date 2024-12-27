@@ -276,8 +276,6 @@ useEffect (() => {
     setActiveTab(newValue);
   };
 
-
-
   let paperWidth, paperHeight;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
@@ -400,6 +398,7 @@ useEffect (() => {
               barWidth: 2,
               height: 75,
               margin: 0,
+              field:"",
               background: "#FFFFFF",
               lineColor: "#000000",
               showText: true,
@@ -1433,16 +1432,16 @@ useEffect (() => {
               templateGroup === "barcode"
                 ? (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
                   (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
-                : templateData?.propertiesState?.pageSize === "Custom"
-                ? templateData.propertiesState?.width
-                : templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight,
+                : templateData?.propertiesState?.pageSize !== "Custom"
+                ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
+                :"auto",
             maxHeight:
               templateGroup === "barcode"
                 ? (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
                   (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
-                : templateData?.propertiesState?.pageSize === "Custom"
-                ? templateData.propertiesState?.height
-                : templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth,
+                : templateData?.propertiesState?.pageSize !== "Custom"
+                ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
+                :`auto` ,
           }}
         >
           {templateGroup === "barcode" ? (
@@ -1622,44 +1621,46 @@ useEffect (() => {
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type === DesignerElementType.field ? (
                           <>
-                         {templateGroup === "barcode" && 
-                           <ERPDataCombobox
-                           id="content"
-                           data={selectedComponent}
-                           label="Content"
-                           field={{
-                             id: "content",
-                             valueKey: "value",
-                             labelKey: "label",
-                           }}
-                           options={fields?.map((field, index) => ({
-                             value: field,
-                             label: field,
-                           }))}
-                           onChangeData={(data) =>
-                             handlePropertyChange("content", data.content)
-                           }
-                           />
-                         }
+                         {templateGroup === "barcode" ?(
+                             <ERPDataCombobox
+                             id="content"
+                             data={selectedComponent}
+                             label="Content"
+                             field={{
+                               id: "content",
+                               valueKey: "value",
+                               labelKey: "label",
+                             }}
+                             options={fields?.map((field, index) => ({
+                               value: field,
+                               label: field,
+                             }))}
+                             onChangeData={(data) =>
+                               handlePropertyChange("content", data.content)
+                             }
+                             />
+                         ):(
                           <ERPDataCombobox
-                           id="content"
-                           data={selectedComponent}
-                           label="Content"
-                           field={{
-                             id: "content",
-                             valueKey: "value",
-                             labelKey: "label",
-                           }}
-                           options={AccountMasterFields?.map((field, index) => ({
-                             value: field,
-                             label: field,
-                           }))}
-                           onChangeData={(data) =>
-                             handlePropertyChange("content", data.content)
-                           }
-                          />
-                           
-                          </>
+                          id="content"
+                          data={selectedComponent}
+                          label="Content"
+                          field={{
+                            id: "content",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={AccountMasterFields?.map((field, index) => ({
+                            value: field,
+                            label: field,
+                          }))}
+                          onChangeData={(data) =>
+                            handlePropertyChange("content", data.content)
+                          }
+                         />
+                         )
+                         
+                         } 
+                        </>
                        
                         ) : selectedComponent.type === DesignerElementType.qrCode ? (
                           <ERPDataCombobox
@@ -1671,7 +1672,7 @@ useEffect (() => {
                               valueKey: "value",
                               labelKey: "label",
                             }}
-                            options={fields?.map((field, index) => ({
+                            options={AccountMasterFields?.map((field, index) => ({
                               value: field,
                               label: field,
                             }))}
@@ -1680,7 +1681,7 @@ useEffect (() => {
                             }
                           />
                         ) : (
-                          <ERPInput
+                            <ERPInput
                             id="content"
                             label="Content"
                             value={selectedComponent.content}
@@ -1689,7 +1690,10 @@ useEffect (() => {
                               handlePropertyChange("content", e.target.value)
                             }
                           />
-                        )}
+                      
+                        )
+                    
+                      }
                       </Box>
                     )}
                      <Box sx={{ mb: 1 }}>
@@ -2404,6 +2408,26 @@ useEffect (() => {
                   {selectedComponent.type === DesignerElementType.barcode &&
                     selectedComponent.barcodeProps && (
                       <div className="space-y-4">
+                          <Box>
+                          <ERPDataCombobox
+                          id="field"
+                          label="Field"
+                          data={selectedComponent.barcodeProps}
+                          field={{
+                            id: "field",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={AccountMasterFields?.map((field) => ({
+                            value: field,
+                            label: field,
+                          }))}
+                          onChangeData={(data) =>
+                            handleBarcodePropertyChange("field", data.field)
+                          }
+                        />
+                          </Box>
+                       
                         <Box>
                           <ERPDataCombobox
                             id="format"

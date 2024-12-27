@@ -25,7 +25,7 @@ const templates = useAppSelector((x:RootState) =>x.AccTransaction?.templates)
 
 const loadTemplateId = useCallback(async(template: TemplateState) => {
     try {
-    const response = await api.getAsync(`${Urls.crm_templates}${template.id}`);
+    const response = await api.getAsync(`${Urls.templates}${template.id}`);
         dispatch(accFormStateHandleFieldChange({fields:{template:response}}));
         setIsOpen(false)
     }

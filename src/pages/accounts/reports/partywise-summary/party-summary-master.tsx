@@ -1,13 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useState } from "react";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPDateInput  from "../../../../components/ERPComponents/erp-date-input";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
-import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import { CircularProgress, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import PartySummaryCollection from "./party-summary-collection";
 import PartySummaryLedger from "./party-summary-ledger";
 import moment from "moment";
@@ -29,20 +25,21 @@ export interface PartySummaryFilter {
   };
 }
 // const PartySummaryMaster = () => {
-  const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const [filter, setFilter] = useState<PartySummaryFilter>({filter: {
-    dateFrom: moment().utc().toISOString(),
-    dateTo: new Date(),
-    ledgerID: -1,
-  }});
-
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<PartySummaryFilter>({
+    filter: {
+      dateFrom: moment().utc().toISOString(),
+      dateTo: new Date(),
+      ledgerID: -1,
+    }
+  });
   debugger;
   const [activeTab, setActiveTab] = useState("address");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -54,57 +51,57 @@ export interface PartySummaryFilter {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
-            <ERPDateInput
-                                  id="dateFrom"
-                                  value={filter.filter.dateFrom}
-                                  customSize='sm'
-                                  data={filter.filter}
-                                  label="from_date"
-                                  onChangeData={(data: any) => setFilter((prev: any) => ({
-                                    ...prev,
-                                    filter: {
-                                      ...prev.filter,
-                                      dateFrom: data.dateFrom
-                                    }
-                                  }))}
-                              />
-                                <ERPDateInput
-                                  id="dateTo"
-                                  value={filter.filter.dateTo}
-                                  customSize='sm'
-                                  data={filter.filter}
-                                  label="from_date"
-                                  onChangeData={(data: any) => setFilter((prev: any) => ({
-                                    ...prev,
-                                    filter: {
-                                      ...prev.filter,
-                                      dateTo: data.dateTo
-                                    }
-                                  }))}
-                              />
-                               <ERPDataCombobox
-      id="ledgerID"
-      value={filter.filter.ledgerID}
-        customSize='sm'
-        data={filter.filter}
-      label={t("Ledgers")}
-      field={{
-        id: "ledgerID",
-        getListUrl: Urls.data_acc_ledgers,
-        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-        valueKey: "id",
-        labelKey: "name",
-      }}
-      // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
-      onChangeData={(data: any) => setFilter((prev: any) => ({
-        ...prev,
-        filter: {
-          ...prev.filter,
-          ledgerID: data.ledgerID
-        }
-      }))}
-    />
-                                {/* <ERPDataCombobox
+              <ERPDateInput
+                id="dateFrom"
+                value={filter.filter.dateFrom}
+                customSize='sm'
+                data={filter.filter}
+                label={t("date_from")}
+                onChangeData={(data: any) => setFilter((prev: any) => ({
+                  ...prev,
+                  filter: {
+                    ...prev.filter,
+                    dateFrom: data.dateFrom
+                  }
+                }))}
+              />
+              <ERPDateInput
+                id="dateTo"
+                value={filter.filter.dateTo}
+                customSize='sm'
+                data={filter.filter}
+                label={t("date_to")}
+                onChangeData={(data: any) => setFilter((prev: any) => ({
+                  ...prev,
+                  filter: {
+                    ...prev.filter,
+                    dateTo: data.dateTo
+                  }
+                }))}
+              />
+              <ERPDataCombobox
+                id="ledgerID"
+                value={filter.filter.ledgerID}
+                customSize='sm'
+                data={filter.filter}
+                label={t("ledgers")}
+                field={{
+                  id: "ledgerID",
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
+                onChangeData={(data: any) => setFilter((prev: any) => ({
+                  ...prev,
+                  filter: {
+                    ...prev.filter,
+                    ledgerID: data.ledgerID
+                  }
+                }))}
+              />
+              {/* <ERPDataCombobox
                               id="ledgerID"
                               data={formState}
                               label={t("party_name")}
@@ -117,7 +114,7 @@ export interface PartySummaryFilter {
                               }}
                               onChangeData={(data: any) => handleFieldChange("ledgerID", data.ledgerID)}
                             /> */}
-                               {/* <ERPDataCombobox
+              {/* <ERPDataCombobox
         {...getFieldProp("salesRouteID")}
         label={t("sales_route")}
         field={{

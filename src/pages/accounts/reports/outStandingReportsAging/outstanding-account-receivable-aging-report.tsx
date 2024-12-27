@@ -1,15 +1,12 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import OutstandingAgingReportFilter, { OutstandingAgingReportFilterInitialState } from "./outstanding-aging-report-filter";
 import OutstandingAccountAgingAnalysis from "./outstanding-account-aging-analysis";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -22,7 +19,7 @@ const OutstandingAccountReceivableAgingReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] = useState<OutstandingAccountReceivableAgingReport>({ from: new Date() });
   const rootState = useRootState();

@@ -9,8 +9,8 @@ interface PartyWiseReport {
   from: Date
 }
 const PartyWiseReport = () => {
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<PartyWiseReport>({from: new Date()});
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<PartyWiseReport>({ from: new Date() });
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -22,7 +22,7 @@ const PartyWiseReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -119,7 +119,7 @@ const PartyWiseReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_wise_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl={Urls.acc_reports_ledger}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   hideGridAddButton={true}
@@ -133,5 +133,4 @@ const PartyWiseReport = () => {
     </Fragment>
   );
 };
-
 export default PartyWiseReport;

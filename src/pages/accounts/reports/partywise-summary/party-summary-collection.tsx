@@ -9,11 +9,10 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
-const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
   debugger;
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {

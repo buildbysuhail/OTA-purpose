@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,16 +9,15 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
-const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummarySales>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "vNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -56,7 +55,7 @@ const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 50,
     },
-     {
+    {
       dataField: "address1",
       caption: t('address1'),
       dataType: "string",
@@ -71,8 +70,6 @@ const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
     },
-   
-   
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -164,7 +161,7 @@ const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_summary_sales")}
-                  dataUrl= {Urls.acc_reports_party_summary_sales}
+                  dataUrl={Urls.acc_reports_party_summary_sales}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -178,9 +175,7 @@ const PartySummarySales  : React.FC<PartySummaryFilter> = ({ filter
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default PartySummarySales;

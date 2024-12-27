@@ -8,9 +8,10 @@ import { ActionType } from "../../../../redux/types";
 interface PurchaseSummaryReport {
   from: Date
 }
+
 const PurchaseSummaryReport = () => {
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<PurchaseSummaryReport>({from: new Date()});
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<PurchaseSummaryReport>({ from: new Date() });
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -22,7 +23,7 @@ const PurchaseSummaryReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -303,7 +304,7 @@ const PurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("purchase_summary_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl={Urls.acc_reports_ledger}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   hideGridAddButton={true}
@@ -317,5 +318,4 @@ const PurchaseSummaryReport = () => {
     </Fragment>
   );
 };
-
 export default PurchaseSummaryReport;

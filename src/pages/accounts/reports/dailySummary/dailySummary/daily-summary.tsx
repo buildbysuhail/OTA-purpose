@@ -184,8 +184,26 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     const updatedColumns = [...detailColumnsTemp]
     const filteredColumns = updatedColumns.filter((column) => {
       // Add logic for filtering based on voucherType
-      if (["CR", "CP", "BR", "BP"].includes(voucherType ?? "")) {
-        return !["total", "partyName", "cashAmount", "creditAmount", "bankAmount", "salesMan"].includes(column.dataField);
+      if (["SI"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
+      }
+      if (["SR","SRCRD","SRCASH"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
+      }
+      if (["NS"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
+      }
+      if (["SICRD"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
+      }
+      if (["BNKAMT"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
+      }
+      if (["CASHSI"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
+      }
+      if (["CR", "CP", "BR"].includes(voucherType ?? "")) {
+        return !["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
       } else {
         return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
       }

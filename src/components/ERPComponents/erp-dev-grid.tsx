@@ -814,7 +814,6 @@ const onCellPrepared = useCallback((e: any) => {
         allowCollapsing={false}
     />
         </DataGrid>
-        {JSON.stringify(gridCols)}
       </div>
       {(childPopupProps || childPopupPropsDynamic) && (
   <ERPModal

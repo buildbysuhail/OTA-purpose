@@ -28,9 +28,23 @@ const accTransactionSlice = createSlice({
       return action.payload;
     },
     // clear entire for new voucher
-    clearState: (state,
-      action: PayloadAction<{userSession: UserModel,softwareDate: string, defaultCostCenterID: number, counterwiseCashLedgerId: number, allowSalesCounter: number}>) => {
-        const { userSession, softwareDate, defaultCostCenterID, counterwiseCashLedgerId, allowSalesCounter} = action.payload;
+    clearState: (
+      state,
+      action: PayloadAction<{
+        userSession: UserModel;
+        softwareDate: string;
+        defaultCostCenterID: number;
+        counterwiseCashLedgerId: number;
+        allowSalesCounter: number;
+      }>
+    ) => {
+      const {
+        userSession,
+        softwareDate,
+        defaultCostCenterID,
+        counterwiseCashLedgerId,
+        allowSalesCounter,
+      } = action.payload;
       state.isBahamdoonPOSReceipt = false;
       (state.transaction.master.accTransMasterID = 0),
         (state.row.ledgerCode = "");
@@ -57,11 +71,7 @@ const accTransactionSlice = createSlice({
       state.printOnSave = true;
       state.transaction.master.isLocked = false;
 
-
-      if (
-        counterwiseCashLedgerId > 0 &&
-        allowSalesCounter
-      ) {
+      if (counterwiseCashLedgerId > 0 && allowSalesCounter) {
         if (
           state.transaction.master.voucherType == "CP" ||
           state.transaction.master.voucherType == "CR"
@@ -69,8 +79,12 @@ const accTransactionSlice = createSlice({
           state.masterAccountID = counterwiseCashLedgerId;
         }
       }
-      state.transaction.master.employeeId = userSession.employeeId > 0 ? userSession.employeeId: 0
-      state.transaction.master.costCentreId = state.userConfig.presetCostenterId > 0 ? state.userConfig.presetCostenterId: 0
+      state.transaction.master.employeeId =
+        userSession.employeeId > 0 ? userSession.employeeId : 0;
+      state.transaction.master.costCentreId =
+        state.userConfig.presetCostenterId > 0
+          ? state.userConfig.presetCostenterId
+          : 0;
       // {
       //   if (userSession.presetCostCenterId > 0)
       //     cbEmployee.SelectedValue =
@@ -94,7 +108,6 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionFormState]?: any };
       }>
     ) => {
-      
       const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       Object.keys(fields).forEach((key) => {
@@ -122,7 +135,6 @@ const accTransactionSlice = createSlice({
       (state.transaction[key] as typeof value) = value;
     },
 
-   
     // Update a specific field in the master object within the transaction
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: "voucherPrefix", value: "INV123" }));
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: { voucherPrefix: "INV123", referenceNumber: "REF456" } }));
@@ -172,20 +184,39 @@ const accTransactionSlice = createSlice({
     // Add single row to the transaction details
     accFormStateTransactionDetailsRowAdd: (
       state,
-      action: PayloadAction<{row: AccTransactionRow, isForeignCurrencyEnabled: boolean}>
+      action: PayloadAction<{
+        row: AccTransactionRow;
+        isForeignCurrencyEnabled: boolean;
+        exchangeRate: number;
+      }>
     ) => {
       const data = action.payload.row;
+      const amount = action.payload.isForeignCurrencyEnabled && data.amount
+      ? (data.amount * action.payload.exchangeRate)
+      : data.amount;
       const serializedRow: AccTransactionRow = {
         ...data,
-        chqDate: data.chqDate
-          ? new Date(data.chqDate).toISOString()
-          : "",
-        bankDate: data.bankDate
-          ? new Date(data.bankDate).toISOString()
-          : "",
-          // amount: action.payload.isForeignCurrencyEnabled ? data.amount * data.exchangeRate
+        chqDate: data.chqDate ? new Date(data.chqDate).toISOString() : "",
+        bankDate: data.bankDate ? new Date(data.bankDate).toISOString() : "",
+        amount:
+          amount,
+        amountFC: data.amount,
+        drCr: state.row.drCr,
+        debit: state.row.drCr == "Dr" ? state.row.amount : 0,
+        credit: state.row.drCr == "Cr" ? state.row.amount : 0,
       };
       state.transaction.details.push(serializedRow);
+
+      state.row.ledgerCode = "";
+      state.row.groupName = "";
+      state.row.ledgerId = 0;
+      state.row.amount = 0;      
+      state.row.discount = 0;
+      state.row.bankName = "",
+      state.row.narration = state.transaction.master.voucherType == VoucherType.MultiJournal ? state.userConfig.keepNarrationForJV != true ? "" : state.row.narration : "";
+
+
+
     },
 
     // Update a specific row in the transaction details
@@ -227,13 +258,12 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionRow]?: any };
       }>
     ) => {
-      
       const { fields } = action.payload;
 
       // Use Object.entries to get key-value pairs
       Object.entries(fields).forEach(([key, fieldValue]) => {
         // Assert the key as keyof AccTransactionRow
-        
+
         const isDateField =
           (state.row[
             key as keyof AccTransactionRow

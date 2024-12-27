@@ -109,7 +109,6 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           formCode={formCode}
           title={title}
           drCr={drCr}
-          voucherNo={data.voucherNo}
           transactionType={transactionType}
         />
         

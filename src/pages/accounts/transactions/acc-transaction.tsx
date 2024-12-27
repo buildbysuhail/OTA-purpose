@@ -8,14 +8,25 @@ import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
-import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
+import {
+  accFormStateHandleFieldChange,
+  accFormStateRowHandleFieldChange,
+  accFormStateTransactionDetailsRowAdd,
+  accFormStateTransactionMasterHandleFieldChange,
+} from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../helpers/api-client";
-import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "../../settings/system/application-settings-types/application-settings-types-main";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "../../settings/system/application-settings-types/application-settings-types-main";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
@@ -28,7 +39,10 @@ import AttachmentSidebar from "../../transaction-base/Attachment-button";
 import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import DownloadPreview from "../../LabelDesigner/download-preview";
-import { DummyInvoiceData, DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
+import {
+  DummyInvoiceData,
+  DummyVoucherData,
+} from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./acc-templates";
@@ -65,7 +79,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionType,
 }) => {
   const { t } = useTranslation();
-  const [gridCode, setGridCode] = useState<string>(`grd_acc_transaction_${voucherType}`);
+  const [gridCode, setGridCode] = useState<string>(
+    `grd_acc_transaction_${voucherType}`
+  );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -83,10 +99,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     enableControls,
     disableControls,
     validate,
-    addOrEditRow
+    addOrEditRow,
   } = useAccTransaction(transactionType ?? "", btnSaveRef, ledgerCodeRef);
   const { validateTransactionDate } = useTransaction(transactionType ?? "");
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const [gridHeight, setGridHeight] = useState(200);
 
   useEffect(() => {
@@ -129,6 +147,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   ]);
 
   useEffect(() => {
+    debugger;
     dispatch(
       accFormStateHandleFieldChange({
         fields: { isInvoker: voucherNo && voucherNo > 0 },
@@ -168,8 +187,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             formState.userConfig.presetCostenterId > 0
               ? formState.userConfig.presetCostenterId
               : userSession.dbIdValue == "SAMAPLASTICS"
-                ? 0
-                : null,
+              ? 0
+              : null,
         },
       })
     );
@@ -188,9 +207,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       try {
         if (formState.showbillwise && formState.row.ledgerId) {
           const billwise = await api.getAsync(
-            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerId
-            }&DrCr=${formState.transaction.master.drCr
-            }&AccTransactionDetailID=${formState.row.accTransactionDetailId ?? 0
+            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
+              formState.row.ledgerId
+            }&DrCr=${
+              formState.transaction.master.drCr
+            }&AccTransactionDetailID=${
+              formState.row.accTransactionDetailId ?? 0
             }`
           );
           dispatch(
@@ -199,7 +221,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             })
           );
         }
-      } catch (error) { }
+      } catch (error) {}
     };
     loadLedgerData();
   }, [formState.showbillwise]);
@@ -220,12 +242,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           if (applicationSettings.accountsSettings?.billwiseMandatory) {
             if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
               if (
-                (!formState.isRowEdit && formState.row.BillwiseDetails == "") ||
+                (formState.isRowEdit  != true && formState.row.BillwiseDetails == "") ||
                 (formState.isRowEdit && formElements.amount.disabled == false)
               ) {
                 const IsBillwiseTransAdjustmentExists = await api.getAsync(
-                  `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists
-                  }?LedgerId=${formState.row.ledgerId}&DrCr=${formState.transaction.master.drCr
+                  `${
+                    Urls.acc_transaction_is_bill_wise_trans_adjustment_exists
+                  }?LedgerId=${formState.row.ledgerId}&DrCr=${
+                    formState.transaction.master.drCr
                   }&AccTransactionDetailID=${0}`
                 );
                 dispatch(
@@ -254,7 +278,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             );
           }
         }
-      } catch (error) { }
+      } catch (error) {}
     };
 
     loadLedgerData();
@@ -262,6 +286,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+      debugger;
       const newFormElements = { ...formElements };
       newFormElements.btnSave.disabled = true;
       newFormElements.btnEdit.disabled = true;
@@ -269,7 +294,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       newFormElements.foreignCurrency.visible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       newFormElements.lblGroupName.label = "";
-      if (!formState.isInvoker && (voucherNo == undefined || voucherNo <= 0)) {
+      if (formState.isInvoker != true) {
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
@@ -280,23 +305,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
         fetchVoucherNumber();
         if (voucherType == "CP" || voucherType == "CR") {
+          console.log("masterAccount.disabled5");
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
                 masterAccountID:
                   userSession.counterwiseCashLedgerId > 0 &&
-                    applicationSettings.accountsSettings.allowSalesCounter
+                  applicationSettings.accountsSettings.allowSalesCounter
                     ? userSession.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings.defaultCashAcc,
               },
             })
           );
-          if (
-            userSession.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings.allowSalesCounter &&
-            userSession.counterAssignedCashLedgerId > 0
-          ) {
-            formElements.masterAccount.disabled = true;
+          debugger;
+          if (userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter ) {
+            if (userSession.counterAssignedCashLedgerId > 0) {
+              formElements.masterAccount.disabled = true;
+            }
+          } else {
+            
           }
         }
       }
@@ -321,6 +348,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       formElements.btnBillWise.visible =
         applicationSettings.accountsSettings.maintainBillwiseAccount;
       if (voucherType == "JV") {
+        console.log("masterAccount.disabled2");
         dispatch(
           accFormStateHandleFieldChange({
             fields: {
@@ -340,6 +368,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           userCashLedgerID = await api.getAsync(
             `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
           );
+          console.log("masterAccount.disabled3");
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -366,6 +395,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
       const newFormElements = { ...formElements };
+      console.log("masterAccount.disabled4");
+      debugger;
       switch (voucherType) {
         case "CR":
         case "CP":
@@ -373,7 +404,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           newFormElements.employee.label =
             voucherType === "CR" ? "Collected By" : "Paid By";
           newFormElements.discount.visible = true;
-          newFormElements.costCentreId.visible = applicationSettings.accountsSettings.maintainCostCenter == true;
+          newFormElements.costCentreId.visible =
+            applicationSettings.accountsSettings.maintainCostCenter == true;
           newFormElements.chequeNumber.visible = false;
           newFormElements.bankDate.visible = false;
           break;
@@ -451,23 +483,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [formType, voucherType, voucherPrefix]);
 
-
-const selectTemplates = useCallback(async() => {
-setTemplateLoad(true)
-setIsTemplateOpen(true)
-  try {
-    const response = await api.getAsync(`${Urls.templates}?template_group=SI`);
-    dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
-    }
-    catch (error) {
+  const selectTemplates = useCallback(async () => {
+    setTemplateLoad(true);
+    setIsTemplateOpen(true);
+    try {
+      const response = await api.getAsync(
+        `${Urls.templates}?template_group=SI`
+      );
+      dispatch(
+        accFormStateHandleFieldChange({ fields: { templates: response } })
+      );
+    } catch (error) {
       console.log(error, "acc-transaction template select error");
+    } finally {
+      setTemplateLoad(false);
     }
-    finally {
-      setTemplateLoad(false)
-    }
-  }, [])
-
-
+  }, []);
 
   const columns: DevGridColumn[] = [
     {
@@ -946,7 +977,7 @@ setIsTemplateOpen(true)
                       id="referenceNumber"
                       label={formElements.referenceNumber.label}
                       value={formState.transaction.master.referenceNumber}
-                       className="lg:max-w-[300px]"
+                      className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -964,7 +995,7 @@ setIsTemplateOpen(true)
                     <ERPDateInput
                       id="transactionDate"
                       label={formElements.transactionDate.label}
-                       className="lg:max-w-[300px]"
+                      className="lg:max-w-[300px]"
                       value={
                         new Date(formState.transaction.master.transactionDate)
                       }
@@ -987,8 +1018,10 @@ setIsTemplateOpen(true)
                     <ERPDateInput
                       id="referenceDate"
                       label={formElements.referenceDate.label}
-                       className="lg:max-w-[300px]"
-                      value={new Date(formState.transaction.master.referenceDate)}
+                      className="lg:max-w-[300px]"
+                      value={
+                        new Date(formState.transaction.master.referenceDate)
+                      }
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -1007,7 +1040,7 @@ setIsTemplateOpen(true)
                       id="employeeId"
                       label={formElements.employee.label}
                       value={formState.masterAccountID}
-                       className="lg:max-w-[300px]"
+                      className="lg:max-w-[300px]"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -1034,7 +1067,7 @@ setIsTemplateOpen(true)
                       id="remarks"
                       label={formElements.remarks.label}
                       value={formState.transaction.master.remarks}
-                       className="max-w-full"
+                      className="max-w-full"
                       onChange={(e) =>
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
@@ -1053,7 +1086,7 @@ setIsTemplateOpen(true)
                     <ERPInput
                       id="notes"
                       label={formElements.commonNarration.label}
-                       className="max-w-full"
+                      className="max-w-full"
                       value={formState.transaction.master.commonNarration}
                       onChange={(e) =>
                         dispatch(
@@ -1082,7 +1115,10 @@ setIsTemplateOpen(true)
                       onSelectItem={(e) =>
                         dispatch(
                           accFormStateRowHandleFieldChange({
-                            fields: { projectId: e.value, projectName: e.label },
+                            fields: {
+                              projectId: e.value,
+                              projectName: e.label,
+                            },
                           })
                         )
                       }
@@ -1329,7 +1365,11 @@ setIsTemplateOpen(true)
                     className="min-w-[180px] max-w-[200px]"
                     label={formElements.bankName.label}
                     value={formState.row.bankName}
-                    options={isNullOrUndefinedOrZero(formState.row.ledgerId) ? []: undefined}
+                    options={
+                      isNullOrUndefinedOrZero(formState.row.ledgerId)
+                        ? []
+                        : undefined
+                    }
                     field={{
                       valueKey: "id",
                       labelKey: "name",
@@ -1337,7 +1377,7 @@ setIsTemplateOpen(true)
                       params: {
                         ledgerID:
                           formState.row.ledgerId != undefined &&
-                            formState.row.ledgerId != null
+                          formState.row.ledgerId != null
                             ? formState.row.ledgerId
                             : 0,
                       },
@@ -1374,7 +1414,10 @@ setIsTemplateOpen(true)
                 onSelectItem={(e) =>
                   dispatch(
                     accFormStateRowHandleFieldChange({
-                      fields: { costCentreId: e.value, costCentreName: e.label },
+                      fields: {
+                        costCentreId: e.value,
+                        costCentreName: e.label,
+                      },
                     })
                   )
                 }
@@ -1394,10 +1437,10 @@ setIsTemplateOpen(true)
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-          // summary={[
-          //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
-          //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
-          // ]}
+            // summary={[
+            //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
+            //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
+            // ]}
           />
           {formState.showSaveDialog && (
             <ERPAlert
@@ -1712,7 +1755,7 @@ setIsTemplateOpen(true)
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                  // size={16}
+                    // size={16}
                   >
                     {" "}
                     Add Items{" "}
@@ -1747,13 +1790,13 @@ setIsTemplateOpen(true)
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title="Save & New"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title="Save"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />
@@ -1925,19 +1968,17 @@ setIsTemplateOpen(true)
                 </div>
               </div>
 
-              <div>
-
-              </div>
+              <div></div>
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
                   title="Save & New"
-                  onClick={() => { }}
+                  onClick={() => {}}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
                   title="Save"
-                  onClick={() => { }}
+                  onClick={() => {}}
                   variant="primary"
                   className="flex-1 !m-0 !rounded-none"
                 />
@@ -1950,7 +1991,7 @@ setIsTemplateOpen(true)
       <AttachmentSidebar></AttachmentSidebar>
       <ActivityLogSidebar></ActivityLogSidebar>
       <div className="fixed top-[3.4rem] right-[465px]">
-      <AccTransactionUserConfig />
+        <AccTransactionUserConfig />
       </div>
       <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
         <div className=" flex items-center gap-4">
@@ -2045,7 +2086,6 @@ setIsTemplateOpen(true)
               Change
             </span>
           </button>
-
         </div>
         Total: {formState.transaction.master.totalAmount}
         <div>
@@ -2076,8 +2116,8 @@ setIsTemplateOpen(true)
         minWidth={350}
         isOpen={formState.printPreview && isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
-        children={<TemplatesView  setIsOpen={setIsTemplateOpen}/>   }>
-      </ERPResizableSidebar>
+        children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
+      ></ERPResizableSidebar>
     </div>
   );
 };

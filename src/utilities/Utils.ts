@@ -641,10 +641,10 @@ export function isNullOrUndefinedOrEmpty(value: any): boolean {
   return value === undefined || value === null || value === '';
 }
 export function isNullOrUndefinedOrZero(value: any): boolean {
-  return value === undefined || value === null || value === '';
+  return value === undefined || value === null || value === '' || value === 0;
 }
 export function hasValue(value: any): boolean {
-  return value === undefined || value === null || value === '' || value === 0;
+  return value !== undefined && value !== null && value !== '' && value !== 0;
 }
 export const setFgAccordingToBgPrimary = () => {
   // Create a temporary element to determine the color of bgPrimary

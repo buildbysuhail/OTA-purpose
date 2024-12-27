@@ -435,7 +435,7 @@ export interface AccTransactionFormState {
   masterAccountID: number; // Master account ID
   masterBalance: number; // Master account balance
   masterAccountName: string; // Master account name
-  previousNarration: string[]; 
+  previousNarration: string; 
   row: AccTransactionRow;
   rowProcessing: boolean;
   transactionProcessing: boolean;
@@ -494,7 +494,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   isBahamdoonPOSReceipt: false,
   unlocking: false,
   total: 0,
-  previousNarration: [],
+  previousNarration: "",
   isRowEdit: false,
   IsBillwiseTransAdjustmentExists: false,
   // formElements: initialFormElements

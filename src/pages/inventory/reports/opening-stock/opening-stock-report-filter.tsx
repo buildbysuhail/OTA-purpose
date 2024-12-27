@@ -1,21 +1,21 @@
+import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 
-
-
-const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
-        <div className="flex items-center gap-4">
+const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const { t } = useTranslation('accountsReport')
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
+      <div className="flex items-center gap-4">
         <ERPCheckbox
-        className="basis-1/3"
+          className="basis-1/3"
           {...getFieldProps("isProductGroup")}
           label={t("product_group")}
-          onChangeData={(data:any) => handleFieldChange('isProductGroup', data.isProductGroup)}
+          onChangeData={(data: any) => handleFieldChange('isProductGroup', data.isProductGroup)}
         />
-          <ERPDataCombobox
+        <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("productGroup")}
           noLabel
@@ -25,19 +25,19 @@ const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data:any) => handleFieldChange('productGroup', data.productGroup)}
+          onChangeData={(data: any) => handleFieldChange('productGroup', data.productGroup)}
         />
-        </div>
-    
-        <div className="flex items-center gap-4">
+      </div>
+
+      <div className="flex items-center gap-4">
         <ERPCheckbox
-        className="basis-1/3"
+          className="basis-1/3"
           {...getFieldProps("isBrand")}
           label={t("brand")}
-          onChangeData={(data:any) => handleFieldChange('isBrand', data.isBrand)}
+          onChangeData={(data: any) => handleFieldChange('isBrand', data.isBrand)}
         />
-          <ERPDataCombobox
-            className="basis-2/3"
+        <ERPDataCombobox
+          className="basis-2/3"
           {...getFieldProps("brand")}
           noLabel
           field={{
@@ -46,20 +46,19 @@ const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data:any) => handleFieldChange('brand', data.brand)}
+          onChangeData={(data: any) => handleFieldChange('brand', data.brand)}
         />
-        </div>
+      </div>
 
-        
-        <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isProduct")}
           label={t("product")}
-          onChangeData={(data:any) => handleFieldChange('isProduct', data.isProduct)}
+          onChangeData={(data: any) => handleFieldChange('isProduct', data.isProduct)}
         />
-          <ERPDataCombobox
-            className="basis-2/3"
+        <ERPDataCombobox
+          className="basis-2/3"
           {...getFieldProps("product")}
           noLabel
           field={{
@@ -68,20 +67,19 @@ const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data:any) => handleFieldChange('product', data.product)}
+          onChangeData={(data: any) => handleFieldChange('product', data.product)}
         />
-        </div>
+      </div>
 
-        
-        <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <ERPCheckbox
-        className="basis-1/3"
+          className="basis-1/3"
           {...getFieldProps("isProductCategory")}
           label={t("product_category")}
-          onChangeData={(data:any) => handleFieldChange('isProductCategory', data.isProductCategory)}
+          onChangeData={(data: any) => handleFieldChange('isProductCategory', data.isProductCategory)}
         />
-          <ERPDataCombobox
-             className="basis-2/3"
+        <ERPDataCombobox
+          className="basis-2/3"
           {...getFieldProps("productCategory")}
           noLabel
           field={{
@@ -90,35 +88,35 @@ const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data:any) => handleFieldChange('productCategory', data.productCategory)}
+          onChangeData={(data: any) => handleFieldChange('productCategory', data.productCategory)}
         />
-        </div>
+      </div>
 
-        <ERPDateInput
+      <ERPDateInput
         {...getFieldProps("fromDate")}
-        label={t("From")}
+        label={t("from")}
         onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
         autoFocus={true}
       />
       <ERPDateInput
         {...getFieldProps("toDate")}
-        label={t("To")}
+        label={t("to")}
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
       />
-      </div>
+    </div>
 
-);
+  );
 }
 export default OpeningStockReportFilter;
 export const OpeningStockReportFilterInitialState = {
-    isProductGroup:false,
-    isBrand:false,
-    isProduct:false,
-    isProductCategory:false,
-     productGroup:"",
-     brand:"",
-     product:"",
-     productCategory:"",
-     fromDate: new Date(), 
-     toDate: new Date(),
+  isProductGroup: false,
+  isBrand: false,
+  isProduct: false,
+  isProductCategory: false,
+  productGroup: "",
+  brand: "",
+  product: "",
+  productCategory: "",
+  fromDate: new Date(),
+  toDate: new Date(),
 };

@@ -8,16 +8,16 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
-const PartySummaryPurchaseReturn  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+
+const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummaryPurchaseReturn>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "vNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -55,7 +55,7 @@ const PartySummaryPurchaseReturn  : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 50,
     },
-     {
+    {
       dataField: "address1",
       caption: t('address1'),
       dataType: "string",
@@ -70,8 +70,6 @@ const PartySummaryPurchaseReturn  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
     },
-   
-   
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -163,7 +161,7 @@ const PartySummaryPurchaseReturn  : React.FC<PartySummaryFilter> = ({ filter
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_summary_purchase_return")}
-                  dataUrl= {Urls.acc_reports_party_summary_purchase_return}
+                  dataUrl={Urls.acc_reports_party_summary_purchase_return}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -177,7 +175,7 @@ const PartySummaryPurchaseReturn  : React.FC<PartySummaryFilter> = ({ filter
           </div>
         </div>
       </div>
-      
+
     </Fragment>
   );
 };

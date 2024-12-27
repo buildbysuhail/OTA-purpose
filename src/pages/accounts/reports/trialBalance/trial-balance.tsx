@@ -2,14 +2,11 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import TrialBalanceReportFilter, { TrialBalanceReportFilterInitialState } from "./trial-balance-report-filter";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
@@ -19,7 +16,7 @@ interface TrialBalance {
 const TrialBalance = () => {
   const [filter, setFilter] = useState<any>(TrialBalanceReportFilterInitialState);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
@@ -31,7 +28,7 @@ const TrialBalance = () => {
       visible: false,
       allowFiltering: true,
       width: 150,
-      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "particulars",
@@ -133,9 +130,7 @@ const TrialBalance = () => {
                   filterContent={<TrialBalanceReportFilter />}
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                      { asOnDate: filter.toDate }
-                    }
+                    content: <CashBookMonthWise postData={{ asOnDate: filter.toDate }}
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
@@ -153,5 +148,4 @@ const TrialBalance = () => {
     </Fragment>
   );
 };
-
 export default TrialBalance;

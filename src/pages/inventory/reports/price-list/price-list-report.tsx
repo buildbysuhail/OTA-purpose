@@ -8,14 +8,13 @@ import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 
-
 interface CashSummary {
   from: Date
 }
-const PriceList = () => {
 
+const PriceList = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -24,7 +23,7 @@ const PriceList = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 100,
     },
     {
@@ -33,18 +32,18 @@ const PriceList = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
     },
     {
       dataField: "group",
-      caption:  t("group"),
+      caption: t("group"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "groupCode",
@@ -52,20 +51,19 @@ const PriceList = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
- 
     {
       dataField: "category",
       caption: t("category"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "brand",
@@ -73,9 +71,9 @@ const PriceList = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "brandNO",
@@ -83,9 +81,9 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "taxCategory",
@@ -93,9 +91,9 @@ const PriceList = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "sVAT",
@@ -103,9 +101,9 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "pVAT",
@@ -113,7 +111,7 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 150,
     },
     {
@@ -122,7 +120,7 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 150,
     },
     {
@@ -131,7 +129,7 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 150,
     },
     {
@@ -140,11 +138,9 @@ const PriceList = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 150,
     },
-   
-    
     // {
     //   dataField: "actions",
     //   caption: t("actions"),
@@ -168,22 +164,22 @@ const PriceList = () => {
   ];
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.inv_reports_price_list}
+                  dataUrl={Urls.inv_reports_price_list}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<PriceListReportFilter/>}
+                  filterContent={<PriceListReportFilter />}
                   filterInitialData={PriceListReportFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   gridId="grd_cost_centre"
                 ></ErpDevGrid>
               </div>
@@ -191,9 +187,6 @@ const PriceList = () => {
           </div>
         </div>
       </div>
-      
-    
-      
     </Fragment>
   );
 };

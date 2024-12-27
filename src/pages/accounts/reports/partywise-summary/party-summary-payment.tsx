@@ -8,10 +8,10 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
-const PartySummaryPayment  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+
+const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummaryPayment>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -33,7 +33,7 @@ const PartySummaryPayment  : React.FC<PartySummaryFilter> = ({ filter
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -79,7 +79,7 @@ const PartySummaryPayment  : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 300,
     },
-     {
+    {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
@@ -114,7 +114,7 @@ const PartySummaryPayment  : React.FC<PartySummaryFilter> = ({ filter
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("party_summary_payment_report")}
-                  dataUrl= {Urls.acc_reports_party_summary_payment}
+                  dataUrl={Urls.acc_reports_party_summary_payment}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -128,7 +128,7 @@ const PartySummaryPayment  : React.FC<PartySummaryFilter> = ({ filter
           </div>
         </div>
       </div>
-      
+
     </Fragment>
   );
 };

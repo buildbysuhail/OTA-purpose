@@ -2,14 +2,16 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
-const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
-    return (
-      <div className="grid grid-cols-1 gap-4">
+const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const { t } = useTranslation('accountsReport')
+  return (
+    <div className="grid grid-cols-1 gap-4">
       {/* As On Date */}
       <ERPDateInput
         {...getFieldProps("asonDate")}
-        label={t("As On")}
+        label={t("as_on")}
         onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
       />
 
@@ -33,60 +35,56 @@ const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange, t
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
-      <ERPDataCombobox
-      {...getFieldProps("routeID")}
-      label={t("Cost Centre")}
-      field={{
-        id: "routeID",
-        getListUrl: Urls.data_salesRoute,
-        valueKey: "id",
-        labelKey: "name",
-      }}
-      onChangeData={(data) => handleFieldChange('routeID', data.routeID)}
-    />
-    <ERPDataCombobox
-      {...getFieldProps("costCentreID")}
-      label={t("Cost Centre")}
-      field={{
-        id: "costCentreID",
-        getListUrl: Urls.data_costcentres,
-        valueKey: "id",
-        labelKey: "name",
-      }}
-      onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
-    />
+        <ERPDataCombobox
+          {...getFieldProps("routeID")}
+          label={t("cost_centre")}
+          field={{
+            id: "routeID",
+            getListUrl: Urls.data_salesRoute,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) => handleFieldChange('routeID', data.routeID)}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("costCentreID")}
+          label={t("cost_centre")}
+          field={{
+            id: "costCentreID",
+            getListUrl: Urls.data_costcentres,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        />
       </div>
-
       {/* Report Options */}
       <div className="space-y-2">
         <ERPCheckbox
           {...getFieldProps("showZeroBalance")}
-          label={t("Show/Include Zero Balance Report")}
+          label={t("show/include_zero_balance_report")}
           onChangeData={(data) => handleFieldChange('showZeroBalance', data.showZeroBalance)}
         />
-
         <ERPCheckbox
           {...getFieldProps("payable")}
-          label={t("Show Payable")}
+          label={t("show_payable")}
           onChangeData={(data) => handleFieldChange('payable', data.payable)}
         />
-
         <ERPCheckbox
           {...getFieldProps("receivable")}
-          label={t("Show Receivable")}
+          label={t("show_receivable")}
           onChangeData={(data) => handleFieldChange('receivable', data.receivable)}
         />
       </div>
     </div>
-
-);
+  );
 }
 export default OutstandingReceivableReportFilter;
 export const OutstandingReceivableReportFilterInitialState = {
-  asonDate: new Date(), 
+  asonDate: new Date(),
   routeID: 0,
-  costCentreID: 0, 
-  showZeroBalance: false, 
-  payable:false,
-  receivable:true,
+  costCentreID: 0,
+  showZeroBalance: false,
+  payable: false,
+  receivable: true,
 };

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,15 +9,14 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
-const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -37,7 +36,7 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
     },
     {
       dataField: "displayName",
-      caption:  t("display_name"),
+      caption: t("display_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -107,8 +106,6 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
-  
-   
     {
       dataField: "faxNumber",
       caption: t("fax_number"),
@@ -197,7 +194,7 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
-   {
+    {
       dataField: "billwiseBillApplicable",
       caption: t("billwise_bill_applicable"),
       dataType: "boolean",
@@ -205,7 +202,7 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
- {
+    {
       dataField: "routeName",
       caption: t("route_name"),
       dataType: "string",
@@ -224,22 +221,20 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("basic_info")}
-                  dataUrl= {Urls.acc_reports_party_summary_basic_info}
+                  dataUrl={Urls.acc_reports_party_summary_basic_info}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
-                  reload={true}
-                ></ErpDevGrid>
+                  reload={true}>
+                </ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default PartySummaryBasicInfo;

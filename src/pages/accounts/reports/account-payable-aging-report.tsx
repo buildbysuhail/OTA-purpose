@@ -2,17 +2,13 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 
 interface AccountPayableAgingReport {
-
   from: Date
 }
 const AccountPayableAgingReport = () => {
@@ -22,8 +18,8 @@ const AccountPayableAgingReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<AccountPayableAgingReport>({from: new Date()});
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<AccountPayableAgingReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -67,7 +63,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "period1",
-      caption: 10+ t("days"),
+      caption: 10 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -75,7 +71,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "period2",
-      caption: 20+t("days"),
+      caption: 20 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -83,13 +79,13 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "period3",
-      caption: 30+t("days"),
+      caption: 30 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-    
+
     // {
     //   dataField: "actions",
     //   caption: t("actions"),
@@ -121,7 +117,7 @@ const AccountPayableAgingReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_aging_payable}
+                  dataUrl={Urls.acc_reports_aging_payable}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -135,7 +131,6 @@ const AccountPayableAgingReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

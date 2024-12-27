@@ -1,28 +1,21 @@
-import { FC,   MouseEventHandler,   useState } from "react";
+import { FC, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
-import { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-
 interface ProfitAndLossSubledgerwiseViewProps {
-  postData: any; 
+  postData: any;
   groupName?: string;
 }
 
-
-const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = ({postData , groupName }) => {
+const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = ({ postData, groupName }) => {
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
     key: number;
@@ -30,8 +23,8 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
   }>({ isOpen: false, key: 0 });
   const [filter, setFilter] = useState<any>(postData);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-    const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -51,7 +44,7 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
     },
     {
       dataField: "accGroupName",
-      caption:  t("acc_group_name"),
+      caption: t("acc_group_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -73,12 +66,12 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return  cellElement.data.ledgerName==="TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-         {cellElement.data.ledgerName}
-         </span>):
+        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.ledgerName}
+        </span>) :
           <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-       }
-     },
+      }
+    },
     {
       dataField: "debit",
       caption: t('debit'),
@@ -87,9 +80,9 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -100,9 +93,9 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -113,10 +106,10 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
- 
-  </span>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+
+        </span>
       ),
     },
   ];
@@ -125,7 +118,7 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
   //   setIsOpenDetails: (isOpen: any) => void;
   // }> = ({ item, setIsOpenDetails }) => {
   //   const { t } = useTranslation();
-  
+
   //   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
   //     event.preventDefault();
   //     setIsOpenDetails({
@@ -134,7 +127,7 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
   //       groupName: item.ledgerName,
   //     });
   //   };
-  
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -143,10 +136,10 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={window.innerHeight-649}
+                  heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={groupName}
-                  dataUrl= {Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
+                  dataUrl={Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
                   postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
@@ -156,14 +149,15 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
                   reload={true}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      {asOnDate: filter.asOnDate,
-                        fromDate:filter.dateFrom
-                      }}/>,
+                      {
+                        asOnDate: filter.asOnDate,
+                        fromDate: filter.dateFrom
+                      }} />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
-                    bodyProps: "ledgerID" ,
+                    bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0
                   }}
                 ></ErpDevGrid>
@@ -172,9 +166,7 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default ProfitAndLossSubledgerwiseView;

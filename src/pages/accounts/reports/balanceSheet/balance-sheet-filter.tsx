@@ -1,57 +1,80 @@
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 
+interface BalanceSheetFilterProps {
+  getFieldProps: (fieldName: string) => any;
+  handleFieldChange: (field: string | object, value?: any) => void;
+}
 
+interface BalanceSheetFilterState {
+  asOnDate: Date;
+  valuationUsing: string;
+  closingStock: number;
+  showVertical: boolean;
+}
 
-const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
+const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
+  getFieldProps,
+  handleFieldChange,
+}) => {
+  
+  const { t } = useTranslation('accountsReport');
 
-  <div className="grid grid-cols-1 gap-4">
-        {/* As On Date */}
-        <ERPDateInput
-          {...getFieldProps("asOnDate")}
-          label={t("As On Date")}
-          onChangeData={(data: any) => handleFieldChange("asOnDate", data.asOnDate)}
-        />
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      <ERPDateInput
+        {...getFieldProps("asOnDate")}
+        label={t("as_on_date")}
+        onChangeData={(data: { asOnDate: Date }) =>
+          handleFieldChange("asOnDate", data.asOnDate)
+        }
+      />
 
-        {/* Stock Value Dropdown */}
-        <ERPDataCombobox
-          {...getFieldProps("valuationUsing")}
-          label={t("Stock Value")}
-          field={{
-            id: "valuationUsing",
-            getListUrl: Urls.data_stock_valuation_methods,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange({valuationUsing: data.valuationUsing})}
-        />
+      <ERPDataCombobox
+        {...getFieldProps("valuationUsing")}
+        label={t("stock_value")}
+        field={{
+          id: "valuationUsing",
+          getListUrl: Urls.data_stock_valuation_methods,
+          valueKey: "id",
+          labelKey: "name",
+        }}
+        onChangeData={(data: { valuationUsing: string }) =>
+          handleFieldChange("valuationUsing", data.valuationUsing)
+        }
+      />
 
-        {/* Closing Stock Input */}
-        <ERPInput
-          {...getFieldProps("closingStock")}
-          label={t("Closing Stock")}
-          type="number"
-          value="0.00"
-          onChangeData={(data) => handleFieldChange('closingStock', data.closingStock)}
-        />
+      <ERPInput
+        {...getFieldProps("closingStock")}
+        label={t("closing_stock")}
+        type="number"
+        defaultValue="0.00"
+        onChangeData={(data: { closingStock: number }) =>
+          handleFieldChange("closingStock", data.closingStock)
+        }
+      />
 
-        {/* Show Vertical Checkbox */}
-        {/* <ERPCheckbox
-          {...getFieldProps("showVertical")}
-          label={t("Show Vertical")}
-          onChangeData={(data) => handleFieldChange('showVertical', data.showVertical)}
-        /> */}
-      </div>
+      {/* Commented out but kept for reference
+      <ERPCheckbox
+        {...getFieldProps("showVertical")}
+        label={t("show_vertical")}
+        onChangeData={(data: { showVertical: boolean }) => 
+          handleFieldChange("showVertical", data.showVertical)
+        }
+      /> 
+      */}
+    </div>
+  );
+};
 
-
-);
 export default BalanceSheetFilter;
-export const BalanceSheetFilterInitialState = {
-  asOnDate: new Date(), 
-  valuationUsing:"SPP",
+
+export const BalanceSheetFilterInitialState: BalanceSheetFilterState = {
+  asOnDate: new Date(),
+  valuationUsing: "SPP",
   closingStock: 0,
-  showVertical: false, 
+  showVertical: false,
 };

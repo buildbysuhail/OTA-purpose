@@ -9,10 +9,9 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
-const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummaryPurchaseOrder>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [

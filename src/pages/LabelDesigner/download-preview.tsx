@@ -30,6 +30,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
   const pxToPoint = (px: number) => px * (72 / 96);
 
   useEffect(() => {
+    if(template?.propertiesState?.template_group === "barcode"){
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
     const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
       const chunkIndex = Math.floor(index / columnsPerRow)
@@ -40,12 +41,15 @@ export default function Component({ template, docTitle = "Document Preview", dat
       return resultArray
     }, [])
     setChunkedData(_chunkedData);
+      
+    }
   }, [data, template?.barcodeState?.labelState?.columnsPerRow])
 
   useEffect(() => {
+    
+    if(template?.propertiesState?.template_group === "barcode"){
     const generateBarcodeImages = async () => {
       const images: { [key: string]: string } = {};
-
       if (template?.barcodeState?.placedComponents) {
         data?.forEach((item: any) => {
           template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
@@ -87,6 +91,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
     };
 
     generateBarcodeImages();
+  }
   }, [template?.barcodeState?.placedComponents, data]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
@@ -181,7 +186,8 @@ export default function Component({ template, docTitle = "Document Preview", dat
               : 0
           ),
       }} style={styles.page}>
-        {chunkedData?.map((label: any, index: number) => (
+        {template?.propertiesState?.template_group === "barcode" ?
+         (chunkedData?.map((label: any, index: number) => (
           <View key={index}
             style={{
               flexDirection: 'row',
@@ -204,7 +210,14 @@ export default function Component({ template, docTitle = "Document Preview", dat
               </View>
             ))}
           </View>
-        ))}
+        ))):(
+        <>
+       {/* {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, data))} */}   
+              <View>
+              {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, data))}
+              </View>
+
+        </>)}
       </Page>
     </Document>
   );

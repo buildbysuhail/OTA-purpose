@@ -456,7 +456,7 @@ const selectTemplates = useCallback(async() => {
 setTemplateLoad(true)
 setIsTemplateOpen(true)
   try {
-    const response = await api.getAsync(`${Urls.templates}?template_group=SI`);
+    const response = await api.getAsync(`${Urls.templates}?template_group=${voucherType}`);
     dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
     }
     catch (error) {
@@ -2059,7 +2059,7 @@ setIsTemplateOpen(true)
         </div>
       </div>
 
-      {/* {formState.transaction && formState.template &&
+      {formState.transaction && formState.template &&
         <ERPModal
           isOpen={formState.printPreview
           }
@@ -2070,11 +2070,11 @@ setIsTemplateOpen(true)
           }}
           content={<DownloadPreview template={formState?.template} data={DummyVoucherData}/>}>
         </ERPModal>
-      } */}
+      }
 
       <ERPResizableSidebar
         minWidth={350}
-        isOpen={formState.printPreview && isTemplateOpen}
+        isOpen={ isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView  setIsOpen={setIsTemplateOpen}/>   }>
       </ERPResizableSidebar>

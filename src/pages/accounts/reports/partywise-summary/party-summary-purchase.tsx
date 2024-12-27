@@ -8,10 +8,12 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();
+    const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation();
   // const [filter, setFilter] =useState<PartySummaryPurchase>({from: new Date()});
   const rootState = useRootState();
@@ -88,6 +90,15 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.quantity == null || cellElement.data?.quantity == 0
+            ? ''
+            : cellElement.data.ledgerName === "TOTAL"
+              ? getFormattedValue(cellElement.data.quantity)
+              : cellElement.data.quantity}`}
+        </span>
+      ),
     },
     {
       dataField: "unitName",
@@ -128,6 +139,15 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.netValue == null || cellElement.data?.netValue == 0
+            ? ''
+            : cellElement.data.ledgerName === "TOTAL"
+              ? getFormattedValue(cellElement.data.netValue)
+              : cellElement.data.netValue}`}
+        </span>
+      ),
     },
     {
       dataField: "totalVatAmount",
@@ -144,6 +164,15 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.netAmount == null || cellElement.data?.netAmount == 0
+            ? ''
+            : cellElement.data.ledgerName === "TOTAL"
+              ? getFormattedValue(cellElement.data.netAmount)
+              : cellElement.data.netAmount}`}
+        </span>
+      ),
     },
     {
       dataField: "productCode",
@@ -162,6 +191,7 @@ const PartySummaryPurchase  : React.FC<PartySummaryFilter> = ({ filter
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_purchase")}
                   dataUrl= {Urls.acc_reports_party_summary_purchase}

@@ -250,6 +250,7 @@ const BillwiseProfit = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl= {Urls.acc_reports_billwise_profit}

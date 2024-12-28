@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, SetStateAction, useState } from "react";
 import { ChevronRight, X, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Address } from "./address";
 import { ContactPersons } from "./contact-persons";
@@ -59,21 +59,19 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       {/* Tabs */}
       <div className="flex gap-6 border-b mb-6">
         <button
-          className={`px-1 py-2 text-sm ${
-            activeTab === "details"
-              ? "border-b-2 border-primary font-medium"
-              : "text-muted-foreground"
-          }`}
+          className={`px-1 py-2 text-sm ${activeTab === "details"
+            ? "border-b-2 border-primary font-medium"
+            : "text-muted-foreground"
+            }`}
           onClick={() => setActiveTab("details")}
         >
           Details
         </button>
         <button
-          className={`px-1 py-2 text-sm ${
-            activeTab === "activity"
-              ? "border-b-2 border-primary font-medium"
-              : "text-muted-foreground"
-          }`}
+          className={`px-1 py-2 text-sm ${activeTab === "activity"
+            ? "border-b-2 border-primary font-medium"
+            : "text-muted-foreground"
+            }`}
           onClick={() => setActiveTab("activity")}
         >
           Activity Log
@@ -135,107 +133,116 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             ))}
 
           {/* Contact Details */}
-          <div className="space-y-6">
-            <h2 className="text-lg font-semibold">Contact Details</h2>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Party Type
-                  </div>
-                  <div>{ledgerData?.partyType}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Party Category
-                  </div>
-                  <div>{ledgerData?.partyCategory}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Price Category
-                  </div>
-                  <div>{ledgerData?.priceCategory}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Tax Number
-                  </div>
-                  <div>{ledgerData?.TaxNumber}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Credit Amount
-                  </div>
-                  <div>{getFormattedValue(ledgerData?.creditAmount)}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Credit Days
-                  </div>
-                  <div>{ledgerData?.creditDays}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Billwise Applicable
-                  </div>
-                  <div>{ledgerData?.billwiseApplicable}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Route Name
-                  </div>
-                  <div>{ledgerData?.routeName}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Details */}
-          <div className="space-y-6">
-            <h2 className="text-lg font-semibold">Additional Details</h2>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Created Date
+          <div className="p-4 shadow rounded-lg">
+            <div className="space-y-6">
+              {/* <h2 className="text-lg font-semibold">Contact Details</h2> */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Party Type</p>
+                      <div className="w-1/2">{ledgerData?.partyType}</div>
+                    </div>
                   </div>
                   <div>
-                    {new Date(ledgerData?.createdDate).toLocaleDateString()}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">
-                    Expiry Date
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Party Category</p>
+                      <div className="w-1/2">{ledgerData?.partyCategory}</div>
+                    </div>
                   </div>
                   <div>
-                    {new Date(ledgerData?.expiryDate).toLocaleDateString()}
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Price Category</p>
+                      <div className="w-1/2">{ledgerData?.priceCategory}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Tax Number</p>
+                      <div className="w-1/2">{ledgerData?.taxNumber}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Credit Amount</p>
+                      <div className="w-1/2">{getFormattedValue(ledgerData?.creditAmount)}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Credit Days</p>
+                      <div className="w-1/2">{ledgerData?.creditDays}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Billwise Applicable</p>
+                      <div className="w-1/2">{ledgerData?.billwiseApplicable}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Route Name</p>
+                      <div className="w-1/2">{ledgerData?.routeName}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Created Date</p>
+                      <div className="w-1/2">{new Date(ledgerData?.createdDate).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                      <p className="text-[#8c8c8c]">Expiry Date</p>
+                      <div className="w-1/2">{new Date(ledgerData?.expiryDate).toLocaleDateString()}</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Contact Persons */}
-          <div>
-            <button
-              className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
-              onClick={() => setShowContactPersons(!showContactPersons)}
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-medium">Contact Persons</span>
-                <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
-                  1
-                </span>
+          {/* Billing Details */}
+          <div className="p-4 shadow rounded-lg">
+            <div className="space-y-6">
+              <h2 className="text-lg font-semibold">Billing Address</h2>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                    {ledgerData?.billingAddress?.length > 0 ? (
+                      ledgerData?.billingAddress?.map((line: any, index: Key | null | undefined) => (
+                        <div key={index}>{line || "\u00A0"}</div>
+                      ))
+                    ) : (
+                      <div>No Billing Address Provided</div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <ChevronRight
-                className={`h-5 w-5 text-gray-400 transition-transform ${
-                  showContactPersons ? "rotate-90" : ""
-                }`}
-              />
-            </button>
-            {showContactPersons && <ContactPersons />}
+            </div>
           </div>
+
+          {/* Shipping Address */}
+          <div className="p-4 shadow rounded-lg">
+            <div className="space-y-6">
+              <h2 className="text-lg font-semibold">Shipping Address</h2>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                    {ledgerData?.shippingAddress?.length > 0 ? (
+                      ledgerData.shippingAddress.map((line: any, index: Key | null | undefined) => (
+                        <div key={index}>{line || "\u00A0"}</div>
+                      ))
+                    ) : (
+                      <div>No Shipping Address Provided</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
           {/* Address */}
           {/* <div>

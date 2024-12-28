@@ -98,7 +98,7 @@ const OutstandingAccountPayableReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue( cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },

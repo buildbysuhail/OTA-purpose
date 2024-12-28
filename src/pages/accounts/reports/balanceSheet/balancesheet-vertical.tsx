@@ -202,7 +202,7 @@ const BalancesheetVertical = () => {
                   // postData={postData}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<BalanceSheetFilter />}
+                  // filterContent={<BalanceSheetFilter />}
                   filterInitialData={BalanceSheetFilterInitialState}
                   filterWidth="100"
                   reload={true}

@@ -185,10 +185,10 @@ const LedgerReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <button className="flex items-center bg-gray-100 p-0 rounded-md">
-
                 </button>
                 <ErpDevGrid
                   columns={columns}
+                  // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   gridHeader={t("ledger_report")}
                   dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}

@@ -58,7 +58,7 @@ const BillwiseProfit = () => {
       width: 80,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
-          {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' : cellElement.data.qty < 0 ? getFormattedValue(-1 * cellElement.data.qty) : getFormattedValue(cellElement.data.qty)}`}
+          {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' :  getFormattedValue(cellElement.data.qty)}`}
         </span>
       ),
     },
@@ -97,7 +97,7 @@ const BillwiseProfit = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
-          {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : cellElement.data.grossAmount < 0 ? getFormattedValue(-1 * cellElement.data.grossAmount) : getFormattedValue(cellElement.data.grossAmount)}`}
+          {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : getFormattedValue(cellElement.data.grossAmount)}`}
         </span>
       ),
     },
@@ -124,8 +124,8 @@ const BillwiseProfit = () => {
           const formattedValue =
             salesPrice == null
               ? '0'
-              : salesPrice < 0
-                ? getFormattedValue(-1 * salesPrice)
+              // : salesPrice < 0
+              //   ? getFormattedValue(-1 * salesPrice)
                 : getFormattedValue(salesPrice);
 
           return (
@@ -149,7 +149,7 @@ const BillwiseProfit = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.totCost == 0 || cellElement.data?.totCost == null ? '' : cellElement.data.totCost < 0 ? getFormattedValue(-1 * cellElement.data.totCost) : getFormattedValue(cellElement.data.totCost)}`}
+          {`${cellElement.data?.totCost == 0 || cellElement.data?.totCost == null ? '' :  getFormattedValue(cellElement.data.totCost)}`}
         </span>
       ),
     },
@@ -162,7 +162,7 @@ const BillwiseProfit = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.netAmount == 0 || cellElement.data?.netAmount == null ? '' : cellElement.data.netAmount < 0 ? getFormattedValue(-1 * cellElement.data.netAmount) : getFormattedValue(cellElement.data.netAmount)}`}
+          {`${cellElement.data?.netAmount == 0 || cellElement.data?.netAmount == null ? '' :  getFormattedValue(cellElement.data.netAmount)}`}
         </span>
       ),
     },
@@ -175,7 +175,7 @@ const BillwiseProfit = () => {
       width: 110,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' : cellElement.data.profit < 0 ? getFormattedValue(-1 * cellElement.data.profit) : getFormattedValue(cellElement.data.profit)}`}
+          {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' :  getFormattedValue(cellElement.data.profit)}`}
         </span>
       ),
     },
@@ -188,7 +188,7 @@ const BillwiseProfit = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' : cellElement.data.markupPerc < 0 ? getFormattedValue(-1 * cellElement.data.markupPerc) : getFormattedValue(cellElement.data.markupPerc)}`}
+          {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' :  getFormattedValue(cellElement.data.markupPerc)}`}
         </span>
       ),
     },
@@ -201,7 +201,7 @@ const BillwiseProfit = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : cellElement.data.marginPerc < 0 ? getFormattedValue(-1 * cellElement.data.marginPerc) : getFormattedValue(cellElement.data.marginPerc)}`}
+          {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : getFormattedValue(cellElement.data.marginPerc)}`}
         </span>
       ),
     },
@@ -222,8 +222,8 @@ const BillwiseProfit = () => {
           const formattedValue =
             vat == null
               ? '0'
-              : vat < 0
-                ? getFormattedValue(-1 * vat)
+              // : vat < 0
+              //   ? getFormattedValue(-1 * vat)
                 : getFormattedValue(vat);
 
           return (

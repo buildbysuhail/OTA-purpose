@@ -101,7 +101,7 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}
         />
-        {applicationSettings.accountsSettings.allowSalesCounter &&
+        {applicationSettings.accountsSettings?.allowSalesCounter &&
           <ERPDataCombobox
             {...getFieldProps("counterID")}
             id="counterID"

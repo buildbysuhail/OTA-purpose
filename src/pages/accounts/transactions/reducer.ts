@@ -53,7 +53,7 @@ const accTransactionSlice = createSlice({
       state.row.ledgerId = 0;
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailId = 0;
-      state.previousNarration = '';
+      state.previousNarration = "";
       state.row.checkStatus = "P";
       state.row.exchangeRate = 1;
       state.row.currencyId = 0;
@@ -194,15 +194,15 @@ const accTransactionSlice = createSlice({
       }>
     ) => {
       const data = action.payload.row;
-      const amount = action.payload.isForeignCurrencyEnabled && data.amount
-      ? (data.amount * action.payload.exchangeRate)
-      : data.amount;
+      const amount =
+        action.payload.isForeignCurrencyEnabled && data.amount
+          ? data.amount * action.payload.exchangeRate
+          : data.amount;
       const serializedRow: AccTransactionRow = {
         ...data,
         chqDate: data.chqDate ? new Date(data.chqDate).toISOString() : "",
         bankDate: data.bankDate ? new Date(data.bankDate).toISOString() : "",
-        amount:
-          amount,
+        amount: amount,
         amountFC: data.amount,
         drCr: state.row.drCr,
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,
@@ -213,15 +213,39 @@ const accTransactionSlice = createSlice({
       state.row.ledgerCode = "";
       state.row.groupName = "";
       state.row.ledgerId = 0;
-      state.row.amount = 0;      
+      state.row.amount = 0;
       state.row.discount = 0;
-      state.row.bankName = "",
-      state.previousNarration = state.row.narration,
-      state.row.narration = state.transaction.master.voucherType == VoucherType.JournalVoucher ? state.userConfig.keepNarrationForJV != true ? "" : state.row.narration : "";
+      (state.row.bankName = ""),
+        (state.previousNarration = state.row.narration),
+        (state.row.narration =
+          state.transaction.master.voucherType == VoucherType.JournalVoucher
+            ? state.userConfig.keepNarrationForJV != true
+              ? ""
+              : state.row.narration
+            : "");
       state.row.chequeNumber = "";
       state.isRowEdit = false;
-      state.row.costCentreId = state.userConfig.presetCostenterId > 0 ? state.userConfig.presetCostenterId : action.payload.applicationSettings.accountsSettings.defaultCostCenterID;
-      
+      state.row.costCentreId =
+        state.userConfig.presetCostenterId > 0
+          ? state.userConfig.presetCostenterId
+          : action.payload.applicationSettings.accountsSettings
+              .defaultCostCenterID;
+              debugger;
+      state.transaction.master.totalAmount =
+      state.transaction.master.voucherType !== "MJV"
+              ? state.transaction.details.reduce(
+                  (sum, detail) => sum + (Number(detail.amount) || 0),
+                  0
+                )
+              : state.transaction.details.reduce(
+                  (sum, detail) => sum + (Number(detail.debit) || 0),
+                  0
+                );
+      localStorage.setItem(
+        `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
+        JSON.stringify(state.transaction.details)
+      );
+      state.row.BillwiseDetails = "";
     },
 
     // Update a specific row in the transaction details

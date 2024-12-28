@@ -47,6 +47,7 @@ import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./acc-templates";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 interface BilledItem {
   id?: number;
   name: string;
@@ -89,6 +90,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
+    const { getFormattedValue } = useNumberFormat();
   const {
     undoEditMode,
     getNextVoucherNumber,
@@ -311,14 +313,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               fields: {
                 masterAccountID:
                   userSession.counterwiseCashLedgerId > 0 &&
-                  applicationSettings.accountsSettings.allowSalesCounter
+                  applicationSettings.accountsSettings?.allowSalesCounter
                     ? userSession.counterwiseCashLedgerId
-                    : applicationSettings.accountsSettings.defaultCashAcc,
+                    : applicationSettings.accountsSettings?.defaultCashAcc,
               },
             })
           );
           debugger;
-          if (userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter ) {
+          if (userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings?.allowSalesCounter ) {
             if (userSession.counterAssignedCashLedgerId > 0) {
               formElements.masterAccount.disabled = true;
             }
@@ -330,7 +332,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
-            printOnSave: applicationSettings.accountsSettings.printAccAftersave,
+            printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
           },
         })
       );
@@ -346,7 +348,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
       }
       formElements.btnBillWise.visible =
-        applicationSettings.accountsSettings.maintainBillwiseAccount;
+        applicationSettings.accountsSettings?.maintainBillwiseAccount;
       if (voucherType == "JV") {
         console.log("masterAccount.disabled2");
         dispatch(
@@ -357,7 +359,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           })
         );
       }
-      if (applicationSettings.accountsSettings.maintainProjectSite) {
+      if (applicationSettings.accountsSettings?.maintainProjectSite) {
         newFormElements.projectId.visible = true;
       }
       if (userSession.dbIdValue == "543140180640") {
@@ -375,7 +377,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 masterAccountID:
                   userCashLedgerID > 0
                     ? userCashLedgerID
-                    : applicationSettings.accountsSettings.defaultCashAcc,
+                    : applicationSettings.accountsSettings?.defaultCashAcc,
               },
             })
           );
@@ -405,7 +407,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             voucherType === "CR" ? "Collected By" : "Paid By";
           newFormElements.discount.visible = true;
           newFormElements.costCentreId.visible =
-            applicationSettings.accountsSettings.maintainCostCenter == true;
+            applicationSettings.accountsSettings?.maintainCostCenter == true;
           newFormElements.chequeNumber.visible = false;
           newFormElements.bankDate.visible = false;
           break;
@@ -806,7 +808,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   )}
                 </div>
-
+{formElements.masterAccount.disabled.toString()}
                 {formElements.masterAccount.visible && (
                   <div>
                     <ERPDataCombobox
@@ -2087,7 +2089,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </span>
           </button>
         </div>
-        Total: {formState.transaction.master.totalAmount}
+        Total: {getFormattedValue(formState.transaction.master.totalAmount??0)}
         <div>
           <ERPButton
             ref={btnSaveRef}

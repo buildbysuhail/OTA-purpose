@@ -50,6 +50,7 @@ export const useAccTransaction = (
   transactionType: string,
   btnSaveRef: any,
   ledgerCodeRef?: any,
+  ledgerIdRef?: any,
   masterAccountRef?: any,
   costCenterRef?: any,
   amountRef?: any
@@ -93,6 +94,11 @@ export const useAccTransaction = (
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
+    }
+  };
+  const focusLedgerCombo = () => {
+    if (ledgerIdRef.current) {
+      ledgerIdRef.current.focus();
     }
   };
   const initialFormElements = {
@@ -437,9 +443,9 @@ export const useAccTransaction = (
     // Handle master account selection based on voucher type
     if (master.voucherType === "BR" || master.voucherType === "PBR") {
       const defaultAccID =
-        applicationSettings.accountsSettings.defaultCreditCardAcc > 0
-          ? applicationSettings.accountsSettings.defaultCreditCardAcc
-          : applicationSettings.accountsSettings.defaultBankAcc;
+        applicationSettings.accountsSettings?.defaultCreditCardAcc > 0
+          ? applicationSettings.accountsSettings?.defaultCreditCardAcc
+          : applicationSettings.accountsSettings?.defaultBankAcc;
 
       dispatch(
         accFormStateHandleFieldChange({
@@ -452,9 +458,9 @@ export const useAccTransaction = (
     } else if (master.voucherType === "CR" || master.voucherType === "CP") {
       const cashLedgerID =
         userSession.counterwiseCashLedgerId > 0 &&
-        applicationSettings.accountsSettings.allowSalesCounter
+        applicationSettings.accountsSettings?.allowSalesCounter
           ? userSession.counterwiseCashLedgerId
-          : applicationSettings.accountsSettings.defaultCashAcc;
+          : applicationSettings.accountsSettings?.defaultCashAcc;
 
       dispatch(
         accFormStateHandleFieldChange({
@@ -563,7 +569,7 @@ export const useAccTransaction = (
         userSession,
         softwareDate,
         defaultCostCenterID:
-          applicationSettings.accountsSettings.defaultCostCenterID,
+          applicationSettings.accountsSettings?.defaultCostCenterID,
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
       })
@@ -704,7 +710,8 @@ export const useAccTransaction = (
               ...prev,
               btnSave: {
                 ...prev.btnSave,
-                disabled: false,
+                disabled:  false,
+                label: "Add"
               },
             }));
           }
@@ -751,6 +758,7 @@ export const useAccTransaction = (
           focusCostCenterRef();
           return false;
         }
+        formElements.btnAdd
 
         dispatch(
           accFormStateTransactionDetailsRowAdd({
@@ -761,11 +769,38 @@ export const useAccTransaction = (
             userSession: userSession,
           })
         );
-        // dispatch(
-        //   accFormStateHandleFieldChange({
-        //     fields: { showSaveDialog: true },
-        //   })
-        // )
+        setFormElements((prev) => ({
+          ...prev,
+          employee: {
+            ...prev.employee,
+            disabled:  true
+          },
+          jvDrCr: {
+            ...prev.jvDrCr,
+            disabled:  true
+          },
+          masterAccount: {
+            ...prev.masterAccount,
+            disabled:  true
+          },
+          referenceNumber: {
+            ...prev.referenceNumber,
+            disabled:  true
+          },
+          referenceDate: {
+            ...prev.referenceDate,
+            disabled:  true
+          },
+          transactionDate: {
+            ...prev.transactionDate,
+            disabled:  true
+          },
+          btnEdit: {
+            ...prev.btnEdit,
+            visible: true
+          },
+        }));
+        focusLedgerCombo();
       }
     }
   };

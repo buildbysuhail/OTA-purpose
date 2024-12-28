@@ -36,7 +36,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-            <span className="text-lg font-medium">{ledgerData?.partyPhoto}</span>
+            <img className="text-lg font-medium" src={ledgerData?.partyPhoto} ></img>
           </div>
           <div>
             <div className="text-sm text-muted-foreground">{ledgerData?.partyName}</div>

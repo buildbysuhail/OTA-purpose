@@ -1145,7 +1145,7 @@ setIsTemplateOpen(true)
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { ledgerCode: e.target?.value },
+                        fields: { ledgerCode: e.target?.value, ledgerId: 2377 },
                       })
                     )
                   }

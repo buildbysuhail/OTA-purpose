@@ -416,6 +416,7 @@ export interface AccTransactionFormState {
   ledgerBalance: number;
   ledgerBillWiseLoading: boolean;
   ledgerData: any;
+  groupName: any;
   ledgerIsBillWiseAdjustExistLoading: boolean;
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   isBahamdoonPOSReceipt: boolean;
@@ -507,5 +508,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   ledgerData: undefined,
   ledgerBalanceLoading: false,
   ledgerBalance: 0,
-  masterBalanceLoading: false
+  masterBalanceLoading: false,
+  groupName: undefined
 }

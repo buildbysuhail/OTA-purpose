@@ -82,7 +82,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         if (barcodeComponent.type !== DesignerElementType.barcode || !barcodeComponent.barcodeProps) {
           return null;
         }
-      debugger;
+      
         const canvas = document.createElement('canvas');
         canvas.height = pxToPoint(barcodeComponent.height);
         canvas.width = pxToPoint(barcodeComponent.width);
@@ -124,7 +124,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
       };
       
     const generateBarcodeImages = async () => {
-      debugger;
+      
       const images: { [key: string]: string } = {};
       if (template?.barcodeState?.placedComponents) {
         if(template.propertiesState?.template_group == "barcode") {
@@ -213,7 +213,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         );
 
       case DesignerElementType.barcode:
-        debugger;
+        
         const barcodeKey = template?.propertiesState?.template_group === "barcode" ? `${data.siNo}-${component.id}`: `${component.id}`;
         return barcodeImages[barcodeKey] ? (
           <Image

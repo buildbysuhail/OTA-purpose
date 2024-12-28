@@ -216,7 +216,7 @@ export const useAccTransaction = (
         voucherType ? voucherType : "null"
       }&prefix=${prefix ? prefix : "null"}`
     );
-    debugger;
+    
     const nextVoucherNumber = response || 1;
 
     return nextVoucherNumber;
@@ -660,7 +660,7 @@ export const useAccTransaction = (
   };
   const addOrEditRow = async () => {
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
-      debugger;
+      
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
           if (formState.row.BillwiseDetails == "") {
@@ -691,7 +691,7 @@ export const useAccTransaction = (
                   return false;
                 }
               }
-        debugger;
+        
         if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
           ERPAlert.show({
             icon: "warning",
@@ -730,7 +730,7 @@ export const useAccTransaction = (
           focusLedgerCode();
           return false;
         }
-        debugger;
+        
         if (isNullOrUndefinedOrZero(formState.row.amount)) {
           ERPAlert.show({
             icon: "info",

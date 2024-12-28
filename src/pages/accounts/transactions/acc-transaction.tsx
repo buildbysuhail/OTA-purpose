@@ -48,6 +48,7 @@ import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable
 import TemplatesView from "./acc-templates";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import useFormComponent from "./use-form-components";
 interface BilledItem {
   id?: number;
   name: string;
@@ -149,7 +150,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   ]);
 
   useEffect(() => {
-    debugger;
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: { isInvoker: voucherNo && voucherNo > 0 },
@@ -228,6 +229,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     loadLedgerData();
   }, [formState.showbillwise]);
 
+
   useEffect(() => {
     const loadLedgerData = async () => {
       dispatch(
@@ -239,68 +241,82 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           },
         })
       );
-
+  
       try {
-        if (formState.row.ledgerId) {
-          if (applicationSettings.accountsSettings?.billwiseMandatory) {
-            if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
-              if (
-                (formState.isRowEdit != true &&
-                  formState.row.BillwiseDetails == "") ||
-                (formState.isRowEdit && formElements.amount.disabled == false)
-              ) {
-                const IsBillwiseTransAdjustmentExists = await api.getAsync(
-                  `${
-                    Urls.acc_transaction_is_bill_wise_trans_adjustment_exists
-                  }?LedgerId=${formState.row.ledgerId}&DrCr=${
-                    formState.transaction.master.drCr
-                  }&AccTransactionDetailID=${0}`
-                );
-                dispatch(
-                  accFormStateHandleFieldChange({
-                    fields: {
-                      IsBillwiseTransAdjustmentExists:
-                        IsBillwiseTransAdjustmentExists,
-                      ledgerIsBillWiseAdjustExistLoading: false,
-                    },
-                  })
-                );
-              }
-            }
-          }
-
-          const ledgerBalance = await api.getAsync(
-            `${Urls.get_ledger_balance}${formState.row.ledgerId}`
-          );
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                ledgerBalance: ledgerBalance,
-                ledgerBalanceLoading: false,
-              },
-            })
-          );
-
-          if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
-            const ledgerData = await api.getAsync(
-              `${Urls.ledgerDataForTransaction}?LedgerId=${formState.row.ledgerId}&DrCr=${formState.transaction.master.drCr}`
+        const ledgerId = formState.row.ledgerId;
+        const { billwiseMandatory } = applicationSettings.accountsSettings ?? {};
+        const isRowEdit = formState.isRowEdit;
+  
+        if (!isNullOrUndefinedOrZero(ledgerId)) {
+          if (billwiseMandatory && 
+              ((!isRowEdit && !formState.row.BillwiseDetails) || 
+              (isRowEdit && !formElements.amount.disabled))) {
+            const IsBillwiseTransAdjustmentExists = await api.getAsync(
+              `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerId}&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=0`
             );
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
-                  ledgerData: ledgerData,
-                  ledgerDataLoading: false,
+                  IsBillwiseTransAdjustmentExists,
+                  ledgerIsBillWiseAdjustExistLoading: false,
                 },
               })
             );
           }
+  
+          const [ledgerBalance, ledgerData] = await Promise.all([
+            api.getAsync(`${Urls.get_ledger_balance}${ledgerId}`),
+            api.getAsync(
+              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerId}&DrCr=${formState.transaction.master.drCr}`
+            ),
+          ]);
+  
+          setFormElements((prev: any) => ({
+            ...prev,
+            costCentreId: {
+              ...prev.costCentreId,
+              visible: ledgerData?.isCostCentreApplicable ?? false,
+            },
+          }));
+  
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: { ledgerCode: ledgerData?.ledgerCode },
+            })
+          );
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                ledgerBalance,
+                groupName: ledgerData?.accGroupName,
+                ledgerData,
+                ledgerDataLoading: false,
+              },
+            })
+          );
+        } else {
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: { ledgerBalance: 0, groupName: "", ledgerData: undefined },
+            })
+          );
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: { ledgerCode: undefined },
+            })
+          );
+          setFormElements((prev: any) => ({
+            ...prev,
+            costCentreId: { ...prev.costCentreId, visible: false },
+          }));
         }
-      } catch (error) {}
+      } catch (error) {
+        // Handle error
+      }
     };
-
+  
     loadLedgerData();
   }, [formState.row.ledgerId]);
-
   useEffect(() => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -326,7 +342,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.masterAccountID]);
   useEffect(() => {
     const initializeFormElements = async () => {
-      debugger;
+      
       const newFormElements = { ...formElements };
       newFormElements.btnSave.disabled = true;
       newFormElements.btnEdit.disabled = true;
@@ -357,7 +373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               },
             })
           );
-          debugger;
+          
           if (
             userSession.counterwiseCashLedgerId > 0 &&
             applicationSettings.accountsSettings?.allowSalesCounter
@@ -439,7 +455,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const updateFormElementsBasedOnVoucherType = () => {
       const newFormElements = { ...formElements };
       console.log("masterAccount.disabled4");
-      debugger;
+      
       switch (voucherType) {
         case "CR":
         case "CP":
@@ -771,7 +787,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [settings, setSettings] = useState<ApplicationMainSettings>(
     ApplicationMainSettingsInitialState
   );
-
+  const {
+    bankAccountField,
+    handleBankNameChange,
+    handleLedgerChange,
+  } = useFormComponent();
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
@@ -865,7 +885,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       field={{
                         valueKey: "id",
                         labelKey: "name",
-                        required: true,
                         getListUrl: Urls.data_acc_ledgers,
                       }}
                       disabled={
@@ -875,7 +894,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                     <div className="flex justify-between items-center mt-1">
                       <span className="text-xs text-gray-500">
-                        Bal: {formState.masterBalance || "0.00"}
+                        Bal: {`${formState.masterBalance || "0.00"} ${formState.masterBalance??0 < 0 ? 'Cr' : 'Dr'}`}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-4">
@@ -964,7 +983,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         getListUrl: Urls.data_currencies,
                       }}
                       onChange={(e) => {
-                        debugger;
+                        
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
                             fields: {
@@ -1093,7 +1112,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       field={{
                         valueKey: "id",
                         labelKey: "name",
-                        required: true,
                         getListUrl: Urls.data_employees,
                       }}
                       disabled={
@@ -1199,7 +1217,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
               {/* {formState?.row.ledgerId?.toString()} */}
               {formElements.ledgerId.visible && (
-                <div>
+                <>
                   <ERPDataCombobox
                     id="ledgerId"
                     className="w-full"
@@ -1216,7 +1234,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       id: "ledgerId",
                       valueKey: "id",
                       labelKey: "name",
-                      required: true,
                       getListUrl: Urls.data_acc_ledgers,
                     }}
                     disabled={
@@ -1226,10 +1243,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   />
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
-                      Bal: {formState.ledgerBalance || "0.00"}
+                    Bal: {`${formState.ledgerBalance || "0.00"} ${formState.ledgerBalance??0 < 0 ? 'Cr' : 'Dr'}`}
                     </span>
                   </div>
-                </div>
+                </>
               )}
 
               {formElements.amount.visible && (
@@ -1408,42 +1425,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     }
                   />
                 )}
-                {formElements.bankName.visible && (
-                  <ERPDataCombobox
-                    id="bankName"
-                    className="min-w-[180px] max-w-[200px]"
-                    label={formElements.bankName.label}
-                    value={formState.row.bankName}
-                    options={
-                      isNullOrUndefinedOrZero(formState.row.ledgerId)
-                        ? []
-                        : undefined
-                    }
-                    field={{
-                      valueKey: "id",
-                      labelKey: "name",
-                      getListUrl: Urls.data_BankAccounts,
-                      params: {
-                        ledgerID:
-                          formState.row.ledgerId != undefined &&
-                          formState.row.ledgerId != null
-                            ? formState.row.ledgerId
-                            : 0,
-                      },
-                    }}
-                    onChange={(e) =>
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: { bankName: e.value },
-                        })
-                      )
-                    }
-                    disabled={
-                      formElements.bankName?.disabled ||
-                      formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
+                 {formElements.bankName.visible && (
+        <ERPDataCombobox
+          id="bankName"
+          className="min-w-[180px] max-w-[200px]"
+          label={formElements.bankName.label}
+          value={formState.row.bankName}
+          options={formState.row.ledgerId ? undefined : []}
+          field={bankAccountField}
+          onChange={handleBankNameChange}
+          disabled={formElements.bankName?.disabled || formElements.pnlMasters?.disabled}
+        />
+      )}
               </>
             )}
             {formElements.costCentreId.visible && (

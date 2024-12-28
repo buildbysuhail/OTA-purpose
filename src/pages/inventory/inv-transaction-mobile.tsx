@@ -314,7 +314,6 @@ const InvTransactionMobile = () => {
                           id="counterID"
                           field={{
                             id: "counterID",
-                            required: true,
                             getListUrl: Urls.data_countries,
                             valueKey: "id",
                             labelKey: "name",

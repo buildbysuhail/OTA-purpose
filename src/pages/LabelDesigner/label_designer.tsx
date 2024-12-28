@@ -884,7 +884,7 @@ useEffect (() => {
       {
         if (isUndoOrRedo == undefined || isUndoOrRedo == false)
           setHistoryData((prevHistory) => {
-            debugger;
+            
             console.log("prevHistory");
             const isDuplicate = prevHistory.some((entry) => entry.id === id);
             const updHistory = prevHistory.slice(0, historyIndex + 1);
@@ -928,7 +928,7 @@ useEffect (() => {
   };
 
   const undoChanges = ( mode: "undo" | "redo" ) => {  
-    debugger;
+    
     if (historyData.length > 0) {
       const lastHistory = mode == "undo" ? historyData[historyIndex] : historyData[historyIndex + 2];
       if (lastHistory) {

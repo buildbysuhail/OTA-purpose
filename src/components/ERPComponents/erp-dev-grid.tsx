@@ -192,7 +192,7 @@ const createStore = async (
             ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
-            debugger;
+            
 
         return result != undefined 
                             ?  result.isOk != undefined && result.isOk == false 
@@ -326,7 +326,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   },
   childPopupPropsDynamic
 }) => {
-  debugger;
+  
   const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
@@ -625,7 +625,7 @@ const onCellPrepared = useCallback((e: any) => {
 //     ((_drillDownCell && !dynamicProps?.enableFn) || 
 //     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
 //   ) {
-//     debugger;
+//     
 //     const dfd = e.cellElement.innerHTML;
 //     const isIn = (e.cellElement.innerHTML as string).includes('<span');
 //     if (e.cellElement && isIn == true) {
@@ -838,7 +838,7 @@ const onCellPrepared = useCallback((e: any) => {
   );
 };
 const _DrillDownCellTemplate = ({ data }: { data: any }) => {
-  debugger;
+  
   if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
     return (
       <a

@@ -61,7 +61,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }>({ voucherPrefix: "", formType: formType, voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   useEffect(() => {
-    debugger;
+    
     if (isChooseVoucherEnabled(title, userSession)) {
       setOpenVoucherSelector(true);
     } else {
@@ -70,7 +70,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, [voucherType]);
 
   const onRowDblClick = useCallback((event: any) => {
-    debugger;
+    
     setData((prev: any) => ({
       ...prev,
       formType: event.data.formType,

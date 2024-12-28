@@ -10,7 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
 const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
-  debugger;
+  
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();

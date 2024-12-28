@@ -67,7 +67,6 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           id="parentGroupID"
           field={{
             id: "parentGroupID",
-            required: true,
             getListUrl: Urls.data_warehouse,
             valueKey: "id",
             labelKey: "name",
@@ -81,7 +80,6 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           id="groupCategoryID"
           field={{
             id: "groupCategoryID",
-            required: true,
             getListUrl: Urls.data_groupcategory,
             valueKey: "id",
             labelKey: "name",
@@ -94,7 +92,6 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           id="sectionID"
           field={{
             id: "sectionID",
-            required: true,
             getListUrl: Urls.data_sections,
             valueKey: "id",
             labelKey: "name",

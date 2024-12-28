@@ -274,11 +274,11 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
         return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
       }
     });
-    debugger;
+    
     setDetailsColumns(filteredColumns);
   }, [voucherType]);
   const onRowClick = useCallback((event: any) => {
-    debugger;
+    
     setVoucherType(event.data?.cType);
     setReload(true)
   }, []);

@@ -56,7 +56,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
               const updates: { [key: string]: any } = {};
               if (frmState.allChecked) {
-                debugger;
+                
                 updates["vTypes"] = "All";
                 updates["isDr"] = formState.isDr;
                 updates["isCr"] = formState.isCr;

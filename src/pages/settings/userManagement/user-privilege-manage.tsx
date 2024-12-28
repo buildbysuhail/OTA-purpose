@@ -135,7 +135,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   //       const matchingParent = immediateParentsOfEndNodes.find(
   //         (parent) => parent.formCode === item.formCode
   //       );
-  //       debugger;
+  //       
   //       if (matchingParent && typeof item.userRights === "string") {
   //         const rightsIds = Array.from(item.userRights).map(
   //           (permission: string) => {
@@ -240,11 +240,11 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   const onSelectionChanged = useCallback(
     (e: TreeListTypes.SelectionChangedEvent) => {
-      debugger;
+      
       const selectedData =
         e.component?.getSelectedRowsData(selectionMode)?.map((x) => x.id) ?? [];
       setSelectedRowKeys(selectedData);
-      debugger;
+      
       if (e.currentSelectedRowKeys.length == 1) {
         const key = e.currentSelectedRowKeys[0];
         const parent = userRights.find((x) => x.id == key)?.headId;
@@ -314,7 +314,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       const childNodes = userRights.filter(
         (child) => child.headId === parent.id
       );
-      debugger;
+      
       const hasMissing = hasAnyMissingParent(parent);
       const keys = getSelectedKeys();
       let parentUserRights = keys.find(x => x == parent.id) != undefined && !hasMissing ? "S" : "";

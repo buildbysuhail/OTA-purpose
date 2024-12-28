@@ -230,7 +230,7 @@ const accTransactionSlice = createSlice({
           ? state.userConfig.presetCostenterId
           : action.payload.applicationSettings.accountsSettings
               .defaultCostCenterID;
-              debugger;
+              
       state.transaction.master.totalAmount =
       state.transaction.master.voucherType !== "MJV"
               ? state.transaction.details.reduce(

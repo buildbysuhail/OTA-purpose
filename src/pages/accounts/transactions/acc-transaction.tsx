@@ -90,7 +90,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-    const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue } = useNumberFormat();
   const {
     undoEditMode,
     getNextVoucherNumber,
@@ -235,6 +235,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           fields: {
             ledgerDataLoading: true,
             ledgerIsBillWiseAdjustExistLoading: true,
+            ledgerBalanceLoading: true,
           },
         })
       );
@@ -244,7 +245,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           if (applicationSettings.accountsSettings?.billwiseMandatory) {
             if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
               if (
-                (formState.isRowEdit  != true && formState.row.BillwiseDetails == "") ||
+                (formState.isRowEdit != true &&
+                  formState.row.BillwiseDetails == "") ||
                 (formState.isRowEdit && formElements.amount.disabled == false)
               ) {
                 const IsBillwiseTransAdjustmentExists = await api.getAsync(
@@ -266,6 +268,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }
             }
           }
+
+          const ledgerBalance = await api.getAsync(
+            `${Urls.get_ledger_balance}${formState.row.ledgerId}`
+          );
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                ledgerBalance: ledgerBalance,
+                ledgerBalanceLoading: false,
+              },
+            })
+          );
+
           if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
             const ledgerData = await api.getAsync(
               `${Urls.ledgerDataForTransaction}?LedgerId=${formState.row.ledgerId}&DrCr=${formState.transaction.master.drCr}`
@@ -274,7 +289,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               accFormStateHandleFieldChange({
                 fields: {
                   ledgerData: ledgerData,
-                  ledgerBillWiseLoading: false,
+                  ledgerDataLoading: false,
                 },
               })
             );
@@ -286,6 +301,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     loadLedgerData();
   }, [formState.row.ledgerId]);
 
+  useEffect(() => {
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            ledgerBalanceLoading: true,
+          },
+        })
+      );
+    const loadLedgerData = async () => {
+      const ledgerBalance = await api.getAsync(
+        `${Urls.get_ledger_balance}${formState.masterAccountID}`
+      );
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            masterBalance: ledgerBalance,
+            ledgerBalanceLoading: false,
+          },
+        })
+      );
+    };
+    loadLedgerData();
+  }, [formState.masterAccountID]);
   useEffect(() => {
     const initializeFormElements = async () => {
       debugger;
@@ -320,19 +358,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             })
           );
           debugger;
-          if (userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings?.allowSalesCounter ) {
+          if (
+            userSession.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings?.allowSalesCounter
+          ) {
             if (userSession.counterAssignedCashLedgerId > 0) {
               formElements.masterAccount.disabled = true;
             }
           } else {
-            
           }
         }
       }
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
-            printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
+            printOnSave:
+              applicationSettings.accountsSettings?.printAccAftersave,
           },
         })
       );
@@ -485,15 +526,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [formType, voucherType, voucherPrefix]);
 
-
-const selectTemplates = useCallback(async() => {
-setTemplateLoad(true)
-setIsTemplateOpen(true)
-  try {
-    const response = await api.getAsync(`${Urls.templates}?template_group=${voucherType}`);
-    dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
-    }
-    catch (error) {
+  const selectTemplates = useCallback(async () => {
+    setTemplateLoad(true);
+    setIsTemplateOpen(true);
+    try {
+      const response = await api.getAsync(
+        `${Urls.templates}?template_group=${voucherType}`
+      );
+      dispatch(
+        accFormStateHandleFieldChange({ fields: { templates: response } })
+      );
+    } catch (error) {
       console.log(error, "acc-transaction template select error");
     } finally {
       setTemplateLoad(false);
@@ -806,7 +849,6 @@ setIsTemplateOpen(true)
                     />
                   )}
                 </div>
-{formElements.masterAccount.disabled.toString()}
                 {formElements.masterAccount.visible && (
                   <div>
                     <ERPDataCombobox
@@ -1145,7 +1187,7 @@ setIsTemplateOpen(true)
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { ledgerCode: e.target?.value, ledgerId: 2377 },
+                        fields: { ledgerCode: e.target?.value },
                       })
                     )
                   }
@@ -1157,30 +1199,37 @@ setIsTemplateOpen(true)
               )}
               {/* {formState?.row.ledgerId?.toString()} */}
               {formElements.ledgerId.visible && (
-                <ERPDataCombobox
-                  id="ledgerId"
-                  className="w-full"
-                  label={formElements.ledgerId.label}
-                  data={formState.row}
-                  onSelectItem={(e) => {
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: { ledgerId: e.value, ledgerName: e.label },
-                      })
-                    );
-                  }}
-                  field={{
-                    id: "ledgerId",
-                    valueKey: "id",
-                    labelKey: "name",
-                    required: true,
-                    getListUrl: Urls.data_acc_ledgers,
-                  }}
-                  disabled={
-                    formElements.ledgerId?.disabled ||
-                    formElements.pnlMasters?.disabled
-                  }
-                />
+                <div>
+                  <ERPDataCombobox
+                    id="ledgerId"
+                    className="w-full"
+                    label={formElements.ledgerId.label}
+                    data={formState.row}
+                    onSelectItem={(e) => {
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { ledgerId: e.value, ledgerName: e.label },
+                        })
+                      );
+                    }}
+                    field={{
+                      id: "ledgerId",
+                      valueKey: "id",
+                      labelKey: "name",
+                      required: true,
+                      getListUrl: Urls.data_acc_ledgers,
+                    }}
+                    disabled={
+                      formElements.ledgerId?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-gray-500">
+                      Bal: {formState.ledgerBalance || "0.00"}
+                    </span>
+                  </div>
+                </div>
               )}
 
               {formElements.amount.visible && (
@@ -2087,7 +2136,8 @@ setIsTemplateOpen(true)
             </span>
           </button>
         </div>
-        Total: {getFormattedValue(formState.transaction.master.totalAmount??0)}
+        Total:{" "}
+        {getFormattedValue(formState.transaction.master.totalAmount ?? 0)}
         <div>
           <ERPButton
             ref={btnSaveRef}
@@ -2099,22 +2149,28 @@ setIsTemplateOpen(true)
         </div>
       </div>
 
-      {formState.transaction && formState.template &&
+      {formState.transaction && formState.template && (
         <ERPModal
-          isOpen={formState.printPreview
-          }
+          isOpen={formState.printPreview}
           title={t("barcode_print")}
           isForm={true}
           closeModal={() => {
-            dispatch(accFormStateHandleFieldChange({fields:{printPreview:false}}));
+            dispatch(
+              accFormStateHandleFieldChange({ fields: { printPreview: false } })
+            );
           }}
-          content={<DownloadPreview template={formState?.template} data={DummyVoucherData}/>}>
-        </ERPModal>
-      }
+          content={
+            <DownloadPreview
+              template={formState?.template}
+              data={DummyVoucherData}
+            />
+          }
+        ></ERPModal>
+      )}
 
       <ERPResizableSidebar
         minWidth={350}
-        isOpen={ isTemplateOpen}
+        isOpen={isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
       ></ERPResizableSidebar>

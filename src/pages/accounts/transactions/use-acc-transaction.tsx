@@ -769,37 +769,52 @@ export const useAccTransaction = (
             userSession: userSession,
           })
         );
-        setFormElements((prev) => ({
-          ...prev,
-          employee: {
-            ...prev.employee,
-            disabled:  true
-          },
-          jvDrCr: {
-            ...prev.jvDrCr,
-            disabled:  true
-          },
-          masterAccount: {
-            ...prev.masterAccount,
-            disabled:  true
-          },
-          referenceNumber: {
-            ...prev.referenceNumber,
-            disabled:  true
-          },
-          referenceDate: {
-            ...prev.referenceDate,
-            disabled:  true
-          },
-          transactionDate: {
-            ...prev.transactionDate,
-            disabled:  true
-          },
-          btnEdit: {
-            ...prev.btnEdit,
-            visible: true
-          },
-        }));
+        setFormElements((prev: any) => {
+          const updatedFormElements = {
+            ...prev,
+            employee: {
+              ...prev.employee,
+              disabled: true,
+            },
+            jvDrCr: {
+              ...prev.jvDrCr,
+              disabled: true,
+            },
+            masterAccount: {
+              ...prev.masterAccount,
+              disabled: true,
+            },
+            referenceNumber: {
+              ...prev.referenceNumber,
+              disabled: true,
+            },
+            referenceDate: {
+              ...prev.referenceDate,
+              disabled: true,
+            },
+            transactionDate: {
+              ...prev.transactionDate,
+              disabled: true,
+            },
+            btnEdit: {
+              ...prev.btnEdit,
+              visible: true,
+            },
+            amount: {
+              ...prev,
+              disabled: false
+            }
+          };
+        
+          if (formState.userConfig.presetCostenterId > 0) {
+            updatedFormElements.costCentreId = {
+              ...prev.costCentreId,
+              disabled: true,
+            };
+          }
+        
+          return updatedFormElements;
+        });
         focusLedgerCombo();
       }
     }

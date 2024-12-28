@@ -412,6 +412,8 @@ export interface AccTransactionFormState {
   isRowEdit: boolean; // isRowEdit
   IsBillwiseTransAdjustmentExists: boolean;
   ledgerDataLoading: boolean;
+  ledgerBalanceLoading: boolean;
+  ledgerBalance: number;
   ledgerBillWiseLoading: boolean;
   ledgerData: any;
   ledgerIsBillWiseAdjustExistLoading: boolean;
@@ -434,6 +436,7 @@ export interface AccTransactionFormState {
   title: string; // Form title
   masterAccountID: number; // Master account ID
   masterBalance: number; // Master account balance
+  masterBalanceLoading: boolean; // Master account balance
   masterAccountName: string; // Master account name
   previousNarration: string; 
   row: AccTransactionRow;
@@ -502,4 +505,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   ledgerBillWiseLoading: false,
   ledgerIsBillWiseAdjustExistLoading: false,
   ledgerData: undefined,
+  ledgerBalanceLoading: false,
+  ledgerBalance: 0,
+  masterBalanceLoading: false
 }

@@ -36,13 +36,13 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-            <span className="text-lg font-medium">X</span>
+            <span className="text-lg font-medium">{ledgerData?.partyPhoto}</span>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground">Customer</div>
+            <div className="text-sm text-muted-foreground">{ledgerData?.partyName}</div>
             <div className="flex items-center gap-2">
-              <span className="font-medium">XCVXCXC</span>
-              <CheckCircle2 className="w-4 h-4 text-blue-500" />
+              <span className="font-medium">{ledgerData?.partyCategory}</span>
+              <CheckCircle2 className="w-4 h-4 text-white " color="blue" />
             </div>
           </div>
         </div>

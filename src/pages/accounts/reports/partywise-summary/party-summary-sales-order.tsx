@@ -8,15 +8,15 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
-const PartySummarySalesOrder  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+
+const PartySummarySalesOrder: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "vNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -54,7 +54,7 @@ const PartySummarySalesOrder  : React.FC<PartySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 50,
     },
-     {
+    {
       dataField: "address1",
       caption: t('address1'),
       dataType: "string",
@@ -69,8 +69,6 @@ const PartySummarySalesOrder  : React.FC<PartySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
     },
-   
-   
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -160,25 +158,24 @@ const PartySummarySalesOrder  : React.FC<PartySummaryFilter> = ({ filter
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_sales_order")}
-                  dataUrl= {Urls.acc_reports_party_summary_sales_order}
+                  dataUrl={Urls.acc_reports_party_summary_sales_order}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   postData={filter}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
+                  reload={true} >
+                </ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default PartySummarySalesOrder;

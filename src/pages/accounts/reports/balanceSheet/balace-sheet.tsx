@@ -1,39 +1,23 @@
 import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
-import BalanceSheetFilter, {
-  BalanceSheetFilterInitialState,
-} from "./balance-sheet-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState, } from "./balance-sheet-filter";
 import Urls from "../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
-import {
-  Clock1,
-  FileDown,
-  Forward,
-  Printer,
-  RectangleVertical,
-  Timer,
-  X,
-} from "lucide-react";
+import { Clock1, FileDown, Forward, Printer, RectangleVertical, X, } from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
-import { Link } from "react-router-dom";
-import { t } from "i18next";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-// import { MouseEventHandler } from "@types/react";
-
 
 const api = new APIClient();
-
 const BalanceSheetRow: React.FC<{
   item: any;
   setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation();
-
+  const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
     setIsOpenDetails({
@@ -42,16 +26,14 @@ const BalanceSheetRow: React.FC<{
       groupName: item.groupName,
     });
   };
-
   return (
     <tr>
       <td
-        className={`py-2 ${
-          item.title == "M" ? "text-[#3b82f6]" :item.groupName=="TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
-        }`}
+        className={`py-2 ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
+          }`}
         style={{
-          paddingLeft: item.title == "M" ||item.groupName=="TOTAL"? "0px" : "20px",
-          fontWeight: item.title == "M" ||item.groupName=="TOTAL"? "bold" : "normal",
+          paddingLeft: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
+          fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
         }}
       >
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
@@ -62,15 +44,14 @@ const BalanceSheetRow: React.FC<{
         <td className="py-2 text-end">
           <a
             href="#"
-            className={`py-2 hover:text-[#1d4ed8] ${
-              item.title == "M" ? "text-[#3b82f6]" :item.groupName=="TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
-            }`}
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
+              }`}
             style={{
-              paddingRight:item.title == "M" ||item.groupName=="TOTAL" ? "0px" : "20px",
-              fontWeight: item.title == "M"||item.groupName=="TOTAL" ? "bold" : "normal",
+              paddingRight: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
+              fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
             }}
-            // onClick={handleClick}
-         //   className="text-[#3b82f6] hover:text-[#1d4ed8]"
+          // onClick={handleClick}
+          //   className="text-[#3b82f6] hover:text-[#1d4ed8]"
           >
             {getFormattedValue(item.total)}
           </a>
@@ -88,10 +69,11 @@ const HorizontalBalanceSheet: React.FC<{
   const assets = data?.filter((item: any) => item?.transType == "A");
 
   const liabilities = data?.filter((item: any) => item?.transType == "L");
+  const { t } = useTranslation('accountsReport');
 
   return (
     <div className="grid grid-cols-2 gap-4">
-       <div>
+      <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("liabilities_capital")}</h3> */}
         <table className="w-full text-left border-collapse">
           <thead>
@@ -147,7 +129,7 @@ const BalanceSheet = () => {
     key: number;
     groupName?: string;
   }>({ isOpen: false, key: 0 });
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
@@ -214,11 +196,10 @@ const BalanceSheet = () => {
 
             <button
               className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
-              onClick={() => setIsVerticalView(!isVerticalView)}
-            >
+              onClick={() => setIsVerticalView(!isVerticalView)}>
               <RectangleVertical className="mr-2" />
               <span className="mr-2">
-                {isVerticalView ? "Show Horizontal" : "Show Vertical"}
+                {isVerticalView ? t("show_horizontal") : t("show_vertical")}
               </span>
               <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                 <input
@@ -235,13 +216,17 @@ const BalanceSheet = () => {
                 ></label>
               </div>
             </button>
-            
+
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
                 gridId="gridBalanceSheet"
                 initialData={BalanceSheetFilterInitialState}
-                content={<BalanceSheetFilter />}
+                content={<BalanceSheetFilter getFieldProps={function (fieldName: string) {
+                  throw new Error("Function not implemented.");
+                }} handleFieldChange={function (field: string | object, value?: any): void {
+                  throw new Error("Function not implemented.");
+                }} />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
                 onClose={onCloseFilter}
@@ -280,8 +265,8 @@ const BalanceSheet = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-  As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
-</p>
+          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+        </p>
         {/* <p className="text-center mb-4">As of {filter.asOnDate.toString("MMMM dd yyyy")}</p> */}
         {loading ? (
           <>
@@ -327,29 +312,28 @@ const BalanceSheet = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-{(isOpenDetails.key>0&&
-      <ERPModal
-        isOpen={isOpenDetails.isOpen}
-        // title={t("bank_cards")}
-        title="Balance Sheet"
-        width="w-full max-w-[90%]"
-        isForm={true}
-        closeModal={() => {
-          setIsOpenDetails({ isOpen: false, key: 0 });
-        }}
-        content={
-          <BalancesheetDetails
-            postData={{
-              accGroupID: isOpenDetails.key,
-              asOnDate: filter.asOnDate,
-            }}
-            groupName={isOpenDetails.groupName}
-          />
-        }
-      />
-    )}
+      {(isOpenDetails.key > 0 &&
+        <ERPModal
+          isOpen={isOpenDetails.isOpen}
+          // title={t("bank_cards")}
+          title={t("balance_sheet")}
+          width="w-full max-w-[90%]"
+          isForm={true}
+          closeModal={() => {
+            setIsOpenDetails({ isOpen: false, key: 0 });
+          }}
+          content={
+            <BalancesheetDetails
+              postData={{
+                accGroupID: isOpenDetails.key,
+                asOnDate: filter.asOnDate,
+              }}
+              groupName={isOpenDetails.groupName}
+            />
+          }
+        />
+      )}
     </div>
   );
 };
-
 export default BalanceSheet;

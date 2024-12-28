@@ -29,7 +29,34 @@ export default function Component({ template, docTitle = "Document Preview", dat
   const [chunkedData, setChunkedData] = useState<any>();
   const pxToPoint = (px: number) => px * (72 / 96);
 
+  let paperWidth: string, paperHeight: string;
+  const paperSize = template?.propertiesState?.pageSize || "A4";
+
+  switch (paperSize) {
+    case "A5":
+      paperWidth = "420pt"; // 5.83in x 8.27in
+      paperHeight = "595pt";
+      break;
+    case "A4":
+      paperWidth = "589pt"; // 8.27in x 11.69in
+      paperHeight = "842pt";
+      break;
+    case "LETTER":
+      paperWidth = "612pt"; // 8.5in x 11in
+      paperHeight = "792pt";
+      break;
+    case "3Inch":
+      paperWidth = "216pt"; // 3in x 6in
+      paperHeight = "432pt";
+      break;
+    case "4Inch":
+      paperWidth = "288pt"; // 4in x 8in
+      paperHeight = "576pt";
+      break;
+  }
+
   useEffect(() => {
+    if(template?.propertiesState?.template_group === "barcode"){
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
     const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
       const chunkIndex = Math.floor(index / columnsPerRow)
@@ -40,53 +67,99 @@ export default function Component({ template, docTitle = "Document Preview", dat
       return resultArray
     }, [])
     setChunkedData(_chunkedData);
+      
+    }
   }, [data, template?.barcodeState?.labelState?.columnsPerRow])
 
   useEffect(() => {
+    
+    // if(template?.propertiesState?.template_group === "barcode"){
+      const generateBarcodeImage = (
+        barcodeComponent: any,
+        item: any,
+        templateGroup: string
+      ): { key: string; image: string } | null => {
+        if (barcodeComponent.type !== DesignerElementType.barcode || !barcodeComponent.barcodeProps) {
+          return null;
+        }
+      debugger;
+        const canvas = document.createElement('canvas');
+        canvas.height = pxToPoint(barcodeComponent.height);
+        canvas.width = pxToPoint(barcodeComponent.width);
+      
+        // Calculate the barWidth based on the component width and the number of characters
+        const barcodeText =  '34343434';
+        const barcodeKey =
+          templateGroup === "barcode"
+            ? `${item.siNo}-${barcodeComponent.id}`
+            : `${barcodeComponent.id}`;
+      
+        try {
+          JsBarcode(canvas, barcodeText, {
+            ...barcodeComponent.barcodeProps,
+            width: 100,
+            format: barcodeComponent.barcodeProps?.format ?? "CODE128",
+            margin: barcodeComponent.barcodeProps?.margin || 0,
+            background: barcodeComponent.barcodeProps?.background || "#FFFFFF",
+            lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",
+            textAlign: barcodeComponent.barcodeProps?.textAlign,
+            height: pxToPoint(barcodeComponent.height),
+            marginBottom: 0,
+            displayValue: barcodeComponent.barcodeProps.showText,
+            valid: (valid: boolean) => {
+              if (!valid) {
+                throw new Error("Invalid barcode");
+              }
+            },
+            fontSize: barcodeComponent.barcodeProps?.fontSize || 21,
+            textMargin: barcodeComponent.barcodeProps?.textMargin || 5,
+          });
+      
+          const image = canvas.toDataURL('image/png');
+          return { key: barcodeKey, image };
+        } catch (error) {
+          console.error("Error generating barcode:", error);
+          return null;
+        }
+      };
+      
     const generateBarcodeImages = async () => {
+      debugger;
       const images: { [key: string]: string } = {};
-
       if (template?.barcodeState?.placedComponents) {
-        data?.forEach((item: any) => {
+        if(template.propertiesState?.template_group == "barcode") {
+          data?.forEach((item: any) => {
+            template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
+              const result = generateBarcodeImage(
+                barcodeComponent,
+                item,
+                template?.propertiesState?.template_group || ""
+              );
+              if (result) {
+                images[result.key] = result.image;
+              }
+            });
+          });
+        } else {
           template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
-            if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
-              const canvas = document.createElement('canvas');
-              canvas.height = pxToPoint(barcodeComponent.height);
-              canvas.width = pxToPoint(barcodeComponent.width);
-
-              // Calculate the barWidth based on the component width and the number of characters
-              const barcodeText = item?.autoBarcode || '';
-              const barWidth = 10; // Adjust this calculation as needed
-
-              JsBarcode(canvas, barcodeText, {
-                ...barcodeComponent.barcodeProps,
-                width: 100,
-                format: barcodeComponent.barcodeProps?.format ?? "CODE128",
-                margin: barcodeComponent.barcodeProps?.margin || 0,
-                background: barcodeComponent.barcodeProps?.background || "#FFFFFF",
-                lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",
-                textAlign: barcodeComponent.barcodeProps?.textAlign,
-                height: pxToPoint(barcodeComponent.height),
-                marginBottom: 0,
-                displayValue: barcodeComponent.barcodeProps.showText,
-                valid: (valid: boolean) => {
-                  if (!valid) {
-                    throw new Error("Invalid barcode");
-                  }
-                },
-                fontSize: barcodeComponent.barcodeProps?.fontSize || 21,
-                textMargin: barcodeComponent.barcodeProps?.textMargin || 5,
-              });
-              images[`${item.siNo}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
+            const result = generateBarcodeImage(
+              barcodeComponent,
+              data,
+              template?.propertiesState?.template_group || ""
+            );
+            if (result) {
+              images[result.key] = result.image;
             }
           });
-        });
+        }
+        
       }
 
       setBarcodeImages(images);
     };
 
     generateBarcodeImages();
+  // }
   }, [template?.barcodeState?.placedComponents, data]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
@@ -109,8 +182,8 @@ export default function Component({ template, docTitle = "Document Preview", dat
               fontSize: component.fontSize || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
-              height: component.height || 50,
-              width: component.width || 50,
+              height: pxToPoint(component.height)|| 50,
+              width:  pxToPoint(component.width)|| 50,
             }}
           >
             {component.content}
@@ -126,17 +199,22 @@ export default function Component({ template, docTitle = "Document Preview", dat
                 fontSize: component.fontSize || 12,
                 fontStyle: component.fontStyle || "normal",
                 textAlign: component.textAlign || "center",
-                height: component.height || 50,
-                width: component.width || 50,
+                height: pxToPoint(component.height)|| 50,
+                width:  pxToPoint(component.width)|| 50,
               }}
             >
-              {data[component.content] || "N/A"}
+           {
+              template?.propertiesState?.template_group === "barcode"
+                ? (data[component.content] || "N/A")
+                : component.content
+            }
             </Text>
           </View>
         );
 
       case DesignerElementType.barcode:
-        const barcodeKey = `${data.siNo}-${component.id}`;
+        debugger;
+        const barcodeKey = template?.propertiesState?.template_group === "barcode" ? `${data.siNo}-${component.id}`: `${component.id}`;
         return barcodeImages[barcodeKey] ? (
           <Image
             key={barcodeKey}
@@ -144,7 +222,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
             style={{
               ...baseStyle,
               height: pxToPoint(component.height) || 50,
-              width: component.width || 50,
+              width: pxToPoint(component.width) || 50,
             }}
           />
         ) : null;
@@ -157,20 +235,28 @@ export default function Component({ template, docTitle = "Document Preview", dat
   const PreviewDocument = () => (
     <Document>
       <FontRegistration />
-      <Page size={{
-        width: pxToPoint(
-          (template?.barcodeState?.labelState?.labelWidth ?? 300) *
-          (template?.barcodeState?.labelState?.columnsPerRow ?? 1)
-        ) +
+      <Page
+       size={{
+        width: template?.propertiesState?.template_group === "barcode"
+        ? pxToPoint(
+            (template?.barcodeState?.labelState?.labelWidth ?? 300) *
+            (template?.barcodeState?.labelState?.columnsPerRow ?? 1)
+          ) +
           (
             chunkedData &&
-              chunkedData[0] &&
-              chunkedData[0].length > 1
+            chunkedData[0] &&
+            chunkedData[0].length > 1
               ? pxToPoint((template?.barcodeState?.labelState?.gap?.hgap ?? 0) * (chunkedData[0].length - 1))
               : 0
+          )
+        : (
+            template?.propertiesState?.pageSize === "Custom"
+              ? `${template.propertiesState?.width}pt`
+              : (template?.propertiesState?.orientation === "portrait" ? paperWidth : paperHeight)
           ),
-
-        height: pxToPoint(
+      
+        height:template?.propertiesState?.template_group === "barcode"  ?
+        pxToPoint(
           (template?.barcodeState?.labelState?.labelHeight ?? 300) *
           (template?.barcodeState?.labelState?.rowsPerPage ?? 1)
         ) +
@@ -179,9 +265,15 @@ export default function Component({ template, docTitle = "Document Preview", dat
               template.barcodeState.labelState.rowsPerPage > 1
               ? pxToPoint((template?.barcodeState?.labelState?.gap?.vgap ?? 0) * (template.barcodeState.labelState.rowsPerPage - 1))
               : 0
+          ):(
+            template?.propertiesState?.pageSize === "Custom"
+            ? `${template.propertiesState?.height}pt`
+            : (template?.propertiesState?.orientation === "portrait" ? paperHeight : paperWidth)
           ),
-      }} style={styles.page}>
-        {chunkedData?.map((label: any, index: number) => (
+      }}
+       style={styles.page}>
+        {template?.propertiesState?.template_group === "barcode" ?
+         (chunkedData?.map((label: any, index: number) => (
           <View key={index}
             style={{
               flexDirection: 'row',
@@ -204,7 +296,14 @@ export default function Component({ template, docTitle = "Document Preview", dat
               </View>
             ))}
           </View>
-        ))}
+        ))):(
+        <>
+       {/* {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, data))} */}   
+              
+                {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, data))}
+              
+
+        </>)}
       </Page>
     </Document>
   );

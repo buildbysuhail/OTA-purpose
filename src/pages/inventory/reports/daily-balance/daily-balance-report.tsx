@@ -1,5 +1,4 @@
-import { Fragment, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -8,9 +7,10 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../redux/types";
 import Urls from "../../../../redux/urls";
 import DailyBalanceReportFilter, { DailyBalanceReportFilterInitialState } from "./daily-balance-report-filter";
+
 const DailyBalanceAmount = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -19,7 +19,7 @@ const DailyBalanceAmount = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
     },
     {
@@ -28,18 +28,18 @@ const DailyBalanceAmount = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
     },
     {
       dataField: "billAmount",
-      caption:  t("billAmount"),
+      caption: t("billAmount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
-     
+
     },
     {
       dataField: "receivedAmount",
@@ -47,42 +47,40 @@ const DailyBalanceAmount = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
-     
+
     },
- 
     {
       dataField: "balance",
       caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
+      allowSorting: true,
       minWidth: 200,
-     
+
     },
-   
   ];
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("daily_balance_report")}
-                  dataUrl= {Urls.inv_reports_balance_report}
+                  dataUrl={Urls.inv_reports_balance_report}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<DailyBalanceReportFilter/>}
+                  filterContent={<DailyBalanceReportFilter />}
                   filterWidth="400"
                   filterInitialData={DailyBalanceReportFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   gridId="grd_daily_balance"
                 ></ErpDevGrid>
               </div>
@@ -93,5 +91,4 @@ const DailyBalanceAmount = () => {
     </Fragment>
   );
 };
-
 export default DailyBalanceAmount;

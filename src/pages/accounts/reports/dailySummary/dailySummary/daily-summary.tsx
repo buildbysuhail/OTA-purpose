@@ -66,117 +66,183 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       //     ),
     },
   ];
-  const detailColumnsTemp = [{
-    dataField: "date",
-    caption: t("date"),
-    dataType: "date",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 50,
-  },
-  {
-    dataField: "vrType",
-    caption: t("voucher_type"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-  },
-  {
-    dataField: "voucherPrefix",
-    caption: t("voucherPrefix"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "voucherNumber",
-    caption: t("voucher_number"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "partyName",
-    caption: t("party_name"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "total",
-    caption: t("total"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "cashAmount",
-    caption: t("cash_amount"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "creditAmount",
-    caption: t("credit_amount"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "bankAmount",
-    caption: t("bank_amount"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "salesMan",
-    caption: t("sales_man"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "amount",
-    caption: t("amount"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "discount",
-    caption: t("discount"),
-    dataType: "number",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "employee",
-    caption: t("employee"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  },
-  {
-    dataField: "ledgerName",
-    caption: t("ledgerName"),
-    dataType: "string",
-    allowSearch: true,
-    allowFiltering: true,
-    width: 150,
-  }];
+  const detailColumnsTemp = [
+    {
+      dataField: "date",
+      caption: t("date"),
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "vrType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "voucherPrefix",
+      caption: t("voucherPrefix"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "voucherNumber",
+      caption: t("voucher_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "partyName",
+      caption: t("party_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "total",
+      caption: t("total"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "cashAmount",
+      caption: t("cash_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "creditAmount",
+      caption: t("credit_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "bankAmount",
+      caption: t("bank_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "salesMan",
+      caption: t("sales_man"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "amount",
+      caption: t("amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "discount",
+      caption: t("discount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "employee",
+      caption: t("employee"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "branchID",
+      caption: t("branch_id"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "address1",
+      caption: t("address"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "grandTotal",
+      caption: t("grand_total"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "cashReceived",
+      caption: t("cash_received"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "totalDiscount",
+      caption: t("total_discount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "userName",
+      caption: t("user_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "signature",
+      caption: t("signature"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "creditAmt",
+      caption: t("credit_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+];
   const [detailsColumns, setDetailsColumns] = useState<any>(detailColumnsTemp);
 
 
@@ -184,8 +250,26 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     const updatedColumns = [...detailColumnsTemp]
     const filteredColumns = updatedColumns.filter((column) => {
       // Add logic for filtering based on voucherType
-      if (["CR", "CP", "BR", "BP"].includes(voucherType ?? "")) {
-        return !["total", "partyName", "cashAmount", "creditAmount", "bankAmount", "salesMan"].includes(column.dataField);
+      if (["SI"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
+      }
+      if (["SR","SRCRD","SRCASH"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
+      }
+      if (["NS"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
+      }
+      if (["SICRD"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
+      }
+      if (["BNKAMT"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
+      }
+      if (["CASHSI"].includes(voucherType ?? "")) {
+        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
+      }
+      if (["CR", "CP", "BR"].includes(voucherType ?? "")) {
+        return !["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
       } else {
         return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
       }

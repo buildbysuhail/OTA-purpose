@@ -11,7 +11,6 @@ import OutstandingReceivableReportFilter, { OutstandingReceivableReportFilterIni
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface OutstandingAccountReceivableReport {
-
   from: Date
 }
 const OutstandingAccountReceivableReport = () => {
@@ -21,9 +20,9 @@ const OutstandingAccountReceivableReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-   const { getFormattedValue } = useNumberFormat()
-  const [filter, setFilter] =useState<OutstandingAccountReceivableReport>({from: new Date()});
+  const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
+  const [filter, setFilter] = useState<OutstandingAccountReceivableReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -41,9 +40,9 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.party}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.party}
+        </span>
       ),
     },
     {
@@ -70,9 +69,9 @@ const OutstandingAccountReceivableReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -83,9 +82,9 @@ const OutstandingAccountReceivableReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red ' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -96,9 +95,9 @@ const OutstandingAccountReceivableReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-    {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 *cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+        </span>
       ),
     },
     {
@@ -117,10 +116,10 @@ const OutstandingAccountReceivableReport = () => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid 
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_receivable")}
-                  dataUrl= {Urls.acc_reports_receivable}
+                  dataUrl={Urls.acc_reports_receivable}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -129,7 +128,7 @@ const OutstandingAccountReceivableReport = () => {
                   filterWidth="150"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<OutstandingReceivableReportFilter/>}
+                  filterContent={<OutstandingReceivableReportFilter />}
                   filterInitialData={OutstandingReceivableReportFilterInitialState}
                 ></ErpDevGrid>
               </div>

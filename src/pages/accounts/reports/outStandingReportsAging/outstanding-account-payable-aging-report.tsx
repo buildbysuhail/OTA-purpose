@@ -1,19 +1,15 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import OutstandingAgingReportFilter, { OutstandingAgingReportFilterInitialState } from "./outstanding-aging-report-filter";
 import OutstandingAccountAgingAnalysis from "./outstanding-account-aging-analysis";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-
 
 const OutstandingAccountPayableAgingReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -22,7 +18,7 @@ const OutstandingAccountPayableAgingReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -89,7 +85,7 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) =>  filter.p1 > 0,
+      visibleDynamic: (filter: any) => filter.p1 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '0' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
@@ -145,7 +141,7 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) =>  filter.p5 > 0,
+      visibleDynamic: (filter: any) => filter.p5 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '0' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
@@ -159,7 +155,7 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) =>  filter.p6 > 0,
+      visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '0' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
@@ -173,7 +169,7 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) =>  filter.p7 > 0,
+      visibleDynamic: (filter: any) => filter.p7 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
@@ -222,5 +218,4 @@ const OutstandingAccountPayableAgingReport = () => {
     </Fragment>
   );
 };
-
 export default OutstandingAccountPayableAgingReport;

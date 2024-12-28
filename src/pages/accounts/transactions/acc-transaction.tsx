@@ -485,17 +485,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [formType, voucherType, voucherPrefix]);
 
-  const selectTemplates = useCallback(async () => {
-    setTemplateLoad(true);
-    setIsTemplateOpen(true);
-    try {
-      const response = await api.getAsync(
-        `${Urls.templates}?template_group=SI`
-      );
-      dispatch(
-        accFormStateHandleFieldChange({ fields: { templates: response } })
-      );
-    } catch (error) {
+
+const selectTemplates = useCallback(async() => {
+setTemplateLoad(true)
+setIsTemplateOpen(true)
+  try {
+    const response = await api.getAsync(`${Urls.templates}?template_group=${voucherType}`);
+    dispatch(accFormStateHandleFieldChange({fields:{templates:response}}));
+    }
+    catch (error) {
       console.log(error, "acc-transaction template select error");
     } finally {
       setTemplateLoad(false);
@@ -2101,7 +2099,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
       </div>
 
-      {/* {formState.transaction && formState.template &&
+      {formState.transaction && formState.template &&
         <ERPModal
           isOpen={formState.printPreview
           }
@@ -2112,11 +2110,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }}
           content={<DownloadPreview template={formState?.template} data={DummyVoucherData}/>}>
         </ERPModal>
-      } */}
+      }
 
       <ERPResizableSidebar
         minWidth={350}
-        isOpen={formState.printPreview && isTemplateOpen}
+        isOpen={ isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
       ></ERPResizableSidebar>

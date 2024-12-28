@@ -4,19 +4,19 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 
-interface BalanceSheetFilterProps {
+interface BalanceSheetVerticalFilterProps {
   getFieldProps: (fieldName: string) => any;
   handleFieldChange: (field: string | object, value?: any) => void;
 }
 
-interface BalanceSheetFilterState {
+interface BalanceSheetVerticalFilterState {
   asOnDate: Date;
   valuationUsing: string;
   closingStock: number;
   showVertical: boolean;
 }
 
-const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
+const BalanceSheetFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
   getFieldProps,
   handleFieldChange,
 }) => {
@@ -72,7 +72,7 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
 
 export default BalanceSheetFilter;
 
-export const BalanceSheetFilterInitialState: BalanceSheetFilterState = {
+export const BalanceSheetVerticalFilterInitialState: BalanceSheetVerticalFilterState = {
   asOnDate: new Date(),
   valuationUsing: "SPP",
   closingStock: 0,

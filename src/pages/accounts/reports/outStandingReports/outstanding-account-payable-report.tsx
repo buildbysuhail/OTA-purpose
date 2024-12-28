@@ -2,19 +2,15 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface OutstandingAccountPayableReport {
-
   from: Date
 }
 const OutstandingAccountPayableReport = () => {
@@ -24,9 +20,9 @@ const OutstandingAccountPayableReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-     const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<OutstandingAccountPayableReport>({from: new Date()});
+  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation('accountsReport');
+  const [filter, setFilter] = useState<OutstandingAccountPayableReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -44,9 +40,9 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.party}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.party}
+        </span>
       ),
     },
     {
@@ -71,12 +67,12 @@ const OutstandingAccountPayableReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -85,12 +81,12 @@ const OutstandingAccountPayableReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-      <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -101,9 +97,9 @@ const OutstandingAccountPayableReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-  </span>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue( cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+        </span>
       ),
     },
     {
@@ -125,7 +121,7 @@ const OutstandingAccountPayableReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_payable")}
-                  dataUrl= {Urls.acc_reports_payable}
+                  dataUrl={Urls.acc_reports_payable}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -134,17 +130,15 @@ const OutstandingAccountPayableReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth="150"
-                  filterContent={<OutstandingPayableReportFilter/>}
-                  filterInitialData={OutstandingPayableReportFilterInitialState}
-                ></ErpDevGrid>
+                  filterContent={<OutstandingPayableReportFilter />}
+                  filterInitialData={OutstandingPayableReportFilterInitialState}>
+                </ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default OutstandingAccountPayableReport;

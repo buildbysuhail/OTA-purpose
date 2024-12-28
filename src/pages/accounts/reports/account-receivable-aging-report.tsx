@@ -2,17 +2,13 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 
 interface AccountReceivableAgingReport {
-
   from: Date
 }
 const AccountReceivableAgingReport = () => {
@@ -22,7 +18,7 @@ const AccountReceivableAgingReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const [filter, setFilter] =useState<AccountReceivableAgingReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -135,9 +131,7 @@ const AccountReceivableAgingReport = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default AccountReceivableAgingReport;

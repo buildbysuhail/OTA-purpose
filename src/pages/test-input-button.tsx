@@ -1,33 +1,32 @@
 import React, { useState } from 'react';
+import ERPDataCombobox from '../components/ERPComponents/erp-data-combobox';
 import ERPInput from '../components/ERPComponents/erp-input';
+import useERPState from '../utilities/hooks/focus-button-input';
 import ERPButton from '../components/ERPComponents/erp-button';
 
 const TestInputButton: React.FC = () => {
     const [formState, setFormState] = useState({
         supervisorPassword1: '',
+        accGroupID: '',
     });
 
-    const [isInputFocus, setIsInputFocus] = useState(false);
-    const [isButtonAFocus, setIsButtonAFocus] = useState(false);
-    const [isButtonBFocus, setIsButtonBFocus] = useState(false);
+    const {
+        isInputFocus,
+        isButtonAFocus,
+        isComboboxFocus,
+        handleButtonAClick,
+        handleButtonBClick,
+        handleButtonCClick,
+        inputRef,
+        buttonARef,
+        comboboxRef
+    } = useERPState();
 
     const handleFieldChange = (field: string, value: any) => {
         setFormState((prevState) => ({
             ...prevState,
             [field]: value,
         }));
-    };
-
-    const handleButtonAClick = () => {
-        setIsInputFocus(true);
-        setIsButtonAFocus(true);
-        setIsButtonBFocus(false);
-    };
-
-    const handleButtonBClick = () => {
-        setIsInputFocus(false);
-        setIsButtonAFocus(true);
-        setIsButtonBFocus(true);
     };
 
     return (
@@ -40,20 +39,38 @@ const TestInputButton: React.FC = () => {
                     data={formState}
                     label="supervisor_password"
                     onChangeData={(data) => handleFieldChange('supervisorPassword1', data.supervisorPassword1)}
-                    autoFocus={isInputFocus}
                     disabled={!isInputFocus}
+                    ref={inputRef}
+                />
+                <ERPDataCombobox
+                    field={{
+                        id: "accGroupID",
+                        required: true,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data: any) => {
+                        handleFieldChange("accGroupID", data.accGroupID);
+                    }}
+                    label="Combobox"
+                    id={'accGroupID'}
+                    disabled={!isComboboxFocus}
                 />
                 <ERPButton
                     onClick={handleButtonAClick}
-                    autoFocus={isButtonAFocus && !isInputFocus}
                     title="Button A"
                     variant="primary"
+                    ref={buttonARef}
                 />
                 <ERPButton
-                    title="Active Primary"
+                    title="Button B"
                     variant="secondary"
                     onClick={handleButtonBClick}
-                    autoFocus={isButtonBFocus}
+                />
+                <ERPButton
+                    title="Combo Button"
+                    variant="secondary"
+                    onClick={handleButtonCClick}
                 />
             </div>
         </div>
@@ -61,3 +78,4 @@ const TestInputButton: React.FC = () => {
 };
 
 export default TestInputButton;
+

@@ -4,15 +4,7 @@ import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-g
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
 // import LoadingPopup from "./LoadingPopup";
-import {
-  Clock1,
-  FileDown,
-  Forward,
-  Printer,
-  RectangleVertical,
-  Timer,
-  X,
-} from "lucide-react";
+import { Clock1, FileDown, Forward, Printer, RectangleVertical, Timer, X } from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 // import BalancesheetDetails from "./balancesheet-details";
@@ -26,16 +18,13 @@ import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 // import { MouseEventHandler } from "@types/react";
 
-
 const api = new APIClient();
-
 const ProfitAndLossRow: React.FC<{
   item: any;
   setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation();
-
+  const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
     setIsOpenDetails({
@@ -48,11 +37,10 @@ const ProfitAndLossRow: React.FC<{
   return (
     <tr>
       <td
-        className={`py-2 ${
-          item.title == "M" ? "text-[#8B4513]" : item.title == "L"||item.title == "G"?"": item.groupName=="TOTAL"?"text-[#FF0000]": "text-[#3b82f6]"
-        }`}
+        className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"
+          }`}
         style={{
-          paddingLeft: item.title == "M" ? "0px" :item.title == "G"?"50px": "20px",
+          paddingLeft: item.title == "M" ? "0px" : item.title == "G" ? "50px" : "20px",
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}
       >
@@ -62,17 +50,16 @@ const ProfitAndLossRow: React.FC<{
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
-         <a
+          <a
             href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${
-              item.title == "M" ? "text-[#8B4513]" : item.title == "L"||item.title == "G"?"": item.groupName=="TOTAL"?"text-[#FF0000]": "text-[#3b82f6]"
-            }`}
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"
+              }`}
             style={{
-              paddingRight: item.title == "M" ? "0px" :item.title == ""?"50px":item.title == "L"?"100px": "100px",
+              paddingRight: item.title == "M" ? "0px" : item.title == "" ? "50px" : item.title == "L" ? "100px" : "100px",
               fontWeight: item.title == "M" ? "bold" : "normal",
             }}
-            // className="text-[#3b82f6] hover:text-[#1d4ed8]"
+          // className="text-[#3b82f6] hover:text-[#1d4ed8]"
           >
             {getFormattedValue(item.total)}
           </a>
@@ -87,6 +74,7 @@ const HorizontalProfitAndLoss: React.FC<{
   data: any;
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
+  const { t } = useTranslation('accountsReport');
   const expense = data?.filter((item: any) => item?.transType == "E");
 
   const income = data?.filter((item: any) => item?.transType == "I");
@@ -171,7 +159,7 @@ const ProfitAndLossDetailedReport = () => {
     groupName?: string;
     title?: string;
   }>({ isOpen: false, key: 0 });
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
@@ -242,7 +230,7 @@ const ProfitAndLossDetailedReport = () => {
             >
               <RectangleVertical className="mr-2" />
               <span className="mr-2">
-                {isVerticalView ? "Show Horizontal" : "Show Vertical"}
+                {isVerticalView ? t("show_horizontal") : t("show_vertical")}
               </span>
               <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                 <input
@@ -259,7 +247,7 @@ const ProfitAndLossDetailedReport = () => {
                 ></label>
               </div>
             </button>
-            
+
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
@@ -304,8 +292,8 @@ const ProfitAndLossDetailedReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-  As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
-</p>
+          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+        </p>
         {loading ? (
           <>
             <div className="bg-white">
@@ -350,49 +338,49 @@ const ProfitAndLossDetailedReport = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-      {(isOpenDetails.key!==0&&isOpenDetails.key!==-400&&
+      {(isOpenDetails.key !== 0 && isOpenDetails.key !== -400 &&
 
-<ERPModal
-        isOpen={isOpenDetails.isOpen}
-        // title={t("bank_cards")}
-        title="Account Report"
-        width="w-full max-w-[90%]" 
-        isForm={true}
-        closeModal={() => {
-          setIsOpenDetails({ isOpen: false, key: 0 });
-        }}
-        content={
-         isOpenDetails.key==-500?
-          <ProfitAndLossClosingStockDetails
-            postData={{
-              fromDate: filter.fromDate,
-              toDate: filter.toDate,
-              valuationUsing: filter.valuationUsing,
-            }}
-            groupName={isOpenDetails.groupName}
-          />: isOpenDetails.title=="L"?
-          <CashBookMonthWise
-          postData={{
-            // accGroupID: isOpenDetails.key,
-            // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
-            // dateFrom: filter.fromDate,
-            asOnDate: filter.toDate,
-            ledgerID:isOpenDetails.key,
+        <ERPModal
+          isOpen={isOpenDetails.isOpen}
+          // title={t("bank_cards")}
+          title="Account Report"
+          width="w-full max-w-[90%]"
+          isForm={true}
+          closeModal={() => {
+            setIsOpenDetails({ isOpen: false, key: 0 });
           }}
-          groupName={isOpenDetails.groupName}
-        />:
-          <ProfitAndLossSubledgerwiseView
-          postData={{
-            accGroupID: isOpenDetails.key,
-            expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
-            dateFrom: filter.fromDate,
-            asOnDate: filter.toDate,
-            isDateForm:true,
-          }}
-          groupName={isOpenDetails.groupName}
+          content={
+            isOpenDetails.key == -500 ?
+              <ProfitAndLossClosingStockDetails
+                postData={{
+                  fromDate: filter.fromDate,
+                  toDate: filter.toDate,
+                  valuationUsing: filter.valuationUsing,
+                }}
+                groupName={isOpenDetails.groupName}
+              /> : isOpenDetails.title == "L" ?
+                <CashBookMonthWise
+                  postData={{
+                    // accGroupID: isOpenDetails.key,
+                    // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
+                    // dateFrom: filter.fromDate,
+                    asOnDate: filter.toDate,
+                    ledgerID: isOpenDetails.key,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                /> :
+                <ProfitAndLossSubledgerwiseView
+                  postData={{
+                    accGroupID: isOpenDetails.key,
+                    expAccGroupID: isOpenDetails.key === 19 ? 23 : isOpenDetails.key === 10 ? 26 : 0,
+                    dateFrom: filter.fromDate,
+                    asOnDate: filter.toDate,
+                    isDateForm: true,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                />
+          }
         />
-        }
-      />
       )}
     </div>
   );

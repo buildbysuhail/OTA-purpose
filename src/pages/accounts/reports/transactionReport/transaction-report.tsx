@@ -8,12 +8,14 @@ import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface TransactionReport {
   from: Date
 }
 const TransactionReport = () => {
   const dispatch = useAppDispatch();
+    const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const [filter, setFilter] = useState<TransactionReport>({ from: new Date() });
   const rootState = useRootState();
@@ -97,7 +99,11 @@ const TransactionReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.debit}
+          {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
+            ? ''
+            : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(cellElement.data.debit)
+              : cellElement.data.debit}`}
         </span>
       ),
     },
@@ -110,7 +116,11 @@ const TransactionReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.credit}
+          {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
+            ? ''
+            : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(cellElement.data.credit)
+              : cellElement.data.credit}`}
         </span>
       ),
     },

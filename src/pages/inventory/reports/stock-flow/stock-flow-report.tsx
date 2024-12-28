@@ -1,5 +1,4 @@
-import { Fragment, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -11,19 +10,19 @@ import StockFlowFilter, { StockFlowFilterInitialState } from "./stock-flow-repor
 
 const StockFlow = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-        dataField: "groupName",
-        caption: t("groupName"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 150,
-        visible:false
-      },
+      dataField: "groupName",
+      caption: t("group_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting: true,
+      width: 150,
+      visible: false
+    },
     {
       dataField: "code",
       caption: t("code"),
@@ -158,7 +157,7 @@ const StockFlow = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "warehouse",
@@ -168,7 +167,7 @@ const StockFlow = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "brand",
@@ -254,22 +253,22 @@ const StockFlow = () => {
   ];
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("stock_flow_report")}
-                  dataUrl= {Urls.inv_reports_stock_flow}
+                  dataUrl={Urls.inv_reports_stock_flow}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<StockFlowFilter/>}
+                  filterContent={<StockFlowFilter />}
                   filterInitialData={StockFlowFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   filterWidth="600"
                   gridId="grd_stock_flow"
                 ></ErpDevGrid>

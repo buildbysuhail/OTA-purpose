@@ -9,10 +9,9 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
-const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter
-}) => {
+const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummaryPurchaseOrder>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -162,6 +161,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_purchase_order")}
                   dataUrl= {Urls.acc_reports_party_summary_purchase_order}

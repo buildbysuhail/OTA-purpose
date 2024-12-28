@@ -1,27 +1,21 @@
-import { FC,   useState } from "react";
+import { FC } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
-
 
 interface ProfitAndLossClosingStockProps {
   postData: any;
   groupName?: string;
 }
 
-
-const ProfitAndLossClosingStockDetails:FC<ProfitAndLossClosingStockProps> = ({postData , groupName }) => {
+const ProfitAndLossClosingStockDetails: FC<ProfitAndLossClosingStockProps> = ({ postData, groupName }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -31,9 +25,9 @@ const ProfitAndLossClosingStockDetails:FC<ProfitAndLossClosingStockProps> = ({po
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.voucherType==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.voucherType}
-  </span>
+        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.voucherType}
+        </span>
       ),
     },
     {
@@ -43,9 +37,9 @@ const ProfitAndLossClosingStockDetails:FC<ProfitAndLossClosingStockProps> = ({po
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.voucherType==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.totalValue}
-  </span>
+        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.totalValue}
+        </span>
       ),
     },
   ];
@@ -59,7 +53,7 @@ const ProfitAndLossClosingStockDetails:FC<ProfitAndLossClosingStockProps> = ({po
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={groupName}
-                  dataUrl= {Urls.acc_reports_closing_stock_details}
+                  dataUrl={Urls.acc_reports_closing_stock_details}
                   postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
@@ -76,9 +70,7 @@ const ProfitAndLossClosingStockDetails:FC<ProfitAndLossClosingStockProps> = ({po
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };
-
 export default ProfitAndLossClosingStockDetails;

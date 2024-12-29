@@ -67,7 +67,13 @@ export const initialUserSessionData: UserModel = {
   currentBranchId: 0,
   currentBranchAddress: [],
   currentBranchName: "",
-  currency: null,
+  currency: {
+    currencyCode:"",
+    currencyName: "",
+    currencySymbol: "",
+    subUnit: "",
+    subUnitSymbol: ""
+  },
   currencySymbol: null,
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,

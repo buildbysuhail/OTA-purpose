@@ -30,7 +30,13 @@ export interface UserModel {
   currentBranchId: number;
   currentBranchAddress: string[];
   currentBranchName: string;
-  currency: string | null;
+  currency: {
+    currencyName: string;
+    subUnit: string;
+    currencySymbol: string;
+    subUnitSymbol: string;
+    currencyCode: string;
+  };
   currencySymbol: string | null;
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;

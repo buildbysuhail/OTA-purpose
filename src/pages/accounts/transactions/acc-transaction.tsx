@@ -91,7 +91,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
-  const { getFormattedValue } = useNumberFormat();
+  const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
     undoEditMode,
     getNextVoucherNumber,
@@ -317,6 +317,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   
     loadLedgerData();
   }, [formState.row.ledgerId]);
+  useEffect(() => {
+    if(applicationSettings.mainSettings.showNumberFormat == "Millions") {
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: { amountInWords: getAmountInWords(formState.row.amount??0) },
+        })
+      );
+    } else {
+
+    }
+  }, [formState.row.amount]);
   useEffect(() => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -1371,9 +1382,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
               </div>
             </div>
-            <div className="text-red-600 font-bold text-sm">
-              Amount in Words: {formState.amountInWords}
-            </div>
+           
           </div>
 
           {formElements.drCr.visible && (
@@ -1465,6 +1474,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 }
               />
             )}
+             <div className="text-red-600" style={{    fontSize: '12px',color: 'chocolate'}}>
+              Amount in Words: {formState.amountInWords}
+            </div>
           </div>
 
           <ErpDevGrid

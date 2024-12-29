@@ -60,6 +60,79 @@ export const useNumberFormat = () => {
   
     return formattedText;
   }
+  const belowTwenty: string[] = [
+    "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+    "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+  ];
+
+  const tens: string[] = [
+    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+  ];
+
+  const scales: string[] = [
+    "", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion"
+  ];
+
+  /**
+   * Converts a number below 1000 to words.
+   */
+  function convertBelowThousand(num: number): string {
+    if (num < 20) return belowTwenty[num];
+    if (num < 100) {
+      const tensPart = tens[Math.floor(num / 10)];
+      const onesPart = num % 10 ? ` ${belowTwenty[num % 10]}` : "";
+      return `${tensPart}${onesPart}`;
+    }
+    const hundredsPart = belowTwenty[Math.floor(num / 100)] + " Hundred";
+    const remainder = num % 100;
+    const remainderPart = remainder ? ` ${convertBelowThousand(remainder)}` : "";
+    return `${hundredsPart}${remainderPart}`;
+  }
+
+  /**
+   * Converts a large number into words using scales (thousands, millions, etc.).
+   */
+  function convertLargeNumber(num: number): string {
+    if (num === 0) return belowTwenty[0];
+
+    let words = "";
+    let scaleIndex = 0;
+
+    while (num > 0) {
+      const chunk = num % 1000;
+      if (chunk !== 0) {
+        const chunkWords = convertBelowThousand(chunk);
+        const scale = scales[scaleIndex];
+        words = `${chunkWords} ${scale} ${words}`.trim();
+      }
+      num = Math.floor(num / 1000);
+      scaleIndex++;
+    }
+
+    return words.trim();
+  }
+
+  /**
+   * Converts an amount (including decimals) into words.
+   */
+  function convertAmountToWords(amount: string): string {
+    const [wholePart, decimalPart] = amount.split(".");
+
+    const wholePartWords = convertLargeNumber(parseInt(wholePart || "0"));
+    let result = `${wholePartWords} ${userSession.currency?.currencyName}`;
+
+    if (decimalPart) {
+      const decimalValue = parseInt(decimalPart.padEnd(applicationSettings.mainSettings?.decimalPoints, "0"));
+      const decimalWords = convertBelowThousand(decimalValue);
+      result += ` and ${decimalWords} ${userSession.currency?.subUnit}`;
+    }
+
+    return `${result} Only`;
+  }
+  function getAmountInWords(amount: number): string {
+    debugger;
+    return convertAmountToWords(amount.toString());
+  }
   
-  return { getNumericFormat, getFormattedValue }
+  return { getNumericFormat, getFormattedValue, getAmountInWords }
 };

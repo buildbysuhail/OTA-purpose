@@ -7,6 +7,8 @@ import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceD
 import { Style } from '@react-pdf/types';
 import FontRegistration from './fontRegister';
 
+// https://chatgpt.com/c/67730e11-bcf4-8009-b01b-382a1c42b6e6
+
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',

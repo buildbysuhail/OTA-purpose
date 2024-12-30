@@ -16,9 +16,12 @@ import {
   accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
   accFormStateTransactionDetailsRowAdd,
+  accFormStateTransactionDetailsRowRemove,
   accFormStateTransactionMasterHandleFieldChange,
   accFormStateTransactionUpdate,
   clearState,
+  setUserRight,
+  updateFormElement,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { loadAccVoucher } from "./thunk";
@@ -27,6 +30,7 @@ import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
 import {
   AccTransactionData,
+  AccTransactionFormState,
   AccTransactionMaster,
 } from "./acc-transaction-types";
 import {
@@ -98,74 +102,11 @@ export const useAccTransaction = (
   };
   const focusLedgerCombo = () => {
     if (ledgerIdRef.current) {
-      ledgerIdRef.current.focus();
+      // ledgerIdRef.current.focus();
     }
-  };
-  const initialFormElements = {
-    foreignCurrency: {
-      visible: true,
-      disabled: false,
-      label: "Foreign Currency",
-    },
-    voucherPrefix: { visible: true, disabled: false, label: "Prefix" },
-    voucherNumber: { visible: true, disabled: false, label: "Voucher Number" },
-    btnDown: { visible: true, disabled: false, label: "" },
-    transactionDate: {
-      visible: true,
-      disabled: false,
-      label: "Transaction Date",
-    },
-    referenceNumber: {
-      visible: true,
-      disabled: false,
-      label: "Reference Number",
-    },
-    pnlMasters: { visible: true, disabled: false, label: "" },
-    dxGrid: { visible: true, disabled: false, label: "" },
-    referenceDate: { visible: true, disabled: false, label: "Reference Date" },
-    masterAccount: { visible: true, disabled: false, label: "Default Account" },
-    jvDrCr: { visible: false, disabled: false, label: "Dr/Cr" },
-    employee: { visible: true, disabled: false, label: "Employee" },
-    remarks: { visible: true, disabled: false, label: "Remarks" },
-    commonNarration: { visible: true, disabled: false, label: "Notes" },
-    ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
-    ledgerId: { visible: true, disabled: false, label: "Ledger" },
-    amount: { visible: true, disabled: false, label: "Amount" },
-    drCr: { visible: false, disabled: false, label: "Amount" },
-    narration: { visible: true, disabled: false, label: "Narration" },
-    currencyID: { visible: true, disabled: false, label: "Currency" },
-    exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },
-    hasDiscount: { visible: true, disabled: false, label: "Discount" },
-    discount: { visible: true, disabled: false, label: "Discount" },
-    chequeNumber: { visible: true, disabled: false, label: "Cheque Number" },
-    bankDate: { visible: false, disabled: false, label: "Bank Date" },
-    nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
-    bankName: { visible: true, disabled: false, label: "Bank Name" },
-    projectId: { visible: false, disabled: false, label: "Project" },
-    costCentreId: { visible: false, disabled: false, label: "Cost Centre" },
-    lblGroupName: { visible: true, disabled: false, label: "Group Name" },
-    printOnSave: { visible: true, disabled: false, label: "Print on Save" },
-    printPreview: { visible: true, disabled: false, label: "Print Preview" },
-    printCheque: { visible: true, disabled: false, label: "Print Cheque" },
-    keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
-    btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
-    btnAdd: { visible: true, disabled: false, label: "Add" },
-    btnEdit: { visible: true, disabled: false, label: "Edit" },
-    btnDelete: { visible: true, disabled: false, label: "Delete" },
-    btnPrint: { visible: true, disabled: false, label: "Print" },
-    btnRef: { visible: true, disabled: false, label: "..." },
-    btnSave: { visible: true, disabled: false, label: "Save" },
-    btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
-    btnAttachment: { visible: true, disabled: false, label: "Attachments" },
-    lnkUnlockVoucher: { visible: false, disabled: false, label: "Unlock" },
-  };
-  type FormElementsState = {
-    [key in keyof typeof initialFormElements]: FormElementState;
   };
 
   const { hasRight } = useUserRights();
-  const [formElements, setFormElements] =
-    useState<FormElementsState>(initialFormElements);
   const loadAccTransVoucher = async (usingManualInvNumber: boolean = false) => {
     // clearControlForNew();
     undoEditMode();
@@ -182,7 +123,7 @@ export const useAccTransaction = (
       await appDispatch(
         loadAccVoucher({ params: params, transactionType: transactionType })
       );
-      setUserRight();
+      dispatch(setUserRight({userSession: userSession, hasRight: hasRight}));
     } catch (error) {
       return null;
     }
@@ -221,67 +162,8 @@ export const useAccTransaction = (
 
     return nextVoucherNumber;
   };
-  const setUserRight = () => {
-    setFormElements((prev: any) => ({
-      ...prev,
-      btnSave: {
-        ...prev.btnSave,
-        visible:
-          userSession.financialYearStatus == "Closed"
-            ? false
-            : hasRight(formState.formCode, UserAction.Add) &&
-              formState?.transaction?.details?.length > 0,
-      },
-      btnEdit: {
-        ...prev.btnEdit,
-        visible:
-          userSession.financialYearStatus == "Closed"
-            ? false
-            : hasRight(formState.formCode, UserAction.Edit),
-      },
-      btnDelete: {
-        ...prev.btnDelete,
-        visible:
-          userSession.financialYearStatus == "Closed"
-            ? false
-            : hasRight(formState.formCode, UserAction.Delete),
-      },
-      btnPrint: {
-        ...prev.btnPrint,
-        visible:
-          userSession.financialYearStatus == "Closed"
-            ? false
-            : hasRight(formState.formCode, UserAction.Print),
-      },
-    }));
-    hasRight;
-  };
-  const enableControls = () => {
-    setFormElements((prev) => ({
-      ...prev,
-      pnlMasters: {
-        ...prev.pnlMasters,
-        disabled: false,
-      },
-      dxGrid: {
-        ...prev.dxGrid,
-        disabled: false,
-      },
-    }));
-  };
-  const disableControls = () => {
-    setFormElements((prev) => ({
-      ...prev,
-      pnlMasters: {
-        ...prev.pnlMasters,
-        disabled: true,
-      },
-      dxGrid: {
-        ...prev.dxGrid,
-        disabled: true,
-      },
-    }));
-  };
+
+  
 
   const validate = (): boolean => {
     // Check if demo version is expired
@@ -302,20 +184,12 @@ export const useAccTransaction = (
       );
 
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
-        setFormElements((prev) => ({
-          ...prev,
-          transactionDate: {
-            ...prev.transactionDate,
-            disabled: true,
-          },
-          btnSave: {
-            ...prev.btnSave,
-            disabled: true,
-          },
-          btnAdd: {
-            ...prev.btnAdd,
-            disabled: true,
-          },
+        dispatch(updateFormElement({
+          fields: {
+            transactionDate: { disabled: true }, 
+            btnSave: { disabled: true },
+            btnAdd: { disabled: true }, 
+          }
         }));
         ERPAlert.show({
           icon: "warning",
@@ -403,6 +277,7 @@ export const useAccTransaction = (
 
     return true;
   };
+ 
   const attachMaster = (): AccTransactionMaster => {
     const master = { ...formState.transaction.master };
 
@@ -473,25 +348,26 @@ export const useAccTransaction = (
     }
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
 
-    setFormElements((prev) => ({
-      ...prev,
-      voucherPrefix: { ...prev.voucherPrefix, disabled: true },
-      voucherNumber: { ...prev.voucherNumber, disabled: true },
-      btnDown: { ...prev.btnDown, disabled: true },
-      transactionDate: { ...prev.transactionDate, disabled: true },
-      ledgerCode: { ...prev.ledgerCode, disabled: true },
-      remarks: { ...prev.remarks, disabled: true },
-      commonNarration: { ...prev.commonNarration, disabled: true },
-      ledgerId: { ...prev.ledgerId, disabled: true },
-      btnBillWise: { ...prev.btnBillWise, disabled: true },
-      referenceDate: { ...prev.referenceDate, disabled: true },
-      masterAccount: { ...prev.masterAccount, disabled: true },
-      employee: { ...prev.employee, disabled: true },
-      projectId: { ...prev.projectId, disabled: true },
-      discount: { ...prev.discount, disabled: true },
-      chequeNumber: { ...prev.chequeNumber, disabled: true },
-      bankDate: { ...prev.bankDate, disabled: true },
-      btnEdit: { ...prev.btnEdit, visible: false },
+    dispatch(updateFormElement({
+      fields: {
+        voucherPrefix: { disabled: true },
+        voucherNumber: { disabled: true },
+        btnDown: { disabled: true },
+        transactionDate: { disabled: true },
+        ledgerCode: { disabled: true },
+        remarks: { disabled: true },
+        commonNarration: { disabled: true },
+        ledgerId: { disabled: true },
+        btnBillWise: { disabled: true },
+        referenceDate: { disabled: true },
+        masterAccount: { disabled: true },
+        employee: { disabled: true },
+        projectId: { disabled: true },
+        discount: { disabled: true },
+        chequeNumber: { disabled: true },
+        bankDate: { disabled: true },
+        btnEdit: { visible: false },
+      }
     }));
   };
   const save = async () => {
@@ -521,38 +397,22 @@ export const useAccTransaction = (
         } else {
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
-
-          setFormElements((prev) => ({
-            ...prev,
-            pnlMasters: {
-              ...prev.pnlMasters,
-              disabled: false,
-            },
-            dxGrid: {
-              ...prev.dxGrid,
-              disabled: false,
-            },
-            btnSave: {
-              ...prev.btnSave,
-              disabled: true,
-            },
+          const fieldsToUpdate: Record<string, any> = {
+            pnlMasters: { disabled: false },
+            dxGrid: { disabled: false },
+            btnSave: { disabled: true },
             btnEdit: {
-              ...prev.btnEdit,
               disabled:
-                !isFinancialYearClosed &&
-                hasRight(formState.formCode, UserAction.Edit)
+                !isFinancialYearClosed && hasRight(formState.formCode, UserAction.Edit)
                   ? false
                   : true,
             },
-            btnDelete: {
-              ...prev.btnDelete,
-              disabled: true,
-            },
-            btnPrint: {
-              ...prev.btnPrint,
-              disabled: true,
-            },
-          }));
+            btnDelete: { disabled: true },
+            btnPrint: { disabled: true },
+          };
+        
+          // Dispatch the update action with all the required fields
+          dispatch(updateFormElement({ fields: fieldsToUpdate }));
         }
       } else {
         ERPAlert.show({
@@ -574,45 +434,16 @@ export const useAccTransaction = (
         allowSalesCounter: 0,
       })
     );
-    setFormElements((prev: any) => {
-      const isFinancialYearClosed =
-        userSession.financialYearStatus === "Closed";
-      let updatedFormElements = {
-        ...prev,
-        amount: {
-          ...prev.amount,
-          disabled: false,
-        },
-        btnSave: {
-          ...prev.btnSave,
-          disabled: true,
-        },
-        btnEdit: {
-          ...prev.btnEdit,
-          disabled:
-            !isFinancialYearClosed &&
-            hasRight(formState.formCode, UserAction.Edit)
-              ? false
-              : true,
-        },
-        btnDelete: {
-          ...prev.btnDelete,
-          disabled: true,
-        },
-        btnPrint: {
-          ...prev.btnPrint,
-          disabled: true,
-        },
-        lnkUnlockVoucher: {
-          ...prev.lnkUnlockVoucher,
-          visible: false,
-        },
-        pnlMasters: {
-          ...prev.pnlMasters,
-          disabled: false,
-        },
+    dispatch(updateFormElement({
+      fields: {
+        amount: { disabled: false },
+        btnSave: { disabled: true },
+        btnEdit: { disabled: !(userSession.financialYearStatus === "Closed" || hasRight(formState.formCode, UserAction.Edit)) },
+        btnDelete: { disabled: true },
+        btnPrint: { disabled: true },
+        lnkUnlockVoucher: { visible: false },
+        pnlMasters: { disabled: false },
         masterAccount: {
-          ...prev.masterAccount,
           disabled:
             userSession.counterwiseCashLedgerId > 0 &&
             applicationSettings.accountsSettings?.allowSalesCounter &&
@@ -620,37 +451,20 @@ export const useAccTransaction = (
               formState.transaction.master.voucherType === "CR") &&
             userSession.counterAssignedCashLedgerId > 0
               ? true
-              : prev.masterAccount.disabled,
+              : undefined, // Keep existing value if condition is not met
         },
         costCentreId: {
-          ...prev.costCentreId,
           disabled:
             formState.userConfig.presetCostenterId > 0
-              ? formState.userConfig.presetCostenterId
-              : userSession.dbIdValue == "SAMAPLASTICS"
-              ? 0
-              : prev.costCentreId,
+              ? true
+              : formState.formElements.costCentreId.disabled
         },
-        employee: {
-          ...prev.employee,
-          disabled: false,
-        },
-        jvDrCr: {
-          ...prev.jvDrCr,
-          disabled: false,
-        },
-        referenceDate: {
-          ...prev.referenceDate,
-          disabled: false,
-        },
-        transactionDate: {
-          ...prev.transactionDate,
-          disabled: false,
-        },
-      };
-
-      return updatedFormElements;
-    });
+        employee: { disabled: false },
+        jvDrCr: { disabled: false },
+        referenceDate: { disabled: false },
+        transactionDate: { disabled: false },
+      }
+    }));
     getNextVoucherNumber(
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
@@ -658,7 +472,18 @@ export const useAccTransaction = (
     );
     focusLedgerCode();
   };
+  const handleRemoveItem = async (index: number) => {
+    dispatch(
+      accFormStateTransactionDetailsRowRemove({
+        index: index,
+        applicationSettings: applicationSettings
+      })
+
+    );
+    
+  }
   const addOrEditRow = async () => {
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
@@ -678,7 +503,7 @@ export const useAccTransaction = (
         }
         else {
                 if (
-                  formElements.amount.disabled == false &&
+                  formState.formElements.amount.disabled == false &&
                   formState.IsBillwiseTransAdjustmentExists == true
                 ) {
                   dispatch(
@@ -706,12 +531,12 @@ export const useAccTransaction = (
           !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
         ) {
           if (hasRight(formState.formCode, UserAction.Add)) {
-            setFormElements((prev) => ({
-              ...prev,
-              btnSave: {
-                ...prev.btnSave,
-                disabled:  false,
-                label: "Add"
+            dispatch(updateFormElement({
+              fields: {
+                btnSave: {
+                  disabled: false,
+                  label: "Add",
+                },
               },
             }));
           }
@@ -749,7 +574,7 @@ export const useAccTransaction = (
         }
         if (
           isNullOrUndefinedOrZero(formState.row.costCentreId) &&
-          formElements.costCentreId.visible == true
+          formState.formElements.costCentreId.visible == true
         ) {
           ERPAlert.show({
             icon: "info",
@@ -758,7 +583,7 @@ export const useAccTransaction = (
           focusCostCenterRef();
           return false;
         }
-        formElements.btnAdd
+        formState.formElements.btnAdd
 
         dispatch(
           accFormStateTransactionDetailsRowAdd({
@@ -769,52 +594,26 @@ export const useAccTransaction = (
             userSession: userSession,
           })
         );
-        setFormElements((prev: any) => {
-          const updatedFormElements = {
-            ...prev,
-            employee: {
-              ...prev.employee,
-              disabled: true,
-            },
-            jvDrCr: {
-              ...prev.jvDrCr,
-              disabled: true,
-            },
-            masterAccount: {
-              ...prev.masterAccount,
-              disabled: true,
-            },
-            referenceNumber: {
-              ...prev.referenceNumber,
-              disabled: true,
-            },
-            referenceDate: {
-              ...prev.referenceDate,
-              disabled: true,
-            },
-            transactionDate: {
-              ...prev.transactionDate,
-              disabled: true,
-            },
-            btnEdit: {
-              ...prev.btnEdit,
-              visible: true,
-            },
-            amount: {
-              ...prev,
-              disabled: false
-            }
-          };
-        
-          if (formState.userConfig.presetCostenterId > 0) {
-            updatedFormElements.costCentreId = {
-              ...prev.costCentreId,
-              disabled: true,
-            };
-          }
-        
-          return updatedFormElements;
-        });
+        const updatedFields: Record<string, any> = {
+          employee: { disabled: true },
+          jvDrCr: { disabled: true },
+          masterAccount: { disabled: true },
+          referenceNumber: { disabled: true },
+          referenceDate: { disabled: true },
+          transactionDate: { disabled: true },
+          btnEdit: { visible: true },
+          amount: { disabled: false },
+        };
+      
+        // Conditionally update costCentreId if needed
+        if (formState.userConfig.presetCostenterId > 0) {
+          updatedFields.costCentreId = { disabled: true };
+        }
+      
+        // Dispatch the updateFormElement action
+        dispatch(updateFormElement({
+          fields: updatedFields,
+        }));
         focusLedgerCombo();
       }
     }
@@ -824,15 +623,11 @@ export const useAccTransaction = (
     undoEditMode,
     getNextVoucherNumber,
     loadAccTransVoucher,
-    formElements,
-    setFormElements,
-    setUserRight,
-    enableControls,
-    disableControls,
     validate,
     setupBahamdoonPOSReceipts,
     save,
     clearControls,
     addOrEditRow,
+    handleRemoveItem
   };
 };

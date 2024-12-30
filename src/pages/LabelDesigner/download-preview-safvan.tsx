@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
+import { Document, Page, View, Text, StyleSheet, Image, PDFViewer, PDFDownloadLink, BlobProvider } from "@react-pdf/renderer";
 import JsBarcode from 'jsbarcode';
 import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
 import { Style } from '@react-pdf/types';
@@ -82,7 +82,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         if (barcodeComponent.type !== DesignerElementType.barcode || !barcodeComponent.barcodeProps) {
           return null;
         }
-      debugger;
+      
         const canvas = document.createElement('canvas');
         canvas.height = pxToPoint(barcodeComponent.height);
         canvas.width = pxToPoint(barcodeComponent.width);
@@ -124,7 +124,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
       };
       
     const generateBarcodeImages = async () => {
-      debugger;
+      
       const images: { [key: string]: string } = {};
       if (template?.barcodeState?.placedComponents) {
         if(template.propertiesState?.template_group == "barcode") {
@@ -213,7 +213,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         );
 
       case DesignerElementType.barcode:
-        debugger;
+        
         const barcodeKey = template?.propertiesState?.template_group === "barcode" ? `${data.siNo}-${component.id}`: `${component.id}`;
         return barcodeImages[barcodeKey] ? (
           <Image
@@ -307,12 +307,83 @@ export default function Component({ template, docTitle = "Document Preview", dat
       </Page>
     </Document>
   );
+  const handlePrint = async (blob: Blob) => {
+    try {
+      // Create a URL for the blob
+      const blobUrl = URL.createObjectURL(blob);
+      
+      // Create an iframe to handle printing
+      const printFrame = document.createElement('iframe');
+      printFrame.style.display = 'none';
+      document.body.appendChild(printFrame);
+      
+      // Load the PDF in the iframe
+      printFrame.src = blobUrl;
+      
+      // Wait for the iframe to load
+      printFrame.onload = () => {
+        try {
+          // Print the iframe content
+          printFrame.contentWindow?.print();
+          
+          // Cleanup after print dialog closes
+          setTimeout(() => {
+            document.body.removeChild(printFrame);
+            URL.revokeObjectURL(blobUrl);
+          }, 1000);
+        } catch (error) {
+          console.error('Print error:', error);
+        }
+      };
+    } catch (error) {
+      console.error('Print setup error:', error);
+    }
+  };
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <PDFViewer width="100%" height={700}>
-        <PreviewDocument />
-      </PDFViewer>
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold">{docTitle}</h2>
+        <BlobProvider document={<PreviewDocument />}>
+          {({ blob, loading, error }) => {
+            if (loading) {
+              return (
+                <button disabled className="px-4 py-2 bg-gray-400 text-white rounded">
+                  Preparing document...
+                </button>
+              );
+            }
+
+            if (error) {
+              return (
+                <button disabled className="px-4 py-2 bg-red-600 text-white rounded">
+                  Error preparing document
+                </button>
+              );
+            }
+
+            if (!blob) {
+              return null;
+            }
+
+            return (
+              <button
+                onClick={() => handlePrint(blob)}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                Print Document
+              </button>
+            );
+          }}
+        </BlobProvider>
+      </div>
+      
+      <div className="bg-gray-100 p-4 rounded">
+        <p className="text-sm text-gray-600">
+          Preview disabled for large documents to prevent browser crashes. 
+          Click the print button above to print the document.
+        </p>
+      </div>
     </div>
   );
 }

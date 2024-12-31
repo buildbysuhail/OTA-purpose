@@ -20,7 +20,7 @@ import {
   accFormStateTransactionDetailsRowAdd,
   accFormStateTransactionMasterHandleFieldChange,
   setUserRight,
-  updateFormElement
+  updateFormElement,
 } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
@@ -101,7 +101,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     loadAccTransVoucher,
     validate,
     addOrEditRow,
-    handleRemoveItem
+    handleRemoveItem,
   } = useAccTransaction(transactionType ?? "", btnSaveRef, ledgerCodeRef);
   const { validateTransactionDate } = useTransaction(transactionType ?? "");
   const applicationSettings = useAppSelector(
@@ -116,7 +116,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
   useEffect(() => {
-   
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
         fields: {
@@ -273,13 +272,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerId}&DrCr=${formState.transaction.master.drCr}`
             ),
           ]);
-          dispatch(updateFormElement({
-            fields: {
-              costCentreId: {
-                visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
+          dispatch(
+            updateFormElement({
+              fields: {
+                costCentreId: {
+                  visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
+                },
               },
-            },
-          }));
+            })
+          );
 
           dispatch(
             accFormStateRowHandleFieldChange({
@@ -299,7 +300,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           dispatch(
             accFormStateRowHandleFieldChange({
               fields: {
-                ledgerCode: ledgerData?.ledgerCode
+                ledgerCode: ledgerData?.ledgerCode,
               },
             })
           );
@@ -372,26 +373,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.masterAccountID]);
   useEffect(() => {
     const initializeFormElements = async () => {
-      const isForeignCurrencyVisible = applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
-      const isBtnBillWiseVisible = applicationSettings.accountsSettings?.maintainBillwiseAccount;
-      const isProjectIdVisible = applicationSettings.accountsSettings?.maintainProjectSite || userSession.dbIdValue == "543140180640";
-    
+      const isForeignCurrencyVisible =
+        applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
+      const isBtnBillWiseVisible =
+        applicationSettings.accountsSettings?.maintainBillwiseAccount;
+      const isProjectIdVisible =
+        applicationSettings.accountsSettings?.maintainProjectSite ||
+        userSession.dbIdValue == "543140180640";
+
       // Prepare the fields to update based on conditions
       const fieldsToUpdate = {
         btnSave: { disabled: true },
         btnEdit: { disabled: true },
         btnPrint: { disabled: true },
         foreignCurrency: { visible: isForeignCurrencyVisible },
-        lblGroupName: { label: "" },  // Dynamically set the label as needed
+        lblGroupName: { label: "" }, // Dynamically set the label as needed
         masterAccount: { disabled: true },
         btnBillWise: { visible: isBtnBillWiseVisible },
         discount: { visible: false },
         hasDiscount: { visible: false },
         projectId: { visible: isProjectIdVisible },
       };
-      
+
       // Dispatch the update action
-     
+
       if (formState.isInvoker != true) {
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
@@ -415,8 +420,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               },
             })
           );
-
-         
         }
       }
       dispatch(
@@ -438,19 +441,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           })
         );
       }
-        if (voucherType == "JV" || voucherType == "MJV") {
-      if (voucherType == "JV") {
-        dispatch(
-          accFormStateHandleFieldChange({
-            fields: {
-              masterAccountID: -1,
-            },
-          })
-        );
+      if (voucherType == "JV" || voucherType == "MJV") {
+        if (voucherType == "JV") {
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                masterAccountID: -1,
+              },
+            })
+          );
+        }
       }
-     
-    }
-     
+
       if (userSession.dbIdValue === "543140180640") {
         if (voucherType === "CP" || voucherType === "CR") {
           let userCashLedgerID = 0;
@@ -458,7 +460,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
           );
           console.log("masterAccount.disabled3");
-    
+
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -471,12 +473,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
         }
       }
-
     };
     initializeFormElements();
-    // loadAccTransVoucher();
     if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({userSession: userSession, hasRight: hasRight}));
+      loadAccTransVoucher();
+      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
   }, []);
 
@@ -493,46 +494,56 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         drCr: {},
         keepNarration: {},
       };
-    
+
       switch (voucherType) {
         case "CR":
         case "CP":
           fieldsToUpdate.masterAccount = { label: "Cash Account" };
-          fieldsToUpdate.employee = { label: voucherType === "CR" ? "Collected By" : "Paid By" };
+          fieldsToUpdate.employee = {
+            label: voucherType === "CR" ? "Collected By" : "Paid By",
+          };
           fieldsToUpdate.discount = { visible: true };
           fieldsToUpdate.costCentreId = {
-            visible: applicationSettings.accountsSettings?.maintainCostCenter === true,
+            visible:
+              applicationSettings.accountsSettings?.maintainCostCenter === true,
           };
           fieldsToUpdate.chequeNumber = { visible: false };
           fieldsToUpdate.bankDate = { visible: false };
           break;
-    
+
         case "PV":
         case "SV":
-          fieldsToUpdate.masterAccount = { label: voucherType === "PV" ? "Purchase Account" : "Sales Account" };
+          fieldsToUpdate.masterAccount = {
+            label: voucherType === "PV" ? "Purchase Account" : "Sales Account",
+          };
           fieldsToUpdate.employee = { label: "Done By" };
           fieldsToUpdate.discount = { visible: true };
           break;
-    
+
         case "BR":
         case "CQR":
         case "BP":
         case "CQP":
           fieldsToUpdate.masterAccount = { label: "Bank Account" };
           fieldsToUpdate.employee = {
-            label: voucherType === "BR" || voucherType === "CQR" ? "Collected By" : "Paid By",
+            label:
+              voucherType === "BR" || voucherType === "CQR"
+                ? "Collected By"
+                : "Paid By",
           };
           fieldsToUpdate.discount = { visible: true };
           fieldsToUpdate.chequeNumber = { visible: true };
           fieldsToUpdate.bankDate = { visible: true };
           break;
-    
+
         case "CN":
         case "DN":
           fieldsToUpdate.masterAccount = { label: "Party Account" };
-          fieldsToUpdate.employee = { label: voucherType === "CN" ? "Collected By" : "Paid By" };
+          fieldsToUpdate.employee = {
+            label: voucherType === "CN" ? "Collected By" : "Paid By",
+          };
           break;
-    
+
         case "JV":
         case "MJV":
           fieldsToUpdate.masterAccount = { label: "Master Account" };
@@ -541,14 +552,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           fieldsToUpdate.keepNarration = { visible: true };
           fieldsToUpdate.discount = { visible: false };
           break;
-    
+
         case "OB":
-          fieldsToUpdate.masterAccount = { label: "Master Account", visible: false };
+          fieldsToUpdate.masterAccount = {
+            label: "Master Account",
+            visible: false,
+          };
           fieldsToUpdate.employee = { label: "Employee" };
           fieldsToUpdate.drCr = { visible: true };
           break;
       }
-    
+
       // Dispatch the update action with all the required fields
       dispatch(updateFormElement({ fields: fieldsToUpdate }));
     };
@@ -710,13 +724,20 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       visible: false,
       cellRender: (cellElement: any, cellInfo: any) => (
         <button
-                  onClick={() => {debugger; handleRemoveItem(cellElement.rowIndex)}}
-                  disabled={formState.isRowEdit && cellElement.data.accTransactionDetailId == formState.row.accTransactionDetailId}
-                  className="ti-btn-link"
-                  type="button"
-                >
-                 <i className="ri-delete-bin-5-line delete-icon" title="Remove"></i>
-                </button>
+          onClick={() => {
+            debugger;
+            handleRemoveItem(cellElement.rowIndex);
+          }}
+          disabled={
+            formState.isRowEdit &&
+            cellElement.data.accTransactionDetailId ==
+              formState.row.accTransactionDetailId
+          }
+          className="ti-btn-link"
+          type="button"
+        >
+          <i className="ri-delete-bin-5-line delete-icon" title="Remove"></i>
+        </button>
       ),
     },
   ];
@@ -890,23 +911,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   )}
 
                   {formState.formElements.voucherNumber.visible && (
-                    <ERPInput
-                      id="voucherNumber"
-                      label={formState.formElements.voucherNumber.label}
-                      value={formState.transaction.master.voucherNumber}
-                      className="max-w-[200px]"
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateTransactionMasterHandleFieldChange({
-                            fields: { voucherNumber: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.voucherNumber?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
+                    <>
+                      <ERPInput
+                        id="voucherNumber"
+                        label={formState.formElements.voucherNumber.label}
+                        value={formState.transaction.master.voucherNumber}
+                        className="max-w-[200px]"
+                        onChange={(e) =>
+                          dispatch(
+                            accFormStateTransactionMasterHandleFieldChange({
+                              fields: { voucherNumber: e.target?.value },
+                            })
+                          )
+                        }
+                        disabled={
+                          formState.formElements.voucherNumber?.disabled ||
+                          formState.formElements.pnlMasters?.disabled
+                        }
+                      />
+                      <button onClick={() => {loadAccTransVoucher()}}>change</button>
+                    </>
                   )}
                 </div>
                 {formState.formElements.masterAccount.visible && (
@@ -1208,8 +1232,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPDataCombobox
                       id="project"
                       label={formState.formElements.projectId.label}
+                      options={
+                        formState.row.ledgerId != undefined &&
+                        formState.row.ledgerId != 0
+                          ? undefined
+                          : []
+                      }
                       field={{
                         valueKey: "id",
+
                         labelKey: "name",
                         getListUrl: Urls.data_projects_by_ledgerid,
                         params: `LedgerID=${formState.row.ledgerId}`,
@@ -1439,7 +1470,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 { value: "Cr", label: "Credit" },
               ]}
               disabled={
-                formState.formElements.drCr?.disabled || formState.formElements.pnlMasters?.disabled
+                formState.formElements.drCr?.disabled ||
+                formState.formElements.pnlMasters?.disabled
               }
             />
           )}

@@ -285,7 +285,7 @@ inv_reports_stock_flow:"",
 
   // Transaction
   
-  acc_transaction_base: "/api/Accounts/",
+  acc_transaction_base: "/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
   acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
 

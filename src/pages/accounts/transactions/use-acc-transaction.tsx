@@ -24,7 +24,7 @@ import {
   updateFormElement,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
-import { loadAccVoucher } from "./thunk";
+import { loadAccVoucher, deleteAccVoucher } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
@@ -127,6 +127,22 @@ export const useAccTransaction = (
     } catch (error) {
       return null;
     }
+  };
+  const deleteAccTransVoucher = async (usingManualInvNumber: boolean = false) => {
+    // clearControlForNew();
+    const params = {
+      VoucherNumber: formState.transaction?.master?.voucherNumber,
+      VoucherPrefix: formState.transaction?.master?.voucherPrefix || "",
+      VoucherType: formState.transaction?.master?.voucherType || "",
+      FormType: formState.transaction?.master?.formType || "",
+      MannualInvoiceNumber:
+        formState.transaction?.master?.referenceNumber || "",
+      SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
+    };
+      await appDispatch(
+        deleteAccVoucher({ params: params, transactionType: transactionType })
+      );
+    
   };
   const { validateTransactionDate } = useTransaction(transactionType);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -623,6 +639,7 @@ export const useAccTransaction = (
     undoEditMode,
     getNextVoucherNumber,
     loadAccTransVoucher,
+    deleteAccTransVoucher,
     validate,
     setupBahamdoonPOSReceipts,
     save,

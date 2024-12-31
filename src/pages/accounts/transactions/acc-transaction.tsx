@@ -99,6 +99,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     undoEditMode,
     getNextVoucherNumber,
     loadAccTransVoucher,
+    deleteAccTransVoucher,
     validate,
     addOrEditRow,
     handleRemoveItem,
@@ -930,6 +931,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         }
                       />
                       <button onClick={() => {loadAccTransVoucher()}}>change</button>
+                      <button onClick={() => {deleteAccTransVoucher()}}>delete</button>
                     </>
                   )}
                 </div>

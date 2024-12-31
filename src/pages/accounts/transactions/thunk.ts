@@ -12,7 +12,7 @@ export interface loadAccVoucherInput {
 }
 export interface deleteAccVoucherInput {
   transactionType: string;
-  params: any;
+  accTransactionMasterID: number;
 }
 export interface AccVoucherOutPut {
   master: AccTransactionMaster;
@@ -31,7 +31,7 @@ export const deleteAccVoucher = createAsyncThunk<ResponseModel<string>, deleteAc
   async (input, { rejectWithValue }) => {
     try {
       const response = await api.delete(
-        `${Urls.acc_transaction_base}${input.transactionType}/?${new URLSearchParams(input.params).toString()}`
+        `${Urls.acc_transaction_base}${input.transactionType}/${input.accTransactionMasterID}}`
       );
 
       // Assuming response.data contains the expected number

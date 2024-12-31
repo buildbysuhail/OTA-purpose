@@ -140,7 +140,7 @@ export const useAccTransaction = (
       SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
     };
       await appDispatch(
-        deleteAccVoucher({ params: params, transactionType: transactionType })
+        deleteAccVoucher({ accTransactionMasterID: formState.transaction?.master?.accTransMasterID, transactionType: transactionType })
       );
     
   };

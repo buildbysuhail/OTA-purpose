@@ -53,7 +53,6 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           label={t("default_incentive_account_1")}
           field={{
             id: "defaultIncentiveAcc1",
-            hasCloseButton: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",

@@ -12,7 +12,6 @@ export const useAppState = () => {
     
     dispatch(setAppState(newState));
   };
-console.log(appState);
 
   return { appState, updateAppState };
 };

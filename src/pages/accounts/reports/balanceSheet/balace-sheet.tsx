@@ -232,19 +232,19 @@ const BalanceSheet = () => {
                 onClose={onCloseFilter}
               />
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
-              <Forward className="pe-2" />
-              <span>{t("share")}</span>
-              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
-                0
-              </span>
-            </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <Forward className="pe-2" /> */}
+              {/* <span>{t("share")}</span> */}
+              {/* <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2"> */}
+                {/* 0 */}
+              {/* </span> */}
+            {/* </button> */} 
+            {/* <button className="flex items-center bg-gray-100 p-2 rounded-md"> */}
               {/* <i className="fas fa-clock me-1"></i> */}
-              <Clock1 className="pe-2" />
-              <span>{t("schedule_report")}</span>
-            </button>
+              {/* <Clock1 className="pe-2" /> */}
+              {/* <span>{t("schedule_report")}</span> */}
+            {/* </button> */}
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-print me-1"></i> */}
               <Printer className="pe-2" />

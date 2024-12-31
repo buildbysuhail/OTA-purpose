@@ -27,7 +27,7 @@ const TransactionReportfilterCheckboxes: React.FC<TransactionReportCheckboxProps
   const remainingItems = allTransactions?.length % 7;
 const [formState, setFormState] = useState<{vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean}>({allChecked: false, drCr: 'DrCr', isCr: false, isDr: false, vTypes:''})
 useEffect(() => {
-  // debugger;
+  // 
   onDataChange(formState)
 }, [formState])
   useEffect(() => {

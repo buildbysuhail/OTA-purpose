@@ -30,7 +30,13 @@ export interface UserModel {
   currentBranchId: number;
   currentBranchAddress: string[];
   currentBranchName: string;
-  currency: string | null;
+  currency: {
+    currencyName: string;
+    subUnit: string;
+    currencySymbol: string;
+    subUnitSymbol: string;
+    currencyCode: string;
+  };
   currencySymbol: string | null;
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;
@@ -61,7 +67,13 @@ export const initialUserSessionData: UserModel = {
   currentBranchId: 0,
   currentBranchAddress: [],
   currentBranchName: "",
-  currency: null,
+  currency: {
+    currencyCode:"",
+    currencyName: "",
+    currencySymbol: "",
+    subUnit: "",
+    subUnitSymbol: ""
+  },
   currencySymbol: null,
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,

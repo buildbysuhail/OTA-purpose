@@ -1,14 +1,30 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Combobox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteProps, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Theme,
+  SxProps,
+  Typography,
+  AutocompleteProps,
+  AutocompleteValue,
+  AutocompleteChangeReason,
+  AutocompleteChangeDetails,
+  Paper,
+} from "@mui/material";
 import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
 import ERPElementValidationMessage from "./erp-element-validation-message";
@@ -34,7 +50,15 @@ interface ERPDataComboboxProps {
   onSelectItem?: (item?: any) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  field?: any;
+  field?: {
+    id?: string;
+    getListUrl?: string;
+    valueKey?: string;
+    labelKey?: string;
+    freezeDataLoad?: boolean | false;
+    params?: any;
+    required?: boolean;
+  };
   defaultData?: any;
   data?: any;
   value?: any;
@@ -126,7 +150,10 @@ const truncateText = (
   return text;
 };
 
-const getSizeClasses = (customSize?: "sm" | "md" | "lg" | "customize", appState?: any) => {
+const getSizeClasses = (
+  customSize?: "sm" | "md" | "lg" | "customize",
+  appState?: any
+) => {
   switch (customSize) {
     case "sm":
       return {
@@ -196,32 +223,43 @@ const Row = ({
 
         return `relative cursor-pointer select-none w-full rounded-sm 
                 ${hoverBgClass} ${hoverTextClass} 
-                ${active || isActive
-            ? "bg-primary text-white"
-            : item.is_active === false
-              ? "bg-gray-200 text-gray-400"
-              : "text-gray-900"
-          } 
+                ${
+                  active || isActive
+                    ? "bg-primary text-white"
+                    : item.is_active === false
+                    ? "bg-gray-200 text-gray-400"
+                    : "text-gray-900"
+                } 
                 ${sizeClasses?.options}`;
       }}
       value={item}
-      disabled={!item.is_active}>
+      disabled={!item.is_active}
+    >
       {({ active }) => (
         <div
-          className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
-            }`}
-          onClick={(e) => { e.stopPropagation(); handleSelect(item) }}>
+          className={`flex items-center px-3 py-2 ${
+            isSelected ? "bg-primary" : ""
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSelect(item);
+          }}
+        >
           <div className="flex-shrink-0 w-5 pe-[23px]">
             {isSelected && (
               <CheckIcon
-                className={`${sizeClasses?.icons
-                  } ${setFgAccordingToBgPrimary()}`}
-                aria-hidden="true" />
+                className={`${
+                  sizeClasses?.icons
+                } ${setFgAccordingToBgPrimary()}`}
+                aria-hidden="true"
+              />
             )}
           </div>
           <span
-            className={`block truncate flex-grow ${isSelected ? "font-medium" : "font-normal"
-              } ${isSelected ? setFgAccordingToBgPrimary() : ""}`}>
+            className={`block truncate flex-grow ${
+              isSelected ? "font-medium" : "font-normal"
+            } ${isSelected ? setFgAccordingToBgPrimary() : ""}`}
+          >
             {item.label}
           </span>
         </div>
@@ -238,37 +276,103 @@ const ComboboxList = React.forwardRef<
     onSelect: (item: Option) => void;
     activeIndex: number;
     customSize?: "sm" | "md" | "lg" | "customize";
-  } & { appState: "rtl" | "ltr" }>
-  ((props, ref) => {
-    const { items, selectedValue, onSelect, activeIndex, customSize, appState } = props;
-    const itemData = {
-      items,
-      selectedValue,
-      handleSelect: onSelect,
-      activeIndex,
-      customSize,
-    };
+  } & { appState: "rtl" | "ltr" }
+>((props, ref) => {
+  const { items, selectedValue, onSelect, activeIndex, customSize, appState } =
+    props;
+  const itemData = {
+    items,
+    selectedValue,
+    handleSelect: onSelect,
+    activeIndex,
+    customSize,
+  };
 
-    return (
-      <List
-        height={LIST_HEIGHT}
-        itemCount={items?.length}
-        itemSize={ITEM_HEIGHT}
-        width="100%"
-        ref={ref}
-        itemData={itemData}
-        className={`scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400`}
-        style={{ direction: appState }}
-      >
-        {Row}
-
-      </List>
-    );
-  });
+  return (
+    <List
+      height={LIST_HEIGHT}
+      itemCount={items?.length}
+      itemSize={ITEM_HEIGHT}
+      width="100%"
+      ref={ref}
+      itemData={itemData}
+      className={`scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400`}
+      style={{ direction: appState }}
+    >
+      {Row}
+    </List>
+  );
+});
 
 ComboboxList.displayName = "ComboboxList";
+// Add a custom props comparison function (optional)
 
-export default function ERPDataCombobox({
+const logProps = (props: ERPDataComboboxProps, label: string) => {
+  console.log(`${label} props:`, Object.keys(props));
+};
+
+const propsAreEqual = (
+  prevProps: ERPDataComboboxProps,
+  nextProps: ERPDataComboboxProps
+) => {
+  console.log(prevProps);
+  console.log(nextProps);
+  
+  
+  // Uncomment to debug
+  // logProps(prevProps, 'Previous');
+  // logProps(nextProps, 'Next');
+
+  // Get all keys from both objects to ensure we don't miss any
+  const allKeys = Array.from(
+    new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
+  );
+
+  for (const key of allKeys) {
+    const prevValue = prevProps[key as keyof ERPDataComboboxProps];
+    const nextValue = nextProps[key as keyof ERPDataComboboxProps];
+
+    // Handle function comparisons
+    if (typeof prevValue === 'function' && typeof nextValue === 'function') {
+      if (prevValue !== nextValue) {
+        console.log(`Function prop ${key} changed`);
+        return false;
+      }
+      continue;
+    }
+
+    // Handle array comparisons
+    if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
+      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+        console.log(`Array prop ${key} changed`);
+        return false;
+      }
+      continue;
+    }
+
+    // Handle object comparisons
+    if (
+      typeof prevValue === 'object' && prevValue !== null &&
+      typeof nextValue === 'object' && nextValue !== null
+    ) {
+      if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
+        console.log(`Object prop ${key} changed`);
+        return false;
+      }
+      continue;
+    }
+
+    // Handle primitive comparisons
+    if (prevValue !== nextValue) {
+      console.log(`Primitive prop ${key} changed from ${prevValue} to ${nextValue}`);
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const ERPDataCombobox = React.memo(function ERPDataCombobox({
   id,
   label,
   handleChange,
@@ -306,6 +410,8 @@ export default function ERPDataCombobox({
   useMUI,
   variant,
 }: ERPDataComboboxProps) {
+  console.log('Re Rendered');
+  
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -319,16 +425,24 @@ export default function ERPDataCombobox({
   const comboboxRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<List>(null);
   const componentRef = useRef<HTMLDivElement>(null);
-  const appState = useAppSelector((state: RootState) => state.AppState.appState);
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState?.inputBox?.inputSize);
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+  const [_customSize, setCustomSize] = useState(
+    customSize ? customSize : appState?.inputBox?.inputSize
+  );
   const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
-  const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(variant === "normal" ? undefined : variant);
+  const [_variant, set_variant] = useState<
+    "filled" | "outlined" | "standard" | undefined
+  >(variant === "normal" ? undefined : variant);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
   const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => { setIsFocused(false); };
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   useEffect(() => {
     if (customSize == undefined || customSize == null) {
@@ -339,14 +453,22 @@ export default function ERPDataCombobox({
   useEffect(() => {
     if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
       set_useMUI(true);
-    } else if (appState?.inputBox?.inputStyle === "normal" && useMUI === undefined) {
+    } else if (
+      appState?.inputBox?.inputStyle === "normal" &&
+      useMUI === undefined
+    ) {
       set_useMUI(false);
     }
   }, [appState?.inputBox?.inputStyle, useMUI]);
 
   useEffect(() => {
-    if (appState?.inputBox?.inputStyle !== "normal" && (variant === undefined || variant === null)) {
-      set_variant(appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard");
+    if (
+      appState?.inputBox?.inputStyle !== "normal" &&
+      (variant === undefined || variant === null)
+    ) {
+      set_variant(
+        appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard"
+      );
     } else if (appState?.inputBox?.inputStyle === "normal") {
       set_variant(undefined);
     } else {
@@ -362,31 +484,58 @@ export default function ERPDataCombobox({
     }
   }, [initial]);
 
-  const [borderStyles, setBorderStyles] = useState<string>(appState?.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
-  const [bgColor, setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true ? '#ffffff' : '#ffffff1a') : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
-   useEffect(() => {
-      let border, bgCol;
-      if (appState?.mode === 'dark') {
-        border = isFocused || isHovered ? '#ffffff' : '#ffffff1a';
-        bgCol = isFocused ? '#ffffff' : '#ffffff1a';
-      } else {
-        border = isFocused || isHovered
+  const [borderStyles, setBorderStyles] = useState<string>(
+    appState?.mode == "dark"
+      ? isFocused == true || isHovered == true
+        ? "#ffffff"
+        : "#ffffff1a"
+      : `${
+          isFocused || isHovered
+            ? `rgb(${appState?.inputBox?.borderFocus})`
+            : `rgb(${appState?.inputBox?.borderColor})`
+        } `
+  );
+  const [bgColor, setBgColor] = useState<string>(
+    appState.mode == "dark"
+      ? isFocused == true
+        ? "#ffffff"
+        : "#ffffff1a"
+      : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `
+  );
+  useEffect(() => {
+    let border, bgCol;
+    if (appState?.mode === "dark") {
+      border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
+      bgCol = isFocused ? "#ffffff" : "#ffffff1a";
+    } else {
+      border =
+        isFocused || isHovered
           ? `rgb(${appState?.inputBox?.borderFocus})`
           : `rgb(${appState?.inputBox?.borderColor})`;
-        bgCol = isFocused
-          ? `rgb(${appState?.inputBox?.focusBgColor})`
-          : ``;
-      }
-      setBorderStyles(border);
-      setBgColor(bgCol);
-    }, [appState.mode, isFocused, isHovered, appState.inputBox?.borderColor, appState.inputBox?.borderFocus, appState.inputBox?.focusBgColor, appState.inputBox?.defaultBgColor]);
+      bgCol = isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``;
+    }
+    setBorderStyles(border);
+    setBgColor(bgCol);
+  }, [
+    appState.mode,
+    isFocused,
+    isHovered,
+    appState.inputBox?.borderColor,
+    appState.inputBox?.borderFocus,
+    appState.inputBox?.focusBgColor,
+    appState.inputBox?.defaultBgColor,
+  ]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         componentRef.current &&
         !componentRef.current.contains(event.target as Node) &&
-        !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target as Node) &&
-        !document.querySelector('.combobox-dropdown')?.contains(event.target as Node)
+        !document
+          .querySelector(".MuiAutocomplete-popper")
+          ?.contains(event.target as Node) &&
+        !document
+          .querySelector(".combobox-dropdown")
+          ?.contains(event.target as Node)
       ) {
         setIsOpen(false);
         setActiveIndex(-1);
@@ -402,14 +551,24 @@ export default function ERPDataCombobox({
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.params, field?.freezeDataLoad, reload, disabledApiCall]);
+  }, [
+    field?.getListUrl,
+    field?.params,
+    field?.freezeDataLoad,
+    reload,
+    disabledApiCall,
+  ]);
 
   const loadData = async () => {
     setLoading(true);
     try {
+      let params = "";
       console.log(`options${field?.freezeDataLoad}`);
-      const _items =
-        options || (await api.getAsync(field?.getListUrl, field?.params || ""));
+      if (field?.params != undefined && Object.keys(field?.params).length > 0) {
+        params = new URLSearchParams(field?.params).toString();
+      }
+
+      const _items = options || (await api.getAsync(field?.getListUrl??"", params));
       const labelKey = field?.labelKey ?? "label";
       const valueKey = field?.valueKey ?? "value";
       let _options = mapItemsToOptions(_items, labelKey, valueKey);
@@ -451,12 +610,12 @@ export default function ERPDataCombobox({
   useEffect(() => {
     const fieldKey = field?.id?.replaceAll("_id", "");
     const defaultValueKey = getNestedValue(
-      defaultData?.[fieldKey],
-      field?.valueKey
+      defaultData?.[fieldKey??""],
+      field?.valueKey??""
     );
     const _default = items?.find((option) => option.value === defaultValueKey);
     const _selected = items?.find(
-      (option) => option.value === (value ? value : data?.[field?.id])
+      (option) => option.value === (value ? value : data?.[field?.id??""])
     );
     const _exceptional =
       (defaultData && fieldKey === "payment_terms" && items[0]) ||
@@ -479,10 +638,10 @@ export default function ERPDataCombobox({
     setActiveIndex(-1);
     setFilteredItems(items);
     if (comboboxRef.current) comboboxRef.current.value = "";
-    handleChange?.(field?.id, null);
+    handleChange?.(field?.id??"", null);
     onChange?.(null);
     onChangeData?.({ ...data, [id]: null });
-    handleChangeData?.(field?.id, null);
+    handleChangeData?.(field?.id??"", null);
     onSelectItem?.(null);
   };
   const handleItemClick = (value: Option) => {
@@ -495,8 +654,8 @@ export default function ERPDataCombobox({
     setFilteredItems(items); // Reset filtered items to original list
     onChange?.(value);
     onChangeData?.(value && data ? { ...data, [id]: value?.value } : null);
-    handleChange?.(field?.id, value?.value);
-    handleChangeData?.(field?.id, value?.value);
+    handleChange?.(field?.id??"", value?.value);
+    handleChangeData?.(field?.id??"", value?.value);
     onSelectItem?.(value);
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -514,16 +673,16 @@ export default function ERPDataCombobox({
       e.preventDefault();
       const formInputs = Array.from(
         document.querySelectorAll(
-          'input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
+          "input:not([disabled]), select:not([disabled]), textarea:not([disabled])"
         )
       );
 
       const currentIndex = formInputs.indexOf(e.target as HTMLInputElement);
       // Handle jump-to logic
-      const jumpToAttr = (e.target as HTMLElement).getAttribute('data-jump-to');
+      const jumpToAttr = (e.target as HTMLElement).getAttribute("data-jump-to");
       if (jumpToAttr) {
         const jumpTargetElement = formInputs.find(
-          (el) => el.getAttribute('data-jump-target') === jumpToAttr
+          (el) => el.getAttribute("data-jump-target") === jumpToAttr
         ) as HTMLElement;
         if (jumpTargetElement) {
           jumpTargetElement.focus();
@@ -536,8 +695,8 @@ export default function ERPDataCombobox({
       // Find next non-skipped input
       while (nextIndex >= 0 && nextIndex < formInputs.length) {
         const nextElement = formInputs[nextIndex] as HTMLElement;
-        const skipAttr = nextElement.getAttribute('data-skip');
-        if (skipAttr !== 'true') {
+        const skipAttr = nextElement.getAttribute("data-skip");
+        if (skipAttr !== "true") {
           break;
         }
         nextIndex = isShiftKey ? nextIndex - 1 : nextIndex + 1;
@@ -631,17 +790,51 @@ export default function ERPDataCombobox({
     const commonMuiStyles = {
       paddingBottom: _variant === "filled" ? "1rem" : "0",
       borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
-      color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`,
-      "& .MuiOutlinedInput-notchedOutline": { borderColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})` },
-      "& .MuiFilledInput-underline, &:before": { borderBottomColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})` },
-      "&:hover ?.MuiOutlinedInput-notchedOutline": { borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})` },
-      "&:hover .MuiFilledInput-underline, &:hover:before": { borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})` },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})` },
+      color:
+        appState?.mode == "dark"
+          ? "#ffffff"
+          : `rgb(${appState?.inputBox?.fontColor})`,
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor:
+          appState?.mode == "dark"
+            ? "#ffffff1a"
+            : `rgb(${appState?.inputBox?.borderColor})`,
+      },
+      "& .MuiFilledInput-underline, &:before": {
+        borderBottomColor:
+          appState?.mode == "dark"
+            ? "#ffffff1a"
+            : `rgb(${appState?.inputBox?.borderColor})`,
+      },
+      "&:hover ?.MuiOutlinedInput-notchedOutline": {
+        borderColor:
+          appState?.mode == "dark"
+            ? "#ffffff"
+            : `rgb(${appState?.inputBox?.borderFocus})`,
+      },
+      "&:hover .MuiFilledInput-underline, &:hover:before": {
+        borderBottomColor:
+          appState?.mode == "dark"
+            ? "#ffffff"
+            : `rgb(${appState?.inputBox?.borderFocus})`,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor:
+          appState?.mode == "dark"
+            ? "#ffffff"
+            : `rgb(${appState?.inputBox?.borderFocus})`,
+      },
       "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
-        { borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})` },
+        {
+          borderBottomColor:
+            appState?.mode == "dark"
+              ? "#ffffff"
+              : `rgb(${appState?.inputBox?.borderFocus})`,
+        },
       margin: "0",
-      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
-        { padding: "0 0.75rem" },
+      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
+        padding: "0 0.75rem",
+      },
     };
 
     switch (_customSize) {
@@ -655,28 +848,35 @@ export default function ERPDataCombobox({
             },
             "& .MuiInputLabel-root": {
               fontSize: "12px",
-              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : appState?.inputBox?.labelColor
+                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(8px, 14px) scale(1)"
                   : _variant === "standard"
-                    ? "translate(0, 10px) scale(1)"
-                    : "translate(8px, 10px) scale(1)",
+                  ? "translate(0, 10px) scale(1)"
+                  : "translate(8px, 10px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.90)"
-                    : "translate(13px, -6px) scale(0.80)",
+                  ? "translate(0, -6px) scale(0.90)"
+                  : "translate(13px, -6px) scale(0.80)",
             },
           } as SxProps<Theme>,
           regular: {
             height: "2rem",
             fontSize: "12px",
-            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
+            color:
+              appState?.mode == "dark"
+                ? "#ffffff"
+                : `rgb(${appState?.inputBox?.fontColor})`,
             // padding: "0.25rem 0.75rem"
           },
         };
@@ -690,28 +890,35 @@ export default function ERPDataCombobox({
             },
             "& .MuiInputLabel-root": {
               fontSize: "13px",
-              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : appState?.inputBox?.labelColor
+                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(10px, 18px) scale(1)"
                   : _variant === "standard"
-                    ? "translate(0, 13px) scale(1)"
-                    : "translate(10px, 13px) scale(1)",
+                  ? "translate(0, 13px) scale(1)"
+                  : "translate(10px, 13px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.90)"
-                    : "translate(12px, -8px) scale(0.90)",
+                  ? "translate(0, -6px) scale(0.90)"
+                  : "translate(12px, -8px) scale(0.90)",
             },
           } as SxProps<Theme>,
           regular: {
             height: "2.5rem",
             fontSize: "14px",
-            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
+            color:
+              appState?.mode == "dark"
+                ? "#ffffff"
+                : `rgb(${appState?.inputBox?.fontColor})`,
             // padding: "0.5rem 1rem"
           },
         };
@@ -725,28 +932,35 @@ export default function ERPDataCombobox({
             },
             "& .MuiInputLabel-root": {
               fontSize: "14px",
-              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : appState?.inputBox?.labelColor
+                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
                   ? "translate(10px, 21px) scale(1)"
                   : _variant === "standard"
-                    ? "translate(0, 15px) scale(1)"
-                    : "translate(10px, 15px) scale(1)"
+                  ? "translate(0, 15px) scale(1)"
+                  : "translate(10px, 15px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                    ? "translate(1px,-6px) scale(0.90)"
-                    : "translate(15px, -9px) scale(0.90)",
+                  ? "translate(1px,-6px) scale(0.90)"
+                  : "translate(15px, -9px) scale(0.90)",
             },
           } as SxProps<Theme>,
           regular: {
             height: "3rem",
             fontSize: "16px",
-            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
+            color:
+              appState?.mode == "dark"
+                ? "#ffffff"
+                : `rgb(${appState?.inputBox?.fontColor})`,
             // label: "10px",
             // padding: "0.75rem 1.25rem"
           },
@@ -762,27 +976,37 @@ export default function ERPDataCombobox({
             },
             "& .MuiInputLabel-root": {
               fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
-              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : appState?.inputBox?.labelColor
+                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 20
-                  }px) scale(1)`
-                  : _variant === "standard"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                      appState?.inputBox?.adjustB ?? 20
                     }px) scale(1)`
-                    : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 12
+                  : _variant === "standard"
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                      appState?.inputBox?.adjustB ?? 15
+                    }px) scale(1)`
+                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                      appState?.inputBox?.adjustB ?? 12
                     }px) scale(1)`,
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -1
-                  }px) scale(0.88)`
-                  : _variant === "standard"
-                    ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6
+                  ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
+                      appState?.inputBox?.adjustD ?? -1
                     }px) scale(0.88)`
-                    : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${appState?.inputBox?.adjustD ?? -9
+                  : _variant === "standard"
+                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${
+                      appState?.inputBox?.adjustD ?? -6
+                    }px) scale(0.88)`
+                  : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${
+                      appState?.inputBox?.adjustD ?? -9
                     }px) scale(0.88)`,
             },
           } as SxProps<Theme>,
@@ -790,7 +1014,10 @@ export default function ERPDataCombobox({
             height: `${appState?.inputBox?.inputHeight ?? 2.5}rem`,
             fontSize: `${appState?.inputBox?.fontSize ?? 15}px`,
             fontWeight: appState?.inputBox?.fontWeight,
-            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
+            color:
+              appState?.mode == "dark"
+                ? "#ffffff"
+                : `rgb(${appState?.inputBox?.fontColor})`,
           },
         };
       default:
@@ -800,17 +1027,26 @@ export default function ERPDataCombobox({
 
   function infoWithLineBreaks(text?: string) {
     if (!text) return null;
-    return text.includes('/n')
-      ? text.split('/n').map((line, index) => (
-        <React.Fragment key={index}>
-          {line}
-          <br />
-        </React.Fragment>
-      ))
+    return text.includes("/n")
+      ? text.split("/n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))
       : text;
   }
-  interface AutocompleteProps<T, Multiple extends boolean | undefined = undefined, DisableClearable extends boolean | undefined = undefined, FreeSolo extends boolean | undefined = undefined>
-    extends Omit<React.ComponentProps<typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>>, 'onChange'> {
+  interface AutocompleteProps<
+    T,
+    Multiple extends boolean | undefined = undefined,
+    DisableClearable extends boolean | undefined = undefined,
+    FreeSolo extends boolean | undefined = undefined
+  > extends Omit<
+      React.ComponentProps<
+        typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>
+      >,
+      "onChange"
+    > {
     onChange?: (
       event: React.SyntheticEvent,
       value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
@@ -819,28 +1055,27 @@ export default function ERPDataCombobox({
     ) => void;
   }
   const StyledAutocomplete = styled(Autocomplete)`
-  & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
-    max-height: 200px !important;
-    overflow-y: auto !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #888 #f1f1f1;
+    & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
+      max-height: 200px !important;
+      overflow-y: auto !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: #888 #f1f1f1;
 
-    &::-webkit-scrollbar {
-      width: 8px;
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+      }
     }
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #888;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #555;
-    }
-  }
-`;
-
+  `;
 
   const sizeStyles = getSizeStyles();
   if (_useMUI == true) {
@@ -872,31 +1107,33 @@ export default function ERPDataCombobox({
         handleItemClick(value);
       }
     };
-    const ScrollbarStyles = styled('div')`
-  .custom-scrollbar {
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-  }
-`;
+    const ScrollbarStyles = styled("div")`
+      .custom-scrollbar {
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 3px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+      }
+    `;
 
     return (
-      <div className={className}
+      <div
+        className={className}
         style={{
           marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
-          marginTop: `${appState?.inputBox?.marginTop ?? 0}px`
-        }}>
+          marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+        }}
+      >
         {/* <Autocomplete
           id={id}
           options={items}
@@ -953,17 +1190,27 @@ export default function ERPDataCombobox({
           value={initial}
           onChange={handleItemSelect}
           getOptionLabel={(option: any) => option.label || ""}
-          isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
+          isOptionEqualToValue={(option: any, value: any) =>
+            option.value === value.value
+          }
           loading={loading}
           disabled={disabled}
           autoHighlight
           openOnFocus
           fullWidth
           ListboxProps={{
-            style: { maxHeight: '200px', scrollbarWidth: 'thin' }
+            style: { maxHeight: "200px", scrollbarWidth: "thin" },
           }}
           PaperComponent={({ children }) => (
-            <Paper elevation={1} style={{ backgroundColor: 'white', borderRadius: 4, overflowY: 'scroll', height: '200px' }}>
+            <Paper
+              elevation={1}
+              style={{
+                backgroundColor: "white",
+                borderRadius: 4,
+                overflowY: "scroll",
+                height: "200px",
+              }}
+            >
               {children}
             </Paper>
           )}
@@ -999,13 +1246,13 @@ export default function ERPDataCombobox({
                 opacity: option.is_active === false ? 0.5 : 1,
                 backgroundColor:
                   option.is_active === false ? "#f5f5f5" : undefined,
-              }}>
+              }}
+            >
               {option.label}
             </li>
           )}
         />
-        <Typography
-          className="text-[#374151] text-xs font-medium mt-1">
+        <Typography className="text-[#374151] text-xs font-medium mt-1">
           {infoWithLineBreaks(info)}
         </Typography>
         {validation && (
@@ -1013,38 +1260,65 @@ export default function ERPDataCombobox({
         )}
       </div>
     );
-  };
-  const { height, fontSize, fontWeight, color, } = sizeStyles.regular;
+  }
+  const { height, fontSize, fontWeight, color } = sizeStyles.regular;
 
   const truncateValue = (text: string, maxLength: number = 23) => {
     if (!text) return text;
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
   if (_useMUI == undefined || _useMUI == false) {
     return (
-      <div className={`${className} relative ${labelDirection === "vertical" ? "flex flex-col space-y-1" : "flex items-center space-x-2"}`} ref={componentRef}
+      <div
+        className={`${className} relative ${
+          labelDirection === "vertical"
+            ? "flex flex-col space-y-1"
+            : "flex items-center space-x-2"
+        }`}
+        ref={componentRef}
         style={{
           marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
           marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
-        }}>
+        }}
+      >
         {!noLabel && (
           <label
-            className={`capitalize block   text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label' : ""} 
+            className={`capitalize block   text-left rtl:text-right ${
+              appState?.mode == "dark" ? "form-label" : ""
+            } 
           ${labelDirection === "vertical" ? "" : ""}`}
             style={{
-              fontSize: _customSize ? _customSize === "sm" ? "12px" : _customSize === "md" ? "14px" : _customSize === "lg" ? "16px" : `${appState?.inputBox?.labelFontSize}px` : `14px`,
-              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
-              transform: _customSize === "customize" ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)` : ``,
-            }}>
-            {`${label || id?.replaceAll("_", " ")}  ${labelDirection === "horizontal" ? ":" : ""}`}
+              fontSize: _customSize
+                ? _customSize === "sm"
+                  ? "12px"
+                  : _customSize === "md"
+                  ? "14px"
+                  : _customSize === "lg"
+                  ? "16px"
+                  : `${appState?.inputBox?.labelFontSize}px`
+                : `14px`,
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : appState?.inputBox?.labelColor
+                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : "rgb(84,84,84)",
+              transform:
+                _customSize === "customize"
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                      appState?.inputBox?.adjustB ?? 10
+                    }px) scale(1)`
+                  : ``,
+            }}
+          >
+            {`${label || id?.replaceAll("_", " ")}  ${
+              labelDirection === "horizontal" ? ":" : ""
+            }`}
             {required && <span className="text-[#ef4444]">*</span>}
           </label>
         )}
-        <Combobox
-          as="div"
-          className="relative">
+        <Combobox as="div" className="relative">
           <div className="flex">
             <Combobox.Input
               ref={comboboxRef}
@@ -1062,9 +1336,14 @@ export default function ERPDataCombobox({
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
               onChange={handleInputChange}
-              onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen) }}
+              onClick={(e) => {
+                e.stopPropagation();
+                !disabled && setIsOpen(!isOpen);
+              }}
               onKeyDown={handleKeyDown}
-              placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
+              placeholder={
+                t("select") + " " + (label || id?.replaceAll("_", " "))
+              }
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onFocus={handleFocus}
@@ -1080,33 +1359,43 @@ export default function ERPDataCombobox({
               style={{
                 background:
                   initial?.value !== undefined &&
-                    initial?.value !== null &&
-                    initial?.value !== ""
+                  initial?.value !== null &&
+                  initial?.value !== ""
                     ? `rgb(${appState?.inputBox?.selectColor})`
                     : "#f9f9f9",
                 ...(document.documentElement.dir === "rtl"
                   ? {
-                    borderTopLeftRadius: `${appState?.inputBox?.borderRadius ?? 5
+                      borderTopLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                    borderBottomLeftRadius: `${appState?.inputBox?.borderRadius ?? 5
+                      borderBottomLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                  }
+                    }
                   : {
-                    borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5
+                      borderTopRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                    borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5
+                      borderBottomRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
                       }px`,
-                  }),
+                    }),
               }}
             >
               {/* Dropdown button */}
               <Combobox.Button
                 className="p-1 hover:bg-gray-100 rounded-full"
-                onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen) }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  !disabled && setIsOpen(!isOpen);
+                }}
               >
                 <ChevronDownIcon
-                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
-                    }`}
+                  className={`${
+                    sizeClasses?.icons
+                  } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                    isOpen ? "transform rotate-180" : ""
+                  }`}
                   aria-hidden="true"
                 />
               </Combobox.Button>
@@ -1120,7 +1409,6 @@ export default function ERPDataCombobox({
                     (el as any).__reactRefHandlers = { contains: () => true };
                   }
                 }}
-
                 className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md"
                 style={{
                   width: comboboxRef.current?.offsetWidth || "auto",
@@ -1163,4 +1451,9 @@ export default function ERPDataCombobox({
       </div>
     );
   }
-}
+});
+
+// Set displayName for better debugging
+ERPDataCombobox.displayName = "ERPDataCombobox";
+
+export default ERPDataCombobox;

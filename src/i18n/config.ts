@@ -22,7 +22,7 @@ import accountsReportAr from "./locales/ar/accountsReport-Ar.json";
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
   lng: "en",
-  debug: true,
+  debug: false,
   ns: ["main", "masters", "userManage", "administration", "applicationSettings", "system", "integration","labelDesigner"],
   defaultNS: "main",
   resources: {

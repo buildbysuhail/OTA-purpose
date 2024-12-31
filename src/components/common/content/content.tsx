@@ -615,7 +615,7 @@ const Content: FC<ContentProps> = () => {
         />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
         <Route
-          path="/accounts/balance_sheet_vertical"
+          path="/accounts/balance_sheet_detailed"
           element={<BalancesheetVertical />}
         />
         <Route

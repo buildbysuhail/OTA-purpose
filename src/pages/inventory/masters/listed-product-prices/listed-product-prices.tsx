@@ -140,7 +140,6 @@ const ListedProductPrices: React.FC = React.memo(() => {
             id="type"
             field={{
               id: "type",
-              required: true,
               getListUrl: Urls.data_warehouse,
               valueKey: "id",
               labelKey: "name",
@@ -168,7 +167,6 @@ const ListedProductPrices: React.FC = React.memo(() => {
               id="product"
               field={{
                 id: "product",
-                required: true,
                 getListUrl: Urls.data_warehouse,
                 valueKey: "id",
                 labelKey: "name",

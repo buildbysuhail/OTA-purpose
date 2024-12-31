@@ -27,7 +27,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   const [distributedItems, setDistributedItems] = useState<any>([]);
 
   // const distributeItems = useMemo(() => {
-  //   debugger;
+  //   
 
   //   return result;
   // }, [userSession?.userTypeCode, userSession?.countryId, applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory]);

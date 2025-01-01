@@ -16,7 +16,7 @@ import CashBookSummary from "../../../pages/accounts/reports/cashBook/cash-book-
 import DayBookDetailed from "../../../pages/accounts/reports/dayBook/day-book-detailed";
 import DayBookSummary from "../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary";
 import PaymentReport from "../../../pages/accounts/reports/payment-report";
-import CollectionReport from "../../../pages/accounts/reports/collection-report";
+import CollectionReport from "../../../pages/accounts/reports/incomeexpense/income-report";
 import TransactionReport from "../../../pages/accounts/reports/transactionReport/transaction-report";
 import AccountsHistoryReport from "../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
 import DailySummary from "../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary";
@@ -244,6 +244,12 @@ import { transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
 import PartySummaryMaster from "../../../pages/accounts/reports/partywise-summary/party-summary-master";
 import DailySummaryMaster from "../../../pages/accounts/reports/dailySummary/daily-summary-master";
+import IncomeReport from "../../../pages/accounts/reports/incomeexpense/income-report";
+import IncomeReportDetailed from "../../../pages/accounts/reports/incomeexpense/income-report-detailed";
+import ExpenseReport from "../../../pages/accounts/reports/incomeexpense/expense-report";
+import ExpenseReportDetailed from "../../../pages/accounts/reports/incomeexpense/expense-report-detailed";
+import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
+import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/Cash-flow-report";
 
 const PriceList = lazy(
   () =>
@@ -517,6 +523,30 @@ const Content: FC<ContentProps> = () => {
         <Route
           path="/accounts/cash_summary_ledgerwise"
           element={<CashSummaryLedgerwise />}
+        />
+        <Route
+          path="/accounts/income_report"
+          element={<IncomeReport/>}
+        />
+        <Route
+          path="/accounts/income_report_detailed"
+          element={<IncomeReportDetailed />}
+        />
+        <Route
+          path="/accounts/expense_report"
+          element={<ExpenseReport />}
+        />
+        <Route
+          path="/accounts/expense_report_detailed"
+          element={<ExpenseReportDetailed />}
+        />
+          <Route
+          path="/accounts/cash_flow"
+          element={<CashFlowReport />}
+        />
+          <Route
+          path="/accounts/bank_flow"
+          element={<BankFlowReport />}
         />
         <Route
           path="/accounts/transaction_report"

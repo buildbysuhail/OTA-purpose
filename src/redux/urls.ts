@@ -269,6 +269,10 @@ const Urls = {
   acc_reports_profit_and_loss_detailed: "/Accounts/RptReports/ProfitAndLossDetailed/",
   acc_reports_account_ledger_balance_view_sub_group_inc: "/Accounts/RptReports/AccountLedgerBalanceViewSubGroupIncluded/",
   acc_reports_closing_stock_details: "/Accounts/RptReports/ClosingStockDetails/",
+  acc_reports_income_expense_report: "/Accounts/RptIncomeExpense/Expense/",
+  acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
+  acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
+  acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
 
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",

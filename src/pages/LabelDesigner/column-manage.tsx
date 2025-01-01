@@ -13,6 +13,7 @@ import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { tableColumns } from "../InvoiceDesigner/Designer/interfaces";
 import ERPFormButtons from "../../components/ERPComponents/erp-form-buttons";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
+import { AccountMasterDetails, AccountMasterFields } from "./fields";
 interface AddColumnsManageProps {
     onSubmit: (columnData: tableColumns) => void;
     onDelete?: () => void;
@@ -76,15 +77,10 @@ interface AddColumnsManageProps {
         onChangeData={(data) =>
             handleFieldChange("field", data.field )
         }
-        options={[
-        { value: "General", label: "General" },
-        { value: "Distribution", label: "Distribution" },
-        { value: "Hypermarket", label: "Hypermarket" },
-        { value: "Supermarket", label: "Supermarket" },
-        { value: "Textiles", label: "Textiles" },
-        { value: "Restaurant", label: "Restaurant" },
-        { value: "Opticals", label: "Opticals" },
-        ]}
+        options={AccountMasterDetails?.map((field, index) => ({
+        value: field,
+        label: field,
+        }))}
     />
      <ERPSlider
         label={`Width (${ColumnData?.width})`}

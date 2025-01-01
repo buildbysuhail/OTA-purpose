@@ -187,6 +187,7 @@ const LedgerReport = () => {
                 <button className="flex items-center bg-gray-100 p-0 rounded-md">
                 </button>
                 <ErpDevGrid
+                remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   gridHeader={t("ledger_report")}

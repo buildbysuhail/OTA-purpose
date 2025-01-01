@@ -110,8 +110,8 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           label={t("project")}
           field={{
             id: "project",
-            getListUrl: Urls.data_projects_by_ledgerid,
-            params: `ledgerID=${formState.ledgerID}`,
+            getListUrl: `${Urls.data_projects_by_ledgerid}${formState.ledgerID}`,
+            // params: `ledgerID=${formState.ledgerID}`,
             valueKey: "id",
             labelKey: "name",
           }}

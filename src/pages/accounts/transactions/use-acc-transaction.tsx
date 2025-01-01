@@ -37,6 +37,7 @@ import {
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
 } from "../../../utilities/Utils";
+import { handleResponse } from "../../../utilities/HandleResponse";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -139,10 +140,12 @@ export const useAccTransaction = (
         formState.transaction?.master?.referenceNumber || "",
       SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
     };
-      await appDispatch(
+      const res = await appDispatch(
         deleteAccVoucher({ accTransactionMasterID: formState.transaction?.master?.accTransMasterID, transactionType: transactionType })
-      );
-    
+      ).unwrap();
+    if(res != undefined && res.isOk != true) {
+      ERPAlert.show({title: 'failed', text: res.message, onConfirm:() =>{return false}})
+    }
   };
   const { validateTransactionDate } = useTransaction(transactionType);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -163,6 +166,22 @@ export const useAccTransaction = (
     }
   }
   const getNextVoucherNumber = async (
+    formType: string,
+    voucherType: string,
+    prefix: string
+  ) => {
+    const response = await api.getAsync(
+      Urls.get_last_voucher_no,
+      `formType=${formType ? formType : "null"}&voucherType= ${
+        voucherType ? voucherType : "null"
+      }&prefix=${prefix ? prefix : "null"}`
+    );
+    
+    const nextVoucherNumber = response || 1;
+
+    return nextVoucherNumber;
+  };
+  const validatePDC = async (
     formType: string,
     voucherType: string,
     prefix: string

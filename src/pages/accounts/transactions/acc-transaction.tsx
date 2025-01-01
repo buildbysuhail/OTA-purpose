@@ -93,6 +93,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const onSelectionChanged = ((e: any) => {
+    setSelectedRows(e.selectedRows); // Contains full row data
+    console.log('Selected Rows:', e.selectedRowsData);
+  });
+
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
@@ -414,9 +421,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             accFormStateHandleFieldChange({
               fields: {
                 masterAccountID:
-                  userSession.counterwiseCashLedgerId > 0 &&
+                  userSession?.counterwiseCashLedgerId > 0 &&
                   applicationSettings.accountsSettings?.allowSalesCounter
-                    ? userSession.counterwiseCashLedgerId
+                    ? userSession?.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings?.defaultCashAcc,
               },
             })
@@ -1563,6 +1570,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
+            onSelectionChanged={onSelectionChanged}
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency

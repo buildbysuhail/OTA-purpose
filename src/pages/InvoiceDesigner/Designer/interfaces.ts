@@ -132,8 +132,8 @@ export type QRCodeProps = {
 export type AreaProps = {
   bgColor: string;
   isRepeat: boolean;
-  height: string;
-  width: string;
+  height: number;
+  width: number;
 };
  export interface tableColumns {
     caption?: string;
@@ -154,8 +154,8 @@ export interface PropertiesState {
   language_prefer?:"Eng"|"Arb";
   templateName?: string;
   pageSize?: string;
-  width?:string;
-  height?:string;
+  width?:number;
+  height?:number;
   orientation?: "portrait" | "landscape";
   // Martgins
   padding?: {
@@ -847,8 +847,8 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       templateName: "Barcode 1",
       pageSize: "A4",
       orientation:"portrait",
-      height:'300',
-      width:'300',
+      height:300,
+      width:300,
       language_prefer:"Eng",
       padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",

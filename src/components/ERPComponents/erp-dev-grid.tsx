@@ -72,7 +72,7 @@ interface ERPDevGridProps {
   onRowClick?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
-  onSelectionChanged?: () => void;
+  onSelectionChanged?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
   customToolbarItems?: ToolbarItem[];

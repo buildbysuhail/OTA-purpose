@@ -1383,6 +1383,23 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
               }}
             >
               {/* Dropdown button */}
+              {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearSelection();
+                  setIsOpen(false);
+                }}
+                className="p-1 hover:bg-gray-100 rounded-full"
+                aria-label="Clear selection"
+              >
+                <XMarkIcon
+                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
+                  aria-hidden="true"
+                />
+              </button>
+            )}
               <Combobox.Button
                 className="p-1 hover:bg-gray-100 rounded-full"
                 onClick={(e) => {

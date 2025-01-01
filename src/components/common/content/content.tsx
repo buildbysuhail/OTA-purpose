@@ -9,14 +9,13 @@ import UserActionReport from "../../../pages/settings/system/user-action-report"
 import ReportList from "../../ERPComponents/reports/reports-list";
 import AccountPayableAgingReport from "../../../pages/accounts/reports/account-payable-aging-report";
 import AccountReceivableAgingReport from "../../../pages/accounts/reports/account-receivable-aging-report";
-import TemplateDesignerLayout from "../layout/template-designer-layout";
+import TemplateDesignerLayout from "../layout/template-designer-layout"; 
 
 import LedgerReport from "../../../pages/accounts/reports/ledger-report";
 import CashBookSummary from "../../../pages/accounts/reports/cashBook/cash-book-summary";
 import DayBookDetailed from "../../../pages/accounts/reports/dayBook/day-book-detailed";
 import DayBookSummary from "../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary";
 import PaymentReport from "../../../pages/accounts/reports/payment-report";
-import CollectionReport from "../../../pages/accounts/reports/incomeexpense/income-report";
 import TransactionReport from "../../../pages/accounts/reports/transactionReport/transaction-report";
 import AccountsHistoryReport from "../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
 import DailySummary from "../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary";
@@ -248,8 +247,9 @@ import IncomeReport from "../../../pages/accounts/reports/incomeexpense/income-r
 import IncomeReportDetailed from "../../../pages/accounts/reports/incomeexpense/income-report-detailed";
 import ExpenseReport from "../../../pages/accounts/reports/incomeexpense/expense-report";
 import ExpenseReportDetailed from "../../../pages/accounts/reports/incomeexpense/expense-report-detailed";
-import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
+import CollectionReport from "../../../pages/accounts/reports/collection-report";
 import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/Cash-flow-report";
+import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
 
 const PriceList = lazy(
   () =>
@@ -524,7 +524,7 @@ const Content: FC<ContentProps> = () => {
           path="/accounts/cash_summary_ledgerwise"
           element={<CashSummaryLedgerwise />}
         />
-        <Route
+        {/* <Route
           path="/accounts/income_report"
           element={<IncomeReport/>}
         />
@@ -547,7 +547,7 @@ const Content: FC<ContentProps> = () => {
           <Route
           path="/accounts/bank_flow"
           element={<BankFlowReport />}
-        />
+        /> */}
         <Route
           path="/accounts/transaction_report"
           element={<TransactionReport />}

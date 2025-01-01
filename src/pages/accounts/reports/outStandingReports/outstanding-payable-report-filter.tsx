@@ -36,7 +36,7 @@ const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange }: an
       <div className="flex items-center gap-2">
         <ERPDataCombobox
           {...getFieldProps("routeID")}
-          label={t("cost_centre")}
+          label={t("sales_route")}
           field={{
             id: "routeID",
             getListUrl: Urls.data_salesRoute,

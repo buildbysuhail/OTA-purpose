@@ -21,6 +21,7 @@ import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
 import dxDataGrid from "devextreme/ui/data_grid";
+import moment from "moment";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
@@ -838,8 +839,15 @@ const onCellPrepared = useCallback((e: any) => {
   );
 };
 const _DrillDownCellTemplate = ({ data }: { data: any }) => {
-  
-  if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
+  if (
+    data.value !== undefined &&
+    data.value !== null &&
+    data.value !== '' &&
+    data.value !== 0
+  ) {
+    debugger;
+    console.log(data.column.dataType);
+
     return (
       <a
         href="#"
@@ -849,7 +857,9 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
           // Handle drill-down logic here
         }}
       >
-        {data.value.toString()}
+        {data.column.dataType === "date"
+          ? moment(data.value, "DD-MM-YYYY").format("DD/MMM/YYYY") // Change this format as needed
+          : data.value.toString()}
       </a>
     );
   }

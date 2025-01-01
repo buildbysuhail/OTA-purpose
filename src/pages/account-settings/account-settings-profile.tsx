@@ -21,7 +21,6 @@ import {
 } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
-import { postAction } from "../../redux/slices/app-thunks";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
@@ -84,10 +83,9 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const changePhone = useCallback(async () => {
     debugger;
     setPhoneChangeLoading(true);
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({ apiUrl: Urls.changePhone, data: { phone: phone } }) as any
-    ).unwrap();
-
+    const response: ResponseModelWithValidation<any, any> = await api.postAsync(Urls.changePhone,{ phone: phone }) ;
+    setPhone(phone);
+    set_Phone(phone);
     setPhoneChangeLoading(false);
     handleResponse(response);
   }, [dispatch, phone]);

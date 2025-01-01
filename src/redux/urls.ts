@@ -269,6 +269,10 @@ const Urls = {
   acc_reports_profit_and_loss_detailed: "/Accounts/RptReports/ProfitAndLossDetailed/",
   acc_reports_account_ledger_balance_view_sub_group_inc: "/Accounts/RptReports/AccountLedgerBalanceViewSubGroupIncluded/",
   acc_reports_closing_stock_details: "/Accounts/RptReports/ClosingStockDetails/",
+  acc_reports_income_expense_report: "/Accounts/RptIncomeExpense/Expense/",
+  acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
+  acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
+  acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
 
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
@@ -285,7 +289,7 @@ inv_reports_stock_flow:"",
 
   // Transaction
   
-  acc_transaction_base: "/api/Accounts/",
+  acc_transaction_base: "/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
   acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
 
@@ -329,6 +333,7 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
+    partiesBankNames:"/Core/SelectPartiesBankNames"
 
 };
 

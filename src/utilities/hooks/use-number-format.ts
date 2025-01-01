@@ -19,7 +19,7 @@ export const useNumberFormat = () => {
     (state: RootState) => state.ClientSession
   );
   function getNumericFormat(): string {
-    const decimalPoint = applicationSettings.mainSettings.decimalPoints;
+    const decimalPoint = applicationSettings.mainSettings?.decimalPoints;
   
     switch (decimalPoint) {
       case 0:
@@ -52,7 +52,7 @@ export const useNumberFormat = () => {
     {
       return '';
     }
-    const decimalPoint = applicationSettings.mainSettings.decimalPoints;
+    const decimalPoint = applicationSettings.mainSettings?.decimalPoints;
     let formattedText: string = val.toLocaleString(undefined, {
       minimumFractionDigits: decimalPoint,
       maximumFractionDigits: decimalPoint,

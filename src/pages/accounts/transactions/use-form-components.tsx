@@ -16,7 +16,7 @@ const useFormComponent = () => {
   const bankAccountField = useMemo(() => ({
     valueKey: "id",
     labelKey: "name",
-    getListUrl: Urls.data_BankAccounts,
+    getListUrl: Urls.partiesBankNames,
     params: bankAccountParams,
   }), [bankAccountParams]);
 

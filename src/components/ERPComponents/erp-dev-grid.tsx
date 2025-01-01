@@ -21,6 +21,10 @@ import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
 import dxDataGrid from "devextreme/ui/data_grid";
+import ERPAlert from "./erp-sweet-alert";
+import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/stock-ledger/stock-ledger-report-filter";
+import ERPToast from "./erp-toast";
+import moment from "moment";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
@@ -72,7 +76,7 @@ interface ERPDevGridProps {
   onRowClick?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
-  onSelectionChanged?: () => void;
+  onSelectionChanged?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
   customToolbarItems?: ToolbarItem[];
@@ -192,7 +196,10 @@ const createStore = async (
             ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
-            
+            if(result != undefined 
+              &&  result.isOk != undefined && result.isOk == false ){
+                ERPToast.show(result.message,"error");
+              }
 
         return result != undefined 
                             ?  result.isOk != undefined && result.isOk == false 
@@ -838,8 +845,15 @@ const onCellPrepared = useCallback((e: any) => {
   );
 };
 const _DrillDownCellTemplate = ({ data }: { data: any }) => {
-  
-  if (data.value != undefined  && data.value != null && data.value != '' && data.value != 0) {
+  if (
+    data.value !== undefined &&
+    data.value !== null &&
+    data.value !== '' &&
+    data.value !== 0
+  ) {
+    debugger;
+    console.log(data.column.dataType);
+
     return (
       <a
         href="#"
@@ -849,7 +863,9 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
           // Handle drill-down logic here
         }}
       >
-        {data.value.toString()}
+        {data.column.dataType === "date"
+          ? moment(data.value, "DD-MM-YYYY").format("DD/MMM/YYYY") // Change this format as needed
+          : data.value.toString()}
       </a>
     );
   }

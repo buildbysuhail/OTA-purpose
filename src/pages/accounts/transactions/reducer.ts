@@ -7,6 +7,8 @@ import {
   AccTransactionMaster,
   AccTransactionRowInitialData,
   accTransactionInitialData,
+  initialFormElements,
+  FormElementState,
 } from "./acc-transaction-types";
 import { useAccTransaction } from "./use-acc-transaction";
 import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
@@ -14,8 +16,9 @@ import VoucherType from "../../../enums/voucher-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { UserModel } from "../../../redux/slices/user-session/reducer";
-import { UserAction } from "../../../helpers/user-right-helper";
+import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
+import { calculateTotal, clearEntryControl } from "./functions";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -86,21 +89,20 @@ const accTransactionSlice = createSlice({
         state.userConfig.presetCostenterId > 0
           ? state.userConfig.presetCostenterId
           : 0;
-      // {
-      //   if (userSession.presetCostCenterId > 0)
-      //     cbEmployee.SelectedValue =
-      //       PolosysFrameWork.General.EMPLOYEEID.ToString();
-      // }
-      // if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
-      //   cbCostCentre.SelectedValue =
-      //     PolosysFrameWork.General.PRESET_COSTCENTER_ID;
-      //   cbCostCentre.Enabled = false;
-      // } else {
-      //   if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
-      //     cbCostCentre.SelectedIndex = -1;
-      //     cbCostCentre.SelectedValue = 0;
-      //   }
-      // }
+      {
+        if (userSession.employeeId > 0)
+          state.transaction.master.employeeId =
+            userSession.employeeId;
+      }
+      if (state.userConfig.presetCostenterId > 0) {
+        state.row.costCentreId =
+        state.userConfig.presetCostenterId;
+        state.formElements.costCentreId.disabled = true;
+      } else {
+        if (userSession.dbIdValue == "SAMAPLASTICS") {
+          state.row.costCentreId = 0;
+        }
+      }
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (
@@ -210,40 +212,9 @@ const accTransactionSlice = createSlice({
       };
       state.transaction.details.push(serializedRow);
 
-      state.row.ledgerCode = "";
-      state.row.groupName = "";
-      state.row.ledgerId = 0;
-      state.row.amount = 0;
-      state.row.discount = 0;
-      (state.row.bankName = ""),
-        (state.previousNarration = state.row.narration),
-        (state.row.narration =
-          state.transaction.master.voucherType == VoucherType.JournalVoucher
-            ? state.userConfig.keepNarrationForJV != true
-              ? ""
-              : state.row.narration
-            : "");
-      state.row.chequeNumber = "";
-      state.isRowEdit = false;
-      state.row.costCentreId =
-        state.userConfig.presetCostenterId > 0
-          ? state.userConfig.presetCostenterId
-          : action.payload.applicationSettings.accountsSettings
-              .defaultCostCenterID;
-              
-      state.transaction.master.totalAmount =
-      state.transaction.master.voucherType !== "MJV"
-              ? state.transaction.details.reduce(
-                  (sum, detail) => sum + (Number(detail.amount) || 0),
-                  0
-                )
-              : state.transaction.details.reduce(
-                  (sum, detail) => sum + (Number(detail.debit) || 0),
-                  0
-                );
-      localStorage.setItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
-        JSON.stringify(state.transaction.details)
+      state = clearEntryControl(
+        state,
+        action.payload.applicationSettings.accountsSettings.defaultCostCenterID
       );
       state.row.BillwiseDetails = "";
     },
@@ -267,10 +238,20 @@ const accTransactionSlice = createSlice({
     // Remove a specific row from the transaction details by index
     accFormStateTransactionDetailsRowRemove: (
       state,
-      action: PayloadAction<number>
+      action: PayloadAction<{
+        index: number;
+        applicationSettings: ApplicationSettingsType;
+      }>
     ) => {
-      const index = action.payload;
+      const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
+        state.transaction.master.totalAmount = calculateTotal(state);
+        state = clearEntryControl(
+          state,
+          action.payload.applicationSettings.accountsSettings
+            .defaultCostCenterID
+        );
+        state.previousNarration = "";
         state.transaction.details.splice(index, 1);
       }
     },
@@ -307,6 +288,60 @@ const accTransactionSlice = createSlice({
     // Clear the form state to initial values
     accFormStateReset: () => {
       return accTransactionFormStateInitialData;
+    },
+    setUserRight: (
+      state,
+      action: PayloadAction<{ userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean }>
+    ) => {
+      debugger;
+      const { userSession, hasRight } = action.payload;
+
+      const isClosed = userSession.financialYearStatus === "Closed";
+
+      state.formElements.btnSave.visible = !isClosed
+        ? hasRight(state.formCode, UserAction.Add) &&
+          (state?.transaction?.details?.length ?? 0) > 0
+        : false;
+
+      state.formElements.btnEdit.visible = !isClosed
+        ? hasRight(state.formCode, UserAction.Edit)
+        : false;
+
+      state.formElements.btnDelete.visible = !isClosed
+        ? hasRight(state.formCode, UserAction.Delete)
+        : false;
+
+      state.formElements.btnPrint.visible = !isClosed
+        ? hasRight(state.formCode, UserAction.Print)
+        : false;
+    },
+    updateFormElement: (
+      state,
+      action: PayloadAction<{
+        fields: Partial<Record<keyof AccTransactionFormState['formElements'], Partial<FormElementState>>>;
+      }>
+    ) => {
+      const { fields } = action.payload;
+
+      // Iterate over the keys of fields and apply updates
+      Object.entries(fields).forEach(([key, updates]) => {
+        if (key in state.formElements) {
+          state.formElements[key as keyof AccTransactionFormState['formElements']] = {
+            ...state.formElements[key as keyof AccTransactionFormState['formElements']],
+            ...updates,
+          };
+        } else {
+          console.warn(`Field ${key} does not exist in formElements.`);
+        }
+      });
+    },
+    enableControls: (state) => {
+      state.formElements.pnlMasters.disabled = false;
+      state.formElements.dxGrid.disabled = false;
+    },
+    disableControls: (state) => {
+      state.formElements.pnlMasters.disabled = true;
+      state.formElements.dxGrid.disabled = true;
     },
   },
   extraReducers: (builder) => {
@@ -439,6 +474,17 @@ export const {
   accFormStateReset,
   accFormStateClearRowForNew,
   clearState,
-} = accTransactionSlice.actions;
+  enableControls,
+  setUserRight,
+  disableControls,
+  updateFormElement
 
+} = accTransactionSlice.actions;
+interface FormElementsState {
+  formElements: {
+    [key: string]: {
+      [field: string]: any; // Allow flexible nested structure
+    };
+  };
+}
 export default accTransactionSlice.reducer;

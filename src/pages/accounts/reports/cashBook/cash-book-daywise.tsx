@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -103,6 +103,16 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
       ),
     },
   ];
+  const [gridHeight, setGridHeight] = useState<number>(() => {
+    debugger;
+    const modals = document.querySelectorAll('.erp-modal-opened');
+    if (modals.length > 0) {
+      const latestModal = modals[modals.length - 1] as HTMLElement;
+      return (window.innerHeight - latestModal.offsetHeight) + 200;
+    } else {
+      return window.innerHeight - 400;
+    }
+  });
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -111,7 +121,7 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  heightToAdjustOnWindows={100}
                   showSerialNo={true}
                   columns={columns}
                   gridHeader={t("cash_book_daywise")}
@@ -125,7 +135,7 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
                   childPopupProps={{
                     content: <CashBookDetailed />,
                     title: t("cash_book_detailed"),
-                    isForm: true,
+                    isForm: false,
                     width: "mw-100",
                     drillDownCells: "transactionDate",
                     bodyProps: "transactionDate,year,monthNum,ledgerID",

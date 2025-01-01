@@ -53,7 +53,7 @@ const ERPModal = React.memo(
     submitTitle,
     onSubmit,
     isForm = false,
-    isButton = true,
+    isButton = false,
     isMaximize = true,
     onSubmitModel,
     hasSubmit = true,
@@ -158,7 +158,7 @@ const ERPModal = React.memo(
                   <DialogPanel
                     // className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
-                    className={`transform bg-white text-left align-middle shadow-xl transition-all ${
+                    className={`erp-modal${isOpen ? '-opened': 'closed'} transform bg-white text-left align-middle shadow-xl transition-all ${
                       isMaximized
                         ? "w-full h-full rounded-md"
                         : `min-h-full max-h-screen ${width} rounded-md`

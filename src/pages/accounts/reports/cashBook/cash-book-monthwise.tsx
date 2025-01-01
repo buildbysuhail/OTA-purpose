@@ -150,7 +150,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
                   childPopupProps={{
                     content: <CashBookDayWise />,
                     title: t("cash_book_daywise"),
-                    isForm: true,
+                    isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
                     bodyProps: "year,monthNum,ledgerID,asonDate",

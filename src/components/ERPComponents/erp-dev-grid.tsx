@@ -21,6 +21,9 @@ import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
 import dxDataGrid from "devextreme/ui/data_grid";
+import ERPAlert from "./erp-sweet-alert";
+import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/stock-ledger/stock-ledger-report-filter";
+import ERPToast from "./erp-toast";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
@@ -192,7 +195,10 @@ const createStore = async (
             ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
             : null;
 
-            
+            if(result != undefined 
+              &&  result.isOk != undefined && result.isOk == false ){
+                ERPToast.show(result.message,"error");
+              }
 
         return result != undefined 
                             ?  result.isOk != undefined && result.isOk == false 

@@ -219,7 +219,8 @@ const Templates = ({ }) => {
                               <PencilIcon
                                 title={t("edit")}
                                 className="w-3 text-accent cursor-pointer"
-                                onClick={() => navigate(`/label-designer/${temp?.id}`)}
+                                onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
+                                // onClick={() => navigate(`/label-designer/${temp?.id}`)}
                               />
                             </div>
                             <div>

@@ -377,9 +377,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             accFormStateHandleFieldChange({
               fields: {
                 masterAccountID:
-                  userSession.counterwiseCashLedgerId > 0 &&
+                  userSession?.counterwiseCashLedgerId > 0 &&
                   applicationSettings.accountsSettings?.allowSalesCounter
-                    ? userSession.counterwiseCashLedgerId
+                    ? userSession?.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings?.defaultCashAcc,
               },
             })

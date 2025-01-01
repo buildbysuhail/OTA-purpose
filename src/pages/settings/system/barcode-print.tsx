@@ -14,7 +14,7 @@ import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import SystemSettingsApi from "./system-apis";
-import DownloadPreview from "../../LabelDesigner/download-preview";
+import DownloadBarcodePreview from "../../LabelDesigner/download-preview-barcode";
 import { APIClient } from "../../../helpers/api-client";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 
@@ -735,7 +735,7 @@ const BarcodePrint: React.FC = () => {
           closeModal={() => {
             setShowPrint(false);
           }}
-          content={<DownloadPreview template={template} data={data}/>}>
+          content={<DownloadBarcodePreview template={template} data={data}/>}>
         </ERPModal>
       }
     </Fragment>

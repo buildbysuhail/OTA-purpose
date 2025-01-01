@@ -264,8 +264,8 @@ useEffect (() => {
         ...prevData,
         propertiesState: {
           ...prevData.propertiesState,
-          width: size.width.toString(),
-          height: size.height.toString(),
+          width: size.width,
+          height: size.height,
         },
       };
       return updated;
@@ -430,8 +430,8 @@ useEffect (() => {
           areaProps:{
             bgColor: "#FFFFFF",
             isRepeat:true,
-            width:"300",
-            height:"300",
+            width:300,
+            height:300,
           }
         };
 
@@ -813,6 +813,8 @@ useEffect (() => {
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
     ) {
+      console.log(component);
+      
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
         canvasElement.height = pxToPoint(component.height);
@@ -1311,6 +1313,7 @@ useEffect (() => {
             style={{
               ...style,
               width: `${component.areaProps?.width??500}pt`,
+              overflow:"hidden",
               height: `${component.areaProps?.height??500}pt`,
               backgroundColor: `${component.areaProps?.bgColor??"white"}`,
           }}
@@ -1332,7 +1335,6 @@ useEffect (() => {
   return (
     <div
     className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : "dir-rtl"}`}
-     
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -1434,14 +1436,14 @@ useEffect (() => {
                   (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
                 : templateData?.propertiesState?.pageSize !== "Custom"
                 ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
-                :"auto",
+                :"",
             maxHeight:
               templateGroup === "barcode"
                 ? (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
                   (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
                 : templateData?.propertiesState?.pageSize !== "Custom"
                 ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
-                :`auto` ,
+                :`` ,
           }}
         >
           {templateGroup === "barcode" ? (
@@ -1631,10 +1633,13 @@ useEffect (() => {
                                valueKey: "value",
                                labelKey: "label",
                              }}
-                             options={fields?.map((field, index) => ({
-                               value: field,
-                               label: field,
-                             }))}
+                             options={fields.map((field) => ({
+                            value: field
+                              .replace(/[\[\]]/g, "") // Remove square brackets
+                              .replace(/([-_\s][a-z])/gi, (match) => match.toUpperCase().replace(/[-_\s]/g, "")) // Convert to camelCase
+                              .replace(/^[A-Z]/, (match) => match.toLowerCase()), // Ensure the first character is lowercase
+                            label: field.replace(/[\[\]]/g, ""), // Remove square brackets for the label
+                          }))}
                              onChangeData={(data) =>
                                handlePropertyChange("content", data.content)
                              }
@@ -2128,7 +2133,7 @@ useEffect (() => {
                             onChange={(e) =>
                               handlePropertyChange(
                                 "height",
-                                e.target.valueAsNumber
+                                parseInt(e.target.value, 10)
                               )
                             }
                             min={10}
@@ -2167,11 +2172,10 @@ useEffect (() => {
                             value={selectedComponent.areaProps?.height}
                             onChange={(e) =>
                               handleAreaPropertyChange(
-                                "height",
-                                e.target.valueAsNumber
+                                "height", parseInt(e.target.value, 10)
                               )
                             }
-                            min={100}
+                            min={10}
                             max={1400}
                           />
                         </Box>
@@ -2207,7 +2211,7 @@ useEffect (() => {
                                 e.target.valueAsNumber
                               )
                             }
-                            min={100}
+                            min={10}
                             max={1400}
                           />
                         </Box>
@@ -3033,7 +3037,7 @@ useEffect (() => {
                         onChange={(e) => {
                           handlePagePropsChange(
                             "width",
-                             String(parseInt(e.target.value,10))
+                             parseInt(e.target.value,10)
                           );
                         }}
                       />
@@ -3046,7 +3050,7 @@ useEffect (() => {
                         onChange={(e) =>
                           handlePagePropsChange(
                             "height",
-                             String(parseInt(e.target.value,10))
+                             parseInt(e.target.value,10)
                           )
                         }
                       />

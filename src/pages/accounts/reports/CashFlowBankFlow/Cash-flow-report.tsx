@@ -21,7 +21,7 @@ const CashFlowReport = () => {
       caption: t('year'),
       dataType: "number",
       allowSearch: true,
-      allowFiltering: true,
+      allowFiltering: true, 
       width: 80,
     },
     {

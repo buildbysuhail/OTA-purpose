@@ -27,6 +27,7 @@ import {
 } from "../../../utilities/hooks/useAppDispatch";
 import LanguageSwitcher from "./language-switcher";
 import { useSelector } from "react-redux";
+import * as switcherdata from "../switcher/switcherdata/switcherdata";
 
 interface HeaderProps {}
 
@@ -49,7 +50,7 @@ const Header: FC<HeaderProps> = () => {
     }
   };
   let userSession = useAppSelector((state: RootState) => state.UserSession);
-  
+
   let userBranches = useAppSelector((state: RootState) => state.UserBranches);
 
   const handleFullscreenChange = () => {
@@ -625,6 +626,47 @@ const Header: FC<HeaderProps> = () => {
 
                   </div>
               </div> */}
+              <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
+                <div className="">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="theme-style"
+                      className="ti-form-radio"
+                      id="switcher-light-theme"
+                      checked={appState.mode === "light"}
+                      onChange={() => {
+                        switcherdata.Light(updateAppState, appState);
+                      }}
+                    />
+
+                    <label
+                      htmlFor="switcher-light-theme"
+                      className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                    >
+                      Light
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="theme-style"
+                      className="ti-form-radio"
+                      id="switcher-dark-theme"
+                      checked={appState.mode === "dark"}
+                      onChange={() => {
+                        switcherdata.Dark(updateAppState, appState);
+                      }}
+                    />
+                    <label
+                      htmlFor="switcher-dark-theme"
+                      className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                    >
+                      Dark
+                    </label>
+                  </div>
+                </div>
+              </div>
               <LanguageSwitcher></LanguageSwitcher>
               <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown  [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
@@ -750,7 +792,7 @@ const Header: FC<HeaderProps> = () => {
                   aria-label="settings"
                   className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                 >
-                    <i className="bx bx-cog full-screen-close text-[1.125rem] header-link-icon"></i>
+                  <i className="bx bx-cog full-screen-close text-[1.125rem] header-link-icon"></i>
                 </Link>
               </div>
               {/* <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">

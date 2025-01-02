@@ -335,5 +335,6 @@
     "opening_stock_report": "تقرير المخزون الافتتاحي",
 
     "debitTransaction": "التحويلات المدينة",
-    "creditTransaction": "التحويلات الدائنة"
+    "creditTransaction": "التحويلات الدائنة",
+    "excludeZeroBalance": "استثناء الرصيد الصفري"
 }

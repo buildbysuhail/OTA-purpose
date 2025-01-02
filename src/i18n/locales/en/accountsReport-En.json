@@ -290,6 +290,7 @@
     "vat_number": "VAT Number",
     "specification": "Specification",
     "counter_name": "Counter Name",
+    "shift":"Shift",
     "scheme_disc": "Scheme Disc",
     "excise_tax": "Excise Tax",
     "purchase_register_report": "Purchase Register Report",

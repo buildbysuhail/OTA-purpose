@@ -67,7 +67,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
+        onSelectItem={(data) => handleFieldChange({ledgerID: data.value, ledgerName: data.label})}
       />
 
       {/* Related Ledger Section */}

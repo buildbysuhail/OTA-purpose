@@ -157,6 +157,8 @@ const createStore = async (
   initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
   paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
   bodyProps?: any,
+  setFilterValidations?: any,
+  setShowFilter?: any
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -190,6 +192,7 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
 
       try {
+        setFilterValidations(undefined)
         const result = method === ActionType.GET
           ? await api.get(dataUrl, queryString)
           : method === ActionType.POST
@@ -200,7 +203,15 @@ const createStore = async (
               &&  result.isOk != undefined && result.isOk == false ){
                 ERPToast.show(result.message,"error");
               }
-
+              
+        debugger;
+if(result != undefined &&  result.isOk != undefined && result.isOk == false) {
+  setFilterValidations(result.validations)
+  setShowFilter(true);
+}
+else {
+  setFilterValidations(undefined)
+}
         return result != undefined 
                             ?  result.isOk != undefined && result.isOk == false 
                                 ? {
@@ -349,6 +360,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [preferences, setPreferences] = useState<GridPreference>();
   const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
   const [filter, setFilter] = useState<any>({});
+  const [filterValidations, setFilterValidations] = useState<any>({});
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any, key?: string }>({ isOpen: false, props: {}, key:"" });
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -446,7 +458,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           filter,
           initialFilters,
           paramNames,
-          bodyProps
+          bodyProps,
+          setFilterValidations,
+          setShowFilter
         );
         setCurrentStore(newStore);
         setStore(newStore);
@@ -735,6 +749,7 @@ const onCellPrepared = useCallback((e: any) => {
                 <ErpGridGlobalFilter
                   width={filterWidth}
                   gridId={gridId}
+                  validations= {filterValidations}
                   initialData={filter}
                   content={
                     filterContent

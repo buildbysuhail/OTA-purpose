@@ -22,10 +22,20 @@ import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
 import { Background } from "devextreme-react/cjs/range-selector";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation, }: { validation?: string; }) => validation != undefined && validation != null && validation != "" ? (<div className="text-red text-xs">{validation}</div>) : (null);
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "color">;
+
+
+interface Option {
+  value: string;
+  label: string;
+  is_active?: boolean;
+}
+
+
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
   data?: any;
@@ -47,6 +57,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   info?: string;
   type?: string;
   autocomplete?: string;
+  initialValue?: any;
   disabled?: boolean;
   labelClassName?: string;
   className?: string;
@@ -80,6 +91,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       type = "text",
       customSize,
       autocomplete = "off",
+      initialValue,
       label,
       placeholder,
       disabled,
@@ -125,6 +137,168 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
+    const [initial, setInitial] = useState<Option | null>(initialValue);
+    
+
+    // useEffect(() => {
+    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+    //     if (event.key === 'ArrowUp') {
+    //       console.log('Keyboard Arrow Up');
+    //     } else if (event.key === 'ArrowDown') {
+    //       console.log('Keyboard Arrow Down');
+    //     }
+    //   };
+  
+    //   interface WheelEvent {
+    //     deltaY: number;
+    //   }
+
+    //   const handleWheel = (event: WheelEvent) => {
+    //     if (event.deltaY < 0) {
+    //       console.log('Mouse Scroll Up');
+    //     } else if (event.deltaY > 0) {
+    //       console.log('Mouse Scroll Down');
+    //     }
+    //   };
+  
+    //   window.addEventListener('keydown', handleKeyDown);
+    //   window.addEventListener('wheel', handleWheel);
+  
+    //   return () => {
+    //     window.removeEventListener('keydown', handleKeyDown);
+    //     window.removeEventListener('wheel', handleWheel);
+    //   };
+    // }, []);
+
+    // useEffect(() => {
+    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+    //     if (event.key === 'ArrowUp') {
+    //       console.log('Keyboard Arrow Up');
+    //     } else if (event.key === 'ArrowDown') {
+    //       console.log('Keyboard Arrow Down');
+    //     }
+    //   };
+  
+    //   const handleWheel = (event: WheelEvent) => {
+    //     if (event.deltaY < 0) {
+    //       console.log('Mouse Scroll Up');
+    //     } else if (event.deltaY > 0) {
+    //       console.log('Mouse Scroll Down');
+    //     }
+    //   };
+  
+    //   window.addEventListener('keydown', handleKeyDown);
+    //   window.addEventListener('wheel', handleWheel);
+  
+    //   return () => {
+    //     window.removeEventListener('keydown', handleKeyDown);
+    //     window.removeEventListener('wheel', handleWheel);
+    //   };
+    // }, []);
+
+    // useEffect(() => {
+    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+    //     if (event.key === 'ArrowUp') {
+    //       console.log('Keyboard Arrow Up');
+    //     } else if (event.key === 'ArrowDown') {
+    //       console.log('Keyboard Arrow Down');
+    //     }
+    //   };
+
+    //   const handleWheel = (event: WheelEvent) => {
+    //     if (event.deltaY < 0) {
+    //       console.log('Mouse Scroll Up');
+    //     } else if (event.deltaY > 0) {
+    //       console.log('Mouse Scroll Down');
+    //     }
+    //   };
+
+    //   document.addEventListener('keydown', handleKeyDown);
+    //   document.addEventListener('wheel', handleWheel, { passive: false });
+
+    //   return () => {
+    //     document.removeEventListener('keydown', handleKeyDown);
+    //     document.removeEventListener('wheel', handleWheel);
+    //   };
+    // }, []);
+
+    
+
+     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+      const ds = min != undefined ? parseFloat(min.toString()) : undefined;
+      const sd = parseFloat(e.target?.value);
+      if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
+        return false;
+      }
+      onChangeData &&
+        data &&
+        onChangeData(setNestedValue(data, id, e.target?.value));
+      onChange && onChange(e);
+    };
+    
+
+    useEffect(() => {
+      // const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      //   if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      //     event.preventDefault();
+      //     const delta = event.key === 'ArrowUp' ? 1 : -1;
+      //     const currentValue = parseFloat(value as string) || 0;
+      //     const newValue = currentValue + delta * (step ? parseFloat(step.toString()) : 1);
+
+      //     if ((min === undefined || newValue >= parseFloat(min.toString())) &&
+      //       (max === undefined || newValue <= parseFloat(max.toString()))) {
+      //       const changeEvent = {
+      //         target: { value: newValue.toString() }
+      //       } as React.ChangeEvent<HTMLInputElement>;
+      //       handleChange(changeEvent);
+      //     }
+
+      //     console.log(event.key === 'ArrowUp' ? 'Keyboard Arrow Up' : 'Keyboard Arrow Down');
+      //   }
+      // };
+
+      const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+        if (event.key === 'ArrowUp') {
+          console.log('Keyboard Arrow Up');
+        } else if (event.key === 'ArrowDown') {
+          console.log('Keyboard Arrow Down');
+        }
+      };
+
+      const handleWheel = (event: WheelEvent) => {
+        if (type === 'number') {
+          event.preventDefault();
+          const delta = event.deltaY < 0 ? 1 : -1;
+          const currentValue = parseFloat(value as string) || 0;
+          const newValue = currentValue + delta * (step ? parseFloat(step.toString()) : 1);
+
+          if ((min === undefined || newValue >= parseFloat(min.toString())) &&
+            (max === undefined || newValue <= parseFloat(max.toString()))) {
+            const changeEvent = {
+              target: { value: newValue.toString() }
+            } as React.ChangeEvent<HTMLInputElement>;
+            handleChange(changeEvent);
+          }
+
+          console.log(event.deltaY < 0 ? 'Mouse Scroll Up' : 'Mouse Scroll Down');
+        }
+      };
+
+      const inputElement = document.getElementById(id);
+      if (inputElement) {
+        inputElement.addEventListener('wheel', handleWheel, { passive: false });
+      }
+
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        if (inputElement) {
+          inputElement.removeEventListener('wheel', handleWheel);
+        }
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [id, value, min, max, step, handleChange]);
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -399,18 +573,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     };
     const sizeStyles = getSizeStyles();
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
-      const ds = min != undefined ? parseFloat(min.toString()) : undefined;
-      const sd = parseFloat(e.target?.value);
-      if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
-        return false;
-      }
-      onChangeData &&
-        data &&
-        onChangeData(setNestedValue(data, id, e.target?.value));
-      onChange && onChange(e);
-    };
+    //   const ds = min != undefined ? parseFloat(min.toString()) : undefined;
+    //   const sd = parseFloat(e.target?.value);
+    //   if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
+    //     return false;
+    //   }
+    //   onChangeData &&
+    //     data &&
+    //     onChangeData(setNestedValue(data, id, e.target?.value));
+    //   onChange && onChange(e);
+    // };
     const commonProps = {
       id,
       name: id,
@@ -522,7 +696,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {prefix}
               </div>
             )}
-            <div className="flex-1">
+            {/* <div className="flex-1">
               <input
 
 
@@ -566,7 +740,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     }),
                   } as React.CSSProperties
                 }
-                className={`form-control ${inputClassName}  placeholder:capitalize`}
+                className={`form-control ${inputClassName}  placeholder:capitalize  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                 onWheel={(e: any) => { type === "number" && e?.target?.blur(); }}
                 maxLength={maxLength}
                 min={min}
@@ -579,6 +753,222 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 data-jump-to={jumpTo}
                 data-jump-target={jumpTarget}
               />
+              <div className="relative h-full w-full">
+                <div className="absolute right-0 top-0 h-full flex flex-col">
+                  <button
+                    className="h-1/2 px-2 py-0 text-gray-600 hover:bg-gray-100 focus:outline-none"
+                    // onClick={handleUpClick}
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    className="h-1/2 px-2 py-0 text-gray-600 hover:bg-gray-100 focus:outline-none"
+                    // onClick={handleDownClick}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div> */}
+            <div className="relative flex-1">
+            <input
+              {...commonProps}
+              placeholder={iPlaceholder}
+              ref={ref}
+              autoComplete={autocomplete}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onFocus={(e) => {
+                setIsFocused(true);
+                onFocus && onFocus(e);
+              }}
+              onBlur={(e) => {
+                setIsFocused(false);
+                onBlur && onBlur(e);
+              }}
+              style={{
+                height,
+                fontSize,
+                fontWeight,
+                color,
+                borderColor: borderStyles,
+                // "--tw-ring-shadow": "none",
+                outline: "none",
+                transition: "border-color 0.2s ease-in-out",
+                borderTopLeftRadius: `${!prefix ? appState?.inputBox?.borderRadius : 0}px`,
+                borderBottomLeftRadius: `${!prefix ? appState?.inputBox?.borderRadius : 0}px`,
+                borderTopRightRadius: `${!suffix && type !== 'number' ? appState?.inputBox?.borderRadius : 0}px`,
+                borderBottomRightRadius: `${!suffix && type !== 'number' ? appState?.inputBox?.borderRadius : 0}px`,
+                backgroundColor: bgColor,
+                paddingRight: type === 'number' ? '2rem' : undefined,
+                ...(!prefix && !suffix && {
+                  borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
+                }),
+              }}
+              className={`form-control ${inputClassName} placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+              // onWheel={(e) => { type === "number" && (e.target as HTMLInputElement)?.blur(); }}
+              onWheel={(e) => { 
+                if (type === "number") {
+                  e.preventDefault();
+                }
+              }}
+              maxLength={maxLength}
+              min={min}
+              max={max}
+              pattern={pattern}
+              step={step}
+              accept={accept}
+              onKeyDown={handleNavigation}
+              data-skip={skip}
+              data-jump-to={jumpTo}
+              data-jump-target={jumpTarget}
+            />
+            {/* {type === 'number' && (
+              <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">
+                <button
+                  type="button"
+                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 focus:outline-none"
+                  onClick={() => {
+                    const currentValue = parseFloat(value) || 0;
+                    const newValue = currentValue + (step ? parseFloat(step) : 1);
+                    if (max === undefined || newValue <= parseFloat(max.toString())) {
+                      const event = {
+                        target: { value: newValue.toString() }
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleChange(event);
+                    }
+                  }}
+                >
+                  <ChevronUp className="h-3 w-3 text-gray-500" />
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 border-t border-gray-300 focus:outline-none"
+                  onClick={() => {
+                    const currentValue = parseFloat(value) || 0;
+                    const newValue = currentValue - (step ? parseFloat(step) : 1);
+                    if (min === undefined || newValue >= parseFloat(min.toString())) {
+                      const event = {
+                        target: { value: newValue.toString() }
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleChange(event);
+                    }
+                  }}
+                >
+                  <ChevronDown className="h-3 w-3 text-gray-500" />
+                </button>
+              </div>
+            )} */}
+
+          {type === 'number' && (
+              // <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">
+              <div
+              // className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
+              className={`absolute right-0 top-0 h-full flex flex-col border-l border-gray-300`}
+              style={{
+                background:
+                  initial?.value !== undefined &&
+                  initial?.value !== null &&
+                  initial?.value !== ""
+                    ? `rgb(${appState?.inputBox?.selectColor})`
+                    : "#f9f9f9",
+                ...(document.documentElement.dir === "rtl"
+                  ? {
+                      borderTopLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                      borderBottomLeftRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                    }
+                  : {
+                      borderTopRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                      borderBottomRightRadius: `${
+                        appState?.inputBox?.borderRadius ?? 5
+                      }px`,
+                    }),
+              }}
+            >
+                <button
+                  type="button"
+                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 focus:outline-none  "
+                  onClick={() => {
+                    const currentValue = parseFloat(value as string) || 0;
+                    const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
+                    if (max === undefined || newValue <= parseFloat(max.toString())) {
+                      const event = {
+                        target: { value: newValue.toString() }
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleChange(event);
+                      console.log('Increment clicked, new value:', newValue); // Add this line
+                    }
+                  }}
+                  style={{
+                    background:
+                     `rgb(${appState?.inputBox?.selectColor})`,
+                    ...(document.documentElement.dir === "rtl"
+                      ? {
+                          borderTopLeftRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                          // borderBottomLeftRadius: `${
+                          //   appState?.inputBox?.borderRadius ?? 5
+                          // }px`,
+                        }
+                      : {
+                          borderTopRightRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                          // borderBottomRightRadius: `${
+                          //   appState?.inputBox?.borderRadius ?? 5
+                          // }px`,
+                        }),
+                  }}
+                >
+                  <ChevronUp className="h-3 w-3  text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 border-t border-gray-300 focus:outline-none  "
+                  onClick={() => {
+                    const currentValue = parseFloat(value as string) || 0;
+                    const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
+                    if (min === undefined || newValue >= parseFloat(min.toString())) {
+                      const event = {
+                        target: { value: newValue.toString() }
+                      } as React.ChangeEvent<HTMLInputElement>;
+                      handleChange(event);
+                      console.log('Decrement clicked, new value:', newValue); // Add this line
+                    }
+                  }}
+                  style={{
+                    background:
+                     `rgb(${appState?.inputBox?.selectColor})`,
+                    ...(document.documentElement.dir === "rtl"
+                      ? {
+                          // borderTopLeftRadius: `${
+                          //   appState?.inputBox?.borderRadius ?? 5
+                          // }px`,
+                          borderBottomLeftRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                        }
+                      : {
+                          // borderTopRightRadius: `${
+                          //   appState?.inputBox?.borderRadius ?? 5
+                          // }px`,
+                          borderBottomRightRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                        }),
+                  }}
+                >
+                  <ChevronDown className="h-3 w-3  text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                </button>
+              </div>
+            )}
             </div>
             {suffix && (
               <div

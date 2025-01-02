@@ -964,15 +964,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.masterAccount?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
+                      labelInfo={
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-xs text-gray-500">
+                          Bal:{" "}
+                          {`${formState.masterBalance || "0.00"} ${
+                            formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
+                          }`}
+                        </span>
+                      </div>
+                      }
                     />
-                    <div className="flex justify-between items-center mt-1">
+                    {/* <div className="flex justify-between items-center mt-1">
                       <span className="text-xs text-gray-500">
                         Bal:{" "}
                         {`${formState.masterBalance || "0.00"} ${
                           formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
                         }`}
                       </span>
-                    </div>
+                    </div> */}
                     <div className="flex flex-wrap gap-4">
                       {formState.formElements.drCr.visible && (
                         <ERPDataCombobox
@@ -1322,15 +1332,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       formState.formElements.ledgerId?.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
+                    labelInfo={
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-xs text-gray-500">
+                          Bal:{" "}
+                          {`${formState.ledgerBalance || "0.00"} ${
+                            formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
+                          }`}
+                      </span>
+                  </div>
+                      }
                   />
-                  <div className="flex justify-between items-center mt-1">
+                  {/* <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
                       Bal:{" "}
                       {`${formState.ledgerBalance || "0.00"} ${
                         formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
                       }`}
                     </span>
-                  </div>
+                  </div> */}
                 </>
               )}
 

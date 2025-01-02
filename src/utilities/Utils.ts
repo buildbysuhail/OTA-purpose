@@ -684,14 +684,15 @@ const isLightColor = (bgColor: any) => {
   }
   return false;
 };
+
 export const mergeObjectsRemovingIdenticalKeys = <T extends object, U extends Record<string, any>>(
   obj1: T,
   obj2: U
 ): T & U => {
-
+debugger;
   // Filter out keys with identical values
   const filteredObj2 = Object.fromEntries(
-    Object.entries(obj2).filter(([key, value]) => obj1[key as keyof T] !== value)
+    obj2 !== undefined && obj2 !== null ?Object.entries(obj2).filter(([key, value]) =>key !==undefined && key !== null && obj1[key as keyof T] !== value) :obj1 !== undefined && obj1 !== null ?Object.entries(obj1):[]
   ) as Partial<U>; // Explicitly cast as Partial<U>
 
   // Merge the objects and cast to T & U

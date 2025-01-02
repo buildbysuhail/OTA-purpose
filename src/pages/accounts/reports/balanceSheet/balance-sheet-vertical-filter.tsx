@@ -4,26 +4,26 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 
-interface BalanceSheetVerticalFilterProps {
-  getFieldProps: (fieldName: string) => any;
-  handleFieldChange: (field: string | object, value?: any) => void;
-}
+// interface BalanceSheetVerticalFilterProps {
+//   getFieldProps: (fieldName: string) => any;
+//   handleFieldChange: (field: string | object, value?: any) => void;
+// }
 
-interface BalanceSheetVerticalFilterState {
-  asOnDate: Date;
-  valuationUsing: string;
-  closingStock: number;
-  showVertical: boolean;
-}
+// interface BalanceSheetVerticalFilterState {
+//   asOnDate: Date;
+//   valuationUsing: string;
+//   closingStock: number;
+// }
 
-const BalanceSheetVerticalFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
-  getFieldProps,
-  handleFieldChange,
-}) => {
-  
-  const { t } = useTranslation('accountsReport');
+// const BalanceSheetVerticalFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
+//   getFieldProps,
+//   handleFieldChange,
+// }) => {
+  const BalanceSheetVerticalFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
+    return (
+  // const { t } = useTranslation('accountsReport');
 
-  return (
+  // return (
     <div className="grid grid-cols-1 gap-4">
       <ERPDateInput
         {...getFieldProps("asOnDate")}
@@ -72,9 +72,9 @@ const BalanceSheetVerticalFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
 
 export default BalanceSheetVerticalFilter;
 
-export const BalanceSheetVerticalFilterInitialState: BalanceSheetVerticalFilterState = {
+export const BalanceSheetVerticalFilterInitialState= {
   asOnDate: new Date(),
   valuationUsing: "SPP",
-  closingStock: 0,
-  showVertical: false,
+  closingStock: 0
+  // showVertical: true,
 };

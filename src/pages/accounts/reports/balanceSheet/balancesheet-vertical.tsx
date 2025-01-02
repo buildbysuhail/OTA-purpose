@@ -11,6 +11,7 @@ import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sh
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import BalancesheetDetails from "./balancesheet-details";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
+import BalanceSheetVerticalFilter, { BalanceSheetVerticalFilterInitialState } from "./balance-sheet-vertical-filter";
 
 const BalancesheetVertical = () => {
   const [isOpenDetails, setIsOpenDetails] = useState<{
@@ -202,8 +203,8 @@ const BalancesheetVertical = () => {
                   // postData={postData}
                   enablefilter={true}
                   showFilterInitially={true}
-                  // filterContent={<BalanceSheetFilter />}
-                  filterInitialData={BalanceSheetFilterInitialState}
+                  filterContent={<BalanceSheetVerticalFilter />}
+                  filterInitialData={BalanceSheetVerticalFilterInitialState}
                   filterWidth="100"
                   reload={true}
                   hideGridAddButton={true}
@@ -245,9 +246,12 @@ const BalancesheetVertical = () => {
                       {
                         asOnDate: filter.asOnDate
                       }} />,
-                    drillDownCells: "accGroupID,ledgerID",
-                    bodyProps: "ledgerID,accGroupID",
-                    // enableFn: () => data?.status === "active", // Corrected to match expected type
+                      // content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                      drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
+                      bodyProps: dataField == "accGroupID" ?"accGroupID":"ledgerID",
+                    // drillDownCells: "accGroupID,ledgerID",
+                    // bodyProps: "ledgerID,accGroupID",
+                   // enableFn: () => dataField?.ledger === "active", // Corrected to match expected type
                   })}
 
                 // )}

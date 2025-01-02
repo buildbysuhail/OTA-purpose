@@ -72,4 +72,5 @@ export const TrialBalanceReportFilterInitialState = {
   asonDate: new Date(),
   costCentreID: 0,
   isPeriodWise: false,
+  isExcludeZeroBalance:false,
 };

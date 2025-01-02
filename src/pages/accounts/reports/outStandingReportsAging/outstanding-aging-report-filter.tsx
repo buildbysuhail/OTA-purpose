@@ -44,6 +44,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
+          
           onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
         />
         {/* As On Date */}

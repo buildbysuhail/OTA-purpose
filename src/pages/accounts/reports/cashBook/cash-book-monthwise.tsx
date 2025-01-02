@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -29,8 +29,18 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
   // const [_postData, setPostData] = useState({})
   // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
+    useEffect(() => {
+      let wh = window.innerHeight;
+      let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
+      let gridHeightWindows = wh - 100; // Assuming 100px is the height to minus for windows
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, []);
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -133,7 +143,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
                   gridHeader={t("cash_book")}

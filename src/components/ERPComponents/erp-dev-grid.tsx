@@ -131,6 +131,7 @@ interface ERPDevGridProps {
     content: any,
     drillDownCells: string,
     bodyProps?: string,
+    isMaximized?:boolean,
     enableFilter?: boolean,
     enableFn?: (data: any) => boolean
   }
@@ -340,7 +341,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     content: null,
     drillDownCells: '',
     bodyProps: '',
-    enableFilter: false,
+   
   },
   childPopupPropsDynamic
 }) => {

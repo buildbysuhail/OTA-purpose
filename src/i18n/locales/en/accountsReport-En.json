@@ -352,6 +352,7 @@
     "productId":"Product Id",
 
     "debitTransaction":"Debit Transactions",
-    "creditTransaction":"Credit Transactions"
+    "creditTransaction":"Credit Transactions",
+    "excludeZeroBalance":"Exclude Zero Balance"
 
 }

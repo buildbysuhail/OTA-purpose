@@ -3,11 +3,13 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
+import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
 
 const BankFlowReport = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +23,7 @@ const BankFlowReport = () => {
       caption: t('year'),
       dataType: "number",
       allowSearch: true,
-      allowFiltering: true,
+      allowFiltering: true, 
       width: 80,
     },
     {
@@ -44,61 +46,51 @@ const BankFlowReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {cellElement.data.month}
+        </span>) :
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      }
     },
     {
       dataField: "debit",
-      caption: t("debit"),
+      caption: t("in_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.debit}
+        {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },
     {
       dataField: "credit",
-      caption: t("credit"),
+      caption: t("out_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.credit}
+         {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
     {
       dataField: "monthBal",
-      caption: t("monthBal"),
+      caption: t("net_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={'font-bold text-red'}>
-          {cellElement.data.monthBal}
+        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : getFormattedValue(cellElement.data.monthBal)}`}
         </span>
       ),
-    },
-    {
-      dataField: "branchName",
-      caption: t("branch_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "costCentreName",
-      caption: t("cost_centre_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
     },
   ];
   return (
@@ -116,12 +108,25 @@ const BankFlowReport = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // enablefilter={true}
-                  // showFilterInitially={true}
-                  // filterContent={<IncomeReportFilter />}
-                  // filterInitialData={IncomeReportFilterInitialState}
-                  hideGridAddButton={true}
+                  remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  enablefilter={false}
+                  showFilterInitially={false}
+                  filterContent={<CashBookReportFilter />}
+                  filterInitialData={CashBookReportFilterInitialState}
                   reload={true}
+                  hideGridAddButton={true}
+                  childPopupProps={{
+                    content: <CashBankFlowDetailedReport postData={
+                      { 
+                        reportType:"Bank",
+                      }} />,
+                    title: t("Bank_flow_detailed"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "month,",
+                    bodyProps: "year,monthNum",
+                    enableFn: (data: any) => data?.month != "TOTAL"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

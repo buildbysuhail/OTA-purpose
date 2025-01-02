@@ -237,13 +237,12 @@ const BalanceSheet = () => {
                 initialData={BalanceSheetFilterInitialState}
                 content={<BalanceSheetFilter getFieldProps={function (fieldName: string) {
                   throw new Error("Function not implemented.");
-                }} handleFieldChange={function (field: string | object, value?: any): void {
+                } } handleFieldChange={function (field: string | object, value?: any): void {
                   throw new Error("Function not implemented.");
-                }} />}
+                } } />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter}
-              />
+                onClose={onCloseFilter} validations={undefined} title={"Balance sheet"}/>
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}

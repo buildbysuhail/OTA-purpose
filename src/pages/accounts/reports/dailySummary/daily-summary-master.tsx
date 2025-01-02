@@ -117,7 +117,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 value={filter.filter.counterShiftId}
                 customSize='sm'
                 data={filter.filter}
-                label={t("counter")}
+                label={t("shift")}
                 field={{
                   id: "counterShiftId",
                   getListUrl: Urls.data_costcentres,

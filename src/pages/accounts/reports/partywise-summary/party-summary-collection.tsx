@@ -160,6 +160,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                    remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_collection_report")}
                   dataUrl={Urls.acc_reports_party_summary_collections}

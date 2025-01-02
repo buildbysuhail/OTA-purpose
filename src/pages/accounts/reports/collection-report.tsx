@@ -95,6 +95,7 @@ const CollectionReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                    remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
                   gridHeader={t("collection_report")}

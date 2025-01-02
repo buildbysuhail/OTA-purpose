@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -7,45 +7,36 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import IncomeReportFilter from "./income-report-filter";
-import ExpenseReportFilter, { ExpenseReportFilterInitialState } from "./expense-report-filter";
+import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
+import CashBookDayWise from "../cashBook/cash-book-daywise";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
-const ExpenseReportDetailed = () => {
+
+interface CashFlowBankFlowDetailedProps {
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
+}
+
+const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postData, contentProps }) => {
+
+// const CashBankFlowDetailedReport = () => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<IncomeRepor>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+
+
     {
-      dataField: "slNo",
-      caption: t('sl_no'),
-      dataType: "number",
+      dataField: "transactionDate",
+      caption: t('transaction_date'),
+      dataType: "date",
       allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-    },
-    {
-      dataField: "accGroupName",
-      caption: t("acc_group_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 300,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.accGroupName}
-        </span>
-      ),
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
+      allowFiltering: true, 
+      width: 150,
     },
     {
       dataField: "vchNo",
@@ -53,21 +44,15 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-
-    {
-      dataField: "ledger",
-      caption: t("ledger"),
+      dataField: "vType",
+      caption: t("v_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
       dataField: "particulars",
@@ -75,77 +60,67 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        {`${cellElement.data?.particulars }`}
+        </span>
+      ),
     },
-
     {
       dataField: "debit",
-      caption: t("debit"),
+      caption: t("in_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-         {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },
     {
       dataField: "credit",
-      caption: t("credit"),
+      caption: t("out_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-       {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
     {
       dataField: "balance",
-      caption: t("balance"),
+      caption: t("net_flow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${"font-bold text-red"
-            }`}
-        >
-          {`${cellElement.data?.balance == null
-            ? '0'
-            : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance) + 'Cr'
-              : getFormattedValue(cellElement.data.balance) + 'Dr'}`}
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },
     {
-      dataField: "narration",
+      dataField: "remarks",
       caption: t("narration"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      width: 150,
     },
     {
       dataField: "branchName",
-      caption: t("branch_name"),
+      caption: t("branch"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "costCentreName",
-      caption: t("cost_centre_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
+      width: 150,
     },
   ];
   return (
@@ -156,19 +131,17 @@ const ExpenseReportDetailed = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  gridHeader={t("expense_report_detailed")}
-                  dataUrl={Urls.acc_reports_income_expense_report_detailed}
+                  // gridHeader={t("cash_flow_detailed_report")}
+                  dataUrl={Urls.acc_reports_cash_bank_flow_detailed }
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  enablefilter={true}
-                  showFilterInitially={true}
-                  filterContent={<ExpenseReportFilter />}
-                  filterInitialData={ExpenseReportFilterInitialState}
-                  hideGridAddButton={true}
+                postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
+                  hideGridAddButton={true}
                 ></ErpDevGrid>
               </div>
             </div>
@@ -178,4 +151,4 @@ const ExpenseReportDetailed = () => {
     </Fragment>
   );
 };
-export default ExpenseReportDetailed;
+export default CashBankFlowDetailedReport;

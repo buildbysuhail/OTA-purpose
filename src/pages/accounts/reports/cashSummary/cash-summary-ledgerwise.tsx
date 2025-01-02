@@ -84,6 +84,7 @@ const CashSummaryLedgerwise = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("cash_summary_ledgerwise")}
                   dataUrl= {Urls.acc_reports_cash_summary_ledgerwise}

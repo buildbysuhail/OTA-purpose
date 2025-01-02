@@ -242,7 +242,7 @@ const BalanceSheet = () => {
                 } } />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={undefined}              />
+                onClose={onCloseFilter} validations={undefined} title={"Balance sheet"}/>
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}

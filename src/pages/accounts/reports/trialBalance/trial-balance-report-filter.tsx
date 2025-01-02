@@ -2,9 +2,16 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
 
 
 const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const userSession = useSelector(
+    (state: RootState) => state.UserSession
+  );
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -44,6 +51,12 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
         }}
         onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
       />
+      {userSession.countryId==Countries.India &&
+      <ERPCheckbox
+      {...getFieldProps("isExcludeZeroBalance")}
+      label={t("excludeZeroBalance")}
+      onChangeData={(data) => handleFieldChange('isExcludeZeroBalance', data.isExcludeZeroBalance)}
+    />}
       {/* <ERPCheckbox
       {...getFieldProps("isPeriodWise")}
       label={t("Period_wise")}

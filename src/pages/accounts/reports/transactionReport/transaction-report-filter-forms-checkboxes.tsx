@@ -80,7 +80,7 @@ useEffect(() => {
                       id="allChecked"
                       checked={formState.allChecked}
                       data={formState}
-                      label={t("allChecked")}
+                      label={t("all")}
                       onChangeData={(data) => {
                         setFormState((prev: any) => ({
                           ...prev,
@@ -111,7 +111,7 @@ useEffect(() => {
                       id="isDr"
                       checked={formState.isDr}
                       data={formState}
-                      label={t("isDr")}
+                      label={t("debitTransaction")}
                       onChangeData={(data) => setFormState((prev: any) => ({
                         ...prev,
                         isDr: data.isDr
@@ -121,7 +121,7 @@ useEffect(() => {
                       id="isCr"
                       checked={formState.isCr}
                       data={formState}
-                      label={t("isCr")}
+                      label={t("creditTransaction")}
                       onChangeData={(data) => setFormState((prev: any) => ({
                         ...prev,
                         isCr: data.isCr

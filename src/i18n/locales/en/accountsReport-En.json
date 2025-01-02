@@ -50,6 +50,7 @@
     "payment_report": "Payment Report",
 
     "include_SI_cash_receipt_amount":"Include SI Cash Receipt Amount",
+    "billToBill":"Bill To Bill Collection",
     "collection_report": "Collection Report",
     "year": "Year",
     "ledger_id": "Ledger ID",
@@ -103,6 +104,7 @@
     "set_cost_as_avg_price":"Set cost as avg price",
     "set_cost_as_FIFO_avg_price":"Set cost as FIFO avg price",
     "include_VAT_in_profit":"Include VAT in profit",
+    "include_TAX_in_profit":"Include TAX in Profit",
     "show_fast":"Show fast",
     "consider_SE":"Consider SE",
 
@@ -288,6 +290,7 @@
     "vat_number": "VAT Number",
     "specification": "Specification",
     "counter_name": "Counter Name",
+    "shift":"Shift",
     "scheme_disc": "Scheme Disc",
     "excise_tax": "Excise Tax",
     "purchase_register_report": "Purchase Register Report",
@@ -346,6 +349,10 @@
     "productionValue":"Production Value",
     "closingStock":"Closing Stock",
     "closingValue":"Closing Value",
-    "productId":"Product Id"
+    "productId":"Product Id",
+
+    "debitTransaction":"Debit Transactions",
+    "creditTransaction":"Credit Transactions",
+    "excludeZeroBalance":"Exclude Zero Balance"
 
 }

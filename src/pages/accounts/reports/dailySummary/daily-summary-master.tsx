@@ -117,7 +117,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 value={filter.filter.counterShiftId}
                 customSize='sm'
                 data={filter.filter}
-                label={t("counter")}
+                label={t("shift")}
                 field={{
                   id: "counterShiftId",
                   getListUrl: Urls.data_costcentres,
@@ -160,7 +160,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 <Tabs value={activeTab} onChange={handleTabChange}>
                   <Tab label="Sales Report Summary" value="salesReportSummary" />
                   <Tab label="Credit Details" value="creditDetails" />
-                  <Tab label="Dedit Details" value="deditDetails" />
+                  <Tab label="Debit Details" value="debitDetails" />
                 </Tabs>
                 <div className="pt-4">
                   {activeTab === "salesReportSummary" && (

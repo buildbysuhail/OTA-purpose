@@ -16,15 +16,19 @@ import {
 import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+interface BillWisePopupProps {
+  isMaximized?: boolean; // Add isMaximized as an optional prop
+}
 
-const BillWisePopup: FC = () => {
+const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized }) => {
+  debugger;
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightWindows = wh - 370;
+    let gridHeightWindows = isMaximized ? wh - 200 : wh - 370; 
     setGridHeight(gridHeightWindows);
-  }, []);
+  }, [isMaximized]);
 
   const handleSelectionChange = (e: any) => {
     const { data } = e;

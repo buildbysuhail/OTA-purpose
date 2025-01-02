@@ -222,8 +222,7 @@ const ProfitAndLossReport = () => {
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter}
-              />
+                onClose={onCloseFilter} validations={undefined} title={"Profit and Loss"}              />
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}

@@ -16,7 +16,7 @@ interface BalanceSheetVerticalFilterState {
   showVertical: boolean;
 }
 
-const BalanceSheetFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
+const BalanceSheetVerticalFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
   getFieldProps,
   handleFieldChange,
 }) => {
@@ -70,7 +70,7 @@ const BalanceSheetFilter: React.FC<BalanceSheetVerticalFilterProps> = ({
   );
 };
 
-export default BalanceSheetFilter;
+export default BalanceSheetVerticalFilter;
 
 export const BalanceSheetVerticalFilterInitialState: BalanceSheetVerticalFilterState = {
   asOnDate: new Date(),

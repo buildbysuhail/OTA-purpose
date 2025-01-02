@@ -122,7 +122,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50 ${customPosition ? "" : "fixed inset-0"}`}
-            onClose={disableOutsideClickClose ? () => {} : handleClose}
+            onClose={disableOutsideClickClose ? () => { } : handleClose}
             style={customPosition ? customStyle : {}}
           >
             {!customPosition && (
@@ -142,9 +142,8 @@ const ERPModal = React.memo(
 
             <div className={`${customPosition ? "" : "fixed inset-0"}`}>
               <div
-                className={`flex min-h-full items-center justify-center text-center ${
-                  customPosition ? "" : "p-4"
-                }`}
+                className={`flex min-h-full items-center justify-center text-center ${customPosition ? "" : "p-4"
+                  }`}
               >
                 <TransitionChild
                   as={Fragment}
@@ -158,11 +157,10 @@ const ERPModal = React.memo(
                   <DialogPanel
                     // className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
-                    className={`erp-modal${isOpen ? '-opened': 'closed'} transform bg-white text-left align-middle shadow-xl transition-all ${
-                      isMaximized
-                        ? "w-full h-full rounded-md"
-                        : `min-h-full max-h-screen ${width} rounded-md`
-                    } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    className={`erp-modal${isOpen ? '-opened' : 'closed'} transform bg-white text-left align-middle shadow-xl transition-all ${isMaximized
+                      ? "w-full h-full rounded-md"
+                      : `min-h-full max-h-screen ${width} rounded-md`
+                      } ${isRemoveSomething ? "px-0" : "px-5"}`}
                   >
                     <DialogTitle
                       as="h3"
@@ -238,20 +236,22 @@ const ERPModal = React.memo(
                         isMaximized
                           ? "h-[calc(100vh-6rem)]"
                           : !isForm
-                          ? "max-h-[calc(100vh-15rem)]"
-                          : "max-h-[calc(100vh-15rem)]  mb-[95px]"
+                            ? "max-h-[calc(100vh-15rem)]"
+                            : "max-h-[calc(100vh-15rem)]  mb-[95px]"
                       }
                     >
                       <ERPScrollArea
-                        className={`${
-                          isMaximized ? "h-full" : "max-h-[calc(100vh-15rem)]"
-                        } overflow-y-auto pr-2`}
+                        className={`${isMaximized ? "h-full" : "max-h-[calc(100vh-15rem)]"
+                          } overflow-y-auto pr-2`}
                       >
-                        {content &&
-                          cloneElement(
-                            content,
-                            contentProps ? { contentProps: contentProps } : {}
-                          )}
+                {content &&
+                    cloneElement(
+                      content,
+                      { 
+                        contentProps: contentProps ? contentProps : {},isMaximized: isMaximized 
+                         // Pass isMaximized to the content
+                      }
+                    )}
                       </ERPScrollArea>
                       <div>{footer}</div>
                     </div>
@@ -272,7 +272,7 @@ const ERPModal = React.memo(
                           <ERPSubmitButton
                             onClick={handleSubmit}
                             className="uppercase"
-                          >
+>
                             {submitTitle || "Submit"}
                           </ERPSubmitButton>
                         )}

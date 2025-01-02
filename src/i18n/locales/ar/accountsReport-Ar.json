@@ -14,7 +14,7 @@
     "show_pending_cheques": "إظهار الشيكات المعلقة",
     "all": "الكل",
 
-     "date": "التاريخ",
+    "date": "التاريخ",
     "form": "النموذج",
     "voucher_no": "رقم القسيمة",
     "ref_no": "الرقم المرجعي",
@@ -50,6 +50,7 @@
     "payment_report": "تقرير الدفع",
 
     "include_SI_cash_receipt_amount": "تضمين مبلغ استلام النقدية لفواتير المبيعات",
+    "billToBill": "جمع من فاتورة إلى فاتورة",
     "collection_report": "تقرير التحصيل",
     "year": "السنة",
     "ledger_id": "معرف دفتر الأستاذ",
@@ -103,6 +104,7 @@
     "set_cost_as_avg_price": "تعيين التكلفة كمتوسط السعر",
     "set_cost_as_FIFO_avg_price": "تعيين التكلفة كمتوسط سعر FIFO",
     "include_VAT_in_profit": "شمل ضريبة القيمة المضافة في الربح",
+    "include_TAX_in_profit": "شمل الضريبة في الربح",
     "show_fast": "عرض سريع",
     "consider_SE": "النظر في SE",
 
@@ -288,6 +290,7 @@
     "vat_number": "رقم ضريبة القيمة المضافة",
     "specification": "المواصفات",
     "counter_name": "اسم الكاونتر",
+    "shift": "الوردية",
     "scheme_disc": "خصم المخطط",
     "excise_tax": "ضريبة الإنتاج",
     "purchase_register_report": "تقرير سجل الشراء",
@@ -329,5 +332,9 @@
     "toWarehouse": "إلى المستودع",
     "salesPrice": "سعر البيع",
     "totalSalesValue": "إجمالي قيمة المبيعات",
-    "opening_stock_report": "تقرير المخزون الافتتاحي"
+    "opening_stock_report": "تقرير المخزون الافتتاحي",
+
+    "debitTransaction": "التحويلات المدينة",
+    "creditTransaction": "التحويلات الدائنة",
+    "excludeZeroBalance": "استثناء الرصيد الصفري"
 }

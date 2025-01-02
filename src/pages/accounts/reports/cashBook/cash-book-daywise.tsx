@@ -13,12 +13,26 @@ interface CashBookMonthDayWiseProps {
   contentProps?: any
   enablefilter?: boolean;
 }
-const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDayWiseProps) => {
+const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
+  debugger;
+  
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<CashBookDayWise>({from: new Date()});
   const rootState = useRootState();
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+  // const [_postData, setPostData] = useState({})
+  // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
+    let gridHeightWindows = wh - 100; // Assuming 100px is the height to minus for windows
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, []);
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -103,16 +117,16 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
       ),
     },
   ];
-  const [gridHeight, setGridHeight] = useState<number>(() => {
-    debugger;
-    const modals = document.querySelectorAll('.erp-modal-opened');
-    if (modals.length > 0) {
-      const latestModal = modals[modals.length - 1] as HTMLElement;
-      return (window.innerHeight - latestModal.offsetHeight) + 200;
-    } else {
-      return window.innerHeight - 400;
-    }
-  });
+  // const [gridHeight, setGridHeight] = useState<number>(() => {
+  //   debugger;
+  //   const modals = document.querySelectorAll('.erp-modal-opened');
+  //   if (modals.length > 0) {
+  //     const latestModal = modals[modals.length - 1] as HTMLElement;
+  //     return (window.innerHeight - latestModal.offsetHeight) + 200;
+  //   } else {
+  //     return window.innerHeight - 400;
+  //   }
+  // });
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -121,7 +135,7 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={100}
+                  heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
                   gridHeader={t("cash_book_daywise")}

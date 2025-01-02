@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, cloneElement } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import {
   CheckIcon,
@@ -24,6 +24,7 @@ import {
   AutocompleteChangeReason,
   AutocompleteChangeDetails,
   Paper,
+  Box,
 } from "@mui/material";
 import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
@@ -66,6 +67,8 @@ interface ERPDataComboboxProps {
   reload?: boolean;
   required?: boolean;
   className?: string;
+  labelInfo?: any;
+  labelInfoProps?: any;
   noLabel?: boolean;
   noXMarkIcon?: boolean;
   multiple?: boolean;
@@ -397,6 +400,8 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
   disabled = false,
   reload = false,
   labelDirection = "vertical",
+  labelInfo,
+  labelInfoProps,
   info,
   initialValue,
   className,
@@ -1215,6 +1220,10 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
             </Paper>
           )}
           renderInput={(params) => (
+            // <Box display="flex" alignItems="center">
+            // <Typography variant="body1" sx={{ marginRight: 1 }}>
+            //   {/* {leftLabel} */}
+            // </Typography>
             <TextField
               {...params}
               label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
@@ -1237,6 +1246,11 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
                 ),
               }}
             />
+          //   <Typography variant="body1" sx={{ marginLeft: 1 }}>
+          //     {/* {rightLabel} */}
+          //   </Typography>
+          // </Box>
+                      
           )}
           renderOption={(props, option: any) => (
             <li
@@ -1268,6 +1282,10 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
+  // const leftLabel = "Left Label"; // Replace with your actual left label value
+  // const rightLabel = "Right Label"; // Replace with your actual right label value
+
+
   if (_useMUI == undefined || _useMUI == false) {
     return (
       <div
@@ -1283,6 +1301,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
         }}
       >
         {!noLabel && (
+        <div className="flex justify-between">
           <label
             className={`capitalize block   text-left rtl:text-right ${
               appState?.mode == "dark" ? "form-label" : ""
@@ -1317,6 +1336,58 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
             }`}
             {required && <span className="text-[#ef4444]">*</span>}
           </label>
+          <label
+              className={`capitalize block text-right rtl:text-left ${
+                appState?.mode == "dark" ? "form-label" : ""
+              }`}
+              style={{
+                fontSize: _customSize
+                  ? _customSize === "sm"
+                    ? "12px"
+                    : _customSize === "md"
+                    ? "14px"
+                    : _customSize === "lg"
+                    ? "16px"
+                    : `${appState?.inputBox?.labelFontSize}px`
+                  : `14px`,
+                color:
+                  appState?.mode === "dark"
+                    ? "rgb(225,224,224)"
+                    : appState?.inputBox?.labelColor
+                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : "rgb(84,84,84)",
+                transform:
+                  _customSize === "customize"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 10
+                      }px) scale(1)`
+                    : ``,
+              }}
+            >
+              {/* {labelInfo && (
+                <span>{labelInfo}</span>
+                // {labelInfo}
+              )} */}
+
+              {/* {masterBalance && (
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-xs text-gray-500">
+                    Bal:{" "}
+                    {`${formState.masterBalance || "0.00"} ${
+                      formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
+                    }`}
+                  </span>
+                </div>
+              )} */}
+
+              {labelInfo &&
+              cloneElement(
+              labelInfo,
+              labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
+            )}
+            </label>
+        </div>
+          
         )}
         <Combobox as="div" className="relative">
           <div className="flex">

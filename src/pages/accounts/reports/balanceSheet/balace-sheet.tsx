@@ -28,31 +28,22 @@ const BalanceSheetRow: React.FC<{
   };
   return (
     <tr>
-      <td
-        className={`py-2 ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
-          }`}
+      <td className={`py-2 ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"}`}
         style={{
           paddingLeft: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
           fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
-        }}
-      >
+        }}>
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
           {item.groupName}
         </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
-          <a
-            href="#"
-            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"
-              }`}
+          <a href="#" className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#3b82f6]" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#03070f]"}`}
             style={{
               paddingRight: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
               fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
-            }}
-          // onClick={handleClick}
-          //   className="text-[#3b82f6] hover:text-[#1d4ed8]"
-          >
+            }}>
             {getFormattedValue(item.total)}
           </a>
         </td>
@@ -66,52 +57,74 @@ const HorizontalBalanceSheet: React.FC<{
   data: any;
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
-  const assets = data?.filter((item: any) => item?.transType == "A");
-
-  const liabilities = data?.filter((item: any) => item?.transType == "L");
+  const assets = data?.filter((item: any) =>
+    item?.transType === "A" && item?.groupName !== "TOTAL"
+  );
+  const liabilities = data?.filter((item: any) =>
+    item?.transType === "L" && item?.groupName !== "TOTAL"
+  );
   const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat();
+
+  const assetTotal = data?.find((item: any) =>
+    item?.transType === "A" && item?.groupName === "TOTAL"
+  )?.total || 0;
+  const liabilityTotal = data?.find((item: any) =>
+    item?.transType === "L" && item?.groupName === "TOTAL"
+  )?.total || 0;
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        {/* <h3 className="text-lg font-bold mb-2">{t("liabilities_capital")}</h3> */}
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("liabilities")}</th>
-              <th className="py-2 text-end pe-2">{t("amount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {liabilities?.map((item: any, index: number) => (
-              <BalanceSheetRow
-                key={`liability-${index}`}
-                item={item}
-                setIsOpenDetails={setIsOpenDetails}
-              />
-            ))}
-          </tbody>
-        </table>
+    <div className="relative">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-400">
+                <th className="py-2 ps-2">{t("liabilities")}</th>
+                <th className="py-2 text-end pe-2">{t("amount")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {liabilities?.map((item: any, index: number) => (
+                <BalanceSheetRow
+                  key={`liability-${index}`}
+                  item={item}
+                  setIsOpenDetails={setIsOpenDetails}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-400">
+                <th className="py-2 ps-2">{t("assets")}</th>
+                <th className="py-2 text-end pe-2">{t("amount")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {assets?.map((item: any, index: number) => (
+                <BalanceSheetRow
+                  key={`asset-${index}`}
+                  item={item}
+                  setIsOpenDetails={setIsOpenDetails}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div>
-        {/* <h3 className="text-lg font-bold mb-2">{t("assets")}</h3> */}
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("assets")}</th>
-              <th className="py-2 text-end pe-2">{t("amount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assets?.map((item: any, index: number) => (
-              <BalanceSheetRow
-                key={`asset-${index}`}
-                item={item}
-                setIsOpenDetails={setIsOpenDetails}
-              />
-            ))}
-          </tbody>
-        </table>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue(liabilityTotal)}</h6>
+        </div>
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue(assetTotal)}</h6>
+        </div>
       </div>
     </div>
   );
@@ -224,26 +237,25 @@ const BalanceSheet = () => {
                 initialData={BalanceSheetFilterInitialState}
                 content={<BalanceSheetFilter getFieldProps={function (fieldName: string) {
                   throw new Error("Function not implemented.");
-                }} handleFieldChange={function (field: string | object, value?: any): void {
+                } } handleFieldChange={function (field: string | object, value?: any): void {
                   throw new Error("Function not implemented.");
-                }} />}
+                } } />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter}
-              />
+                onClose={onCloseFilter} validations={undefined} title={"Balance sheet"}/>
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
-              {/* <Forward className="pe-2" /> */}
-              {/* <span>{t("share")}</span> */}
-              {/* <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2"> */}
-                {/* 0 */}
-              {/* </span> */}
-            {/* </button> */} 
+            {/* <Forward className="pe-2" /> */}
+            {/* <span>{t("share")}</span> */}
+            {/* <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2"> */}
+            {/* 0 */}
+            {/* </span> */}
+            {/* </button> */}
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md"> */}
-              {/* <i className="fas fa-clock me-1"></i> */}
-              {/* <Clock1 className="pe-2" /> */}
-              {/* <span>{t("schedule_report")}</span> */}
+            {/* <i className="fas fa-clock me-1"></i> */}
+            {/* <Clock1 className="pe-2" /> */}
+            {/* <span>{t("schedule_report")}</span> */}
             {/* </button> */}
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-print me-1"></i> */}

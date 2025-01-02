@@ -14,6 +14,7 @@ interface ErpGridGlobalFilterProps {
   width?: string;
   initialData: any;
   validations: any;
+  title: string
   content: React.ReactNode; // Pass pre-defined JSX for content
   onApplyFilters?: (filters: any) => void;
   toogleFilter?: boolean;
@@ -27,6 +28,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   initialData,
   validations,
   onApplyFilters,
+  title,
   toogleFilter = false,
   onClose,
 }) => {
@@ -114,7 +116,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
         hasSubmit={false}
         width={width}
         closeTitle={t("close")}
-        title={t("filters")}
+        title={title}
         closeModal={() => setIsOpen(false)}
         content={
           // Pass down required handlers to the content

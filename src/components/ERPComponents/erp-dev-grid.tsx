@@ -749,6 +749,7 @@ const onCellPrepared = useCallback((e: any) => {
               <Item>
                 <ErpGridGlobalFilter
                   width={filterWidth}
+                  title={gridHeader}
                   gridId={gridId}
                   validations= {filterValidations}
                   initialData={filter}

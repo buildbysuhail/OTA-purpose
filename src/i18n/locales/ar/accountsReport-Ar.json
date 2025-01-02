@@ -104,7 +104,7 @@
     "set_cost_as_avg_price": "تعيين التكلفة كمتوسط السعر",
     "set_cost_as_FIFO_avg_price": "تعيين التكلفة كمتوسط سعر FIFO",
     "include_VAT_in_profit": "شمل ضريبة القيمة المضافة في الربح",
-    "include_TAX_in_profit": "شمل الضريبة في الربح",
+    "include_TAX_in_profit": "تضمين الضريبة في الربح",
     "show_fast": "عرض سريع",
     "consider_SE": "النظر في SE",
 
@@ -336,5 +336,5 @@
 
     "debitTransaction": "التحويلات المدينة",
     "creditTransaction": "التحويلات الدائنة",
-    "excludeZeroBalance": "استثناء الرصيد الصفري"
+    "excludeZeroBalance": "استبعاد الرصيد الصفري"
 }

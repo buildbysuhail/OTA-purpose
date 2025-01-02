@@ -7,9 +7,13 @@ import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
 import moment from 'moment';
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
-
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const { t } = useTranslation('accountsReport');
   // const [reload,setReload]= useState(false);
   return (
@@ -92,7 +96,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
         }}
         onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
       />
-
+      {applicationSettings.accountsSettings.allowSalesCounter == true &&
       <ERPDataCombobox
         {...getFieldProps("counterID")}
         label={t("counter_id")}
@@ -103,8 +107,8 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           labelKey: "name",
         }}
         onChangeData={(data) => handleFieldChange('counterID', data.counterID)}
-      />
-      {formState.ledgerID != undefined && formState.ledgerID != null && formState.ledgerID != 0 &&
+      />}
+      {formState.ledgerID != undefined && formState.ledgerID != null && formState.ledgerID != 0 && applicationSettings.accountsSettings.maintainProjectSite == true &&
         < ERPDataCombobox
           {...getFieldProps("project")}
           label={t("project")}

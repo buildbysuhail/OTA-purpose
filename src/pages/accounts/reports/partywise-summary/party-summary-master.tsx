@@ -41,7 +41,7 @@ const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
     }
   });
   
-  const [activeTab, setActiveTab] = useState("address");
+  const [activeTab, setActiveTab] = useState("basicInfo");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
@@ -126,7 +126,7 @@ const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
         onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
       /> */}
               <div className="grid grid-cols-1 gap-3">
-                <Tabs value={activeTab} onChange={handleTabChange}>
+                <Tabs value={activeTab} onChange={handleTabChange}   variant="scrollable" scrollButtons="auto">
                   <Tab label="Basic Info" value="basicInfo" />
                   <Tab label="Account Ledger" value="accountLedger" />
                   <Tab label="Payments" value="payments" />

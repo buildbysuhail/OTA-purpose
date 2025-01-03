@@ -21,7 +21,6 @@ interface BillWisePopupProps {
 }
 
 const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized }) => {
-  debugger;
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {

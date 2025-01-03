@@ -69,6 +69,22 @@ const ERPModal = React.memo(
     customStyle = {},
   }: ERPModalProps) => {
     const [isMaximized, setIsMaximized] = useState(false);
+    const [modalHeight, setModalHeight] = useState(0);
+
+    useEffect(() => {
+      const updateModalHeight = () => {
+        const height =  window.innerHeight 
+        setModalHeight(height);
+      };
+    
+      updateModalHeight();
+      window.addEventListener('resize', updateModalHeight);
+    
+      return () => {
+        window.removeEventListener('resize', updateModalHeight);
+      };
+    }, [isMaximized]);
+
     const handleClose = () => closeModal(false);
     const handleSubmit = () => {
       if (onSubmitModel) {
@@ -122,7 +138,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50 ${customPosition ? "" : "fixed inset-0"}`}
-            onClose={disableOutsideClickClose ? () => { } : handleClose}
+            onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
             {!customPosition && (
@@ -142,8 +158,9 @@ const ERPModal = React.memo(
 
             <div className={`${customPosition ? "" : "fixed inset-0"}`}>
               <div
-                className={`flex min-h-full items-center justify-center text-center ${customPosition ? "" : "p-4"
-                  }`}
+                className={`flex min-h-full items-center justify-center text-center ${
+                  customPosition ? "" : "p-4"
+                }`}
               >
                 <TransitionChild
                   as={Fragment}
@@ -161,6 +178,7 @@ const ERPModal = React.memo(
                       ? "w-full h-full rounded-md"
                       : `min-h-full max-h-screen ${width} rounded-md`
                       } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    // style={{ height:"auto",maxHeight:isMaximized?`${modalHeight - 10}px` :`${modalHeight - 300}px`}}
                   >
                     <DialogTitle
                       as="h3"
@@ -209,49 +227,48 @@ const ERPModal = React.memo(
                         </button>
                       </div>
                     </DialogTitle>
-                    {/* <div className={"max-h-[calc(100vh-15rem)]"}>
-                      <ERPScrollArea
-                        className={`max-h-[calc(100vh-15rem)] overflow-y-auto pr-2`}
-                      >
-                        {content &&
-                          cloneElement(
-                            content,
-                            contentProps ? { contentProps: contentProps } : {}
-                          )}
-                      </ERPScrollArea>
-                      <div>{footer}</div>
-                    </div> */}
 
                     {/* <div
                       className={
                         isMaximized
                           ? "h-[calc(100vh-6rem)]"
-                          : "max-h-[calc(100vh-15rem)] " : isForm ? "mb-[95px]" : ""
-                          
-                      }
-                    > */}
-
-                    <div
-                      className={
-                        isMaximized
-                          ? "h-[calc(100vh-6rem)]"
                           : !isForm
-                            ? "max-h-[calc(100vh-15rem)]"
-                            : "max-h-[calc(100vh-15rem)]  mb-[95px]"
+                          ? "max-h-[calc(100vh-15rem)]"
+                          : "max-h-[calc(100vh-15rem)]  mb-[95px]"
                       }
                     >
                       <ERPScrollArea
-                        className={`${isMaximized ? "h-full" : "max-h-[calc(100vh-15rem)]"
-                          } overflow-y-auto pr-2`}
+                        className={`${
+                          isMaximized ? "h-full" : "max-h-[calc(100vh-15rem)]"
+                        } overflow-y-auto pr-2`}
                       >
-                {content &&
-                    cloneElement(
-                      content,
-                      { 
-                        contentProps: contentProps ? contentProps : {},isMaximized: isMaximized 
-                         // Pass isMaximized to the content
-                      }
-                    )}
+                        {content &&
+                          cloneElement(content, {
+                            contentProps: contentProps ? contentProps : {},
+                            isMaximized: isMaximized, // Pass isMaximized to the content
+                          })}
+                      </ERPScrollArea>
+                      <div>{footer}</div>
+                    </div> */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        maxHeight:`${isMaximized ? `${modalHeight - 100}px`:`${modalHeight - 200}px`}`,
+                        height: 'auto',
+                         overflowY: 'auto'
+                      }}
+>
+                      <ERPScrollArea
+                        customStyle={`${isMaximized ? `100%`:`${modalHeight - 300}px`}`} // Use modalHeight for maxHeight
+                        className="overflow-y-auto pr-2"
+                      >
+                        {content &&
+                          cloneElement(content, {
+                            contentProps: contentProps ? contentProps : {},
+                            isMaximized: isMaximized, 
+                            modalHeight:modalHeight// Pass isMaximized to the content
+                          })}
                       </ERPScrollArea>
                       <div>{footer}</div>
                     </div>
@@ -272,7 +289,7 @@ const ERPModal = React.memo(
                           <ERPSubmitButton
                             onClick={handleSubmit}
                             className="uppercase"
->
+                          >
                             {submitTitle || "Submit"}
                           </ERPSubmitButton>
                         )}

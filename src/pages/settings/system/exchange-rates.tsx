@@ -18,8 +18,13 @@ import { CurrencyMasterManage } from "../../accounts/masters/currency-master/cur
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
+interface ExchangeRatesProps {
+  isMaximized?: boolean; 
+  modalHeight?:any
 
-const ExchangeRates = () => {
+}
+const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
+  debugger;
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -93,9 +98,9 @@ const ExchangeRates = () => {
     } catch (error) {
       setStore([]);
     }
-    let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 400; // Assuming 100px is the height to minus for windows
+    let wh = modalHeight;
+    let gridHeightMobile = wh - 50; // Assuming 200px is the height to minus for mobile
+    let gridHeightWindows = isMaximized ? wh - 50 : wh - 250; // Assuming 100px is the height to minus for windows isMaximized ? wh - 200 : wh - 370
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 

@@ -25,6 +25,7 @@ import ERPAlert from "./erp-sweet-alert";
 import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/stock-ledger/stock-ledger-report-filter";
 import ERPToast from "./erp-toast";
 import moment from "moment";
+import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
@@ -630,11 +631,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
       }): {};
-  
+  const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(postData, updatedBodyProps)
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell, drillDownDisplayCells: _drillDownDisplayCells, data: event.data});
+      setIsChildOpen({ isOpen: true, props: _updatedBodyProps, key: _drillDownCell, drillDownDisplayCells: _drillDownDisplayCells, data: event.data});
       // const sd = 223;
     }
   }, []);

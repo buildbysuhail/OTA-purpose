@@ -116,6 +116,7 @@ const PaymentReport = () => {
                   showFilterInitially={true}
                   filterContent={<PaymentReportFilter />}
                   filterInitialData={PaymentReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

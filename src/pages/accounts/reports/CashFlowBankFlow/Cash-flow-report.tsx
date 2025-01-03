@@ -17,6 +17,7 @@ import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
 
 const CashFlowReport = () => {
   const dispatch = useAppDispatch();
+  const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<IncomeRepor>({ from: new Date() });
@@ -103,6 +104,7 @@ const CashFlowReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
+                  filterText="As On Date : {asonDate}"
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
@@ -112,13 +114,13 @@ const CashFlowReport = () => {
                   showFilterInitially={false}
                   filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <CashBankFlowDetailedReport postData={
-                      { 
-                        reportType:"Cash",
-                      }} />,
+                    content: <CashBankFlowDetailedReport postData={{...filter,
+                      reportType:"Cash",
+                    }} />,
                     title: t("cash_flow_detailed"),
                     isForm: false,
                     width: "mw-100",

@@ -99,6 +99,7 @@ const CashBookSummary = () => {
                   filterInitialData={CashBookReportFilterInitialState}
                   reload={true}
                   hideGridAddButton={true}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
                       { ...filter }} />,

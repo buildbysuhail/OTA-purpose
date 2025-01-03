@@ -108,6 +108,7 @@ const CollectionReport = () => {
                   showFilterInitially={true}
                   filterContent={<CollectionReportFilter />}
                   filterInitialData={CollectionReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

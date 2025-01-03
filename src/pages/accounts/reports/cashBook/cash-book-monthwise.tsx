@@ -164,12 +164,12 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   childPopupProps={{
                     // content: <CashBookMonthWise postData={
                     //   { ...filter }} />,
-                     content : <CashBookDayWise postData={{}}/>,
+                     content : <CashBookDayWise postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
                     title: t("cash_book_daywise"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
-                    bodyProps: "year,monthNum,ledgerID,asonDate",
+                    bodyProps: "year,monthNum",
                   }}
                 ></ErpDevGrid>
               </div>

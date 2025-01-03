@@ -119,6 +119,7 @@ const IncomeReport = () => {
                 <ErpDevGrid
                   allowGrouping={true}
                   columns={columns}
+                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
                   gridHeader={t("income_report")}
                   dataUrl={Urls.acc_reports_income_expense_report }
                   method={ActionType.POST}

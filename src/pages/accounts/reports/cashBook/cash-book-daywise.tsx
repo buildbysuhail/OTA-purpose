@@ -14,6 +14,7 @@ interface CashBookMonthDayWiseProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
+  rowData?: any;
 }
 // interface CashBookMonthWiseProps {
 //   postData: any;
@@ -21,7 +22,7 @@ interface CashBookMonthDayWiseProps {
 //   contentProps?: any;
 // }
 
-const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps }) => {
+const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData }) => {
 // const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
   // debugger;
   
@@ -156,13 +157,14 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
+                  rowData={rowData}
                   childPopupProps={{
-                    content: <CashBookDetailed />,
+                    content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
                     title: t("cash_book_detailed"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "transactionDate",
-                    bodyProps: "transactionDate,year,monthNum,ledgerID",
+                    bodyProps: "transactionDate",
                   }}
                 ></ErpDevGrid>
               </div>

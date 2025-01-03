@@ -14,8 +14,9 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface BalancesheetDetailsProps {
   postData: any;
   groupName?: string;
+  rowData?: any;
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName,rowData }) => {
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
@@ -98,6 +99,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                rowData={rowData}
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={groupName}

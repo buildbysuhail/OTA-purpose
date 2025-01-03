@@ -148,6 +148,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
+                  filterText="{___(month)} {**** As On Date : (asonDate)}"
                   gridHeader={t("cash_book_daywise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}

@@ -21,6 +21,7 @@ type ERPModalProps = {
   isOpen: boolean;
   closeModal: (reload: boolean) => void;
   content?: any;
+  rowData?: any;
   contentProps?: any;
   footer?: any;
   submitTitle?: string;
@@ -47,6 +48,7 @@ const ERPModal = React.memo(
     isOpen,
     closeModal,
     content,
+    rowData,
     contentProps,
     footer,
     title,
@@ -267,7 +269,8 @@ const ERPModal = React.memo(
                           cloneElement(content, {
                             contentProps: contentProps ? contentProps : {},
                             isMaximized: isMaximized, 
-                            modalHeight:modalHeight// Pass isMaximized to the content
+                            modalHeight:modalHeight, // Pass isMaximized to the content
+                            rowData: rowData
                           })}
                       </ERPScrollArea>
                       <div>{footer}</div>

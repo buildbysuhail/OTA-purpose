@@ -20,7 +20,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+          onSelectItem={(data) => handleFieldChange({salesRouteID: data.value,salesRouteName:data.name})}
         />
         {/* Party Category Combobox */}
         <ERPDataCombobox
@@ -32,7 +32,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('partyCategoryID', data.partyCategoryID)}
+          onSelectItem={(data) => handleFieldChange({partyCategoryID: data.value,partyCategoryName:data.name})}
         />
         {/* Cost Centre Combobox */}
         <ERPDataCombobox
@@ -44,8 +44,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          
-          onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+          onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
         />
         {/* As On Date */}
         <ERPDateInput

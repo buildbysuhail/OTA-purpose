@@ -37,9 +37,11 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {cellElement.data.particulars}
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
+          {/* {cellElement.data.particulars} */}
+          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
         </span>
+        
       ),
     },
     {

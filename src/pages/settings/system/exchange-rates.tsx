@@ -21,7 +21,6 @@ const api = new APIClient();
 interface ExchangeRatesProps {
   isMaximized?: boolean; 
   modalHeight?:any
-
 }
 const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
   debugger;
@@ -98,11 +97,13 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
     } catch (error) {
       setStore([]);
     }
-    let wh = modalHeight;
-    let gridHeightMobile = wh - 50; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = isMaximized ? wh - 50 : wh - 250; // Assuming 100px is the height to minus for windows isMaximized ? wh - 200 : wh - 370
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+
   }, []);
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
 
   const handleDelete = async (id: any, rowIndex: number) => {
     if (id === 0 || id === null) {

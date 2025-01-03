@@ -23,6 +23,7 @@ type ERPModalProps = {
   content?: any;
   rowData?: any;
   contentProps?: any;
+  origin?: string;
   footer?: any;
   submitTitle?: string;
   onSubmit?: any;
@@ -51,6 +52,7 @@ const ERPModal = React.memo(
     rowData,
     contentProps,
     footer,
+    origin,
     title,
     submitTitle,
     onSubmit,
@@ -271,7 +273,8 @@ const ERPModal = React.memo(
                             contentProps: contentProps ? contentProps : {},
                             isMaximized: isMaximized, 
                             modalHeight:modalHeight,// Pass isMaximized to the content
-                            rowData: rowData
+                            rowData: rowData,
+                            origin: origin
                           })}
                       </ERPScrollArea>
                       <div>{footer}</div>

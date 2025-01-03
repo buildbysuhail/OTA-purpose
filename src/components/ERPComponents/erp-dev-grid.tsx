@@ -138,6 +138,7 @@ interface ERPDevGridProps {
     bodyProps?: string,
     isMaximized?:boolean,
     enableFilter?: boolean,
+    origin?: string,
     enableFn?: (data: any) => boolean
   }
   childPopupPropsDynamic?: (data?: any) => {
@@ -149,6 +150,7 @@ interface ERPDevGridProps {
     drillDownDisplayCells?: string,
     bodyProps?: string,
     enableFilter?: boolean,
+    origin?: string,
     enableFn?: () => boolean
   }
 }
@@ -955,6 +957,9 @@ const onCellPrepared = useCallback((e: any) => {
     isForm={childPopupPropsDynamic 
       ? childPopupPropsDynamic(isChildOpen.key).isForm 
       : childPopupProps?.isForm}
+    origin={childPopupPropsDynamic 
+      ? childPopupPropsDynamic(isChildOpen.key).origin 
+      : childPopupProps?.origin}
     closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
     content={childPopupPropsDynamic 
       ? childPopupPropsDynamic(isChildOpen.key).content 

@@ -21,9 +21,10 @@ interface CashBookMonthWiseProps {
   groupName?: string;
   contentProps?: any;
   rowData?: any;
+  origin?: any;
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData }) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin }) => {
   debugger;
   // interface CashBookMonthWiseFilters {
   //   from: Date
@@ -149,7 +150,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText="{___(ledgerName)} {**** As On Date : (asonDate)}"
+                  filterText={`{${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}} {**** As On Date : (asonDate)}`}
                   gridHeader={t("cash_book_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}

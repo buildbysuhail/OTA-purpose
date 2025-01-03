@@ -255,7 +255,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&
-            ((!isRowEdit && !formState.row.BillwiseDetails) ||
+            ((!isRowEdit && !formState.row.billwiseDetails) ||
               (isRowEdit && !formState.formElements.amount.disabled))
           ) {
             const IsBillwiseTransAdjustmentExists = await api.getAsync(

@@ -13,8 +13,9 @@ interface CashBookDetailedProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
+  rowData?: any;
 }
-const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps }) => {
+const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, rowData}) => {
 // const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
@@ -129,6 +130,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps })
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                rowData={rowData}
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   filterText="{___(transactionDate)} {**** As On Date : (asonDate)}"

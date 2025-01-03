@@ -794,8 +794,8 @@ const onCellPrepared = useCallback((e: any) => {
             {!hideGridHeader  && (
               <Item location="before">
                 <div className="flex  flex-col">
-                  <div className="box-title !text-xl !font-medium">
-                    {header}
+                  <div className={`box-title !text-xl !font-medium ${filter != undefined && Object.entries(filter).length>0 ? "!text-xs":""}`}>
+                    <span className="text-sm">{gridHeader}</span> &nbsp; {':'} &nbsp; {header}
                   </div>
                 </div>
               </Item>

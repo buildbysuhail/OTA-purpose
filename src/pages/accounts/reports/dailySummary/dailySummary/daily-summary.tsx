@@ -59,11 +59,11 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      //     cellRender: (cellElement: any, cellInfo: any) => (
-      //       <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
-      // {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
-      // </span>
-      //     ),
+          cellRender: (cellElement: any, cellInfo: any) => (
+            <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+      {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
+      </span>
+          ),
     },
   ];
   const detailColumnsTemp = [
@@ -105,6 +105,11 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.partyName}`}
+        </span>
+      ),
     },
     {
       dataField: "total",
@@ -113,6 +118,14 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.total == null || cellElement.data?.total == 0
+            ? '0'
+              : getFormattedValue(cellElement.data.total)
+              }`}
+        </span>
+      ),
     },
     {
       dataField: "cashAmount",
@@ -121,6 +134,14 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.cashAmount == null || cellElement.data?.cashAmount == 0
+            ? '0'
+              : getFormattedValue(cellElement.data.cashAmount)
+              }`}
+        </span>
+      ),
     },
     {
       dataField: "creditAmount",
@@ -129,6 +150,14 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.creditAmount == null || cellElement.data?.creditAmount == 0
+            ? '0'
+              : getFormattedValue(cellElement.data.creditAmount)
+              }`}
+        </span>
+      ),
     },
     {
       dataField: "bankAmount",
@@ -137,6 +166,14 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.bankAmount == null || cellElement.data?.bankAmount == 0
+            ? '0'
+              : getFormattedValue(cellElement.data.bankAmount)
+              }`}
+        </span>
+      ),
     },
     {
       dataField: "salesMan",
@@ -244,8 +281,6 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     },
 ];
   const [detailsColumns, setDetailsColumns] = useState<any>(detailColumnsTemp);
-
-
   useEffect(() => {
     const updatedColumns = [...detailColumnsTemp]
     const filteredColumns = updatedColumns.filter((column) => {
@@ -308,6 +343,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
           <div className="p-4">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+               remoteOperations={{filtering:true,paging:true,sorting:true}}
                 columns={detailsColumns}
                 gridHeader={t("daily_summary_detailed")}
                 dataUrl={Urls.acc_reports_daily_summary_detailed}

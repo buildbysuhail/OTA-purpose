@@ -672,7 +672,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         return result;
       } else if (formState[placeholder] !== undefined) {
         // Handle regular placeholders
-        if (placeholder.includes('date')) {
+        if (placeholder.includes('date') || placeholder.includes('Date')) {
           // If the placeholder is a date, format it
           return formatDate(formState[placeholder]);
         }

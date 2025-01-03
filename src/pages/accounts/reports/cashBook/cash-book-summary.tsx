@@ -100,7 +100,7 @@ const CashBookSummary = () => {
                   hideGridAddButton={true}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      { asOnDate: filter?.asonDate }} />,
+                      { ...filter }} />,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",

@@ -100,6 +100,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                rowData={rowData}
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={"abc"}

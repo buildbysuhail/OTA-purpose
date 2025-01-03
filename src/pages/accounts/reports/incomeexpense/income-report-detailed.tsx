@@ -20,7 +20,7 @@ const IncomeReportDetailed = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t('sl_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -48,7 +48,7 @@ const IncomeReportDetailed = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("vchNo"),
+      caption: t("voucherNumber"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

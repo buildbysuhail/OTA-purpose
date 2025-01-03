@@ -108,6 +108,7 @@ const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwisePro
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   postData = {contentProps}
+                  filterText="{___(voucherType)} {**** From : (dateFrom) To : (dateTo)}"
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}

@@ -104,6 +104,7 @@ const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:O
                 <ErpDevGrid
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
+                  filterText="{___(ledgername)}{**** As On Date : (asonDate)}"
                   postData = {contentProps}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}

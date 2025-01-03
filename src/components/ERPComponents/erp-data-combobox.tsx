@@ -34,6 +34,7 @@ interface Option {
   value: string;
   label: string;
   is_active?: boolean;
+  name?: string;
 }
 
 interface ERPDataComboboxProps {
@@ -55,6 +56,7 @@ interface ERPDataComboboxProps {
     id?: string;
     getListUrl?: string;
     valueKey?: string;
+    nameKey?: string;
     labelKey?: string;
     freezeDataLoad?: boolean | false;
     params?: any;
@@ -112,11 +114,13 @@ const getNestedValue = (item: any, path: string) => {
 const mapItemsToOptions = (
   items: any[],
   labelKey: string,
-  valueKey: string
+  valueKey: string,
+  nameKey: string
 ): Option[] => {
   return items?.map((item: any) => ({
     label: getNestedValue(item, labelKey) || "",
     value: getNestedValue(item, valueKey) || "",
+    name: getNestedValue(item, nameKey) || "",
     is_active: item?.is_active,
   }));
 };
@@ -576,7 +580,8 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
       const _items = options || (await api.getAsync(field?.getListUrl??"", params));
       const labelKey = field?.labelKey ?? "label";
       const valueKey = field?.valueKey ?? "value";
-      let _options = mapItemsToOptions(_items, labelKey, valueKey);
+      const nameKey = field?.nameKey ?? "name";
+      let _options = mapItemsToOptions(_items, labelKey, valueKey, nameKey);
       _options = _options?.filter(
         (option) => !excludeOptions?.includes(option.value)
       );

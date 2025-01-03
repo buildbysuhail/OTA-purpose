@@ -84,6 +84,7 @@ interface ERPDevGridProps {
   hideDefaultSearchPanel?: boolean;
   hideGridHeader?: boolean;
   gridHeader?: string;
+  filterText?: string;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -300,6 +301,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   hideDefaultSearchPanel = false,
   hideGridHeader = false,
   gridHeader = "",
+  filterText = "",
   hideGridAddButton = false,
   gridAddButtonType = "link",
   gridAddButtonIcon = "ri-add-line",
@@ -632,6 +634,64 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     }
   }, []);
   
+  const formatStringWithConditions = (formatString: string, formState: any): string => {
+    // Helper function to format dates in dd/MM/yyyy format
+    const formatDate = (dateStr: string): string => {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return 'N/A';
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+  
+    // Function to evaluate and replace placeholders and conditions
+    const evaluateExpression = (expression: string, data: any): boolean => {
+      // Create a safer scope for evaluating the expression by passing 'data' as an argument
+      try {
+        return new Function(...Object.keys(data), `return ${expression};`)(...Object.values(data));
+      } catch (error) {
+        console.error('Error evaluating expression:', error);
+        return false; // Return false in case of error
+      }
+    };
+  
+    // Replace placeholders and conditions
+    return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
+      debugger;
+      // Handle conditional expressions using '&&'
+      if (placeholder.includes('&&')) {
+        const [condition, trueValue] = placeholder.split('&&');
+        const conditionResult = evaluateExpression(condition.trim(), formState);
+        const result = conditionResult
+          ? trueValue.replace(/\[([^\]]+)\]/g, (innerMatch: any, innerPlaceholder: any) => {
+            return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+          })
+          : '';
+  
+        return result;
+      } else if (formState[placeholder] !== undefined) {
+        // Handle regular placeholders
+        if (placeholder.includes('date')) {
+          // If the placeholder is a date, format it
+          return formatDate(formState[placeholder]);
+        }
+        return formState[placeholder] || 'N/A';
+      }
+      return 'N/A';
+    });
+  };
+  
+  const header = useMemo(() => {
+    if (!filterText || !filter) return filterText || "";
+debugger;
+    const data = filter;
+const _gridHeader = filterText.toString();
+    // Dynamically replace placeholders using a regular expression
+   
+      return formatStringWithConditions(_gridHeader, data);
+  }, [gridHeader, filter]);
+  
 const onCellPrepared = useCallback((e: any) => {
 //   // Get dynamic properties
 //   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
@@ -731,11 +791,11 @@ const onCellPrepared = useCallback((e: any) => {
           )}
 
           <Toolbar>
-            {!hideGridHeader && (filterInitialData == undefined || filterInitialData == null) && (
+            {!hideGridHeader  && (
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className="box-title !text-xl !font-medium">
-                    {gridHeader}
+                    {header}
                   </div>
                 </div>
               </Item>

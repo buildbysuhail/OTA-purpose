@@ -130,7 +130,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('brandID', data.brandID)}
+        onSelectItem={(data) => handleFieldChange({brandID: data.value,brandName:data.name})}
       />
       {/* </div> */}
       {/* <div className="flex items-center gap-2">
@@ -147,7 +147,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('colour', data.colour)}
+        onSelectItem={(data) => handleFieldChange({colour: data.name})}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('warranty', data.warranty)}
+        onSelectItem={(data) => handleFieldChange({warranty: data.name})}
       />
       {/* </div>
       <div className="flex items-center gap-2">

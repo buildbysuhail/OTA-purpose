@@ -269,7 +269,7 @@ export interface AccTransactionRow {
   checkStatus: string;
   checkBouncedDate: string;
   billwiseData: BillwiseData[];
-  BillwiseDetails: string;
+  billwiseDetails: string;
   branchId: number;
   costCentreId: number;
   costCentreName: number;
@@ -324,7 +324,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   currencyName: "",
   projectName: "",
   costCentreName: 0,
-  BillwiseDetails: "",
+  billwiseDetails: "",
   chqDate: "",
   groupName: ""
 }

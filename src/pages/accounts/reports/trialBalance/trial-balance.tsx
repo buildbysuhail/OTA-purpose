@@ -117,6 +117,7 @@ const TrialBalance = () => {
                 <ErpDevGrid
                   columns={columns}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                  filterText="As On Date : {asonDate}"
                   gridHeader={t("trial_balance")}
                   dataUrl={Urls.acc_reports_trial_balance}
                   method={ActionType.POST}

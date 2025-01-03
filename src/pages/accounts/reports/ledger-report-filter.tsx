@@ -48,10 +48,11 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           getListUrl: Urls.data_acc_ledgers_Code,
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
-          labelKey: "name",
+          labelKey: "alias",
+          nameKey:"name",
         }}
-        onChangeData={(data) => {
-          handleFieldChange('ledgerID', data.ledgerID);
+        onSelectItem={(data) => {
+          handleFieldChange({ledgerID: data.value, ledgerName: data.name, ledgerCode: data.label});
           // setReload(!reload);
         }}
       />
@@ -66,8 +67,9 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
           labelKey: "name",
+          nameKey:'alias',
         }}
-        onSelectItem={(data) => handleFieldChange({ledgerID: data.value, ledgerName: data.label})}
+        onSelectItem={(data) =>{ handleFieldChange({ledgerID: data.value, ledgerName: data.label,ledgerCode:data.name})}}
       />
 
       {/* Related Ledger Section */}
@@ -94,7 +96,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,CostCenterName:data.label})}
       />
       {applicationSettings.accountsSettings.allowSalesCounter == true &&
       <ERPDataCombobox

@@ -120,6 +120,7 @@ const OutstandingAccountPayableReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="As On Date : {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_payable")}
                   dataUrl={Urls.acc_reports_payable}
                   method={ActionType.POST}

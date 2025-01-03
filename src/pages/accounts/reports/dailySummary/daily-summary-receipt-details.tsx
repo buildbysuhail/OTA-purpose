@@ -8,16 +8,18 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { DailySummaryFilter } from "./daily-summary-master";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+     const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<DailySummaryReceiptDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "invTransactionMasterID",
-      caption: t("invTransaction_master_id"),
+      dataField: "accTransactionMasterID",
+      caption: t("acc_transaction_masterID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -29,7 +31,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "voucherPrefix",
@@ -60,7 +62,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
     },
     {
       dataField: "ledgerName",
@@ -69,6 +71,13 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.ledgerName
+           
+              }`}
+        </span>
+      ),
     },
     {
       dataField: "amount",
@@ -77,10 +86,15 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.amount == null 
+            ? '0'
+              : getFormattedValue(cellElement.data.amount)
+              }`}
+        </span>
+      ),
     },
-    
-   
-   
     {
       dataField: "balanceAmount",
       caption: t('balance_amount'),
@@ -88,6 +102,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+
     },
     {
       dataField: "balance",
@@ -96,8 +111,17 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        debugger;
+        return (
+          <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+            {`${cellElement.data.ledgerName === "TOTAL"?  
+                 getFormattedValue(parseFloat(cellElement.data?.balance)):cellElement.data?.balance
+                }`}
+          </span>
+        )
+      }
     },
-    
     {
       dataField: "ledger_Balance",
       caption: t("ledger_balance"),
@@ -139,6 +163,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                //  remoteOperations={{filtering:true,paging:true,sorting:true}}
                   columns={columns}
                   gridHeader={t("daily_summary_receipt_details")}
                   dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
@@ -146,9 +171,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
                   postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>

@@ -49,7 +49,7 @@ const applicationSettings = useSelector(
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('routeID', data.routeID)}
+          onSelectItem={(data) => handleFieldChange({routeID: data.value, routeName: data.routeName})}
         />}
         {applicationSettings.accountsSettings.maintainCostCenter == true &&
         <ERPDataCombobox

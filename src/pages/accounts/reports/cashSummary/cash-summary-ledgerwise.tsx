@@ -86,6 +86,7 @@ const CashSummaryLedgerwise = () => {
                 <ErpDevGrid
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From : {fromDate} To : {toDate}"
                   gridHeader={t("cash_summary_ledgerwise")}
                   dataUrl= {Urls.acc_reports_cash_summary_ledgerwise}
                   method={ActionType.POST}

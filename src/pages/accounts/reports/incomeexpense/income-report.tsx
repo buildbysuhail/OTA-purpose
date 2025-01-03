@@ -20,7 +20,7 @@ const IncomeReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t('sl_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

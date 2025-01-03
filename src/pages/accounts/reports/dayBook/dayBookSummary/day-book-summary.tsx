@@ -16,7 +16,7 @@ import { Filter } from "lucide-react";
 // }
 const DayBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue} = useNumberFormat()
   const [filter, setFilter] = useState<any>(DayBookReportFilterInitialState);
   const rootState = useRootState();
@@ -31,7 +31,7 @@ const DayBookSummary = () => {
     // },
     {
       dataField: "voucherType",
-      caption: t("voucher_type"),
+      caption: t("voucherType"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

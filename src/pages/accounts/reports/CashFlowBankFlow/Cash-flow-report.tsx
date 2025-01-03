@@ -55,7 +55,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "debit",
-      caption: t("in_flow"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -68,7 +68,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "credit",
-      caption: t("out_flow"),
+      caption: t("outFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -81,7 +81,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "monthBal",
-      caption: t("net_flow"),
+      caption: t("netFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -121,10 +121,10 @@ const CashFlowReport = () => {
                     content: <CashBankFlowDetailedReport postData={{...filter,
                       reportType:"Cash",
                     }} />,
-                    title: t("cash_flow_detailed"),
+                    title: t("cash_flow_report_detailed"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "month,",
+                    drillDownCells: "month",
                     bodyProps: "year,monthNum",
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}

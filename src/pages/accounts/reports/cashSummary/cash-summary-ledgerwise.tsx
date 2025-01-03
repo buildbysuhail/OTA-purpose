@@ -18,7 +18,7 @@ interface CashSummaryLedgerwise {
 }
 const CashSummaryLedgerwise = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue} = useNumberFormat()
   const [filter, setFilter] =useState<CashSummaryLedgerwise>({from: new Date()});
   const rootState = useRootState();

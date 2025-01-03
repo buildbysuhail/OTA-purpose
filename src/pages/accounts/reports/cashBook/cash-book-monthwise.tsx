@@ -56,7 +56,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
     // },
     {
       dataField: "year",
-      caption: "kkkk",
+      caption: t("year"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

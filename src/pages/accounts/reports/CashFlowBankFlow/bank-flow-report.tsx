@@ -56,7 +56,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "debit",
-      caption: t("in_flow"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -69,7 +69,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "credit",
-      caption: t("out_flow"),
+      caption: t("outFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -82,7 +82,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "monthBal",
-      caption: t("net_flow"),
+      caption: t("netFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -123,10 +123,10 @@ const BankFlowReport = () => {
                       { ...filter,
                         reportType:"Bank",
                       }} />,
-                    title: t("Bank_flow_detailed"),
+                    title: t("bank_flow_report_detailed"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "month,",
+                    drillDownCells: "month",
                     bodyProps: "year,monthNum",
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}

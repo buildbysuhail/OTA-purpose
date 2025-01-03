@@ -337,5 +337,11 @@
 
     "debitTransaction": "التحويلات المدينة",
     "creditTransaction": "التحويلات الدائنة",
-    "excludeZeroBalance": "استبعاد الرصيد الصفري"
+    "excludeZeroBalance": "استبعاد الرصيد الصفري",
+    "income_report":"تقرير الدخل",
+    "income_report_detailed":"تقرير الدخل التفصيلي",
+    "group_under":"المجموعة تحت",
+    "expense_report":"تقرير النفقات",
+    "expense_report_detailed":"تقرير المصروفات مفصل",
+    "cash_summary_ledgerwise":"ملخص النقد حسب دفتر الأستاذ"
 }

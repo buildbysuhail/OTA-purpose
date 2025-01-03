@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -10,10 +10,12 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface CashBookDetailedProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
 }
-const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
+const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps }) => {
+// const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat()

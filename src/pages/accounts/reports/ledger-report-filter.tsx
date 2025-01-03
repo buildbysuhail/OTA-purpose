@@ -48,7 +48,8 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           getListUrl: Urls.data_acc_ledgers_Code,
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
-          labelKey: "name",
+          labelKey: "alias",
+          nameKey:"name",
         }}
         onChangeData={(data) => {
           handleFieldChange({ledgerID: data.value, ledgerName: data.name});

@@ -76,6 +76,7 @@ interface ERPDevGridProps {
   | boolean
   | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
+  onFilterChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
@@ -296,6 +297,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   allowSearching = true,
   remoteOperations = true,
   onRowClick,
+  onFilterChanged,
   onCellClick,
   onRowDblClick,
   onSelectionChanged,
@@ -402,7 +404,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   ); // Add any other dependencies here
   const onApplyFilter = useCallback(
     (_filter: any) => {
-
+debugger;
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
       console.log(filter);
@@ -415,6 +417,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
       }
       setFilter(dss);
+      onFilterChanged != undefined && onFilterChanged(dss);
     },
     []
   ); // Add any other dependencies here

@@ -115,7 +115,7 @@ const DayBookSummary = () => {
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <DayBookBillWise postData={{...filter}}/>,
+                    content: <DayBookBillWise postData={filter}/>,
                     title: t("daybook_billwise"),
                     isForm: false,
                     width: "mw-100",

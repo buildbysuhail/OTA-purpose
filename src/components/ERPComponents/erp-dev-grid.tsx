@@ -681,7 +681,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const [l, r] = placeholder.split('___');
         const result = r
           ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
-            return isChildOpen.data != undefined ? isChildOpen.data[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
+            return postData != undefined ? postData[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
           })
           : '';
   

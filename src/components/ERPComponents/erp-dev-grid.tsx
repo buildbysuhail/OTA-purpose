@@ -44,6 +44,7 @@ interface ERPDevGridProps {
   columns: DevGridColumn[];
   showSerialNo?: boolean;
   gridId: string;
+  rowData?: string;
   dataUrl?: string;
   filterInitialData?: any;
   enablefilter?: boolean;
@@ -268,6 +269,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   dataUrl,
   data,
   postData,
+  rowData,
   filterInitialData,
   enablefilter = false,
   filterContent = <></>,

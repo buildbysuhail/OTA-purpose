@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,12 +9,21 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDetailed from "./cash-book-detailed";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 interface CashBookMonthDayWiseProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
 }
-const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
-  debugger;
+// interface CashBookMonthWiseProps {
+//   postData: any;
+//   groupName?: string;
+//   contentProps?: any;
+// }
+
+const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps }) => {
+// const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
+  // debugger;
   
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
@@ -141,7 +150,7 @@ const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDa
                   gridHeader={t("cash_book_daywise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}
-                  postData={contentProps}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}

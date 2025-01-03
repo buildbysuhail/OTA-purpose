@@ -20,9 +20,10 @@ interface CashBookMonthWiseProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
+  rowData?: any;
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps }) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData }) => {
   // interface CashBookMonthWiseFilters {
   //   from: Date
   // }
@@ -158,9 +159,12 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
+                  rowData={rowData}
                   // CashBookMonthWise
                   childPopupProps={{
-                    content: <CashBookDayWise />,
+                    // content: <CashBookMonthWise postData={
+                    //   { ...filter }} />,
+                     content : <CashBookDayWise postData={""}/>,
                     title: t("cash_book_daywise"),
                     isForm: false,
                     width: "mw-100",

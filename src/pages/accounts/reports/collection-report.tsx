@@ -98,6 +98,7 @@ const CollectionReport = () => {
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
+                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("collection_report")}
                   dataUrl={Urls.acc_reports_collection}
                   method={ActionType.POST}

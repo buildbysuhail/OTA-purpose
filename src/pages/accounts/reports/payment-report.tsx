@@ -106,6 +106,7 @@ const PaymentReport = () => {
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}

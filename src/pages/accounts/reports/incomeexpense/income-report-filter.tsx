@@ -67,7 +67,7 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
       />
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -78,7 +78,7 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />
     </div>
   );

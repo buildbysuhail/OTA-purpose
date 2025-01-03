@@ -131,6 +131,7 @@ interface ERPDevGridProps {
     isForm: boolean,
     content: any,
     drillDownCells: string,
+    drillDownDisplayCells?: string,
     bodyProps?: string,
     isMaximized?:boolean,
     enableFilter?: boolean,
@@ -142,6 +143,7 @@ interface ERPDevGridProps {
     isForm: boolean,
     content: any,
     drillDownCells: string,
+    drillDownDisplayCells?: string,
     bodyProps?: string,
     enableFilter?: boolean,
     enableFn?: () => boolean
@@ -365,7 +367,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [filter, setFilter] = useState<any>({});
   const [filterValidations, setFilterValidations] = useState<any>({});
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any, key?: string }>({ isOpen: false, props: {}, key:"" });
+  const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any, key?: string , drillDownDisplayCells?: string[], data?: any}>({ isOpen: false, props: {}, key:"" ,drillDownDisplayCells:[]});
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
@@ -615,6 +617,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     // Check if the clicked cell's field matches dynamicProps.drillDownCells
     const _drillDownCells = dynamicProps?.drillDownCells.split(',');
     const _drillDownCell = _drillDownCells.find((x: string) => x === event.column?.dataField);
+    const _drillDownDisplayCells = dynamicProps?.drillDownDisplayCells?.split(',');
   
     if ((_drillDownCell !== undefined && dynamicProps?.enableFn == undefined) || 
         (_drillDownCell !== undefined && dynamicProps?.enableFn != undefined && dynamicProps?.enableFn(event.data))) {
@@ -629,7 +632,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell});
+      setIsChildOpen({ isOpen: true, props: updatedBodyProps, key: _drillDownCell, drillDownDisplayCells: _drillDownDisplayCells, data: event.data});
       // const sd = 223;
     }
   }, []);
@@ -659,6 +662,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     // Replace placeholders and conditions
     return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
       debugger;
+
       // Handle conditional expressions using '&&'
       if (placeholder.includes('&&')) {
         const [condition, trueValue] = placeholder.split('&&');
@@ -670,7 +674,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           : '';
   
         return result;
-      } else if (formState[placeholder] !== undefined) {
+      }
+      else if (placeholder.includes('___')) {
+        const [l, r] = placeholder.split('___');
+        const result = r
+          ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
+            return isChildOpen.data != undefined ? isChildOpen.data[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
+          })
+          : '';
+  
+        return result;
+      }
+       else if (formState[placeholder] !== undefined) {
         // Handle regular placeholders
         if (placeholder.includes('date') || placeholder.includes('Date')) {
           // If the placeholder is a date, format it
@@ -688,7 +703,7 @@ debugger;
     const data = filter;
 const _gridHeader = filterText.toString();
     // Dynamically replace placeholders using a regular expression
-   
+      
       return formatStringWithConditions(_gridHeader, data);
   }, [gridHeader, filter]);
   

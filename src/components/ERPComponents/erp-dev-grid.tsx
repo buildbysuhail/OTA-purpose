@@ -671,6 +671,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const conditionResult = evaluateExpression(condition.trim(), formState);
         const result = conditionResult
           ? trueValue.replace(/\[([^\]]+)\]/g, (innerMatch: any, innerPlaceholder: any) => {
+            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
+              // If the placeholder is a date, format it
+              return formatDate(formState[innerPlaceholder]);
+            }
             return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
           })
           : '';
@@ -681,6 +685,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const [l, r] = placeholder.split('___');
         const result = r
           ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
+            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
+              // If the placeholder is a date, format it
+              return rowData != undefined ? formatDate(rowData[innerPlaceholder]): "N/A";
+            }
+            return rowData != undefined ? rowData[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
+          })
+          : '';
+  
+        return result;
+      }
+      else if (placeholder.includes('****')) {
+        const [l, r] = placeholder.split('****'); 
+        const result = r
+          ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
+            debugger;
+            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
+              // If the placeholder is a date, format it
+              return formatDate(postData[innerPlaceholder]);
+            }
             return postData != undefined ? postData[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
           })
           : '';
@@ -932,6 +955,7 @@ const onCellPrepared = useCallback((e: any) => {
     content={childPopupPropsDynamic 
       ? childPopupPropsDynamic(isChildOpen.key).content 
       : childPopupProps?.content}
+      rowData={isChildOpen.data} 
     contentProps={isChildOpen.props}
   />
 )}

@@ -95,7 +95,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,CostCenterName:data.label})}
       />
       {applicationSettings.accountsSettings.allowSalesCounter == true &&
       <ERPDataCombobox

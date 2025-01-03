@@ -164,7 +164,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   childPopupProps={{
                     // content: <CashBookMonthWise postData={
                     //   { ...filter }} />,
-                     content : <CashBookDayWise postData={""}/>,
+                     content : <CashBookDayWise postData={{}}/>,
                     title: t("cash_book_daywise"),
                     isForm: false,
                     width: "mw-100",

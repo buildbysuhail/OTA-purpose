@@ -33,7 +33,7 @@ const DayBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCenterID', data.costCenterID)}
+        onSelectItem={(data) => handleFieldChange({costCenterID: data.value,CostCenterName:data.label})}
       />
     </div>
   );

@@ -81,7 +81,7 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onSelectItem={(data) => handleFieldChange({salesRouteID: data.value,salesRouteName:data.name})}
       />}
       <ERPDataCombobox
         {...getFieldProps("employeeID")}
@@ -92,7 +92,7 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('employeeID', data.employeeID)}
+        onSelectItem={(data) => handleFieldChange({employeeID: data.value, employeeName: data.name})}
       />
       <ERPDataCombobox
         {...getFieldProps("costCenterID")}

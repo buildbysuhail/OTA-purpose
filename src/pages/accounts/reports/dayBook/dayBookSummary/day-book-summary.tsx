@@ -64,7 +64,7 @@ const DayBookSummary = () => {
     },
     {
       dataField: "credit",
-      caption: t("credit"),
+      caption: t("credit"), 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -99,6 +99,7 @@ const DayBookSummary = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}

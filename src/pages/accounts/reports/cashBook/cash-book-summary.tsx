@@ -89,6 +89,7 @@ const CashBookSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterWidth="100"
+                  filterText="As On Date : {asonDate}"
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}
                   method={ActionType.POST}

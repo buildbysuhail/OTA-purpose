@@ -10,6 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDayWise from "./cash-book-daywise";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { Filter } from "lucide-react";
 
 // interface CashBookMonthWiseProps {
 //   contentProps?: any
@@ -146,6 +147,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
                   heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
+                  filterText=""
                   gridHeader={t("cash_book")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}

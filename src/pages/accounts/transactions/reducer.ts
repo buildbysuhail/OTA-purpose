@@ -216,7 +216,7 @@ const accTransactionSlice = createSlice({
         state,
         action.payload.applicationSettings.accountsSettings.defaultCostCenterID
       );
-      state.row.BillwiseDetails = "";
+      state.row.billwiseDetails = "";
     },
 
     // Update a specific row in the transaction details

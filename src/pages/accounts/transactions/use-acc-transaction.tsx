@@ -32,6 +32,7 @@ import {
   AccTransactionData,
   AccTransactionFormState,
   AccTransactionMaster,
+  AccTransactionRow,
 } from "./acc-transaction-types";
 import {
   isNullOrUndefinedOrEmpty,
@@ -181,7 +182,7 @@ export const useAccTransaction = (
 
     return nextVoucherNumber;
   };
-  const validatePDC = async (
+  const validatedPDC = async (
     formType: string,
     voucherType: string,
     prefix: string
@@ -523,7 +524,7 @@ export const useAccTransaction = (
       
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
-          if (formState.row.BillwiseDetails == "") {
+          if (formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
               dispatch(
                 accFormStateHandleFieldChange({
@@ -651,6 +652,135 @@ export const useAccTransaction = (
         }));
         focusLedgerCombo();
       }
+    }
+  };
+  const validatePDC = async (
+    accTransactionDetailsId: number
+  ): Promise<boolean> => {
+    try {
+      if (!accTransactionDetailsId) {
+        return false;
+      }
+  
+      const params = {
+        accDetailId: accTransactionDetailsId
+      };
+  
+      const response = await api.getAsync(
+        `${Urls.validate_check_status}${accTransactionDetailsId}`,
+      );
+      
+      if (response == undefined || response.isOk === false) {
+        return false;
+      }
+      return true;
+  
+    } catch (error) {
+      ERPAlert.show({
+        type: 'error',
+        title: 'Error',
+        text: error instanceof Error ? error.message : 'Failed to validate PDC'
+      });
+      return true; // Maintain original behavior of returning true on error
+    }
+  };
+  interface RowClickHandlerParams {
+    rowIndex: number;
+    columnName: string;
+    row: AccTransactionRow;
+  }
+  const handleRowClick = async ({ rowIndex, columnName, row }: RowClickHandlerParams) => {
+    try {
+      // Check PDC validation first
+      if (row.accTransactionDetailId) {
+        const isPDCValid = await validatePDC(row.accTransactionDetailId);
+        if (isPDCValid) {
+          ERPAlert.show({
+            title: "Warning",
+            text: "Sorry You can't Edit Cleared/Bounced PDC....!!",
+            icon: "warning",
+          });
+          clearControls();
+          dispatch(updateFormElement({
+            fields: {
+              btnSave: { disabled: true },
+              btnAdd: { disabled: true }
+            }
+          }));
+          return;
+        }
+      }
+
+      // Handle empty row
+      if (!row) {
+        clearControls();
+        return;
+      }
+
+
+      // Enable buttons
+      dispatch(updateFormElement({
+        fields: {
+          btnSave: { disabled: false },
+          btnAdd: { disabled: false }
+        }
+      }));
+
+      // Update row data in form state
+      dispatch(accFormStateRowHandleFieldChange({
+        fields: {
+          amount: row.amountFC?.toString() || row.amount?.toString() || "0",
+          discount: row.discount?.toString() || "0",
+          ledgerCode: row.ledgerCode || "",
+          ledgerId: row.ledgerId || 0,
+          narration: row.narration || "",
+          nameOnCheque: row.nameOnCheque || "",
+          bankName: row.bankName || "",
+          costCentreId: row.costCentreId || 0,
+          projectId: row.projectId || 0,
+          billwiseDetails: row.billwiseDetails || "",
+          chequeNumber: row.chequeNumber || "",
+          checkStatus: row.checkStatus|| "",
+          bankDate: row.bankDate || new Date().toISOString(),
+          drCr: row.drCr || ""
+        }
+      }));
+
+      let accTransDetailsID = row.accTransactionDetailId;
+
+      // Handle special voucher type cases
+      if (["CR", "BR", "CN", "CQR", "PBR", "JV"].includes(formState.transaction.master.voucherType)) {
+        if (formState.isEdit && accTransDetailsID > 0) {
+          accTransDetailsID = accTransDetailsID + 1;
+        }
+      } else if (formState.transaction.master.voucherType === "OB") {
+        if (formState.isEdit && accTransDetailsID > 0 && row.drCr === "Cr") {
+          accTransDetailsID =accTransDetailsID + 1
+        }
+      }
+
+      // Update row edit state
+      dispatch(accFormStateHandleFieldChange({
+        fields: {
+          isRowEdit: true,
+          accTransDetailsID: accTransDetailsID
+        }
+      }));
+
+      // Update Add button text
+      dispatch(updateFormElement({
+        fields: {
+          btnAdd: { label: "Modify" }
+        }
+      }));
+
+    } catch (error) {
+      console.error("Row click handler error:", error);
+      ERPAlert.show({
+        title: "Error",
+        text: "An error occurred while processing the row click",
+        icon: "error"
+      });
     }
   };
 

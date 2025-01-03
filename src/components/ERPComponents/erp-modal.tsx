@@ -75,7 +75,9 @@ const ERPModal = React.memo(
 
     useEffect(() => {
       const updateModalHeight = () => {
-        const height =  window.innerHeight 
+        const height = isMaximized
+          ? window.innerHeight - 50
+          : window.innerHeight - 300;
         setModalHeight(height);
       };
     
@@ -177,10 +179,10 @@ const ERPModal = React.memo(
                     // className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
                     className={`erp-modal${isOpen ? '-opened' : 'closed'} transform bg-white text-left align-middle shadow-xl transition-all ${isMaximized
-                      ? "w-full h-full rounded-md"
-                      : `min-h-full max-h-screen ${width} rounded-md`
+                      ? "w-full  rounded-md"
+                      : `${width} rounded-md`
                       } ${isRemoveSomething ? "px-0" : "px-5"}`}
-                    // style={{ height:"auto",maxHeight:isMaximized?`${modalHeight - 10}px` :`${modalHeight - 300}px`}}
+                    style={{ height:`${modalHeight}px`}}
                   >
                     <DialogTitle
                       as="h3"
@@ -254,22 +256,21 @@ const ERPModal = React.memo(
                     </div> */}
                     <div
                       style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        maxHeight:`${isMaximized ? `${modalHeight - 100}px`:`${modalHeight - 200}px`}`,
-                        height: 'auto',
-                         overflowY: 'auto'
+                        // display: 'flex',
+                        // flexDirection: 'column',
+                        maxHeight: `${modalHeight - 100}px`,
+                        // height: 'auto',
                       }}
 >
                       <ERPScrollArea
-                        customStyle={`${isMaximized ? `100%`:`${modalHeight - 300}px`}`} // Use modalHeight for maxHeight
+                        customStyle={`${modalHeight - 130}px`} // Use modalHeight for maxHeight
                         className="overflow-y-auto pr-2"
                       >
                         {content &&
                           cloneElement(content, {
                             contentProps: contentProps ? contentProps : {},
                             isMaximized: isMaximized, 
-                            modalHeight:modalHeight, // Pass isMaximized to the content
+                            modalHeight:modalHeight,// Pass isMaximized to the content
                             rowData: rowData
                           })}
                       </ERPScrollArea>

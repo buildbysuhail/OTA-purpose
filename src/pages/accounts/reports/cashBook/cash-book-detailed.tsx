@@ -129,6 +129,7 @@ const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetail
                 <ErpDevGrid
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
+                  filterText="{___(transactionDate)} {**** As On Date : (asonDate)}"
                   gridHeader={t("cash_book_detailed")}
                   dataUrl={Urls.acc_reports_cash_book_transactionwise}
                   method={ActionType.POST}

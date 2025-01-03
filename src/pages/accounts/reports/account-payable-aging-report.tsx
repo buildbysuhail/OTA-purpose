@@ -116,6 +116,7 @@ const AccountPayableAgingReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="As On Date : {asonDate}{salesRouteID > 0 && , Sales Route :[salesRouteName]}{partyCategoryID > 0 && , Party Category : [partyCategoryName]}{costCentreID > 0 && , Cost Centre : [costCentreName]}"
                   gridHeader={t("account_payable_aging_report")}
                   dataUrl={Urls.acc_reports_aging_payable}
                   method={ActionType.POST}

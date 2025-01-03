@@ -205,6 +205,7 @@ const BalancesheetVertical = () => {
                   showFilterInitially={true}
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   filterWidth="100"
                   reload={true}
                   hideGridAddButton={true}

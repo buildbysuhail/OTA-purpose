@@ -132,6 +132,7 @@ const TrialBalance = () => {
                   showFilterInitially={true}
                   filterContent={<TrialBalanceReportFilter />}
                   filterInitialData={TrialBalanceReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={{ asOnDate: filter.toDate }}
                     />,

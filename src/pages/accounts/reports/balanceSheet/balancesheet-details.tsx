@@ -14,8 +14,10 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface BalancesheetDetailsProps {
   postData: any;
   groupName?: string;
+  rowData?: any;
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData }) => {
+  debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
@@ -100,13 +102,15 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                 <ErpDevGrid
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
-                  gridHeader={groupName}
+                  gridHeader={"abc"}
+                  filterText="{___(groupName)} {****(asOnDate)}"
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
                   showFilterInitially={true}
                   method={ActionType.POST}
+                  rowData={rowData}
                   gridId="grd_balancesheet_details"
                   childPopupProps={{
                     content: <CashBookMonthWise postData={{ asOnDate: filter.asOnDate }} />,

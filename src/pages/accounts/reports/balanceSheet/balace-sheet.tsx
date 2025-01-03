@@ -14,16 +14,17 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
   item: any;
-  setIsOpenDetails: (isOpen: any) => void;
+  setIsOpenDetails: (data: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    event.preventDefault();
+    debugger;
     setIsOpenDetails({
       isOpen: true,
       key: item.groupID,
       groupName: item.groupName,
+      item: item
     });
   };
   return (
@@ -89,7 +90,10 @@ const HorizontalBalanceSheet: React.FC<{
                 <BalanceSheetRow
                   key={`liability-${index}`}
                   item={item}
-                  setIsOpenDetails={setIsOpenDetails}
+                  setIsOpenDetails={(data: any) => {
+                    setIsOpenDetails(data);
+                    debugger;
+                  }}
                 />
               ))}
             </tbody>
@@ -108,7 +112,10 @@ const HorizontalBalanceSheet: React.FC<{
                 <BalanceSheetRow
                   key={`asset-${index}`}
                   item={item}
-                  setIsOpenDetails={setIsOpenDetails}
+                  setIsOpenDetails={(data: any) => {
+                    setIsOpenDetails(data);
+                    debugger;
+                  }}
                 />
               ))}
             </tbody>
@@ -141,7 +148,8 @@ const BalanceSheet = () => {
     isOpen: boolean;
     key: number;
     groupName?: string;
-  }>({ isOpen: false, key: 0 });
+    item?: any
+  }>({ isOpen: false, key: 0, item: {}});
   const { t } = useTranslation('accountsReport');
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
@@ -312,7 +320,10 @@ const BalanceSheet = () => {
                     <BalanceSheetRow
                       key={index}
                       item={item ?? []}
-                      setIsOpenDetails={setIsOpenDetails}
+                      setIsOpenDetails={(data: any) => {
+                        setIsOpenDetails(data);
+                        debugger;
+                      }}
                     />
                   ))}
                 </tbody>
@@ -324,7 +335,9 @@ const BalanceSheet = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
+      {JSON.stringify(isOpenDetails.item)}
       {(isOpenDetails.key > 0 &&
+      
         <ERPModal
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
@@ -332,13 +345,11 @@ const BalanceSheet = () => {
           width="w-full max-w-[90%]"
           isForm={true}
           closeModal={() => {
-            setIsOpenDetails({ isOpen: false, key: 0 });
+            setIsOpenDetails({ isOpen: false, key: 0 ,item:{}});
           }}
           content={
-            <BalancesheetDetails
-              postData={{
-                accGroupID: isOpenDetails.key,
-                asOnDate: filter.asOnDate,
+            <BalancesheetDetails rowData={isOpenDetails.item}
+              postData={{...filter, accGroupID: isOpenDetails.key
               }}
               groupName={isOpenDetails.groupName}
             />

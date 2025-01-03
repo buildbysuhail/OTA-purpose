@@ -155,6 +155,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                remoteOperations={{filtering:true,paging:true,sorting:true}}
                   columns={columns}
                   gridHeader={t("daily_summary_sales_credit_details")}
                   dataUrl= {Urls.acc_reports_daily_summary_credit_details}

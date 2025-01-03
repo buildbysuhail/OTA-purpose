@@ -18,7 +18,7 @@ interface DayBookBillwiseProps {
 }
 
 const DayBookBillWise: FC<DayBookBillwiseProps> = ({ postData, contentProps, rowData }) => {
-
+debugger;
 // const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()
@@ -116,7 +116,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({ postData, contentProps, row
                   columns={columns}
                   rowData={rowData}
                   // postData = {contentProps}
-                  filterText="{___(voucherType)} {**** From : (dateFrom) To : (dateTo)}"
+                  filterText="{___(voucherType)} {**** From : (dateFrom)}{**** To : (dateTo)}"
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}

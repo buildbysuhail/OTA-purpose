@@ -90,7 +90,7 @@ const CashBookSummary = () => {
                   columns={columns}
                   filterWidth="100"
                   filterText="As On Date : {asonDate}"
-                  gridHeader={t("day_book_summary")}
+                  gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"

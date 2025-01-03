@@ -199,6 +199,7 @@ const LedgerReport = () => {
                   method={ActionType.POST}
                   filterContent={<LedgerReportFilter />}
                   filterInitialData={LedgerReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   gridId="grd_cost_centre"
                 ></ErpDevGrid>

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,12 +11,16 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 interface OutstandingAccountAgingAnalysisProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
+  rowData?: any;
 }
-const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
+const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData }) => {
+// const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
     const { getFormattedValue } = useNumberFormat()
@@ -105,7 +109,7 @@ const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:O
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   filterText="{___(ledgername)}{**** As On Date : (asonDate)}"
-                  postData = {contentProps}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}
                   method={ActionType.POST}

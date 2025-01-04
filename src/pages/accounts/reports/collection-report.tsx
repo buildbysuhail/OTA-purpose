@@ -102,7 +102,7 @@ const CollectionReport = () => {
                   gridHeader={t("collection_report")}
                   dataUrl={Urls.acc_reports_collection}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_collection_reports"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

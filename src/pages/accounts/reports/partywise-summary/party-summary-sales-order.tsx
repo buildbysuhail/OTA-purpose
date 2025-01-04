@@ -163,7 +163,7 @@ const PartySummarySalesOrder: React.FC<PartySummaryFilter> = ({ filter }) => {
                   gridHeader={t("party_summary_sales_order")}
                   dataUrl={Urls.acc_reports_party_summary_sales_order}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_party_summary_sales_order"
                   popupAction={toggleCostCentrePopup}
                   postData={filter}
                   hideGridAddButton={true}

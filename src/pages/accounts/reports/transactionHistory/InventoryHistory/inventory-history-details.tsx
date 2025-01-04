@@ -99,7 +99,7 @@ const InventoryHistoryDetails = ({contentProps}:InventoryHistoryDetailsProps) =>
                   gridHeader={t("inventory_transaction_history_details")}
                   dataUrl= {Urls.acc_reports_inventory_history_details}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_inventory_history_details"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}

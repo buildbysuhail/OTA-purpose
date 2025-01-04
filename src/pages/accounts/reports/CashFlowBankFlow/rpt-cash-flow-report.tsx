@@ -108,7 +108,7 @@ const CashFlowReport = () => {
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_flow"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={false}
                   showFilterInitially={false}

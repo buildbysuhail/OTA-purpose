@@ -108,7 +108,7 @@ const BankFlowReport = () => {
                   gridHeader={t("bank_flow_report")}
                   dataUrl={Urls.acc_reports_bank_flow}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_bank_flow"
                   popupAction={toggleCostCentrePopup}
                   remoteOperations={{filtering:false,paging:false,sorting:false}}
                   enablefilter={false}

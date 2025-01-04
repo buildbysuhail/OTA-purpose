@@ -251,7 +251,7 @@ const ProfitAndLossDetailedReport = () => {
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
-                gridId="gridPandL"
+                gridId="gridPandL_detailed"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}

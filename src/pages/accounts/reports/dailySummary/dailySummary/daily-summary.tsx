@@ -352,7 +352,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
                 postData={filter}
                 onRowClick={onRowClick}
                 method={ActionType.POST}
-                gridId="grd_cost_centre"
+                gridId="grd_daily_summary"
                 popupAction={toggleCostCentrePopup}
                 remoteOperations={{filtering: false, paging: false, sorting: false}}
                 hideGridAddButton={true}
@@ -378,7 +378,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
                     setReload(reload);
                   }
                 }}
-                gridId="grd_cost_centre_detailed"
+                gridId="grd_daily_summary_detailed"
                 popupAction={toggleCostCentrePopup}
                 hideGridAddButton={true}
                 reload={reload}

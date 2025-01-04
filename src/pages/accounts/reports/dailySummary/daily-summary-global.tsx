@@ -117,7 +117,7 @@ const DailySummaryGlobal = () => {
                   gridHeader={t("daily_summary_report")}
                   dataUrl={Urls.acc_reports_daily_summary_global}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_daily_summary_global"
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth="100"

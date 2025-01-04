@@ -278,7 +278,7 @@ const BillwiseProfitGlobal = () => {
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl={Urls.acc_reports_billwise_profit_global}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_billwise_profit_global"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

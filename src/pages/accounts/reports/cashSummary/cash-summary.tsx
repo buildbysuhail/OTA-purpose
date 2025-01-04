@@ -57,7 +57,7 @@ const CashSummary = () => {
                   gridHeader={t("cash_summary")}
                   dataUrl={Urls.acc_reports_cash_summary}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_summary"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

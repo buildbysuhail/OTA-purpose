@@ -124,7 +124,7 @@ const OutstandingAccountPayableReport = () => {
                   gridHeader={t("account_payable")}
                   dataUrl={Urls.acc_reports_payable}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_outstanding_account_payable"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

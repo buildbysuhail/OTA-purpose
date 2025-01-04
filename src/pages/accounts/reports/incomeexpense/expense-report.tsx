@@ -124,7 +124,7 @@ const ExpenseReport = () => {
                   gridHeader={t("expense_report")}
                   dataUrl={Urls.acc_reports_income_expense_report }
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_expense_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

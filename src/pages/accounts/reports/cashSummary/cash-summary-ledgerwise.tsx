@@ -90,7 +90,7 @@ const CashSummaryLedgerwise = () => {
                   gridHeader={t("cash_summary_ledgerwise")}
                   dataUrl= {Urls.acc_reports_cash_summary_ledgerwise}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_summary_ledgerwise"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

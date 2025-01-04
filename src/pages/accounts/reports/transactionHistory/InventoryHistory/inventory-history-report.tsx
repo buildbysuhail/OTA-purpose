@@ -140,7 +140,7 @@ const InventoryHistoryReport = () => {
                   gridHeader={t("inventory_transaction_history")}
                   dataUrl={Urls.acc_reports_inventory_history}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_inventory_history_report"
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactrionHistoryReportFilter />}

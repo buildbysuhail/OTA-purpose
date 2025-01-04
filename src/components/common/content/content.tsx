@@ -7,8 +7,6 @@ import Templates from "../../../pages/InvoiceDesigner/Templates";
 import Settings from "../../../pages/settings/AllSettings/Settings";
 import UserActionReport from "../../../pages/settings/system/user-action-report";
 import ReportList from "../../ERPComponents/reports/reports-list";
-import AccountPayableAgingReport from "../../../pages/accounts/reports/account-payable-aging-report";
-import AccountReceivableAgingReport from "../../../pages/accounts/reports/account-receivable-aging-report";
 import TemplateDesignerLayout from "../layout/template-designer-layout"; 
 
 import LedgerReport from "../../../pages/accounts/reports/ledger-report";

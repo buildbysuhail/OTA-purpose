@@ -116,7 +116,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
                   dataUrl= {Urls.acc_reports_accounts_history_popup}
                   method={ActionType.POST}
                   postData ={contentProps.oldAccTransactionMasterID!=0?contentProps:null}
-                  gridId="grd_cost_centre"
+                  gridId="grd_accounts_history_popup"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

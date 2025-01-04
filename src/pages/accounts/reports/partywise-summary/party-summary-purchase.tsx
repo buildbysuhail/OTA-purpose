@@ -195,7 +195,7 @@ const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
                   gridHeader={t("party_summary_purchase")}
                   dataUrl={Urls.acc_reports_party_summary_purchase}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_party_summary_purchase"
                   popupAction={toggleCostCentrePopup}
                   postData={filter}
                   hideGridAddButton={true}

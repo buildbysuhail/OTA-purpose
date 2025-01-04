@@ -123,7 +123,7 @@ const IncomeReport = () => {
                   gridHeader={t("income_report")}
                   dataUrl={Urls.acc_reports_income_expense_report }
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_income_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

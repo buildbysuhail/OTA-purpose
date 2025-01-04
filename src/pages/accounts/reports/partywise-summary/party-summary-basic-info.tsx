@@ -224,7 +224,7 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
                   dataUrl={Urls.acc_reports_party_summary_basic_info}
                   method={ActionType.POST}
                   postData={filter}
-                  gridId="grd_cost_centre"
+                  gridId="grd_party_summary_basic_info"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}>

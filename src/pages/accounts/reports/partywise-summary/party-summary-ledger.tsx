@@ -203,7 +203,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
                   gridHeader={t("party_summary_ledger_report")}
                   dataUrl={Urls.acc_reports_party_summary_ledger}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_party_summary_ledger_report"
                   postData={filter}
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

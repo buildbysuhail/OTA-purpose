@@ -29,6 +29,7 @@ import {
 import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
 import ERPElementValidationMessage from "./erp-element-validation-message";
+import { X } from "lucide-react";
 
 interface Option {
   value: string;
@@ -636,8 +637,10 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
   }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
   const clearSelection = (e?: React.MouseEvent) => {
+    debugger;
     e?.stopPropagation();
     setQuery("");
+    setIsOpen(false);
     setInputValue("");
     setInitial(null);
     setActiveIndex(-1);
@@ -1136,7 +1139,10 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
         className={className}
         style={{
           marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
-          marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+          // marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+          marginTop: `${
+            (appState?.inputBox?.marginTop ?? 0) - (labelInfo ? 12 : 0)
+          }px`,
         }}
       >
         {/* <Autocomplete
@@ -1193,7 +1199,15 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
           id={id}
           options={items}
           value={initial}
-          onChange={handleItemSelect}
+          onChange={(event: any, value: any, reason: any) => {
+            if (reason === 'clear' && event.type === 'click') {
+              clearSelection();
+            }
+            else{
+              
+            handleItemSelect(event, value);
+            }
+           }}
           getOptionLabel={(option: any) => option.label || ""}
           isOptionEqualToValue={(option: any, value: any) =>
             option.value === value.value
@@ -1220,10 +1234,14 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
             </Paper>
           )}
           renderInput={(params) => (
-            // <Box display="flex" alignItems="center">
-            // <Typography variant="body1" sx={{ marginRight: 1 }}>
-            //   {/* {leftLabel} */}
-            // </Typography>
+              <>
+              <div className="flex justify-end items-center">
+              {labelInfo &&
+              cloneElement(
+              labelInfo,
+              labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
+              )}
+              </div>
             <TextField
               {...params}
               label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
@@ -1245,12 +1263,8 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
                   </React.Fragment>
                 ),
               }}
-            />
-          //   <Typography variant="body1" sx={{ marginLeft: 1 }}>
-          //     {/* {rightLabel} */}
-          //   </Typography>
-          // </Box>
-                      
+            />         
+              </>         
           )}
           renderOption={(props, option: any) => (
             <li
@@ -1281,9 +1295,6 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     if (!text) return text;
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
-
-  // const leftLabel = "Left Label"; // Replace with your actual left label value
-  // const rightLabel = "Right Label"; // Replace with your actual right label value
 
 
   if (_useMUI == undefined || _useMUI == false) {
@@ -1364,22 +1375,6 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
                     : ``,
               }}
             >
-              {/* {labelInfo && (
-                <span>{labelInfo}</span>
-                // {labelInfo}
-              )} */}
-
-              {/* {masterBalance && (
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-xs text-gray-500">
-                    Bal:{" "}
-                    {`${formState.masterBalance || "0.00"} ${
-                      formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
-                    }`}
-                  </span>
-                </div>
-              )} */}
-
               {labelInfo &&
               cloneElement(
               labelInfo,
@@ -1424,6 +1419,8 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
               autoFocus={autoFocus}
               title={initial?.label || ""}
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
+              readOnly={!disabled}
+              disabled={disabled}
             />
             <div
               className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
@@ -1457,31 +1454,49 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
               {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
               <button
                 type="button"
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   clearSelection();
+                //   setIsOpen(false);
+                // }}
                 onClick={(e) => {
+                  if (disabled) return;
                   e.stopPropagation();
                   clearSelection();
                   setIsOpen(false);
                 }}
-                className="p-1 hover:bg-gray-100 rounded-full"
+                // className="p-1 hover:bg-gray-100 rounded-full"
+                className={`p-1 ${!disabled ? 'hover:bg-gray-100' : ''} rounded-full`}
                 aria-label="Clear selection"
               >
                 <XMarkIcon
-                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
+                  // className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
+                  className={`${
+                    sizeClasses?.icons
+                  } text-gray-400 ${!disabled ? 'hover:text-gray-500' : ''} transition-transform duration-200 ${
+                    isOpen ? "transform rotate-180" : ""
+                  }`}
                   aria-hidden="true"
                 />
               </button>
             )}
               <Combobox.Button
-                className="p-1 hover:bg-gray-100 rounded-full"
+                // className="p-1 hover:bg-gray-100 rounded-full"
+                className={`p-1 ${!disabled ? 'hover:bg-gray-100' : ''} rounded-full`}
                 onClick={(e) => {
                   e.stopPropagation();
                   !disabled && setIsOpen(!isOpen);
                 }}
               >
                 <ChevronDownIcon
+                  // className={`${
+                  //   sizeClasses?.icons
+                  // } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                  //   isOpen ? "transform rotate-180" : ""
+                  // }`}
                   className={`${
                     sizeClasses?.icons
-                  } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                  } text-gray-400 ${!disabled ? 'hover:text-gray-500' : ''} transition-transform duration-200 ${
                     isOpen ? "transform rotate-180" : ""
                   }`}
                   aria-hidden="true"
@@ -1489,7 +1504,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
               </Combobox.Button>
             </div>
           </div>
-          {isOpen &&
+          {/* {isOpen &&
             createPortal(
               <div
                 ref={(el) => {
@@ -1503,6 +1518,43 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
                   top: comboboxRef.current?.getBoundingClientRect().bottom || 0,
                   left: comboboxRef.current?.getBoundingClientRect().left || 0,
                   position: "fixed",
+                }}
+              >
+                {loading ? (
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700 text-center animate-pulse">
+                    Loading...
+                  </div>
+                ) : filteredItems?.length === 0 ? (
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                    No data found
+                  </div>
+                ) : (
+                  <ComboboxList
+                    ref={listRef}
+                    items={filteredItems}
+                    selectedValue={initial}
+                    onSelect={handleItemClick}
+                    activeIndex={activeIndex}
+                    customSize={_customSize}
+                    appState={appState.dir}
+                  />
+                )}
+              </div>,
+              document.body // Render to body to escape parent constraints
+            )} */}
+            {isOpen &&
+            createPortal(
+              <div
+                ref={(el) => {
+                  if (el) {
+                    (el as any).__reactRefHandlers = { contains: () => true };
+                  }
+                }}
+                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md"
+                style={{
+                  width: comboboxRef.current?.offsetWidth || "auto",
+                  top: (comboboxRef.current?.getBoundingClientRect().bottom ?? 0) + window.scrollY,
+                  left: (comboboxRef.current?.getBoundingClientRect().left ?? 0) + window.scrollX,
                 }}
               >
                 {loading ? (

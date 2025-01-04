@@ -35,6 +35,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -43,6 +44,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -51,6 +53,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -59,6 +62,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
@@ -88,6 +92,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
@@ -106,7 +111,7 @@ const PaymentReport = () => {
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
+                  filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}

@@ -41,7 +41,7 @@ const CashSummaryLedgerwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-    
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -56,6 +56,7 @@ const CashSummaryLedgerwise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -68,7 +69,7 @@ const CashSummaryLedgerwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-   
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
    {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
@@ -86,7 +87,7 @@ const CashSummaryLedgerwise = () => {
                 <ErpDevGrid
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="From : {fromDate} To : {toDate}"
+                  filterText=" from {fromDate} to {toDate}"
                   gridHeader={t("cash_summary_ledgerwise")}
                   dataUrl= {Urls.acc_reports_cash_summary_ledgerwise}
                   method={ActionType.POST}

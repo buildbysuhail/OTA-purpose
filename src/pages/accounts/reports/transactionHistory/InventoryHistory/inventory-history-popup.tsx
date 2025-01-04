@@ -30,6 +30,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -38,6 +39,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -45,6 +47,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -53,6 +56,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
@@ -62,6 +66,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "cashReceived",
@@ -70,6 +75,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "remarks",

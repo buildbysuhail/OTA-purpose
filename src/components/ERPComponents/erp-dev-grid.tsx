@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid } from "devextreme-react/data-grid";
+import { DataGrid, GroupItem } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -123,8 +123,8 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-    | boolean
-    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+  | boolean
+  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
@@ -274,16 +274,16 @@ const createStore = async (
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-            ? await api.postAsync(
+              ? await api.postAsync(
                 dataUrl,
                 filterData != undefined && Object.keys(filterData).length > 0
                   ? filterData
                   : postData != undefined
-                  ? postData
-                  : {},
+                    ? postData
+                    : {},
                 queryString
               )
-            : null;
+              : null;
 
         if (
           result != undefined &&
@@ -307,21 +307,21 @@ const createStore = async (
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
-                data: [],
-                totalCount: -1,
-                summary: {},
-                groupCount: 0,
-              }
-            : {
-                data: result.data,
-                totalCount: result.totalCount,
-              }
-          : {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            };
+            }
+            : {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+            data: [],
+            totalCount: -1,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -464,8 +464,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       heightToAdjustOnWindowsInModal !== undefined
         ? heightToAdjustOnWindowsInModal
         : wh - heightToAdjustOnWindows < 300
-        ? 300
-        : wh - heightToAdjustOnWindows;
+          ? 300
+          : wh - heightToAdjustOnWindows;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [
     heightToAdjustOnMobile,
@@ -702,11 +702,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
           const pdfVisibleColumns = preferences
             ? preferences.columnPreferences
-                .filter((colPref) => colPref.showInPdf)
-                .map((colPref) => colPref.dataField)
+              .filter((colPref) => colPref.showInPdf)
+              .map((colPref) => colPref.dataField)
             : gridCols
-                .filter((col) => col.showInPdf)
-                .map((col) => col.dataField);
+              .filter((col) => col.showInPdf)
+              .map((col) => col.dataField);
 
           const pageWidth = doc.internal.pageSize.getWidth() - 80;
 
@@ -719,16 +719,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
           const pdfColumnsWidths = preferences
             ? preferences.columnPreferences
-                .filter((colPref) => colPref.showInPdf)
-                .map((colPref) => {
-                  if (!colPref.width) {
-                    return 0;
-                  }
-                  return colPref.width || 150;
-                })
+              .filter((colPref) => colPref.showInPdf)
+              .map((colPref) => {
+                if (!colPref.width) {
+                  return 0;
+                }
+                return colPref.width || 150;
+              })
             : gridCols
-                .filter((col) => col.showInPdf)
-                .map((col) => col.width || 100);
+              .filter((col) => col.showInPdf)
+              .map((col) => col.width || 100);
 
           if (columnsWithoutWidth.length > 0) {
             const specifiedWidthTotal = pdfColumnsWidths
@@ -766,68 +766,68 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           const workbook = new Workbook();
           const worksheet = workbook.addWorksheet(gridHeader);
 
-        // Add header section
-        const totalColumns = e.component.getVisibleColumns().length;
-        debugger;
-        const lastColumnLetter = String.fromCharCode(64 + totalColumns);
-        let currentRow = 1;
-        let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          // Add header section
+          const totalColumns = e.component.getVisibleColumns().length;
+          debugger;
+          const lastColumnLetter = String.fromCharCode(64 + totalColumns);
+          let currentRow = 1;
+          let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
 
-        // Keep track of merged ranges to prevent duplication
-        const mergedRanges = new Set();
+          // Keep track of merged ranges to prevent duplication
+          const mergedRanges = new Set();
 
-        // Helper function to merge cells safely
-        // const mergeCellsSafely = (range: any) => {
-        //   if (!mergedRanges.has(`${range}${currentRow}`)) {
-        //     worksheet.mergeCells(`${range}${currentRow}`);
-        //     mergedRanges.add(`${range}${currentRow}`);
-        //   }
-        // };
+          // Helper function to merge cells safely
+          // const mergeCellsSafely = (range: any) => {
+          //   if (!mergedRanges.has(`${range}${currentRow}`)) {
+          //     worksheet.mergeCells(`${range}${currentRow}`);
+          //     mergedRanges.add(`${range}${currentRow}`);
+          //   }
+          // };
 
-        // Add header section with merged cells
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
-        ) {
-          worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading7;
-          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
-          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
-        ) {
+          // Add header section with merged cells
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+          ) {
+            worksheet.mergeCells(mergeRange);
+            worksheet.getCell(`A${currentRow}`).value =
+              userSession.headerFooter.heading7;
+            worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
+            worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+            currentRow += 1;
+          }
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+          ) {
+            mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+            worksheet.mergeCells(mergeRange);
+            worksheet.getCell(`A${currentRow}`).value =
+              userSession.headerFooter.heading8;
+            worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+            worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+            currentRow += 1;
+          }
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+          ) {
+            mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+            worksheet.mergeCells(mergeRange);
+            worksheet.getCell(`A${currentRow}`).value =
+              userSession.headerFooter.heading9;
+            worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+            worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+            currentRow += 1;
+          }
+
+          const pageTitle = `${gridHeader} - ${header}`;
           mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
           worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading8;
-          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).value = pageTitle;
+          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
           worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
-        ) {
-          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-          worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading9;
-          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
-          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-
-        const pageTitle = `${gridHeader} - ${header}`;
-        mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-        worksheet.mergeCells(mergeRange);
-        worksheet.getCell(`A${currentRow}`).value = pageTitle;
-        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
-        worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-        currentRow += 2; // Add an extra row for spacing
+          currentRow += 2; // Add an extra row for spacing
           // Export grid data starting from the next row
           exportDataGridToExcel({
             component: e.component,
@@ -878,9 +878,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
       dynamicProps?.bodyProps != undefined
         ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-            const trimmedProp = prop.trim();
-            updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-          })
+          const trimmedProp = prop.trim();
+          updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+        })
         : {};
       const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
         postData,
@@ -937,18 +937,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const conditionResult = evaluateExpression(condition.trim(), formState);
         const result = conditionResult
           ? trueValue.replace(
-              /\[([^\]]+)\]/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return formatDate(formState[innerPlaceholder]);
-                }
-                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+            /\[([^\]]+)\]/g,
+            (innerMatch: any, innerPlaceholder: any) => {
+              if (
+                innerPlaceholder.includes("date") ||
+                innerPlaceholder.includes("Date")
+              ) {
+                // If the placeholder is a date, format it
+                return formatDate(formState[innerPlaceholder]);
               }
-            )
+              return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+            }
+          )
           : "";
 
         return result;
@@ -957,22 +957,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const [l, r] = placeholder.split("___");
         const result = r
           ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return rowData != undefined
-                    ? formatDate(rowData[innerPlaceholder])
-                    : "N/A";
-                }
+            /\(([^\]]+)\)/g,
+            (innerMatch: any, innerPlaceholder: any) => {
+              if (
+                innerPlaceholder.includes("date") ||
+                innerPlaceholder.includes("Date")
+              ) {
+                // If the placeholder is a date, format it
                 return rowData != undefined
-                  ? rowData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
+                  ? formatDate(rowData[innerPlaceholder])
+                  : "N/A";
               }
-            )
+              return rowData != undefined
+                ? rowData[innerPlaceholder] || "N/A"
+                : "N/A"; // Return the value from formState, or "N/A" if not found
+            }
+          )
           : "";
 
         return result;
@@ -980,21 +980,21 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const [l, r] = placeholder.split("****");
         const result = r
           ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                debugger;
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return formatDate(postData[innerPlaceholder]);
-                }
-                return postData != undefined
-                  ? postData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
+            /\(([^\]]+)\)/g,
+            (innerMatch: any, innerPlaceholder: any) => {
+              debugger;
+              if (
+                innerPlaceholder.includes("date") ||
+                innerPlaceholder.includes("Date")
+              ) {
+                // If the placeholder is a date, format it
+                return formatDate(postData[innerPlaceholder]);
               }
-            )
+              return postData != undefined
+                ? postData[innerPlaceholder] || "N/A"
+                : "N/A"; // Return the value from formState, or "N/A" if not found
+            }
+          )
           : "";
 
         return result;
@@ -1209,6 +1209,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                   ? column.captionDynamic(filter)
                   : column.caption
               }
+              groupIndex={column.groupIndex}
               dataType={column.dataType}
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
@@ -1227,6 +1228,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           ))}
           {summaryItems.length > 0 && (
             <Summary>
+              <GroupItem
+                column="SaleAmount"
+                summaryType="max"
+                valueFormat="currency"
+                showInGroupFooter={false}
+                alignByColumn={true}
+                displayFormat="Total: {0}"
+              />
               {summaryItems.map((config, index) => (
                 <TotalItem
                   key={index}
@@ -1238,7 +1247,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               ))}
             </Summary>
           )}
-          <Grouping autoExpandAll={true} allowCollapsing={false} />
+          {/* <Summary>
+               
+              </Summary> */}
         </DataGrid>
       </div>
       {(childPopupProps || childPopupPropsDynamic) && (

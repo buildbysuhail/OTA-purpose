@@ -79,10 +79,11 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
     {
       dataField: "period",
       caption: t("period"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      groupIndex:0
     },
     {
       dataField: "balance",
@@ -106,6 +107,8 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                allowGrouping={true}
+                groupPanelVisible={true}
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   filterText="{___(ledgername)}{**** As On Date : (asonDate)}"

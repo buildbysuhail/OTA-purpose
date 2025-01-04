@@ -115,7 +115,7 @@ const DayBookSummary = () => {
                   childPopupProps={{
                     content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
-                    isForm: true,
+                    // isForm: false,
                     width: "mw-100",
                     drillDownCells: "voucherType",
                     bodyProps: "dateFrom,dateTo,costCenterID,voucherType"

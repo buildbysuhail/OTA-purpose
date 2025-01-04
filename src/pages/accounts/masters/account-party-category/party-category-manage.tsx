@@ -28,7 +28,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     });
   const { t } = useTranslation("masters");
   return (
-    <div className="w-full pt-4">
+    <div className="w-full">
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("partyCategoryName")}

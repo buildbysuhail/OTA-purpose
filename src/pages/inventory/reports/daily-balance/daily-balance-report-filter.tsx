@@ -4,7 +4,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
 const DailyBalanceReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
-  <div className="grid grid-cols-1 gap-4 my-3">
+  <div className="grid grid-cols-1 gap-4">
     {/* Date Range Section */}
     <div className="flex items-center gap-4">
       <ERPDateInput

@@ -129,7 +129,7 @@ interface ERPDevGridProps {
   childPopupProps?: {
     title: string,
     width: string,
-    isForm: boolean,
+    isForm?: boolean,
     content: any,
     drillDownCells: string,
     drillDownDisplayCells?: string,

@@ -155,7 +155,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
       
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="w-full pt-4">
+        <div className="w-full">
           <div className="grid grid-cols-1 gap-3">
             <ERPInput
               id="Subject"

@@ -36,7 +36,7 @@ export const VoucherManage: React.FC = React.memo(() => {
   const { t } = useTranslation("system");
 
   return (
-    <div className="w-full pt-4">
+    <div className="w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPDataCombobox
           {...getFieldProps("voucherType")}

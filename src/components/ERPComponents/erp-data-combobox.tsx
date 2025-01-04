@@ -56,6 +56,7 @@ interface ERPDataComboboxProps {
   field?: {
     id?: string;
     getListUrl?: string;
+    getListUrlDynamic?: (value: any) => string;
     valueKey?: string;
     nameKey?: string;
     labelKey?: string;
@@ -563,6 +564,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     }
   }, [
     field?.getListUrl,
+    field?.getListUrlDynamic,
     field?.params,
     field?.freezeDataLoad,
     reload,
@@ -578,7 +580,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
         params = new URLSearchParams(field?.params).toString();
       }
 
-      const _items = options || (await api.getAsync(field?.getListUrl??"", params));
+      const _items = options || (await api.getAsync(field?.getListUrlDynamic != undefined ? field.getListUrlDynamic(data) : field?.getListUrl??"", params));
       const labelKey = field?.labelKey ?? "label";
       const valueKey = field?.valueKey ?? "value";
       const nameKey = field?.nameKey ?? "name";

@@ -148,7 +148,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
             <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  // heightToAdjustOnWindowsInModal={gridHeight.windows}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
                   filterText={`{${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}} {**** As On Date : (asonDate)}`}

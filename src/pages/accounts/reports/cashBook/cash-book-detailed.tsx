@@ -210,7 +210,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   rowData={rowData}
-                  // heightToAdjustOnWindowsInModal={gridHeight.windows}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   filterText="{___ Transaction Date : (transactionDate)}"
                   gridHeader={t("cash_book_detailed")}

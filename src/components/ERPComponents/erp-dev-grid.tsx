@@ -664,32 +664,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           // Set font size for company details and addresses
           if (
             userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header7)
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
           ) {
             doc.setFontSize(13);
-            doc.text(userSession.headerFooter.header7, 40, currentY, {
-              align: "left",
-            });
+            doc.text(userSession.headerFooter.heading7, 40, currentY, { align: "left" });
             currentY += 15; // Add spacing
           }
           if (
             userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header8)
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
           ) {
             doc.setFontSize(9);
-            doc.text(userSession.headerFooter.header8, 40, currentY, {
-              align: "left",
-            });
+            doc.text(userSession.headerFooter.heading8, 40, currentY, { align: "left" });
             currentY += 15;
           }
           if (
             userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header9)
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
           ) {
             doc.setFontSize(9);
-            doc.text(userSession.headerFooter.header9, 40, currentY, {
-              align: "left",
-            });
+            doc.text(userSession.headerFooter.heading9, 40, currentY, { align: "left" });
             currentY += 15; // Add spacing
           }
           doc.setFontSize(12);
@@ -772,45 +766,68 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           const workbook = new Workbook();
           const worksheet = workbook.addWorksheet(gridHeader);
 
-          // Add header section
-          let currentRow = 1;
+        // Add header section
+        const totalColumns = e.component.getVisibleColumns().length;
+        debugger;
+        const lastColumnLetter = String.fromCharCode(64 + totalColumns);
+        let currentRow = 1;
+        let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
 
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header7)
-          ) {
-            worksheet.getCell(`A${currentRow}`).value =
-              userSession.headerFooter.header7;
-            worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
-            currentRow += 1;
-          }
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header8)
-          ) {
-            worksheet.getCell(`A${currentRow}`).value =
-              userSession.headerFooter.header8;
-            worksheet.getCell(`A${currentRow}`).font = { size: 9 };
-            currentRow += 1;
-          }
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header9)
-          ) {
-            worksheet.getCell(`A${currentRow}`).value =
-              userSession.headerFooter.header9;
-            worksheet.getCell(`A${currentRow}`).font = { size: 9 };
-            currentRow += 1;
-          }
+        // Keep track of merged ranges to prevent duplication
+        const mergedRanges = new Set();
 
-          const pageTitle = `${gridHeader} - ${header}`;
-          worksheet.getCell(`A${currentRow}`).value = pageTitle;
-          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+        // Helper function to merge cells safely
+        // const mergeCellsSafely = (range: any) => {
+        //   if (!mergedRanges.has(`${range}${currentRow}`)) {
+        //     worksheet.mergeCells(`${range}${currentRow}`);
+        //     mergedRanges.add(`${range}${currentRow}`);
+        //   }
+        // };
+
+        // Add header section with merged cells
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+        ) {
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.heading7;
+          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
           currentRow += 1;
-
-          // Add some spacing between the header and the grid content
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+        ) {
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.heading8;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
           currentRow += 1;
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+        ) {
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.heading9;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+          currentRow += 1;
+        }
 
+        const pageTitle = `${gridHeader} - ${header}`;
+        mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+        worksheet.mergeCells(mergeRange);
+        worksheet.getCell(`A${currentRow}`).value = pageTitle;
+        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+        worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+        currentRow += 2; // Add an extra row for spacing
           // Export grid data starting from the next row
           exportDataGridToExcel({
             component: e.component,

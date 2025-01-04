@@ -347,6 +347,13 @@
     "cash_summary_ledgerwise":"ملخص النقد حسب دفتر الأستاذ",
     "oldAccTransactionMasterId":"معرف المعاملة الرئيسي للحساب القديم",
     "accTransactionMasterId":"معرف المعاملة الرئيسي للحساب",
-    "productsDetailedReportTransaction":"تقرير مفصل عن معاملات المنتج"
+    "productsDetailedReportTransaction":"تقرير مفصل عن معاملات المنتج",
+    "voucherPrefix":"بادئة القسيمة",
+    "branchId":"معرف الفرع",
+    "address":"عنوان",
+    "signature":"إمضاء",
+    "daily_summary_report":"تقرير ملخص يومي",
+    "daily_summary_detailed":"ملخص يومي مفصل",
+    "acc_group_view":"عرض مجموعة الحساب"
 
 }

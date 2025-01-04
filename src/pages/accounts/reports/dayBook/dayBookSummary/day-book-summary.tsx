@@ -100,7 +100,7 @@ const DayBookSummary = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="of From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
@@ -111,7 +111,7 @@ const DayBookSummary = () => {
                   filterInitialData={DayBookReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
-                  gridId="grd_cost_centre"
+                  gridId="grd_day_book_summary"
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{

@@ -197,6 +197,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                   showFilterInitially={true}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AR" }} />,
                     title: t("account_aging_analysis"),

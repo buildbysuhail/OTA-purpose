@@ -190,7 +190,7 @@ const LedgerReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
-                  filterText=" {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])} From: {dateFrom} To: {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, From: {dateFrom} To: {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader="Ledger Report"
                   dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}
@@ -201,7 +201,7 @@ const LedgerReport = () => {
                   filterInitialData={LedgerReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
-                  gridId="grd_cost_centre"
+                  gridId="grd_ledger_report"
                 ></ErpDevGrid>
               </div>
             </div>

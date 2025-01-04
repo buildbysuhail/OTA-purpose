@@ -38,9 +38,9 @@ export interface UserModel {
     currencyCode: string;
   };
   headerFooter: {
-    header7: string;
-    header8: string;
-    header9: string;
+    heading7: string;
+    heading8: string;
+    heading9: string;
   };
   currencySymbol: string | null;
   taxDecimalPoint: number;
@@ -98,9 +98,9 @@ export const initialUserSessionData: UserModel = {
   userName: "",
   counterName: "",
   headerFooter: {
-    header7: "",
-    header8: "",
-    header9: ""
+    heading7: "",
+    heading8: "",
+    heading9: ""
   }
 };
 let ass = localStorage.getItem("up");

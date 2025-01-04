@@ -144,6 +144,7 @@ interface ERPDevGridProps {
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
+  heightToAdjustOnWindowsInModal?: number;
   popupAction?: (value: popupDataProps) => {
     type: string;
     payload: popupDataProps;
@@ -398,6 +399,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   gridAddButtonText = "Add",
   heightToAdjustOnMobile = 200,
   heightToAdjustOnWindows = 100,
+  heightToAdjustOnWindowsInModal,
   popupAction,
   changeReload,
   defaultColumnWidth,
@@ -450,13 +452,27 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     popupAction &&
       dispatch(popupAction({ isOpen: true, key: null, reload: false }));
   }, [dispatch, popupAction]);
+
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
+    let gridHeightMobile =
+      heightToAdjustOnMobile !== undefined
+        ? wh - heightToAdjustOnMobile
+        : heightToAdjustOnWindowsInModal ?? 400;
+
     let gridHeightWindows =
-      wh - heightToAdjustOnWindows < 300 ? 300 : wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
+      heightToAdjustOnWindowsInModal !== undefined
+        ? heightToAdjustOnWindowsInModal
+        : wh - heightToAdjustOnWindows < 300
+        ? 300
+        : wh - heightToAdjustOnWindows;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, []);
+  }, [
+    heightToAdjustOnMobile,
+    heightToAdjustOnWindows,
+    heightToAdjustOnWindowsInModal,
+  ]);
+
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
   const initialFilterState = useMemo(
@@ -748,7 +764,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           });
         } else if (e.format === "xlsx") {
           const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet(gridHeader);
+          const worksheet = workbook.addWorksheet(gridHeader);
 
         // Add header section
         const totalColumns = 0
@@ -784,28 +800,28 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           currentRow += 1;
         }
 
-        const pageTitle = `${gridHeader} - ${header}`;
-        worksheet.getCell(`A${currentRow}`).value = pageTitle;
-        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
-        currentRow += 1;
+          const pageTitle = `${gridHeader} - ${header}`;
+          worksheet.getCell(`A${currentRow}`).value = pageTitle;
+          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+          currentRow += 1;
 
-        // Add some spacing between the header and the grid content
-        currentRow += 1;
+          // Add some spacing between the header and the grid content
+          currentRow += 1;
 
-        // Export grid data starting from the next row
-        exportDataGridToExcel({
-          component: e.component,
-          worksheet,
-          autoFilterEnabled: true,
-          topLeftCell: `A${currentRow}`,
-        }).then(() => {
-          workbook.xlsx.writeBuffer().then((buffer) => {
-            saveAs(
-              new Blob([buffer], { type: "application/octet-stream" }),
-              `${gridId}.xlsx`
-            );
+          // Export grid data starting from the next row
+          exportDataGridToExcel({
+            component: e.component,
+            worksheet,
+            autoFilterEnabled: true,
+            topLeftCell: `A${currentRow}`,
+          }).then(() => {
+            workbook.xlsx.writeBuffer().then((buffer) => {
+              saveAs(
+                new Blob([buffer], { type: "application/octet-stream" }),
+                `${gridId}.xlsx`
+              );
+            });
           });
-        });
         }
       }
     },

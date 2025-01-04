@@ -99,6 +99,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
     }
 
   }, []);
+  
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50; 
     let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250; 

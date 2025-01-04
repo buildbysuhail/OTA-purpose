@@ -285,6 +285,7 @@
     "category_code": "رمز الفئة",
     "autobarcode": "الباركود التلقائي",
     "autobarcode1": "الباركود التلقائي 1",
+    "auto_barcode":"الباركود التلقائي",
     "batch_no": "رقم الدفعة",
     "x_rate": "سعر X",
     "detail_ID": "معرف التفاصيل",
@@ -343,5 +344,9 @@
     "group_under":"المجموعة تحت",
     "expense_report":"تقرير النفقات",
     "expense_report_detailed":"تقرير المصروفات مفصل",
-    "cash_summary_ledgerwise":"ملخص النقد حسب دفتر الأستاذ"
+    "cash_summary_ledgerwise":"ملخص النقد حسب دفتر الأستاذ",
+    "oldAccTransactionMasterId":"معرف المعاملة الرئيسي للحساب القديم",
+    "accTransactionMasterId":"معرف المعاملة الرئيسي للحساب",
+    "productsDetailedReportTransaction":"تقرير مفصل عن معاملات المنتج"
+
 }

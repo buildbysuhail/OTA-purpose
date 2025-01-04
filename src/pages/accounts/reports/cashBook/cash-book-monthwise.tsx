@@ -22,9 +22,11 @@ interface CashBookMonthWiseProps {
   contentProps?: any;
   rowData?: any;
   origin?: any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin }) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight}) => {
   debugger;
   // interface CashBookMonthWiseFilters {
   //   from: Date
@@ -37,14 +39,13 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
-  // const [_postData, setPostData] = useState({})
-  // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
-    useEffect(() => {
-      let wh = window.innerHeight;
-      let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-      let gridHeightWindows = wh - 100; // Assuming 100px is the height to minus for windows
-      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-    }, []);
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = modalHeight - 180; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
+
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -143,11 +144,11 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
+          <div>
+            <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={gridHeight.windows}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
                   filterText={`of {${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}}, {**** As On Date : (asonDate)}`}

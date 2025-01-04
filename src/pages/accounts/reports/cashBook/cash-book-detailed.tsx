@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -14,18 +14,37 @@ interface CashBookDetailedProps {
   groupName?: string;
   contentProps?: any;
   rowData?: any;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, rowData}) => {
-// const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
+const CashBookDetailed: FC<CashBookDetailedProps> = ({
+  postData,
+  contentProps,
+  rowData,
+  isMaximized,
+  modalHeight,
+}) => {
+  // const CashBookDetailed = ({ contentProps, enablefilter = false }: CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
-  const { getFormattedValue } = useNumberFormat()
-  // const [filter, setFilter] =useState<CashBookDetailed>({from: new Date()});
+  const { getFormattedValue } = useNumberFormat();
+
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -53,21 +72,45 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, r
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span
+          className={`${
+            cellElement.data.particulars === "TOTAL"
+              ? "font-bold text-red text-lg"
+              : ""
+          }`}
+        >
           {cellElement.data.particulars}
         </span>
       ),
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)} ${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data?.debit >= 0 ? 'Dr' : 'Cr'}`}
+        <span
+          className={`${
+            cellElement.data.particulars === "TOTAL"
+              ? "font-bold text-red text-lg"
+              : ""
+          }`}
+        >
+          {`${
+            cellElement.data?.debit == 0 || cellElement.data?.debit == null
+              ? ""
+              : cellElement.data.debit < 0
+              ? getFormattedValue(-1 * cellElement.data.debit)
+              : getFormattedValue(cellElement.data.debit)
+          } ${
+            cellElement.data?.debit == 0 || cellElement.data?.debit == null
+              ? ""
+              : cellElement.data?.debit >= 0
+              ? "Dr"
+              : "Cr"
+          }`}
         </span>
       ),
     },
@@ -79,8 +122,26 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, r
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)} ${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data?.credit >= 0 ? 'Dr' : 'Cr'}`}
+        <span
+          className={`${
+            cellElement.data.particulars === "TOTAL"
+              ? "font-bold text-red text-lg"
+              : ""
+          }`}
+        >
+          {`${
+            cellElement.data?.credit == 0 || cellElement.data?.credit == null
+              ? ""
+              : cellElement.data.credit < 0
+              ? getFormattedValue(-1 * cellElement.data.credit)
+              : getFormattedValue(cellElement.data.credit)
+          } ${
+            cellElement.data?.credit == 0 || cellElement.data?.credit == null
+              ? ""
+              : cellElement.data?.credit >= 0
+              ? "Dr"
+              : "Cr"
+          }`}
         </span>
       ),
     },
@@ -92,8 +153,26 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, r
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr'}`}
+        <span
+          className={`${
+            cellElement.data.particulars === "TOTAL"
+              ? "font-bold text-red text-lg"
+              : ""
+          }`}
+        >
+          {`${
+            cellElement.data?.balance == 0 || cellElement.data?.balance == null
+              ? ""
+              : cellElement.data.balance < 0
+              ? getFormattedValue(-1 * cellElement.data.balance)
+              : getFormattedValue(cellElement.data.balance)
+          } ${
+            cellElement.data?.balance == 0 || cellElement.data?.balance == null
+              ? ""
+              : cellElement.data?.balance >= 0
+              ? "Dr"
+              : "Cr"
+          }`}
         </span>
       ),
     },
@@ -127,11 +206,11 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({ postData, contentProps, r
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                rowData={rowData}
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  rowData={rowData}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   filterText="of {___(ledgerName)},{___ Day of (transactionDate)}"
                   gridHeader={t("ledger_report_daywise")}

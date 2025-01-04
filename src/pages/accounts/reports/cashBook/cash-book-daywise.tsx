@@ -15,6 +15,8 @@ interface CashBookMonthDayWiseProps {
   groupName?: string;
   contentProps?: any;
   rowData?: any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 // interface CashBookMonthWiseProps {
 //   postData: any;
@@ -22,7 +24,7 @@ interface CashBookMonthDayWiseProps {
 //   contentProps?: any;
 // }
 
-const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData }) => {
+const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
 // const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
   // debugger;
   
@@ -35,14 +37,12 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
-  // const [_postData, setPostData] = useState({})
-  // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
+
   useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 100; // Assuming 100px is the height to minus for windows
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = modalHeight - 180; 
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, []);
+  }, [isMaximized,modalHeight]);
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -141,11 +141,11 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
+          <div>
+            <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={gridHeight.windows}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
                   filterText="of {___(ledgerName)},{___ Month of (month)}"

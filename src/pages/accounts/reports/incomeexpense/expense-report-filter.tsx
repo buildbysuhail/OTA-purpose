@@ -7,7 +7,7 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 
-const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) => {
   const { t } = useTranslation('accountsReport');
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -29,7 +29,7 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         label={t("group_under")}
         field={{
           id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
+          getListUrl: `${Urls.data_SelectAccGroupsUnderAccGroupIDForCombo}${9}`,
           valueKey: "id",
           labelKey: "name",
         }}
@@ -40,8 +40,8 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         label={t("ledger")}
         field={{
           id: "accLedgerID",
-          getListUrl: Urls.data_acc_ledgers,
-          params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+          getListUrl: filter?.accGroupID !==9 ? `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}` : Urls.data_acc_ledgers,
+         params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
           valueKey: "id",
           labelKey: "name",
         }}

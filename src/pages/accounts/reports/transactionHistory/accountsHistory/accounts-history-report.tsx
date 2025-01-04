@@ -31,6 +31,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -39,6 +40,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "modifiedDate",
@@ -47,6 +49,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     // {
     //   dataField: "timeStamp",
@@ -63,6 +66,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
@@ -72,6 +76,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "accountName",
@@ -80,6 +85,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -88,6 +94,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "debit",
@@ -96,6 +103,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "credit",
@@ -104,6 +112,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "narration",
@@ -112,6 +121,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "actionStatus",

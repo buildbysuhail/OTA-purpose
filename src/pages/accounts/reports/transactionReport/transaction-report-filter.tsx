@@ -50,7 +50,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />}
 
       {/* <div className="relative"> */}

@@ -53,6 +53,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -61,6 +62,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 90,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -69,6 +71,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "refNo",
@@ -100,6 +103,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {cellElement.data.particulars}
@@ -113,6 +117,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -126,6 +131,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -138,6 +144,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
@@ -190,7 +197,7 @@ const LedgerReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
-                  filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, From: {dateFrom} To: {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader="Ledger Report"
                   dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}

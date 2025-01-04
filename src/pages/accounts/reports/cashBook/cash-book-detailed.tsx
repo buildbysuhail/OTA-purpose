@@ -49,6 +49,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -56,6 +57,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "vType",
@@ -64,6 +66,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -71,6 +74,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
           className={`${
@@ -152,6 +156,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
           className={`${
@@ -191,6 +196,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -212,8 +218,8 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
                   rowData={rowData}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
-                  filterText="of {___(ledgerName)},{___ Day of (transactionDate)}"
-                  gridHeader={t("ledger_report_daywise")}
+                  filterText="of {___(ledgerName)},{___ day of (transactionDate)}"
+                  gridHeader={t("ledger_report_detailed")}
                   dataUrl={Urls.acc_reports_cash_book_transactionwise}
                   method={ActionType.POST}
                   gridId="grd_cash_book_detailed"

@@ -36,6 +36,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
@@ -57,6 +58,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.debit}
@@ -70,6 +72,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.credit}
@@ -83,6 +86,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
   <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
@@ -100,7 +104,7 @@ const DayBookSummary = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="of From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="from {dateFrom} to {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}

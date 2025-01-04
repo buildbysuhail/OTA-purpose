@@ -22,7 +22,7 @@ debugger;
 // const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<DayBookBillWise>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -33,6 +33,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -41,6 +42,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -49,6 +51,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -56,6 +59,7 @@ debugger;
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.particulars}
@@ -69,6 +73,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.debit}
@@ -82,6 +87,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.credit}
@@ -95,6 +101,7 @@ debugger;
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
@@ -116,7 +123,7 @@ debugger;
                   columns={columns}
                   rowData={rowData}
                   // postData = {contentProps}
-                  filterText="{___ of (voucherType)}, {**** From : (dateFrom)}{**** To : (dateTo)}"
+                  filterText="{___of (voucherType)}, {**** from (dateFrom)}{**** to (dateTo)}"
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}

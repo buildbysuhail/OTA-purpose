@@ -39,7 +39,10 @@ import {
 } from "../../utilities/dx-grid-preference-updater";
 import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
 import { APIClient } from "../../helpers/api-client";
-import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
@@ -52,9 +55,13 @@ import ERPAlert from "./erp-sweet-alert";
 import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/stock-ledger/stock-ledger-report-filter";
 import ERPToast from "./erp-toast";
 import moment from "moment";
-import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
+import {
+  isNullOrUndefinedOrEmpty,
+  mergeObjectsRemovingIdenticalKeys,
+} from "../../utilities/Utils";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 import type { Column as ColumnType } from "devextreme/ui/data_grid";
+import { RootState } from "../../redux/store";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -431,6 +438,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 }) => {
   const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -634,9 +642,39 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             format: "a4",
           });
           // Store original column visibility states
-          const pageTitle = gridHeader;
-          doc.setFontSize(16);
-          doc.text(pageTitle, 40, 30);
+          const pageTitle = `${gridHeader} - ${header}`;
+          let currentY = 30; // Start position for content
+
+          // Set font size for company details and addresses
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header7)
+          ) {
+            doc.setFontSize(13);
+            doc.text(userSession.headerFooter.header7, 40, currentY, { align: "left" });
+            currentY += 15; // Add spacing
+          }
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header8)
+          ) {
+            doc.setFontSize(9);
+            doc.text(userSession.headerFooter.header8, 40, currentY, { align: "left" });
+            currentY += 15;
+          }
+          if (
+            userSession.headerFooter != undefined &&
+            !isNullOrUndefinedOrEmpty(userSession.headerFooter.header9)
+          ) {
+            doc.setFontSize(9);
+            doc.text(userSession.headerFooter.header9, 40, currentY, { align: "left" });
+            currentY += 15; // Add spacing
+          }
+          doc.setFontSize(12);
+          doc.text(pageTitle, 40, currentY, { align: "left" });
+
+          doc.setFontSize(10); // Reset font size for the grid content
+          // currentY += 20; // Adjust for the next section
           doc.setFontSize(10);
 
           const originalColumnVisibility = e.component
@@ -704,25 +742,67 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             jsPDFDocument: doc,
             component: e.component,
             columnWidths: pdfColumnsWidths,
+            topLeft: { x: 0, y: currentY },
           }).then(() => {
             doc.save(`${gridId}.pdf`);
           });
         } else if (e.format === "xlsx") {
           const workbook = new Workbook();
-          const worksheet = workbook.addWorksheet(gridHeader);
+        const worksheet = workbook.addWorksheet(gridHeader);
 
-          exportDataGridToExcel({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-          }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-              saveAs(
-                new Blob([buffer], { type: "application/octet-stream" }),
-                `${gridId}.xlsx`
-              );
-            });
+        // Add header section
+        let currentRow = 1;
+
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.header7)
+        ) {
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.header7;
+          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
+          currentRow += 1;
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.header8)
+        ) {
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.header8;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          currentRow += 1;
+        }
+        if (
+          userSession.headerFooter != undefined &&
+          !isNullOrUndefinedOrEmpty(userSession.headerFooter.header9)
+        ) {
+          worksheet.getCell(`A${currentRow}`).value =
+            userSession.headerFooter.header9;
+          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          currentRow += 1;
+        }
+
+        const pageTitle = `${gridHeader} - ${header}`;
+        worksheet.getCell(`A${currentRow}`).value = pageTitle;
+        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+        currentRow += 1;
+
+        // Add some spacing between the header and the grid content
+        currentRow += 1;
+
+        // Export grid data starting from the next row
+        exportDataGridToExcel({
+          component: e.component,
+          worksheet,
+          autoFilterEnabled: true,
+          topLeftCell: `A${currentRow}`,
+        }).then(() => {
+          workbook.xlsx.writeBuffer().then((buffer) => {
+            saveAs(
+              new Blob([buffer], { type: "application/octet-stream" }),
+              `${gridId}.xlsx`
+            );
           });
+        });
         }
       }
     },
@@ -742,12 +822,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     const _drillDownDisplayCells =
       dynamicProps?.drillDownDisplayCells?.split(",");
 
-    if ( (_drillDownCell !== undefined && _drillDownCell !== undefined && event.data[_drillDownCell] != undefined && event.data[_drillDownCell] != null
-      && event.data[_drillDownCell] != 0 && event.data[_drillDownCell] != '') &&
+    if (
+      _drillDownCell !== undefined &&
+      _drillDownCell !== undefined &&
+      event.data[_drillDownCell] != undefined &&
+      event.data[_drillDownCell] != null &&
+      event.data[_drillDownCell] != 0 &&
+      event.data[_drillDownCell] != "" &&
       (dynamicProps?.enableFn == undefined ||
-      (_drillDownCell !== undefined &&
-        dynamicProps?.enableFn != undefined &&
-        dynamicProps?.enableFn(event.data)))
+        (_drillDownCell !== undefined &&
+          dynamicProps?.enableFn != undefined &&
+          dynamicProps?.enableFn(event.data)))
     ) {
       const updatedBodyProps: { [key: string]: any } = {};
 
@@ -1000,8 +1085,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className={`box-title !text-xs !font-medium`}>
-                    <span className="text-sm">{gridHeader}</span> &nbsp; {":"}{" "}
-                    &nbsp; {header}
+                    <span className="text-sm">{gridHeader}</span> &nbsp; &nbsp;{" "}
+                    {header}
                   </div>
                 </div>
               </Item>

@@ -120,7 +120,7 @@ debugger;
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_day_book_billwise"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}

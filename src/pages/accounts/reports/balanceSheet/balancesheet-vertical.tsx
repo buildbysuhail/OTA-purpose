@@ -205,6 +205,7 @@ const BalancesheetVertical = () => {
                   showFilterInitially={true}
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   filterWidth="100"
                   reload={true}
                   hideGridAddButton={true}
@@ -233,7 +234,7 @@ const BalancesheetVertical = () => {
                   // />:
 
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title: dataField == t("accGroupID") ? t(`balance_detailed`) : t(`monthwise_balance`),
+                    title: dataField == "accGroupID" ? t(`balance_detailed`) : t(`monthwise_balance`),
                     width: "700px",
                     isForm: false,
                     content: dataField == "accGroupID" ? <BalancesheetDetails
@@ -241,17 +242,18 @@ const BalancesheetVertical = () => {
                         // accGroupID: isOpenDetails.key,
                         asOnDate: filter.asOnDate,
                       }}
+                      rowData={{groupName:"sdsdssd"}}
                       groupName={isOpenDetails.groupName}
                     /> : <CashBookMonthWise postData={
                       {
                         asOnDate: filter.asOnDate
                       }} />,
-                      // content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
-                      drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
-                      bodyProps: dataField == "accGroupID" ?"accGroupID":"ledgerID",
+                    // content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                    drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
+                    bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     // drillDownCells: "accGroupID,ledgerID",
                     // bodyProps: "ledgerID,accGroupID",
-                   // enableFn: () => dataField?.ledger === "active", // Corrected to match expected type
+                    // enableFn: () => dataField?.ledgerID === "active", // Corrected to match expected type
                   })}
 
                 // )}

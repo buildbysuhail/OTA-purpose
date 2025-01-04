@@ -33,6 +33,7 @@
     "closing_balance": "Closing Balance",
     "cash_book_daywise": "Cash Book Daywise",
     "day_book_summary": "Day Book Summary",
+    "cash_book_summary": "Cash Book Summary",
     "cash_book_monthwise": "Cash Book Monthwise",
     "voucher_number": "Voucher No",
     "voucher_type": "Voucher Type",
@@ -353,6 +354,21 @@
 
     "debitTransaction":"Debit Transactions",
     "creditTransaction":"Credit Transactions",
-    "excludeZeroBalance":"Exclude Zero Balance"
+    "excludeZeroBalance":"Exclude Zero Balance",
+    "income_report":"Income Report",
+    "income_report_detailed":"Income Report Detailed",
+    "group_under":"Group Under",
+    "expense_report":"Expense Report",
+    "expense_report_detailed":"Expense Report Detailed",
+    "cash_flow":"Cash Flow",
+    "cash_flow_report":"Cash Flow Report",
+    "cash_flow_report_detailed":"Cash Flow Report Detailed",
+    "bank_flow":"Bank Flow",
+    "bank_flow_report":"Bank Flow Report",
+    "bank_flow_report_detailed":"Bank Flow Report Detailed",
+    "inFlow":"In Flow",
+    "outFlow":"Out Flow",
+    "netFlow":"Net Flow",
+    "cash_summary_ledgerwise":"Cash Summary Ledger wise"
 
 }

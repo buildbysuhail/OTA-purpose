@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
@@ -8,12 +8,18 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 
 interface DayBookBillwiseProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
+  rowData?: any;
 }
-const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
+
+const DayBookBillWise: FC<DayBookBillwiseProps> = ({ postData, contentProps, rowData }) => {
+debugger;
+// const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
@@ -105,9 +111,12 @@ const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwisePro
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
-                  postData = {contentProps}
+                  rowData={rowData}
+                  // postData = {contentProps}
+                  filterText="{___(voucherType)} {**** From : (dateFrom)}{**** To : (dateTo)}"
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}

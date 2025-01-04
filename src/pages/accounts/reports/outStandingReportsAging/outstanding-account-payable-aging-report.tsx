@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -17,6 +17,7 @@ const OutstandingAccountPayableAgingReport = () => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
+  const [filter, setFilter] = useState<any>(OutstandingAgingReportFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
@@ -201,12 +202,13 @@ const OutstandingAccountPayableAgingReport = () => {
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
                   childPopupProps={{
-                    content: <OutstandingAccountAgingAnalysis />,
+                    content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AP" }} />,
                     title: t("account_aging_analysis"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
-                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,",
+                    bodyProps: "ledgerID",
+                    //asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,
                     enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
                 ></ErpDevGrid>

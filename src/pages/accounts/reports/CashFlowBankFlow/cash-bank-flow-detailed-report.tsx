@@ -17,9 +17,10 @@ interface CashFlowBankFlowDetailedProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
+  rowData?: any;
 }
 
-const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postData, contentProps }) => {
+const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postData, contentProps,rowData }) => {
 
 // const CashBankFlowDetailedReport = () => {
   const dispatch = useAppDispatch();
@@ -40,7 +41,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "vchNo",
-      caption: t("vchNo"),
+      caption: t("voucherNumber"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -48,7 +49,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "vType",
-      caption: t("v_type"),
+      caption: t("voucherType"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -69,7 +70,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "debit",
-      caption: t("in_flow"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -82,7 +83,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "credit",
-      caption: t("out_flow"),
+      caption: t("outFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -95,7 +96,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "balance",
-      caption: t("net_flow"),
+      caption: t("netFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -131,10 +132,12 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  // gridHeader={t("cash_flow_detailed_report")}
+                  filterText="{___ As On (month)} {___(year)}"
+                  gridHeader={ contentProps.reportType=="Cash"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}// consider bank flow header
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed }
                   method={ActionType.POST}
                   gridId="grd_cost_centre"

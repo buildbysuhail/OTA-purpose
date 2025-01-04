@@ -690,6 +690,20 @@ export const mergeObjectsRemovingIdenticalKeys = <T extends object, U extends Re
   obj2: U
 ): T & U => {
 debugger;
+if(obj1 == undefined || obj2 == undefined) {
+  if(obj1 == undefined && obj2 != undefined) {
+    const out2 = { ...obj2 } as T & U;
+    return out2;
+  } 
+  if(obj2 == undefined && obj1 != undefined) {
+    const out1 = { ...obj1 } as T & U;
+    return out1;
+  } 
+  if(obj2 == undefined && obj2 == undefined) {
+    const out1 = { } as T & U;
+    return out1;
+  }
+}
   // Filter out keys with identical values
   const filteredObj2 = Object.fromEntries(
     obj2 !== undefined && obj2 !== null ?Object.entries(obj2).filter(([key, value]) =>key !==undefined && key !== null && obj1[key as keyof T] !== value) :obj1 !== undefined && obj1 !== null ?Object.entries(obj1):[]

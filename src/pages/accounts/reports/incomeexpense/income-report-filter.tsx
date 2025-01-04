@@ -14,12 +14,12 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
-          label={t("from_date")}
+          label={t("from")}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
-          label={t("to_date")}
+          label={t("to")}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>

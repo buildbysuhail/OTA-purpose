@@ -17,6 +17,7 @@ import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
 
 const CashFlowReport = () => {
   const dispatch = useAppDispatch();
+  const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<IncomeRepor>({ from: new Date() });
@@ -54,7 +55,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "debit",
-      caption: t("in_flow"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -67,7 +68,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "credit",
-      caption: t("out_flow"),
+      caption: t("outFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -80,7 +81,7 @@ const CashFlowReport = () => {
     },
     {
       dataField: "monthBal",
-      caption: t("net_flow"),
+      caption: t("netFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -103,6 +104,7 @@ const CashFlowReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
+                  filterText="As On Date : {asonDate}"
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
@@ -112,17 +114,17 @@ const CashFlowReport = () => {
                   showFilterInitially={false}
                   filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <CashBankFlowDetailedReport postData={
-                      { 
-                        reportType:"Cash",
-                      }} />,
-                    title: t("cash_flow_detailed"),
+                    content: <CashBankFlowDetailedReport postData={{...filter,
+                      reportType:"Cash",
+                    }} />,
+                    title: t("cash_flow_report_detailed"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "month,",
+                    drillDownCells: "month",
                     bodyProps: "year,monthNum",
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}

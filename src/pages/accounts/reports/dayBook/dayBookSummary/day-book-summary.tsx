@@ -10,14 +10,15 @@ import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
 import DayBookBillWise from "./day-book-billwise";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { Filter } from "lucide-react";
 // interface DayBookSummary {
 //   from: Date
 // }
 const DayBookSummary = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue} = useNumberFormat()
-  // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
+  const [filter, setFilter] = useState<any>(DayBookReportFilterInitialState);
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -30,7 +31,7 @@ const DayBookSummary = () => {
     // },
     {
       dataField: "voucherType",
-      caption: t("voucher_type"),
+      caption: t("voucherType"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -108,17 +109,20 @@ const DayBookSummary = () => {
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}
                   filterInitialData={DayBookReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   gridId="grd_cost_centre"
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <DayBookBillWise />,
+                    content: <DayBookBillWise postData={filter}/>,
                     title: t("daybook_billwise"),
-                    // isForm: false,
+                    isForm: false,
                     width: "mw-100",
                     drillDownCells: "voucherType",
-                    bodyProps: "dateFrom,dateTo,costCenterID,voucherType"
+                    bodyProps: "voucherType",
+                    // enableFn: (data: any) => data?.voucherType != ""
+                    //dateFrom,dateTo,costCenterID,
                   }}
                 ></ErpDevGrid>
               </div>

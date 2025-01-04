@@ -33,6 +33,7 @@
     "closing_balance": "الرصيد الختامي",
     "cash_book_daywise": "دفتر النقدية حسب الأيام",
     "day_book_summary": "ملخص دفتر اليومية",
+    "cash_book_summary": "ملخص كتاب النقدية",
     "cash_book_monthwise": "دفتر النقدية حسب الأشهر",
     "voucher_number": "رقم القسيمة",
     "voucher_type": "نوع القسيمة",
@@ -336,5 +337,11 @@
 
     "debitTransaction": "التحويلات المدينة",
     "creditTransaction": "التحويلات الدائنة",
-    "excludeZeroBalance": "استبعاد الرصيد الصفري"
+    "excludeZeroBalance": "استبعاد الرصيد الصفري",
+    "income_report":"تقرير الدخل",
+    "income_report_detailed":"تقرير الدخل التفصيلي",
+    "group_under":"المجموعة تحت",
+    "expense_report":"تقرير النفقات",
+    "expense_report_detailed":"تقرير المصروفات مفصل",
+    "cash_summary_ledgerwise":"ملخص النقد حسب دفتر الأستاذ"
 }

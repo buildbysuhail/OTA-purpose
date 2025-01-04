@@ -37,9 +37,14 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {cellElement.data.particulars}
+        <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
+          {/* {cellElement.data.particulars} */}
+          {
+            cellElement.data.isGroup != true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
+          }
+          
         </span>
+        
       ),
     },
     {
@@ -130,6 +135,7 @@ const TrialBalance = () => {
                   showFilterInitially={true}
                   filterContent={<TrialBalanceReportFilter />}
                   filterInitialData={TrialBalanceReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={{ asOnDate: filter.toDate }}
                     />,
@@ -138,6 +144,7 @@ const TrialBalance = () => {
                     width: "mw-100",
                     drillDownCells: "particulars",
                     bodyProps: "ledgerID",
+                    origin:"trialBalance",
                     enableFn: (data: any) => data?.isGroup == false && data?.particulars != "TOTAL"
                   }}
                 ></ErpDevGrid>

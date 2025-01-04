@@ -13,6 +13,7 @@ import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
 
 const BankFlowReport = () => {
   const dispatch = useAppDispatch();
+  const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<IncomeRepor>({ from: new Date() });
@@ -55,7 +56,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "debit",
-      caption: t("in_flow"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -68,7 +69,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "credit",
-      caption: t("out_flow"),
+      caption: t("outFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -81,7 +82,7 @@ const BankFlowReport = () => {
     },
     {
       dataField: "monthBal",
-      caption: t("net_flow"),
+      caption: t("netFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -103,6 +104,7 @@ const BankFlowReport = () => {
                 <ErpDevGrid
                   allowGrouping={true}
                   columns={columns}
+                  filterText="As On Date : {asonDate}"
                   gridHeader={t("bank_flow_report")}
                   dataUrl={Urls.acc_reports_bank_flow}
                   method={ActionType.POST}
@@ -113,17 +115,18 @@ const BankFlowReport = () => {
                   showFilterInitially={false}
                   filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
                     content: <CashBankFlowDetailedReport postData={
-                      { 
+                      { ...filter,
                         reportType:"Bank",
                       }} />,
-                    title: t("Bank_flow_detailed"),
+                    title: t("bank_flow_report_detailed"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "month,",
+                    drillDownCells: "month",
                     bodyProps: "year,monthNum",
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}

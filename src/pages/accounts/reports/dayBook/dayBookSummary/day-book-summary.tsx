@@ -85,7 +85,7 @@ const DayBookSummary = () => {
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
   <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
-  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },

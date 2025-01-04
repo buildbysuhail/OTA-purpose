@@ -767,7 +767,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           const worksheet = workbook.addWorksheet(gridHeader);
 
         // Add header section
-        const totalColumns = 0
+        const totalColumns = e.component.getVisibleColumns().length;
         debugger;
         let currentRow = 1;
         const lastColumnLetter = String.fromCharCode(64 + totalColumns);
@@ -776,6 +776,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
         ) {
+          worksheet.mergeCells(`${mergeRange}${currentRow}`);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading7;
           worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
@@ -785,6 +786,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
         ) {
+          worksheet.mergeCells(`${mergeRange}${currentRow}`);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading8;
           worksheet.getCell(`A${currentRow}`).font = { size: 9 };
@@ -794,6 +796,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
         ) {
+          worksheet.mergeCells(`${mergeRange}${currentRow}`);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading9;
           worksheet.getCell(`A${currentRow}`).font = { size: 9 };
@@ -801,6 +804,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         }
 
           const pageTitle = `${gridHeader} - ${header}`;
+          worksheet.mergeCells(`${mergeRange}${currentRow}`);
           worksheet.getCell(`A${currentRow}`).value = pageTitle;
           worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
           currentRow += 1;

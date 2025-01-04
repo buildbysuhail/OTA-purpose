@@ -165,7 +165,7 @@ const OutstandingAccountPayableAgingReport = () => {
     },
     {
       dataField: "period7",
-      captionDynamic: (filter: any) => `>${filter.p6?.toString()} ${t("days")}`,
+      captionDynamic: (filter: any) => `>${Math.max(...[filter.p1,filter.p2,filter.p3,filter.p4,filter.p5,filter.p6])?.toString()} ${t("days")}`,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -201,6 +201,7 @@ const OutstandingAccountPayableAgingReport = () => {
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AP" }} />,
                     title: t("account_aging_analysis"),

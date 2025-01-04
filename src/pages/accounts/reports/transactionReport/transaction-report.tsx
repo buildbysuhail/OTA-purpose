@@ -27,6 +27,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -35,6 +36,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 140,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -43,6 +45,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "accountName",
@@ -51,6 +54,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -58,6 +62,7 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
@@ -97,6 +102,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
@@ -114,6 +120,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
@@ -135,6 +142,7 @@ const TransactionReport = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}} 
                   columns={columns}
+                  filterText=" from {dateFrom} to {dateTo} {salesRouteID > 0 && ,Sales Route : [salesRouteName]}"
                   gridHeader={t("transaction_report")}
                   dataUrl={Urls.acc_reports_transaction}
                   method={ActionType.POST}

@@ -33,36 +33,29 @@ const TransactionReportFilter = ({
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* <div className="flex items-center gap-4"> */}
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3">
-        <ERPDateInput
-          {...getFieldProps("dateFrom")}
-          label={t("from")}
-          onChangeData={(data: any) =>
-            handleFieldChange("dateFrom", data.dateFrom)
-          }
-        />
-        <ERPDateInput
-          {...getFieldProps("dateTo")}
-          label={t("to")}
-          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
-        />
-        {/* </div> */}
-        {applicationSettings.mainSettings.allowSalesRouteArea == true && (
-          <ERPDataCombobox
-            {...getFieldProps("salesRouteID")}
-            label={t("sales_route")}
-            field={{
-              id: "salesRouteID",
-              getListUrl: Urls.data_salesRoute,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data) =>
-              handleFieldChange("salesRouteID", data.salesRouteID)
-            }
-          />
-        )}
-      </div>
+      <ERPDateInput
+        {...getFieldProps("dateFrom")}
+        label={t("from")}
+        onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+      />
+      <ERPDateInput
+        {...getFieldProps("dateTo")}
+        label={t("to")}
+        onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
+      />
+      {/* </div> */}
+      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
+      <ERPDataCombobox
+        {...getFieldProps("salesRouteID")}
+        label={t("sales_route")}
+        field={{
+          id: "salesRouteID",
+          getListUrl: Urls.data_salesRoute,
+          valueKey: "id",
+          labelKey: "name",
+        }}
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
+      />}
 
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">

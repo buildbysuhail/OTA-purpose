@@ -30,6 +30,7 @@ const CashFlowReport = () => {
       allowSearch: true,
       allowFiltering: true, 
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "monthNum",
@@ -46,6 +47,7 @@ const CashFlowReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.month}
@@ -60,6 +62,7 @@ const CashFlowReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
         {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
@@ -73,6 +76,7 @@ const CashFlowReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
@@ -86,6 +90,7 @@ const CashFlowReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : getFormattedValue(cellElement.data.monthBal)}`}
@@ -104,7 +109,7 @@ const CashFlowReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  filterText="As On Date : {asonDate}"
+                  filterText=" as of {asonDate}"
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
@@ -126,6 +131,7 @@ const CashFlowReport = () => {
                     width: "mw-100",
                     drillDownCells: "month",
                     bodyProps: "year,monthNum",
+                    origin:"cash_flow",
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}
                   // childPopupProps={{

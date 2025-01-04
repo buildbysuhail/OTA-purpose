@@ -1124,7 +1124,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className={`box-title !text-xs !font-medium`}>
-                    <span className="text-sm">{gridHeader}</span> &nbsp; &nbsp;{" "}
+                    <span className="text-sm">{gridHeader}</span>&nbsp;{""}
                     {header}
                   </div>
                 </div>

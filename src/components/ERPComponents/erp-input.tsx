@@ -63,6 +63,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   className?: string;
   inputClassName?: string;
   noLabel?: boolean;
+  Voucherno?: false | true ;
   labelDirection?: "horizontal" | "vertical";
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
@@ -107,6 +108,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       max,
       pattern,
       noLabel,
+      Voucherno,
       labelDirection = "vertical",
       prefix,
       suffix,
@@ -280,8 +282,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             } as React.ChangeEvent<HTMLInputElement>;
             handleChange(changeEvent);
           }
-
+          if (Voucherno) {
           console.log(event.deltaY < 0 ? 'Mouse Scroll Up' : 'Mouse Scroll Down');
+          }
         }
       };
 
@@ -290,13 +293,26 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         inputElement.addEventListener('wheel', handleWheel, { passive: false });
       }
 
-      document.addEventListener('keydown', handleKeyDown);
+      // document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keydown', (event) => {
+        if (Voucherno) {
+            handleKeyDown(event);
+            console.log({Voucherno});
+        }
+    });
+
+    
+    
 
       return () => {
         if (inputElement) {
           inputElement.removeEventListener('wheel', handleWheel);
         }
-        document.removeEventListener('keydown', handleKeyDown);
+        // document.removeEventListener('keydown', handleKeyDown);
+        if (Voucherno) {
+          document.removeEventListener('keydown', handleKeyDown);
+          console.log({Voucherno});
+      }
       };
     }, [id, value, min, max, step, handleChange]);
 
@@ -606,17 +622,136 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       const muiProps: TextFieldProps = {
         ...commonProps,
         label: !noLabel ? iLabel : undefined,
+        // InputProps: {
+        //   startAdornment: prefix ? (
+        //     <InputAdornment position="start" onClick={onClickPrefix}>
+        //       {prefix}
+        //     </InputAdornment>
+        //   ) : undefined,
+        //   endAdornment: suffix ? (
+        //     <InputAdornment position="end" onClick={onClickSuffix}>
+        //       {suffix}
+        //     </InputAdornment>
+        //   ) : undefined,
+        // },
         InputProps: {
           startAdornment: prefix ? (
             <InputAdornment position="start" onClick={onClickPrefix}>
               {prefix}
             </InputAdornment>
           ) : undefined,
-          endAdornment: suffix ? (
-            <InputAdornment position="end" onClick={onClickSuffix}>
-              {suffix}
-            </InputAdornment>
-          ) : undefined,
+          endAdornment: (
+            <>
+              {suffix && (
+                <InputAdornment position="end" onClick={onClickSuffix}>
+                  {suffix}
+                </InputAdornment>
+              )}
+              {/* {!noLabel && ( */}
+              {/* {type === "number" && ( */}
+              {Voucherno && (
+                <div
+                  className="absolute right-0 top-0 h-full flex flex-col  "
+                  style={{
+                    // background:
+                    //   initial?.value !== undefined &&
+                    //   initial?.value !== null &&
+                    //   initial?.value !== ""
+                    //     ? `rgb(${appState?.inputBox?.selectColor})`
+                    //     : "#f9f9f9",
+                    ...(document.documentElement.dir === "rtl"
+                      ? {
+                          borderTopLeftRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                          borderBottomLeftRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                        }
+                      : {
+                          borderTopRightRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                          borderBottomRightRadius: `${
+                            appState?.inputBox?.borderRadius ?? 5
+                          }px`,
+                        }),
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="flex items-center justify-center h-1/2 w-6  focus:outline-none"
+                    onClick={() => {
+                      const currentValue = parseFloat(value as string) || 0;
+                      const newValue =
+                        currentValue + (step ? parseFloat(step.toString()) : 1);
+                      if (
+                        max === undefined ||
+                        newValue <= parseFloat(max.toString())
+                      ) {
+                        const event = {
+                          target: { value: newValue.toString() },
+                        } as React.ChangeEvent<HTMLInputElement>;
+                        handleChange(event);
+                        console.log("Increment clicked, new value:", newValue);
+                      }
+                    }}
+                    style={{
+                      // background: `rgb(${appState?.inputBox?.selectColor})`,
+                      ...(document.documentElement.dir === "rtl"
+                        ? {
+                            borderTopLeftRadius: `${
+                              appState?.inputBox?.borderRadius ?? 5
+                            }px`,
+                          }
+                        : {
+                            borderTopRightRadius: `${
+                              appState?.inputBox?.borderRadius ?? 5
+                            }px`,
+                          }),
+                    }}
+                  >
+                    <ChevronUp className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center h-1/2 w-6   focus:outline-none"
+                    onClick={() => {
+                      const currentValue = parseFloat(value as string) || 0;
+                      const newValue =
+                        currentValue - (step ? parseFloat(step.toString()) : 1);
+                      if (
+                        min === undefined ||
+                        newValue >= parseFloat(min.toString())
+                      ) {
+                        const event = {
+                          target: { value: newValue.toString() },
+                        } as React.ChangeEvent<HTMLInputElement>;
+                        handleChange(event);
+                        console.log("Decrement clicked, new value:", newValue);
+                      }
+                    }}
+                    style={{
+                      // background: `rgb(${appState?.inputBox?.selectColor})`,
+                      ...(document.documentElement.dir === "rtl"
+                        ? {
+                            borderBottomLeftRadius: `${
+                              appState?.inputBox?.borderRadius ?? 5
+                            }px`,
+                          }
+                        : {
+                            borderBottomRightRadius: `${
+                              appState?.inputBox?.borderRadius ?? 5
+                            }px`,
+                          }),
+                    }}
+                  >
+                    <ChevronDown className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
+                  </button>
+                </div>
+              )}
+            </>
+          ),
         },
         fullWidth: true,
         variant: _variant,
@@ -630,8 +765,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           "data-skip": skip,
           "data-jump-to": jumpTo,
           "data-jump-target": jumpTarget,
+          style: { appearance: "none" },
         },
-        sx: sizeStyles.mui,
+        // sx: sizeStyles.mui,
+        sx: {
+          ...sizeStyles.mui,
+          "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+            appearance: "none",
+          },
+          "& input[type=number]": {
+            appearance: "textfield", // For cross-browser consistency
+          },
+        },
         onKeyDown: handleKeyDown,
       };
       return (
@@ -860,11 +1005,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </div>
             )} */}
 
-          {type === 'number' && (
+          {Voucherno && (
               // <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">
               <div
               // className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
-              className={`absolute right-0 top-0 h-full flex flex-col border-l border-gray-300`}
+              className={`absolute right-0 top-0 h-[86%] flex flex-col border-l border-gray-300 m-[2px]`}
               style={{
                 background:
                   initial?.value !== undefined &&

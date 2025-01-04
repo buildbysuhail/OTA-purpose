@@ -858,6 +858,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   );
   const { bankAccountField, handleBankNameChange, handleLedgerChange } =
     useFormComponent();
+
+    const handleChange = (selectedOption: { value: string; label: string }) => {
+      console.log('Selected:', selectedOption);
+    }; 
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
@@ -921,6 +925,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         id="voucherNumber"
                         label={formState.formElements.voucherNumber.label}
                         value={formState.transaction.master.voucherNumber}
+                        type="number"
+                        Voucherno={true}
                         className="max-w-[200px]"
                         onChange={(e) =>
                           dispatch(
@@ -962,13 +968,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.pnlMasters?.disabled
                       }
                       labelInfo={
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-xs text-gray-500">
-                            Bal:{" "}
-                            {`${formState.masterBalance || "0.00"} ${formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
-                              }`}
-                          </span>
-                        </div>
+                      <div className="">
+                        <span className="text-xx text-primary">
+                          Bal:{" "}
+                          {`${formState.masterBalance || "0.00"} ${
+                            formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
+                          }`}
+                        </span>
+                      </div>
                       }
                     />
                     {/* <div className="flex justify-between items-center mt-1">
@@ -1329,8 +1336,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       formState.formElements.pnlMasters?.disabled
                     }
                     labelInfo={
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-gray-500">
+                      <div className="">
+                        <span className="text-xs text-primary">
                           Bal:{" "}
                           {`${formState.ledgerBalance || "0.00"} ${formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
                             }`}

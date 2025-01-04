@@ -25,23 +25,27 @@ export interface PartySummaryFilter {
   };
 }
 // const PartySummaryMaster = () => {
-const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const PartySummaryMaster = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PartySummaryFilter>({
     filter: {
       dateFrom: moment().utc().toISOString(),
       dateTo: new Date(),
       ledgerID: -1,
-    }
+    },
   });
-  
-  const [activeTab, setActiveTab] = useState("address");
+
+  const [activeTab, setActiveTab] = useState("basicInfo");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
@@ -51,56 +55,64 @@ const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
-              <ERPDateInput
-                id="dateFrom"
-                value={filter.filter.dateFrom}
-                customSize='sm'
-                data={filter.filter}
-                label={t("date_from")}
-                onChangeData={(data: any) => setFilter((prev: any) => ({
-                  ...prev,
-                  filter: {
-                    ...prev.filter,
-                    dateFrom: data.dateFrom
+              <div className="grid grid-cols-3 gap-3 items-stretch">
+                <ERPDateInput
+                  id="dateFrom"
+                  value={filter.filter.dateFrom}
+                  customSize="sm"
+                  data={filter.filter}
+                  label={t("date_from")}
+                  onChangeData={(data: any) =>
+                    setFilter((prev: any) => ({
+                      ...prev,
+                      filter: {
+                        ...prev.filter,
+                        dateFrom: data.dateFrom,
+                      },
+                    }))
                   }
-                }))}
-              />
-              <ERPDateInput
-                id="dateTo"
-                value={filter.filter.dateTo}
-                customSize='sm'
-                data={filter.filter}
-                label={t("date_to")}
-                onChangeData={(data: any) => setFilter((prev: any) => ({
-                  ...prev,
-                  filter: {
-                    ...prev.filter,
-                    dateTo: data.dateTo
+                />
+                <ERPDateInput
+                  id="dateTo"
+                  value={filter.filter.dateTo}
+                  customSize="sm"
+                  data={filter.filter}
+                  label={t("date_to")}
+                  onChangeData={(data: any) =>
+                    setFilter((prev: any) => ({
+                      ...prev,
+                      filter: {
+                        ...prev.filter,
+                        dateTo: data.dateTo,
+                      },
+                    }))
                   }
-                }))}
-              />
-              <ERPDataCombobox
-                id="ledgerID"
-                value={filter.filter.ledgerID}
-                customSize='sm'
-                data={filter.filter}
-                label={t("ledgers")}
-                field={{
-                  id: "ledgerID",
-                  getListUrl: Urls.data_acc_ledgers,
-                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
-                onChangeData={(data: any) => setFilter((prev: any) => ({
-                  ...prev,
-                  filter: {
-                    ...prev.filter,
-                    ledgerID: data.ledgerID
+                />
+                <ERPDataCombobox
+                  id="ledgerID"
+                  value={filter.filter.ledgerID}
+                  customSize="sm"
+                  data={filter.filter}
+                  label={t("ledgers")}
+                  field={{
+                    id: "ledgerID",
+                    getListUrl: Urls.data_acc_ledgers,
+                    params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
+                  onChangeData={(data: any) =>
+                    setFilter((prev: any) => ({
+                      ...prev,
+                      filter: {
+                        ...prev.filter,
+                        ledgerID: data.ledgerID,
+                      },
+                    }))
                   }
-                }))}
-              />
+                />
+              </div>
               {/* <ERPDataCombobox
                               id="ledgerID"
                               data={formState}
@@ -126,7 +138,12 @@ const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
         onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
       /> */}
               <div className="grid grid-cols-1 gap-3">
-                <Tabs value={activeTab} onChange={handleTabChange}>
+                <Tabs
+                  value={activeTab}
+                  onChange={handleTabChange}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                >
                   <Tab label="Basic Info" value="basicInfo" />
                   <Tab label="Account Ledger" value="accountLedger" />
                   <Tab label="Payments" value="payments" />
@@ -140,34 +157,54 @@ const PartySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 </Tabs>
                 <div className="pt-4">
                   {activeTab === "basicInfo" && (
-                    <PartySummaryBasicInfo filter={filter.filter}></PartySummaryBasicInfo>
+                    <PartySummaryBasicInfo
+                      filter={filter.filter}
+                    ></PartySummaryBasicInfo>
                   )}
                   {activeTab === "accountLedger" && (
-                    <PartySummaryLedger filter={filter.filter}></PartySummaryLedger>
+                    <PartySummaryLedger
+                      filter={filter.filter}
+                    ></PartySummaryLedger>
                   )}
                   {activeTab === "payments" && (
-                    <PartySummaryPayment filter={filter.filter}></PartySummaryPayment>
+                    <PartySummaryPayment
+                      filter={filter.filter}
+                    ></PartySummaryPayment>
                   )}
                   {activeTab === "collections" && (
-                    <PartySummaryCollection filter={filter.filter}></PartySummaryCollection>
+                    <PartySummaryCollection
+                      filter={filter.filter}
+                    ></PartySummaryCollection>
                   )}
                   {activeTab === "purchase" && (
-                    <PartySummaryPurchase filter={filter.filter}></PartySummaryPurchase>
+                    <PartySummaryPurchase
+                      filter={filter.filter}
+                    ></PartySummaryPurchase>
                   )}
                   {activeTab === "sales" && (
-                    <PartySummarySales filter={filter.filter}></PartySummarySales>
+                    <PartySummarySales
+                      filter={filter.filter}
+                    ></PartySummarySales>
                   )}
                   {activeTab === "purchaseReturn" && (
-                    <PartySummaryPurchaseReturn filter={filter.filter}></PartySummaryPurchaseReturn>
+                    <PartySummaryPurchaseReturn
+                      filter={filter.filter}
+                    ></PartySummaryPurchaseReturn>
                   )}
                   {activeTab === "purchaseOrder" && (
-                    <PartySummaryPurchaseOrder filter={filter.filter}></PartySummaryPurchaseOrder>
+                    <PartySummaryPurchaseOrder
+                      filter={filter.filter}
+                    ></PartySummaryPurchaseOrder>
                   )}
                   {activeTab === "salesReturn" && (
-                    <PartySummarySalesReturn filter={filter.filter}></PartySummarySalesReturn>
+                    <PartySummarySalesReturn
+                      filter={filter.filter}
+                    ></PartySummarySalesReturn>
                   )}
                   {activeTab === "salesOrder" && (
-                    <PartySummarySalesOrder filter={filter.filter}></PartySummarySalesOrder>
+                    <PartySummarySalesOrder
+                      filter={filter.filter}
+                    ></PartySummarySalesOrder>
                   )}
                 </div>
               </div>

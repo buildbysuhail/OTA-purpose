@@ -273,6 +273,7 @@ const Urls = {
   acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
   acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
   acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
+  acc_reports_cash_bank_flow_detailed: "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",
 
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
@@ -333,7 +334,8 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
-    partiesBankNames:"/Core/SelectPartiesBankNames"
+    partiesBankNames:"/Core/SelectPartiesBankNames",
+    validate_check_status:"/validate_check_status"
 
 };
 

@@ -250,10 +250,11 @@ const BillwiseProfit = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From : {fromDate} To : {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl={Urls.acc_reports_billwise_profit}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_billwise_profit"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

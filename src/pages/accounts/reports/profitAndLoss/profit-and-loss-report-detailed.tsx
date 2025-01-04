@@ -251,13 +251,12 @@ const ProfitAndLossDetailedReport = () => {
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
-                gridId="gridPandL"
+                gridId="gridPandL_detailed"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter}
-              />
+                onClose={onCloseFilter} validations={undefined} title={"Profit and Loss Detailed"}              />
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}

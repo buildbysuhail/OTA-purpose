@@ -18,7 +18,7 @@ interface CashSummaryLedgerwise {
 }
 const CashSummaryLedgerwise = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue} = useNumberFormat()
   const [filter, setFilter] =useState<CashSummaryLedgerwise>({from: new Date()});
   const rootState = useRootState();
@@ -84,11 +84,13 @@ const CashSummaryLedgerwise = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From : {fromDate} To : {toDate}"
                   gridHeader={t("cash_summary_ledgerwise")}
                   dataUrl= {Urls.acc_reports_cash_summary_ledgerwise}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_summary_ledgerwise"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

@@ -16,15 +16,19 @@ import {
 import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+interface BillWisePopupProps {
+  isMaximized?: boolean; 
+  modalHeight?:any // Add isMaximized as an optional prop
+}
 
-const BillWisePopup: FC = () => {
+const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightWindows = wh - 370;
+    let wh = modalHeight;
+    let gridHeightWindows = wh - 230; 
     setGridHeight(gridHeightWindows);
-  }, []);
+  }, [isMaximized,modalHeight]);
 
   const handleSelectionChange = (e: any) => {
     const { data } = e;
@@ -47,7 +51,7 @@ const BillWisePopup: FC = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <DataGrid
                   id="TestPopup"

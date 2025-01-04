@@ -6,8 +6,13 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -65,6 +70,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         }}
         onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
       />
+      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
         label={t("sales_route")}
@@ -74,8 +80,8 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
-      />
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
+      />}
       <ERPDataCombobox
         {...getFieldProps("employeeID")}
         label={t("employee")}
@@ -85,7 +91,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('employeeID', data.employeeID)}
+        onSelectItem={(data) => handleFieldChange({employeeID: data.value, employeeName:data.name})}
       />
       <ERPDataCombobox
         {...getFieldProps("costCenterID")}

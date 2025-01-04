@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,16 +9,40 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDetailed from "./cash-book-detailed";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 interface CashBookMonthDayWiseProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
+  contentProps?: any;
+  rowData?: any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
-const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDayWiseProps) => {
+// interface CashBookMonthWiseProps {
+//   postData: any;
+//   groupName?: string;
+//   contentProps?: any;
+// }
+
+const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
+// const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
+  // debugger;
+  
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<CashBookDayWise>({from: new Date()});
   const rootState = useRootState();
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = modalHeight - 180; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -103,42 +127,44 @@ const CashBookDayWise = ({ contentProps, enablefilter = false }: CashBookMonthDa
       ),
     },
   ];
-  const [gridHeight, setGridHeight] = useState<number>(() => {
-    debugger;
-    const modals = document.querySelectorAll('.erp-modal-opened');
-    if (modals.length > 0) {
-      const latestModal = modals[modals.length - 1] as HTMLElement;
-      return (window.innerHeight - latestModal.offsetHeight) + 200;
-    } else {
-      return window.innerHeight - 400;
-    }
-  });
+  // const [gridHeight, setGridHeight] = useState<number>(() => {
+  //   debugger;
+  //   const modals = document.querySelectorAll('.erp-modal-opened');
+  //   if (modals.length > 0) {
+  //     const latestModal = modals[modals.length - 1] as HTMLElement;
+  //     return (window.innerHeight - latestModal.offsetHeight) + 200;
+  //   } else {
+  //     return window.innerHeight - 400;
+  //   }
+  // });
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
+          <div>
+            <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={100}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  gridHeader={t("cash_book_daywise")}
+                  filterText="of {___(ledgerName)},{___ Month of (month)}"
+                  gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}
-                  postData={contentProps}
-                  gridId="grd_cost_centre"
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                  gridId="grd_cash_book_daywise"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
+                  rowData={rowData}
                   childPopupProps={{
-                    content: <CashBookDetailed />,
-                    title: t("cash_book_detailed"),
+                    content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
+                    title: t("acc_group_dayview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "transactionDate",
-                    bodyProps: "transactionDate,year,monthNum,ledgerID",
+                    bodyProps: "transactionDate",
                   }}
                 ></ErpDevGrid>
               </div>

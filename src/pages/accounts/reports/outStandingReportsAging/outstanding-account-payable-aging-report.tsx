@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -17,6 +17,7 @@ const OutstandingAccountPayableAgingReport = () => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
+  const [filter, setFilter] = useState<any>(OutstandingAgingReportFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
@@ -37,7 +38,7 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.ledgername}`}
         </span>) :
           <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
@@ -80,7 +81,7 @@ const OutstandingAccountPayableAgingReport = () => {
     },
     {
       dataField: "period1",
-      captionDynamic: (filter: any) => `0-${filter.p1?.toString()} ${t("days")}`,
+      captionDynamic: (filter: any) => `<${filter.p1?.toString()} ${t("days")}`,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -164,12 +165,12 @@ const OutstandingAccountPayableAgingReport = () => {
     },
     {
       dataField: "period7",
-      captionDynamic: (filter: any) => `${filter.p6?.toString()}-${filter.p7?.toString()} ${t("days")}`,
+      captionDynamic: (filter: any) => `>${Math.max(...[filter.p1,filter.p2,filter.p3,filter.p4,filter.p5,filter.p6])?.toString()} ${t("days")}`,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) => filter.p7 > 0,
+      // visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
@@ -189,7 +190,7 @@ const OutstandingAccountPayableAgingReport = () => {
                   gridHeader={t("account_payable_aging_report")}
                   dataUrl={Urls.acc_reports_outstanding_aging_payable}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_aging_payable"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}
@@ -200,13 +201,15 @@ const OutstandingAccountPayableAgingReport = () => {
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <OutstandingAccountAgingAnalysis />,
+                    content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AP" }} />,
                     title: t("account_aging_analysis"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
-                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,",
+                    bodyProps: "ledgerID",
+                    //asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,
                     enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
                 ></ErpDevGrid>

@@ -60,7 +60,7 @@ const PaymentReport = () => {
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -89,7 +89,7 @@ const PaymentReport = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
 
         </span>
@@ -104,16 +104,19 @@ const PaymentReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                    remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
+                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_payment_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<PaymentReportFilter />}
                   filterInitialData={PaymentReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

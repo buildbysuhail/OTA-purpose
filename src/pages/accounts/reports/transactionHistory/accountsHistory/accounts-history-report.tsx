@@ -26,7 +26,7 @@ const AccountsHistoryReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -142,7 +142,7 @@ const AccountsHistoryReport = () => {
                   gridHeader={t("accounts_transaction_history")}
                   dataUrl={Urls.acc_reports_accounts_history}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_accounts_history_report"
                   // popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -10,6 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDayWise from "./cash-book-daywise";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { Filter } from "lucide-react";
 
 // interface CashBookMonthWiseProps {
 //   contentProps?: any
@@ -19,9 +20,14 @@ interface CashBookMonthWiseProps {
   postData: any;
   groupName?: string;
   contentProps?: any;
+  rowData?: any;
+  origin?: any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps }) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight}) => {
+  debugger;
   // interface CashBookMonthWiseFilters {
   //   from: Date
   // }
@@ -29,8 +35,17 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
-  // const [_postData, setPostData] = useState({})
-  // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = modalHeight - 180; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
+
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -129,31 +144,35 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps 
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
+          <div>
+            <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  gridHeader={t("cash_book")}
+                  filterText={`of {${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}}, {**** As On Date : (asonDate)}`}
+                  gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
-                  gridId="grd_cash_book_monthly"
+                  gridId="grd_cash_book_monthwise"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
+                  rowData={rowData}
                   // CashBookMonthWise
                   childPopupProps={{
-                    content: <CashBookDayWise />,
-                    title: t("cash_book_daywise"),
+                    // content: <CashBookMonthWise postData={
+                    //   { ...filter }} />,
+                     content : <CashBookDayWise postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
+                    title: t("acc_group_monthview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
-                    bodyProps: "year,monthNum,ledgerID,asonDate",
+                    bodyProps: "year,monthNum",
                   }}
                 ></ErpDevGrid>
               </div>

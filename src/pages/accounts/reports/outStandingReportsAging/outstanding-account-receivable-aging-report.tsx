@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -18,6 +18,7 @@ const OutstandingAccountReceivableAgingReport = () => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
+   const [filter, setFilter] = useState<any>(OutstandingAgingReportFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
@@ -39,8 +40,8 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.ledgername == "TOTAL"}`}
+        return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.ledgername}`}
         </span>) :
           <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
       }
@@ -182,10 +183,11 @@ const OutstandingAccountReceivableAgingReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="As On Date : {asonDate}{salesRouteID > 0 &&, Sales Route :[salesRouteName]}{partyCategoryID > 0 &&, Party Category : [partyCategoryName]}{costCentreID > 0 &&, Cost Centre : [costCentreName]}"
                   gridHeader={t("account_receivable_aging_report")}
                   dataUrl={Urls.acc_reports_outstanding_aging_receivable}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_aging_receivable"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
@@ -195,13 +197,15 @@ const OutstandingAccountReceivableAgingReport = () => {
                   showFilterInitially={true}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <OutstandingAccountAgingAnalysis />,
+                    content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AR" }} />,
                     title: t("account_aging_analysis"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgername",
-                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,",
+                    bodyProps: "ledgerID",
+                    //"asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"
                     enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
                 ></ErpDevGrid>

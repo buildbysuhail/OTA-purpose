@@ -54,7 +54,7 @@ const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   const PopUpModalEmailChange = () => {
     return (
-      <div className="w-full pt-4">
+      <div className="w-full">
         <div className="grid grid-cols-1 gap-3">
           <ERPInput
             id="userName"

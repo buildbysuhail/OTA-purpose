@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
@@ -11,11 +11,11 @@ interface AccountsHistoryPopupProps {
   enablefilter?: boolean;
 }
 const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -43,6 +43,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "accountName",
@@ -86,7 +87,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "oldAccTransactionMasterID",
-      caption: t("old_accTransaction_master_id"),
+      caption: t("oldAccTransactionMasterId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -94,7 +95,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "accTransactionMasterID",
-      caption: t("accTransaction_master_id"),
+      caption: t("accTransactionMasterId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -115,7 +116,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
                   dataUrl= {Urls.acc_reports_accounts_history_popup}
                   method={ActionType.POST}
                   postData ={contentProps.oldAccTransactionMasterID!=0?contentProps:null}
-                  gridId="grd_cost_centre"
+                  gridId="grd_accounts_history_popup"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

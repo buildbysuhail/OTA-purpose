@@ -21,7 +21,7 @@ const ExpenseReportDetailed = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t('sl_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -49,7 +49,7 @@ const ExpenseReportDetailed = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("vchNo"),
+      caption: t("voucherNumber"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -86,7 +86,7 @@ const ExpenseReportDetailed = () => {
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.debit}
+         {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },
@@ -99,7 +99,7 @@ const ExpenseReportDetailed = () => {
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.credit}
+       {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
@@ -111,12 +111,18 @@ const ExpenseReportDetailed = () => {
       allowFiltering: true,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={'font-bold text-red'}>
-          {cellElement.data.balance}
+        <span
+          className={`${"font-bold text-red"
+            }`}
+        >
+          {`${cellElement.data?.balance == null
+            ? '0'
+            : cellElement.data.balance < 0
+              ? getFormattedValue(-1 * cellElement.data.balance) + 'Cr'
+              : getFormattedValue(cellElement.data.balance) + 'Dr'}`}
         </span>
       ),
     },
-
     {
       dataField: "narration",
       caption: t("narration"),
@@ -155,7 +161,7 @@ const ExpenseReportDetailed = () => {
                   gridHeader={t("expense_report_detailed")}
                   dataUrl={Urls.acc_reports_income_expense_report_detailed}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_expense_report_details"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

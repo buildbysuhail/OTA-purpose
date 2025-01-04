@@ -20,7 +20,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+          onSelectItem={(data) => handleFieldChange({salesRouteID: data.value,salesRouteName:data.name})}
         />
         {/* Party Category Combobox */}
         <ERPDataCombobox
@@ -32,7 +32,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('partyCategoryID', data.partyCategoryID)}
+          onSelectItem={(data) => handleFieldChange({partyCategoryID: data.value,partyCategoryName:data.name})}
         />
         {/* Cost Centre Combobox */}
         <ERPDataCombobox
@@ -44,7 +44,7 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+          onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
         />
         {/* As On Date */}
         <ERPDateInput
@@ -58,37 +58,37 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             {...getFieldProps("p1")}
             label={t("period_1")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p1", data.p1)}
+            onChangeData={({ p1 }: any) => handleFieldChange("p1", parseInt(p1) || 0)}
           />
           <ErpInput
             {...getFieldProps("p2")}
             label={t("period_2")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p2", data.p2)}
+            onChangeData={({ p2 }: any) => handleFieldChange("p2", parseInt(p2) || 0)}
           />
           <ErpInput
             {...getFieldProps("p3")}
             label={t("period_3")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p3", data.p3)}
+            onChangeData={({ p3 }: any) => handleFieldChange("p3", parseInt(p3) || 0)}
           />
           <ErpInput
             {...getFieldProps("p4")}
             label={t("period_4")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p4", data.p4)}
+            onChangeData={({ p4 }: any) => handleFieldChange("p4", parseInt(p4) || 0)}
           />
           <ErpInput
             {...getFieldProps("p5")}
             label={t("period_5")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p5", data.p5)}
+            onChangeData={({ p5 }: any) => handleFieldChange("p5", parseInt(p5) || 0)}
           />
           <ErpInput
             {...getFieldProps("p6")}
             label={t("period_6")}
             type="number"
-            onChangeData={(data: any) => handleFieldChange("p6", data.p6)}
+            onChangeData={({ p6 }: any) => handleFieldChange("p6", parseInt(p6) || 0)}
           />
         </div>
         {/* Load Defaults Checkbox */}

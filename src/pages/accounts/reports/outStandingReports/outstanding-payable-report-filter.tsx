@@ -3,8 +3,13 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+const applicationSettings = useSelector(
+  (state: RootState) => state.ApplicationSettings
+);
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -34,6 +39,7 @@ const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange }: an
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
+      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
         <ERPDataCombobox
           {...getFieldProps("routeID")}
           label={t("sales_route")}
@@ -43,8 +49,9 @@ const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange }: an
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('routeID', data.routeID)}
-        />
+          onSelectItem={(data) => handleFieldChange({routeID: data.value, routeName: data.routeName})}
+        />}
+        {applicationSettings.accountsSettings.maintainCostCenter == true &&
         <ERPDataCombobox
           {...getFieldProps("costCentreID")}
           label={t("cost_centre")}
@@ -55,7 +62,7 @@ const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange }: an
             labelKey: "name",
           }}
           onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
-        />
+        />}
       </div>
       {/* Report Options */}
       <div className="space-y-2">

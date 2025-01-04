@@ -89,19 +89,21 @@ const CashBookSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterWidth="100"
-                  gridHeader={t("day_book_summary")}
+                  filterText="of As On Date : {asonDate}"
+                  gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_book_summary"
                   enablefilter={true}
                   filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
                   reload={true}
                   hideGridAddButton={true}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <CashBookMonthWise postData={
-                      { asOnDate: filter.asonDate }} />,
-                    title: t("cash_book_monthwise"),
+                      { ...filter }} />,
+                    title: t("acc_group_monthview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",

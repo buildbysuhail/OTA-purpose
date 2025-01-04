@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
@@ -20,12 +20,12 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -53,6 +53,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "grandTotal",
@@ -102,6 +103,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
   ];
   return (
@@ -117,28 +119,20 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
                   gridHeader={t("inventory_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_inventory_history_popup}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_inventory_history_popup"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
-                  childPopupProps={{
-                    content: <InventoryHistoryPopup/>,
-                    title: t("inventory_transaction_history_popup"),
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
+                    width: "700px",
                     isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "vchNo",
-                    bodyProps: "oldInvTransactionID"
-                  }}
-                  // childPopupProps= {{
-                  //   content: <InventoryHistoryDetails/>,
-                  //   title: t("inventory_transaction_history_details"),
-                  //   isForm: false,
-                  //   width: "mw-100",
-                  //   drillDownCells: "details",
-                  //   bodyProps: "invTransactionMasterID"
-                  // }}
+                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                    drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
+                    bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
+                  })}
                 ></ErpDevGrid>
               </div>
             </div>

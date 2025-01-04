@@ -14,12 +14,12 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
-          label={t("from_date")}
+          label={t("from")}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
-          label={t("to_date")}
+          label={t("to")}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
@@ -67,7 +67,7 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
       />
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -78,7 +78,7 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />
     </div>
   );

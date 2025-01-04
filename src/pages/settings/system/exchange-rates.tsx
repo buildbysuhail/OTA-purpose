@@ -18,8 +18,12 @@ import { CurrencyMasterManage } from "../../accounts/masters/currency-master/cur
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
-
-const ExchangeRates = () => {
+interface ExchangeRatesProps {
+  isMaximized?: boolean; 
+  modalHeight?:any
+}
+const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
+  debugger;
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -93,11 +97,14 @@ const ExchangeRates = () => {
     } catch (error) {
       setStore([]);
     }
-    let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 400; // Assuming 100px is the height to minus for windows
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+
   }, []);
+  
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
 
   const handleDelete = async (id: any, rowIndex: number) => {
     if (id === 0 || id === null) {
@@ -162,7 +169,7 @@ const ExchangeRates = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <DataGrid
                   dataSource={store}

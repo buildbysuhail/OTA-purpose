@@ -53,10 +53,11 @@ const CashSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="From : {fromDate} To : {toDate}"
                   gridHeader={t("cash_summary")}
                   dataUrl={Urls.acc_reports_cash_summary}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_summary"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

@@ -47,13 +47,13 @@ useEffect(() => {
         }))
       );
     } else if (filter.vTypes !== "") {
-      const ids = filter.vTypes.split(",");
+      const ids = filter.vTypes?.split(",");
   
       // Update `checked` to true for items with IDs in `ids`
       setAllTransactions((prev: any[]) =>
         prev.map((transaction: any) => ({
           ...transaction,
-          checked: ids.includes(transaction.id), // Check if the id exists in the array
+          checked: ids?.includes(transaction.id), // Check if the id exists in the array
         }))
       );
     }
@@ -80,7 +80,7 @@ useEffect(() => {
                       id="allChecked"
                       checked={formState.allChecked}
                       data={formState}
-                      label={t("allChecked")}
+                      label={t("all")}
                       onChangeData={(data) => {
                         setFormState((prev: any) => ({
                           ...prev,
@@ -111,7 +111,7 @@ useEffect(() => {
                       id="isDr"
                       checked={formState.isDr}
                       data={formState}
-                      label={t("isDr")}
+                      label={t("debitTransaction")}
                       onChangeData={(data) => setFormState((prev: any) => ({
                         ...prev,
                         isDr: data.isDr
@@ -121,7 +121,7 @@ useEffect(() => {
                       id="isCr"
                       checked={formState.isCr}
                       data={formState}
-                      label={t("isCr")}
+                      label={t("creditTransaction")}
                       onChangeData={(data) => setFormState((prev: any) => ({
                         ...prev,
                         isCr: data.isCr

@@ -7,8 +7,6 @@ import Templates from "../../../pages/InvoiceDesigner/Templates";
 import Settings from "../../../pages/settings/AllSettings/Settings";
 import UserActionReport from "../../../pages/settings/system/user-action-report";
 import ReportList from "../../ERPComponents/reports/reports-list";
-import AccountPayableAgingReport from "../../../pages/accounts/reports/account-payable-aging-report";
-import AccountReceivableAgingReport from "../../../pages/accounts/reports/account-receivable-aging-report";
 import TemplateDesignerLayout from "../layout/template-designer-layout"; 
 
 import LedgerReport from "../../../pages/accounts/reports/ledger-report";
@@ -248,9 +246,8 @@ import IncomeReportDetailed from "../../../pages/accounts/reports/incomeexpense/
 import ExpenseReport from "../../../pages/accounts/reports/incomeexpense/expense-report";
 import ExpenseReportDetailed from "../../../pages/accounts/reports/incomeexpense/expense-report-detailed";
 import CollectionReport from "../../../pages/accounts/reports/collection-report";
-import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/Cash-flow-report";
 import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
-
+import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/rpt-cash-flow-report";
 const PriceList = lazy(
   () =>
     import(
@@ -524,7 +521,7 @@ const Content: FC<ContentProps> = () => {
           path="/accounts/cash_summary_ledgerwise"
           element={<CashSummaryLedgerwise />}
         />
-        {/* <Route
+        <Route
           path="/accounts/income_report"
           element={<IncomeReport/>}
         />
@@ -542,12 +539,12 @@ const Content: FC<ContentProps> = () => {
         />
           <Route
           path="/accounts/cash_flow"
-          element={<CashFlowReport />}
+          element={<CashFlowReport/>}
         />
           <Route
           path="/accounts/bank_flow"
           element={<BankFlowReport />}
-        /> */}
+        />
         <Route
           path="/accounts/transaction_report"
           element={<TransactionReport />}
@@ -618,14 +615,14 @@ const Content: FC<ContentProps> = () => {
           path="/accounts/balance_sheet_detailed"
           element={<BalancesheetVertical />}
         />
-        <Route
+        {/* <Route
           path="/accounts/payable_aging"
           element={<AccountPayableAgingReport />}
         />
         <Route
           path="/accounts/receivable_aging"
           element={<AccountReceivableAgingReport />}
-        />
+        /> */}
         {/* Reports - Accounts */}
 
         {/* Reports - Inventory */}

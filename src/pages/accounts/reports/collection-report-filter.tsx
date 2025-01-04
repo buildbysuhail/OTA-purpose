@@ -6,8 +6,14 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+  const userSession = useSelector((state:RootState)=>state.UserSession)
   const { t } = useTranslation('accountsReport');
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -65,6 +71,7 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         }}
         onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
       />
+      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
         label={t("sales_route")}
@@ -74,8 +81,8 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
-      />
+        onSelectItem={(data) => handleFieldChange({salesRouteID: data.value,salesRouteName:data.name})}
+      />}
       <ERPDataCombobox
         {...getFieldProps("employeeID")}
         label={t("employee")}
@@ -85,7 +92,7 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('employeeID', data.employeeID)}
+        onSelectItem={(data) => handleFieldChange({employeeID: data.value, employeeName: data.name})}
       />
       <ERPDataCombobox
         {...getFieldProps("costCenterID")}
@@ -102,7 +109,13 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         {...getFieldProps("isIncludePI_CP")}
         label={t("include_SI_cash_receipt_amount")}
         onChangeData={(data) => handleFieldChange("isIncludePI_CP", data.isIncludePI_CP)}
-      />
+      /> 
+      {userSession.dbIdValue == '543140180640' &&
+      <ERPCheckbox
+        {...getFieldProps("isBillToBill")}
+        label={t("billToBill")}
+        onChangeData={(data) => handleFieldChange("isBillToBill", data.isBillToBill)}
+      />}
     </div>
   );
 }

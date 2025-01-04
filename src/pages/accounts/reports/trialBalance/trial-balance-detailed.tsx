@@ -243,10 +243,11 @@ const TrialBalancePeriodwise = () => {
                 <ErpDevGrid
                   columns={columns}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                  filterText="From : {asonDate} To : {toDate}"
                   gridHeader={t("trial_balance_periodwise")}
                   dataUrl={Urls.acc_reports_trial_balance_detailed}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_trial_balance_detailed"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

@@ -37,6 +37,11 @@ export interface UserModel {
     subUnitSymbol: string;
     currencyCode: string;
   };
+  headerFooter: {
+    heading7: string;
+    heading8: string;
+    heading9: string;
+  };
   currencySymbol: string | null;
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;
@@ -68,7 +73,7 @@ export const initialUserSessionData: UserModel = {
   currentBranchAddress: [],
   currentBranchName: "",
   currency: {
-    currencyCode:"",
+    currencyCode: "",
     currencyName: "",
     currencySymbol: "",
     subUnit: "",
@@ -91,7 +96,12 @@ export const initialUserSessionData: UserModel = {
   systemName: "",
   financialYearStatus: "Closed",
   userName: "",
-  counterName: ""
+  counterName: "",
+  headerFooter: {
+    heading7: "",
+    heading8: "",
+    heading9: ""
+  }
 };
 let ass = localStorage.getItem("up");
   

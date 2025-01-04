@@ -3,9 +3,15 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
 
 const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
+  const userSession = useSelector(
+    (state: RootState) => state.UserSession
+  );
   return (
     <div className="grid grid-cols-2 gap-4">
       {/* Date Range */}
@@ -124,7 +130,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('brandID', data.brandID)}
+        onSelectItem={(data) => handleFieldChange({brandID: data.value,brandName:data.name})}
       />
       {/* </div> */}
       {/* <div className="flex items-center gap-2">
@@ -141,7 +147,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('colour', data.colour)}
+        onSelectItem={(data) => handleFieldChange({colour: data.name})}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -158,7 +164,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('warranty', data.warranty)}
+        onSelectItem={(data) => handleFieldChange({warranty: data.name})}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -221,7 +227,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           />
           <ERPCheckbox
             {...getFieldProps("includeVATinProfit")}
-            label={t("include_VAT_in_profit")}
+            label={userSession.countryId == Countries.India ? t("include_TAX_in_profit") : t("include_VAT_in_profit")}
             onChangeData={(data) => handleFieldChange('includeVATinProfit', data.includeVATinProfit)}
           />
         </div>

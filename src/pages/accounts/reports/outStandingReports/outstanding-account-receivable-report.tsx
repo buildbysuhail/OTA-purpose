@@ -118,10 +118,11 @@ const OutstandingAccountReceivableReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="As On Date : {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_receivable")}
                   dataUrl={Urls.acc_reports_receivable}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_outstanding_account_receivable"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

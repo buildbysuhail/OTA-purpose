@@ -144,10 +144,11 @@ const DayBookDetailed = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterText="of From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader={t("day_book_detailed")}
                   dataUrl={Urls.acc_reports_day_book_detailed}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_day_book_detailed"
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth="100"

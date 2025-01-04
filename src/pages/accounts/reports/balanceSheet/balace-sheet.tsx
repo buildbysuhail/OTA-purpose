@@ -347,8 +347,9 @@ const BalanceSheet = () => {
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0 ,item:{}});
           }}
+          rowData={isOpenDetails.item}
           content={
-            <BalancesheetDetails rowData={isOpenDetails.item}
+            <BalancesheetDetails
               postData={{...filter, accGroupID: isOpenDetails.key
               }}
               groupName={isOpenDetails.groupName}

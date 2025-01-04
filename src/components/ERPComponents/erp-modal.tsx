@@ -258,15 +258,15 @@ const ERPModal = React.memo(
                     </div> */}
                     <div
                       style={{
-                        // display: 'flex',
-                        // flexDirection: 'column',
+                        display: 'flex',
+                        flexDirection: 'column',
                         maxHeight: `${modalHeight - 100}px`,
                         // height: 'auto',
                       }}
 >
                       <ERPScrollArea
                         customStyle={`${modalHeight - 130}px`} // Use modalHeight for maxHeight
-                        className="overflow-y-auto pr-2"
+                        className="overflow-y-auto pr-2 overflow-x-hidden py-4"
                       >
                         {content &&
                           cloneElement(content, {
@@ -295,8 +295,7 @@ const ERPModal = React.memo(
                         {hasSubmit && (
                           <ERPSubmitButton
                             onClick={handleSubmit}
-                            className="uppercase"
-                          >
+                            className="uppercase">
                             {submitTitle || "Submit"}
                           </ERPSubmitButton>
                         )}

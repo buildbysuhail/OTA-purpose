@@ -67,7 +67,7 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
   });
 
   return (
-    <div className="w-full pt-4">
+    <div className="w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("companyName")}

@@ -1,15 +1,42 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
 import { DataGrid } from "devextreme-react/data-grid";
-import { FilterRow, HeaderFilter, Paging, Scrolling, SearchPanel, ColumnFixing, ColumnChooser, Selection, Grouping, Toolbar, Item, Export, Editing, StateStoring, Column, Summary, TotalItem } from 'devextreme-react/data-grid';
+import {
+  FilterRow,
+  HeaderFilter,
+  Paging,
+  Scrolling,
+  SearchPanel,
+  ColumnFixing,
+  ColumnChooser,
+  Selection,
+  Grouping,
+  Toolbar,
+  Item,
+  Export,
+  Editing,
+  StateStoring,
+  Column,
+  Summary,
+  TotalItem,
+} from "devextreme-react/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from "jspdf";
 import { Workbook } from "exceljs";
 import { saveAs } from "file-saver";
 import { Link } from "react-router-dom";
 import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
-import { applyGridColumnPreferences, getInitialPreference } from "../../utilities/dx-grid-preference-updater";
+import {
+  applyGridColumnPreferences,
+  getInitialPreference,
+} from "../../utilities/dx-grid-preference-updater";
 import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
 import { APIClient } from "../../helpers/api-client";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
@@ -20,13 +47,14 @@ import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
-import dxDataGrid from "devextreme/ui/data_grid";
+import dxDataGrid, { dxDataGridColumn } from "devextreme/ui/data_grid";
 import ERPAlert from "./erp-sweet-alert";
 import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/stock-ledger/stock-ledger-report-filter";
 import ERPToast from "./erp-toast";
 import moment from "moment";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
+import type { Column as ColumnType } from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -34,11 +62,22 @@ interface ToolbarItem {
 }
 export interface SummaryConfig {
   column: string;
-  summaryType: 'sum' | 'min' | 'max' | 'avg' | 'count';
+  summaryType: "sum" | "min" | "max" | "avg" | "count";
   valueFormat?: string;
   customizeText?: (itemInfo: { value: any }) => string;
 }
-type FilterOperation = "=" | "<>" | ">" | ">=" | "<" | "<=" | "startswith" | "endswith" | "contains" | "notcontains" | "between";
+type FilterOperation =
+  | "="
+  | "<>"
+  | ">"
+  | ">="
+  | "<"
+  | "<="
+  | "startswith"
+  | "endswith"
+  | "contains"
+  | "notcontains"
+  | "between";
 
 interface ERPDevGridProps {
   summaryItems?: SummaryConfig[];
@@ -69,12 +108,16 @@ interface ERPDevGridProps {
   allowColumnResizing?: boolean;
   allowColumnChooser?: boolean;
   allowFiltering?: boolean;
-  initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
+  initialFilters?: Array<{
+    field: string;
+    value: any;
+    operation: FilterOperation;
+  }>;
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-  | boolean
-  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+    | boolean
+    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
@@ -94,7 +137,10 @@ interface ERPDevGridProps {
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
-  popupAction?: (value: popupDataProps) => { type: string; payload: popupDataProps; };
+  popupAction?: (value: popupDataProps) => {
+    type: string;
+    payload: popupDataProps;
+  };
   defaultColumnWidth?: number;
   columnAutoWidth?: boolean;
   columnHidingEnabled?: boolean;
@@ -129,30 +175,30 @@ interface ERPDevGridProps {
   changeReload?: (action: boolean) => void;
   showFilterInitially?: boolean;
   childPopupProps?: {
-    title: string,
-    width: string,
-    isForm: boolean,
-    content: any,
-    drillDownCells: string,
-    drillDownDisplayCells?: string,
-    bodyProps?: string,
-    isMaximized?:boolean,
-    enableFilter?: boolean,
-    origin?: string,
-    enableFn?: (data: any) => boolean
-  }
+    title: string;
+    width: string;
+    isForm: boolean;
+    content: any;
+    drillDownCells: string;
+    drillDownDisplayCells?: string;
+    bodyProps?: string;
+    isMaximized?: boolean;
+    enableFilter?: boolean;
+    origin?: string;
+    enableFn?: (data: any) => boolean;
+  };
   childPopupPropsDynamic?: (data?: any) => {
-    title: string,
-    width: string,
-    isForm: boolean,
-    content: any,
-    drillDownCells: string,
-    drillDownDisplayCells?: string,
-    bodyProps?: string,
-    enableFilter?: boolean,
-    origin?: string,
-    enableFn?: () => boolean
-  }
+    title: string;
+    width: string;
+    isForm: boolean;
+    content: any;
+    drillDownCells: string;
+    drillDownDisplayCells?: string;
+    bodyProps?: string;
+    enableFilter?: boolean;
+    origin?: string;
+    enableFn?: () => boolean;
+  };
 }
 const api = new APIClient();
 const createStore = async (
@@ -163,8 +209,18 @@ const createStore = async (
   method?: ActionType,
   postData?: any,
   filterData?: any,
-  initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
-  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
+  initialFilters?: Array<{
+    field: string;
+    value: any;
+    operation: FilterOperation;
+  }>,
+  paramNames: string[] = [
+    "skip",
+    "take",
+    "requireTotalCount",
+    "sort",
+    "filter",
+  ],
   bodyProps?: any,
   setFilterValidations?: any,
   setShowFilter?: any
@@ -173,10 +229,14 @@ const createStore = async (
     key: keyExpr,
     load: async (loadOptions: any) => {
       if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
-        loadOptions.filter = initialFilters.map(f => {
+        loadOptions.filter = initialFilters.map((f) => {
           if (f.value instanceof Date) {
             // Format the date as ISO string
-            return [f.field, f.operation, formatDate(f.value, 'yyyy-MM-ddTHH:mm:ss')];
+            return [
+              f.field,
+              f.operation,
+              formatDate(f.value, "yyyy-MM-ddTHH:mm:ss"),
+            ];
           }
           return [f.field, f.operation, f.value];
         });
@@ -187,7 +247,7 @@ const createStore = async (
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
           .map((paramName) => [
             paramName,
-            JSON.stringify(loadOptions[paramName])
+            JSON.stringify(loadOptions[paramName]),
           ])
       );
 
@@ -201,45 +261,59 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
 
       try {
-        setFilterValidations(undefined)
-        const result = method === ActionType.GET
-          ? await api.get(dataUrl, queryString)
-          : method === ActionType.POST
-            ? await api.postAsync(dataUrl, filterData != undefined && Object.keys(filterData).length > 0 ? filterData: postData != undefined ?  postData : {}, queryString)
+        setFilterValidations(undefined);
+        const result =
+          method === ActionType.GET
+            ? await api.get(dataUrl, queryString)
+            : method === ActionType.POST
+            ? await api.postAsync(
+                dataUrl,
+                filterData != undefined && Object.keys(filterData).length > 0
+                  ? filterData
+                  : postData != undefined
+                  ? postData
+                  : {},
+                queryString
+              )
             : null;
 
-            if(result != undefined 
-              &&  result.isOk != undefined && result.isOk == false ){
-                ERPToast.show(result.message,"error");
-              }
-              
+        if (
+          result != undefined &&
+          result.isOk != undefined &&
+          result.isOk == false
+        ) {
+          ERPToast.show(result.message, "error");
+        }
+
         debugger;
-if(result != undefined &&  result.isOk != undefined && result.isOk == false) {
-  setFilterValidations(result.validations)
-  setShowFilter(true);
-}
-else {
-  setFilterValidations(undefined)
-}
-        return result != undefined 
-                            ?  result.isOk != undefined && result.isOk == false 
-                                ? {
-                                    data: [],
-                                    totalCount:-1,
-                                    summary: {},
-                                    groupCount: 0,
-                                  } 
-                                : 
-                                  {
-                                    data: result.data,
-                                    totalCount: result.totalCount,
-                                  }
-                            : {
-                              data: [],
-                              totalCount: -1,
-                              summary: {},
-                              groupCount: 0,
-                            };
+        if (
+          result != undefined &&
+          result.isOk != undefined &&
+          result.isOk == false
+        ) {
+          setFilterValidations(result.validations);
+          setShowFilter(true);
+        } else {
+          setFilterValidations(undefined);
+        }
+        return result != undefined
+          ? result.isOk != undefined && result.isOk == false
+            ? {
+                data: [],
+                totalCount: -1,
+                summary: {},
+                groupCount: 0,
+              }
+            : {
+                data: result.data,
+                totalCount: result.totalCount,
+              }
+          : {
+              data: [],
+              totalCount: -1,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -346,38 +420,55 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   showFilterInitially = false,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
   childPopupProps = {
-    title: '',
-    width: 'mw-100',
+    title: "",
+    width: "mw-100",
     isForm: false,
     content: null,
-    drillDownCells: '',
-    bodyProps: '',
-   
+    drillDownCells: "",
+    bodyProps: "",
   },
-  childPopupPropsDynamic
+  childPopupPropsDynamic,
 }) => {
-  
   const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
-  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
-  const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText);
-  const onPopupOpenClick = useCallback(() => { popupAction && dispatch(popupAction({ isOpen: true, key: null, reload: false })); }, [dispatch, popupAction]);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+  const [addButtonText, setAddButtonText] = useState<string>(
+    gridAddButtonText == "Add" ? t("add") : gridAddButtonText
+  );
+  const onPopupOpenClick = useCallback(() => {
+    popupAction &&
+      dispatch(popupAction({ isOpen: true, key: null, reload: false }));
+  }, [dispatch, popupAction]);
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = (wh - heightToAdjustOnWindows)<300?300:wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
+    let gridHeightWindows =
+      wh - heightToAdjustOnWindows < 300 ? 300 : wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
-  const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
+  const initialFilterState = useMemo(
+    () => filterInitialData || {},
+    [filterInitialData]
+  );
   const [filter, setFilter] = useState<any>({});
   const [filterValidations, setFilterValidations] = useState<any>({});
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any, key?: string , drillDownDisplayCells?: string[], data?: any}>({ isOpen: false, props: {}, key:"" ,drillDownDisplayCells:[]});
+  const [isChildOpen, setIsChildOpen] = useState<{
+    isOpen: boolean;
+    props: any;
+    key?: string;
+    drillDownDisplayCells?: string[];
+    data?: any;
+  }>({ isOpen: false, props: {}, key: "", drillDownDisplayCells: [] });
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
-  const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
+  const [_filterInitialData, set_filterInitialData] =
+    useState(filterInitialData);
   const [_reload, set_reload] = useState(reload);
   const [isPdfMode, setIsPdfMode] = useState(false);
   useEffect(() => {
@@ -404,39 +495,36 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     },
     [columns]
   ); // Add any other dependencies here
-  const onApplyFilter = useCallback(
-    (_filter: any) => {
-debugger;
-      const dss = { ..._filter }
-      console.log(`prev:${filter}`);
-      console.log(filter);
-      console.log(`latest:${_filter}`);
-      console.log(_filter);
-      console.log(dss);
-      
-      if (filterShowCount == 0) {
-        setFilterShowCount((prev) => prev + 1);
-        console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
-      }
-      setFilter(dss);
-      onFilterChanged != undefined && onFilterChanged(dss);
-    },
-    []
-  ); // Add any other dependencies here
-  const onCloseFilter = useCallback(
-    () => {
-      console.log(`filterShowCountww: ${filterShowCount}`);
-      if (filterShowCount == 0) {
-        setFilter({});
-        setFilterShowCount((prev) => prev + 1);
-        console.log(`filterShowCount333: ${filterShowCount}`);
-      }
-      setShowFilter(false);
-    },
-    []
-  );
+  const onApplyFilter = useCallback((_filter: any) => {
+    debugger;
+    const dss = { ..._filter };
+    console.log(`prev:${filter}`);
+    console.log(filter);
+    console.log(`latest:${_filter}`);
+    console.log(_filter);
+    console.log(dss);
 
-  const [currentStore, setCurrentStore] = useState<CustomStore<any, any> | null>(null);
+    if (filterShowCount == 0) {
+      setFilterShowCount((prev) => prev + 1);
+      console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
+    }
+    setFilter(dss);
+    onFilterChanged != undefined && onFilterChanged(dss);
+  }, []); // Add any other dependencies here
+  const onCloseFilter = useCallback(() => {
+    console.log(`filterShowCountww: ${filterShowCount}`);
+    if (filterShowCount == 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+      console.log(`filterShowCount333: ${filterShowCount}`);
+    }
+    setShowFilter(false);
+  }, []);
+
+  const [currentStore, setCurrentStore] = useState<CustomStore<
+    any,
+    any
+  > | null>(null);
   const [store, setStore] = useState<CustomStore | null>(null);
   useEffect(() => {
     const fetchStore = async () => {
@@ -487,14 +575,23 @@ debugger;
       }
     };
     fetchStore();
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload,  isPdfMode]);
+  }, [
+    data,
+    keyExpr,
+    dataUrl,
+    allowEditing,
+    method,
+    filter,
+    _reload,
+    isPdfMode,
+  ]);
   const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
   const memoizedStore = useMemo(() => store, [store]);
-//SAfvan
+  //SAfvan
   // const switchPdf = useCallback((e: any) => {
   //   setIsPdfMode((prevpdf: boolean) => {
   //     setGridCols((prev: any) => {
-        
+
   //       if (!prevpdf) {
   //         // to pdf
   //         if (preferences) {
@@ -513,263 +610,320 @@ debugger;
   const switchToPdf = useCallback(() => {
     setGridCols((prev: any) => {
       if (preferences) {
-        const cols = preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true);
+        const cols = preferences.columnPreferences.filter(
+          (x) => x.visible == false && x.showInPdf == true
+        );
         return cols;
       }
       return prev;
-    })
+    });
   }, [preferences, gridInstance]);
   const onGridReady = (e: any) => {
     setGridInst(e.component); // Store the instance when the grid is ready
   };
-  const onExportingHandler = useCallback((e: any) => {
-    if (onExporting) {
-      onExporting(e);
-    } else {
-      if (e.format === "pdf") {
-        const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-        // Store original column visibility states
-        const pageTitle = gridHeader;
-        doc.setFontSize(16);
-        doc.text(pageTitle, 40, 30);
-        doc.setFontSize(10);
+  const onExportingHandler = useCallback(
+    (e: any) => {
+      if (onExporting) {
+        onExporting(e);
+      } else {
+        debugger;
+        if (e.format === "pdf") {
+          const doc = new jsPDF({
+            orientation: "landscape",
+            unit: "pt",
+            format: "a4",
+          });
+          // Store original column visibility states
+          const pageTitle = gridHeader;
+          doc.setFontSize(16);
+          doc.text(pageTitle, 40, 30);
+          doc.setFontSize(10);
 
-        const originalColumnVisibility = e.component.getVisibleColumns().map((column: any) => ({
-          dataField: column.dataField,
-          visible: column.visible
-        }));
+          const originalColumnVisibility = e.component
+            .getVisibleColumns()
+            .map((column: any) => ({
+              dataField: column.dataField,
+              visible: column.visible,
+            }));
 
-        const pdfVisibleColumns = preferences
-          ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.dataField)
-          : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.dataField);
+          const pdfVisibleColumns = preferences
+            ? preferences.columnPreferences
+                .filter((colPref) => colPref.showInPdf)
+                .map((colPref) => colPref.dataField)
+            : gridCols
+                .filter((col) => col.showInPdf)
+                .map((col) => col.dataField);
 
-        const pageWidth = doc.internal.pageSize.getWidth() - 80;
+          const pageWidth = doc.internal.pageSize.getWidth() - 80;
 
-        const columnsWithoutWidth = pdfVisibleColumns.filter(
-          (colField) => !preferences?.columnPreferences.find(
-            (colPref) => colPref.dataField === colField && colPref.width
-          )
-        );
+          const columnsWithoutWidth = pdfVisibleColumns.filter(
+            (colField) =>
+              !preferences?.columnPreferences.find(
+                (colPref) => colPref.dataField === colField && colPref.width
+              )
+          );
 
-        const pdfColumnsWidths = preferences
-          ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => {
-              if (!colPref.width) {
-                return 0;
+          const pdfColumnsWidths = preferences
+            ? preferences.columnPreferences
+                .filter((colPref) => colPref.showInPdf)
+                .map((colPref) => {
+                  if (!colPref.width) {
+                    return 0;
+                  }
+                  return colPref.width || 150;
+                })
+            : gridCols
+                .filter((col) => col.showInPdf)
+                .map((col) => col.width || 100);
+
+          if (columnsWithoutWidth.length > 0) {
+            const specifiedWidthTotal = pdfColumnsWidths
+              .filter((width) => width > 0)
+              .reduce((sum, width) => sum + width, 0);
+            const remainingWidth = pageWidth - specifiedWidthTotal;
+            const defaultColumnWidth =
+              remainingWidth / columnsWithoutWidth.length;
+
+            pdfColumnsWidths.forEach((width, index) => {
+              if (width === 0) {
+                pdfColumnsWidths[index] =
+                  defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
               }
-              return colPref.width || 150;
-            })
-          : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.width || 100);
+            });
+          }
 
-        if (columnsWithoutWidth.length > 0) {
-          const specifiedWidthTotal = pdfColumnsWidths
-            .filter(width => width > 0)
-            .reduce((sum, width) => sum + width, 0);
-          const remainingWidth = pageWidth - specifiedWidthTotal;
-          const defaultColumnWidth = remainingWidth / columnsWithoutWidth.length;
-
-          pdfColumnsWidths.forEach((width, index) => {
-            if (width === 0) {
-              pdfColumnsWidths[index] = defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
+          e.component.beginUpdate();
+          e.component.option("wordWrapEnabled", true);
+          e.component.getVisibleColumns().forEach((column: any) => {
+            if (!pdfVisibleColumns.includes(column.dataField)) {
+              e.component.columnOption(column.dataField, "visible", false);
             }
           });
-        }
 
-        e.component.beginUpdate();
-        e.component.option('wordWrapEnabled', true);
-        e.component.getVisibleColumns().forEach((column: any) => {
-          if (!pdfVisibleColumns.includes(column.dataField)) {
-            e.component.columnOption(column.dataField, "visible", false);
-          }
-        });
-
-        exportDataGridToPdf({
-          jsPDFDocument: doc,
-          component: e.component,
-          columnWidths: pdfColumnsWidths,
-        }).then(() => {
-          doc.save(`${gridId}.pdf`);
-        });
-      } else if (e.format === "xlsx") {
-        const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet(gridHeader);
-
-        exportDataGridToExcel({ 
-          component: e.component,
-          worksheet,
-          autoFilterEnabled: true,
-        }).then(() => {
-          workbook.xlsx.writeBuffer().then((buffer) => {
-            saveAs(
-              new Blob([buffer], { type: "application/octet-stream" }),
-              `${gridId}.xlsx`
-            );
+          exportDataGridToPdf({
+            jsPDFDocument: doc,
+            component: e.component,
+            columnWidths: pdfColumnsWidths,
+          }).then(() => {
+            doc.save(`${gridId}.pdf`);
           });
-        });
+        } else if (e.format === "xlsx") {
+          const workbook = new Workbook();
+          const worksheet = workbook.addWorksheet(gridHeader);
+
+          exportDataGridToExcel({
+            component: e.component,
+            worksheet,
+            autoFilterEnabled: true,
+          }).then(() => {
+            workbook.xlsx.writeBuffer().then((buffer) => {
+              saveAs(
+                new Blob([buffer], { type: "application/octet-stream" }),
+                `${gridId}.xlsx`
+              );
+            });
+          });
+        }
       }
-    }
-  },
+    },
     [onExporting, gridId, preferences, gridCols]
   );
-  
+
   const handleCellClick = useCallback((event: any) => {
-    const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic(event.column?.dataField) : childPopupProps;
-    
+    const dynamicProps = childPopupPropsDynamic
+      ? childPopupPropsDynamic(event.column?.dataField)
+      : childPopupProps;
+
     // Check if the clicked cell's field matches dynamicProps.drillDownCells
-    const _drillDownCells = dynamicProps?.drillDownCells.split(',');
-    const _drillDownCell = _drillDownCells.find((x: string) => x === event.column?.dataField);
-    const _drillDownDisplayCells = dynamicProps?.drillDownDisplayCells?.split(',');
-  
-    if ((_drillDownCell !== undefined && dynamicProps?.enableFn == undefined) || 
-        (_drillDownCell !== undefined && dynamicProps?.enableFn != undefined && dynamicProps?.enableFn(event.data))) {
+    const _drillDownCells = dynamicProps?.drillDownCells.split(",");
+    const _drillDownCell = _drillDownCells.find(
+      (x: string) => x === event.column?.dataField
+    );
+    const _drillDownDisplayCells =
+      dynamicProps?.drillDownDisplayCells?.split(",");
+
+    if ( (_drillDownCell !== undefined && _drillDownCell !== undefined && event.data[_drillDownCell] != undefined && event.data[_drillDownCell] != null
+      && event.data[_drillDownCell] != 0 && event.data[_drillDownCell] != '') &&
+      (dynamicProps?.enableFn == undefined ||
+      (_drillDownCell !== undefined &&
+        dynamicProps?.enableFn != undefined &&
+        dynamicProps?.enableFn(event.data)))
+    ) {
       const updatedBodyProps: { [key: string]: any } = {};
-  
+
       // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-      dynamicProps?.bodyProps != undefined ? dynamicProps?.bodyProps?.split(',').forEach((prop: string) => {
-        const trimmedProp = prop.trim();
-        updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-      }): {};
-  const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(postData, updatedBodyProps)
+      dynamicProps?.bodyProps != undefined
+        ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
+            const trimmedProp = prop.trim();
+            updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+          })
+        : {};
+      const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
+        postData,
+        updatedBodyProps
+      );
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      setIsChildOpen({ isOpen: true, props: _updatedBodyProps, key: _drillDownCell, drillDownDisplayCells: _drillDownDisplayCells, data: event.data});
+      setIsChildOpen({
+        isOpen: true,
+        props: _updatedBodyProps,
+        key: _drillDownCell,
+        drillDownDisplayCells: _drillDownDisplayCells,
+        data: event.data,
+      });
       // const sd = 223;
     }
   }, []);
-  
-  const formatStringWithConditions = (formatString: string, formState: any): string => {
+
+  const formatStringWithConditions = (
+    formatString: string,
+    formState: any
+  ): string => {
     // Helper function to format dates in dd/MM/yyyy format
     const formatDate = (dateStr: string): string => {
       const date = new Date(dateStr);
-      if (isNaN(date.getTime())) return 'N/A';
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
+      if (isNaN(date.getTime())) return "N/A";
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     };
-  
+
     // Function to evaluate and replace placeholders and conditions
     const evaluateExpression = (expression: string, data: any): boolean => {
       // Create a safer scope for evaluating the expression by passing 'data' as an argument
       try {
-        return new Function(...Object.keys(data), `return ${expression};`)(...Object.values(data));
+        return new Function(...Object.keys(data), `return ${expression};`)(
+          ...Object.values(data)
+        );
       } catch (error) {
-        console.error('Error evaluating expression:', error);
+        console.error("Error evaluating expression:", error);
         return false; // Return false in case of error
       }
     };
-  
+
     // Replace placeholders and conditions
     return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
       debugger;
 
       // Handle conditional expressions using '&&'
-      if (placeholder.includes('&&')) {
-        const [condition, trueValue] = placeholder.split('&&');
+      if (placeholder.includes("&&")) {
+        const [condition, trueValue] = placeholder.split("&&");
         const conditionResult = evaluateExpression(condition.trim(), formState);
         const result = conditionResult
-          ? trueValue.replace(/\[([^\]]+)\]/g, (innerMatch: any, innerPlaceholder: any) => {
-            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
-              // If the placeholder is a date, format it
-              return formatDate(formState[innerPlaceholder]);
-            }
-            return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
-          })
-          : '';
-  
+          ? trueValue.replace(
+              /\[([^\]]+)\]/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return formatDate(formState[innerPlaceholder]);
+                }
+                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
+          : "";
+
         return result;
-      }
-      else if (placeholder.includes('___')) {
-        const [l, r] = placeholder.split('___');
+      } else if (placeholder.includes("___")) {
+        debugger;
+        const [l, r] = placeholder.split("___");
         const result = r
-          ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
-            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
-              // If the placeholder is a date, format it
-              return rowData != undefined ? formatDate(rowData[innerPlaceholder]): "N/A";
-            }
-            return rowData != undefined ? rowData[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
-          })
-          : '';
-  
+          ? r.replace(
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return rowData != undefined
+                    ? formatDate(rowData[innerPlaceholder])
+                    : "N/A";
+                }
+                return rowData != undefined
+                  ? rowData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
+          : "";
+
         return result;
-      }
-      else if (placeholder.includes('****')) {
-        const [l, r] = placeholder.split('****'); 
+      } else if (placeholder.includes("****")) {
+        const [l, r] = placeholder.split("****");
         const result = r
-          ? r.replace(/\(([^\]]+)\)/g, (innerMatch: any, innerPlaceholder: any) => {
-            debugger;
-            if (innerPlaceholder.includes('date') || innerPlaceholder.includes('Date')) {
-              // If the placeholder is a date, format it
-              return formatDate(postData[innerPlaceholder]);
-            }
-            return postData != undefined ? postData[innerPlaceholder] || "N/A" : "N/A"; // Return the value from formState, or "N/A" if not found
-          })
-          : '';
-  
+          ? r.replace(
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                debugger;
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return formatDate(postData[innerPlaceholder]);
+                }
+                return postData != undefined
+                  ? postData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
+          : "";
+
         return result;
-      }
-       else if (formState[placeholder] !== undefined) {
+      } else if (formState[placeholder] !== undefined) {
         // Handle regular placeholders
-        if (placeholder.includes('date') || placeholder.includes('Date')) {
+        if (placeholder.includes("date") || placeholder.includes("Date")) {
           // If the placeholder is a date, format it
           return formatDate(formState[placeholder]);
         }
-        return formState[placeholder] || 'N/A';
+        return formState[placeholder] || "N/A";
       }
-      return 'N/A';
+      return "N/A";
     });
   };
-  
+
   const header = useMemo(() => {
     if (!filterText || !filter) return filterText || "";
-debugger;
+    debugger;
     const data = filter;
-const _gridHeader = filterText.toString();
+    const _gridHeader = filterText.toString();
     // Dynamically replace placeholders using a regular expression
-      
-      return formatStringWithConditions(_gridHeader, data);
+
+    return formatStringWithConditions(_gridHeader, data);
   }, [gridHeader, filter]);
-  
-const onCellPrepared = useCallback((e: any) => {
-//   // Get dynamic properties
-//   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
 
-//   // Check if the column is drill-down enabled
-//   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
-//   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
-//   const val = e.row?.data?.[e.column.dataField];
-
-//   if (
-//     e.rowType === 'data' &&
-//     val !== undefined &&
-//     ((_drillDownCell && !dynamicProps?.enableFn) || 
-//     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
-//   ) {
-//     
-//     const dfd = e.cellElement.innerHTML;
-//     const isIn = (e.cellElement.innerHTML as string).includes('<span');
-//     if (e.cellElement && isIn == true) {
-//       e.cellElement.style.cursor = 'pointer';
-//       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
-      
-//     } else {
-//       console.error('Cell element not found');
-//     }
-//   }
-}, []);
+  const onCellPrepared = useCallback((e: any) => {
+    //   // Get dynamic properties
+    //   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
+    //   // Check if the column is drill-down enabled
+    //   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
+    //   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
+    //   const val = e.row?.data?.[e.column.dataField];
+    //   if (
+    //     e.rowType === 'data' &&
+    //     val !== undefined &&
+    //     ((_drillDownCell && !dynamicProps?.enableFn) ||
+    //     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
+    //   ) {
+    //
+    //     const dfd = e.cellElement.innerHTML;
+    //     const isIn = (e.cellElement.innerHTML as string).includes('<span');
+    //     if (e.cellElement && isIn == true) {
+    //       e.cellElement.style.cursor = 'pointer';
+    //       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
+    //     } else {
+    //       console.error('Cell element not found');
+    //     }
+    //   }
+  }, []);
   return (
     <Fragment>
       <div className={className}>
         <DataGrid
-     
           // wordWrapEnabled={wordWrapEnabled}
           onInitialized={onGridReady}
           dataSource={memoizedStore}
@@ -796,28 +950,33 @@ const onCellPrepared = useCallback((e: any) => {
           keyExpr={keyExpr}
           dateSerializationFormat={dateSerializationFormat}
           // loadPanelEnabled={true}
-          hoverStateEnabled={hoverStateEnabled}>
+          hoverStateEnabled={hoverStateEnabled}
+        >
           <ColumnFixing enabled={true} />
           <Scrolling mode={scrollingMode} showScrollbar="always" />
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}
-          {allowFiltering && <FilterRow visible={false}>
-            {initialFilters.map((filter, index) => (
-              <Column
-                key={index}
-                dataField={filter.field}
-                filterValue={filter.value}
-                selectedFilterOperation={filter.operation}
-              />
-            ))}
-          </FilterRow>}
+          {allowFiltering && (
+            <FilterRow visible={false}>
+              {initialFilters.map((filter, index) => (
+                <Column
+                  key={index}
+                  dataField={filter.field}
+                  filterValue={filter.value}
+                  selectedFilterOperation={filter.operation}
+                />
+              ))}
+            </FilterRow>
+          )}
           {allowSearching && <SearchPanel visible={false} />}
           <HeaderFilter visible={false} />
           {allowColumnChooser && <ColumnChooser enabled={true} />}
           {allowSelection && <Selection mode={selectionMode} />}
           {allowGrouping && <Grouping />}
-          {groupPanelVisible && (<Grouping contextMenuEnabled={true} expandMode="rowClick" />)}
+          {groupPanelVisible && (
+            <Grouping contextMenuEnabled={true} expandMode="rowClick" />
+          )}
           {allowEditing && (
             <Editing
               mode={editMode}
@@ -830,18 +989,19 @@ const onCellPrepared = useCallback((e: any) => {
             <Export
               enabled={true}
               formats={["pdf", "xlsx"]}
-              allowExportSelectedData={true}
+              allowExportSelectedData={false}
             />
           ) : (
             <Export enabled={false}></Export>
           )}
 
           <Toolbar>
-            {!hideGridHeader  && (
+            {!hideGridHeader && (
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className={`box-title !text-xs !font-medium`}>
-                    <span className="text-sm">{gridHeader}</span> &nbsp; {':'} &nbsp; {header}
+                    <span className="text-sm">{gridHeader}</span> &nbsp; {":"}{" "}
+                    &nbsp; {header}
                   </div>
                 </div>
               </Item>
@@ -850,14 +1010,14 @@ const onCellPrepared = useCallback((e: any) => {
             {!hideDefaultExportButton && allowExport && (
               <Item name="exportButton" />
             )}
-            
-            {enablefilter == true &&  
+
+            {enablefilter == true && (
               <Item>
                 <ErpGridGlobalFilter
                   width={filterWidth}
                   title={gridHeader}
                   gridId={gridId}
-                  validations= {filterValidations}
+                  validations={filterValidations}
                   initialData={filter}
                   content={
                     filterContent
@@ -868,7 +1028,7 @@ const onCellPrepared = useCallback((e: any) => {
                   onClose={onCloseFilter}
                 />
               </Item>
-              }
+            )}
             <Item>
               <GridPreferenceChooser
                 columns={columns}
@@ -880,14 +1040,21 @@ const onCellPrepared = useCallback((e: any) => {
             {!hideGridAddButton && (
               <Item>
                 <div>
-                  {gridAddButtonType == "link" && (<Link to="#" className="ti-btn-primary-full ti-btn ti-btn-full ">Add<i className="ri-user-add-line"></i></Link>)}
+                  {gridAddButtonType == "link" && (
+                    <Link
+                      to="#"
+                      className="ti-btn-primary-full ti-btn ti-btn-full "
+                    >
+                      Add<i className="ri-user-add-line"></i>
+                    </Link>
+                  )}
                   {gridAddButtonType == "popup" && (
                     <ERPButton
                       variant="primary"
                       onClick={onPopupOpenClick}
                       title={addButtonText}
-                      startIcon={gridAddButtonIcon}>
-                    </ERPButton>
+                      startIcon={gridAddButtonIcon}
+                    ></ERPButton>
                   )}
                 </div>
               </Item>
@@ -913,7 +1080,11 @@ const onCellPrepared = useCallback((e: any) => {
               allowEditing={column.allowEditing || false}
               key={column.dataField}
               dataField={column.dataField}
-              caption={column.captionDynamic != undefined ? column.captionDynamic(filter) : column.caption}
+              caption={
+                column.captionDynamic != undefined
+                  ? column.captionDynamic(filter)
+                  : column.caption
+              }
               dataType={column.dataType}
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
@@ -923,7 +1094,11 @@ const onCellPrepared = useCallback((e: any) => {
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visibleDynamic != undefined ? column.visibleDynamic(filter) :  column.visible || false}
+              visible={
+                column.visibleDynamic != undefined
+                  ? column.visibleDynamic(filter)
+                  : column.visible || false
+              }
             />
           ))}
           {summaryItems.length > 0 && (
@@ -939,35 +1114,42 @@ const onCellPrepared = useCallback((e: any) => {
               ))}
             </Summary>
           )}
-             <Grouping
-        autoExpandAll={true}
-        allowCollapsing={false}
-    />
+          <Grouping autoExpandAll={true} allowCollapsing={false} />
         </DataGrid>
       </div>
       {(childPopupProps || childPopupPropsDynamic) && (
-  <ERPModal
-    isOpen={isChildOpen.isOpen}
-    title={childPopupPropsDynamic 
-      ? childPopupPropsDynamic(isChildOpen.key).title 
-      : childPopupProps?.title}
-    width={childPopupPropsDynamic 
-      ? childPopupPropsDynamic(isChildOpen.key).width 
-      : childPopupProps?.width}
-    isForm={childPopupPropsDynamic 
-      ? childPopupPropsDynamic(isChildOpen.key).isForm 
-      : childPopupProps?.isForm}
-    origin={childPopupPropsDynamic 
-      ? childPopupPropsDynamic(isChildOpen.key).origin 
-      : childPopupProps?.origin}
-    closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
-    content={childPopupPropsDynamic 
-      ? childPopupPropsDynamic(isChildOpen.key).content 
-      : childPopupProps?.content}
-      rowData={isChildOpen.data} 
-    contentProps={isChildOpen.props}
-  />
-)}
+        <ERPModal
+          isOpen={isChildOpen.isOpen}
+          title={
+            childPopupPropsDynamic
+              ? childPopupPropsDynamic(isChildOpen.key).title
+              : childPopupProps?.title
+          }
+          width={
+            childPopupPropsDynamic
+              ? childPopupPropsDynamic(isChildOpen.key).width
+              : childPopupProps?.width
+          }
+          isForm={
+            childPopupPropsDynamic
+              ? childPopupPropsDynamic(isChildOpen.key).isForm
+              : childPopupProps?.isForm
+          }
+          origin={
+            childPopupPropsDynamic
+              ? childPopupPropsDynamic(isChildOpen.key).origin
+              : childPopupProps?.origin
+          }
+          closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
+          content={
+            childPopupPropsDynamic
+              ? childPopupPropsDynamic(isChildOpen.key).content
+              : childPopupProps?.content
+          }
+          rowData={isChildOpen.data}
+          contentProps={isChildOpen.props}
+        />
+      )}
     </Fragment>
   );
 };
@@ -975,7 +1157,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
   if (
     data.value !== undefined &&
     data.value !== null &&
-    data.value !== '' &&
+    data.value !== "" &&
     data.value !== 0
   ) {
     debugger;
@@ -984,7 +1166,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
     return (
       <a
         href="#"
-        style={{ color: '#1976d2', textDecoration: 'underline' }}
+        style={{ color: "#1976d2", textDecoration: "underline" }}
         onClick={(e) => {
           e.preventDefault();
           // Handle drill-down logic here

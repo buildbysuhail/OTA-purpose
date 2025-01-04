@@ -47,13 +47,13 @@ useEffect(() => {
         }))
       );
     } else if (filter.vTypes !== "") {
-      const ids = filter.vTypes.split(",");
+      const ids = filter.vTypes?.split(",");
   
       // Update `checked` to true for items with IDs in `ids`
       setAllTransactions((prev: any[]) =>
         prev.map((transaction: any) => ({
           ...transaction,
-          checked: ids.includes(transaction.id), // Check if the id exists in the array
+          checked: ids?.includes(transaction.id), // Check if the id exists in the array
         }))
       );
     }

@@ -111,7 +111,6 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   enablefilter={false}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  rowData={rowData}
                   gridId="grd_balancesheet_details"
                   childPopupProps={{
                     content: <CashBookMonthWise postData={{ asOnDate: filter.asOnDate }} />,

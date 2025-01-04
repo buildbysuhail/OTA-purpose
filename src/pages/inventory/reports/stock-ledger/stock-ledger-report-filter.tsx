@@ -11,7 +11,7 @@ import warehouse from "../../masters/warehouse/warehouse";
 
 const  StockLedgerFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
-        <div className="grid grid-cols-1 space-y-4 my-3">
+        <div className="grid grid-cols-1 space-y-4">
          <ERPDataCombobox
           {...getFieldProps("product")}
           label={t("product")}

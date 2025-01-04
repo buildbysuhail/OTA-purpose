@@ -7,7 +7,7 @@ import Urls from "../../../../redux/urls";
 const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="flex items-center gap-4">
         <ERPCheckbox
           className="basis-1/3"

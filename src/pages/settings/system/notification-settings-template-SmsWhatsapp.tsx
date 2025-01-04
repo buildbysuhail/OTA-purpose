@@ -99,7 +99,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
     
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="w-full pt-4">
+        <div className="w-full">
           <div className="grid grid-cols-1 gap-3">
             <div className="form-group">
               <label

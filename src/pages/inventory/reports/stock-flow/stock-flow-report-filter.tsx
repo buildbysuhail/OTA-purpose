@@ -9,7 +9,7 @@ import Urls from "../../../../redux/urls";
 const StockFlowFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
   return (
-    <div className="grid grid-cols-1 space-y-4 my-3">
+    <div className="grid grid-cols-1 space-y-4">
       <ERPDataCombobox
         {...getFieldProps("product")}
         label={t("product")}

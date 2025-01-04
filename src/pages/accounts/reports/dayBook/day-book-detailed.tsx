@@ -21,6 +21,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -29,6 +30,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -37,6 +39,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     // {
     //   dataField: "ledger",
@@ -53,6 +56,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
@@ -90,6 +94,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
@@ -107,6 +112,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
@@ -124,6 +130,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${"font-bold text-red"}`}>
           {`${cellElement.data?.balance == null
@@ -144,7 +151,7 @@ const DayBookDetailed = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="of From: {dateFrom} To: {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
+                  filterText="from {dateFrom} to {dateTo} {costCenterID > 0 && , Cost Center: [CostCenterName]}"
                   gridHeader={t("day_book_detailed")}
                   dataUrl={Urls.acc_reports_day_book_detailed}
                   method={ActionType.POST}

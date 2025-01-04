@@ -62,6 +62,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "ledgerID",
@@ -85,6 +86,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
@@ -94,6 +96,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -107,6 +110,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -120,6 +124,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
           {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
@@ -133,6 +138,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
           {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
@@ -151,7 +157,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText={`of {${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}}, {**** As On Date : (asonDate)}`}
+                  filterText={`of {${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}}, {**** as of (asonDate)}`}
                   gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
@@ -168,7 +174,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                     // content: <CashBookMonthWise postData={
                     //   { ...filter }} />,
                      content : <CashBookDayWise postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
-                    title: t("acc_group_monthview"),
+                    title: t("acc_group_dayview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",

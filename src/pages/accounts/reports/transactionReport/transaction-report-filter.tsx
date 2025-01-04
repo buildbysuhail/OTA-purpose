@@ -12,7 +12,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { t } = useTranslation('accountsReport')
+  const { t } = useTranslation("accountsReport");
   const api = new APIClient();
   const [allTransactions, setAllTransactions] = useState<any>();
   useEffect(() => {
@@ -50,7 +50,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />}
 
       {/* <div className="relative"> */}
@@ -96,7 +96,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
     </div>
     // </div>
   );
-}
+};
 export default TransactionReportFilter;
 export const TransactionReportFilterInitialState = {
   dateFrom: new Date(),

@@ -26,6 +26,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "accGroupName",
@@ -34,6 +35,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.accGroupName}
@@ -46,6 +48,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -53,6 +56,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -60,6 +64,7 @@ const ExpenseReportDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
 
     {
@@ -68,6 +73,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -75,6 +81,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
 
     {
@@ -84,6 +91,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
          {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
@@ -97,6 +105,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
        {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
@@ -110,6 +119,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
           className={`${"font-bold text-red"
@@ -158,6 +168,7 @@ const ExpenseReportDetailed = () => {
                 <ErpDevGrid
                   allowGrouping={true}
                   columns={columns}
+                  filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
                   gridHeader={t("expense_report_detailed")}
                   dataUrl={Urls.acc_reports_income_expense_report_detailed}
                   method={ActionType.POST}

@@ -25,6 +25,7 @@ const CashSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
           {cellElement.data.party}
@@ -37,6 +38,7 @@ const CashSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
           {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1 * cellElement.data.billed) : getFormattedValue(cellElement.data.billed)}`}
@@ -53,7 +55,7 @@ const CashSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="From : {fromDate} To : {toDate}"
+                  filterText="from {fromDate} to {toDate}"
                   gridHeader={t("cash_summary")}
                   dataUrl={Urls.acc_reports_cash_summary}
                   method={ActionType.POST}

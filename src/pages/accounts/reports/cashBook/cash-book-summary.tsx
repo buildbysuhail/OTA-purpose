@@ -24,6 +24,7 @@ const CashBookSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.ledgerName}
@@ -38,6 +39,7 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -51,6 +53,7 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -64,6 +67,7 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -74,6 +78,7 @@ const CashBookSummary = () => {
       dataField: "branch",
       caption: t("branch"),
       dataType: "string",
+      showInPdf:true,
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -89,7 +94,7 @@ const CashBookSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterWidth="100"
-                  filterText="of As On Date : {asonDate}"
+                  filterText="as of {asonDate}"
                   gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}
                   method={ActionType.POST}

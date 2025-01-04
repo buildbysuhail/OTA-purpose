@@ -29,7 +29,9 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         label={t("group_under")}
         field={{
           id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
+          // getListUrl: Urls.data_SelectAccGroupsUnderAccGroupIDForCombo,
+          // params: `accGroupID=${9}`,
+          getListUrl: `${Urls.data_projects_by_ledgerid}${9}`,
           valueKey: "id",
           labelKey: "name",
         }}

@@ -53,6 +53,10 @@ const BalanceSheetRow: React.FC<{
   );
 };
 
+const goToPreviousPage = () => {
+  window.history.back();
+};
+
 // Horizontal format component
 const HorizontalBalanceSheet: React.FC<{
   data: any;
@@ -275,7 +279,7 @@ const BalanceSheet = () => {
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button onClick={goToPreviousPage} className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />

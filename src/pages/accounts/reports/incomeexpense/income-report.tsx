@@ -25,6 +25,7 @@ const IncomeReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
     },
     {
       dataField: "accGroupName",
@@ -33,6 +34,7 @@ const IncomeReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.accGroupName}
@@ -45,6 +47,7 @@ const IncomeReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "debit",
@@ -53,6 +56,7 @@ const IncomeReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
@@ -66,6 +70,7 @@ const IncomeReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
          {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
@@ -79,6 +84,7 @@ const IncomeReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
           className={`${"font-bold text-red"
@@ -119,7 +125,7 @@ const IncomeReport = () => {
                 <ErpDevGrid
                   allowGrouping={true}
                   columns={columns}
-                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
+                  filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"
                   gridHeader={t("income_report")}
                   dataUrl={Urls.acc_reports_income_expense_report }
                   method={ActionType.POST}

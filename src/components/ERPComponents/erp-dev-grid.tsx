@@ -742,11 +742,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     const _drillDownDisplayCells =
       dynamicProps?.drillDownDisplayCells?.split(",");
 
-    if (
-      (_drillDownCell !== undefined && dynamicProps?.enableFn == undefined) ||
+    if ( (_drillDownCell !== undefined && _drillDownCell !== undefined && event.data[_drillDownCell] != undefined && event.data[_drillDownCell] != null
+      && event.data[_drillDownCell] != 0 && event.data[_drillDownCell] != '') &&
+      (dynamicProps?.enableFn == undefined ||
       (_drillDownCell !== undefined &&
         dynamicProps?.enableFn != undefined &&
-        dynamicProps?.enableFn(event.data))
+        dynamicProps?.enableFn(event.data)))
     ) {
       const updatedBodyProps: { [key: string]: any } = {};
 

@@ -40,8 +40,8 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) =
         label={t("ledger")}
         field={{
           id: "accLedgerID",
-          getListUrl: filter?.accGroupID !==9 ? `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}` : Urls.data_acc_ledgers,
-         params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
+          getListUrl:`${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}`,
+        //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
           valueKey: "id",
           labelKey: "name",
         }}

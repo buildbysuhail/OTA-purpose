@@ -77,7 +77,7 @@ const OutstandingAccountReceivableAgingReport = () => {
     },
     {
       dataField: "period1",
-      captionDynamic: (filter: any) => `0-${filter.p1?.toString()} ${t("days")}`,
+      captionDynamic: (filter: any) => `<${filter.p1?.toString()} ${t("days")}`,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -161,15 +161,15 @@ const OutstandingAccountReceivableAgingReport = () => {
     },
     {
       dataField: "period7",
-      captionDynamic: (filter: any) => `${filter.p6?.toString()}-${filter.p7?.toString()} ${t("days")}`,
+      captionDynamic: (filter: any) => `>${Math.max(...[filter.p1,filter.p2,filter.p3,filter.p4,filter.p5,filter.p6])?.toString()} ${t("days")}`,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visibleDynamic: (filter: any) => filter.p7 > 0,
+      // visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
-          {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
         </span>
       ),
     },

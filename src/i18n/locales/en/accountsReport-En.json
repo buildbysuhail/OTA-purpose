@@ -77,8 +77,9 @@
     "cash_received": "Cash Received",
     "user_name": "Username",
     "old_invTransaction_id": "Old InvTransaction ID",
-    "details": "details",
+    "details": "Details",
     "inventory_transaction_history": "Inventory Transaction History",
+    "inventory_transaction_history_popup": "Inventory Transaction History Popup",
     "inventory_transaction_history_details": "Inventory Transaction History Details",
     "accounts_transaction_history": "Accounts Transaction History",
     "accounts_transaction_history_popup": "Accounts Transaction History Popup",
@@ -285,6 +286,7 @@
     "category_code": "Category Code",
     "autobarcode": "Autobarcode",
     "autobarcode1": "Autobarcode 1",
+    "auto_barcode":"Auto Barcode",
     "batch_no": "Batch No",
     "x_rate": "X Rate",
     "detail_ID": "Detail ID",
@@ -369,6 +371,9 @@
     "inFlow":"In Flow",
     "outFlow":"Out Flow",
     "netFlow":"Net Flow",
-    "cash_summary_ledgerwise":"Cash Summary Ledger wise"
+    "cash_summary_ledgerwise":"Cash Summary Ledger wise",
+    "oldAccTransactionMasterId":"Old AccTransaction MasterId",
+    "accTransactionMasterId":"AccTransaction MasterId",
+    "productsDetailedReportTransaction":"Products Detailed Report of Transactions"
 
 }

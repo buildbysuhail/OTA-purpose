@@ -19,7 +19,7 @@ const InventoryHistoryDetails = ({contentProps}:InventoryHistoryDetailsProps) =>
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {

@@ -20,12 +20,12 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -103,6 +103,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
   ];
   return (
@@ -124,22 +125,14 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
-                  childPopupProps={{
-                    content: <InventoryHistoryPopup/>,
-                    title: t("inventory_transaction_history_popup"),
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
+                    width: "700px",
                     isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "vchNo",
-                    bodyProps: "oldInvTransactionID"
-                  }}
-                  // childPopupProps= {{
-                  //   content: <InventoryHistoryDetails/>,
-                  //   title: t("inventory_transaction_history_details"),
-                  //   isForm: false,
-                  //   width: "mw-100",
-                  //   drillDownCells: "details",
-                  //   bodyProps: "invTransactionMasterID"
-                  // }}
+                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                    drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
+                    bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
+                  })}
                 ></ErpDevGrid>
               </div>
             </div>

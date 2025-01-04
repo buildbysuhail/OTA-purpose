@@ -11,11 +11,11 @@ interface AccountsHistoryPopupProps {
   enablefilter?: boolean;
 }
 const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -87,7 +87,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "oldAccTransactionMasterID",
-      caption: t("old_accTransaction_master_id"),
+      caption: t("oldAccTransactionMasterId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -95,7 +95,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "accTransactionMasterID",
-      caption: t("accTransaction_master_id"),
+      caption: t("accTransactionMasterId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

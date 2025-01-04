@@ -52,7 +52,6 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
-import CustomDropdown from "../../settings/system/input test/CustomDropdown";
 interface BilledItem {
   id?: number;
   name: string;

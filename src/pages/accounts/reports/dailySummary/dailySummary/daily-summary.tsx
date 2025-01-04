@@ -21,7 +21,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
   const [voucherType, setVoucherType] = useState<string>();
   const [reload, setReload] = useState<boolean>(false);
@@ -239,7 +239,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
    
     {
       dataField: "branchID",
-      caption: t("branch_id"),
+      caption: t("branchId"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

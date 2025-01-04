@@ -137,7 +137,7 @@ const TrialBalance = () => {
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={{ asOnDate: filter.toDate }}
+                    content: <CashBookMonthWise postData={filter}
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,

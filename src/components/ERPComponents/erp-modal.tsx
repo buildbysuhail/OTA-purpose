@@ -77,19 +77,25 @@ const ERPModal = React.memo(
 
     useEffect(() => {
       const updateModalHeight = () => {
+        // Add extra padding to ensure content fits
+        const headerHeight = 60; // Height of the header
+        const footerHeight = (!isForm && isButton) ? 70 : 0; // Height of the footer if present
+        const padding = 40; // Extra padding for safety
+
         const height = isMaximized
-          ? window.innerHeight - 50
+          ? window.innerHeight - headerHeight - footerHeight - padding
           : window.innerHeight - 300;
+
         setModalHeight(height);
       };
-    
+
       updateModalHeight();
-      window.addEventListener('resize', updateModalHeight);
-    
+      window.addEventListener("resize", updateModalHeight);
+
       return () => {
-        window.removeEventListener('resize', updateModalHeight);
+        window.removeEventListener("resize", updateModalHeight);
       };
-    }, [isMaximized]);
+    }, [isMaximized, isForm, isButton]);
 
     const handleClose = () => closeModal(false);
     const handleSubmit = () => {
@@ -180,24 +186,26 @@ const ERPModal = React.memo(
                   <DialogPanel
                     // className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
-                    className={`erp-modal${isOpen ? '-opened' : 'closed'} transform bg-white text-left align-middle shadow-xl transition-all ${isMaximized
-                      ? "w-full  rounded-md"
-                      : `${width} rounded-md`
-                      } ${isRemoveSomething ? "px-0" : "px-5"}`}
-                    style={{ height:`${modalHeight}px`}}
+                    className={`erp-modal${
+                      isOpen ? "-opened" : "closed"
+                    } transform bg-white text-left align-middle shadow-xl transition-all ${
+                      isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
+                    } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    style={{
+                      ...(isMaximized
+                        ? { height: `${modalHeight}px` }
+                        : { maxHeight: `${modalHeight}px` }),
+                      display: "flex",
+                      flexDirection: "column",
+                      overflow: "hidden" 
+                    }}
                   >
                     <DialogTitle
                       as="h3"
                       className="place-items-center sticky min-w-full top-0 z-10 flex justify-between text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
+                      style={{ flex: "0 0 auto" }} // Prevent header from shrinking
                     >
-                      {/* {closeButton === "LeftArrow" && (
-                        <button
-                          className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
-                          onClick={handleClose}>
-                          <i className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: "23px" }}></i>
-                        </button>
-                      )} */}
-                      {/* {title} */}
+                  
                       <div className="flex items-center">{title}</div>
                       {closeButton === "Button" && (
                         <div className="max-w-[200px] inline-block">
@@ -234,54 +242,32 @@ const ERPModal = React.memo(
                       </div>
                     </DialogTitle>
 
-                    {/* <div
-                      className={
-                        isMaximized
-                          ? "h-[calc(100vh-6rem)]"
-                          : !isForm
-                          ? "max-h-[calc(100vh-15rem)]"
-                          : "max-h-[calc(100vh-15rem)]  mb-[95px]"
-                      }
-                    >
-                      <ERPScrollArea
-                        className={`${
-                          isMaximized ? "h-full" : "max-h-[calc(100vh-15rem)]"
-                        } overflow-y-auto pr-2`}
-                      >
-                        {content &&
-                          cloneElement(content, {
-                            contentProps: contentProps ? contentProps : {},
-                            isMaximized: isMaximized, // Pass isMaximized to the content
-                          })}
-                      </ERPScrollArea>
-                      <div>{footer}</div>
-                    </div> */}
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        maxHeight: `${modalHeight - 100}px`,
-                        // height: 'auto',
-                      }}
->
-                      <ERPScrollArea
-                        customStyle={`${modalHeight - 130}px`} // Use modalHeight for maxHeight
+                    <div className="flex flex-col justify-between flex-grow">
+                    
+                     <ERPScrollArea
+                        customStyle={`${modalHeight - 130}px`}
                         className="overflow-y-auto pr-2 overflow-x-hidden py-4"
                       >
                         {content &&
                           cloneElement(content, {
                             contentProps: contentProps ? contentProps : {},
-                            isMaximized: isMaximized, 
-                            modalHeight:modalHeight,// Pass isMaximized to the content
+                            isMaximized: isMaximized,
+                            modalHeight: modalHeight, // Pass isMaximized to the content
                             rowData: rowData,
-                            origin: origin
+                            origin: origin,
                           })}
                       </ERPScrollArea>
-                      <div>{footer}</div>
+
+                      {footer && (
+                        <div >
+                          {footer}
+                        </div>
+                      )}
                     </div>
 
                     {!isForm && isButton && (
-                      <div className="border-t py-2 flex gap-2 justify-end">
+                      <div className="border-t py-2 flex gap-2 justify-end"
+                      style={{ flex: "0 0 auto" }}>
                         <div className="max-w-[200px]">
                           <ERPButton
                             className="w-full"
@@ -295,7 +281,8 @@ const ERPModal = React.memo(
                         {hasSubmit && (
                           <ERPSubmitButton
                             onClick={handleSubmit}
-                            className="uppercase">
+                            className="uppercase"
+                          >
                             {submitTitle || "Submit"}
                           </ERPSubmitButton>
                         )}

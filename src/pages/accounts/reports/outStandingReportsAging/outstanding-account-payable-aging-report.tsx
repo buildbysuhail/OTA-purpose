@@ -201,6 +201,7 @@ const OutstandingAccountPayableAgingReport = () => {
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
+                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
                     content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AP" }} />,
                     title: t("account_aging_analysis"),

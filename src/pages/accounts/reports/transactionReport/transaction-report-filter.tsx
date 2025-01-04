@@ -8,11 +8,15 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const TransactionReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { t } = useTranslation('accountsReport')
+  const { t } = useTranslation("accountsReport");
   const api = new APIClient();
   const [allTransactions, setAllTransactions] = useState<any>();
   useEffect(() => {
@@ -29,29 +33,36 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* <div className="flex items-center gap-4"> */}
-      <ERPDateInput
-        {...getFieldProps("dateFrom")}
-        label={t("from")}
-        onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
-      />
-      <ERPDateInput
-        {...getFieldProps("dateTo")}
-        label={t("to")}
-        onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
-      />
-      {/* </div> */}
-      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
-      <ERPDataCombobox
-        {...getFieldProps("salesRouteID")}
-        label={t("sales_route")}
-        field={{
-          id: "salesRouteID",
-          getListUrl: Urls.data_salesRoute,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
-      />}
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3">
+        <ERPDateInput
+          {...getFieldProps("dateFrom")}
+          label={t("from")}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
+        />
+        <ERPDateInput
+          {...getFieldProps("dateTo")}
+          label={t("to")}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
+        />
+        {/* </div> */}
+        {applicationSettings.mainSettings.allowSalesRouteArea == true && (
+          <ERPDataCombobox
+            {...getFieldProps("salesRouteID")}
+            label={t("sales_route")}
+            field={{
+              id: "salesRouteID",
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) =>
+              handleFieldChange("salesRouteID", data.salesRouteID)
+            }
+          />
+        )}
+      </div>
 
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
@@ -59,32 +70,38 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
       <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[1000px] h-auto max-h-[260px]">
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
-            <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
-              const updates: { [key: string]: any } = {};
-              if (frmState.allChecked) {
-                
-                updates["vTypes"] = "All";
-                updates["isDr"] = formState.isDr;
-                updates["isCr"] = formState.isCr;
-              } else {
-                const sds = allTransactions
-                  ?.filter((xx: any) => xx.checked === true)
-                  ?.map((tr: any) => tr.id)
-                  ?.join(',');
-                updates["vTypes"] = sds || '';
-              }
-              if (frmState.isDr && frmState.isCr) {
-                updates["drCr"] = "drCr";
-              } else if (frmState.isDr) {
-                updates["drCr"] = "dr";
-              } else if (frmState.isCr) {
-                updates["drCr"] = "cr";
-              } else {
-                updates["drCr"] = "drCr";
-              }
-              // Call handleFieldChange once with all updates
-              handleFieldChange(updates);
-            }}
+            <TransactionReportfilterCheckboxes
+              onDataChange={(frmState: {
+                vTypes: string;
+                drCr: string;
+                allChecked: boolean;
+                isDr: boolean;
+                isCr: boolean;
+              }) => {
+                const updates: { [key: string]: any } = {};
+                if (frmState.allChecked) {
+                  updates["vTypes"] = "All";
+                  updates["isDr"] = formState.isDr;
+                  updates["isCr"] = formState.isCr;
+                } else {
+                  const sds = allTransactions
+                    ?.filter((xx: any) => xx.checked === true)
+                    ?.map((tr: any) => tr.id)
+                    ?.join(",");
+                  updates["vTypes"] = sds || "";
+                }
+                if (frmState.isDr && frmState.isCr) {
+                  updates["drCr"] = "drCr";
+                } else if (frmState.isDr) {
+                  updates["drCr"] = "dr";
+                } else if (frmState.isCr) {
+                  updates["drCr"] = "cr";
+                } else {
+                  updates["drCr"] = "drCr";
+                }
+                // Call handleFieldChange once with all updates
+                handleFieldChange(updates);
+              }}
               filter={formState}
               allTransactions={allTransactions}
               setAllTransactions={setAllTransactions}
@@ -95,7 +112,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
     </div>
     // </div>
   );
-}
+};
 export default TransactionReportFilter;
 export const TransactionReportFilterInitialState = {
   dateFrom: new Date(),

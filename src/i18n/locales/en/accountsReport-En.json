@@ -34,7 +34,7 @@
     "cash_book_daywise": "Cash Book Daywise",
     "day_book_summary": "Day Book Summary",
     "cash_book_summary": "Cash Book Summary",
-    "cash_book_monthwise": "Cash Book Monthwise",
+    "cash_book_monthwise":"Cash Book Month Wise",
     "voucher_number": "Voucher No",
     "voucher_type": "Voucher Type",
     "particulars": "Particulars",
@@ -374,6 +374,18 @@
     "cash_summary_ledgerwise":"Cash Summary Ledger wise",
     "oldAccTransactionMasterId":"Old AccTransaction MasterId",
     "accTransactionMasterId":"AccTransaction MasterId",
-    "productsDetailedReportTransaction":"Products Detailed Report of Transactions"
+    "productsDetailedReportTransaction":"Products Detailed Report of Transactions",
+    "voucherPrefix":"Voucher Prefix",
+    "branchId":"BranchId",
+    "address":"Address",
+    "signature":"Signature",
+    "daily_summary_report":"Daily Summary Report",
+    "daily_summary_detailed":"Daily Summary Detailed",
+    "acc_group_view":"Account Group View",
+    "acc_group_monthview":"Account Group (Month Wise)",
+    "ledger_report_monthwise": "Ledger Report (Month View)",
+    "acc_group_dayview":"Account Group (Day Wise)",
+    "ledger_report_daywise": "Ledger Report (Day View)",
+    "daybook_billwise":"Day Book Bill Wise"
 
 }

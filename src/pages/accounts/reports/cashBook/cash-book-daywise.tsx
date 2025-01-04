@@ -148,19 +148,19 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   heightToAdjustOnWindows={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText="{___ As On (month)} {___(year)}"
-                  gridHeader={t("cash_book_daywise")}
+                  filterText="of {___(ledgerName)},{___ Month of (month)}"
+                  gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
-                  gridId="grd_cost_centre"
+                  gridId="grd_cash_book_daywise"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
                   rowData={rowData}
                   childPopupProps={{
                     content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
-                    title: t("cash_book_detailed"),
+                    title: t("acc_group_dayview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "transactionDate",

@@ -249,10 +249,7 @@ import ExpenseReport from "../../../pages/accounts/reports/incomeexpense/expense
 import ExpenseReportDetailed from "../../../pages/accounts/reports/incomeexpense/expense-report-detailed";
 import CollectionReport from "../../../pages/accounts/reports/collection-report";
 import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
-import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/cash-flow-report";
-// import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/cash-flow-report";
-// import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/cash-flow-report";
-
+import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/Cash-flow-report";
 const PriceList = lazy(
   () =>
     import(

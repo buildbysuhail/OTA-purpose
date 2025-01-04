@@ -169,7 +169,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         title={"Customize Columns"}
         width="!w-[80rem] !max-w-[60rem]"
         closeModal={() => setIsOpen(false)}
-        content={(<div className="px-1 py-3 flex flex-col gap-1">
+        content={(<div className="flex flex-col gap-1">
           <ERPInput
             noLabel
             className="mb-3"

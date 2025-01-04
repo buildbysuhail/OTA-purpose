@@ -23,7 +23,7 @@ interface ErpGridGlobalFilterProps {
 
 const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   gridId,
-  width = "w-full max-w-[1000px]",
+  width = "w-full max-w-[1000px] min-w-[300px]",
   content,
   initialData,
   validations,

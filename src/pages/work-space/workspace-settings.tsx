@@ -191,7 +191,7 @@ const updateBasicInfo = useCallback(async () => {
 
   const PopUpModalEmailChange = () => {
     return (
-      <div className="w-full pt-4">
+      <div className="w-full">
           <div className="grid grid-cols-1 gap-3">
            
             <ERPInput

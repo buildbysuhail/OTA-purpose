@@ -23,7 +23,7 @@ const InventoryHistoryReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: t("si_no"),
+      caption: t("SiNo"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -149,7 +149,7 @@ const InventoryHistoryReport = () => {
                   hideGridAddButton={true}
                   reload={true}
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title: dataField == t("accGroupID") ? t(`balance_detailed`) : t(`monthwise_balance`),
+                    title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
                     width: "700px",
                     isForm: false,
                     content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,

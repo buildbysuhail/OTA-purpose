@@ -16,7 +16,8 @@ interface BalancesheetDetailsProps {
   groupName?: string;
   rowData?: any;
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName,rowData }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData }) => {
+  debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
@@ -102,7 +103,8 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                 rowData={rowData}
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
-                  gridHeader={groupName}
+                  gridHeader={"abc"}
+                  filterText="{___(groupName)} {****(asOnDate)}"
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   postData={postData}
                   hideGridAddButton={true}

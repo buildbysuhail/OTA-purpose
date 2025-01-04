@@ -168,7 +168,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <DataGrid
                   dataSource={store}

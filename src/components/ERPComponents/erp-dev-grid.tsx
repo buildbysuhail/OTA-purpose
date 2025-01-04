@@ -769,49 +769,65 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         // Add header section
         const totalColumns = e.component.getVisibleColumns().length;
         debugger;
-        let currentRow = 1;
         const lastColumnLetter = String.fromCharCode(64 + totalColumns);
-        const mergeRange = `A:${lastColumnLetter}`;
+        let currentRow = 1;
+        let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+
+        // Keep track of merged ranges to prevent duplication
+        const mergedRanges = new Set();
+
+        // Helper function to merge cells safely
+        // const mergeCellsSafely = (range: any) => {
+        //   if (!mergedRanges.has(`${range}${currentRow}`)) {
+        //     worksheet.mergeCells(`${range}${currentRow}`);
+        //     mergedRanges.add(`${range}${currentRow}`);
+        //   }
+        // };
+
+        // Add header section with merged cells
         if (
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
         ) {
-          worksheet.mergeCells(`${mergeRange}${currentRow}`);
+          worksheet.mergeCells(mergeRange);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading7;
           worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
           currentRow += 1;
         }
         if (
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
         ) {
-          worksheet.mergeCells(`${mergeRange}${currentRow}`);
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading8;
           worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
           currentRow += 1;
         }
         if (
           userSession.headerFooter != undefined &&
           !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
         ) {
-          worksheet.mergeCells(`${mergeRange}${currentRow}`);
+          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+          worksheet.mergeCells(mergeRange);
           worksheet.getCell(`A${currentRow}`).value =
             userSession.headerFooter.heading9;
           worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
           currentRow += 1;
         }
 
-          const pageTitle = `${gridHeader} - ${header}`;
-          worksheet.mergeCells(`${mergeRange}${currentRow}`);
-          worksheet.getCell(`A${currentRow}`).value = pageTitle;
-          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
-          currentRow += 1;
-
-          // Add some spacing between the header and the grid content
-          currentRow += 1;
-
+        const pageTitle = `${gridHeader} - ${header}`;
+        mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+        worksheet.mergeCells(mergeRange);
+        worksheet.getCell(`A${currentRow}`).value = pageTitle;
+        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+        worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
+        currentRow += 2; // Add an extra row for spacing
           // Export grid data starting from the next row
           exportDataGridToExcel({
             component: e.component,

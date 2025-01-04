@@ -111,7 +111,7 @@ const DayBookSummary = () => {
                   filterInitialData={DayBookReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
-                  gridId="grd_cost_centre"
+                  gridId="grd_day_book_summary"
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{

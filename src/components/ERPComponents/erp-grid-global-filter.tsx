@@ -119,13 +119,15 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
         title={title}
         closeModal={() => setIsOpen(false)}
         content={
-          <ContentWrapper
-            content={content}
-            getFieldProps={getFieldProps}
-            handleFieldChange={handleFieldChange}
-            t={t}
-            formState={formState}
-          />
+          React.isValidElement(content)
+            ? React.createElement(content.type, {
+                ...content.props,
+                getFieldProps,
+                handleFieldChange,
+                t,
+                formState,
+              })
+            : content
         }
         footer={
           <div className="flex gap-10 justify-between py-3 border-t mt-5">

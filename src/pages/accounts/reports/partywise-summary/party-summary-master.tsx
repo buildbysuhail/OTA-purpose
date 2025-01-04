@@ -7,7 +7,7 @@ import { Tab, Tabs } from "@mui/material";
 import PartySummaryCollection from "./party-summary-collection";
 import PartySummaryLedger from "./party-summary-ledger";
 import moment from "moment";
-import PartySummaryBasicInfo, { PartySummaryBasicInfoRef } from "./party-summary-basic-info";
+import PartySummaryBasicInfo from "./party-summary-basic-info";
 import PartySummaryPayment from "./party-summary-payment";
 import PartySummaryPurchase from "./party-summary-purchase";
 import PartySummarySales from "./party-summary-sales";
@@ -25,13 +25,16 @@ export interface PartySummaryFilter {
     ledgerID: number;
   };
 }
+export interface PartySummaryRef {
+  reloadData: () => void;
+}
 // const PartySummaryMaster = () => {
 const PartySummaryMaster = ({
   getFieldProps,
   handleFieldChange,
   formState,
 }: any) => {
-  const childRef = useRef<PartySummaryBasicInfoRef>(null);
+  const childRef = useRef<PartySummaryRef>(null);
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PartySummaryFilter>({
@@ -41,7 +44,7 @@ const PartySummaryMaster = ({
       ledgerID: -1,
     },
   });
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
+ 
   const [activeTab, setActiveTab] = useState("basicInfo");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);

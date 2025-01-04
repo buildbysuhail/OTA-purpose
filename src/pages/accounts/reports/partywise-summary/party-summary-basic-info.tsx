@@ -9,14 +9,12 @@ import {
   toggleAccountGroupPopup,
   toggleCostCentrePopup,
 } from "../../../../redux/slices/popup-reducer";
-import { PartySummaryFilter } from "./party-summary-master";
+import { PartySummaryFilter, PartySummaryRef } from "./party-summary-master";
 import { forwardRef, Fragment, useEffect, useImperativeHandle, useState } from "react";
 
 // Define the ref type for useImperativeHandle
-export interface PartySummaryBasicInfoRef {
-  reloadData: () => void;
-}
-const PartySummaryBasicInfo = forwardRef<PartySummaryBasicInfoRef, PartySummaryFilter>(
+
+const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
   ({ filter }, ref) => {
 
   const [reload, setReload] = useState<boolean>(true);

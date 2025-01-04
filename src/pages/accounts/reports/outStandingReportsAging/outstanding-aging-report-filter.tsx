@@ -64,31 +64,31 @@ const OutstandingAgingReportFilter = ({ getFieldProps, handleFieldChange }: any)
             {...getFieldProps("p2")}
             label={t("period_2")}
             type="number"
-            onChangeData={({ p2 }: any) => handleFieldChange("p1", parseInt(p2) || 0)}
+            onChangeData={({ p2 }: any) => handleFieldChange("p2", parseInt(p2) || 0)}
           />
           <ErpInput
             {...getFieldProps("p3")}
             label={t("period_3")}
             type="number"
-            onChangeData={({ p3 }: any) => handleFieldChange("p1", parseInt(p3) || 0)}
+            onChangeData={({ p3 }: any) => handleFieldChange("p3", parseInt(p3) || 0)}
           />
           <ErpInput
             {...getFieldProps("p4")}
             label={t("period_4")}
             type="number"
-            onChangeData={({ p4 }: any) => handleFieldChange("p1", parseInt(p4) || 0)}
+            onChangeData={({ p4 }: any) => handleFieldChange("p4", parseInt(p4) || 0)}
           />
           <ErpInput
             {...getFieldProps("p5")}
             label={t("period_5")}
             type="number"
-            onChangeData={({ p5 }: any) => handleFieldChange("p1", parseInt(p5) || 0)}
+            onChangeData={({ p5 }: any) => handleFieldChange("p5", parseInt(p5) || 0)}
           />
           <ErpInput
             {...getFieldProps("p6")}
             label={t("period_6")}
             type="number"
-            onChangeData={({ p6 }: any) => handleFieldChange("p1", parseInt(p6) || 0)}
+            onChangeData={({ p6 }: any) => handleFieldChange("p6", parseInt(p6) || 0)}
           />
         </div>
         {/* Load Defaults Checkbox */}

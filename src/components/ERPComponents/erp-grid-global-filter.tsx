@@ -119,15 +119,13 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
         title={title}
         closeModal={() => setIsOpen(false)}
         content={
-          React.isValidElement(content)
-            ? React.createElement(content.type, {
-                ...content.props,
-                getFieldProps,
-                handleFieldChange,
-                t,
-                formState,
-              })
-            : content
+          // Pass down required handlers to the content
+          React.cloneElement(content as React.ReactElement, {
+            getFieldProps,
+            handleFieldChange,
+            t,
+            formState,
+          })
         }
         footer={
           <div className="flex gap-10 justify-between py-3 border-t mt-5">
@@ -150,24 +148,3 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 };
 
 export default React.memo(ErpGridGlobalFilter);
-
-const ContentWrapper = ({
-  content,
-  getFieldProps,
-  handleFieldChange,
-  t,
-  formState,
-}: {
-  content: React.ReactNode;
-  getFieldProps: any;
-  handleFieldChange: any;
-  t: any;
-  formState: any;
-}) => {
-  return React.cloneElement(content as React.ReactElement, {
-    getFieldProps,
-    handleFieldChange,
-    t,
-    formState,
-  });
-};

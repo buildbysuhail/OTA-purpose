@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState }: any) => {
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -60,18 +60,18 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
-              const updates: { [key: string]: any } = {};
+              let updates = frmState;
               if (frmState.allChecked) {
                 
                 updates["vTypes"] = "All";
-                updates["isDr"] = formState.isDr;
-                updates["isCr"] = formState.isCr;
+                updates["isDr"] = frmState?.isDr;
+                updates["isCr"] = frmState?.isCr;
               } else {
-                const sds = allTransactions
-                  ?.filter((xx: any) => xx.checked === true)
-                  ?.map((tr: any) => tr.id)
-                  ?.join(',');
-                updates["vTypes"] = sds || '';
+                // const sds = allTransactions
+                //   ?.filter((xx: any) => xx.checked === true)
+                //   ?.map((tr: any) => tr.id)
+                //   ?.join(',');
+                // updates["vTypes"] = sds || '';
               }
               if (frmState.isDr && frmState.isCr) {
                 updates["drCr"] = "drCr";
@@ -83,9 +83,10 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, formState }
                 updates["drCr"] = "drCr";
               }
               // Call handleFieldChange once with all updates
+              debugger;
               handleFieldChange(updates);
             }}
-              filter={formState}
+              filter={_formState}
               allTransactions={allTransactions}
               setAllTransactions={setAllTransactions}
             />

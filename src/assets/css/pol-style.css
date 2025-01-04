@@ -214,41 +214,41 @@
 
 /* standard */
 
-.css-fzem9i-MuiAutocomplete-root .MuiInput-root .MuiInput-input {
+.MuiInput-root .MuiInput-input {
   padding-top: 10px !important;
 }
 
-.css-1gct3s2-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiInput-input {
+.MuiInputBase-root .MuiInput-input {
   padding: 10px 0 0 0 !important;
 }
 
-.css-102e8i3-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiInput-input {
+.MuiInputBase-root .MuiInput-input {
   padding: 10px 0 0 0 !important;
 }
 
-.css-un1m0k-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiOutlinedInput-input, .css-un1m0k-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiFilledInput-input, .css-un1m0k-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiInput-input {
+ .MuiInputBase-root .MuiOutlinedInput-input, .MuiInputBase-root .MuiFilledInput-input,  .MuiInputBase-root .MuiInput-input {
   padding: 10px 0 0 0 !important;
 }
 
 /* outlined */
 
-.css-s7kzde-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiOutlinedInput-input{
+.MuiInputBase-root .MuiOutlinedInput-input{
   padding: 0 0 5px 4PX !important;
 }
 
 /* filled */
 
-.css-ebbmza-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiFilledInput-input{
+ .MuiInputBase-root .MuiFilledInput-input{
   padding: 8px 0 0 0 !important;
 }
-.css-fzem9i-MuiAutocomplete-root .MuiFilledInput-root .MuiFilledInput-input {
+ .MuiFilledInput-root .MuiFilledInput-input {
   padding: 7px 0px 0 0 !important;
 }
 
-.css-1a318qr-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiFilledInput-input{
+ .MuiInputBase-root .MuiFilledInput-input{
   padding: 8px 0 0 7px !important; 
 }
 
-.css-1khp7oo-MuiFormControl-root-MuiTextField-root .MuiInputBase-root .MuiFilledInput-input{
+.MuiInputBase-root .MuiFilledInput-input{
   padding: 8px 0 0 8px !important;
 }

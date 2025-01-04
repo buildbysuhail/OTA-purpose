@@ -45,8 +45,9 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
         label={t("ledger")}
         field={{
           id: "accLedgerID",
-          getListUrl: filter?.accGroupID > 0 ? `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}` : Urls.data_acc_ledgers,
-          params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
+          getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}`,
+          // getListUrl: filter?.accGroupID > 0 ? `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}` : Urls.data_acc_ledgers,
+          // params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
           valueKey: "id",
           labelKey: "name",
         }}
@@ -93,7 +94,7 @@ export const IncomeReportFilterInitialState = {
   dateFrom: new Date(),
   dateTo: new Date(),
   ledgerID: -1,
-  accGroupID: undefined,
+  accGroupID: 8,
   // accLedgerID: -1,
   salesRouteID: -1,
   salesmanID: -1,

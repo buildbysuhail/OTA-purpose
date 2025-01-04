@@ -242,6 +242,7 @@ const BalancesheetVertical = () => {
                         // accGroupID: isOpenDetails.key,
                         asOnDate: filter.asOnDate,
                       }}
+                      rowData={{groupName:"sdsdssd"}}
                       groupName={isOpenDetails.groupName}
                     /> : <CashBookMonthWise postData={
                       {

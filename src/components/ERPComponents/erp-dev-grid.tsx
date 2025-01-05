@@ -65,7 +65,6 @@ import {
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 import type { Column as ColumnType } from "devextreme/ui/data_grid";
 import { RootState } from "../../redux/store";
-import { DataGrid } from "devextreme-react/data-grid";
 
 interface ToolbarItem {
   item: React.ReactNode;

@@ -19,6 +19,7 @@ import { UserModel } from "../../../redux/slices/user-session/reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { calculateTotal, clearEntryControl } from "./functions";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -91,12 +92,10 @@ const accTransactionSlice = createSlice({
           : 0;
       {
         if (userSession.employeeId > 0)
-          state.transaction.master.employeeId =
-            userSession.employeeId;
+          state.transaction.master.employeeId = userSession.employeeId;
       }
       if (state.userConfig.presetCostenterId > 0) {
-        state.row.costCentreId =
-        state.userConfig.presetCostenterId;
+        state.row.costCentreId = state.userConfig.presetCostenterId;
         state.formElements.costCentreId.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS") {
@@ -171,6 +170,21 @@ const accTransactionSlice = createSlice({
     },
 
     // Add multiple rows to the transaction details
+    accFormStateTransactionDetailsSetSlNo: (
+      state,
+      action: PayloadAction<{}>
+    ) => {
+      debugger;
+      if (state.transaction.details) {
+        state.transaction.details = state.transaction.details.map(
+          (x, index) => ({
+            ...x,
+            slNo: index + 1, // Reset slNo to start from 1
+          })
+        );
+      }
+    },
+    // Add multiple rows to the transaction details
     accFormStateTransactionDetailsRowsAdd: (
       state,
       action: PayloadAction<AccTransactionRow[]>
@@ -210,7 +224,20 @@ const accTransactionSlice = createSlice({
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,
         credit: state.row.drCr == "Cr" ? state.row.amount : 0,
       };
-      state.transaction.details.push(serializedRow);
+      if (state.isRowEdit === true) {
+        const index = state.transaction.details.findIndex((x) => x.slNo === data.slNo);
+        if (index !== -1) {
+          state.transaction.details[index] = serializedRow; // Update existing row
+        } else {
+          ERPToast.show(`Row with slNo ${data.slNo} not found. Cannot edit row.`);
+        }
+      } else {
+        state.transaction.details.push(serializedRow);
+      }
+      state.transaction.details = state.transaction.details.map((x, index) => ({
+        ...x,
+        slNo: index + 1, // Reset slNo to start from 1
+      }));
 
       state = clearEntryControl(
         state,
@@ -243,6 +270,7 @@ const accTransactionSlice = createSlice({
         applicationSettings: ApplicationSettingsType;
       }>
     ) => {
+      debugger;
       const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
         state.transaction.master.totalAmount = calculateTotal(state);
@@ -253,6 +281,12 @@ const accTransactionSlice = createSlice({
         );
         state.previousNarration = "";
         state.transaction.details.splice(index, 1);
+        state.transaction.details = state.transaction.details.map(
+          (x, index) => ({
+            ...x,
+            slNo: index + 1, // Reset slNo to start from 1
+          })
+        );
       }
     },
 
@@ -291,7 +325,10 @@ const accTransactionSlice = createSlice({
     },
     setUserRight: (
       state,
-      action: PayloadAction<{ userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean }>
+      action: PayloadAction<{
+        userSession: UserModel;
+        hasRight: (formCode: string, action: UserAction) => boolean;
+      }>
     ) => {
       debugger;
       const { userSession, hasRight } = action.payload;
@@ -318,16 +355,26 @@ const accTransactionSlice = createSlice({
     updateFormElement: (
       state,
       action: PayloadAction<{
-        fields: Partial<Record<keyof AccTransactionFormState['formElements'], Partial<FormElementState>>>;
+        fields: Partial<
+          Record<
+            keyof AccTransactionFormState["formElements"],
+            Partial<FormElementState>
+          >
+        >;
       }>
     ) => {
+      debugger;
       const { fields } = action.payload;
 
       // Iterate over the keys of fields and apply updates
       Object.entries(fields).forEach(([key, updates]) => {
         if (key in state.formElements) {
-          state.formElements[key as keyof AccTransactionFormState['formElements']] = {
-            ...state.formElements[key as keyof AccTransactionFormState['formElements']],
+          state.formElements[
+            key as keyof AccTransactionFormState["formElements"]
+          ] = {
+            ...state.formElements[
+              key as keyof AccTransactionFormState["formElements"]
+            ],
             ...updates,
           };
         } else {
@@ -367,8 +414,9 @@ const accTransactionSlice = createSlice({
         };
 
         // Handle details data
-        state.transaction.details = payload.details.map((detail: any) => ({
+        state.transaction.details = payload.details.map((detail, index) => ({
           ...detail,
+          slNo: index + 1, // Reset slNo to start from 1
           bankDate: detail.bankDate
             ? new Date(detail.bankDate).toISOString()
             : new Date(2000, 0, 1).toISOString(),
@@ -379,7 +427,6 @@ const accTransactionSlice = createSlice({
             ? new Date(detail.checkBouncedDate).toISOString()
             : new Date(2000, 0, 1).toISOString(),
         }));
-
         // Handle attachments
         state.transaction.attachments = payload.attachments || [];
 
@@ -477,8 +524,8 @@ export const {
   enableControls,
   setUserRight,
   disableControls,
-  updateFormElement
-
+  updateFormElement,
+  accFormStateTransactionDetailsSetSlNo,
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

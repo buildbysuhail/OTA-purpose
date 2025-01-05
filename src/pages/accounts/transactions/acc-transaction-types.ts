@@ -235,6 +235,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
 };
 // AccDetailInput interface
 export interface AccTransactionRow {
+  slNo?: number;
   accTransMasterID: number;
   accTransactionDetailId: number;
   ledgerId: number;
@@ -326,7 +327,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   costCentreName: 0,
   billwiseDetails: "",
   chqDate: "",
-  groupName: ""
+  groupName: "",
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
@@ -507,7 +508,7 @@ export const initialFormElements = {
   printPreview: { visible: true, disabled: false, label: "Print Preview" },
   printCheque: { visible: true, disabled: false, label: "Print Cheque" },
   keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
-  btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
+  btnBillWise: { visible: true, disabled: false, label: "Billwise" },
   btnAdd: { visible: true, disabled: false, label: "Add" },
   btnEdit: { visible: true, disabled: false, label: "Edit" },
   btnDelete: { visible: true, disabled: false, label: "Delete" },

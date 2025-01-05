@@ -39,6 +39,8 @@ export const clearEntryControl = (
       : defaultCostCenterID;
 
   state.transaction.master.totalAmount = calculateTotal(state);
+  state.formElements.btnAdd.label = "Add";
+  state.isRowEdit = false;
   localStorage.setItem(
     `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
     JSON.stringify(state.transaction.details)

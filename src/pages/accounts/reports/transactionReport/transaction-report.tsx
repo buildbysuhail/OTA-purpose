@@ -140,6 +140,7 @@ const TransactionReport = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                focusedRowEnabled={true}
                 remoteOperations={{filtering:false,paging:false,sorting:false}} 
                   columns={columns}
                   filterText=" from {dateFrom} to {dateTo} {salesRouteID > 0 && ,Sales Route : [salesRouteName]}"

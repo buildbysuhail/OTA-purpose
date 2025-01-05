@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { GroupItem, Summary } from "devextreme-react/cjs/data-grid";
 interface CollectionReport {
   from: Date
 }
@@ -102,6 +103,7 @@ const CollectionReport = () => {
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
+                  groupPanelVisible={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("collection_report")}

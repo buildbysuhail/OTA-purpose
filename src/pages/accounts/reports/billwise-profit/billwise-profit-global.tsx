@@ -28,6 +28,7 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={'font-bold text-blue'}>
           {cellElement.data.description}
@@ -40,6 +41,7 @@ const BillwiseProfitGlobal = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red ' : ''}`}>
   {cellElement.data.productName}
@@ -53,6 +55,7 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
           {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' :  getFormattedValue(cellElement.data.qty)}`}
@@ -76,6 +79,7 @@ const BillwiseProfitGlobal = () => {
       allowFiltering: true,
       width: 60,
       visible: false,
+      showInPdf:true,
     },
     {
       dataField: "rate",
@@ -84,6 +88,7 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "grossAmount",
@@ -105,6 +110,7 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "salesPrice",
@@ -274,7 +280,7 @@ const BillwiseProfitGlobal = () => {
                 <ErpDevGrid
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="From : {fromDate} To : {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
+                  filterText="from {fromDate} to {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl={Urls.acc_reports_billwise_profit_global}
                   method={ActionType.POST}

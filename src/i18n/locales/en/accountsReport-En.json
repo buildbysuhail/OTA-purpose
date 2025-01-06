@@ -392,6 +392,7 @@
     "c_type":"CType",
     "account_receivable":"Account Receivable",
     "bill_total":"Bill Total",
-    "period":"Period"
+    "period":"Period",
+    "account_report":"Account Report"
 
 }

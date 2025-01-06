@@ -10,6 +10,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 import CashFlowBankFlowSummaryDetailedInReport from "./cash-bank-flow-summary-deailed-in-report";
+import CashFlowBankFlowSummaryDetailedOutReport from "./cash-bank-flow-summary-deailed-out-report";
 interface CashFlowBankFlowDetailedSummaryProps {
   postData: any;
   groupName?: string;
@@ -47,6 +48,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
         <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
           {cellElement.data.ledgerNameIN}
         </span>
+       
       ),
     },
     // {
@@ -122,7 +124,6 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                 <ErpDevGrid
                 rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
-                  allowGrouping={true}
                   columns={columns}
                   filterText="{___ as of (month)} {___(year)}"
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}
@@ -133,19 +134,34 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                 postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
-                  childPopupProps={{
-                    content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title:  t(`cash_flow_report_detailed`),
+                    width: "700px",
+                    isForm: false,
+                    content: dataField == "ledgerNameIN" ? <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                      // ,
+                      // reportType:"Cash",
+                    }} /> : <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
                       // ,
                       // reportType:"Cash",
                     }} />,
-                    title: t("cash_flow_report_detailed"),
-                    isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "month",
-                    bodyProps: "year,monthNum",
-                    origin:"cash_flow",
-                    enableFn: (data: any) => data?.month != "TOTAL"
-                  }}
+                    drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
+                    bodyProps: dataField == "accGroupIDIN" ?"accGroupIDIN":"AccGroupIDOut",
+                 //   enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
+                  })}
+                  // childPopupProps={{
+                  //   content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                  //     // ,
+                  //     // reportType:"Cash",
+                  //   }} />,
+                  //   title: t("cash_flow_report_detailed"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "ledgerNameIN",
+                  //   bodyProps: "year,monthNum,accGroupIDIN",
+                  //   origin:"cash_flow",
+                  //    enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
+                  // }}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -125,7 +125,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                   columns={columns}
                   filterText="{___ as of (month)} {___(year)}"
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}
-                  dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary }
+                  dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary_in }
                   method={ActionType.POST}
                   gridId="grd_cashflow_bankflow_drilldown_new"
                   popupAction={toggleCostCentrePopup}

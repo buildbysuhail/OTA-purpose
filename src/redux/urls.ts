@@ -277,6 +277,8 @@ const Urls = {
   acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
   acc_reports_cash_bank_flow_detailed: "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",
   acc_reports_cash_bank_flow_detailed_summary: "/Accounts/RptCashFlowBankFlow/CashBankFlowNewDrilldown/",
+  acc_reports_cash_bank_flow_detailed_summary_in: "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownIN/",
+  acc_reports_cash_bank_flow_detailed_summary_out: "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownOut/",
 
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",

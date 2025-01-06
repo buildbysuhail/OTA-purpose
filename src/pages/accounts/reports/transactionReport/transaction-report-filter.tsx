@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState }: any) => {
+const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState, getFormState }: any) => {
   debugger;
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
@@ -53,6 +53,8 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
         }}
         onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />}
+      {JSON.stringify(getFormState())}
+      {JSON.stringify(_formState)}
 
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
@@ -61,6 +63,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
+              debugger;
               let updates = frmState;
               // if (frmState.allChecked) {
                 
@@ -87,7 +90,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
               debugger;
               handleFieldChange(updates);
             }}
-              filter={_formState}
+              filter={getFormState()}
               allTransactions={allTransactions}
               setAllTransactions={setAllTransactions}
             />

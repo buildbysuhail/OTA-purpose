@@ -51,6 +51,12 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
     },
     [formState]
   );
+  const getFormState = useCallback(() => {
+      console.log("getFieldProps called");
+      return  formState;
+    },
+    [formState]
+  );
 
   // Handle field value changes
   // const handleFieldChange = useCallback(
@@ -109,6 +115,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 
   return (
     <>
+    {JSON.stringify(formState)}
       <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px]">
         <i className="ri-filter-line"></i>
       </button>
@@ -128,6 +135,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
             handleFieldChange,
             t,
             formState,
+            getFormState
           })
         }
         footer={

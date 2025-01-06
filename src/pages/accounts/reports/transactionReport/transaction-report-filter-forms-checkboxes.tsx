@@ -36,7 +36,7 @@ const TransactionReportfilterCheckboxes: React.FC<
     allChecked: boolean;
     isDr: boolean;
     isCr: boolean;
-  }>({ allChecked: false, drCr: "DrCr", isCr: false, isDr: false, vTypes: "" });
+  }>(filter);
   useEffect(() => {
     //
     onDataChange(formState);

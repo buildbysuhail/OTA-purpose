@@ -309,21 +309,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               })
             );
 
-            if (voucherType === "CN" || voucherType === "DN") {
-              if (isBillwiseApplicable(cbMasterAccount)) {
-                handleBillwiseDialog(cbMasterAccount, "");
-                focusNext();
-              } else {
-                focusNext();
-              }
-            } else {
-              if (isBillwiseApplicable(cbLedger)) {
-                handleBillwiseDialog(cbLedger, "");
-                focusNext();
-              } else {
-                focusNext();
-              }
-            }
+            // if (voucherType === "CN" || voucherType === "DN") {
+            //   if (isBillwiseApplicable(cbMasterAccount)) {
+            //     handleBillwiseDialog(cbMasterAccount, "");
+            //     focusNext();
+            //   } else {
+            //     focusNext();
+            //   }
+            // } else {
+            //   if (isBillwiseApplicable(cbLedger)) {
+            //     handleBillwiseDialog(cbLedger, "");
+            //     focusNext();
+            //   } else {
+            //     focusNext();
+            //   }
+            // }
           }
         } catch (error) {}
       }

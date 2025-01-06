@@ -44,6 +44,8 @@ interface ERPInputProps extends ERPInputBaseProps {
   label?: string;
   placeholder?: string;
   onChangeData?: (data: any) => void;
+  onKeyDown?: (e: any) => void;
+  onKeyUp?: (e: any) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -74,6 +76,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   autoFocus?: boolean;
   customSize?: "sm" | "md" | "lg" | "customize";
   useMUI?: boolean;
+  disableEnterNavigation?: boolean;
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
@@ -88,6 +91,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       onChange,
       onFocus,
       onBlur,
+      onKeyDown,
+      onKeyUp,
       data,
       type = "text",
       customSize,
@@ -119,6 +124,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       onClickSuffix,
       useMUI,
       skip = false,
+      disableEnterNavigation = false,
       jumpTo,
       jumpTarget,
       variant,
@@ -140,91 +146,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
-    
-
-    // useEffect(() => {
-    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-    //     if (event.key === 'ArrowUp') {
-    //       console.log('Keyboard Arrow Up');
-    //     } else if (event.key === 'ArrowDown') {
-    //       console.log('Keyboard Arrow Down');
-    //     }
-    //   };
-  
-    //   interface WheelEvent {
-    //     deltaY: number;
-    //   }
-
-    //   const handleWheel = (event: WheelEvent) => {
-    //     if (event.deltaY < 0) {
-    //       console.log('Mouse Scroll Up');
-    //     } else if (event.deltaY > 0) {
-    //       console.log('Mouse Scroll Down');
-    //     }
-    //   };
-  
-    //   window.addEventListener('keydown', handleKeyDown);
-    //   window.addEventListener('wheel', handleWheel);
-  
-    //   return () => {
-    //     window.removeEventListener('keydown', handleKeyDown);
-    //     window.removeEventListener('wheel', handleWheel);
-    //   };
-    // }, []);
-
-    // useEffect(() => {
-    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-    //     if (event.key === 'ArrowUp') {
-    //       console.log('Keyboard Arrow Up');
-    //     } else if (event.key === 'ArrowDown') {
-    //       console.log('Keyboard Arrow Down');
-    //     }
-    //   };
-  
-    //   const handleWheel = (event: WheelEvent) => {
-    //     if (event.deltaY < 0) {
-    //       console.log('Mouse Scroll Up');
-    //     } else if (event.deltaY > 0) {
-    //       console.log('Mouse Scroll Down');
-    //     }
-    //   };
-  
-    //   window.addEventListener('keydown', handleKeyDown);
-    //   window.addEventListener('wheel', handleWheel);
-  
-    //   return () => {
-    //     window.removeEventListener('keydown', handleKeyDown);
-    //     window.removeEventListener('wheel', handleWheel);
-    //   };
-    // }, []);
-
-    // useEffect(() => {
-    //   const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-    //     if (event.key === 'ArrowUp') {
-    //       console.log('Keyboard Arrow Up');
-    //     } else if (event.key === 'ArrowDown') {
-    //       console.log('Keyboard Arrow Down');
-    //     }
-    //   };
-
-    //   const handleWheel = (event: WheelEvent) => {
-    //     if (event.deltaY < 0) {
-    //       console.log('Mouse Scroll Up');
-    //     } else if (event.deltaY > 0) {
-    //       console.log('Mouse Scroll Down');
-    //     }
-    //   };
-
-    //   document.addEventListener('keydown', handleKeyDown);
-    //   document.addEventListener('wheel', handleWheel, { passive: false });
-
-    //   return () => {
-    //     document.removeEventListener('keydown', handleKeyDown);
-    //     document.removeEventListener('wheel', handleWheel);
-    //   };
-    // }, []);
-
-    
 
      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -241,32 +162,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     
 
     useEffect(() => {
-      // const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      //   if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      //     event.preventDefault();
-      //     const delta = event.key === 'ArrowUp' ? 1 : -1;
-      //     const currentValue = parseFloat(value as string) || 0;
-      //     const newValue = currentValue + delta * (step ? parseFloat(step.toString()) : 1);
-
-      //     if ((min === undefined || newValue >= parseFloat(min.toString())) &&
-      //       (max === undefined || newValue <= parseFloat(max.toString()))) {
-      //       const changeEvent = {
-      //         target: { value: newValue.toString() }
-      //       } as React.ChangeEvent<HTMLInputElement>;
-      //       handleChange(changeEvent);
-      //     }
-
-      //     console.log(event.key === 'ArrowUp' ? 'Keyboard Arrow Up' : 'Keyboard Arrow Down');
-      //   }
-      // };
-
-      const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-        if (event.key === 'ArrowUp') {
-          console.log('Keyboard Arrow Up');
-        } else if (event.key === 'ArrowDown') {
-          console.log('Keyboard Arrow Down');
-        }
-      };
 
       const handleWheel = (event: WheelEvent) => {
         if (type === 'number') {
@@ -293,26 +188,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         inputElement.addEventListener('wheel', handleWheel, { passive: false });
       }
 
-      // document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('keydown', (event) => {
-        if (Voucherno) {
-            handleKeyDown(event);
-            console.log({Voucherno});
-        }
-    });
-
-    
-    
-
       return () => {
         if (inputElement) {
           inputElement.removeEventListener('wheel', handleWheel);
         }
-        // document.removeEventListener('keydown', handleKeyDown);
-        if (Voucherno) {
-          document.removeEventListener('keydown', handleKeyDown);
-          console.log({Voucherno});
-      }
       };
     }, [id, value, min, max, step, handleChange]);
 
@@ -777,7 +656,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             appearance: "textfield", // For cross-browser consistency
           },
         },
-        onKeyDown: handleKeyDown,
+        onKeyDown:disableEnterNavigation == true ? undefined : onKeyDown != undefined ? onKeyDown: handleKeyDown,
+        onKeyUp: onKeyUp,
       };
       return (
         <div className={`${className}`}
@@ -841,80 +721,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {prefix}
               </div>
             )}
-            {/* <div className="flex-1">
-              <input
-
-
-                {...commonProps}
-                placeholder={iPlaceholder}
-                ref={ref}
-                autoComplete={autocomplete}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onFocus={(e) => {
-                  setIsFocused(true);
-                  onFocus && onFocus(e);
-                }}
-                onBlur={(e) => {
-                  setIsFocused(false);
-                  onBlur && onBlur(e);
-                }}
-                style={
-                  {
-                    height,
-                    fontSize,
-                    fontWeight,
-                    color,
-                    borderColor: borderStyles,
-                    "--tw-ring-shadow": "none",
-                    outline: "none",
-                    transition: "border-color 0.2s ease-in-out",
-                    borderTopLeftRadius: `${!prefix ? appState?.inputBox?.borderRadius : 0
-                      }px`,
-                    borderBottomLeftRadius: `${!prefix ? appState?.inputBox?.borderRadius : 0
-                      }px`,
-                    borderTopRightRadius: `${!suffix ? appState?.inputBox?.borderRadius : 0
-                      }px`,
-                    borderBottomRightRadius: `${!suffix ? appState?.inputBox?.borderRadius : 0
-                      }px`,
-                    backgroundColor: bgColor,
-                    ...(!prefix &&
-                      !suffix && {
-                      borderRadius: `${appState?.inputBox?.borderRadius ?? 5
-                        }px`,
-                    }),
-                  } as React.CSSProperties
-                }
-                className={`form-control ${inputClassName}  placeholder:capitalize  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                onWheel={(e: any) => { type === "number" && e?.target?.blur(); }}
-                maxLength={maxLength}
-                min={min}
-                max={max}
-                pattern={pattern}
-                step={step}
-                accept={accept}
-                onKeyDown={handleNavigation}
-                data-skip={skip}
-                data-jump-to={jumpTo}
-                data-jump-target={jumpTarget}
-              />
-              <div className="relative h-full w-full">
-                <div className="absolute right-0 top-0 h-full flex flex-col">
-                  <button
-                    className="h-1/2 px-2 py-0 text-gray-600 hover:bg-gray-100 focus:outline-none"
-                    // onClick={handleUpClick}
-                  >
-                    <ChevronUp className="h-4 w-4" />
-                  </button>
-                  <button
-                    className="h-1/2 px-2 py-0 text-gray-600 hover:bg-gray-100 focus:outline-none"
-                    // onClick={handleDownClick}
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </div> */}
             <div className="relative flex-1">
             <input
               {...commonProps}
@@ -963,47 +769,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               pattern={pattern}
               step={step}
               accept={accept}
-              onKeyDown={handleNavigation}
+              onKeyDown={disableEnterNavigation == true ? undefined :onKeyDown != undefined ? onKeyDown : handleNavigation}
+              onKeyUp={onKeyUp}
               data-skip={skip}
               data-jump-to={jumpTo}
               data-jump-target={jumpTarget}
             />
-            {/* {type === 'number' && (
-              <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">
-                <button
-                  type="button"
-                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 focus:outline-none"
-                  onClick={() => {
-                    const currentValue = parseFloat(value) || 0;
-                    const newValue = currentValue + (step ? parseFloat(step) : 1);
-                    if (max === undefined || newValue <= parseFloat(max.toString())) {
-                      const event = {
-                        target: { value: newValue.toString() }
-                      } as React.ChangeEvent<HTMLInputElement>;
-                      handleChange(event);
-                    }
-                  }}
-                >
-                  <ChevronUp className="h-3 w-3 text-gray-500" />
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 border-t border-gray-300 focus:outline-none"
-                  onClick={() => {
-                    const currentValue = parseFloat(value) || 0;
-                    const newValue = currentValue - (step ? parseFloat(step) : 1);
-                    if (min === undefined || newValue >= parseFloat(min.toString())) {
-                      const event = {
-                        target: { value: newValue.toString() }
-                      } as React.ChangeEvent<HTMLInputElement>;
-                      handleChange(event);
-                    }
-                  }}
-                >
-                  <ChevronDown className="h-3 w-3 text-gray-500" />
-                </button>
-              </div>
-            )} */}
+           
 
           {Voucherno && (
               // <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">

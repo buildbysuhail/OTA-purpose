@@ -40,7 +40,7 @@ const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }:
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
-      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
         <ERPDataCombobox
           {...getFieldProps("routeID")}
           label={t("cost_centre")}
@@ -52,7 +52,7 @@ const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }:
           }}
           onSelectItem={(data) => handleFieldChange({routeID: data.value, routeName: data.routeName})}
         />}
-        {applicationSettings.accountsSettings.maintainCostCenter == true &&
+        {applicationSettings.accountsSettings?.maintainCostCenter == true &&
         <ERPDataCombobox
           {...getFieldProps("costCentreID")}
           label={t("cost_centre")}

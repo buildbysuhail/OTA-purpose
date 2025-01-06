@@ -98,7 +98,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         <ERPInput
           id="salesmanIncentive"  
           min={0}
-          value={settings?.miscellaneousSettings.salesmanIncentive}
+          value={settings?.miscellaneousSettings?.salesmanIncentive}
           data={settings?.miscellaneousSettings}
           type="number"
           label={t("salesman_incentive")}

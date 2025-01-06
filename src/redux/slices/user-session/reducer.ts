@@ -42,6 +42,9 @@ export interface UserModel {
     heading8: string;
     heading9: string;
   };
+  general: {
+    syncState: string;
+  };
   currencySymbol: string | null;
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;
@@ -101,6 +104,9 @@ export const initialUserSessionData: UserModel = {
     heading7: "",
     heading8: "",
     heading9: ""
+  },
+  general: {
+    syncState: ""
   }
 };
 let ass = localStorage.getItem("up");

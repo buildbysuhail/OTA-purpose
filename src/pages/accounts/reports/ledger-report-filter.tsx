@@ -98,7 +98,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
         }}
         onSelectItem={(data) => handleFieldChange({costCentreID: data.value,CostCenterName:data.label})}
       />
-      {applicationSettings.accountsSettings.allowSalesCounter == true &&
+      {applicationSettings.accountsSettings?.allowSalesCounter == true &&
       <ERPDataCombobox
         {...getFieldProps("counterID")}
         label={t("counter_id")}
@@ -110,7 +110,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
         }}
         onChangeData={(data) => handleFieldChange('counterID', data.counterID)}
       />}
-      {formState.ledgerID != undefined && formState.ledgerID != null && formState.ledgerID != 0 && applicationSettings.accountsSettings.maintainProjectSite == true &&
+      {formState.ledgerID != undefined && formState.ledgerID != null && formState.ledgerID != 0 && applicationSettings.accountsSettings?.maintainProjectSite == true &&
         < ERPDataCombobox
           {...getFieldProps("project")}
           label={t("project")}

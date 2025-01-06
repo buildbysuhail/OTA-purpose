@@ -1,7 +1,12 @@
+import moment from "moment";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
+import { ClientSessionModel } from "../../../redux/slices/client-session/reducer";
 import { UserModel } from "../../../redux/slices/user-session/reducer";
+import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { AccTransactionFormState } from "./acc-transaction-types";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 
 export const calculateTotal = (state: AccTransactionFormState): number => {
   return state.transaction.master.voucherType !== "MJV"
@@ -17,6 +22,7 @@ export const calculateTotal = (state: AccTransactionFormState): number => {
 export const clearEntryControl = (
   state: AccTransactionFormState,
   defaultCostCenterID: number
+
 ): AccTransactionFormState => {
   state.row.ledgerCode = "";
   state.row.groupName = "";
@@ -39,36 +45,90 @@ export const clearEntryControl = (
       : defaultCostCenterID;
 
   state.transaction.master.totalAmount = calculateTotal(state);
-  localStorage.setItem(
-    `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
-    JSON.stringify(state.transaction.details)
-  );
+  state.formElements.btnAdd.label = "Add";
+  state.isRowEdit = false;
   return state;
 };
-// export const setUserRight = (
-//   state: AccTransactionFormState,
-//   userSession: UserModel,
-//   hasRight: (formCode: string, action: UserAction) => boolean
-// ): AccTransactionFormState => {
-//   debugger;
+export const validateTransactionDate = (
+  transDate: Date,
+  skipPostDatedAndPredated: boolean = false,
+  userSession: UserModel,
+  clientSession: ClientSessionModel,
+  applicationSettings: ApplicationSettingsType,
+  hasRight: (formCode: string, action: UserAction) => boolean
+): { valid: boolean; message: string } => {
+  // Normalize the transaction date to remove the time
+  transDate = new Date(transDate.setHours(0, 0, 0, 0));
+  let isValid = true;
+  let message = "Transaction date is valid.";
 
-//   const isClosed = userSession.financialYearStatus === "Closed";
+  // Financial period validation
+  if (!userSession.finFrom || !userSession.finTo) {
+    ERPToast.show("Invalid Financial year!", "warning");
+    return { valid: false, message: "Invalid Financial year." };
+  }
 
-//   state.formElements.btnSave.visible = !isClosed
-//     ? hasRight(state.formCode, UserAction.Add) &&
-//       (state?.transaction?.details?.length ?? 0) > 0
-//     : false;
+  if (transDate < userSession.finFrom || transDate > userSession.finTo) {
+    return {
+      valid: false,
+      message: "Transaction date is outside the financial period.",
+    };
+  }
 
-//   state.formElements.btnEdit.visible = !isClosed
-//     ? hasRight(state.formCode, UserAction.Edit)
-//     : false;
+  // Skip post-dated and pre-dated checks if specified
+  if (!skipPostDatedAndPredated) {
+    const softwareDate = new Date(clientSession.softwareDate);
 
-//   state.formElements.btnDelete.visible = !isClosed
-//     ? hasRight(state.formCode, UserAction.Delete)
-//     : false;
+    // Post-dated transaction validation
+    if (
+      applicationSettings.mainSettings?.allowPostdatedTrans &&
+      transDate.toDatePartString() !== softwareDate.toDatePartString()
+    ) {
+      if (!hasRight("PRE_POST", UserAction.Blocked)) {
+        const maxPostDate = moment().add(
+          applicationSettings.mainSettings?.postDatedTransInNumbers,
+          "days"
+        ).toDate();
 
-//   state.formElements.btnPrint.visible = !isClosed
-//     ? hasRight(state.formCode, UserAction.Print)
-//     : false;
-//   return state;
-// };
+        if (transDate > maxPostDate) {
+          return {
+            valid: false,
+            message: "Post Dated Transaction Not Allowed.",
+          };
+        }
+      } else {
+        return {
+          valid: false,
+          message: "User privilege not assigned. Please contact admin.",
+        };
+      }
+    }
+
+    // Pre-dated transaction validation
+    if (
+      applicationSettings.mainSettings?.allowPredatedTrans &&
+      transDate.toDatePartString() !== softwareDate.toDatePartString()
+    ) {
+      if (!hasRight("PRE_POST", UserAction.Blocked)) {
+        const minPreDate = moment().subtract(
+          applicationSettings.mainSettings?.preDatedTransInNumbers,
+          "days"
+        ).toDate();
+
+        if (transDate < minPreDate) {
+          return {
+            valid: false,
+            message: "Pre Dated Transaction Not Allowed",
+          };
+        }
+      } else {
+        return {
+          valid: false,
+          message: "User privilege not assigned. Please contact admin.",
+        };
+      }
+    }
+  }
+
+  return { valid: isValid, message };
+};

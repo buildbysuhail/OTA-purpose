@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import { Tab, Tabs } from "@mui/material";
@@ -17,6 +17,7 @@ import PartySummarySalesReturn from "./party-summary-sales-return";
 import PartySummarySalesOrder from "./party-summary-sales-order";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { LedgerType } from "../../../../enums/ledger-types";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
 export interface PartySummaryFilter {
   filter: {
     dateFrom: any;
@@ -24,17 +25,16 @@ export interface PartySummaryFilter {
     ledgerID: number;
   };
 }
+export interface PartySummaryRef {
+  reloadData: () => void;
+}
 // const PartySummaryMaster = () => {
 const PartySummaryMaster = ({
   getFieldProps,
   handleFieldChange,
   formState,
 }: any) => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+  const childRef = useRef<PartySummaryRef>(null);
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PartySummaryFilter>({
@@ -44,10 +44,15 @@ const PartySummaryMaster = ({
       ledgerID: -1,
     },
   });
-
+ 
   const [activeTab, setActiveTab] = useState("basicInfo");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
+  };
+  const handleShowButtonClick = () => {
+    if (childRef.current) {
+      childRef.current.reloadData(); // Call the exposed function in the child
+    }
   };
   return (
     <Fragment>
@@ -55,63 +60,78 @@ const PartySummaryMaster = ({
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
-              <div className="grid grid-cols-3 gap-3 items-stretch">
-                <ERPDateInput
-                  id="dateFrom"
-                  value={filter.filter.dateFrom}
-                  customSize="sm"
-                  data={filter.filter}
-                  label={t("date_from")}
-                  onChangeData={(data: any) =>
-                    setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        dateFrom: data.dateFrom,
-                      },
-                    }))
-                  }
-                />
-                <ERPDateInput
-                  id="dateTo"
-                  value={filter.filter.dateTo}
-                  customSize="sm"
-                  data={filter.filter}
-                  label={t("date_to")}
-                  onChangeData={(data: any) =>
-                    setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        dateTo: data.dateTo,
-                      },
-                    }))
-                  }
-                />
-                <ERPDataCombobox
-                  id="ledgerID"
-                  value={filter.filter.ledgerID}
-                  customSize="sm"
-                  data={filter.filter}
-                  label={t("ledgers")}
-                  field={{
-                    id: "ledgerID",
-                    getListUrl: Urls.data_acc_ledgers,
-                    params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
-                  onChangeData={(data: any) =>
-                    setFilter((prev: any) => ({
-                      ...prev,
-                      filter: {
-                        ...prev.filter,
-                        ledgerID: data.ledgerID,
-                      },
-                    }))
-                  }
-                />
+              <div>
+                <div className="flex items-center gap-4">
+                  <ERPDateInput
+                    id="dateFrom"
+                    value={filter.filter.dateFrom}
+                    customSize="sm"
+                    className="max-w-[150px]"
+                    data={filter.filter}
+                    label={t("date_from")}
+                    onChangeData={(data: any) =>
+                      setFilter((prev: any) => ({
+                        ...prev,
+                        filter: {
+                          ...prev.filter,
+                          dateFrom: data.dateFrom,
+                        },
+                      }))
+                    }
+                  />
+                  <ERPDateInput
+                    id="dateTo"
+                    value={filter.filter.dateTo}
+                    customSize="sm"
+                    className="max-w-[150px]"
+                    data={filter.filter}
+                    label={t("date_to")}
+                    onChangeData={(data: any) =>
+                      setFilter((prev: any) => ({
+                        ...prev,
+                        filter: {
+                          ...prev.filter,
+                          dateTo: data.dateTo,
+                        },
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex items-end gap-4">
+                  <ERPDataCombobox
+                    id="ledgerID"
+                    value={filter.filter.ledgerID}
+                    customSize="sm"
+                    className="min-w-[300px]"
+                    data={filter.filter}
+                    label={t("ledgers")}
+                    field={{
+                      id: "ledgerID",
+                      getListUrl: Urls.data_acc_ledgers,
+                      params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
+                    onChangeData={(data: any) =>
+                      setFilter((prev: any) => ({
+                        ...prev,
+                        filter: {
+                          ...prev.filter,
+                          ledgerID: data.ledgerID,
+                        },
+                      }))
+                    }
+                  />
+                  <div>
+                    <ERPButton
+                      type="button"
+                      variant="primary"
+                      onClick={handleShowButtonClick}
+                      title={t("show")}
+                    ></ERPButton>
+                  </div>
+                </div>
               </div>
               {/* <ERPDataCombobox
                               id="ledgerID"
@@ -159,6 +179,7 @@ const PartySummaryMaster = ({
                   {activeTab === "basicInfo" && (
                     <PartySummaryBasicInfo
                       filter={filter.filter}
+                      ref={childRef} // Pass the ref to the child
                     ></PartySummaryBasicInfo>
                   )}
                   {activeTab === "accountLedger" && (

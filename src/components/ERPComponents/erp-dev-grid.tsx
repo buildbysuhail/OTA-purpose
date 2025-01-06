@@ -1,13 +1,16 @@
 import React, {
+  forwardRef,
   Fragment,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid } from "devextreme-react/data-grid";
+import { DataGrid, GroupItem } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -123,13 +126,15 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-    | boolean
-    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+  | boolean
+  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+  focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
+  onKeyDown?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
   customToolbarItems?: ToolbarItem[];
@@ -207,6 +212,7 @@ interface ERPDevGridProps {
     origin?: string;
     enableFn?: () => boolean;
   };
+  [key: string]: any; // To allow other props to be passed
 }
 const api = new APIClient();
 const createStore = async (
@@ -274,16 +280,16 @@ const createStore = async (
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-            ? await api.postAsync(
+              ? await api.postAsync(
                 dataUrl,
                 filterData != undefined && Object.keys(filterData).length > 0
                   ? filterData
                   : postData != undefined
-                  ? postData
-                  : {},
+                    ? postData
+                    : {},
                 queryString
               )
-            : null;
+              : null;
 
         if (
           result != undefined &&
@@ -307,21 +313,21 @@ const createStore = async (
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
-                data: [],
-                totalCount: -1,
-                summary: {},
-                groupCount: 0,
-              }
-            : {
-                data: result.data,
-                totalCount: result.totalCount,
-              }
-          : {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            };
+            }
+            : {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+            data: [],
+            totalCount: -1,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -347,125 +353,138 @@ const createStore = async (
 };
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
-const ERPDevGrid: React.FC<ERPDevGridProps> = ({
-  summaryItems = [],
-  columns,
-  showSerialNo,
-  gridId,
-  dataUrl,
-  data,
-  postData,
-  rowData,
-  filterInitialData,
-  enablefilter = false,
-  filterContent = <></>,
-  filterWidth = "w-full max-w-[1000px]",
-  method = ActionType.GET,
-  height,
-  className = "custom-data-grid",
-  showBorders = true,
-  showColumnLines = false,
-  showRowLines = true,
-  pageSize = 100,
-  allowPaging = true,
-  allowSelection = true,
-  selectionMode = "single",
-  allowExport = true,
-  exportFormats = ["pdf", "excel"],
-  allowColumnReordering = true,
-  allowColumnResizing = true,
-  allowColumnChooser = false,
-  allowFiltering = true,
-  initialFilters = [],
-  allowSorting = true,
-  allowSearching = true,
-  remoteOperations = true,
-  onRowClick,
-  onFilterChanged,
-  onCellClick,
-  onRowDblClick,
-  onSelectionChanged,
-  onExporting,
-  onContentReady,
-  customToolbarItems = [],
-  hideDefaultExportButton = false,
-  hideDefaultSearchPanel = false,
-  hideGridHeader = false,
-  gridHeader = "",
-  filterText = "",
-  hideGridAddButton = false,
-  gridAddButtonType = "link",
-  gridAddButtonIcon = "ri-add-line",
-  gridAddButtonText = "Add",
-  heightToAdjustOnMobile = 200,
-  heightToAdjustOnWindows = 100,
-  heightToAdjustOnWindowsInModal,
-  popupAction,
-  changeReload,
-  defaultColumnWidth,
-  columnAutoWidth = true,
-  columnHidingEnabled = false,
-  stateStoring,
-  scrollingMode = "virtual",
-  allowGrouping = false,
-  groupPanelVisible = false,
-  allowEditing = false,
-  editMode = "row",
-  onRowUpdating,
-  onRowInserting,
-  onRowRemoving,
-  rowRender,
-  cellRender,
-  locale,
-  columnRenderingMode = "standard",
-  rowRenderingMode = "standard",
-  keyExpr,
-  dateSerializationFormat,
-  loadPanelEnabled = true,
-  hoverStateEnabled = true,
-  wordWrapEnabled = true,
-  initialPreferences,
-  reload,
-  showFilterInitially = false,
-  paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
-  childPopupProps = {
-    title: "",
-    width: "mw-100",
-    isForm: false,
-    content: null,
-    drillDownCells: "",
-    bodyProps: "",
-  },
-  childPopupPropsDynamic,
-}) => {
-  const { t } = useTranslation("main");
-  const dispatch = useAppDispatch();
-  const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
-  const [addButtonText, setAddButtonText] = useState<string>(
-    gridAddButtonText == "Add" ? t("add") : gridAddButtonText
-  );
-  const onPopupOpenClick = useCallback(() => {
-    popupAction &&
-      dispatch(popupAction({ isOpen: true, key: null, reload: false }));
-  }, [dispatch, popupAction]);
+// Forward the ref
+const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
+  (
+    {
+      summaryItems = [],
+      columns,
+      showSerialNo,
+      gridId,
+      dataUrl,
+      data,
+      postData,
+      rowData,
+      filterInitialData,
+      enablefilter = false,
+      filterContent = <></>,
+      filterWidth = "w-full max-w-[1000px]",
+      method = ActionType.GET,
+      height,
+      className = "custom-data-grid",
+      showBorders = true,
+      showColumnLines = false,
+      showRowLines = true,
+      pageSize = 100,
+      allowPaging = true,
+      allowSelection = true,
+      selectionMode = "single",
+      allowExport = true,
+      exportFormats = ["pdf", "excel"],
+      allowColumnReordering = true,
+      allowColumnResizing = true,
+      allowColumnChooser = false,
+      allowFiltering = true,
+      initialFilters = [],
+      allowSorting = true,
+      allowSearching = true,
+      remoteOperations = true,
+      focusedRowEnabled = false,
+      onRowClick,
+      onFilterChanged,
+      onCellClick,
+      onRowDblClick,
+      onSelectionChanged,
+      onKeyDown,
+      onExporting,
+      onContentReady,
+      customToolbarItems = [],
+      hideDefaultExportButton = false,
+      hideDefaultSearchPanel = false,
+      hideGridHeader = false,
+      gridHeader = "",
+      filterText = "",
+      hideGridAddButton = false,
+      gridAddButtonType = "link",
+      gridAddButtonIcon = "ri-add-line",
+      gridAddButtonText = "Add",
+      heightToAdjustOnMobile = 200,
+      heightToAdjustOnWindows = 100,
+      heightToAdjustOnWindowsInModal,
+      popupAction,
+      changeReload,
+      defaultColumnWidth,
+      columnAutoWidth = true,
+      columnHidingEnabled = false,
+      stateStoring,
+      scrollingMode = "virtual",
+      allowGrouping = false,
+      groupPanelVisible = false,
+      allowEditing = false,
+      editMode = "row",
+      onRowUpdating,
+      onRowInserting,
+      onRowRemoving,
+      rowRender,
+      cellRender,
+      locale,
+      columnRenderingMode = "standard",
+      rowRenderingMode = "standard",
+      keyExpr,
+      dateSerializationFormat,
+      loadPanelEnabled = true,
+      hoverStateEnabled = true,
+      wordWrapEnabled = true,
+      initialPreferences,
+      reload,
+      showFilterInitially = false,
+      paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
+      childPopupProps = {
+        title: "",
+        width: "mw-100",
+        isForm: false,
+        content: null,
+        drillDownCells: "",
+        bodyProps: "",
+      },
+      childPopupPropsDynamic,
+      ...props
+    },
+    ref
+  ) => {
+    const gridRef = useRef<any>(null); // Use `any` for the instance
+    useImperativeHandle(ref, () => ({
+      instance: () => gridRef.current?.instance(), // Safely access instance()
+    }));
 
-  useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightMobile =
-      heightToAdjustOnMobile !== undefined
-        ? wh - heightToAdjustOnMobile
-        : heightToAdjustOnWindowsInModal ?? 400;
+    const { t } = useTranslation("main");
+    const dispatch = useAppDispatch();
+    const userSession = useAppSelector((state: RootState) => state.UserSession);
+    const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+    const [addButtonText, setAddButtonText] = useState<string>(
+      gridAddButtonText == "Add" ? t("add") : gridAddButtonText
+    );
+    const onPopupOpenClick = useCallback(() => {
+      popupAction &&
+        dispatch(popupAction({ isOpen: true, key: null, reload: false }));
+    }, [dispatch, popupAction]);
+
+    useEffect(() => {
+      let wh = window.innerHeight;
+      let gridHeightMobile =
+        heightToAdjustOnMobile !== undefined
+          ? wh - heightToAdjustOnMobile
+          : heightToAdjustOnWindowsInModal ?? 400;
 
     let gridHeightWindows =
       heightToAdjustOnWindowsInModal !== undefined
         ? heightToAdjustOnWindowsInModal
         : wh - heightToAdjustOnWindows < 300
-        ? 300
-        : wh - heightToAdjustOnWindows;
+          ? 300
+          : wh - heightToAdjustOnWindows;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [
     heightToAdjustOnMobile,
@@ -473,810 +492,835 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     heightToAdjustOnWindowsInModal,
   ]);
 
-  const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
-  const [preferences, setPreferences] = useState<GridPreference>();
-  const initialFilterState = useMemo(
-    () => filterInitialData || {},
-    [filterInitialData]
-  );
-  const [filter, setFilter] = useState<any>({});
-  const [filterValidations, setFilterValidations] = useState<any>({});
-  const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [isChildOpen, setIsChildOpen] = useState<{
-    isOpen: boolean;
-    props: any;
-    key?: string;
-    drillDownDisplayCells?: string[];
-    data?: any;
-  }>({ isOpen: false, props: {}, key: "", drillDownDisplayCells: [] });
-  const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [bodyProps, setBodyProps] = useState({});
-  const [_filterInitialData, set_filterInitialData] =
-    useState(filterInitialData);
-  const [_reload, set_reload] = useState(reload);
-  const [isPdfMode, setIsPdfMode] = useState(false);
-  useEffect(() => {
-    set_reload(reload);
-  }, [reload]);
-  useEffect(() => {
-    setGridCols(columns);
-  }, []);
-  useEffect(() => {
-    if (filterInitialData && Object.keys(filter).length === 0) {
-      setFilter(filterInitialData);
-    }
-  }, [filterInitialData]);
-  useEffect(() => {
-    if (gridId != "" && columns != undefined && columns != null) {
-      onApplyPreferences(getInitialPreference(gridId, columns));
-    }
-  }, [gridId]);
-  const onApplyPreferences = useCallback(
-    (pref: GridPreference) => {
-      setPreferences(pref);
-      const updatedColumns = applyGridColumnPreferences(columns, pref);
-      setGridCols(updatedColumns);
-    },
-    [columns]
-  ); // Add any other dependencies here
-  const onApplyFilter = useCallback((_filter: any) => {
-    debugger;
-    const dss = { ..._filter };
-    console.log(`prev:${filter}`);
-    console.log(filter);
-    console.log(`latest:${_filter}`);
-    console.log(_filter);
-    console.log(dss);
+    const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    const [preferences, setPreferences] = useState<GridPreference>();
+    const initialFilterState = useMemo(
+      () => filterInitialData || {},
+      [filterInitialData]
+    );
+    const [filter, setFilter] = useState<any>({});
+    const [filterValidations, setFilterValidations] = useState<any>({});
+    const [filterShowCount, setFilterShowCount] = useState<number>(0);
+    const [isChildOpen, setIsChildOpen] = useState<{
+      isOpen: boolean;
+      props: any;
+      key?: string;
+      drillDownDisplayCells?: string[];
+      data?: any;
+    }>({ isOpen: false, props: {}, key: "", drillDownDisplayCells: [] });
+    const [showFilter, setShowFilter] = useState<boolean>(false);
+    const [bodyProps, setBodyProps] = useState({});
+    const [_filterInitialData, set_filterInitialData] =
+      useState(filterInitialData);
+    const [_reload, set_reload] = useState(reload);
+    const [isPdfMode, setIsPdfMode] = useState(false);
+    useEffect(() => {
+      set_reload(reload);
+    }, [reload]);
+    useEffect(() => {
+      setGridCols(columns);
+    }, []);
+    useEffect(() => {
+      if (filterInitialData && Object.keys(filter).length === 0) {
+        setFilter(filterInitialData);
+      }
+    }, [filterInitialData]);
+    useEffect(() => {
+      if (gridId != "" && columns != undefined && columns != null) {
+        onApplyPreferences(getInitialPreference(gridId, columns));
+      }
+    }, [gridId]);
+    const onApplyPreferences = useCallback(
+      (pref: GridPreference) => {
+        setPreferences(pref);
+        const updatedColumns = applyGridColumnPreferences(columns, pref);
+        setGridCols(updatedColumns);
+      },
+      [columns]
+    ); // Add any other dependencies here
+    const onApplyFilter = useCallback((_filter: any) => {
+      debugger;
+      const dss = { ..._filter };
+      console.log(`prev:${filter}`);
+      console.log(filter);
+      console.log(`latest:${_filter}`);
+      console.log(_filter);
+      console.log(dss);
 
-    if (filterShowCount == 0) {
-      setFilterShowCount((prev) => prev + 1);
-      console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
-    }
-    setFilter(dss);
-    onFilterChanged != undefined && onFilterChanged(dss);
-  }, []); // Add any other dependencies here
-  const onCloseFilter = useCallback(() => {
-    console.log(`filterShowCountww: ${filterShowCount}`);
-    if (filterShowCount == 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-      console.log(`filterShowCount333: ${filterShowCount}`);
-    }
-    setShowFilter(false);
-  }, []);
+      if (filterShowCount == 0) {
+        setFilterShowCount((prev) => prev + 1);
+        console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
+      }
+      setFilter(dss);
+      onFilterChanged != undefined && onFilterChanged(dss);
+    }, []); // Add any other dependencies here
+    const onCloseFilter = useCallback(() => {
+      console.log(`filterShowCountww: ${filterShowCount}`);
+      if (filterShowCount == 0) {
+        setFilter({});
+        setFilterShowCount((prev) => prev + 1);
+        console.log(`filterShowCount333: ${filterShowCount}`);
+      }
+      setShowFilter(false);
+    }, []);
 
-  const [currentStore, setCurrentStore] = useState<CustomStore<
-    any,
-    any
-  > | null>(null);
-  const [store, setStore] = useState<CustomStore | null>(null);
-  useEffect(() => {
-    const fetchStore = async () => {
-      if (data) {
-        setStore(data);
-        return;
-      }
-      if (!dataUrl) {
-        setStore(null);
-        return;
-      }
-      if (filterShowCount === 0 && enablefilter && showFilterInitially) {
-        setShowFilter(true);
-        return;
-      } else {
-        setShowFilter(false);
-      }
-      console.log(`reload: ${_reload}`);
-      if (_reload !== undefined && _reload !== true) {
-        // Return the current store without reloading
-        setStore(currentStore);
-        return;
-      }
-      try {
-        const newStore = await createStore(
-          keyExpr,
-          dataUrl ?? "",
-          enablefilter,
-          allowEditing,
-          method,
-          postData,
-          filter,
-          initialFilters,
-          paramNames,
-          bodyProps,
-          setFilterValidations,
-          setShowFilter
-        );
-        setCurrentStore(newStore);
-        setStore(newStore);
-        if (_reload === true) {
-          changeReload && changeReload(false);
+    const [currentStore, setCurrentStore] = useState<CustomStore<
+      any,
+      any
+    > | null>(null);
+    const [store, setStore] = useState<CustomStore | null>(null);
+    useEffect(() => {
+      const fetchStore = async () => {
+        if (data) {
+          setStore(data);
+          return;
         }
-      } catch (error) {
-        console.error("Error creating store:", error);
-        setStore(null);
-      } finally {
-      }
+        if (!dataUrl) {
+          setStore(null);
+          return;
+        }
+        if (filterShowCount === 0 && enablefilter && showFilterInitially) {
+          setShowFilter(true);
+          return;
+        } else {
+          setShowFilter(false);
+        }
+        console.log(`reload: ${_reload}`);
+        if (_reload !== undefined && _reload !== true) {
+          // Return the current store without reloading
+          setStore(currentStore);
+          return;
+        }
+        try {
+          const newStore = await createStore(
+            keyExpr,
+            dataUrl ?? "",
+            enablefilter,
+            allowEditing,
+            method,
+            postData,
+            filter,
+            initialFilters,
+            paramNames,
+            bodyProps,
+            setFilterValidations,
+            setShowFilter
+          );
+          setCurrentStore(newStore);
+          setStore(newStore);
+          if (_reload === true) {
+            changeReload && changeReload(false);
+          }
+        } catch (error) {
+          console.error("Error creating store:", error);
+          setStore(null);
+        } finally {
+        }
+      };
+      fetchStore();
+    }, [
+      data,
+      keyExpr,
+      dataUrl,
+      allowEditing,
+      method,
+      filter,
+      _reload,
+      isPdfMode,
+    ]);
+    const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
+    const memoizedStore = useMemo(() => store, [store]);
+    //SAfvan
+    // const switchPdf = useCallback((e: any) => {
+    //   setIsPdfMode((prevpdf: boolean) => {
+    //     setGridCols((prev: any) => {
+
+    //       if (!prevpdf) {
+    //         // to pdf
+    //         if (preferences) {
+    //           return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
+    //         }
+    //       } else {
+    //         if (preferences) {
+    //           return preferences.columnPreferences.filter(x => x.visible == false)
+    //         }
+    //       }
+    //       return prev;
+    //     })
+    //     return !prevpdf;  // Return the previous value if no change
+    //   });
+    // }, [preferences, gridInstance]);
+    const switchToPdf = useCallback(() => {
+      setGridCols((prev: any) => {
+        if (preferences) {
+          const cols = preferences.columnPreferences.filter(
+            (x) => x.visible == false && x.showInPdf == true
+          );
+          return cols;
+        }
+        return prev;
+      });
+    }, [preferences, gridInstance]);
+    const onGridReady = (e: any) => {
+      setGridInst(e.component); // Store the instance when the grid is ready
     };
-    fetchStore();
-  }, [
-    data,
-    keyExpr,
-    dataUrl,
-    allowEditing,
-    method,
-    filter,
-    _reload,
-    isPdfMode,
-  ]);
-  const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
-  const memoizedStore = useMemo(() => store, [store]);
-  //SAfvan
-  // const switchPdf = useCallback((e: any) => {
-  //   setIsPdfMode((prevpdf: boolean) => {
-  //     setGridCols((prev: any) => {
+    const onExportingHandler = useCallback(
+      (e: any) => {
+        if (onExporting) {
+          onExporting(e);
+        } else {
+          debugger;
+          if (e.format === "pdf") {
+            const doc = new jsPDF({
+              orientation: "landscape",
+              unit: "pt",
+              format: "a4",
+            });
+            // Store original column visibility states
+            const pageTitle = `${gridHeader} - ${header}`;
+            let currentY = 30; // Start position for content
 
-  //       if (!prevpdf) {
-  //         // to pdf
-  //         if (preferences) {
-  //           return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
-  //         }
-  //       } else {
-  //         if (preferences) {
-  //           return preferences.columnPreferences.filter(x => x.visible == false)
-  //         }
-  //       }
-  //       return prev;
-  //     })
-  //     return !prevpdf;  // Return the previous value if no change
-  //   });
-  // }, [preferences, gridInstance]);
-  const switchToPdf = useCallback(() => {
-    setGridCols((prev: any) => {
-      if (preferences) {
-        const cols = preferences.columnPreferences.filter(
-          (x) => x.visible == false && x.showInPdf == true
-        );
-        return cols;
-      }
-      return prev;
-    });
-  }, [preferences, gridInstance]);
-  const onGridReady = (e: any) => {
-    setGridInst(e.component); // Store the instance when the grid is ready
-  };
-  const onExportingHandler = useCallback(
-    (e: any) => {
-      if (onExporting) {
-        onExporting(e);
-      } else {
-        debugger;
-        if (e.format === "pdf") {
-          const doc = new jsPDF({
-            orientation: "landscape",
-            unit: "pt",
-            format: "a4",
-          });
-          // Store original column visibility states
-          const pageTitle = `${gridHeader} - ${header}`;
-          let currentY = 30; // Start position for content
+            // Set font size for company details and addresses
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+            ) {
+              doc.setFontSize(13);
+              doc.text(userSession.headerFooter.heading7, 40, currentY, {
+                align: "left",
+              });
+              currentY += 15; // Add spacing
+            }
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+            ) {
+              doc.setFontSize(9);
+              doc.text(userSession.headerFooter.heading8, 40, currentY, {
+                align: "left",
+              });
+              currentY += 15;
+            }
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+            ) {
+              doc.setFontSize(9);
+              doc.text(userSession.headerFooter.heading9, 40, currentY, {
+                align: "left",
+              });
+              currentY += 15; // Add spacing
+            }
+            doc.setFontSize(12);
+            doc.text(pageTitle, 40, currentY, { align: "left" });
 
-          // Set font size for company details and addresses
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
-          ) {
-            doc.setFontSize(13);
-            doc.text(userSession.headerFooter.heading7, 40, currentY, { align: "left" });
-            currentY += 15; // Add spacing
-          }
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
-          ) {
-            doc.setFontSize(9);
-            doc.text(userSession.headerFooter.heading8, 40, currentY, { align: "left" });
-            currentY += 15;
-          }
-          if (
-            userSession.headerFooter != undefined &&
-            !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
-          ) {
-            doc.setFontSize(9);
-            doc.text(userSession.headerFooter.heading9, 40, currentY, { align: "left" });
-            currentY += 15; // Add spacing
-          }
-          doc.setFontSize(12);
-          doc.text(pageTitle, 40, currentY, { align: "left" });
+            doc.setFontSize(10); // Reset font size for the grid content
+            // currentY += 20; // Adjust for the next section
+            doc.setFontSize(10);
 
-          doc.setFontSize(10); // Reset font size for the grid content
-          // currentY += 20; // Adjust for the next section
-          doc.setFontSize(10);
-
-          const originalColumnVisibility = e.component
-            .getVisibleColumns()
-            .map((column: any) => ({
-              dataField: column.dataField,
-              visible: column.visible,
-            }));
+            const originalColumnVisibility = e.component
+              .getVisibleColumns()
+              .map((column: any) => ({
+                dataField: column.dataField,
+                visible: column.visible,
+              }));
 
           const pdfVisibleColumns = preferences
             ? preferences.columnPreferences
-                .filter((colPref) => colPref.showInPdf)
-                .map((colPref) => colPref.dataField)
+              .filter((colPref) => colPref.showInPdf)
+              .map((colPref) => colPref.dataField)
             : gridCols
-                .filter((col) => col.showInPdf)
-                .map((col) => col.dataField);
+              .filter((col) => col.showInPdf)
+              .map((col) => col.dataField);
 
-          const pageWidth = doc.internal.pageSize.getWidth() - 80;
+            const pageWidth = doc.internal.pageSize.getWidth() - 80;
 
-          const columnsWithoutWidth = pdfVisibleColumns.filter(
-            (colField) =>
-              !preferences?.columnPreferences.find(
-                (colPref) => colPref.dataField === colField && colPref.width
-              )
-          );
+            const columnsWithoutWidth = pdfVisibleColumns.filter(
+              (colField) =>
+                !preferences?.columnPreferences.find(
+                  (colPref) => colPref.dataField === colField && colPref.width
+                )
+            );
 
           const pdfColumnsWidths = preferences
             ? preferences.columnPreferences
-                .filter((colPref) => colPref.showInPdf)
-                .map((colPref) => {
-                  if (!colPref.width) {
-                    return 0;
-                  }
-                  return colPref.width || 150;
-                })
+              .filter((colPref) => colPref.showInPdf)
+              .map((colPref) => {
+                if (!colPref.width) {
+                  return 0;
+                }
+                return colPref.width || 150;
+              })
             : gridCols
-                .filter((col) => col.showInPdf)
-                .map((col) => col.width || 100);
+              .filter((col) => col.showInPdf)
+              .map((col) => col.width || 100);
 
-          if (columnsWithoutWidth.length > 0) {
-            const specifiedWidthTotal = pdfColumnsWidths
-              .filter((width) => width > 0)
-              .reduce((sum, width) => sum + width, 0);
-            const remainingWidth = pageWidth - specifiedWidthTotal;
-            const defaultColumnWidth =
-              remainingWidth / columnsWithoutWidth.length;
+            if (columnsWithoutWidth.length > 0) {
+              const specifiedWidthTotal = pdfColumnsWidths
+                .filter((width) => width > 0)
+                .reduce((sum, width) => sum + width, 0);
+              const remainingWidth = pageWidth - specifiedWidthTotal;
+              const defaultColumnWidth =
+                remainingWidth / columnsWithoutWidth.length;
 
-            pdfColumnsWidths.forEach((width, index) => {
-              if (width === 0) {
-                pdfColumnsWidths[index] =
-                  defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
-              }
-            });
-          }
-
-          e.component.beginUpdate();
-          e.component.option("wordWrapEnabled", true);
-          e.component.getVisibleColumns().forEach((column: any) => {
-            if (!pdfVisibleColumns.includes(column.dataField)) {
-              e.component.columnOption(column.dataField, "visible", false);
+              pdfColumnsWidths.forEach((width, index) => {
+                if (width === 0) {
+                  pdfColumnsWidths[index] =
+                    defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
+                }
+              });
             }
-          });
 
-          exportDataGridToPdf({
-            jsPDFDocument: doc,
-            component: e.component,
-            columnWidths: pdfColumnsWidths,
-            topLeft: { x: 0, y: currentY },
-          }).then(() => {
-            doc.save(`${gridId}.pdf`);
-          });
-        } else if (e.format === "xlsx") {
-          const workbook = new Workbook();
-          const worksheet = workbook.addWorksheet(gridHeader);
-
-        // Add header section
-        const totalColumns = e.component.getVisibleColumns().length;
-        debugger;
-        const lastColumnLetter = String.fromCharCode(64 + totalColumns);
-        let currentRow = 1;
-        let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-
-        // Keep track of merged ranges to prevent duplication
-        const mergedRanges = new Set();
-
-        // Helper function to merge cells safely
-        // const mergeCellsSafely = (range: any) => {
-        //   if (!mergedRanges.has(`${range}${currentRow}`)) {
-        //     worksheet.mergeCells(`${range}${currentRow}`);
-        //     mergedRanges.add(`${range}${currentRow}`);
-        //   }
-        // };
-
-        // Add header section with merged cells
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
-        ) {
-          worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading7;
-          worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 13 };
-          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
-        ) {
-          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-          worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading8;
-          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
-          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-        if (
-          userSession.headerFooter != undefined &&
-          !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
-        ) {
-          mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-          worksheet.mergeCells(mergeRange);
-          worksheet.getCell(`A${currentRow}`).value =
-            userSession.headerFooter.heading9;
-          worksheet.getCell(`A${currentRow}`).font = { size: 9 };
-          worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-          currentRow += 1;
-        }
-
-        const pageTitle = `${gridHeader} - ${header}`;
-        mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
-        worksheet.mergeCells(mergeRange);
-        worksheet.getCell(`A${currentRow}`).value = pageTitle;
-        worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
-        worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left" };
-        currentRow += 2; // Add an extra row for spacing
-          // Export grid data starting from the next row
-          exportDataGridToExcel({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-            topLeftCell: `A${currentRow}`,
-          }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-              saveAs(
-                new Blob([buffer], { type: "application/octet-stream" }),
-                `${gridId}.xlsx`
-              );
+            e.component.beginUpdate();
+            e.component.option("wordWrapEnabled", true);
+            e.component.getVisibleColumns().forEach((column: any) => {
+              if (!pdfVisibleColumns.includes(column.dataField)) {
+                e.component.columnOption(column.dataField, "visible", false);
+              }
             });
-          });
+
+            exportDataGridToPdf({
+              jsPDFDocument: doc,
+              component: e.component,
+              columnWidths: pdfColumnsWidths,
+              topLeft: { x: 0, y: currentY },
+            }).then(() => {
+              doc.save(`${gridId}.pdf`);
+            });
+          } else if (e.format === "xlsx") {
+            const workbook = new Workbook();
+            const worksheet = workbook.addWorksheet(gridHeader);
+
+            // Add header section
+            const totalColumns = e.component.getVisibleColumns().length;
+            debugger;
+            const lastColumnLetter = String.fromCharCode(64 + totalColumns);
+            let currentRow = 1;
+            let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+
+            // Keep track of merged ranges to prevent duplication
+            const mergedRanges = new Set();
+
+            // Helper function to merge cells safely
+            // const mergeCellsSafely = (range: any) => {
+            //   if (!mergedRanges.has(`${range}${currentRow}`)) {
+            //     worksheet.mergeCells(`${range}${currentRow}`);
+            //     mergedRanges.add(`${range}${currentRow}`);
+            //   }
+            // };
+
+            // Add header section with merged cells
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+            ) {
+              worksheet.mergeCells(mergeRange);
+              worksheet.getCell(`A${currentRow}`).value =
+                userSession.headerFooter.heading7;
+              worksheet.getCell(`A${currentRow}`).font = {
+                bold: true,
+                size: 13,
+              };
+              worksheet.getCell(`A${currentRow}`).alignment = {
+                horizontal: "left",
+              };
+              currentRow += 1;
+            }
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+            ) {
+              mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+              worksheet.mergeCells(mergeRange);
+              worksheet.getCell(`A${currentRow}`).value =
+                userSession.headerFooter.heading8;
+              worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+              worksheet.getCell(`A${currentRow}`).alignment = {
+                horizontal: "left",
+              };
+              currentRow += 1;
+            }
+            if (
+              userSession.headerFooter != undefined &&
+              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+            ) {
+              mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+              worksheet.mergeCells(mergeRange);
+              worksheet.getCell(`A${currentRow}`).value =
+                userSession.headerFooter.heading9;
+              worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+              worksheet.getCell(`A${currentRow}`).alignment = {
+                horizontal: "left",
+              };
+              currentRow += 1;
+            }
+
+            const pageTitle = `${gridHeader} - ${header}`;
+            mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+            worksheet.mergeCells(mergeRange);
+            worksheet.getCell(`A${currentRow}`).value = pageTitle;
+            worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+            worksheet.getCell(`A${currentRow}`).alignment = {
+              horizontal: "left",
+            };
+            currentRow += 2; // Add an extra row for spacing
+            // Export grid data starting from the next row
+            exportDataGridToExcel({
+              component: e.component,
+              worksheet,
+              autoFilterEnabled: true,
+              topLeftCell: `A${currentRow}`,
+            }).then(() => {
+              workbook.xlsx.writeBuffer().then((buffer) => {
+                saveAs(
+                  new Blob([buffer], { type: "application/octet-stream" }),
+                  `${gridId}.xlsx`
+                );
+              });
+            });
+          }
         }
-      }
-    },
-    [onExporting, gridId, preferences, gridCols]
-  );
-
-  const handleCellClick = useCallback((event: any) => {
-    const dynamicProps = childPopupPropsDynamic
-      ? childPopupPropsDynamic(event.column?.dataField)
-      : childPopupProps;
-
-    // Check if the clicked cell's field matches dynamicProps.drillDownCells
-    const _drillDownCells = dynamicProps?.drillDownCells.split(",");
-    const _drillDownCell = _drillDownCells.find(
-      (x: string) => x === event.column?.dataField
+      },
+      [onExporting, gridId, preferences, gridCols]
     );
-    const _drillDownDisplayCells =
-      dynamicProps?.drillDownDisplayCells?.split(",");
 
-    if (
-      _drillDownCell !== undefined &&
-      _drillDownCell !== undefined &&
-      event.data[_drillDownCell] != undefined &&
-      event.data[_drillDownCell] != null &&
-      event.data[_drillDownCell] != 0 &&
-      event.data[_drillDownCell] != "" &&
-      (dynamicProps?.enableFn == undefined ||
-        (_drillDownCell !== undefined &&
-          dynamicProps?.enableFn != undefined &&
-          dynamicProps?.enableFn(event.data)))
-    ) {
-      const updatedBodyProps: { [key: string]: any } = {};
+    const handleCellClick = useCallback((event: any) => {
+      const dynamicProps = childPopupPropsDynamic
+        ? childPopupPropsDynamic(event.column?.dataField)
+        : childPopupProps;
 
-      // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-      dynamicProps?.bodyProps != undefined
-        ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-            const trimmedProp = prop.trim();
-            updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-          })
-        : {};
-      const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
-        postData,
-        updatedBodyProps
+      // Check if the clicked cell's field matches dynamicProps.drillDownCells
+      const _drillDownCells = dynamicProps?.drillDownCells.split(",");
+      const _drillDownCell = _drillDownCells.find(
+        (x: string) => x === event.column?.dataField
       );
-      // Update bodyProps state
-      onCellClick && onCellClick(event);
-      setBodyProps(updatedBodyProps);
-      setIsChildOpen({
-        isOpen: true,
-        props: _updatedBodyProps,
-        key: _drillDownCell,
-        drillDownDisplayCells: _drillDownDisplayCells,
-        data: event.data,
-      });
-      // const sd = 223;
-    }
-  }, []);
+      const _drillDownDisplayCells =
+        dynamicProps?.drillDownDisplayCells?.split(",");
 
-  const formatStringWithConditions = (
-    formatString: string,
-    formState: any
-  ): string => {
-    // Helper function to format dates in dd/MM/yyyy format
-    const formatDate = (dateStr: string): string => {
-      const date = new Date(dateStr);
-      if (isNaN(date.getTime())) return "N/A";
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    };
+      if (
+        _drillDownCell !== undefined &&
+        _drillDownCell !== undefined &&
+        event.data[_drillDownCell] != undefined &&
+        event.data[_drillDownCell] != null &&
+        event.data[_drillDownCell] != 0 &&
+        event.data[_drillDownCell] != "" &&
+        (dynamicProps?.enableFn == undefined ||
+          (_drillDownCell !== undefined &&
+            dynamicProps?.enableFn != undefined &&
+            dynamicProps?.enableFn(event.data)))
+      ) {
+        const updatedBodyProps: { [key: string]: any } = {};
 
-    // Function to evaluate and replace placeholders and conditions
-    const evaluateExpression = (expression: string, data: any): boolean => {
-      // Create a safer scope for evaluating the expression by passing 'data' as an argument
-      try {
-        return new Function(...Object.keys(data), `return ${expression};`)(
-          ...Object.values(data)
+        // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
+        dynamicProps?.bodyProps != undefined
+          ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
+              const trimmedProp = prop.trim();
+              updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+            })
+          : {};
+        const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
+          postData,
+          updatedBodyProps
         );
-      } catch (error) {
-        console.error("Error evaluating expression:", error);
-        return false; // Return false in case of error
+        // Update bodyProps state
+        onCellClick && onCellClick(event);
+        setBodyProps(updatedBodyProps);
+        setIsChildOpen({
+          isOpen: true,
+          props: _updatedBodyProps,
+          key: _drillDownCell,
+          drillDownDisplayCells: _drillDownDisplayCells,
+          data: event.data,
+        });
+        // const sd = 223;
       }
+    }, []);
+
+    const formatStringWithConditions = (
+      formatString: string,
+      formState: any
+    ): string => {
+      // Helper function to format dates in dd/MM/yyyy format
+      const formatDate = (dateStr: string): string => {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return "N/A";
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      // Function to evaluate and replace placeholders and conditions
+      const evaluateExpression = (expression: string, data: any): boolean => {
+        // Create a safer scope for evaluating the expression by passing 'data' as an argument
+        try {
+          return new Function(...Object.keys(data), `return ${expression};`)(
+            ...Object.values(data)
+          );
+        } catch (error) {
+          console.error("Error evaluating expression:", error);
+          return false; // Return false in case of error
+        }
+      };
+
+      // Replace placeholders and conditions
+      return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
+        debugger;
+
+        // Handle conditional expressions using '&&'
+        if (placeholder.includes("&&")) {
+          const [condition, trueValue] = placeholder.split("&&");
+          const conditionResult = evaluateExpression(
+            condition.trim(),
+            formState
+          );
+          const result = conditionResult
+            ? trueValue.replace(
+                /\[([^\]]+)\]/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(formState[innerPlaceholder]);
+                  }
+                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("___")) {
+          debugger;
+          const [l, r] = placeholder.split("___");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return rowData != undefined
+                      ? formatDate(rowData[innerPlaceholder])
+                      : "N/A";
+                  }
+                  return rowData != undefined
+                    ? rowData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("****")) {
+          const [l, r] = placeholder.split("****");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  debugger;
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(postData[innerPlaceholder]);
+                  }
+                  return postData != undefined
+                    ? postData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (formState[placeholder] !== undefined) {
+          // Handle regular placeholders
+          if (placeholder.includes("date") || placeholder.includes("Date")) {
+            // If the placeholder is a date, format it
+            return formatDate(formState[placeholder]);
+          }
+          return formState[placeholder] || "N/A";
+        }
+        return "N/A";
+      });
     };
 
-    // Replace placeholders and conditions
-    return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
+    const header = useMemo(() => {
+      if (!filterText || !filter) return filterText || "";
       debugger;
+      const data = filter;
+      const _gridHeader = filterText.toString();
+      // Dynamically replace placeholders using a regular expression
 
-      // Handle conditional expressions using '&&'
-      if (placeholder.includes("&&")) {
-        const [condition, trueValue] = placeholder.split("&&");
-        const conditionResult = evaluateExpression(condition.trim(), formState);
-        const result = conditionResult
-          ? trueValue.replace(
-              /\[([^\]]+)\]/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return formatDate(formState[innerPlaceholder]);
-                }
-                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
-          : "";
+      return formatStringWithConditions(_gridHeader, data);
+    }, [gridHeader, filter]);
 
-        return result;
-      } else if (placeholder.includes("___")) {
-        debugger;
-        const [l, r] = placeholder.split("___");
-        const result = r
-          ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return rowData != undefined
-                    ? formatDate(rowData[innerPlaceholder])
-                    : "N/A";
-                }
-                return rowData != undefined
-                  ? rowData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
-          : "";
-
-        return result;
-      } else if (placeholder.includes("****")) {
-        const [l, r] = placeholder.split("****");
-        const result = r
-          ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                debugger;
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return formatDate(postData[innerPlaceholder]);
-                }
-                return postData != undefined
-                  ? postData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
-          : "";
-
-        return result;
-      } else if (formState[placeholder] !== undefined) {
-        // Handle regular placeholders
-        if (placeholder.includes("date") || placeholder.includes("Date")) {
-          // If the placeholder is a date, format it
-          return formatDate(formState[placeholder]);
-        }
-        return formState[placeholder] || "N/A";
-      }
-      return "N/A";
-    });
-  };
-
-  const header = useMemo(() => {
-    if (!filterText || !filter) return filterText || "";
-    debugger;
-    const data = filter;
-    const _gridHeader = filterText.toString();
-    // Dynamically replace placeholders using a regular expression
-
-    return formatStringWithConditions(_gridHeader, data);
-  }, [gridHeader, filter]);
-
-  const onCellPrepared = useCallback((e: any) => {
-    //   // Get dynamic properties
-    //   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
-    //   // Check if the column is drill-down enabled
-    //   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
-    //   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
-    //   const val = e.row?.data?.[e.column.dataField];
-    //   if (
-    //     e.rowType === 'data' &&
-    //     val !== undefined &&
-    //     ((_drillDownCell && !dynamicProps?.enableFn) ||
-    //     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
-    //   ) {
-    //
-    //     const dfd = e.cellElement.innerHTML;
-    //     const isIn = (e.cellElement.innerHTML as string).includes('<span');
-    //     if (e.cellElement && isIn == true) {
-    //       e.cellElement.style.cursor = 'pointer';
-    //       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
-    //     } else {
-    //       console.error('Cell element not found');
-    //     }
-    //   }
-  }, []);
-  return (
-    <Fragment>
-      <div className={className}>
-        <DataGrid
-          // wordWrapEnabled={wordWrapEnabled}
-          onInitialized={onGridReady}
-          dataSource={memoizedStore}
-          height={gridHeight.windows}
-          showBorders={showBorders}
-          remoteOperations={remoteOperations}
-          allowColumnReordering={allowColumnReordering}
-          allowColumnResizing={allowColumnResizing}
-          columnAutoWidth={columnAutoWidth}
-          columnHidingEnabled={columnHidingEnabled}
-          // columns={gridCols}
-          onRowClick={onRowClick}
-          onSelectionChanged={onSelectionChanged}
-          onExporting={onExportingHandler}
-          onContentReady={onContentReady}
-          showColumnLines={showColumnLines}
-          showRowLines={showRowLines}
-          rowAlternationEnabled={true}
-          onCellClick={handleCellClick}
-          onRowDblClick={onRowDblClick}
-          onCellPrepared={onCellPrepared}
-          // columnRenderingMode={columnRenderingMode}
-          // rowRenderingMode={rowRenderingMode}
-          keyExpr={keyExpr}
-          dateSerializationFormat={dateSerializationFormat}
-          // loadPanelEnabled={true}
-          hoverStateEnabled={hoverStateEnabled}
-        >
-          <ColumnFixing enabled={true} />
-          <Scrolling mode={scrollingMode} showScrollbar="always" />
-          {allowPaging && (
-            <Paging defaultPageSize={pageSize} pageSize={pageSize} />
-          )}
-          {allowFiltering && (
-            <FilterRow visible={false}>
-              {initialFilters.map((filter, index) => (
-                <Column
-                  key={index}
-                  dataField={filter.field}
-                  filterValue={filter.value}
-                  selectedFilterOperation={filter.operation}
-                />
-              ))}
-            </FilterRow>
-          )}
-          {allowSearching && <SearchPanel visible={false} />}
-          <HeaderFilter visible={false} />
-          {allowColumnChooser && <ColumnChooser enabled={true} />}
-          {allowSelection && <Selection mode={selectionMode} />}
-          {allowGrouping && <Grouping />}
-          {groupPanelVisible && (
-            <Grouping contextMenuEnabled={true} expandMode="rowClick" />
-          )}
-          {allowEditing && (
-            <Editing
-              mode={editMode}
-              allowUpdating={true}
-              allowDeleting={true}
-              allowAdding={true}
-            />
-          )}
-          {allowExport ? (
-            <Export
-              enabled={true}
-              formats={["pdf", "xlsx"]}
-              allowExportSelectedData={false}
-            />
-          ) : (
-            <Export enabled={false}></Export>
-          )}
-
-          <Toolbar>
-            {!hideGridHeader && (
-              <Item location="before">
-                <div className="flex  flex-col">
-                  <div className={`box-title !text-xs !font-medium`}>
-                    <span className="text-sm">{gridHeader}</span>&nbsp;{""}
-                    {header}
-                  </div>
-                </div>
-              </Item>
+    const onCellPrepared = useCallback((e: any) => {
+      //   // Get dynamic properties
+      //   const dynamicProps = childPopupPropsDynamic ? childPopupPropsDynamic() : childPopupProps;
+      //   // Check if the column is drill-down enabled
+      //   const _drillDownCells = dynamicProps?.drillDownCells?.split(',');
+      //   const _drillDownCell = _drillDownCells?.find((x: string) => x === e.column.dataField);
+      //   const val = e.row?.data?.[e.column.dataField];
+      //   if (
+      //     e.rowType === 'data' &&
+      //     val !== undefined &&
+      //     ((_drillDownCell && !dynamicProps?.enableFn) ||
+      //     (_drillDownCell && dynamicProps?.enableFn?.(e.row?.data)))
+      //   ) {
+      //
+      //     const dfd = e.cellElement.innerHTML;
+      //     const isIn = (e.cellElement.innerHTML as string).includes('<span');
+      //     if (e.cellElement && isIn == true) {
+      //       e.cellElement.style.cursor = 'pointer';
+      //       e.cellElement.innerHTML = `<a class="drill-down-link">${val}</a>`;
+      //     } else {
+      //       console.error('Cell element not found');
+      //     }
+      //   }
+    }, []);
+    return (
+      <Fragment>
+        <div className={className}>
+          <DataGrid
+            // wordWrapEnabled={wordWrapEnabled}
+            ref={gridRef}
+            onInitialized={onGridReady}
+            dataSource={memoizedStore}
+            height={gridHeight.windows}
+            showBorders={showBorders}
+            remoteOperations={remoteOperations}
+            focusedRowEnabled={focusedRowEnabled}
+            allowColumnReordering={allowColumnReordering}
+            allowColumnResizing={allowColumnResizing}
+            columnAutoWidth={columnAutoWidth}
+            columnHidingEnabled={columnHidingEnabled}
+            // columns={gridCols}
+            onRowClick={onRowClick}
+            onSelectionChanged={onSelectionChanged}
+            onKeyDown={onKeyDown}
+            onExporting={onExportingHandler}
+            onContentReady={onContentReady}
+            showColumnLines={showColumnLines}
+            showRowLines={showRowLines}
+            rowAlternationEnabled={true}
+            onCellClick={handleCellClick}
+            onRowDblClick={onRowDblClick}
+            onCellPrepared={onCellPrepared}
+            // columnRenderingMode={columnRenderingMode}
+            // rowRenderingMode={rowRenderingMode}
+            keyExpr={keyExpr}
+            dateSerializationFormat={dateSerializationFormat}
+            // loadPanelEnabled={true}
+            hoverStateEnabled={hoverStateEnabled}
+            {...props} // Spread additional props to DataGrid
+          >
+            <ColumnFixing enabled={true} />
+            <Scrolling mode={scrollingMode} showScrollbar="always" />
+            {allowPaging && (
+              <Paging defaultPageSize={pageSize} pageSize={pageSize} />
             )}
-            {!hideDefaultSearchPanel && <Item name="searchPanel" />}
-            {!hideDefaultExportButton && allowExport && (
-              <Item name="exportButton" />
+            {allowFiltering && (
+              <FilterRow visible={false}>
+                {initialFilters.map((filter: any, index: any) => (
+                  <Column
+                    key={index}
+                    dataField={filter.field}
+                    filterValue={filter.value}
+                    selectedFilterOperation={filter.operation}
+                  />
+                ))}
+              </FilterRow>
             )}
-
-            {enablefilter == true && (
-              <Item>
-                <ErpGridGlobalFilter
-                  width={filterWidth}
-                  title={gridHeader}
-                  gridId={gridId}
-                  validations={filterValidations}
-                  initialData={filter}
-                  content={
-                    filterContent
-                    // <LedgerReportFilter /> // Pass standalone JSX content
-                  }
-                  toogleFilter={showFilter}
-                  onApplyFilters={(filters) => onApplyFilter(filters)}
-                  onClose={onCloseFilter}
-                />
-              </Item>
+            {allowSearching && <SearchPanel visible={false} />}
+            <HeaderFilter visible={false} />
+            {allowColumnChooser && <ColumnChooser enabled={true} />}
+            {allowSelection && <Selection mode={selectionMode} />}
+            {allowGrouping && <Grouping />}
+            {groupPanelVisible && (
+              <Grouping contextMenuEnabled={true} expandMode="rowClick" />
             )}
-            <Item>
-              <GridPreferenceChooser
-                columns={columns}
-                gridId={gridId}
-                onApplyPreferences={onApplyPreferences}
+            {allowEditing && (
+              <Editing
+                mode={editMode}
+                allowUpdating={true}
+                allowDeleting={true}
+                allowAdding={true}
               />
-            </Item>
-
-            {!hideGridAddButton && (
-              <Item>
-                <div>
-                  {gridAddButtonType == "link" && (
-                    <Link
-                      to="#"
-                      className="ti-btn-primary-full ti-btn ti-btn-full "
-                    >
-                      Add<i className="ri-user-add-line"></i>
-                    </Link>
-                  )}
-                  {gridAddButtonType == "popup" && (
-                    <ERPButton
-                      variant="primary"
-                      onClick={onPopupOpenClick}
-                      title={addButtonText}
-                      startIcon={gridAddButtonIcon}
-                    ></ERPButton>
-                  )}
-                </div>
-              </Item>
             )}
-            {customToolbarItems
-              ?.filter((item) => item.location === "before")
-              .map((toolbarItem, index) => (
-                <Item key={index} location="before">
-                  {toolbarItem.item}
+            {allowExport ? (
+              <Export
+                enabled={true}
+                formats={["pdf", "xlsx"]}
+                allowExportSelectedData={false}
+              />
+            ) : (
+              <Export enabled={false}></Export>
+            )}
+
+            <Toolbar>
+              {!hideGridHeader && (
+                <Item location="before">
+                  <div className="flex  flex-col">
+                    <div className={`box-title !text-xs !font-medium`}>
+                      <span className="text-sm">{gridHeader}</span>&nbsp;{""}
+                      {header}
+                    </div>
+                  </div>
                 </Item>
-              ))}
-            {customToolbarItems
-              ?.filter((item) => item.location === "after")
-              .map((toolbarItem, index) => (
-                <Item key={index} location="after">
-                  {toolbarItem.item}
+              )}
+              {!hideDefaultSearchPanel && <Item name="searchPanel" />}
+              {!hideDefaultExportButton && allowExport && (
+                <Item name="exportButton" />
+              )}
+
+              {enablefilter == true && (
+                <Item>
+                  <ErpGridGlobalFilter
+                    width={filterWidth}
+                    title={gridHeader}
+                    gridId={gridId}
+                    validations={filterValidations}
+                    initialData={filter}
+                    content={
+                      filterContent
+                      // <LedgerReportFilter /> // Pass standalone JSX content
+                    }
+                    toogleFilter={showFilter}
+                    onApplyFilters={(filters) => onApplyFilter(filters)}
+                    onClose={onCloseFilter}
+                  />
                 </Item>
-              ))}
-          </Toolbar>
-          {gridCols?.map((column) => (
-            <Column
-              customizeText={column.customizeText}
-              allowEditing={column.allowEditing || false}
-              key={column.dataField}
-              dataField={column.dataField}
-              caption={
-                column.captionDynamic != undefined
-                  ? column.captionDynamic(filter)
-                  : column.caption
-              }
-              dataType={column.dataType}
-              allowSorting={column.allowSorting}
-              allowSearch={column.allowSearch}
-              allowFiltering={column.allowFiltering ?? false}
-              width={column.width}
-              minWidth={column.minWidth}
-              fixed={column.fixed}
-              fixedPosition={column.fixedPosition}
-              cellRender={column.cellRender}
-              visible={
-                column.visibleDynamic != undefined
-                  ? column.visibleDynamic(filter)
-                  : column.visible || false
-              }
-            />
-          ))}
-          {summaryItems.length > 0 && (
-            <Summary>
-              {summaryItems.map((config, index) => (
-                <TotalItem
-                  key={index}
-                  column={config.column}
-                  summaryType={config.summaryType}
-                  valueFormat={config.valueFormat}
-                  customizeText={config.customizeText}
+              )}
+              <Item>
+                <GridPreferenceChooser
+                  columns={columns}
+                  gridId={gridId}
+                  onApplyPreferences={onApplyPreferences}
                 />
-              ))}
-            </Summary>
-          )}
-          <Grouping autoExpandAll={true} allowCollapsing={false} />
-        </DataGrid>
-      </div>
-      {(childPopupProps || childPopupPropsDynamic) && (
-        <ERPModal
-          isOpen={isChildOpen.isOpen}
-          title={
-            childPopupPropsDynamic
-              ? childPopupPropsDynamic(isChildOpen.key).title
-              : childPopupProps?.title
-          }
-          width={
-            childPopupPropsDynamic
-              ? childPopupPropsDynamic(isChildOpen.key).width
-              : childPopupProps?.width
-          }
-          isForm={
-            childPopupPropsDynamic
-              ? childPopupPropsDynamic(isChildOpen.key).isForm
-              : childPopupProps?.isForm
-          }
-          origin={
-            childPopupPropsDynamic
-              ? childPopupPropsDynamic(isChildOpen.key).origin
-              : childPopupProps?.origin
-          }
-          closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
-          content={
-            childPopupPropsDynamic
-              ? childPopupPropsDynamic(isChildOpen.key).content
-              : childPopupProps?.content
-          }
-          rowData={isChildOpen.data}
-          contentProps={isChildOpen.props}
-        />
-      )}
-    </Fragment>
-  );
-};
+              </Item>
+
+              {!hideGridAddButton && (
+                <Item>
+                  <div>
+                    {gridAddButtonType == "link" && (
+                      <Link
+                        to="#"
+                        className="ti-btn-primary-full ti-btn ti-btn-full "
+                      >
+                        Add<i className="ri-user-add-line"></i>
+                      </Link>
+                    )}
+                    {gridAddButtonType == "popup" && (
+                      <ERPButton
+                        variant="primary"
+                        onClick={onPopupOpenClick}
+                        title={addButtonText}
+                        startIcon={gridAddButtonIcon}
+                      ></ERPButton>
+                    )}
+                  </div>
+                </Item>
+              )}
+              {customToolbarItems
+                ?.filter((item: any) => item.location === "before")
+                .map((toolbarItem: any, index: any) => (
+                  <Item key={index} location="before">
+                    {toolbarItem.item}
+                  </Item>
+                ))}
+              {customToolbarItems
+                ?.filter((item: any) => item.location === "after")
+                .map((toolbarItem: any, index: any) => (
+                  <Item key={index} location="after">
+                    {toolbarItem.item}
+                  </Item>
+                ))}
+            </Toolbar>
+            {gridCols?.map((column) => (
+              <Column
+                customizeText={column.customizeText}
+                allowEditing={column.allowEditing || false}
+                key={column.dataField}
+                dataField={column.dataField}
+                caption={
+                  column.captionDynamic != undefined
+                    ? column.captionDynamic(filter)
+                    : column.caption
+                }
+                dataType={column.dataType}
+                allowSorting={column.allowSorting}
+                allowSearch={column.allowSearch}
+                allowFiltering={column.allowFiltering ?? false}
+                width={column.width}
+                minWidth={column.minWidth}
+                fixed={column.fixed}
+                fixedPosition={column.fixedPosition}
+                cellRender={column.cellRender}
+                visible={
+                  column.visibleDynamic != undefined
+                    ? column.visibleDynamic(filter)
+                    : column.visible || false
+                }
+              />
+            ))}
+            {summaryItems.length > 0 && (
+              <Summary>
+                {summaryItems.map((config: any, index: number) => (
+                  <TotalItem
+                    key={index}
+                    column={config.column}
+                    summaryType={config.summaryType}
+                    valueFormat={config.valueFormat}
+                    customizeText={config.customizeText}
+                  />
+                ))}
+              </Summary>
+            )}
+            <Grouping autoExpandAll={true} allowCollapsing={false} />
+          </DataGrid>
+        </div>
+        {(childPopupProps || childPopupPropsDynamic) && (
+          <ERPModal
+            isOpen={isChildOpen.isOpen}
+            title={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).title
+                : childPopupProps?.title
+            }
+            width={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).width
+                : childPopupProps?.width
+            }
+            isForm={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).isForm
+                : childPopupProps?.isForm
+            }
+            origin={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).origin
+                : childPopupProps?.origin
+            }
+            closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
+            content={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).content
+                : childPopupProps?.content
+            }
+            rowData={isChildOpen.data}
+            contentProps={isChildOpen.props}
+          />
+        )}
+      </Fragment>
+    );
+  }
+);
 const _DrillDownCellTemplate = ({ data }: { data: any }) => {
   if (
     data.value !== undefined &&

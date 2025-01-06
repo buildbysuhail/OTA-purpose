@@ -53,7 +53,7 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
             <ERPInput
               id="kSA_EInvoice_Sync_SystemCode"
               disabled={!hasPermitted}
-              value={settings?.branchSettings.kSA_EInvoice_Sync_SystemCode}
+              value={settings?.branchSettings?.kSA_EInvoice_Sync_SystemCode}
               data={settings?.branchSettings}
               label={t("e-Invoice_sync_systemCode")}
               onChangeData={(data) =>

@@ -7,8 +7,10 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 
-const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-  const { t } = useTranslation('accountsReport');
+const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) => {
+  // const { t } = useTranslation('accountsReport');
+  // const [filter, setFilter] = useState<any>(IncomeReportFilterInitialState);
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="flex items-center gap-4">
@@ -23,13 +25,16 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
-   
+      safvan
+   {JSON.stringify(filter)}
       <ERPDataCombobox
         {...getFieldProps("accGroupID")}
         label={t("group_under")}
         field={{
           id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
+          // getListUrl: Urls.data_SelectAccGroupsUnderAccGroupIDForCombo,
+          // params: `accGroupID=${8}`,
+          getListUrl: `${Urls.data_SelectAccGroupsUnderAccGroupIDForCombo}${8}`,
           valueKey: "id",
           labelKey: "name",
         }}
@@ -40,13 +45,12 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         label={t("ledger")}
         field={{
           id: "accLedgerID",
-          getListUrl: Urls.data_acc_ledgers,
-          params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+          getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${8}`,
           valueKey: "id",
           labelKey: "name",
         }}
         onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
-      />
+      /> 
         <ERPDataCombobox
         {...getFieldProps("salesmanID")}
         label={t("salesman")}

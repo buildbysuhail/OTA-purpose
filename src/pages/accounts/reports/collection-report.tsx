@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { GroupItem, Summary } from "devextreme-react/cjs/data-grid";
 interface CollectionReport {
   from: Date
 }
@@ -27,6 +28,7 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 180,
       groupIndex: 0,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -35,6 +37,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -43,6 +46,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -51,6 +55,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.particulars}
@@ -80,6 +85,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
@@ -97,12 +103,13 @@ const CollectionReport = () => {
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
+                  groupPanelVisible={true}
                   columns={columns}
-                  filterText="From : {dateFrom} To : {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
+                  filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("collection_report")}
                   dataUrl={Urls.acc_reports_collection}
                   method={ActionType.POST}
-                  gridId="grd_collection_reports"
+                  gridId="grd_collection_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

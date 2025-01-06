@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback, cloneElement } from "react";
+import React, { useState, useEffect, useRef, useCallback, cloneElement, forwardRef, memo } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import {
   CheckIcon,
@@ -56,6 +56,7 @@ interface ERPDataComboboxProps {
   field?: {
     id?: string;
     getListUrl?: string;
+    getListUrlDynamic?: (value: any) => string;
     valueKey?: string;
     nameKey?: string;
     labelKey?: string;
@@ -380,7 +381,7 @@ const propsAreEqual = (
   return true;
 };
 
-const ERPDataCombobox = React.memo(function ERPDataCombobox({
+const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   id,
   label,
   handleChange,
@@ -419,7 +420,10 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
   customSize,
   useMUI,
   variant,
-}: ERPDataComboboxProps) {
+}
+  : ERPDataComboboxProps,
+    ref
+  ) => {
   console.log('Re Rendered');
   
   const { t } = useTranslation();
@@ -432,7 +436,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
   const [displayValue, setDisplayValue] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [inputValue, setInputValue] = useState("");
-  const comboboxRef = useRef<HTMLInputElement>(null);
+  const comboboxRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<List>(null);
   const componentRef = useRef<HTMLDivElement>(null);
   const appState = useAppSelector(
@@ -488,7 +492,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
 
   useEffect(() => {
     if (initial?.label) {
-      setDisplayValue(truncateText(initial?.label, comboboxRef));
+      setDisplayValue(truncateText(initial?.label, (ref as React.RefObject<HTMLInputElement>) || comboboxRef));
     } else {
       setDisplayValue("");
     }
@@ -563,6 +567,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     }
   }, [
     field?.getListUrl,
+    field?.getListUrlDynamic,
     field?.params,
     field?.freezeDataLoad,
     reload,
@@ -578,7 +583,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
         params = new URLSearchParams(field?.params).toString();
       }
 
-      const _items = options || (await api.getAsync(field?.getListUrl??"", params));
+      const _items = options || (await api.getAsync(field?.getListUrlDynamic != undefined ? field.getListUrlDynamic(data) : field?.getListUrl??"", params));
       const labelKey = field?.labelKey ?? "label";
       const valueKey = field?.valueKey ?? "value";
       const nameKey = field?.nameKey ?? "name";
@@ -650,7 +655,6 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     setInitial(null);
     setActiveIndex(-1);
     setFilteredItems(items);
-    if (comboboxRef.current) comboboxRef.current.value = "";
     handleChange?.(field?.id??"", null);
     onChange?.(null);
     onChangeData?.({ ...data, [id]: null });
@@ -663,7 +667,7 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
     // setActiveIndex(-1);
     setQuery("");
     setInputValue(value.label);
-    setDisplayValue(truncateText(value.label, comboboxRef));
+    setDisplayValue("");
     setFilteredItems(items); // Reset filtered items to original list
     onChange?.(value);
     onChangeData?.(value && data ? { ...data, [id]: value?.value } : null);
@@ -1390,9 +1394,11 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
           
         )}
         <Combobox as="div" className="relative">
-          <div className="flex">
+          <div className="flex"
+        ref={comboboxRef}>
             <Combobox.Input
-              ref={comboboxRef}
+              
+        ref={ref}
               style={{
                 height,
                 fontSize,
@@ -1494,11 +1500,6 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
                 }}
               >
                 <ChevronDownIcon
-                  // className={`${
-                  //   sizeClasses?.icons
-                  // } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
-                  //   isOpen ? "transform rotate-180" : ""
-                  // }`}
                   className={`${
                     sizeClasses?.icons
                   } text-gray-400 ${!disabled ? 'hover:text-gray-500' : ''} transition-transform duration-200 ${
@@ -1509,44 +1510,6 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
               </Combobox.Button>
             </div>
           </div>
-          {/* {isOpen &&
-            createPortal(
-              <div
-                ref={(el) => {
-                  if (el) {
-                    (el as any).__reactRefHandlers = { contains: () => true };
-                  }
-                }}
-                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md"
-                style={{
-                  width: comboboxRef.current?.offsetWidth || "auto",
-                  top: comboboxRef.current?.getBoundingClientRect().bottom || 0,
-                  left: comboboxRef.current?.getBoundingClientRect().left || 0,
-                  position: "fixed",
-                }}
-              >
-                {loading ? (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700 text-center animate-pulse">
-                    Loading...
-                  </div>
-                ) : filteredItems?.length === 0 ? (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                    No data found
-                  </div>
-                ) : (
-                  <ComboboxList
-                    ref={listRef}
-                    items={filteredItems}
-                    selectedValue={initial}
-                    onSelect={handleItemClick}
-                    activeIndex={activeIndex}
-                    customSize={_customSize}
-                    appState={appState.dir}
-                  />
-                )}
-              </div>,
-              document.body // Render to body to escape parent constraints
-            )} */}
             {isOpen &&
             createPortal(
               <div
@@ -1601,4 +1564,4 @@ const ERPDataCombobox = React.memo(function ERPDataCombobox({
 // Set displayName for better debugging
 ERPDataCombobox.displayName = "ERPDataCombobox";
 
-export default ERPDataCombobox;
+export default memo(ERPDataCombobox);

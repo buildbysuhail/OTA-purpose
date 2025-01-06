@@ -141,7 +141,7 @@ export const UserManage: React.FC = React.memo(() => {
           onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}
         />
 
-        {applicationSettings.mainSettings.maintainBusinessType == 'Restaurant' &&
+        {applicationSettings.mainSettings?.maintainBusinessType == 'Restaurant' &&
           <ERPInput
             {...getFieldProps("passkey")}
             label={t("passkey")}

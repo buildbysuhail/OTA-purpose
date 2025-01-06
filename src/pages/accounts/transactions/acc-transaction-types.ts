@@ -97,7 +97,7 @@ export interface AccTransactionMaster {
   transactionDate: string;
   totalAmount?: number;
   prevTransDate: string;
-  bankDate: string;
+  // bankDate: string;
   voucherPrefix: string;
   voucherNumber: number;
   referenceNumber: string;
@@ -235,6 +235,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
 };
 // AccDetailInput interface
 export interface AccTransactionRow {
+  slNo?: number;
   accTransMasterID: number;
   accTransactionDetailId: number;
   ledgerId: number;
@@ -326,7 +327,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   costCentreName: 0,
   billwiseDetails: "",
   chqDate: "",
-  groupName: ""
+  groupName: "",
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
@@ -339,7 +340,7 @@ export const accTransactionInitialData: AccTransactionData = {
     transactionDate: new Date().toISOString(),
     totalAmount: 0.00,
     prevTransDate: new Date().toISOString(),
-    bankDate: new Date().toISOString(),
+    // bankDate: new Date().toISOString(),
     voucherPrefix: "",
     voucherNumber: 0,
     referenceNumber: "",
@@ -415,6 +416,7 @@ export interface AccTransactionFormState {
   isRowEdit: boolean; // isRowEdit
   IsBillwiseTransAdjustmentExists: boolean;
   ledgerDataLoading: boolean;
+  saving: boolean;
   ledgerBalanceLoading: boolean;
   ledgerBalance: number;
   ledgerBillWiseLoading: boolean;
@@ -507,11 +509,12 @@ export const initialFormElements = {
   printPreview: { visible: true, disabled: false, label: "Print Preview" },
   printCheque: { visible: true, disabled: false, label: "Print Cheque" },
   keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
-  btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
+  btnBillWise: { visible: true, disabled: false, label: "Billwise" },
   btnAdd: { visible: true, disabled: false, label: "Add" },
   btnEdit: { visible: true, disabled: false, label: "Edit" },
+  linkEdit: { visible: false, disabled: false, label: "linkEdit" },
   btnDelete: { visible: true, disabled: false, label: "Delete" },
-  btnPrint: { visible: true, disabled: false, label: "Print" },
+  btnPrint: { visible: true, disabled: true, label: "Print" },
   btnRef: { visible: true, disabled: false, label: "..." },
   btnSave: { visible: true, disabled: false, label: "Save" },
   btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
@@ -575,5 +578,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   ledgerBalance: 0,
   masterBalanceLoading: false,
   groupName: undefined,
-  formElements: initialFormElements
+  formElements: initialFormElements,
+  saving: false
 }

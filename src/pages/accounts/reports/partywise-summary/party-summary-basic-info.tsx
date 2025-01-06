@@ -1,27 +1,36 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import { PartySummaryFilter } from "./party-summary-master";
+import {
+  toggleAccountGroupPopup,
+  toggleCostCentrePopup,
+} from "../../../../redux/slices/popup-reducer";
+import { PartySummaryFilter, PartySummaryRef } from "./party-summary-master";
+import { forwardRef, Fragment, useEffect, useImperativeHandle, useState } from "react";
 
-const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+// Define the ref type for useImperativeHandle
+
+const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
+  ({ filter }, ref) => {
+
+  const [reload, setReload] = useState<boolean>(true);
+  useImperativeHandle(ref, () => ({
+    reloadData: () => {
+      setReload(prev => !prev); // Toggle reload state
+    },
+  }));
+
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "partyCode",
-      caption: t('party_code'),
+      caption: t("party_code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -84,7 +93,7 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
     },
     {
       dataField: "workPhone",
-      caption: t('work_phone'),
+      caption: t("work_phone"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -227,8 +236,9 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
                   gridId="grd_party_summary_basic_info"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
-                  reload={true}>
-                </ErpDevGrid>
+                  changeReload={(reload)=>setReload(reload)}
+                  reload={reload}
+                ></ErpDevGrid>
               </div>
             </div>
           </div>
@@ -236,5 +246,5 @@ const PartySummaryBasicInfo: React.FC<PartySummaryFilter> = ({ filter }) => {
       </div>
     </Fragment>
   );
-};
+});
 export default PartySummaryBasicInfo;

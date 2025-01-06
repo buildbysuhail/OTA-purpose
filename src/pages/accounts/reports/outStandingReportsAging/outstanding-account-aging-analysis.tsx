@@ -2,14 +2,11 @@ import { FC, Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
@@ -22,18 +19,19 @@ interface OutstandingAccountAgingAnalysisProps {
 const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData }) => {
 // const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
     const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t('si_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -41,6 +39,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -62,6 +61,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "billTotal",
@@ -70,6 +70,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.billTotal}
@@ -83,7 +84,8 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      groupIndex:0
+      groupIndex:0,
+      showInPdf:true,
     },
     {
       dataField: "balance",
@@ -92,6 +94,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -111,7 +114,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
                 groupPanelVisible={true}
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
-                  filterText="{___(ledgername)}{**** As On Date : (asonDate)}"
+                  filterText="{___ (ledgername)} {**** as of (asonDate)}"
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}

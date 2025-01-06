@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
 const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState }: any) => {
+  debugger;
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -61,18 +62,18 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
               let updates = frmState;
-              if (frmState.allChecked) {
+              // if (frmState.allChecked) {
                 
-                updates["vTypes"] = "All";
-                updates["isDr"] = frmState?.isDr;
-                updates["isCr"] = frmState?.isCr;
-              } else {
-                // const sds = allTransactions
-                //   ?.filter((xx: any) => xx.checked === true)
-                //   ?.map((tr: any) => tr.id)
-                //   ?.join(',');
-                // updates["vTypes"] = sds || '';
-              }
+              //   updates["vTypes"] = "All";
+              //   updates["isDr"] = frmState?.isDr;
+              //   updates["isCr"] = frmState?.isCr;
+              // } else {
+              //   // const sds = allTransactions
+              //   //   ?.filter((xx: any) => xx.checked === true)
+              //   //   ?.map((tr: any) => tr.id)
+              //   //   ?.join(',');
+              //   // updates["vTypes"] = sds || '';
+              // }
               if (frmState.isDr && frmState.isCr) {
                 updates["drCr"] = "drCr";
               } else if (frmState.isDr) {

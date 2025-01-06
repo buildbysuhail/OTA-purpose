@@ -496,7 +496,7 @@ export default function SettingsPage() {
       )}
       {/* main */}
       <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto scrollbar-thin scrollbar-track-gray scrollbar-thumb-gray hover:scrollbar-thumb-gray dark:scrollbar-track-gray dark:scrollbar-thumb-gray dark:hover:scrollbar-thumb-gray scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-        <div className="flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2">
+        <div className="flex items-center justify-between z-[53] fixed bg-white shadow w-[-webkit-fill-available] p-2">
           <button
             className="md:hidden mr-2 p-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

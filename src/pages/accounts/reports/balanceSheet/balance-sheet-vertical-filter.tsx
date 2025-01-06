@@ -19,11 +19,11 @@ import Urls from "../../../../redux/urls";
 //   getFieldProps,
 //   handleFieldChange,
 // }) => {
-  const BalanceSheetVerticalFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
-    return (
-  // const { t } = useTranslation('accountsReport');
+  const BalanceSheetVerticalFilter = ({ getFieldProps, handleFieldChange}: any) => {
 
-  // return (
+   const { t } = useTranslation('accountsReport');
+
+   return (
     <div className="grid grid-cols-1 gap-4">
       <ERPDateInput
         {...getFieldProps("asOnDate")}

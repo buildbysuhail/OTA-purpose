@@ -352,6 +352,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.showbillwise]);
 
   useEffect(() => {
+      debugger;
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -368,7 +369,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-
+debugger;
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&
@@ -991,7 +992,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
-              {formState.formElements.foreignCurrency.visible && (
+              {/* {formState.formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"
                   label={formState.formElements.foreignCurrency.label}
@@ -1008,92 +1009,105 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
-              )}
+              )} */}
             </div>
-            <h2 className="text-4xl font-bold text-center text-blue">
+            {/* <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
-            </h2>
+            </h2> */}
             <div className="w-[100px]"></div>
           </div>
 
-          <div className="p-6">
-            {/* <div className="max-w-5xl mx-auto"> */}
-            <div className="max-w-full mx-2">
-              <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
-                {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
-                <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  {/* <span>Customise</span> */}
-                  <h6 className="text-center text-lg font-bold  mb-0">
-                    {formState.title}
-                  </h6>
-                  <i className="fas fa-cog ms-1"></i>
-                </div>
+          <div className="py-1">
+  <div className="max-w-full mx-0">
+    <div className="flex items-center p-0 border border-gray-300 rounded-md mb-2">
+      <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
+        <h6 className="text-center text-lg font-bold mb-0">
+          {formState.title}
+        </h6>
+        <i className="fas fa-cog ms-1"></i>
+      </div>
+      <div className="flex items-center justify-end space-x-4 p-4 w-full">
+        {/* Change Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Replace className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("change")}
+          </p>
+        </div>
 
-                <div className="flex items-center ms-auto space-x-4">
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Replace className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("change")}
-                    </p>
-                  </div>
+        {/* Delete Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Trash2 className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("delete")}
+          </p>
+        </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("delete")}
-                    </p>
-                  </div>
+        {/* Load Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Loader className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("load")}
+          </p>
+        </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Loader className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("load")}
-                    </p>
-                  </div>
+        {/* Edit Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Pencil className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("edit")}
+          </p>
+        </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Pencil className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("edit")}
-                    </p>
-                  </div>
+        {/* Print Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Printer className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("print")}
+          </p>
+        </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Printer className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("print")}
-                    </p>
-                  </div>
+        {/* Clear Button */}
+        <div className="group relative inline-flex flex-col items-center">
+          <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors">
+            <Delete className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+          </button>
+          <p className="absolute top-[-19px] text-sm text-gray-600 opacity-0 group-hover:opacity-100 
+            group-hover:top-[-35px] transition-all duration-300">
+            {t("clear")}
+          </p>
+        </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Delete className="w-5 h-5" />
-                    </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("clear")}
-                    </p>
-                  </div>
+        {/* Previous Page Button */}
+        <button
+          onClick={goToPreviousPage}
+          className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+        >
+          <X className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                  <button
-                    onClick={goToPreviousPage}
-                    className="flex items-center bg-gray-100 p-2 rounded-md"
-                  >
-                    <X />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+
+
+
 
           <div className="grid grid-cols-2 gap-8 !mt-12">
             <div className="">

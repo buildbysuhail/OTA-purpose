@@ -389,6 +389,10 @@
     "acc_group_detailed":"Account Group (Detailed)",
     "ledger_report_detailed": "Ledger Report (Detailed View)",
     "daybook_billwise":"Day Book Bill Wise",
-    "c_type":"CType"
+    "c_type":"CType",
+    "account_receivable":"Account Receivable",
+    "bill_total":"Bill Total",
+    "period":"Period",
+    "account_report":"Account Report"
 
 }

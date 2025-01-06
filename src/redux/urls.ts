@@ -341,8 +341,8 @@ inv_reports_stock_flow:"",
     voucher_selector: "/Core/VoucherSelector/",
     partiesBankNames:"/Core/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
-    set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode"
-
+    set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
+    get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"
 };
 
 export default Urls;

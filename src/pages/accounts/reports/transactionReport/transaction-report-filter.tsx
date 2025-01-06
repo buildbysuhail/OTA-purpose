@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
 const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState, getFormState }: any) => {
-  debugger;
+  
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -63,7 +63,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
-              debugger;
+              
               let updates = frmState;
               // if (frmState.allChecked) {
                 
@@ -87,7 +87,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
                 updates["drCr"] = "drCr";
               }
               // Call handleFieldChange once with all updates
-              debugger;
+              
               handleFieldChange(updates);
             }}
               filter={getFormState()}

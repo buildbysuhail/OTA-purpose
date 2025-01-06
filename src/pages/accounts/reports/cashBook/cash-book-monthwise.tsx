@@ -27,7 +27,7 @@ interface CashBookMonthWiseProps {
 }
 
 const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight}) => {
-  debugger;
+  
   // interface CashBookMonthWiseFilters {
   //   from: Date
   // }

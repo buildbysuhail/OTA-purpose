@@ -23,7 +23,7 @@ interface ExchangeRatesProps {
   modalHeight?:any
 }
 const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
-  debugger;
+  
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();

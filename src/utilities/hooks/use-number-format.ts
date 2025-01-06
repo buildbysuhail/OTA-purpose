@@ -130,7 +130,7 @@ export const useNumberFormat = () => {
     return `${result} Only`;
   }
   function getAmountInWords(amount: number): string {
-    debugger;
+    
     return convertAmountToWords(amount.toString());
   }
   

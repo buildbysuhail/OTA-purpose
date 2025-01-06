@@ -185,7 +185,7 @@ const ProfitAndLossDetailedReport = () => {
 
   useEffect(() => {
     if (filterShowCount == 0) {
-      debugger;
+      
       setShowFilter(true);
     } else {
       LoadAsync();
@@ -204,7 +204,7 @@ const ProfitAndLossDetailedReport = () => {
       res.isOk == false
     ) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => { debugger; return true});
+      setShowFilter((prev: any) => {  return true});
     } else {
       setFilterValidations(undefined);
       setShowFilter(false);

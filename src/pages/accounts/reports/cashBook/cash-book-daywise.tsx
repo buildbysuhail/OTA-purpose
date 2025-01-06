@@ -26,7 +26,7 @@ interface CashBookMonthDayWiseProps {
 
 const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps,rowData,isMaximized,modalHeight }) => {
 // const CashBookDayWise = ({ contentProps, enablefilter = false,}: CashBookMonthDayWiseProps) => {
-  // debugger;
+  // 
   
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
@@ -135,7 +135,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
     },
   ];
   // const [gridHeight, setGridHeight] = useState<number>(() => {
-  //   debugger;
+  //   
   //   const modals = document.querySelectorAll('.erp-modal-opened');
   //   if (modals.length > 0) {
   //     const latestModal = modals[modals.length - 1] as HTMLElement;

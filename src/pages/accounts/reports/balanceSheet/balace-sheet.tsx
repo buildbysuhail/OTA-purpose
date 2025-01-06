@@ -19,7 +19,7 @@ const BalanceSheetRow: React.FC<{
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    debugger;
+    
     setIsOpenDetails({
       isOpen: true,
       key: item.groupID,
@@ -96,7 +96,7 @@ const HorizontalBalanceSheet: React.FC<{
                   item={item}
                   setIsOpenDetails={(data: any) => {
                     setIsOpenDetails(data);
-                    debugger;
+                    
                   }}
                 />
               ))}
@@ -118,7 +118,7 @@ const HorizontalBalanceSheet: React.FC<{
                   item={item}
                   setIsOpenDetails={(data: any) => {
                     setIsOpenDetails(data);
-                    debugger;
+                    
                   }}
                 />
               ))}
@@ -177,7 +177,7 @@ const BalanceSheet = () => {
       res.isOk == false
     ) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => { debugger; return true});
+      setShowFilter((prev: any) => {  return true});
     } else {
       setFilterValidations(undefined);
       setShowFilter(false);
@@ -337,7 +337,7 @@ const BalanceSheet = () => {
                       item={item ?? []}
                       setIsOpenDetails={(data: any) => {
                         setIsOpenDetails(data);
-                        debugger;
+                        
                       }}
                     />
                   ))}

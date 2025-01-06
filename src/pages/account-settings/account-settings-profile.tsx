@@ -81,7 +81,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     set_Phone(res);
   };
   const changePhone = useCallback(async () => {
-    debugger;
+    
     setPhoneChangeLoading(true);
     const response: ResponseModelWithValidation<any, any> = await api.postAsync(Urls.changePhone,{ phone: phone }) ;
     setPhone(phone);

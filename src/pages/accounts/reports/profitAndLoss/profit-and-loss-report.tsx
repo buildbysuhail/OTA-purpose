@@ -166,7 +166,7 @@ const ProfitAndLossReport = () => {
       res.isOk == false
     ) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => { debugger; return true});
+      setShowFilter((prev: any) => {  return true});
     } else {
       setFilterValidations(undefined);
       setShowFilter(false);

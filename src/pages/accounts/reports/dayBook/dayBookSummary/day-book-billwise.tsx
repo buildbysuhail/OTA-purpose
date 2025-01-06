@@ -18,7 +18,7 @@ interface DayBookBillwiseProps {
 }
 
 const DayBookBillWise: FC<DayBookBillwiseProps> = ({ postData, contentProps, rowData }) => {
-debugger;
+
 // const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue} = useNumberFormat()

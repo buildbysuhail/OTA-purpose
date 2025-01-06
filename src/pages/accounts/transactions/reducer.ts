@@ -174,7 +174,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{}>
     ) => {
-      debugger;
+      
       if (state.transaction.details) {
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
@@ -279,7 +279,7 @@ const accTransactionSlice = createSlice({
         applicationSettings?: ApplicationSettingsType;
       }>
     ) => {
-      debugger;
+      
       const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
         state.transaction.master.totalAmount = calculateTotal(state);
@@ -357,7 +357,7 @@ const accTransactionSlice = createSlice({
         hasRight: (formCode: string, action: UserAction) => boolean;
       }>
     ) => {
-      debugger;
+      
       const { userSession, hasRight } = action.payload;
 
       const isClosed = userSession.financialYearStatus === "Closed";
@@ -390,7 +390,7 @@ const accTransactionSlice = createSlice({
         >;
       }>
     ) => {
-      debugger;
+      
       const { fields } = action.payload;
 
       // Iterate over the keys of fields and apply updates

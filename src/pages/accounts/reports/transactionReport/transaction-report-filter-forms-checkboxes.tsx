@@ -63,7 +63,7 @@ const TransactionReportfilterCheckboxes: React.FC<
       // Update `checked` to true for items with IDs in `ids`
       setAllTransactions((prev: any[]) =>
       {
-        debugger;
+        
         const dff = prev.map((transaction: any) => ({
           ...transaction,
           checked: ids?.includes(transaction.id), // Check if the id exists in the array

@@ -119,7 +119,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
   }, [template?.barcodeState?.placedComponents]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
-    debugger;
+    
     const baseStyle: Style = {
       position: 'absolute',
       left: component.x,

@@ -104,7 +104,7 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCode = () => {
-    debugger;
+    
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
     }
@@ -432,7 +432,7 @@ export const useAccTransaction = (
     );
   };
   const save = async () => {
-    debugger;
+    
     dispatch(accFormStateHandleFieldChange({fields:{
       saving: true
     }}));
@@ -558,7 +558,7 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async () => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
@@ -768,7 +768,7 @@ export const useAccTransaction = (
           },
         })
       );
-      debugger;
+      
 
       // Update row data in form state
       dispatch(
@@ -834,7 +834,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    debugger;
+    
     if (field === "grid") {
       handleGridKeyDown(key, gridRef, applicationSettings);
     } else if (field === "ledgerCode") {
@@ -850,7 +850,7 @@ export const useAccTransaction = (
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    debugger;
+    
     if (key === "e" || key === "E" || key === "Enter") {
       focusLedgerCombo();
     }
@@ -863,7 +863,7 @@ export const useAccTransaction = (
         icon: "warning",
         confirmButtonText: "Yes, delete it!",
         onConfirm: () => {
-          debugger;
+          
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           dispatch(
@@ -880,7 +880,7 @@ export const useAccTransaction = (
 
   // Ledger code keydown handler
   const handleLedgerCodeKeyDown = async (e: any) => {
-    debugger;
+    
     if (e.key === "Enter" || e.key === "Tab") {
       try {
         const response = await api.getAsync(
@@ -909,7 +909,7 @@ export const useAccTransaction = (
 
   // Amount keydown handler
   const handleAmountKeyDown = (e: any) => {
-    debugger;
+    
     if (e.key === "Enter") {
       const voucherType = formState.transaction.master.voucherType;
       if (voucherType !== "OB" && voucherType !== "MJV") {
@@ -923,7 +923,7 @@ export const useAccTransaction = (
   // Voucher number navigation handlers
   const handleVoucherNumberKeyUp = async (e: any) => {
     const currentNumber = Number(formState.transaction.master.voucherNumber);
-    debugger;
+    
     if (e.key == "ArrowDown" || e.key == "ArrowUp" || e.key == "Enter") {
       if (currentNumber > 0) {
         await loadAccTransVoucher();

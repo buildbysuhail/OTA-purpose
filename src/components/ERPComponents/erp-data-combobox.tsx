@@ -667,7 +667,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
   const clearSelection = (e?: React.MouseEvent) => {
-    debugger;
+    
     e?.stopPropagation();
     setQuery("");
     setIsOpen(false);

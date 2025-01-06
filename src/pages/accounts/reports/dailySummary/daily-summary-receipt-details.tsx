@@ -112,7 +112,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => {
-        debugger;
+        
         return (
           <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
             {`${cellElement.data.ledgerName === "TOTAL"?  

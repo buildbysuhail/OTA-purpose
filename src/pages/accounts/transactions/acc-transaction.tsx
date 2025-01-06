@@ -354,7 +354,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.showbillwise]);
 
   useEffect(() => {
-    debugger;
+    
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -371,7 +371,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-        debugger;
+        
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&
@@ -850,7 +850,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       cellRender: (cellElement: any, cellInfo: any) => (
         <button
           onClick={() => {
-            debugger;
+            
             handleRemoveItem(cellElement.rowIndex);
           }}
           disabled={
@@ -1052,7 +1052,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        debugger;
+                        
                         loadTemporaryRows();
                       }}
                     >
@@ -1068,7 +1068,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        debugger;
+                        
                         handleEdit();
                       }}
                     >
@@ -1084,7 +1084,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        debugger;
+                        
                         handleEdit();
                       }}
                     >
@@ -1100,7 +1100,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        debugger;
+                        
                         printVoucher(formState.transaction);
                       }}
                     >
@@ -1116,7 +1116,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        debugger;
+                        
                         clearControls();
                       }}
                     >
@@ -1173,7 +1173,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         ref={voucherNumberRef}
                         id="voucherNumber"
                         onKeyUp={(e) => {
-                          debugger;
+                          
                           handleFieldKeyDown("voucherNumber", e);
                         }}
                         label={formState.formElements.voucherNumber.label}
@@ -1373,7 +1373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <span
                         className="hover:underline text-[#0ea5e9] capitalize ml-1"
                         onClick={() => {
-                          debugger;
+                          
                           enableCombo();
                         }}
                       >
@@ -1565,7 +1565,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   value={formState.row.ledgerCode}
                   ref={ledgerCodeRef}
                   onKeyDown={(e) => {
-                    debugger;
+                    
                     handleFieldKeyDown("ledgerCode", e);
                   }}
                   onChange={(e) =>
@@ -1641,7 +1641,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   type="number"
                   value={formState.row.amount}
                   onKeyDown={(e) => {
-                    debugger;
+                    
                     handleFieldKeyDown("amount", e);
                   }}
                   onChange={(e) =>

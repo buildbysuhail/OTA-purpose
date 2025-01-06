@@ -132,7 +132,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       width: 150,
     },
   ];
-  debugger;
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

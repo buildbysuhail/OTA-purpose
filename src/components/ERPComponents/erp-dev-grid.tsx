@@ -300,7 +300,7 @@ const createStore = async (
           ERPToast.show(result.message, "error");
         }
 
-        debugger;
+        
         if (
           result != undefined &&
           result.isOk != undefined &&
@@ -524,7 +524,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, []);
     useEffect(() => {
       if (filterInitialData && Object.keys(filter).length === 0) {
-        debugger;
+        
         setFilter(filterInitialData);
       }
     }, [filterInitialData]);
@@ -542,7 +542,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
-      debugger;
+      
       const dss = { ..._filter };
       console.log(`prev:${filter}`);
       console.log(filter);
@@ -554,14 +554,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
       }
-      debugger;
+      
       setFilter(dss);
       onFilterChanged != undefined && onFilterChanged(dss);
     }, []); // Add any other dependencies here
     // const onCloseFilter = useCallback(() => {
     //   console.log(`filterShowCountww: ${filterShowCount}`);
     //   if (filterShowCount == 0) {
-    //     debugger;
+    //     
     //     setFilter({});
     //     setFilterShowCount((prev) => prev + 1);
     //     console.log(`filterShowCount333: ${filterShowCount}`);
@@ -674,7 +674,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         if (onExporting) {
           onExporting(e);
         } else {
-          debugger;
+          
           if (e.format === "pdf") {
             const doc = new jsPDF({
               orientation: "landscape",
@@ -798,7 +798,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             // Add header section
             const totalColumns = e.component.getVisibleColumns().length;
-            debugger;
+            
             const lastColumnLetter = String.fromCharCode(64 + totalColumns);
             let currentRow = 1;
             let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
@@ -970,7 +970,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
-        debugger;
+        
 
         // Handle conditional expressions using '&&'
         if (placeholder.includes("&&")) {
@@ -997,7 +997,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           return result;
         } else if (placeholder.includes("___")) {
-          debugger;
+          
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
@@ -1026,7 +1026,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             ? r.replace(
                 /\(([^\]]+)\)/g,
                 (innerMatch: any, innerPlaceholder: any) => {
-                  debugger;
+                  
                   if (
                     innerPlaceholder.includes("date") ||
                     innerPlaceholder.includes("Date")
@@ -1056,7 +1056,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const header = useMemo(() => {
       if (!filterText || !filter) return filterText || "";
-      debugger;
+      
       const data = filter;
       const _gridHeader = filterText.toString();
       // Dynamically replace placeholders using a regular expression
@@ -1340,7 +1340,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
     data.value !== "" &&
     data.value !== 0
   ) {
-    debugger;
+    
     console.log(data.column.dataType);
 
     return (

@@ -33,7 +33,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   onClose,
 }) => {
   
-  debugger;
+  
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formState, setFormState] = useState<any>({
     data: initialData,
@@ -70,7 +70,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   // );
   const handleFieldChange = useCallback(
     (fields: { [fieldId: string]: any } | string, value?: any) => {
-      debugger;
+      
       // Normalize fields into an object for single or multiple field updates
       const fieldsToUpdate =
         typeof fields === "string" ? { [fields]: value } : fields;
@@ -92,12 +92,12 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   );
   // Apply filters callback
   const handleApply = () => {
-    debugger;
+    
     // setIsOpen(false);
     if (onApplyFilters) onApplyFilters(formState.data ?? {});
   };
   useEffect(() => {
-    debugger;
+    
     if (toogleFilter == true) {
       setIsOpen(true);
     }

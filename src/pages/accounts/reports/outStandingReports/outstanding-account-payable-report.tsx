@@ -27,11 +27,12 @@ const OutstandingAccountPayableReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t('si_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "party",
@@ -39,6 +40,7 @@ const OutstandingAccountPayableReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.party}
@@ -52,6 +54,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "mobilePhone",
@@ -60,6 +63,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "debit",
@@ -69,6 +73,7 @@ const OutstandingAccountPayableReport = () => {
       allowFiltering: true,
       visible: false,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -83,6 +88,7 @@ const OutstandingAccountPayableReport = () => {
       allowFiltering: true,
       visible: false,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -96,6 +102,7 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue( cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -120,7 +127,7 @@ const OutstandingAccountPayableReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="As On Date : {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
+                  filterText="as of {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_payable")}
                   dataUrl={Urls.acc_reports_payable}
                   method={ActionType.POST}

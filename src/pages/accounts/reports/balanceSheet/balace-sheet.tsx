@@ -146,6 +146,7 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filterValidations,setFilterValidations]=useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
@@ -170,6 +171,17 @@ const BalanceSheet = () => {
       Urls.acc_reports_balance_sheet,
       _filter || filter
     );
+    if (
+      res != undefined &&
+      res.isOk != undefined &&
+      res.isOk == false
+    ) {
+      setFilterValidations(res.validations);
+      setShowFilter((prev: any) => { debugger; return true});
+    } else {
+      setFilterValidations(undefined);
+      setShowFilter(false);
+    }
     setData(res?.data || []);
     setLoading(false);
   };
@@ -253,7 +265,7 @@ const BalanceSheet = () => {
                 } } />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={undefined} title={"Balance sheet"}/>
+                onClose={onCloseFilter} validations={filterValidations} title={"Balance sheet"}/>
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}

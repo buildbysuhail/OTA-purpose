@@ -22,6 +22,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -30,6 +31,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -38,6 +40,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "accountGroup",
@@ -46,6 +49,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "particulars",
@@ -54,6 +58,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "amount",
@@ -62,6 +67,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
     },
     {
       dataField: "discount",
@@ -70,6 +76,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
     },
     {
       dataField: "narration",
@@ -86,6 +93,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "financialYearID",
@@ -126,6 +134,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "contactPhone",

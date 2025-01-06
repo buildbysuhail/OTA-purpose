@@ -90,6 +90,7 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
+  showSummary?: boolean;
   summaryItems?: SummaryConfig[];
   columns: DevGridColumn[];
   showSerialNo?: boolean;
@@ -126,8 +127,8 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-  | boolean
-  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+    | boolean
+    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
@@ -280,16 +281,16 @@ const createStore = async (
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-              ? await api.postAsync(
+            ? await api.postAsync(
                 dataUrl,
                 filterData != undefined && Object.keys(filterData).length > 0
                   ? filterData
                   : postData != undefined
-                    ? postData
-                    : {},
+                  ? postData
+                  : {},
                 queryString
               )
-              : null;
+            : null;
 
         if (
           result != undefined &&
@@ -313,21 +314,21 @@ const createStore = async (
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
+                data: [],
+                totalCount: -1,
+                summary: {},
+                groupCount: 0,
+              }
+            : {
+                data: result.data,
+                totalCount: result.totalCount,
+              }
+          : {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            }
-            : {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
-          : {
-            data: [],
-            totalCount: -1,
-            summary: {},
-            groupCount: 0,
-          };
+            };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -357,6 +358,7 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
+      showSummary = true,
       summaryItems = [],
       columns,
       showSerialNo,
@@ -479,18 +481,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           ? wh - heightToAdjustOnMobile
           : heightToAdjustOnWindowsInModal ?? 400;
 
-    let gridHeightWindows =
-      heightToAdjustOnWindowsInModal !== undefined
-        ? heightToAdjustOnWindowsInModal
-        : wh - heightToAdjustOnWindows < 300
+      let gridHeightWindows =
+        heightToAdjustOnWindowsInModal !== undefined
+          ? heightToAdjustOnWindowsInModal
+          : wh - heightToAdjustOnWindows < 300
           ? 300
           : wh - heightToAdjustOnWindows;
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [
-    heightToAdjustOnMobile,
-    heightToAdjustOnWindows,
-    heightToAdjustOnWindowsInModal,
-  ]);
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [
+      heightToAdjustOnMobile,
+      heightToAdjustOnWindows,
+      heightToAdjustOnWindowsInModal,
+    ]);
 
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
     const [preferences, setPreferences] = useState<GridPreference>();
@@ -725,13 +727,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 visible: column.visible,
               }));
 
-          const pdfVisibleColumns = preferences
-            ? preferences.columnPreferences
-              .filter((colPref) => colPref.showInPdf)
-              .map((colPref) => colPref.dataField)
-            : gridCols
-              .filter((col) => col.showInPdf)
-              .map((col) => col.dataField);
+            const pdfVisibleColumns = preferences
+              ? preferences.columnPreferences
+                  .filter((colPref) => colPref.showInPdf)
+                  .map((colPref) => colPref.dataField)
+              : gridCols
+                  .filter((col) => col.showInPdf)
+                  .map((col) => col.dataField);
 
             const pageWidth = doc.internal.pageSize.getWidth() - 80;
 
@@ -742,18 +744,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 )
             );
 
-          const pdfColumnsWidths = preferences
-            ? preferences.columnPreferences
-              .filter((colPref) => colPref.showInPdf)
-              .map((colPref) => {
-                if (!colPref.width) {
-                  return 0;
-                }
-                return colPref.width || 150;
-              })
-            : gridCols
-              .filter((col) => col.showInPdf)
-              .map((col) => col.width || 100);
+            const pdfColumnsWidths = preferences
+              ? preferences.columnPreferences
+                  .filter((colPref) => colPref.showInPdf)
+                  .map((colPref) => {
+                    if (!colPref.width) {
+                      return 0;
+                    }
+                    return colPref.width || 150;
+                  })
+              : gridCols
+                  .filter((col) => col.showInPdf)
+                  .map((col) => col.width || 100);
 
             if (columnsWithoutWidth.length > 0) {
               const specifiedWidthTotal = pdfColumnsWidths
@@ -1268,8 +1270,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
               />
             ))}
-            {summaryItems.length > 0 && (
+
+            {showSummary && (
               <Summary>
+                <TotalItem
+                  column="siNo" 
+                  summaryType="count" 
+                  customizeText={(data) => `Total Rows: ${data.value || 0}`} 
+                />
                 {summaryItems.map((config: any, index: number) => (
                   <TotalItem
                     key={index}
@@ -1281,6 +1289,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ))}
               </Summary>
             )}
+
             <Grouping autoExpandAll={true} allowCollapsing={false} />
           </DataGrid>
         </div>

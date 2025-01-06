@@ -252,3 +252,8 @@
 .MuiInputBase-root .MuiFilledInput-input{
   padding: 8px 0 0 8px !important;
 }
+
+.dx-datagrid-summary-item {
+  white-space: nowrap !important; 
+  overflow: visible !important;
+}

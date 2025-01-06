@@ -31,20 +31,20 @@ const ProfitAndLossRow: React.FC<{
 
   return (
     <tr>
-      <td className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"}`}
+      <td className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"}`}
         style={{
           paddingLeft: item.title == "M" ? "0px" : item.title == "G" ? "20px" : "10px",
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}>
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
-          {item.groupName}
+          {item.groupName} 
         </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
           <a href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"}`}
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"}`}
             style={{
               paddingLeft: item.title == "M" ? "0px" : item.title == "" ? "10px" : item.title == "L" ? "20px" : "20px",
               fontWeight: item.title == "M" ? "bold" : "normal",
@@ -61,17 +61,19 @@ const ProfitAndLossRow: React.FC<{
 
 // Horizontal format component
 const HorizontalProfitAndLoss: React.FC<{
-  data: any;
+  data: any[];
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
+  const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('accountsReport');
   const expense = data?.filter((item: any) => item?.transType == "E");
   const income = data?.filter((item: any) => item?.transType == "I");
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="relative">
+    <div className="grid grid-cols-2 gap-4 bg-white">
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse bg-white">
           <thead>
             <tr className="bg-gray-400">
               <th className="py-2 ps-2">{t("expense")}</th>
@@ -79,7 +81,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {expense?.map((item: any, index: number) => (
+          {expense?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`asset-${index}`}
                 item={item}
@@ -91,7 +93,7 @@ const HorizontalProfitAndLoss: React.FC<{
       </div>
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse bg-white">
           <thead>
             <tr className="bg-gray-400">
               <th className="py-2 ps-2">{t("income")}</th>
@@ -99,7 +101,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {income?.map((item: any, index: number) => (
+            {income?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`liability-${index}`}
                 item={item}
@@ -110,6 +112,21 @@ const HorizontalProfitAndLoss: React.FC<{
         </table>
       </div>
     </div>
+     <div className="grid grid-cols-2 gap-4">
+     <div className="grid grid-cols-2 bg-gray-50 p-2">
+       <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+       <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+ item?.transType === "E" && item?.groupName === "TOTAL"
+)?.total || 0)}</h6>
+     </div>
+     <div className="grid grid-cols-2 bg-gray-50 p-2">
+       <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+       <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+ item?.transType === "I" && item?.groupName === "TOTAL"
+)?.total || 0)}</h6>
+     </div>
+   </div>
+   </div>
   );
 };
 
@@ -119,6 +136,7 @@ const ProfitAndLossReport = () => {
   const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filterValidations,setFilterValidations]=useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
@@ -142,6 +160,17 @@ const ProfitAndLossReport = () => {
       Urls.acc_reports_profit_and_loss,
       _filter || filter
     );
+    if (
+      res != undefined &&
+      res.isOk != undefined &&
+      res.isOk == false
+    ) {
+      setFilterValidations(res.validations);
+      setShowFilter((prev: any) => { debugger; return true});
+    } else {
+      setFilterValidations(undefined);
+      setShowFilter(false);
+    }
     setData(res?.data || []);
     setLoading(false);
   };
@@ -160,7 +189,7 @@ const ProfitAndLossReport = () => {
   }, [filterShowCount]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
@@ -174,22 +203,6 @@ const ProfitAndLossReport = () => {
           </div>
 
           <div className="flex items-center ms-auto space-x-4">
-            {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
-              <RectangleVertical />
-              <p  className="pe-2">Show Vertical</p>
-              <div className="">
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={isVerticalView}
-                    onChange={(e) => setIsVerticalView(e.target.checked)}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div> */}
-
             <button
               className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
               onClick={() => setIsVerticalView(!isVerticalView)}
@@ -222,7 +235,7 @@ const ProfitAndLossReport = () => {
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={undefined} title={"Profit and Loss"}              />
+                onClose={onCloseFilter} validations={filterValidations} title={"Profit and Loss"}              />
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
@@ -257,7 +270,7 @@ const ProfitAndLossReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+          As of {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (
@@ -280,14 +293,14 @@ const ProfitAndLossReport = () => {
                 setIsOpenDetails={setIsOpenDetails}
               />
             ) : (
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse bg-white">
                 <thead>
-                  <tr className="bg-gray-400">
+                <tr className={"bg-white"}>
                     <th className="py-2 ps-2">{t("account")}</th>
-                    <th className="py-2 text-end pe-2">{t("total")}</th>
+                    <th className="font-bold py-2 text-end pe-2 bg-white">{t("total")}</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white">
                   {data?.map((item, index) => (
                     <ProfitAndLossRow
                       key={index}

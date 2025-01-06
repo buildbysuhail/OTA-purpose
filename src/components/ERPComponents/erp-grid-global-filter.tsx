@@ -87,13 +87,16 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   // Apply filters callback
   const handleApply = () => {
     debugger;
+    // setIsOpen(false);
     if (onApplyFilters) onApplyFilters(formState.data ?? {});
-    setIsOpen(false);
   };
   useEffect(() => {
     debugger;
     if (toogleFilter == true) {
       setIsOpen(true);
+    }
+    else {
+      setIsOpen(false);
     }
   }, [toogleFilter]);
   useEffect(() => {

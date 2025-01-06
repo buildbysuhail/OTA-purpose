@@ -24,6 +24,7 @@ const ProfitAndLossRow: React.FC<{
   setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat()
+
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
@@ -37,7 +38,7 @@ const ProfitAndLossRow: React.FC<{
   return (
     <tr>
       <td
-        className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"
+        className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"
           }`}
         style={{
           paddingLeft: item.title == "M" ? "0px" : item.title == "G" ? "50px" : "20px",
@@ -53,7 +54,7 @@ const ProfitAndLossRow: React.FC<{
           <a
             href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-[#FF0000]" : "text-[#3b82f6]"
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" || item.title == "G" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"
               }`}
             style={{
               paddingRight: item.title == "M" ? "0px" : item.title == "" ? "50px" : item.title == "L" ? "100px" : "100px",
@@ -71,16 +72,19 @@ const ProfitAndLossRow: React.FC<{
 
 // Horizontal format component
 const HorizontalProfitAndLoss: React.FC<{
-  data: any;
+  data: any[];
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
+  const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('accountsReport');
   const expense = data?.filter((item: any) => item?.transType == "E");
 
+  
   const income = data?.filter((item: any) => item?.transType == "I");
   // const subLedger = data?.filter((item: any) => item?.ti == "L");
 
   return (
+    <div className="relative">
     <div className="grid grid-cols-2 gap-4">
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
@@ -92,7 +96,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {expense?.map((item: any, index: number) => (
+            {expense?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`asset-${index}`}
                 item={item}
@@ -132,7 +136,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {income?.map((item: any, index: number) => (
+            {income?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`liability-${index}`}
                 item={item}
@@ -141,6 +145,21 @@ const HorizontalProfitAndLoss: React.FC<{
             ))}
           </tbody>
         </table>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+    item?.transType === "E" && item?.groupName === "TOTAL"
+  )?.total || 0)}</h6>
+        </div>
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+    item?.transType === "I" && item?.groupName === "TOTAL"
+  )?.total || 0)}</h6>
+        </div>
       </div>
     </div>
   );
@@ -152,6 +171,8 @@ const ProfitAndLossDetailedReport = () => {
   const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  
+  const [filterValidations,setFilterValidations]=useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
@@ -164,6 +185,7 @@ const ProfitAndLossDetailedReport = () => {
 
   useEffect(() => {
     if (filterShowCount == 0) {
+      debugger;
       setShowFilter(true);
     } else {
       LoadAsync();
@@ -176,6 +198,17 @@ const ProfitAndLossDetailedReport = () => {
       Urls.acc_reports_profit_and_loss_detailed,
       _filter || filter
     );
+    if (
+      res != undefined &&
+      res.isOk != undefined &&
+      res.isOk == false
+    ) {
+      setFilterValidations(res.validations);
+      setShowFilter((prev: any) => { debugger; return true});
+    } else {
+      setFilterValidations(undefined);
+      setShowFilter(false);
+    }
     setData(res?.data || []);
     setLoading(false);
   };
@@ -192,9 +225,8 @@ const ProfitAndLossDetailedReport = () => {
     }
     setShowFilter(false);
   }, [filterShowCount]);
-
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
@@ -256,7 +288,7 @@ const ProfitAndLossDetailedReport = () => {
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={undefined} title={"Profit and Loss Detailed"}              />
+                onClose={onCloseFilter} validations={filterValidations} title={"Profit and Loss Detailed"}              />
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
@@ -291,7 +323,7 @@ const ProfitAndLossDetailedReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+        As of {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
         </p>
         {loading ? (
           <>

@@ -126,7 +126,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPInput
           id="priceCode"
-          value={settings?.inventorySettings.priceCode}
+          value={settings?.inventorySettings?.priceCode}
           data={settings?.inventorySettings}
           label={t("price_code")}
           placeholder={t("enter_the_price_code")}
@@ -322,7 +322,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPCheckbox
           id="maintainWarehouse"
-          checked={settings?.inventorySettings.maintainWarehouse}
+          checked={settings?.inventorySettings?.maintainWarehouse}
           data={settings?.inventorySettings}
           label={t("maintain_warehouse")}
           onChangeData={(data: any) =>
@@ -358,7 +358,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPCheckbox
           id="setProductCostWithVATAmount"
-          checked={settings?.inventorySettings.setProductCostWithVATAmount}
+          checked={settings?.inventorySettings?.setProductCostWithVATAmount}
           data={settings?.inventorySettings}
           label={t("set_product_cost_with_TAX_amount")}
           onChangeData={(data: any) =>
@@ -376,7 +376,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPCheckbox
           id="showPrinterSelection"
-          checked={settings?.inventorySettings.showPrinterSelection}
+          checked={settings?.inventorySettings?.showPrinterSelection}
           data={settings?.inventorySettings}
           label={t("show_printer_selection")}
           onChangeData={(data: any) =>
@@ -394,7 +394,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPCheckbox
           id="showProductDuplicationMessage"
-          checked={settings?.inventorySettings.showProductDuplicationMessage}
+          checked={settings?.inventorySettings?.showProductDuplicationMessage}
           data={settings?.inventorySettings}
           label={t("show_product_duplication_message")}
           onChangeData={(data: any) =>
@@ -414,7 +414,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       element: (
         <ERPCheckbox
           id="enableAddStockAdjustment"
-          checked={settings?.inventorySettings.enableAddStockAdjustment}
+          checked={settings?.inventorySettings?.enableAddStockAdjustment}
           data={settings?.inventorySettings}
           label={t("enable_add_stock_adjustment")}
           onChangeData={(data: any) =>

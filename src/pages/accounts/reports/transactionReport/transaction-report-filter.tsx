@@ -40,7 +40,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState 
         onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
       />
       {/* </div> */}
-      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
         label={t("sales_route")}

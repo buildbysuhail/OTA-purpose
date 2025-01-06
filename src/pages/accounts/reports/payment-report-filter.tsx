@@ -70,7 +70,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         }}
         onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
       />
-      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
         label={t("sales_route")}

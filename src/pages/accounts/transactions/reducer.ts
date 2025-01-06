@@ -83,7 +83,7 @@ const accTransactionSlice = createSlice({
         ) {
           state.masterAccountID = counterwiseCashLedgerId;
         }
-      }
+      } 
       state.transaction.master.employeeId =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
       state.transaction.master.costCentreId =
@@ -225,11 +225,15 @@ const accTransactionSlice = createSlice({
         credit: state.row.drCr == "Cr" ? state.row.amount : 0,
       };
       if (state.isRowEdit === true) {
-        const index = state.transaction.details.findIndex((x) => x.slNo === data.slNo);
+        const index = state.transaction.details.findIndex(
+          (x) => x.slNo === data.slNo
+        );
         if (index !== -1) {
           state.transaction.details[index] = serializedRow; // Update existing row
         } else {
-          ERPToast.show(`Row with slNo ${data.slNo} not found. Cannot edit row.`);
+          ERPToast.show(
+            `Row with slNo ${data.slNo} not found. Cannot edit row.`
+          );
         }
       } else {
         state.transaction.details.push(serializedRow);
@@ -241,7 +245,12 @@ const accTransactionSlice = createSlice({
 
       state = clearEntryControl(
         state,
-        action.payload.applicationSettings.accountsSettings.defaultCostCenterID
+        action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
+      );
+
+      localStorage.setItem(
+        `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
+        JSON.stringify(state.transaction.details)
       );
       state.row.billwiseDetails = "";
     },
@@ -267,7 +276,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{
         index: number;
-        applicationSettings: ApplicationSettingsType;
+        applicationSettings?: ApplicationSettingsType;
       }>
     ) => {
       debugger;
@@ -276,8 +285,8 @@ const accTransactionSlice = createSlice({
         state.transaction.master.totalAmount = calculateTotal(state);
         state = clearEntryControl(
           state,
-          action.payload.applicationSettings.accountsSettings
-            .defaultCostCenterID
+          action.payload.applicationSettings?.accountsSettings
+            ?.defaultCostCenterID ?? 0
         );
         state.previousNarration = "";
         state.transaction.details.splice(index, 1);
@@ -287,12 +296,29 @@ const accTransactionSlice = createSlice({
             slNo: index + 1, // Reset slNo to start from 1
           })
         );
+
+        localStorage.setItem(
+          `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
+          JSON.stringify(state.transaction.details)
+        );
       }
     },
 
     // Remove a specific row from the transaction details by index
     accFormStateClearRowForNew: (state) => {
       state.row = { ...AccTransactionRowInitialData };
+    },
+
+    // Remove a specific row from the transaction details by index
+    loadTempRows: (state) => {
+      const tmp = localStorage.getItem(
+        `${state.transaction.master.voucherType}${state.transaction.master.formType}`);
+        if(tmp != undefined && tmp != null && tmp != "") {
+          const tmpRows = JSON.parse(tmp) as Array<AccTransactionRow>
+          if(tmpRows.length > 0) {
+            state.transaction.details = tmpRows;
+          }
+        }
     },
 
     // Handle changes for the "row" property in the state
@@ -335,20 +361,20 @@ const accTransactionSlice = createSlice({
 
       const isClosed = userSession.financialYearStatus === "Closed";
 
-      state.formElements.btnSave.visible = !isClosed
+      state.formElements.btnSave.disabled = !isClosed
         ? hasRight(state.formCode, UserAction.Add) &&
           (state?.transaction?.details?.length ?? 0) > 0
         : false;
 
-      state.formElements.btnEdit.visible = !isClosed
+      state.formElements.btnEdit.disabled = !isClosed
         ? hasRight(state.formCode, UserAction.Edit)
         : false;
 
-      state.formElements.btnDelete.visible = !isClosed
+      state.formElements.btnDelete.disabled = !isClosed
         ? hasRight(state.formCode, UserAction.Delete)
         : false;
 
-      state.formElements.btnPrint.visible = !isClosed
+      state.formElements.btnPrint.disabled = !isClosed
         ? hasRight(state.formCode, UserAction.Print)
         : false;
     },
@@ -405,12 +431,12 @@ const accTransactionSlice = createSlice({
             payload.master.transactionDate
           ).toISOString(),
           prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
-          bankDate: new Date(payload.master.bankDate).toISOString(),
+          // bankDate: new Date(payload.master.bankDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
-          dueDate: new Date(payload.master.dueDate).toISOString(),
-          checkBouncedDate: new Date(
-            payload.master.checkBouncedDate
-          ).toISOString(),
+          // dueDate: new Date(payload.master.dueDate).toISOString(),
+          // checkBouncedDate: new Date(
+          //   payload.master.checkBouncedDate
+          // ).toISOString(),
         };
 
         // Handle details data
@@ -526,6 +552,7 @@ export const {
   disableControls,
   updateFormElement,
   accFormStateTransactionDetailsSetSlNo,
+  loadTempRows,
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

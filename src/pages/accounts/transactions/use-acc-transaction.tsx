@@ -19,6 +19,7 @@ import {
   accFormStateTransactionDetailsRowRemove,
   accFormStateTransactionMasterHandleFieldChange,
   accFormStateTransactionUpdate,
+  loadTempRows,
   clearState,
   setUserRight,
   updateFormElement,
@@ -40,6 +41,7 @@ import {
 } from "../../../utilities/Utils";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
+import { validateTransactionDate } from "./functions";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -60,7 +62,10 @@ export const useAccTransaction = (
   ledgerIdRef?: any,
   masterAccountRef?: any,
   costCenterRef?: any,
-  amountRef?: any
+  amountRef?: any,
+  drCrRef?: any,
+  narrationRef?: any,
+  voucherNumberRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -109,6 +114,21 @@ export const useAccTransaction = (
       ledgerIdRef.current.focus();
     }
   };
+  const focusNarration = () => {
+    if (narrationRef.current) {
+      narrationRef.current.focus();
+    }
+  };
+  const focusDrCr = () => {
+    if (drCrRef.current) {
+      drCrRef.current.focus();
+    }
+  };
+  const focusVoucherNumber = () => {
+    if (voucherNumberRef.current) {
+      voucherNumberRef.current.focus();
+    }
+  };
 
   const { hasRight } = useUserRights();
   const loadAccTransVoucher = async (usingManualInvNumber: boolean = false) => {
@@ -145,23 +165,25 @@ export const useAccTransaction = (
         formState.transaction?.master?.referenceNumber || "",
       SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
     };
-    const res = await appDispatch(
-      deleteAccVoucher({
-        accTransactionMasterID: formState.transaction?.master?.accTransMasterID,
-        transactionType: transactionType,
-      })
-    ).unwrap();
-    if (res != undefined && res.isOk != true) {
-      ERPAlert.show({
-        title: "failed",
-        text: res.message,
-        onConfirm: () => {
-          return false;
-        },
-      });
+    if (formState.transaction?.master?.accTransMasterID > 0) {
+      const res = await appDispatch(
+        deleteAccVoucher({
+          accTransactionMasterID:
+            formState.transaction?.master?.accTransMasterID,
+          transactionType: transactionType,
+        })
+      ).unwrap();
+      if (res != undefined && res.isOk != true) {
+        ERPAlert.show({
+          title: "failed",
+          text: res.message,
+          onConfirm: () => {
+            return false;
+          },
+        });
+      }
     }
   };
-  const { validateTransactionDate } = useTransaction(transactionType);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode() {
     if (formState.isEdit) {
@@ -242,21 +264,25 @@ export const useAccTransaction = (
       return false;
     }
     const validateTransDate = validateTransactionDate(
-      new Date(formState.transaction.master.transactionDate)
+      new Date(formState.transaction.master.transactionDate),
+      false,
+      userSession,
+      clientSession,
+      applicationSettings,
+      hasRight
     );
-    if (validateTransDate == 0) {
+    if (!validateTransDate.valid) {
       ERPAlert.show({
         icon: "warning",
         title:
           "Transaction Date validation failed(Check Financial Year period)",
+          text: validateTransDate.message
       });
-      return false;
-    } else if (validateTransDate == 2) {
       return false;
     }
 
     // Validate transaction amount
-    if (formState.total === null || formState.total == 0) {
+    if (formState.transaction.master.totalAmount === null || formState.transaction.master.totalAmount == 0) {
       ERPAlert.show({
         icon: "warning",
         title: "Invalid Transaction Amount",
@@ -295,10 +321,10 @@ export const useAccTransaction = (
     if (formState.transaction.master.voucherType == "MJV") {
       const totalDebit = formState.transaction.details
         .reduce((sum, x) => sum + (x.debit || 0), 0)
-        .toFixed(applicationSettings.mainSettings.decimalPoints);
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
       const totalCredit = formState.transaction.details
         .reduce((sum, x) => sum + (x.credit || 0), 0)
-        .toFixed(applicationSettings.mainSettings.decimalPoints);
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
       if (totalDebit !== totalCredit) {
         ERPAlert.show({
           icon: "warning",
@@ -315,7 +341,7 @@ export const useAccTransaction = (
     const master = { ...formState.transaction.master };
 
     master.accTransMasterID = formState.isEdit ? master.accTransMasterID : 0;
-    master.bankDate = new Date().toISOString();
+    // master.bankDate = new Date().toISOString();
     master.checkBouncedDate = new Date().toISOString();
     master.dueDate = master.transactionDate;
     const totalAmount = formState.total || 0;
@@ -336,7 +362,7 @@ export const useAccTransaction = (
     return master;
   };
   const PrintPaymentReceiptAdvice = (voucher: AccTransactionData) => {};
-  const PrintVoucher = (voucher: AccTransactionData) => {};
+  const printVoucher = (voucher: AccTransactionData) => {};
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -406,6 +432,10 @@ export const useAccTransaction = (
     );
   };
   const save = async () => {
+    debugger;
+    dispatch(accFormStateHandleFieldChange({fields:{
+      saving: true
+    }}));
     if (validate() == true) {
       const params: AccTransactionData = {
         master: attachMaster(),
@@ -413,7 +443,7 @@ export const useAccTransaction = (
         attachments: [...formState.transaction.attachments],
       };
       const saveRes = await api.postAsync(
-        `Urls.acc_transaction_base${transactionType}`,
+        `${Urls.acc_transaction_base}${transactionType}`,
         params
       );
       if (saveRes.isOk == true) {
@@ -424,7 +454,7 @@ export const useAccTransaction = (
           ) {
             PrintPaymentReceiptAdvice(params);
           } else {
-            PrintVoucher(params);
+            printVoucher(params);
           }
         }
         if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
@@ -456,6 +486,10 @@ export const useAccTransaction = (
           title: saveRes.message,
         });
       }
+      
+      dispatch(accFormStateHandleFieldChange({fields:{
+        saving: false
+      }}));
     }
   };
   const clearControls = async () => {
@@ -794,166 +828,203 @@ export const useAccTransaction = (
       });
     }
   };
-  const handleGridKeyDown = (key: any, gridRef: any,applicationSettings: ApplicationSettingsType) => {
+  const handleFieldKeyDown = (
+    field: string,
+    key: any,
+    gridRef?: any,
+    applicationSettings?: ApplicationSettingsType
+  ) => {
     debugger;
-    if (key === 'e' || key === 'E' || key === 'Enter') {
+    if (field === "grid") {
+      handleGridKeyDown(key, gridRef, applicationSettings);
+    } else if (field === "ledgerCode") {
+      handleLedgerCodeKeyDown(key);
+    } else if (field === "amount") {
+      handleAmountKeyDown(key);
+    } else if (field === "voucherNumber") {
+      handleVoucherNumberKeyUp(key);
+    }
+  };
+  const handleGridKeyDown = (
+    key: any,
+    gridRef: any,
+    applicationSettings?: ApplicationSettingsType
+  ) => {
+    debugger;
+    if (key === "e" || key === "E" || key === "Enter") {
       focusLedgerCombo();
     }
-    if (key === 'a' || key === 'A') {
-     
+    if (key === "a" || key === "A") {
     }
-    if (key === 'd' || key === 'D') {
+    if (key === "d" || key === "D") {
       ERPAlert.show({
-        title: 'Confirm Delete',
-        text: 'Are you sure you want to delete this row?',
-        icon: 'warning',
-        confirmButtonText: 'Yes, delete it!',
+        title: "Confirm Delete",
+        text: "Are you sure you want to delete this row?",
+        icon: "warning",
+        confirmButtonText: "Yes, delete it!",
         onConfirm: () => {
           debugger;
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
-              const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
-             dispatch( accFormStateTransactionDetailsRowRemove({applicationSettings:applicationSettings, index: focusedRowIndex}));
+          const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
+          dispatch(
+            accFormStateTransactionDetailsRowRemove({
+              applicationSettings: applicationSettings,
+              index: focusedRowIndex,
+            })
+          );
           console.log("Row Data:", focusedRowIndex);
-        }
+        },
       });
     }
   };
 
-  // // Ledger code keydown handler
-  // const handleLedgerCodeKeyDown = async (e: KeyboardEvent) => {
-  //   if (e.key === 'Enter' || e.key === 'Tab') {
-  //     try {
-  //       const response = await api.getAsync(
-  //         `${Urls.get_ledger_by_code}/${formState.row.ledgerCode}`
-  //       );
-        
-  //       if (response && response.data > 0) {
-  //         dispatch(accFormStateRowHandleFieldChange({
-  //           fields: {
-  //             ledgerId: response.data
-  //           }
-  //         }));
-  //         focusAmount();
-  //         e.preventDefault();
-  //       } else {
-  //         focusLedgerCombo();
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching ledger:', error);
-  //     }
-  //   }
-  // };
+  // Ledger code keydown handler
+  const handleLedgerCodeKeyDown = async (e: any) => {
+    debugger;
+    if (e.key === "Enter" || e.key === "Tab") {
+      try {
+        const response = await api.getAsync(
+          `${Urls.get_ledgerId_by_code}/${formState.row.ledgerCode}`
+        );
 
-  // // Amount keydown handler
-  // const handleAmountKeyDown = (e: KeyboardEvent) => {
-  //   if (e.key === 'Enter') {
-  //     const voucherType = formState.transaction.master.voucherType;
-  //     if (voucherType !== 'OB' && voucherType !== 'MJV') {
-  //       dispatch(updateFormElement({
-  //         fields: {
-  //           narration: { focused: true }
-  //         }
-  //       }));
-  //     } else {
-  //       dispatch(updateFormElement({
-  //         fields: {
-  //           drCr: { focused: true }
-  //         }
-  //       }));
-  //     }
-  //   }
-  // };
+        if (response && response > 0) {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: {
+                ledgerId: response,
+              },
+            })
+          );
+          focusAmount();
+          e.preventDefault();
+        } else {
+          focusLedgerCombo();
+        }
+      } catch (error) {
+        e.preventDefault();
+        console.error("Error fetching ledger:", error);
+      }
+    }
+  };
 
-  // // Voucher number navigation handlers
-  // const handleVoucherNumberKeyUp = async (e: KeyboardEvent) => {
-  //   const currentNumber = Number(formState.transaction.master.voucherNumber);
-    
-  //   switch(e.key) {
-  //     case 'ArrowDown':
-  //       if (currentNumber > 1) {
-  //         await handleVoucherNumberChange(currentNumber - 1);
-  //       }
-  //       break;
-  //     case 'ArrowUp':
-  //       await handleVoucherNumberChange(currentNumber + 1);
-  //       break;
-  //     case 'Enter':
-  //       await loadAccTransVoucher();
-  //       break;
-  //   }
-  // };
+  // Amount keydown handler
+  const handleAmountKeyDown = (e: any) => {
+    debugger;
+    if (e.key === "Enter") {
+      const voucherType = formState.transaction.master.voucherType;
+      if (voucherType !== "OB" && voucherType !== "MJV") {
+        focusNarration();
+      } else {
+        focusDrCr();
+      }
+    }
+  };
 
-  // const handleVoucherNumberChange = async (newNumber: number) => {
-  //   dispatch(accFormStateHandleFieldChange({
-  //     fields: {
-  //       'transaction.master.voucherNumber': newNumber.toString()
-  //     }
-  //   }));
-  //   try {
-  //     await loadAccTransVoucher();
-  //   } catch (error) {
-  //     console.error('Error loading voucher:', error);
-  //   }
-  // };
+  // Voucher number navigation handlers
+  const handleVoucherNumberKeyUp = async (e: any) => {
+    const currentNumber = Number(formState.transaction.master.voucherNumber);
+    debugger;
+    if (e.key == "ArrowDown" || e.key == "ArrowUp" || e.key == "Enter") {
+      if (currentNumber > 0) {
+        await loadAccTransVoucher();
+      }
+    }
+  };
 
-  // // Edit button handler
-  // const handleEdit = async () => {
-  //   if (!validateTransactionDate(new Date(formState.transaction.master.transactionDate))) {
-  //     return;
-  //   }
+  const loadTemporaryRows = async () => {
+    dispatch(loadTempRows());
+  };
 
-  //   if (formState.isLocked) {
-  //     ERPAlert.show({
-  //       title: 'Warning',
-  //       text: 'This voucher is locked. Cannot be edited/deleted.',
-  //       icon: 'warning'
-  //     });
-  //     return;
-  //   }
+  const enableCombo = async () => {
+    dispatch(updateFormElement({
+      fields: {
+        employee: { disabled: false},
+        jvDrCr: { disabled: false },
+        masterAccount: { disabled: false },
+        referenceDate: { disabled: false },
+        transactionDate: { disabled: false },
+        linkEdit: { visible: true },
+      }
+    }));
+  }
+  const disableCombo = async () => {
+    dispatch(updateFormElement({
+      fields: {
+        employee: { disabled: true},
+        jvDrCr: { disabled: true },
+        masterAccount: { disabled: true },
+        referenceDate: { disabled: true },
+        transactionDate: { disabled: true },
+        linkEdit: { visible: false },
+      }
+    }));
+  }
+  // Edit button handler
+  const handleEdit = async () => {
+    const validateTransactionDateRes = 
+    validateTransactionDate(
+      new Date(new Date(formState.transaction.master.transactionDate)),
+      false,
+      userSession,
+      clientSession,
+      applicationSettings,
+      hasRight
+    );
+    if (!validateTransactionDateRes.valid) {
+      ERPAlert.show({
+        title: 'Warning',
+        text: validateTransactionDateRes.message,
+        icon: 'warning'
+      });
+    }
 
-  //   try {
-  //     const result = await api.postAsync(
-  //       Urls.select_transaction_edit_mode,
-  //       {
-  //         transactionType: 'A',
-  //         transactionMasterId: formState.transaction.master.accTransMasterID
-  //       }
-  //     );
+    if (formState.transaction.master.isLocked) {
+      ERPAlert.show({
+        title: 'Warning',
+        text: 'This voucher is locked. Cannot be edited/deleted.',
+        icon: 'warning'
+      });
+      return;
+    }
 
-  //     if (!result.editMode) {
-  //       dispatch(accFormStateHandleFieldChange({
-  //         fields: {
-  //           isEdit: true
-  //         }
-  //       }));
-  //       dispatch(updateFormElement({
-  //         fields: {
-  //           btnSave: { disabled: false },
-  //           btnDelete: { disabled: true },
-  //           btnPrint: { disabled: true },
-  //           btnEdit: { disabled: true }
-  //         }
-  //       }));
+    try {
+      const result = await api.postAsync(
+        Urls.get_and_set_transaction_edit_mode,
+        {
+          transactionType: 'A',
+          transactionMasterId: formState.transaction.master.accTransMasterID
+        }
+      );
 
-  //       // Update edit mode in backend
-  //       await api.postAsync(
-  //         Urls.update_transaction_edit_mode,
-  //         {
-  //           editRemarks: `${window.navigator.userAgent};${userSession.userName};${new Date().toISOString()}`
-  //         }
-  //       );
-  //     } else {
-  //       const editInfo = result.editInfo.split(';');
-  //       ERPAlert.show({
-  //         title: 'Voucher in Use',
-  //         text: `This Voucher is already in use by ${editInfo[1]} on system ${editInfo[0]} at ${editInfo[2]}`,
-  //         icon: 'warning'
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error('Error handling edit:', error);
-  //   }
-  // };
+      if (!result?.isOk == true) {
+        dispatch(accFormStateHandleFieldChange({
+          fields: {
+            isEdit: true
+          }
+        }));
+        dispatch(updateFormElement({
+          fields: {
+            btnSave: { disabled: !hasRight(formState.formCode, UserAction.Add)  },
+            btnDelete: { disabled: true },
+            btnPrint: { disabled: true },
+            btnEdit: { disabled: true },
+            pnlMasters: { disabled: false },
+            dxGrid: { disabled: true },
+          }
+        }));
+
+      } else {
+        const editInfo = result.message.split(';');
+        ERPAlert.show({
+          title: 'Voucher in Use',
+          text: `This Voucher is already in use by ${editInfo[1]} on system ${editInfo[0]} at ${editInfo[2]}`,
+          icon: 'warning'
+        });
+      }
+    } catch (error) {
+      console.error('Error handling edit:', error);
+    }
+  };
 
   // // Delete button handler
   // const handleDelete = async () => {
@@ -995,6 +1066,11 @@ export const useAccTransaction = (
     addOrEditRow,
     handleRemoveItem,
     handleRowClick,
-    handleGridKeyDown
+    handleFieldKeyDown,
+    loadTemporaryRows,
+    enableCombo,
+    disableCombo,
+    handleEdit,
+    printVoucher
   };
 };

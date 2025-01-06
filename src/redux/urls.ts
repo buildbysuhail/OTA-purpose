@@ -332,6 +332,8 @@ inv_reports_stock_flow:"",
     // common
     get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
     get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
+    get_and_set_transaction_edit_mode: "/Core/TransactionBase/GetAndSetTransactionEditMode/",
+    get_ledgerId_by_code: "/Core/TransactionBase/GetLedgerIdByCode/",
     upsert_bill_modified_history: "/Core/TransactionBase/UpsertBillModifiedHistory/",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",

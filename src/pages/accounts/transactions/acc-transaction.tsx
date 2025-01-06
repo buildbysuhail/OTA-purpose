@@ -92,25 +92,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const btnSaveRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const ledgerIdRef = useRef<HTMLInputElement>(null);
-  const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const masterAccountRef = useRef<HTMLInputElement>(null);
+  const costCenterRef = useRef<HTMLInputElement>(null);
+  const amountRef = useRef<HTMLInputElement>(null);
+  const drCrRef = useRef<HTMLInputElement>(null); // Example for a dropdown/select
+  const narrationRef = useRef<HTMLInputElement>(null); // Example for a textarea
   const erpGridRef = useRef<any>(null); // Reference to ERPDevGrid
+  const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
 
   const [selectedRows, setSelectedRows] = useState([]);
   const onSelectionChanged = (e: any) => {
     setSelectedRows(e.selectedRows); // Contains full row data
-    const selectedIndexes = e.component.getSelectedRowKeys().map((key: any) => 
-      e.component.getRowIndexByKey(key)
-    );
+    const selectedIndexes = e.component
+      .getSelectedRowKeys()
+      .map((key: any) => e.component.getRowIndexByKey(key));
     console.log("Selected Rows:", selectedIndexes);
-    if(selectedIndexes.length > 0) {
-      handleRowClick({row: formState.transaction.details[selectedIndexes[0]]})
+    if (selectedIndexes.length > 0) {
+      handleRowClick({
+        row: formState.transaction.details[selectedIndexes[0]],
+      });
     }
   };
-  const handleKeyDown  = (e: any) => {
-      handleGridKeyDown(e.event.originalEvent.key, erpGridRef, applicationSettings)
-    
+  const handleKeyDown = (e: any, field: string) => {
+    handleFieldKeyDown(
+      field,
+      e.event.originalEvent.key,
+      erpGridRef,
+      applicationSettings
+    );
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
@@ -124,9 +136,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     addOrEditRow,
     handleRemoveItem,
     handleRowClick,
-    handleGridKeyDown
-  } = useAccTransaction(transactionType ?? "", btnSaveRef, ledgerCodeRef,ledgerIdRef);
-  const { validateTransactionDate } = useTransaction(transactionType ?? "");
+    handleFieldKeyDown,
+    loadTemporaryRows,
+    save,
+    enableCombo,
+    disableCombo,
+    handleEdit,
+    printVoucher,
+    clearControls,
+  } = useAccTransaction(
+    transactionType ?? "",
+    btnSaveRef,
+    ledgerCodeRef,
+    ledgerIdRef,
+    masterAccountRef,
+    costCenterRef,
+    amountRef,
+    drCrRef,
+    narrationRef,
+    voucherNumberRef
+  );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -224,8 +253,34 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, []);
 
   useEffect(() => {
+    let drCr = "";
     const loadLedgerData = async () => {
-      if (formState.showbillwise === true) {
+      switch (formState.transaction.master.voucherType) {
+        case "CP":
+        case "BP":
+        case "DN":
+        case "CQP":
+        case "SV":
+        case "SRV":
+        case "PBP":
+          drCr = "Dr";
+
+        case "CR":
+        case "BR":
+        case "CN":
+        case "CQR":
+        case "PV":
+        case "PBR":
+          drCr = "Cr";
+
+        case "OB":
+        case "MJV":
+          drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
+
+        case "JV":
+          drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
+      }
+      if (formState.showbillwise === true && formState.row.ledgerId && formState.ledgerData != null) {
         dispatch(
           accFormStateHandleFieldChange({
             fields: {
@@ -233,27 +288,47 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
           })
         );
-      }
 
-      try {
-        if (formState.showbillwise && formState.row.ledgerId) {
-          const billwise = await api.getAsync(
-            `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-              formState.row.ledgerId
-            }&DrCr=${
-              formState.transaction.master.drCr
-            }&AccTransactionDetailID=${
-              formState.row.accTransactionDetailId ?? 0
-            }`
-          );
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: { billwiseData: billwise, ledgerBillWiseLoading: false },
-            })
-          );
-        }
-      } catch (error) {}
+        try {
+          if (formState.showbillwise === true && formState.row.ledgerId && formState.ledgerData != null) {
+            const billwise = await api.getAsync(
+              `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
+                formState.row.ledgerId
+              }&DrCr=${
+                formState.transaction.master.drCr
+              }&AccTransactionDetailID=${
+                formState.row.accTransactionDetailId ?? 0
+              }`
+            );
+            dispatch(
+              accFormStateHandleFieldChange({
+                fields: {
+                  billwiseData: billwise,
+                  ledgerBillWiseLoading: false,
+                },
+              })
+            );
+
+            if (voucherType === "CN" || voucherType === "DN") {
+              if (isBillwiseApplicable(cbMasterAccount)) {
+                handleBillwiseDialog(cbMasterAccount, "");
+                focusNext();
+              } else {
+                focusNext();
+              }
+            } else {
+              if (isBillwiseApplicable(cbLedger)) {
+                handleBillwiseDialog(cbLedger, "");
+                focusNext();
+              } else {
+                focusNext();
+              }
+            }
+          }
+        } catch (error) {}
+      }
     };
+
     loadLedgerData();
   }, [formState.showbillwise]);
 
@@ -365,7 +440,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     loadLedgerData();
   }, [formState.row.ledgerId]);
   useEffect(() => {
-    if (applicationSettings.mainSettings.showNumberFormat == "Millions") {
+    if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -945,7 +1020,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.voucherNumber.visible && (
                     <>
                       <ERPInput
+                        disableEnterNavigation={true}
+                        ref={voucherNumberRef}
                         id="voucherNumber"
+                        onKeyUp={(e) => {
+                          debugger;
+                          handleFieldKeyDown("voucherNumber", e);
+                        }}
                         label={formState.formElements.voucherNumber.label}
                         value={formState.transaction.master.voucherNumber}
                         type="number"
@@ -976,6 +1057,54 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         }}
                       >
                         delete
+                      </button>
+                      <button
+                        onClick={() => {
+                          debugger;
+                          loadTemporaryRows();
+                        }}
+                      >
+                        load
+                      </button>
+                      {formState.formElements.btnEdit.visible == true && (
+                        <button
+                          onClick={() => {
+                            debugger;
+                            handleEdit();
+                          }}
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {formState.formElements.linkEdit.visible == true && (
+                        <button
+                          onClick={() => {
+                            debugger;
+                            enableCombo();
+                          }}
+                        >
+                          linkEdit
+                        </button>
+                      )}
+                      {formState.formElements.btnPrint.visible == true && (
+                        <button
+                          disabled={formState.formElements.btnPrint.disabled}
+                          onClick={() => {
+                            debugger;
+                            printVoucher(formState.transaction);
+                          }}
+                        >
+                          print
+                        </button>
+                      )}
+                      <button
+                        disabled={formState.formElements.btnPrint.disabled}
+                        onClick={() => {
+                          debugger;
+                          clearControls();
+                        }}
+                      >
+                        clear
                       </button>
                     </>
                   )}
@@ -1332,6 +1461,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   label={formState.formElements.ledgerCode.label}
                   value={formState.row.ledgerCode}
                   ref={ledgerCodeRef}
+                  onKeyDown={(e) => {
+                    debugger;
+                    handleFieldKeyDown("ledgerCode", e);
+                  }}
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
@@ -1349,7 +1482,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {formState.formElements.ledgerId.visible && (
                 <>
                   <ERPDataCombobox
-                  ref={ledgerIdRef}
+                    ref={ledgerIdRef}
                     id="ledgerId"
                     className="w-full"
                     label={formState.formElements.ledgerId.label}
@@ -1395,11 +1528,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               {formState.formElements.amount.visible && (
                 <ERPInput
+                  ref={amountRef}
                   id="amount"
                   className=""
                   label={formState.formElements.amount.label}
                   type="number"
                   value={formState.row.amount}
+                  onKeyDown={(e) => {
+                    debugger;
+                    handleFieldKeyDown("amount", e);
+                  }}
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
@@ -1466,6 +1604,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="flex items-center gap-2">
               {formState.formElements.narration.visible && (
                 <ERPInput
+                  ref={narrationRef}
                   id="narration"
                   className="w-full"
                   label={formState.formElements.narration.label}
@@ -1489,35 +1628,38 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 (userSession.userTypeCode == "CA" ||
                   userSession.userTypeCode == "BA") && <>unlock</>}
               <div className="flex items-center gap-2 mt-3">
-                {formState.formElements.btnBillWise.visible == true &&
-                <ERPButton
-                  title={formState.formElements.btnBillWise.label}
-                  variant="secondary"
-                  onClick={() => {
-                    dispatch(
-                      accFormStateHandleFieldChange({
-                        fields: { showbillwise: true },
-                      })
-                    );
-                  }}
-                  disabled={formState.ledgerBillWiseLoading || formState.formElements.btnBillWise.disabled == true}
-                />
-}
-                {formState.formElements.btnAdd.visible == true &&
-                <ERPButton
-                  title={formState.formElements.btnAdd.label}
-                  variant="primary"
-                  jumpTo="save"
-                  loading={formState.rowProcessing}
-                  type="button"
-                  onClick={addOrEditRow}
-                  disabled={
-                    formState.formElements.btnAdd.disabled == true ||
-                    formState.ledgerBillWiseLoading ||
-                    formState.ledgerIsBillWiseAdjustExistLoading
-                  }
-                />
-}
+                {formState.formElements.btnBillWise.visible == true && (
+                  <ERPButton
+                    title={formState.formElements.btnBillWise.label}
+                    variant="secondary"
+                    onClick={() => {
+                      dispatch(
+                        accFormStateHandleFieldChange({
+                          fields: { showbillwise: true },
+                        })
+                      );
+                    }}
+                    disabled={
+                      formState.ledgerBillWiseLoading ||
+                      formState.formElements.btnBillWise.disabled == true
+                    }
+                  />
+                )}
+                {formState.formElements.btnAdd.visible == true && (
+                  <ERPButton
+                    title={formState.formElements.btnAdd.label}
+                    variant="primary"
+                    jumpTo="save"
+                    loading={formState.rowProcessing}
+                    type="button"
+                    onClick={addOrEditRow}
+                    disabled={
+                      formState.formElements.btnAdd.disabled == true ||
+                      formState.ledgerBillWiseLoading ||
+                      formState.ledgerIsBillWiseAdjustExistLoading
+                    }
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -1623,7 +1765,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
 
           <ErpDevGrid
-          ref={erpGridRef}
+            ref={erpGridRef}
             key={"slNo"}
             keyExpr="slNo"
             columns={columns}
@@ -1637,7 +1779,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => handleFieldKeyDown("grid", e)}
             onSelectionChanged={onSelectionChanged}
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
@@ -2296,7 +2438,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             title="save"
             jumpTarget="save"
             variant="primary"
-            onClick={addOrEditRow}
+            onClick={save}
           />
         </div>
       </div>

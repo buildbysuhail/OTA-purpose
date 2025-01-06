@@ -39,7 +39,7 @@ const applicationSettings = useSelector(
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
-      {applicationSettings.mainSettings.allowSalesRouteArea == true &&
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
         <ERPDataCombobox
           {...getFieldProps("routeID")}
           label={t("sales_route")}
@@ -51,7 +51,7 @@ const applicationSettings = useSelector(
           }}
           onSelectItem={(data) => handleFieldChange({routeID: data.value, routeName: data.routeName})}
         />}
-        {applicationSettings.accountsSettings.maintainCostCenter == true &&
+        {applicationSettings.accountsSettings?.maintainCostCenter == true &&
         <ERPDataCombobox
           {...getFieldProps("costCentreID")}
           label={t("cost_centre")}

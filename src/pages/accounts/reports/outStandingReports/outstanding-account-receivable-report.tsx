@@ -27,11 +27,12 @@ const OutstandingAccountReceivableReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t('si_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "party",
@@ -39,6 +40,7 @@ const OutstandingAccountReceivableReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.party}
@@ -60,6 +62,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "debit",
@@ -68,6 +71,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -81,6 +85,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red ' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -94,6 +99,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 *cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -118,7 +124,7 @@ const OutstandingAccountReceivableReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="As On Date : {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
+                  filterText="as of {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_receivable")}
                   dataUrl={Urls.acc_reports_receivable}
                   method={ActionType.POST}

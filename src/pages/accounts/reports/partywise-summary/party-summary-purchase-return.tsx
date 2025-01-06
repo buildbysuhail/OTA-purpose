@@ -22,6 +22,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "vPrefix",
@@ -30,6 +31,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -38,6 +40,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "ledgerName",
@@ -46,6 +49,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "partyName",
@@ -77,6 +81,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "quantity",
@@ -85,6 +90,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "unitName",
@@ -101,6 +107,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "grossValue",
@@ -125,6 +132,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "totalVatAmount",
@@ -141,6 +149,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "productCode",

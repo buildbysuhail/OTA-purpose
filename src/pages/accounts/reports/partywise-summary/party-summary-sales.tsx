@@ -24,6 +24,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "vPrefix",
@@ -32,6 +33,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "date",
@@ -40,6 +42,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "ledgerName",
@@ -48,6 +51,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "partyName",
@@ -56,6 +60,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "address1",
@@ -79,6 +84,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "quantity",
@@ -87,6 +93,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.quantity == null || cellElement.data?.quantity == 0
@@ -112,6 +119,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "grossValue",
@@ -136,6 +144,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.netValue == null || cellElement.data?.netValue == 0
@@ -161,6 +170,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.netAmount == null || cellElement.data?.netAmount == 0

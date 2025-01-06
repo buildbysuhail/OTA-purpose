@@ -49,6 +49,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true, 
     },
     {
       dataField: "particulars",

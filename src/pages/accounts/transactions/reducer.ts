@@ -83,7 +83,7 @@ const accTransactionSlice = createSlice({
         ) {
           state.masterAccountID = counterwiseCashLedgerId;
         }
-      } 
+      }
       state.transaction.master.employeeId =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
       state.transaction.master.costCentreId =
@@ -312,13 +312,14 @@ const accTransactionSlice = createSlice({
     // Remove a specific row from the transaction details by index
     loadTempRows: (state) => {
       const tmp = localStorage.getItem(
-        `${state.transaction.master.voucherType}${state.transaction.master.formType}`);
-        if(tmp != undefined && tmp != null && tmp != "") {
-          const tmpRows = JSON.parse(tmp) as Array<AccTransactionRow>
-          if(tmpRows.length > 0) {
-            state.transaction.details = tmpRows;
-          }
+        `${state.transaction.master.voucherType}${state.transaction.master.formType}`
+      );
+      if (tmp != undefined && tmp != null && tmp != "") {
+        const tmpRows = JSON.parse(tmp) as Array<AccTransactionRow>;
+        if (tmpRows.length > 0) {
+          state.transaction.details = tmpRows;
         }
+      }
     },
 
     // Handle changes for the "row" property in the state
@@ -440,19 +441,26 @@ const accTransactionSlice = createSlice({
         };
 
         // Handle details data
-        state.transaction.details = payload.details.map((detail, index) => ({
-          ...detail,
-          slNo: index + 1, // Reset slNo to start from 1
-          bankDate: detail.bankDate
-            ? new Date(detail.bankDate).toISOString()
-            : new Date(2000, 0, 1).toISOString(),
-          chqDate: detail.chqDate
-            ? new Date(detail.chqDate).toISOString()
-            : new Date(2000, 0, 1).toISOString(),
-          checkBouncedDate: detail.checkBouncedDate
-            ? new Date(detail.checkBouncedDate).toISOString()
-            : new Date(2000, 0, 1).toISOString(),
-        }));
+
+        let BillwiseAccTransDetailID = 0;
+        state.transaction.details = payload.details.map((detail, index) => {
+          let _LedgerID = 0;
+          return {
+            ...detail,
+
+            slNo: index + 1, // Reset slNo to start from 1
+            amountFC: detail.amount,
+            bankDate: detail.bankDate
+              ? new Date(detail.bankDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+            chqDate: detail.chqDate
+              ? new Date(detail.chqDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+            checkBouncedDate: detail.checkBouncedDate
+              ? new Date(detail.checkBouncedDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+          };
+        });
         // Handle attachments
         state.transaction.attachments = payload.attachments || [];
 
@@ -505,6 +513,9 @@ const accTransactionSlice = createSlice({
         }
 
         state.transactionLoading = false;
+        state.formElements.pnlMasters.disabled = true;
+        state.formElements.btnSave.disabled = true;
+        state.transaction.master.totalAmount = calculateTotal(state);
       }
     });
 

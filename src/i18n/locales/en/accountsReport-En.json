@@ -388,6 +388,7 @@
     "ledger_report_daywise": "Ledger Report (Day View)",
     "acc_group_detailed":"Account Group (Detailed)",
     "ledger_report_detailed": "Ledger Report (Detailed View)",
-    "daybook_billwise":"Day Book Bill Wise"
+    "daybook_billwise":"Day Book Bill Wise",
+    "c_type":"CType"
 
 }

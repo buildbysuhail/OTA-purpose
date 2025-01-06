@@ -52,9 +52,10 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
         label={t("closing_stock")}
         type="number"
         defaultValue="0.00"
-        onChangeData={(data: { closingStock: number }) =>
-          handleFieldChange("closingStock", data.closingStock)
-        }
+        onChangeData={({ closingStock }: any) => handleFieldChange("closingStock", parseInt(closingStock) || 0)}
+        // onChangeData={(data: { closingStock: number }) =>
+        //   handleFieldChange("closingStock", data.closingStock)
+        // }
       />
 
       {/* Commented out but kept for reference

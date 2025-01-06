@@ -31,6 +31,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 240,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={'font-bold text-blue'}>
           {cellElement.data.description}
@@ -43,6 +44,7 @@ const BillwiseProfit = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.productName}
@@ -56,6 +58,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span>
           {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' :  getFormattedValue(cellElement.data.qty)}`}
@@ -87,6 +90,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "grossAmount",
@@ -108,6 +112,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "salesPrice",
@@ -116,6 +121,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         const productName = cellElement.data?.productName;
         const salesPrice = cellElement.data?.salesPrice;
@@ -173,6 +179,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 110,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' :  getFormattedValue(cellElement.data.profit)}`}
@@ -186,6 +193,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' :  getFormattedValue(cellElement.data.markupPerc)}`}
@@ -199,6 +207,7 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : getFormattedValue(cellElement.data.marginPerc)}`}
@@ -213,6 +222,7 @@ const BillwiseProfit = () => {
       visible: false,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         const productName = cellElement.data?.productName;
         const vat = cellElement.data?.vat;
@@ -250,7 +260,7 @@ const BillwiseProfit = () => {
                 <ErpDevGrid
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="From : {fromDate} To : {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
+                  filterText="from {fromDate} to {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl={Urls.acc_reports_billwise_profit}
                   method={ActionType.POST}

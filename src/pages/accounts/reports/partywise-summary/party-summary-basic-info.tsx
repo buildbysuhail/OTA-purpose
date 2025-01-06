@@ -35,6 +35,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "partyName",
@@ -42,6 +43,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "displayName",
@@ -58,6 +60,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "address2",
@@ -106,6 +109,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "contactPhone",
@@ -138,6 +142,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "startDate",
@@ -162,6 +167,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "cstNumber",
@@ -178,6 +184,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "partyType",
@@ -218,6 +225,7 @@ const PartySummaryBasicInfo = forwardRef<PartySummaryRef, PartySummaryFilter>(
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
   ];
   return (

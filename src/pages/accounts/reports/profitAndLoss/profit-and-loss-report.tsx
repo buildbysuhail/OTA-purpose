@@ -322,7 +322,7 @@ const ProfitAndLossReport = () => {
         <ERPModal
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
-          title="Account Report"
+          title={t("")}
           width="w-full max-w-[90%]"
           isForm={true}
           closeModal={() => {

@@ -11,6 +11,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
 import CashBookDayWise from "../cashBook/cash-book-daywise";
 import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
+import CashBankFlowDetailedSummaryReport from "./cash-bank-flow-summary-report";
 
 
 
@@ -123,7 +124,7 @@ const CashFlowReport = () => {
                   reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <CashBankFlowDetailedReport postData={{...filter,
+                    content: <CashBankFlowDetailedSummaryReport postData={{...filter,
                       reportType:"Cash",
                     }} />,
                     title: t("cash_flow_report_detailed"),

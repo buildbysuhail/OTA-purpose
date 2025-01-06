@@ -30,7 +30,7 @@ interface AccountGroupOrderFooterProps {
 
 // AccountGroupOrderContent component
 export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> = React.memo(({ formData, setFormData }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('masters');
   const [searchCols, setSearchCols] = useState<String>("");
   // const [formData, setFormData] = useState<GroupOrder[]>([]);
   const dragItem = useRef<number | null>(null);

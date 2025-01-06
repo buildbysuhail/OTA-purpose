@@ -47,7 +47,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("remarks", data.remarks)
           }
         />
-        <ERPDataCombobox
+        {/* <ERPDataCombobox
           {...getFieldProps("partyColor")}
           field={{
             id: "partyColor",
@@ -61,7 +61,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           }}
         
           label={t("party_color")}
-        />
+        /> */}
         <ERPCheckbox
           {...getFieldProps("isEdit")}
           label={t("is_editable")}

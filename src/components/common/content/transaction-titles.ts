@@ -1,5 +1,5 @@
 export enum TransactionTitles {
-  CashPayment = "Cash Payment",
+  CashPayment = "cash_payment",
   CashReceipt = "cash_receipt",
   CashPaymentEstimate = "cash_payment_estimate",
   CashReceiptEstimate = "cash_receipt_estimate",

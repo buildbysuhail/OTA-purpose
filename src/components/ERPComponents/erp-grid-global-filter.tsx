@@ -39,7 +39,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
     data: initialData,
     validations: validations,
   });
-  const { t } = useTranslation();
+  const { t } = useTranslation("main");
   const [_show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 

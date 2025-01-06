@@ -59,7 +59,9 @@ import {
   Loader,
   Pencil,
   Printer,
+  RefreshCw,
   Replace,
+  Settings,
   Trash,
   Trash2,
   X,
@@ -352,7 +354,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.showbillwise]);
 
   useEffect(() => {
-      debugger;
+    debugger;
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -369,7 +371,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-debugger;
+        debugger;
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&
@@ -989,10 +991,10 @@ debugger;
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
         <div className="bg-white space-y-6 p-4">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
-              {formState.formElements.foreignCurrency.visible && (
+              {/* {formState.formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"
                   label={formState.formElements.foreignCurrency.label}
@@ -1009,87 +1011,131 @@ debugger;
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
-              )}
+              )} */}
             </div>
-            <h2 className="text-4xl font-bold text-center text-blue">
+            {/* <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
-            </h2>
+            </h2> */}
             <div className="w-[100px]"></div>
           </div>
 
-          <div className="p-6">
-            {/* <div className="max-w-5xl mx-auto"> */}
-            <div className="max-w-full mx-2">
-              <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
-                {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
+          <div className="py-0">
+            <div className="max-w-full mx-0">
+              <div className="flex items-center p-0 border border-gray-300 rounded-md mb-2">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  {/* <span>Customise</span> */}
-                  <h6 className="text-center text-lg font-bold  mb-0">
+                  <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
                     {formState.title}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>
-
-                <div className="flex items-center ms-auto space-x-4">
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Replace className="w-5 h-5" />
+                <div className="flex items-center justify-end space-x-4 p-1 w-full">
+                  {/* Change Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("change")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        deleteAccTransVoucher();
+                      }}
+                    >
+                      <Replace className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("change")}
-                    </p>
                   </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Trash2 className="w-5 h-5" />
+                  {/* Delete Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("delete")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        debugger;
+                        loadTemporaryRows();
+                      }}
+                    >
+                      <Trash2 className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("delete")}
-                    </p>
                   </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Loader className="w-5 h-5" />
+                  {/* Load Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("load")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        debugger;
+                        handleEdit();
+                      }}
+                    >
+                      <RefreshCw className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("load")}
-                    </p>
                   </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Pencil className="w-5 h-5" />
+                  {/* Edit Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("edit")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        debugger;
+                        handleEdit();
+                      }}
+                    >
+                      <Pencil className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("edit")}
-                    </p>
                   </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Printer className="w-5 h-5" />
+                  {/* Print Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("print")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        debugger;
+                        printVoucher(formState.transaction);
+                      }}
+                    >
+                      <Printer className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("print")}
-                    </p>
                   </div>
 
-                  <div className="group inline-flex flex-col items-center">
-                    <button className="flex items-center bg-gray-100 p-2 rounded-md">
-                      <Delete className="w-5 h-5" />
+                  {/* Clear Button */}
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("clear")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={() => {
+                        debugger;
+                        clearControls();
+                      }}
+                    >
+                      <Delete className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
-                    <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                      {t("clear")}
-                    </p>
                   </div>
 
+                  {/* Settings  Button */}
+                  <div>
+                    <AccTransactionUserConfig />
+                  </div>
+
+                  {/* Previous Page Button */}
                   <button
                     onClick={goToPreviousPage}
-                    className="flex items-center bg-gray-100 p-2 rounded-md"
+                    className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                    title={t("previous_page")}
                   >
-                    <X />
+                    <X className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>
                 </div>
               </div>
@@ -1147,68 +1193,6 @@ debugger;
                           formState.formElements.pnlMasters?.disabled
                         }
                       />
-                      <button
-                        onClick={() => {
-                          loadAccTransVoucher();
-                        }}
-                      >
-                        change
-                      </button>
-                      <button
-                        onClick={() => {
-                          deleteAccTransVoucher();
-                        }}
-                      >
-                        delete
-                      </button>
-                      <button
-                        onClick={() => {
-                          debugger;
-                          loadTemporaryRows();
-                        }}
-                      >
-                        load
-                      </button>
-                      {formState.formElements.btnEdit.visible == true && (
-                        <button
-                          onClick={() => {
-                            debugger;
-                            handleEdit();
-                          }}
-                        >
-                          Edit
-                        </button>
-                      )}
-                      {formState.formElements.linkEdit.visible == true && (
-                        <button
-                          onClick={() => {
-                            debugger;
-                            enableCombo();
-                          }}
-                        >
-                          linkEdit
-                        </button>
-                      )}
-                      {formState.formElements.btnPrint.visible == true && (
-                        <button
-                          disabled={formState.formElements.btnPrint.disabled}
-                          onClick={() => {
-                            debugger;
-                            printVoucher(formState.transaction);
-                          }}
-                        >
-                          print
-                        </button>
-                      )}
-                      <button
-                        disabled={formState.formElements.btnPrint.disabled}
-                        onClick={() => {
-                          debugger;
-                          clearControls();
-                        }}
-                      >
-                        clear
-                      </button>
                     </>
                   )}
                 </div>
@@ -1237,6 +1221,9 @@ debugger;
                       labelInfo={
                         <div className="">
                           <span className="text-xx text-primary">
+                            <button className="pe-3">
+                              <CustomerDetailsSidebar displayType="link" />
+                            </button>
                             Bal:{" "}
                             {`${formState.masterBalance || "0.00"} ${
                               formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
@@ -1380,6 +1367,19 @@ debugger;
                         formState.formElements.pnlMasters?.disabled
                       }
                     />
+                  )}
+                  {formState.formElements.linkEdit.visible == true && (
+                    <button className="">
+                      <span
+                        className="hover:underline text-[#0ea5e9] capitalize ml-1"
+                        onClick={() => {
+                          debugger;
+                          enableCombo();
+                        }}
+                      >
+                        Edit
+                      </span>
+                    </button>
                   )}
                 </div>
               </div>
@@ -1610,6 +1610,9 @@ debugger;
                     labelInfo={
                       <div className="">
                         <span className="text-xs text-primary">
+                          <button className="pe-3">
+                            <CustomerDetailsSidebar displayType="link" />
+                          </button>
                           Bal:{" "}
                           {`${formState.ledgerBalance || "0.00"} ${
                             formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
@@ -2433,12 +2436,12 @@ debugger;
           }
         />
       </div>
-      <CustomerDetailsSidebar></CustomerDetailsSidebar>
-      <AttachmentSidebar></AttachmentSidebar>
-      <ActivityLogSidebar></ActivityLogSidebar>
-      <div className="fixed top-[3.4rem] right-[465px]">
+      {/* <CustomerDetailsSidebar></CustomerDetailsSidebar> */}
+
+      {/* <ActivityLogSidebar></ActivityLogSidebar> */}
+      {/* <div className="fixed top-[3.4rem] right-[465px]">
         <AccTransactionUserConfig />
-      </div>
+      </div> */}
       <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
         <div className=" flex items-center gap-4">
           {formState.formElements.printOnSave.visible && (
@@ -2531,6 +2534,9 @@ debugger;
             >
               Change
             </span>
+          </button>
+          <button className="text-blue-600">
+            <AttachmentSidebar displayType="link" />
           </button>
         </div>
         Total:{" "}

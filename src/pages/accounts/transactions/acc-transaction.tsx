@@ -352,6 +352,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.showbillwise]);
 
   useEffect(() => {
+      debugger;
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -368,7 +369,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-
+debugger;
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&

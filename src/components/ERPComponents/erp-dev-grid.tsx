@@ -558,16 +558,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       setFilter(dss);
       onFilterChanged != undefined && onFilterChanged(dss);
     }, []); // Add any other dependencies here
-    const onCloseFilter = useCallback(() => {
-      console.log(`filterShowCountww: ${filterShowCount}`);
-      if (filterShowCount == 0) {
-        debugger;
-        setFilter({});
-        setFilterShowCount((prev) => prev + 1);
-        console.log(`filterShowCount333: ${filterShowCount}`);
-      }
-      setShowFilter(false);
-    }, []);
+    // const onCloseFilter = useCallback(() => {
+    //   console.log(`filterShowCountww: ${filterShowCount}`);
+    //   if (filterShowCount == 0) {
+    //     debugger;
+    //     setFilter({});
+    //     setFilterShowCount((prev) => prev + 1);
+    //     console.log(`filterShowCount333: ${filterShowCount}`);
+    //   }
+    //   setShowFilter(false);
+    // }, []);
 
     const [currentStore, setCurrentStore] = useState<CustomStore<
       any,
@@ -1197,7 +1197,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     }
                     toogleFilter={showFilter}
                     onApplyFilters={(filters) => onApplyFilter(filters)}
-                    onClose={onCloseFilter}
+                    // onClose={onCloseFilter}
                   />
                 </Item>
               )}
@@ -1274,7 +1274,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-            {showSummary && (
+            {showSummary && summaryItems.length > 0 && (
               <Summary>
                 <TotalItem
                   column="siNo" 

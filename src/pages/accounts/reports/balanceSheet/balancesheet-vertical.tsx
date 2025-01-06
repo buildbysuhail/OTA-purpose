@@ -198,11 +198,12 @@ const BalancesheetVertical = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  // gridHeader={groupName}
+                   gridHeader={t("balance_sheet")}
                   dataUrl={Urls.acc_reports_balance_sheet_vertical}
                   // postData={postData}
                   enablefilter={true}
                   showFilterInitially={true}
+                  filterText="as of {asOnDate}"
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}

@@ -270,7 +270,7 @@ const ProfitAndLossReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          As of {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+          From {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (

@@ -22,6 +22,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -38,6 +39,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "refNo",
@@ -69,6 +71,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {cellElement.data.particulars}
@@ -82,6 +85,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -95,6 +99,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -108,6 +113,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${"font-bold text-red"}`}>
           {`${cellElement.data?.balance == null

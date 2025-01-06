@@ -22,6 +22,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "form",
@@ -30,6 +31,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "vchNo",
@@ -38,6 +40,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf:true,
     },
     {
       dataField: "accountGroup",
@@ -54,6 +57,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "amount",
@@ -62,6 +66,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
     },
     {
       dataField: "discount",
@@ -70,6 +75,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
     },
     {
       dataField: "narration",
@@ -86,6 +92,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      showInPdf:true,
     },
     {
       dataField: "financialYearID",

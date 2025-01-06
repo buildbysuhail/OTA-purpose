@@ -31,7 +31,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<DailySummaryFilter>({
     filter: {
       transactionDate: new Date(),
@@ -54,11 +54,11 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
           <div className="">
             <div className="p-4">
               <ERPDateInput
-                id="transactionDate"
+                id="3nsactionDate"
                 value={filter.filter.transactionDate}
                 customSize='sm'
                 data={filter.filter}
-                label="transaction_date"
+                label={t("transaction_date")}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
                   ...prev,
                   filter: {

@@ -71,9 +71,10 @@ const ProfitAndLossRow: React.FC<{
 
 // Horizontal format component
 const HorizontalProfitAndLoss: React.FC<{
-  data: any;
+  data: any[];
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
+  const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('accountsReport');
   const expense = data?.filter((item: any) => item?.transType == "E");
 
@@ -81,6 +82,7 @@ const HorizontalProfitAndLoss: React.FC<{
   // const subLedger = data?.filter((item: any) => item?.ti == "L");
 
   return (
+    <div className="relative">
     <div className="grid grid-cols-2 gap-4">
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
@@ -92,7 +94,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {expense?.map((item: any, index: number) => (
+            {expense?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`asset-${index}`}
                 item={item}
@@ -132,7 +134,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tr>
           </thead>
           <tbody>
-            {income?.map((item: any, index: number) => (
+            {income?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`liability-${index}`}
                 item={item}
@@ -141,6 +143,21 @@ const HorizontalProfitAndLoss: React.FC<{
             ))}
           </tbody>
         </table>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+    item?.transType === "E" && item?.groupName === "TOTAL"
+  )?.total || 0)}</h6>
+        </div>
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
+    item?.transType === "I" && item?.groupName === "TOTAL"
+  )?.total || 0)}</h6>
+        </div>
       </div>
     </div>
   );
@@ -194,7 +211,7 @@ const ProfitAndLossDetailedReport = () => {
   }, [filterShowCount]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
@@ -321,7 +338,7 @@ const ProfitAndLossDetailedReport = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.map((item, index) => (
+                  {data?.filter(x=>x.groupName!="TOTAL").map((item, index) => (
                     <ProfitAndLossRow
                       key={index}
                       item={item ?? []}

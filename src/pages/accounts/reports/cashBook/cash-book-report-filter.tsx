@@ -12,7 +12,6 @@ const CashBookReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
         />
       </div>
     </div>
-
   );
 }
 export default CashBookReportFilter;

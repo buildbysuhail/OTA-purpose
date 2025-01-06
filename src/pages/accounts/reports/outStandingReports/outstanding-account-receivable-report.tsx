@@ -40,7 +40,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.party}
         </span>
       ),

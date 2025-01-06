@@ -126,7 +126,6 @@ const HorizontalBalanceSheet: React.FC<{
           </table>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-4">
         <div className="grid grid-cols-2 bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#f00]">Total</h6>
@@ -189,7 +188,7 @@ const BalanceSheet = () => {
   }, [filterShowCount]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
@@ -339,7 +338,7 @@ const BalanceSheet = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-      {JSON.stringify(isOpenDetails.item)}
+      {/* {JSON.stringify(isOpenDetails.item)} */}
       {(isOpenDetails.key > 0 &&
       
         <ERPModal

@@ -68,10 +68,10 @@ const HorizontalProfitAndLoss: React.FC<{
   const expense = data?.filter((item: any) => item?.transType == "E");
   const income = data?.filter((item: any) => item?.transType == "I");
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 bg-white">
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse bg-white">
           <thead>
             <tr className="bg-gray-400">
               <th className="py-2 ps-2">{t("expense")}</th>
@@ -91,7 +91,7 @@ const HorizontalProfitAndLoss: React.FC<{
       </div>
       <div>
         {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse bg-white">
           <thead>
             <tr className="bg-gray-400">
               <th className="py-2 ps-2">{t("income")}</th>
@@ -160,7 +160,7 @@ const ProfitAndLossReport = () => {
   }, [filterShowCount]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
@@ -174,22 +174,6 @@ const ProfitAndLossReport = () => {
           </div>
 
           <div className="flex items-center ms-auto space-x-4">
-            {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
-              <RectangleVertical />
-              <p  className="pe-2">Show Vertical</p>
-              <div className="">
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={isVerticalView}
-                    onChange={(e) => setIsVerticalView(e.target.checked)}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div> */}
-
             <button
               className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
               onClick={() => setIsVerticalView(!isVerticalView)}
@@ -257,7 +241,7 @@ const ProfitAndLossReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+          As of {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (
@@ -280,14 +264,14 @@ const ProfitAndLossReport = () => {
                 setIsOpenDetails={setIsOpenDetails}
               />
             ) : (
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse bg-white">
                 <thead>
-                  <tr className="bg-gray-400">
+                <tr className={"bg-white"}>
                     <th className="py-2 ps-2">{t("account")}</th>
-                    <th className="py-2 text-end pe-2">{t("total")}</th>
+                    <th className="font-bold py-2 text-end pe-2 bg-white">{t("total")}</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white">
                   {data?.map((item, index) => (
                     <ProfitAndLossRow
                       key={index}

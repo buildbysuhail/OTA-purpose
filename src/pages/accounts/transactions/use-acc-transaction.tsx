@@ -710,7 +710,7 @@ export const useAccTransaction = (
       };
 
       const response = await api.getAsync(
-        `${Urls.validate_check_status}${accTransactionDetailsId}`
+        `${Urls.validate_cheque_status}${accTransactionDetailsId}`
       );
 
       if (response == undefined || response.isOk === false) {

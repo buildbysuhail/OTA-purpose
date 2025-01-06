@@ -524,6 +524,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, []);
     useEffect(() => {
       if (filterInitialData && Object.keys(filter).length === 0) {
+        debugger;
         setFilter(filterInitialData);
       }
     }, [filterInitialData]);
@@ -553,12 +554,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
       }
+      debugger;
       setFilter(dss);
       onFilterChanged != undefined && onFilterChanged(dss);
     }, []); // Add any other dependencies here
     const onCloseFilter = useCallback(() => {
       console.log(`filterShowCountww: ${filterShowCount}`);
       if (filterShowCount == 0) {
+        debugger;
         setFilter({});
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCount333: ${filterShowCount}`);

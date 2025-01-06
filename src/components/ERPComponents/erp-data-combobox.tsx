@@ -459,6 +459,26 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (isOpen && comboboxRef.current) {
+        const rect = comboboxRef.current.getBoundingClientRect();
+        const dropdown = document.querySelector(".combobox-dropdown") as HTMLElement;
+        if (dropdown) {
+          dropdown.style.top = `${rect.bottom + window.scrollY}px`;
+          dropdown.style.left = `${rect.left + window.scrollX}px`;
+        }
+      }
+    };
+  
+    const scrollArea = document.querySelector(".content.main-index");
+    scrollArea?.addEventListener("scroll", handleScroll);
+  
+    return () => {
+      scrollArea?.removeEventListener("scroll", handleScroll);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (customSize == undefined || customSize == null) {
       setCustomSize(appState?.inputBox?.inputSize);
     }

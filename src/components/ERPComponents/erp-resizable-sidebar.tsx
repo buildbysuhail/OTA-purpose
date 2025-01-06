@@ -47,13 +47,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
           
         </ResizableBox>
       )}
-     {isOpen.toString()}
-      <button
-        className="toggle-sidebar-button"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        Toggle Sidebar
-      </button>
+     
     </>
   );
 };

@@ -30,6 +30,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "balance",
@@ -38,6 +39,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 90,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -59,6 +61,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -72,6 +75,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -84,6 +88,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.ledgerName}
@@ -104,7 +109,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
                   gridHeader={t("acc_group_view")}
-                  filterText="{___(groupName)} {**** As On Date : (asOnDate)}"
+                  filterText="{___(groupName)} {**** as of (asOnDate)}"
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   postData={postData}
                   hideGridAddButton={true}
@@ -114,7 +119,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   gridId="grd_balancesheet_details"
                   childPopupProps={{
                     content: <CashBookMonthWise postData={filter} />,
-                    title: t("cash_book_monthwise"),
+                    title: t("acc_group_monthview"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName",

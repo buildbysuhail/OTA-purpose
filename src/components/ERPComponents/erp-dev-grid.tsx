@@ -1271,7 +1271,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-            {showSummary && (
+            {showSummary && summaryItems.length > 0 && (
               <Summary>
                 <TotalItem
                   column="siNo" 

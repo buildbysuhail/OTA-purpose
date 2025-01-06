@@ -365,6 +365,16 @@
     "c_type":"النوع النقدي",
     "account_receivable":"الحسابات المستحقة",
     "bill_total":"الحسابات المستحقة",
-    "period":"فترة"
+    "period":"فترة",
+    "cash_flow": "التدفق النقدي",
+    "cash_flow_report": "تقرير التدفق النقدي",
+    "cash_flow_report_detailed": "تقرير التدفق النقدي التفصيلي",
+    "bank_flow": "تدفق البنك",
+    "bank_flow_report": "تقرير تدفق البنك",
+    "bank_flow_report_detailed": "تقرير تدفق البنك التفصيلي",
+    "inFlow": "التدفق الداخل",
+    "outFlow": "التدفق الخارج",
+    "netFlow": "صافي التدفق",
+    "account_report": "تقرير الحساب"
 
 }

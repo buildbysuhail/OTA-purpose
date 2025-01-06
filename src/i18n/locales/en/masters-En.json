@@ -163,7 +163,7 @@
     "qr_pay": "QR Pay",
     "qr_pay_name": "QR Pay Name",
 
-    "user_type_code": "UserTypeCode",
+    "user_type_code": "User Type Code",
     "account_group": "Account Group",
     "hideLedgerID": "Hide Ledger ID",
     "particulars": "Particulars",
@@ -183,5 +183,8 @@
     "enter_cost_centre_name": "Enter cost center name",
     "enter_short_name": "Enter short name",
     "additional_number": "Additional number",
-    "country_sub_division": "Country sub division"
+    "country_sub_division": "Country sub division",
+
+    "group_name":"Group Name",
+    "group_head":"Group Head"
 }

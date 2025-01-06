@@ -47,14 +47,14 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
       
       );
     let st = items;
-    // if (userSession.userTypeCode === "BA") {
-    //   st = st?.filter((x: any) => x.title !== "branches");
-    //   setItems(st);
-    // }
-    // if (userSession.userTypeCode === "CA") {
-    //   st = st?.filter((x: any) => x.title !== "branch_info");
-    //   setItems(st);
-    // }
+    if (userSession.userTypeCode === "BA") {
+      st = st?.filter((x: any) => x.title !== "branches");
+      setItems(st);
+    }
+    if (userSession.userTypeCode === "CA") {
+      st = st?.filter((x: any) => x.title !== "branch_info");
+      setItems(st);
+    }
 
     const result: any = Array.from({ length: columns }, () => []);
     const itemsPerColumn = Math.ceil(st.length / columns);
@@ -64,41 +64,41 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
       const columnIndex = Math.floor(index / itemsPerColumn);
       item.disabled = false;
       item.visible = true;
-      // if (item.title === "refresh_all_branches") {
-      //   if (
-      //     userSession.userTypeCode !== "CA" &&
-      //     applicationSettings?.miscellaneousSettings
-      //       ?.maintainAllBranchWithCommonInventory != true
-      //   ) {
-      //     item.disabled = true;
-      //   }
-      // }
+      if (item.title === "refresh_all_branches") {
+        if (
+          userSession.userTypeCode !== "CA" &&
+          applicationSettings?.miscellaneousSettings
+            ?.maintainAllBranchWithCommonInventory != true
+        ) {
+          item.disabled = true;
+        }
+      }
 
-      // if (
-      //   item.title === "company_profile_india" &&
-      //   userSession.countryId != Countries.India
-      // ) {
-      //   item.visible = false;
-      // }
+      if (
+        item.title === "company_profile_india" &&
+        userSession.countryId != Countries.India
+      ) {
+        item.visible = false;
+      }
 
-      // if (
-      //   item.title === "hide_account_ledger" &&
-      //   userSession.countryId == Countries.India
-      // ) {
-      //   item.visible = false;
-      // }
-      // if (
-      //   item.title === "company_profile_others" &&
-      //   userSession.countryId == Countries.India
-      // ) {
-      //   item.visible = false;
-      // }
-      // if (item.title === "upi" && userSession.countryId != Countries.India) {
-      //   item.visible = false;
-      // }
-      // if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
-      //   item.visible = false;
-      // }
+      if (
+        item.title === "hide_account_ledger" &&
+        userSession.countryId == Countries.India
+      ) {
+        item.visible = false;
+      }
+      if (
+        item.title === "company_profile_others" &&
+        userSession.countryId == Countries.India
+      ) {
+        item.visible = false;
+      }
+      if (item.title === "upi" && userSession.countryId != Countries.India) {
+        item.visible = false;
+      }
+      if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
+        item.visible = false;
+      }
       result[columnIndex]?.push(item);
     });
     setDistributedItems(result);

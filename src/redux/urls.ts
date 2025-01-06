@@ -339,7 +339,8 @@ inv_reports_stock_flow:"",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
     partiesBankNames:"/Core/SelectPartiesBankNames",
-    validate_check_status:"/validate_check_status"
+    validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
+    set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode"
 
 };
 

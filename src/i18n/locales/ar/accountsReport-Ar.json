@@ -354,6 +354,17 @@
     "signature":"إمضاء",
     "daily_summary_report":"تقرير ملخص يومي",
     "daily_summary_detailed":"ملخص يومي مفصل",
-    "acc_group_view":"عرض مجموعة الحساب"
+    "acc_group_view":"عرض مجموعة الحساب",
+    "acc_group_monthview":"مجموعة الحسابات (شهر)",
+    "ledger_report_monthwise": "تقرير الدفتر (عرض شهري)",
+    "acc_group_dayview":"مجموعة الحسابات (حسب اليوم)",
+    "ledger_report_daywise": "تقرير الدفتر (عرض يومي)",
+    "acc_group_detailed":"مجموعة الحسابات (مفصلة)",
+    "ledger_report_detailed": "تقرير الدفتر (عرض تفصيلي)",
+    "daybook_billwise":"كتاب اليوم بيل وايز",
+    "c_type":"النوع النقدي",
+    "account_receivable":"الحسابات المستحقة",
+    "bill_total":"الحسابات المستحقة",
+    "period":"فترة"
 
 }

@@ -27,11 +27,12 @@ const OutstandingAccountReceivableAgingReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t('si_no'),
+      caption: t('SiNo'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf:true,
     },
     {
       dataField: "ledgername",
@@ -39,6 +40,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.ledgername}`}
@@ -69,6 +71,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={'font-bold text-red'}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
@@ -82,6 +85,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p1 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -96,6 +100,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p2 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -110,6 +115,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p3 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -124,6 +130,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p4 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -138,6 +145,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p5 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -152,6 +160,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
@@ -166,6 +175,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
       // visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
@@ -183,7 +193,7 @@ const OutstandingAccountReceivableAgingReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="As On Date : {asonDate}{salesRouteID > 0 &&, Sales Route :[salesRouteName]}{partyCategoryID > 0 &&, Party Category : [partyCategoryName]}{costCentreID > 0 &&, Cost Centre : [costCentreName]}"
+                  filterText="as of {asonDate}{salesRouteID > 0 &&, Sales Route :[salesRouteName]}{partyCategoryID > 0 &&, Party Category : [partyCategoryName]}{costCentreID > 0 &&, Cost Centre : [costCentreName]}"
                   gridHeader={t("account_receivable_aging_report")}
                   dataUrl={Urls.acc_reports_outstanding_aging_receivable}
                   method={ActionType.POST}

@@ -36,6 +36,7 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
           {/* {cellElement.data.particulars} */}
@@ -65,6 +66,7 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
           {cellElement.data.ledgerNameInArabic}
@@ -78,6 +80,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -91,6 +94,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
@@ -122,7 +126,7 @@ const TrialBalance = () => {
                 <ErpDevGrid
                   columns={columns}
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
-                  filterText="As On Date : {asonDate}"
+                  filterText="as of {asonDate}"
                   gridHeader={t("trial_balance")}
                   dataUrl={Urls.acc_reports_trial_balance}
                   method={ActionType.POST}

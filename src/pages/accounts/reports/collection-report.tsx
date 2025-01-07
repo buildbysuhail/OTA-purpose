@@ -19,30 +19,25 @@ const CollectionReport = () => {
   const { t } = useTranslation('accountsReport');
   const [filter, setFilter] = useState<CollectionReport>({ from: new Date() });
   const rootState = useRootState();
-  const summaryItems: SummaryConfig[] = [
-    {
-      column: "refNo",
-      summaryType: "max",
-      showInGroupFooter:true,
-      alignByColumn:true
-    },
-    {
-      column: "amount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      showInGroupFooter:true,
-      alignByColumn:true
-    },
-  ];
+  // const summaryItems: SummaryConfig[] = [
+  //   {
+  //     column: "amount",
+  //     summaryType: "sum",
+  //     valueFormat: "currency",
+  //     showInGroupFooter:true,
+  //     alignByColumn:true,
+  //   },
+  // ];
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
       caption: t('date'),
       dataType: "date",
       allowSearch: true,
+      allowSorting:false,
       allowFiltering: true,
       width: 180,
-      groupIndex: 0,
+      // groupIndex: 0,
       showInPdf:true,
     },
     {
@@ -102,8 +97,8 @@ const CollectionReport = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
+        <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-red' : ''}`}>
+          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} `}
         </span>
       ),
     },
@@ -117,8 +112,9 @@ const CollectionReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
-                  allowGrouping={true}
-                  groupPanelVisible={true}
+                  // allowGrouping={true}
+                  
+                  // groupPanelVisible={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("collection_report")}
@@ -133,7 +129,7 @@ const CollectionReport = () => {
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}
-                  summaryItems={summaryItems}
+                  // summaryItems={summaryItems}
                   showSummary={false}
                 ></ErpDevGrid>
               </div>

@@ -16,7 +16,7 @@ interface OutstandingAccountAgingAnalysisProps {
   contentProps?: any;
   rowData?: any;
 }
-const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData }) => {
+const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData }) => {
 // const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
@@ -49,7 +49,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.form}
   </span>
       ),
@@ -72,7 +72,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red ' : ''}`}>
   {cellElement.data.billTotal}
   </span>
       ),
@@ -84,7 +84,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      groupIndex:0,
+      // groupIndex:0,
       showInPdf:true,
     },
     {
@@ -96,7 +96,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
@@ -110,8 +110,9 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                allowGrouping={true}
-                groupPanelVisible={true}
+                rowData={rowData}
+                // allowGrouping={true}
+                // groupPanelVisible={true}
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   filterText="{___ (ledgername)} {**** as of (asonDate)}"

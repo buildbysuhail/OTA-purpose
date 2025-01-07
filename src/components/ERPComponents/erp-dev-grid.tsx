@@ -1300,6 +1300,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   />
                 ))}
               </Summary>
+              
             )}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>

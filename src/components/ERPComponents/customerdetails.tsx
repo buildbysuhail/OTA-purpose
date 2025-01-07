@@ -156,7 +156,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
     <div className="max-w-2xl mx-auto p-4 overflow-auto ">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
             <img
               className="text-lg font-medium"
@@ -219,7 +219,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     <AlertTriangle className="h-4 w-4" />
                     <span className="text-sm">Receivables</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.outstandingReceivables)}
                   </div>
                 </div>
@@ -228,7 +228,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Sales Amount</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.totalSalesAmount)}
                   </div>
                 </div>
@@ -237,7 +237,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Purchase Amount</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.totalPurchaseAmount)}
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Sales Count</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {ledgerData?.totalSalesCount}
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Purchase Count</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {ledgerData?.totalPurchaseCount}
                   </div>
                 </div>
@@ -344,7 +344,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {/* Billing Details */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Billing Address</h2>
+            <h2 className="text-lg text-black font-semibold text-start">Billing Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div className="text-sm text-black flex flex-col items-start space-y-1">
@@ -366,7 +366,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {/* Shipping Address */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
+              <h2 className="text-lg text-black font-semibold text-start">Shipping Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div className="text-sm text-black flex flex-col items-start space-y-1">

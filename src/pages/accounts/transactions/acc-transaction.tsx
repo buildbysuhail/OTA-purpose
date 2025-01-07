@@ -1222,7 +1222,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         <div className="">
                           <span className="text-xx text-primary">
                             <button className="pe-3">
-                              <CustomerDetailsSidebar displayType="link" />
+                              {/* <CustomerDetailsSidebar displayType="link" /> */}
                             </button>
                             Bal:{" "}
                             {`${formState.masterBalance || "0.00"} ${
@@ -2442,7 +2442,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {/* <div className="fixed top-[3.4rem] right-[465px]">
         <AccTransactionUserConfig />
       </div> */}
-      <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
+      {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
+      <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2" style={{ boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)' }}>
         <div className=" flex items-center gap-4">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox

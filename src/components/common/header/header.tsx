@@ -28,6 +28,7 @@ import {
 import LanguageSwitcher from "./language-switcher";
 import { useSelector } from "react-redux";
 import * as switcherdata from "../switcher/switcherdata/switcherdata";
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 
 interface HeaderProps {}
 
@@ -627,7 +628,7 @@ const Header: FC<HeaderProps> = () => {
                   </div>
               </div> */}
               <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
-                <div className="">
+                {/* <div className="">
                   <div className="flex items-center">
                     <input
                       type="radio"
@@ -665,6 +666,26 @@ const Header: FC<HeaderProps> = () => {
                       Dark
                     </label>
                   </div>
+                </div> */}
+                <div className="flex items-center space-x-4">
+                  {/* <span className="text-sm font-medium">☀️</span> */}
+                  <div
+                    className={`relative w-12 h-5 flex items-center bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-full cursor-pointer transition-colors duration-300 ease-in-out shadow-lg`}
+                    onClick={() => {
+                      appState.mode === "light"
+                        ? switcherdata.Dark(updateAppState, appState)
+                        : switcherdata.Light(updateAppState, appState);
+                    }}
+                  >
+                    <div
+                      className={`absolute w-5 h-3 bg-white dark:bg-black rounded-full shadow-md transform transition-transform duration-300 ease-in-out scale-95 hover:scale-100 ${
+                        appState.mode === "dark"
+                          ? "translate-x-6"
+                          : "translate-x-1"
+                      }`}
+                    ></div>
+                  </div>
+                  {/* <span className="text-sm font-medium">🌙</span> */}
                 </div>
               </div>
               <LanguageSwitcher></LanguageSwitcher>
@@ -912,8 +933,8 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <img
                     className="inline-block rounded-full "
-                    title={userSession?.userimage}
-                    src={userSession?.userimage}
+                    title={userSession?.userimage || profile}
+                    src={userSession?.userimage || profile}
                     width="32"
                     height="32"
                     alt="Image Description"
@@ -974,8 +995,8 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <img
                     className="inline-block rounded-full "
-                    title={userSession?.userimage}
-                    src={userSession?.userimage}
+                    title={userSession?.userimage || profile}
+                    src={userSession?.userimage || profile}
                     width="20"
                     height="20"
                     alt="Image Description"
@@ -1016,8 +1037,8 @@ const Header: FC<HeaderProps> = () => {
                         >
                           <img
                             className="inline-block rounded-full "
-                            title={userSession?.userimage}
-                            src={userSession?.userimage}
+                            title={userSession?.userimage || profile}
+                            src={userSession?.userimage || profile}
                             width="32"
                             height="32"
                             alt="Image Description"

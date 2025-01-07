@@ -127,7 +127,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 rowData={rowData}
@@ -139,7 +139,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                   method={ActionType.POST}
                   gridId="grd_cashflow_bankflow_drilldown_new"
                   popupAction={toggleCostCentrePopup}
-                postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
                 //   childPopupPropsDynamic={(dataField: string) => ({

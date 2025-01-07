@@ -167,7 +167,7 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}

@@ -354,7 +354,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.showbillwise]);
 
   useEffect(() => {
-    
     const loadLedgerData = async () => {
       dispatch(
         accFormStateHandleFieldChange({
@@ -371,7 +370,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-        
+
         if (!isNullOrUndefinedOrZero(ledgerId)) {
           if (
             billwiseMandatory &&
@@ -850,7 +849,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       cellRender: (cellElement: any, cellInfo: any) => (
         <button
           onClick={() => {
-            
             handleRemoveItem(cellElement.rowIndex);
           }}
           disabled={
@@ -1020,7 +1018,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
 
           <div className="py-0">
-            <div className="max-w-full mx-0">
+            <div
+              className="w-full max-w-full mx-0"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                padding: 0,
+              }}
+            >
               <div className="flex items-center p-0 border border-gray-300 rounded-md mb-2">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -1052,7 +1059,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        
                         loadTemporaryRows();
                       }}
                     >
@@ -1068,7 +1074,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        
                         handleEdit();
                       }}
                     >
@@ -1084,7 +1089,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        
                         handleEdit();
                       }}
                     >
@@ -1100,7 +1104,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        
                         printVoucher(formState.transaction);
                       }}
                     >
@@ -1116,7 +1119,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        
                         clearControls();
                       }}
                     >
@@ -1173,7 +1175,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         ref={voucherNumberRef}
                         id="voucherNumber"
                         onKeyUp={(e) => {
-                          
                           handleFieldKeyDown("voucherNumber", e);
                         }}
                         label={formState.formElements.voucherNumber.label}
@@ -1222,7 +1223,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         <div className="">
                           <span className="text-xx text-primary">
                             <button className="pe-3">
-                              <CustomerDetailsSidebar displayType="link" />
+                              {/* <CustomerDetailsSidebar displayType="link" /> */}
                             </button>
                             Bal:{" "}
                             {`${formState.masterBalance || "0.00"} ${
@@ -1373,7 +1374,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <span
                         className="hover:underline text-[#0ea5e9] capitalize ml-1"
                         onClick={() => {
-                          
                           enableCombo();
                         }}
                       >
@@ -1565,7 +1565,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   value={formState.row.ledgerCode}
                   ref={ledgerCodeRef}
                   onKeyDown={(e) => {
-                    
                     handleFieldKeyDown("ledgerCode", e);
                   }}
                   onChange={(e) =>
@@ -1641,7 +1640,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   type="number"
                   value={formState.row.amount}
                   onKeyDown={(e) => {
-                    
                     handleFieldKeyDown("amount", e);
                   }}
                   onChange={(e) =>
@@ -2442,7 +2440,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {/* <div className="fixed top-[3.4rem] right-[465px]">
         <AccTransactionUserConfig />
       </div> */}
-      <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
+      {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
+      <div
+        className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
+        style={{
+          boxShadow:
+            "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+        }}
+      >
         <div className=" flex items-center gap-4">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox

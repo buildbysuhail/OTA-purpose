@@ -138,17 +138,19 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
           })
         }
         footer={
-          <div className="flex gap-10 justify-between py-3 border-t">
-            <ERPSubmitButton variant="primary" onClick={handleApply}>
-              {t("apply")}
-            </ERPSubmitButton>
+          <div className=" flex justify-end space-x-2 gap-4 py-5 border-t">
+           
             <ERPSubmitButton
               type="button"
               // onClick={onClose}
               onClick={() => setIsOpen(false)}
-              className="w-28 bg-[#e5e7eb] text-[black]"
+              className="bg-[#e5e7eb] text-[black] max-w-[200px]"
             >
               {t("cancel")}
+            </ERPSubmitButton>
+             <ERPSubmitButton variant="primary" onClick={handleApply}
+            className="max-w-[200px]">
+              {t("apply")}
             </ERPSubmitButton>
           </div>
         }

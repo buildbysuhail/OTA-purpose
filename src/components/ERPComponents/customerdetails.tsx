@@ -1,28 +1,46 @@
 "use client";
 
-import { Dispatch, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, SetStateAction, useState } from "react";
-import { ChevronRight, X, CheckCircle2, AlertTriangle, CircleDot, CreditCard, Receipt, UserPlus } from "lucide-react";
+import {
+  Dispatch,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  SetStateAction,
+  useState,
+} from "react";
+import {
+  ChevronRight,
+  X,
+  CheckCircle2,
+  AlertTriangle,
+  CircleDot,
+  CreditCard,
+  Receipt,
+  UserPlus,
+} from "lucide-react";
 import { Address } from "./address";
 import { ContactPersons } from "./contact-persons";
 import { ActivityLog } from "./erp-activitylog";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import profile from '../../assets/images/faces/profile-circle.512x512.png'
+import profile from "../../assets/images/faces/profile-circle.512x512.png";
 
-// interface Activity {
-//   id?: string
-//   type?: 'payment' | 'invoice' | 'contact'
-//   message?: string
-//   timestamp?: string
-//   user?: string
-// }
+interface Activity {
+  id: string;
+  type: "payment" | "invoice" | "contact";
+  message: string;
+  timestamp: string;
+  user: string;
+}
 
 interface CustomerDetailsProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   // activities: Activity[]
 }
 
-export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
+export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const [activeTab, setActiveTab] = useState("details");
   const [showContactPersons, setShowContactPersons] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
@@ -53,19 +71,106 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
     return String(value);
   }
 
+  const getActivityConfig = (type: Activity["type"]) => {
+    switch (type) {
+      case "payment":
+        return {
+          icon: <CreditCard className="h-4 w-4" />,
+          iconBg: "bg-[#e6f4ff]",
+          iconColor: "text-[#22c55e]",
+        };
+      case "invoice":
+        return {
+          icon: <Receipt className="h-4 w-4" />,
+          iconBg: "bg-[#e6f4ff]",
+          iconColor: "text-[#3b82f6]",
+        };
+      case "contact":
+        return {
+          icon: <UserPlus className="h-4 w-4" />,
+          iconBg: "bg-[#e6f4ff]",
+          iconColor: "text-[#8b5cf6]",
+        };
+      default:
+        return {
+          icon: <CircleDot className="h-4 w-4" />,
+          iconBg: "bg-gray-100",
+          iconColor: "text-gray-500",
+        };
+    }
+    // switch (type) {
+    //   case 'payment':
+    //     return <CreditCard className="h-4 w-4 text-[#22c55e]" />
+    //   case 'invoice':
+    //     return <Receipt className="h-4 w-4 text-[#3b82f6]" />
+    //   case 'contact':
+    //     return <UserPlus className="h-4 w-4 text-[#8b5cf6]" />
+    //   default:
+    //     return <CircleDot className="h-4 w-4 text-gray-500" />
+    // }
+  };
+
+  const activities: Activity[] = [
+    {
+      id: "1",
+      type: "payment",
+      message: "Payment of amount ₹255.00 received and applied for INV-000001",
+      timestamp: "13/12/2024 12:29 PM",
+      user: "Safvan",
+    },
+    {
+      id: "2",
+      type: "invoice",
+      message: "Invoice INV-000001 marked as sent",
+      timestamp: "09/12/2024 01:27 PM",
+      user: "Safvan",
+    },
+    {
+      id: "3",
+      type: "invoice",
+      message: "Invoice INV-000001 of amount ₹255.00 created",
+      timestamp: "09/12/2024 01:26 PM",
+      user: "Safvan",
+    },
+    {
+      id: "4",
+      type: "contact",
+      message: "Contact person xcvxc has been created",
+      timestamp: "09/12/2024 01:26 PM",
+      user: "Safvan",
+    },
+    {
+      id: "5",
+      type: "contact",
+      message: "Contact created",
+      timestamp: "09/12/2024 01:26 PM",
+      user: "Safvan",
+    },
+  ];
+
+  const customerName = {
+    user: 'polosys'
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-4 overflow-auto h-svh">
+    <div className="max-w-2xl mx-auto p-4 overflow-auto ">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-            <img className="text-lg font-medium" src={ledgerData?.partyPhoto || profile } ></img>
+            <img
+              className="text-lg font-medium"
+              src={ledgerData?.partyPhoto || profile}
+            ></img>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground">{ledgerData?.partyName}</div>
-            <div className="flex items-center gap-2">
+            <div className="text-sm text-black">
+              {ledgerData?.partyName}
+            </div>
+            <div className="flex items-center gap-1">
               <span className="font-medium">{ledgerData?.partyCategory}</span>
-              <CheckCircle2 className="w-4 h-4 text-white " color="blue" />
+              {/* <h6 className="text-sm text-gray-600">{customerName.user}</h6> */}
+              <CheckCircle2 className="w-4 h-4 text-white " color="green" />
             </div>
           </div>
         </div>
@@ -82,19 +187,21 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
       {/* Tabs */}
       <div className="flex gap-6 border-b mb-6">
         <button
-          className={`px-1 py-2 text-sm ${activeTab === "details"
-            ? "border-b-2 border-primary font-medium"
-            : "text-muted-foreground"
-            }`}
+          className={`px-1 py-2 text-sm ${
+            activeTab === "details"
+              ? "border-b-2 border-primary font-medium"
+              : "text-black"
+          }`}
           onClick={() => setActiveTab("details")}
         >
           Details
         </button>
         <button
-          className={`px-1 py-2 text-sm ${activeTab === "activity"
-            ? "border-b-2 border-primary font-medium"
-            : "text-muted-foreground"
-            }`}
+          className={`px-1 py-2 text-sm ${
+            activeTab === "activity"
+              ? "border-b-2 border-primary font-medium"
+              : "text-black"
+          }`}
           onClick={() => setActiveTab("activity")}
         >
           Activity Log
@@ -112,7 +219,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                     <AlertTriangle className="h-4 w-4" />
                     <span className="text-sm">Receivables</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.outstandingReceivables)}
                   </div>
                 </div>
@@ -121,7 +228,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Sales Amount</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.totalSalesAmount)}
                   </div>
                 </div>
@@ -130,7 +237,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Purchase Amount</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {getFormattedValue(ledgerData?.totalPurchaseAmount)}
                   </div>
                 </div>
@@ -139,7 +246,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Sales Count</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {ledgerData?.totalSalesCount}
                   </div>
                 </div>
@@ -148,7 +255,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="text-sm">Total Purchase Count</span>
                   </div>
-                  <div className="text-xl font-semibold">
+                  <div className="text-xl text-black font-semibold">
                     {ledgerData?.totalPurchaseCount}
                   </div>
                 </div>
@@ -162,63 +269,71 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Party Type</p>
                       <div className="w-1/2">{ledgerData?.partyType}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Party Category</p>
                       <div className="w-1/2">{ledgerData?.partyCategory}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Price Category</p>
                       <div className="w-1/2">{ledgerData?.priceCategory}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Tax Number</p>
                       <div className="w-1/2">{ledgerData?.taxNumber}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Credit Amount</p>
-                      <div className="w-1/2">{getFormattedValue(ledgerData?.creditAmount)}</div>
+                      <div className="w-1/2">
+                        {getFormattedValue(ledgerData?.creditAmount)}
+                      </div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Credit Days</p>
                       <div className="w-1/2">{ledgerData?.creditDays}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Billwise Applicable</p>
-                      <div className="w-1/2">{ledgerData?.billwiseApplicable}</div>
+                      <div className="w-1/2">
+                        {ledgerData?.billwiseApplicable}
+                      </div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Route Name</p>
                       <div className="w-1/2">{ledgerData?.routeName}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Created Date</p>
-                      <div className="w-1/2">{new Date(ledgerData?.createdDate).toLocaleDateString()}</div>
+                      <div className="w-1/2">
+                        {new Date(ledgerData?.createdDate).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Expiry Date</p>
-                      <div className="w-1/2">{new Date(ledgerData?.expiryDate).toLocaleDateString()}</div>
+                      <div className="w-1/2">
+                        {new Date(ledgerData?.expiryDate).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -229,14 +344,16 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
           {/* Billing Details */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Billing Address</h2>
+            <h2 className="text-lg text-black font-semibold text-start">Billing Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                  <div className="text-sm text-black flex flex-col items-start space-y-1">
                     {ledgerData?.billingAddress?.length > 0 ? (
-                      ledgerData?.billingAddress?.map((line: any, index: Key | null | undefined) => (
-                        <div key={index}>{line || "\u00A0"}</div>
-                      ))
+                      ledgerData?.billingAddress?.map(
+                        (line: any, index: Key | null | undefined) => (
+                          <div key={index}>{line || "\u00A0"}</div>
+                        )
+                      )
                     ) : (
                       <div>No Billing Address Provided</div>
                     )}
@@ -245,19 +362,20 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
               </div>
             </div>
           </div>
-          
 
           {/* Shipping Address */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
+              <h2 className="text-lg text-black font-semibold text-start">Shipping Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                  <div className="text-sm text-black flex flex-col items-start space-y-1">
                     {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map((line: any, index: Key | null | undefined) => (
-                        <div key={index}>{line || "\u00A0"}</div>
-                      ))
+                      ledgerData.shippingAddress.map(
+                        (line: any, index: Key | null | undefined) => (
+                          <div key={index}>{line || "\u00A0"}</div>
+                        )
+                      )
                     ) : (
                       <div>No Shipping Address Provided</div>
                     )}
@@ -266,7 +384,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
               </div>
             </div>
           </div>
-
+          
 
           {/* Address */}
           {/* <div>
@@ -292,7 +410,7 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
                       <p key={index} className="text-sm">{line}</p>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground">No shipping address provided</p>
+                    <p className="text-sm text-black">No shipping address provided</p>
                   )}
                 </div>
               </div>
@@ -300,7 +418,32 @@ export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
           </div> */}
         </div>
       ) : (
-        <p>test</p>
+        // <p>test</p>
+        <div className="max-w-2xl mx-auto p-4 space-y-1">
+          {activities.map((activity) => {
+            const config = getActivityConfig(activity.type);
+            return (
+              <div key={activity.id} className="flex items-start gap-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 `}
+            >
+              <div className={config.iconColor}>{config.icon}</div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-sm text-gray-900">{activity.user}</span>
+                <span className="text-xs text-gray-500">
+                  {activity.timestamp}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 mt-0.5 leading-tight">
+                {activity.message}
+              </p>
+            </div>
+          </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

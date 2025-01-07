@@ -53,7 +53,6 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
         }}
         onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />}
-      {JSON.stringify(getFormState())}
 
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">

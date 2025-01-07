@@ -191,7 +191,8 @@ const Settings = () => {
         isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={t("day_close")}
         width="w-full max-w-[600px]"
-        isForm={true}
+        minHeight={400}
+        isForm
         closeModal={() => {
           dispatch(toggleDayClosePopup({ isOpen: false }));
         }}

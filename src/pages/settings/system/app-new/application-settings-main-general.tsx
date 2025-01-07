@@ -21,7 +21,7 @@ interface ApplicationSettingsProps {
   isCompactView: boolean;
   gridClass: string;
   sectionsRef: any;
-  subItemsRef: MutableRefObject<Record<string, HTMLElement | null>>
+  subItemsRef: MutableRefObject<Record<string, HTMLElement | null>>;
   subItemsCatRef: any;
   blinkSection: string | null;
   handleGeneralHeaderClick: any;
@@ -43,12 +43,13 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   handleGeneralHeaderClick,
   key,
 }) => {
-  const { t } = useTranslation("applicationSettings")
+  const { t } = useTranslation("applicationSettings");
   const items = [
     {
       condition: filterComponent([t("business_type")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "maintainBusinessType",
             valueKey: "value",
@@ -80,6 +81,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("currency_main")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="currency"
           field={{
             id: "currency",
@@ -99,6 +101,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("currency_format")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "showNumberFormat",
             valueKey: "value",
@@ -125,6 +128,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("decimal_points")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{ id: "decimalPoints", valueKey: "value", labelKey: "label" }}
           id="decimalPoints"
           label={t("decimal_points")}
@@ -154,6 +158,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         <ERPDisableEnable targetCount={15}>
           {(hasPermitted) => (
             <ERPDataCombobox
+          isInModal={false}
               id="countryName"
               disabled={!hasPermitted}
               field={{
@@ -182,6 +187,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         filterComponent([t("rounding_method_global")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "roundingMethodGLOBAL",
             valueKey: "value",
@@ -220,6 +226,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         filterComponent([t("rounding_method")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{ id: "roundingMethod", valueKey: "value", labelKey: "label" }}
           id="roundingMethod"
           label={t("rounding_method")}
@@ -247,7 +254,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       ),
       element: (
         <ERPInput
-          id="keepUserActionInDays"  
+          id="keepUserActionInDays"
           min={0}
           value={settings?.inventorySettings?.keepUserActionInDays}
           data={settings?.inventorySettings}
@@ -286,6 +293,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_cost_center")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultCostCenterID"
           data={settings?.accountsSettings}
           label={t("cost_center")}
@@ -309,6 +317,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("report_mode")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="reportMode"
           field={{ id: "reportMode", valueKey: "value", labelKey: "label" }}
           data={settings.branchSettings}
@@ -327,6 +336,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("file_attachment_method")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="fileAttachmentMethod"
           field={{
             id: "fileAttachmentMethod",
@@ -633,7 +643,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               handleFieldChange(
                 "mainSettings",
                 "postDatedTransInNumbers",
-                parseInt(data.postDatedTransInNumbers,10)
+                parseInt(data.postDatedTransInNumbers, 10)
               )
             }
           />
@@ -676,7 +686,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               handleFieldChange(
                 "mainSettings",
                 "preDatedTransInNumbers",
-                parseInt(data.preDatedTransInNumbers,10)
+                parseInt(data.preDatedTransInNumbers, 10)
               )
             }
           />
@@ -726,7 +736,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         />
       ),
     },
-   
+
     {
       condition:
         filterComponent([t("enable_day_end")], filterText) &&
@@ -748,8 +758,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   useEffect(() => {
     const hasMatchingItems = items.some((component) => component.condition);
     setHasMatchedItems(hasMatchingItems);
-  }, [filterText])
-
+  }, [filterText]);
 
   return (
     <>
@@ -760,10 +769,11 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             ref={(el) => (subItemsRef.current["mainGeneral"] = el)}
           >
             <h1
-              className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "mainGeneral"
+              className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${
+                blinkSection === "mainGeneral"
                   ? "blink-animation bg-[#f1f1f1]"
                   : "bg-[#f1f1f1]"
-                }`}
+              }`}
               onClick={handleGeneralHeaderClick}
             >
               {t("general")}
@@ -771,12 +781,14 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             <div key="mainGeneral" className="space-y-4">
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div
-                  className={`grid ${isCompactView
+                  className={`grid ${
+                    isCompactView
                       ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                      : `${gridClass ||
-                      "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
-                    }`}
+                      : `${
+                          gridClass ||
+                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
+                  }`}
                 >
                   {items?.map(
                     (component: any, index: number) =>
@@ -789,8 +801,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             </div>
           </div>
         </div>
-      )
-      }
+      )}
     </>
   );
 };

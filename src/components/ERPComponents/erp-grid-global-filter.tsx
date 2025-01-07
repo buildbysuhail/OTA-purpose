@@ -115,7 +115,6 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 
   return (
     <>
-    {JSON.stringify(formState)}
       <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px]">
         <i className="ri-filter-line"></i>
       </button>
@@ -139,7 +138,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
           })
         }
         footer={
-          <div className="flex gap-10 justify-between py-3 border-t mt-5">
+          <div className="flex gap-10 justify-between py-3 border-t">
             <ERPSubmitButton variant="primary" onClick={handleApply}>
               {t("apply")}
             </ERPSubmitButton>

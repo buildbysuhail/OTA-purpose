@@ -83,7 +83,7 @@ const TrialBalance = () => {
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null||cellElement.data.isGroup == true? '0' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },

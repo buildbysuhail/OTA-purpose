@@ -164,7 +164,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             ></img>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-black">
               {ledgerData?.partyName}
             </div>
             <div className="flex items-center gap-1">
@@ -190,7 +190,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           className={`px-1 py-2 text-sm ${
             activeTab === "details"
               ? "border-b-2 border-primary font-medium"
-              : "text-muted-foreground"
+              : "text-black"
           }`}
           onClick={() => setActiveTab("details")}
         >
@@ -200,7 +200,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           className={`px-1 py-2 text-sm ${
             activeTab === "activity"
               ? "border-b-2 border-primary font-medium"
-              : "text-muted-foreground"
+              : "text-black"
           }`}
           onClick={() => setActiveTab("activity")}
         >
@@ -269,31 +269,31 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Party Type</p>
                       <div className="w-1/2">{ledgerData?.partyType}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Party Category</p>
                       <div className="w-1/2">{ledgerData?.partyCategory}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Price Category</p>
                       <div className="w-1/2">{ledgerData?.priceCategory}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Tax Number</p>
                       <div className="w-1/2">{ledgerData?.taxNumber}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Credit Amount</p>
                       <div className="w-1/2">
                         {getFormattedValue(ledgerData?.creditAmount)}
@@ -301,13 +301,13 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Credit Days</p>
                       <div className="w-1/2">{ledgerData?.creditDays}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Billwise Applicable</p>
                       <div className="w-1/2">
                         {ledgerData?.billwiseApplicable}
@@ -315,13 +315,13 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Route Name</p>
                       <div className="w-1/2">{ledgerData?.routeName}</div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Created Date</p>
                       <div className="w-1/2">
                         {new Date(ledgerData?.createdDate).toLocaleDateString()}
@@ -329,7 +329,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground flex items-center justify-between">
+                    <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c]">Expiry Date</p>
                       <div className="w-1/2">
                         {new Date(ledgerData?.expiryDate).toLocaleDateString()}
@@ -347,7 +347,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               <h2 className="text-lg font-semibold">Billing Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                  <div className="text-sm text-black flex flex-col items-start space-y-1">
                     {ledgerData?.billingAddress?.length > 0 ? (
                       ledgerData?.billingAddress?.map(
                         (line: any, index: Key | null | undefined) => (
@@ -369,7 +369,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               <h2 className="text-lg font-semibold">Shipping Address</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
+                  <div className="text-sm text-black flex flex-col items-start space-y-1">
                     {ledgerData?.shippingAddress?.length > 0 ? (
                       ledgerData.shippingAddress.map(
                         (line: any, index: Key | null | undefined) => (
@@ -384,126 +384,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               </div>
             </div>
           </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 shadow rounded-lg">
-            <div className="space-y-6">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-muted-foreground flex flex-col items-start space-y-1">
-                    {ledgerData?.shippingAddress?.length > 0 ? (
-                      ledgerData.shippingAddress.map(
-                        (line: any, index: Key | null | undefined) => (
-                          <div key={index}>{line || "\u00A0"}</div>
-                        )
-                      )
-                    ) : (
-                      <div>No Shipping Address Provided</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Address */}
           {/* <div>
@@ -529,7 +410,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                       <p key={index} className="text-sm">{line}</p>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground">No shipping address provided</p>
+                    <p className="text-sm text-black">No shipping address provided</p>
                   )}
                 </div>
               </div>

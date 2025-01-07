@@ -106,7 +106,7 @@ const CustomerSupplierLedger = () => {
       <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="px-4 pt-4 pb-2 ">
               <div className="flex justify-end items-center mb-5">
                 <div className="flex space-x-5 pr-5">
                   <ERPRadio

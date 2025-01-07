@@ -353,7 +353,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-          <div className="p-4">
+          <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 columns={columns}
@@ -372,7 +372,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
           </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-          <div className="p-4">
+          <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
               //  remoteOperations={{filtering:true,paging:true,sorting:true}}

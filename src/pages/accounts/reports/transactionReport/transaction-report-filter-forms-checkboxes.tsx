@@ -169,10 +169,13 @@ const TransactionReportfilterCheckboxes: React.FC<
         data={formState}
         label={t("creditTransaction")}
         onChangeData={(data) =>
-          setFormState((prev: any) => ({
-            ...prev,
-            isCr: data.isCr,
-          }))
+          setFormState((prev: any) => {
+            const st = {
+              ...prev,
+              isCr: data.isCr,
+            };
+            onDataChange(st);
+            return st;})
         }
       />
       <div className="max-w-3xl">

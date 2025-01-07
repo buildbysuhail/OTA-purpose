@@ -20,34 +20,31 @@ interface TransactionReportCheckboxProps {
     isDr: boolean;
     isCr: boolean;
   }) => void;
-  filter: any;
+  getFormState: any;
 }
 
 const TransactionReportfilterCheckboxes: React.FC<
   TransactionReportCheckboxProps
-> = ({ allTransactions, setAllTransactions, onDataChange, filter }) => {
+> = ({ allTransactions, setAllTransactions, onDataChange, getFormState }) => {
+  debugger;
   // Calculate the number of full columns (7 items each) and any remaining items
   const { t } = useTranslation();
   const fullColumns = Math.floor(allTransactions?.length / 7);
   const remainingItems = allTransactions?.length % 7;
-  const [formState, setFormState] = useState<{
-    vTypes: string;
-    drCr: string;
-    allChecked: boolean;
-    isDr: boolean;
-    isCr: boolean;
-  }>(filter);
+  const [formState, setFormState] = useState<any>(getFormState()?.data);
+  // useEffect(() => {
+  //   //
+  //   onDataChange(formState);
+  // }, [formState]);
   useEffect(() => {
-    //
-    onDataChange(formState);
-  }, [formState]);
-  useEffect(() => {
+    debugger;
+    const data = getFormState().data;
     const updates: { [key: string]: any } = {
-      isDr: filter?.drCr == "drCr" || filter?.drCr == "dr",
-      isCr: filter?.drCr == "drCr" || filter?.drCr == "cr",
+      isDr: data?.drCr == "drCr" || data?.drCr == "dr",
+      isCr: data?.drCr == "drCr" || data?.drCr == "cr",
     };
 
-    if (filter?.vTypes === "All") {
+    if (data?.vTypes === "All") {
       updates["allChecked"] = true;
 
       // Set all items in `allTransactions` to checked
@@ -57,20 +54,17 @@ const TransactionReportfilterCheckboxes: React.FC<
           checked: true,
         }))
       );
-    } else if (filter?.vTypes !== "") {
-      const ids = filter?.vTypes?.split(",");
+    } else if (data?.vTypes !== "") {
+      const ids = data?.vTypes?.split(",");
 
       // Update `checked` to true for items with IDs in `ids`
-      setAllTransactions((prev: any[]) =>
-      {
-        
+      setAllTransactions((prev: any[]) => {
         const dff = prev.map((transaction: any) => ({
           ...transaction,
           checked: ids?.includes(transaction.id), // Check if the id exists in the array
         }));
-        return  dff;
-      }
-      );
+        return dff;
+      });
     }
 
     // Apply all updates to formState in one call
@@ -96,6 +90,31 @@ const TransactionReportfilterCheckboxes: React.FC<
   //     return st;
   //   });
   // }, [allTransactions]);
+  const onChangeData = (data: any) => {
+    debugger;
+    setFormState((prev: any) => {
+      debugger;
+      const sdsds = allTransactions?.map((tr: any) => {
+        debugger;
+        return {
+          ...tr, // Spread existing properties
+          checked: tr.id == data.id ? data[data.id] : tr.checked, // Add new `checked` property
+        };
+      });
+      const sds = sdsds
+        ?.filter((xx: any) => xx.checked === true)
+        ?.map((tr: any) => tr.id)
+        ?.join(",");
+      let st = {
+        ...prev,
+        allChecked: sdsds.find((x) => x.checked == false) == undefined,
+        vTypes: sds || "",
+      };
+      setAllTransactions(sdsds);
+      onDataChange(st);
+      return st;
+    });
+  };
   return (
     <>
       <ERPCheckbox
@@ -131,12 +150,18 @@ const TransactionReportfilterCheckboxes: React.FC<
         checked={formState.isDr}
         data={formState}
         label={t("debitTransaction")}
-        onChangeData={(data) =>
-          setFormState((prev: any) => ({
-            ...prev,
-            isDr: data.isDr,
-          }))
-        }
+        onChangeData={(data) => {
+          debugger;
+          setFormState((prev: any) => {
+            debugger;
+            const st = {
+              ...prev,
+              isDr: data.isDr,
+            };
+            onDataChange(st);
+            return st;
+          });
+        }}
       />
       <ERPCheckbox
         id="isCr"
@@ -164,37 +189,7 @@ const TransactionReportfilterCheckboxes: React.FC<
                       label={transaction.name}
                       data={transaction}
                       checked={transaction.checked}
-                      onChangeData={() => {
-                        setAllTransactions((prev: any) => {
-                          const updatedTransactions = prev.map((tr: any) =>
-                            tr.id === transaction.id
-                              ? { ...tr, checked: !tr.checked }
-                              : tr
-                          );
-
-                          const allChecked = updatedTransactions.every(
-                            (tr: any) => tr.checked
-                          );
-                          const anyChecked = updatedTransactions.some(
-                            (tr: any) => tr.checked
-                          );
-
-                          setFormState((prev: any) => ({
-                            ...prev,
-                            allChecked,
-                            vTypes: allChecked
-                              ? "All"
-                              : anyChecked
-                              ? updatedTransactions
-                                  .filter((x: any) => x.checked)
-                                  .map((x: any) => x.id)
-                                  .join(",")
-                              : "",
-                          }));
-
-                          return updatedTransactions;
-                        });
-                      }}
+                      onChangeData={onChangeData}
                     />
                   ))}
               </div>

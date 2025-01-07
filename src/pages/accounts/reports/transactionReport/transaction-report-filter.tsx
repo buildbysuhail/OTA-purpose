@@ -54,7 +54,6 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
         onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
       />}
       {JSON.stringify(getFormState())}
-      {JSON.stringify(_formState)}
 
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
@@ -63,7 +62,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes onDataChange={(frmState: { vTypes: string, drCr: string, allChecked: boolean, isDr: boolean, isCr: boolean }) => {
-              
+              debugger;
               let updates = frmState;
               // if (frmState.allChecked) {
                 
@@ -90,7 +89,7 @@ const TransactionReportFilter = ({ getFieldProps, handleFieldChange, _formState,
               
               handleFieldChange(updates);
             }}
-              filter={getFormState()}
+            getFormState={getFormState}
               allTransactions={allTransactions}
               setAllTransactions={setAllTransactions}
             />
@@ -106,10 +105,10 @@ export const TransactionReportFilterInitialState = {
   dateFrom: new Date(),
   dateTo: new Date(),
   vTypes: "All",
-  drCr: "DrCr",
+  drCr: "drCr",
   salesRouteID: -1,
   isDr: true,
   isCr: true,
-  isCheched: false,
+  isChecked: false,
   allTransactions: -1,
 };

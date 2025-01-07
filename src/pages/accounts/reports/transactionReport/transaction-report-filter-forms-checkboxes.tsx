@@ -28,7 +28,7 @@ const TransactionReportfilterCheckboxes: React.FC<
 > = ({ allTransactions, setAllTransactions, onDataChange, getFormState }) => {
   debugger;
   // Calculate the number of full columns (7 items each) and any remaining items
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const fullColumns = Math.floor(allTransactions?.length / 7);
   const remainingItems = allTransactions?.length % 7;
   const [formState, setFormState] = useState<any>(getFormState()?.data);

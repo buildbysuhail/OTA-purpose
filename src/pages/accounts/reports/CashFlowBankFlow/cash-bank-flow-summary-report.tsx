@@ -139,7 +139,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                   method={ActionType.POST}
                   gridId="grd_cashflow_bankflow_drilldown_new"
                   popupAction={toggleCostCentrePopup}
-                postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
                 //   childPopupPropsDynamic={(dataField: string) => ({

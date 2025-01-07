@@ -89,8 +89,8 @@ const CustomErpDevGrid: React.FC<ErpDevGridProps> = ({
   const onOptionChanged = (e: any) => {
     console.log(`onOptionChanged${e.fullName}`);
     
-    if (gridInstance != undefined && gridInstance != null) {
-      const sd = gridInstance.totalCount();
+    if (dataGridInstance != undefined && dataGridInstance != null) {
+      const sd = dataGridInstance.totalCount();
       
       setTotalRowCount((prev: number) => prev <= 0 ? sd : prev);
     }

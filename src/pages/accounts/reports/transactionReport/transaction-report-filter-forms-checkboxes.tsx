@@ -123,26 +123,29 @@ const TransactionReportfilterCheckboxes: React.FC<
         data={formState}
         label={t("all")}
         onChangeData={(data) => {
-          setFormState((prev: any) => ({
-            ...prev,
-            allChecked: data.allChecked,
-          }));
-          const sds = allTransactions?.map((tr: any) => ({
-            ...tr, // Spread existing properties
-            checked: data.allChecked, // Add new `checked` property
-          }));
-          setAllTransactions(sds);
-          if (data.allChecked == true) {
-            setFormState((prev: any) => ({
+          setFormState((prev: any) => {
+            const updatedState = {
               ...prev,
-              vTypes: "All",
+              allChecked: data.allChecked,
+              vTypes: data.allChecked ? "All" : prev.vTypes,
+            };
+        
+            const updatedTransactions = allTransactions?.map((tr: any) => ({
+              ...tr,
+              checked: data.allChecked,
             }));
-          } else {
-            const sds = allTransactions
-              ?.filter((x) => x.checked === true)
-              ?.map((tr: any) => tr.id)
-              ?.join(",");
-          }
+            setAllTransactions(updatedTransactions);
+        
+            if (!data.allChecked) {
+              updatedState.selectedIds = allTransactions
+                ?.filter((x: any) => x.checked)
+                ?.map((tr: any) => tr.id)
+                ?.join(",");
+            }
+        
+            onDataChange(updatedState);
+            return updatedState;
+          });
         }}
       />
       <ERPCheckbox

@@ -37,6 +37,7 @@ type ERPModalProps = {
   isFullHeight?: boolean;
   isRemoveSomething?: boolean;
   width?: string;
+  minHeight?: number;
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
   disableOutsideClickClose?: boolean;
@@ -67,6 +68,7 @@ const ERPModal = React.memo(
     isFullHeight = false,
     isRemoveSomething = false,
     width = "w-full",
+    minHeight,
     closeOnSubmit = true,
     disableOutsideClickClose = true,
     customPosition = false,
@@ -83,7 +85,7 @@ const ERPModal = React.memo(
         const padding = 40; // Extra padding for safety
 
         const height = isMaximized
-          ? window.innerHeight - headerHeight - footerHeight - padding
+          ? window.innerHeight - 50
           : window.innerHeight - 300;
 
         setModalHeight(height);
@@ -149,7 +151,7 @@ const ERPModal = React.memo(
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             as="div"
-            className={`relative z-50 ${customPosition ? "" : "fixed inset-0"}`}
+            className={`relative erp-modal ${customPosition ? "" : "fixed inset-0"}`}
             onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
@@ -197,7 +199,7 @@ const ERPModal = React.memo(
                         : { maxHeight: `${modalHeight}px` }),
                       display: "flex",
                       flexDirection: "column",
-                      overflow: "hidden" 
+                      // minHeight: minHeight ? `${minHeight}px` : "auto",
                     }}
                   >
                     <DialogTitle
@@ -242,11 +244,14 @@ const ERPModal = React.memo(
                       </div>
                     </DialogTitle>
 
-                    <div className="flex flex-col justify-between flex-grow">
+                    <div className="flex flex-col justify-between flex-grow "
+             
+                    >
                     
                      <ERPScrollArea
-                        customStyle={`${modalHeight - 130}px`}
-                        className="overflow-y-auto pr-2 overflow-x-hidden py-4"
+                        customStyle={`${modalHeight-50}px`}
+                        className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto"
+                      
                       >
                         {content &&
                           cloneElement(content, {
@@ -259,7 +264,7 @@ const ERPModal = React.memo(
                       </ERPScrollArea>
 
                       {footer && (
-                        <div >
+                        <div className="" >
                           {footer}
                         </div>
                       )}

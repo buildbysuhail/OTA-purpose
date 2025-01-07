@@ -23,13 +23,22 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTableDesigner";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { exludedRoutes } from "../content/transaction-routes";
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+
 interface SidebarProps {
-  type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
+  type:
+    | "erp"
+    | "account-settings"
+    | "workspace-settings"
+    | "settings"
+    | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
-  let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  let applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     console.log(`type${type}`);
@@ -52,56 +61,84 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   });
   useEffect(() => {
     if (type == "settings") {
-      let st: [] = []
+      let st: [] = [];
       if (userSession.userTypeCode == "BA") {
-        st = menuitems.filter((x: any) => x.title != 'branches');
+        st = menuitems.filter((x: any) => x.title != "branches");
       }
       if (userSession.userTypeCode == "BA") {
-        st = menuitems.filter((x: any) => x.title != 'branch_info');
+        st = menuitems.filter((x: any) => x.title != "branch_info");
       }
-      const sd = st.map((x: any) => x.children?.map((item: any) => {
-        item.visible = true;
-        item.disabled = false;
-        if (item.title === "refresh_all_branches") {
-          if (userSession.userTypeCode !== "CA" && applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory != true) {
-            item.disabled = true;
+      const sd = st.map((x: any) =>
+        x.children?.map((item: any) => {
+          item.visible = true;
+          item.disabled = false;
+          if (item.title === "refresh_all_branches") {
+            if (
+              userSession.userTypeCode !== "CA" &&
+              applicationSettings?.miscellaneousSettings
+                ?.maintainAllBranchWithCommonInventory != true
+            ) {
+              item.disabled = true;
+            }
           }
-        }
 
-        if (item.title === "company_profile_india" && userSession.countryId != Countries.India) {
-          item.visible = false;
-        }
+          if (
+            item.title === "company_profile_india" &&
+            userSession.countryId != Countries.India
+          ) {
+            item.visible = false;
+          }
 
-        if (item.title === "hide_account_ledger" && userSession.countryId == Countries.India) {
-          item.visible = false;
-        }
-        if (item.title === "company_profile_others" && userSession.countryId == Countries.India) {
-          item.visible = false;
-        }
-        if (item.title === "upi" || item.title === "qr_pay") {
+          if (
+            item.title === "hide_account_ledger" &&
+            userSession.countryId == Countries.India
+          ) {
+            item.visible = false;
+          }
+          if (
+            item.title === "company_profile_others" &&
+            userSession.countryId == Countries.India
+          ) {
+            item.visible = false;
+          }
+          if (item.title === "upi" || item.title === "qr_pay") {
+          }
+          if (
+            item.title === "upi" &&
+            userSession.countryId != Countries.India
+          ) {
+            item.visible = false;
+          }
+          if (
+            item.title === "qr_pay" &&
+            userSession.countryId == Countries.India
+          ) {
+            item.visible = false;
+          }
 
-        }
-        if (item.title === "upi" && userSession.countryId != Countries.India) {
-          item.visible = false;
-        }
-        if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
-          item.visible = false;
-        }
-        
-        if (exludedRoutes.find(route => route.countries.find(x => x == userSession.countryId) != undefined)) {
-          
-
-        }
-        if (exludedRoutes.find(route =>
-          route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined
-        )) {
-          item.visible = false;
-        }
-      }))
+          if (
+            exludedRoutes.find(
+              (route) =>
+                route.countries.find((x) => x == userSession.countryId) !=
+                undefined
+            )
+          ) {
+          }
+          if (
+            exludedRoutes.find(
+              (route) =>
+                route.title === item.title &&
+                route.countries.find((x) => x == userSession.countryId) !=
+                  undefined
+            )
+          ) {
+            item.visible = false;
+          }
+        })
+      );
       setMenuitems(st);
-    }
-    else if (type == "erp") {
-      let st: [] = []
+    } else if (type == "erp") {
+      let st: [] = [];
 
       st = menuitems;
 
@@ -116,24 +153,29 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         UserAction.Show
       );
       console.log(allowedFormCodes);
-      
 
-      const sd = st.map((x: any) => x.children?.map((item: any) => {
-        item.visible = true;
-        item.disabled = false;
+      const sd = st.map((x: any) =>
+        x.children?.map((item: any) => {
+          item.visible = true;
+          item.disabled = false;
 
-        if (!allowedFormCodes.find(x => x == item.rights)) {
-          item.visible = false;
-        }
-        if (exludedRoutes.find(route =>
-          route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined
-        )) {
-          item.visible = false;
-        }
-      }))
+          if (!allowedFormCodes.find((x) => x == item.rights)) {
+            item.visible = false;
+          }
+          if (
+            exludedRoutes.find(
+              (route) =>
+                route.title === item.title &&
+                route.countries.find((x) => x == userSession.countryId) !=
+                  undefined
+            )
+          ) {
+            item.visible = false;
+          }
+        })
+      );
       setMenuitems(st);
     }
-
   }, [userSession.userTypeCode]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
@@ -534,7 +576,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
   //
   function setMenuUsingUrl(currentPath: any) {
-
     hasParent = false;
     hasParentLevel = 1;
     // Check current url and trigger the setSidemenu method to active the menu.
@@ -557,7 +598,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       userSession?.companies &&
       Array.isArray(userSession?.companies)
     ) {
-
       const company = userSession?.companies.find(
         (x: any) => x.name === userSession?.currentClientName
       );
@@ -655,10 +695,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
             if (theme.dir == "rtl") {
               if (
                 siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
-                0 &&
+                  0 &&
                 outterUlWidth < window.innerWidth &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                window.innerWidth
+                  window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -667,10 +707,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
             } else {
               if (
                 outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
-                window.innerWidth &&
+                  window.innerWidth &&
                 siblingULRect.right >= 0 &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                window.innerWidth
+                  window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -777,7 +817,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           onMouseLeave={() => Outhover()}
         >
           <div className="main-sidebar-header">
-            <Link to={import.meta.env.BASE_URL} className="header-logo" >
+            <Link to={import.meta.env.BASE_URL} className="header-logo">
               <img src={logo1} alt="logo" className="desktop-logo" />
               <img src={logo2} alt="logo" className="toggle-logo" />
               <img src={logo3} alt="logo" className="desktop-dark" />
@@ -810,17 +850,20 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                 {menuitems.map((levelone: any) => (
                   <Fragment key={Math.random()}>
                     <li
-                      className={`${levelone.menutitle
-                        ? "slide__category"
-                        : levelone.menutitle_lg
+                      className={`${
+                        levelone.menutitle
+                          ? "slide__category"
+                          : levelone.menutitle_lg
                           ? "slide__category slide__category__lg"
                           : ""
-                        } ${levelone.hasTopBorder === true
+                      } ${
+                        levelone.hasTopBorder === true
                           ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
-                        } ${levelone.type === "link" ? "slide" : ""}
-                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${levelone?.active ? "open" : ""
-                        } ${levelone?.selected ? "active" : ""}`}
+                      } ${levelone.type === "link" ? "slide" : ""}
+                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${
+                        levelone?.active ? "open" : ""
+                      } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
                         <span className="category-name">
@@ -839,8 +882,9 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                       {levelone.type === "link" ? (
                         <Link
                           to={levelone.path}
-                          className={`side-menu__item ${levelone.selected ? "active" : ""
-                            }`}
+                          className={`side-menu__item ${
+                            levelone.selected ? "active" : ""
+                          }`}
                         >
                           {levelone.icon}
                           <span className="side-menu__label">
@@ -892,8 +936,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                           <div>
                             <span className="avatar avatar-md avatar-rounded ">
                               <img
-                                alt={userSession?.displayName}
-                                src={userSession?.userimage}
+                                alt={userSession?.displayName || profile}
+                                src={userSession?.userimage || profile}
                               />
                             </span>
                           </div>
@@ -910,32 +954,35 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                         </div>
                       </li>
                     )}
-                    {levelone.menutitle_lg && levelone.showWorkspaceMiniCard && (
-                      <li className="slide__category_Detail">
-                        <div className="sm:flex items-start items-center">
-                          <div>
-                            <span className="avatar avatar-md avatar-badge ">
-                              <ErpAvatar
-                                variant="square"
-                                alt={userSession?.currentClientName}
-                                src={companyLogo}
-                                sx={avatarStyle}
-                              />
-                            </span>
-                          </div>
-                          <div className="flex-grow p-2">
-                            <div className="flex items-center !justify-between">
-                              <h6 className="mb-1  text-[.6rem]">
-                                <p className="mb-1  text-[.8rem]">
-                                  {userSession?.currentClientName}
-                                </p>
-                                <p>Branch: {userSession?.currentBranchName}</p>
-                              </h6>
+                    {levelone.menutitle_lg &&
+                      levelone.showWorkspaceMiniCard && (
+                        <li className="slide__category_Detail">
+                          <div className="sm:flex items-start items-center">
+                            <div>
+                              <span className="avatar avatar-md avatar-badge ">
+                                <ErpAvatar
+                                  variant="square"
+                                  alt={userSession?.currentClientName}
+                                  src={companyLogo}
+                                  sx={avatarStyle}
+                                />
+                              </span>
+                            </div>
+                            <div className="flex-grow p-2">
+                              <div className="flex items-center !justify-between">
+                                <h6 className="mb-1  text-[.6rem]">
+                                  <p className="mb-1  text-[.8rem]">
+                                    {userSession?.currentClientName}
+                                  </p>
+                                  <p>
+                                    Branch: {userSession?.currentBranchName}
+                                  </p>
+                                </h6>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    )}
+                        </li>
+                      )}
                   </Fragment>
                 ))}
               </ul>
@@ -962,9 +1009,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       </Fragment>
     );
   }, [menuitems]);
-  return renderNavItems
+  return renderNavItems;
 });
-
 
 const mapStateToProps = (state: any) => ({
   local_varaiable: state,

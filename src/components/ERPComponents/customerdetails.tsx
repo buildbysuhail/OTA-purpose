@@ -1,24 +1,47 @@
 "use client";
 
 import { Dispatch, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, SetStateAction, useState } from "react";
-import { ChevronRight, X, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ChevronRight, X, CheckCircle2, AlertTriangle, CircleDot, CreditCard, Receipt, UserPlus } from "lucide-react";
 import { Address } from "./address";
 import { ContactPersons } from "./contact-persons";
 import { ActivityLog } from "./erp-activitylog";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
+import profile from '../../assets/images/faces/profile-circle.512x512.png'
+
+// interface Activity {
+//   id?: string
+//   type?: 'payment' | 'invoice' | 'contact'
+//   message?: string
+//   timestamp?: string
+//   user?: string
+// }
 
 interface CustomerDetailsProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  // activities: Activity[]
 }
 
-export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
+export default function CustomerDetails({ setIsOpen   }: CustomerDetailsProps) {
   const [activeTab, setActiveTab] = useState("details");
   const [showContactPersons, setShowContactPersons] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
   );
+
+  // const getIcon = (type: Activity['type']) => {
+  //   switch (type) {
+  //     case 'payment':
+  //       return <CreditCard className="h-4 w-4 text-[#22c55e]" />
+  //     case 'invoice':
+  //       return <Receipt className="h-4 w-4 text-[#3b82f6]" />
+  //     case 'contact':
+  //       return <UserPlus className="h-4 w-4 text-[#8b5cf6]" />
+  //     default:
+  //       return <CircleDot className="h-4 w-4 text-gray-500" />
+  //   }
+  // }
 
   function getFormattedValue(value: number | string): string {
     if (typeof value === "number") {
@@ -36,7 +59,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-            <img className="text-lg font-medium" src={ledgerData?.partyPhoto} ></img>
+            <img className="text-lg font-medium" src={ledgerData?.partyPhoto || profile } ></img>
           </div>
           <div>
             <div className="text-sm text-muted-foreground">{ledgerData?.partyName}</div>
@@ -222,6 +245,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               </div>
             </div>
           </div>
+          
 
           {/* Shipping Address */}
           <div className="p-4 shadow rounded-lg">
@@ -276,7 +300,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           </div> */}
         </div>
       ) : (
-        <ActivityLog activities={[]} />
+        <p>test</p>
       )}
     </div>
   );

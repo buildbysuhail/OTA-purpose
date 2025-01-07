@@ -260,8 +260,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         </div>
         )}
         footer={(
-          <div className="flex gap-10 justify-between py-3 border-t mt-5">
-            <ERPSubmitButton type="button"
+          <div className="flex gap-10 justify-between py-3 border-t">
+            <ERPSubmitButton type="button" className=""
               variant="primary"
               onClick={handleApplyPreferences}>
               Save

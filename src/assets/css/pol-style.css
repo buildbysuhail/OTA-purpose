@@ -23,10 +23,20 @@
 }
 
 .app-header {
-  z-index: 55 !important;
+  z-index: 50 !important;
 }
 .app-sidebar {
-  z-index: 50 !important;
+  z-index: 51 !important;
+}
+.erp-modal{
+  z-index: 52 !important;
+}
+
+.combobox-dropdown {
+  z-index: 40 !important;
+}
+.combobox-dropdown-modal {
+  z-index: 53 !important;
 }
 
 /* .dx-datagrid-rowsview .dx-datagrid-content .dx-row-lines > td {

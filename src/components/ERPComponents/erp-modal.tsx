@@ -244,10 +244,8 @@ const ERPModal = React.memo(
                       </div>
                     </DialogTitle>
 
-                    <div className="flex flex-col justify-between flex-grow "
-          
-                    >
-                    
+                    <div className="flex flex-col justify-between flex-grow ">
+      
                      <ERPScrollArea
                         maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
                         className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto"
@@ -264,9 +262,10 @@ const ERPModal = React.memo(
                       </ERPScrollArea>
 
                       {footer && (
-                        <div className="" >
-                          {footer}
-                        </div>
+                      <div className="">
+                        {footer}
+                      </div> 
+                   
                       )}
                     </div>
 

@@ -72,8 +72,10 @@ interface ToolbarItem {
 }
 export interface SummaryConfig {
   column: string;
-  summaryType: "sum" | "min" | "max" | "avg" | "count";
+  summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
   valueFormat?: string;
+  showInGroupFooter?: true | false;
+  alignByColumn?: true | false;
   customizeText?: (itemInfo: { value: any }) => string;
 }
 type FilterOperation =
@@ -90,7 +92,7 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
-  showSummary?: boolean;
+  showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
   columns: DevGridColumn[];
   showSerialNo?: boolean;
@@ -128,7 +130,14 @@ interface ERPDevGridProps {
   allowSearching?: boolean;
   remoteOperations?:
     | boolean
-    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+    | {
+        filtering?: boolean;
+        sorting?: boolean;
+        paging?: boolean;
+        summary?: boolean;
+        groupPaging?: boolean;
+        grouping?: boolean;
+      };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
@@ -238,7 +247,8 @@ const createStore = async (
   ],
   bodyProps?: any,
   setFilterValidations?: any,
-  setShowFilter?: any
+  setShowFilter?: any,
+  setTotalRowCount?: any
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -300,7 +310,6 @@ const createStore = async (
           ERPToast.show(result.message, "error");
         }
 
-        
         if (
           result != undefined &&
           result.isOk != undefined &&
@@ -311,6 +320,9 @@ const createStore = async (
         } else {
           setFilterValidations(undefined);
         }
+        setTotalRowCount((prev: number) =>
+          prev <= 0 ? result.totalCount : prev
+        );
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
@@ -358,7 +370,7 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
-      showSummary = true,
+      showTotalCount = true,
       summaryItems = [],
       columns,
       showSerialNo,
@@ -524,7 +536,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, []);
     useEffect(() => {
       if (filterInitialData && Object.keys(filter).length === 0) {
-        
         setFilter(filterInitialData);
       }
     }, [filterInitialData]);
@@ -542,7 +553,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
-      
       const dss = { ..._filter };
       console.log(`prev:${filter}`);
       console.log(filter);
@@ -554,14 +564,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
       }
-      
+
       setFilter(dss);
       onFilterChanged != undefined && onFilterChanged(dss);
     }, []); // Add any other dependencies here
     // const onCloseFilter = useCallback(() => {
     //   console.log(`filterShowCountww: ${filterShowCount}`);
     //   if (filterShowCount == 0) {
-    //     
+    //
     //     setFilter({});
     //     setFilterShowCount((prev) => prev + 1);
     //     console.log(`filterShowCount333: ${filterShowCount}`);
@@ -609,7 +619,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             paramNames,
             bodyProps,
             setFilterValidations,
-            setShowFilter
+            setShowFilter,
+            setTotalRowCount
           );
           setCurrentStore(newStore);
           setStore(newStore);
@@ -667,14 +678,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [preferences, gridInstance]);
     const onGridReady = (e: any) => {
-      setGridInst(e.component); // Store the instance when the grid is ready
+      debugger;
+      setGridInst(e.component);
     };
     const onExportingHandler = useCallback(
       (e: any) => {
         if (onExporting) {
           onExporting(e);
         } else {
-          
           if (e.format === "pdf") {
             const doc = new jsPDF({
               orientation: "landscape",
@@ -798,7 +809,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             // Add header section
             const totalColumns = e.component.getVisibleColumns().length;
-            
+
             const lastColumnLetter = String.fromCharCode(64 + totalColumns);
             let currentRow = 1;
             let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
@@ -970,8 +981,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       // Replace placeholders and conditions
       return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
-        
-
         // Handle conditional expressions using '&&'
         if (placeholder.includes("&&")) {
           const [condition, trueValue] = placeholder.split("&&");
@@ -997,7 +1006,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           return result;
         } else if (placeholder.includes("___")) {
-          
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
@@ -1026,7 +1034,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             ? r.replace(
                 /\(([^\]]+)\)/g,
                 (innerMatch: any, innerPlaceholder: any) => {
-                  
                   if (
                     innerPlaceholder.includes("date") ||
                     innerPlaceholder.includes("Date")
@@ -1056,7 +1063,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const header = useMemo(() => {
       if (!filterText || !filter) return filterText || "";
-      
+
       const data = filter;
       const _gridHeader = filterText.toString();
       // Dynamically replace placeholders using a regular expression
@@ -1088,6 +1095,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       //     }
       //   }
     }, []);
+
+    const [totalRowCount, setTotalRowCount] = useState<number>(0);
+
+   
     return (
       <Fragment>
         <div className={className}>
@@ -1257,6 +1268,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     ? column.captionDynamic(filter)
                     : column.caption
                 }
+                groupIndex={column.groupIndex}
                 dataType={column.dataType}
                 allowSorting={column.allowSorting}
                 allowSearch={column.allowSearch}
@@ -1274,27 +1286,29 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-            {showSummary && summaryItems.length > 0 && (
+            {summaryItems.length > 0 && (
               <Summary>
-                <TotalItem
-                  column="siNo" 
-                  summaryType="count" 
-                  customizeText={(data) => `Total Rows: ${data.value || 0}`} 
-                />
-                {summaryItems.map((config: any, index: number) => (
-                  <TotalItem
-                    key={index}
+                {summaryItems?.map((config: any, index: number) => (
+                  <GroupItem
+                    // key={`summaryItem_${index}`}
                     column={config.column}
                     summaryType={config.summaryType}
                     valueFormat={config.valueFormat}
                     customizeText={config.customizeText}
+                    showInGroupFooter={config.showInGroupFooter}
+                    alignByColumn={config.alignByColumn}
                   />
                 ))}
               </Summary>
             )}
-
-            <Grouping autoExpandAll={true} allowCollapsing={false} />
+            {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
+          {showTotalCount == true && (
+            <div className="mt-4 p-3 bg-gray rounded-md border border-gray">
+              <span className="text-gray font-semibold">Total Records: </span>
+              <span className="text-gray">{totalRowCount}</span>
+            </div>
+          )}
         </div>
         {(childPopupProps || childPopupPropsDynamic) && (
           <ERPModal
@@ -1340,7 +1354,6 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
     data.value !== "" &&
     data.value !== 0
   ) {
-    
     console.log(data.column.dataType);
 
     return (

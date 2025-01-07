@@ -87,10 +87,15 @@ const CustomErpDevGrid: React.FC<ErpDevGridProps> = ({
   };
 
   const onOptionChanged = (e: any) => {
-    if (e.fullName === 'dataSource' && dataGridInstance) {
-      setTotalRowCount(dataGridInstance.totalCount());
+    console.log(`onOptionChanged${e.fullName}`);
+    
+    if (gridInstance != undefined && gridInstance != null) {
+      const sd = gridInstance.totalCount();
+      
+      setTotalRowCount((prev: number) => prev <= 0 ? sd : prev);
     }
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow">

@@ -115,7 +115,6 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 
   return (
     <>
-    {JSON.stringify(formState)}
       <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px]">
         <i className="ri-filter-line"></i>
       </button>

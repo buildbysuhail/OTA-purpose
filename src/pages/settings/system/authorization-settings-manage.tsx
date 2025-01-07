@@ -15,8 +15,11 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
-
-const AuthorizationSettings = () => {
+interface AuthorizationSettingsProps {
+  isMaximized?: boolean; 
+  modalHeight?:any
+}
+const AuthorizationSettings = ({modalHeight,isMaximized}:AuthorizationSettingsProps) => {
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -100,12 +103,14 @@ const AuthorizationSettings = () => {
     } catch (error) {
       setStore([]);
     }
-    let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 600; // Assuming 100px is the height to minus for windows
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
+ useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = isMaximized ? modalHeight - 280 : modalHeight - 350; 
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
+  
   const columns: DevGridColumn[] = [
     {
       dataField: "employeeID",
@@ -151,7 +156,7 @@ const AuthorizationSettings = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      minWidth: 150,
     },
   ];
 
@@ -159,8 +164,6 @@ const AuthorizationSettings = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
                 <ERPDataCombobox
                   data={postData}
@@ -213,7 +216,7 @@ const AuthorizationSettings = () => {
                   }}
                 />
               </div>
-              <div className="grid grid-cols-4 sm:grid-cols-4 gap-3 ">
+              <div className="grid grid-cols-2 my-2 gap-3 ">
                 <ERPButton
                   loading={postDataLoading}
                   onClick={handleSubmit}
@@ -226,14 +229,7 @@ const AuthorizationSettings = () => {
                 />
               </div>
               <div className="grid grid-cols-1 gap-3">
-                {/* <DataGrid
-                columns={columns}
-                  dataSource={store}
-                  onSelectionChanged={onSelectionChanged}
-                  height={gridHeight.windows}
-                  key="authorizationID"
-                  showBorders={true}
-                ></DataGrid> */}
+              
                 <DataGrid
                   columns={columns}
                   dataSource={store}
@@ -246,8 +242,6 @@ const AuthorizationSettings = () => {
 
             </div>
           </div>
-        </div>
-      </div>
     </Fragment>
   );
 };

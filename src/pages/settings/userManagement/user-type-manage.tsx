@@ -40,7 +40,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
   const { t } = useTranslation("userManage");
 
   return (
-    <div className="w-full">
+    <div className="w-full modal-content">
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps('userTypeName')}

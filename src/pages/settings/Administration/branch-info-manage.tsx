@@ -121,7 +121,7 @@ const BranchManage: React.FC = React.memo(() => {
 
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); }} className="w-full p-4">
+    <form onSubmit={(e) => { e.preventDefault(); }} className="w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("branchID")}

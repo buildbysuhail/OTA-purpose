@@ -48,7 +48,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   const { t } = useTranslation("administration");
 
   return (
-    <div className=" w-full pt-4">
+    <div className=" w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-2">
         <ERPInput
           {...getFieldProps("registeredName")}

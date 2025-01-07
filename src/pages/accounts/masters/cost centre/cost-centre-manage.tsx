@@ -37,7 +37,7 @@ export const CostCentreManage = () => {
   });
   const { t } = useTranslation("masters");
   return (
-    <div className="w-full">
+    <div className="w-full modal-content">
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("costCentreName")}

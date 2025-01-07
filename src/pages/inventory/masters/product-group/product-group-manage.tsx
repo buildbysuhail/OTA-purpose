@@ -39,7 +39,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
 
   return (
-    <div className="w-full">
+    <div className="w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("groupName")}

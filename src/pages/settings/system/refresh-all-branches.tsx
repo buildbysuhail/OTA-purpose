@@ -59,7 +59,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
   }, [formState?.data?.agreementChecked, handleSubmit]);
 
   return (
-    <div className="w-full pt-4">
+    <div className="w-full modal-content">
       <div className="flex items-center justify-between my-4">
         <ERPCheckbox
           {...getFieldProps("agreementChecked")}

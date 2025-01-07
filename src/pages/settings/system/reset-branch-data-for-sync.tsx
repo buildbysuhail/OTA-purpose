@@ -8,6 +8,7 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { ActionType } from "../../../redux/types";
+import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 export interface BranchResetData {
   date: string;
@@ -46,31 +47,34 @@ export const BranchDataReset: React.FC = React.memo(() => {
   }, [dispatch]);
 
   return (
-    <div className="w-full pt-4">
-      <div className="grid grid-cols-3 gap-4">
+    <div className="w-full modal-content">
+      <div className="grid grid-cols-1 gap-4">
         <ERPDateInput
           {...getFieldProps("date")}
           label={t("reset_date_from")}
           required={true}
           onChangeData={(data:any) => handleFieldChange("date",data.date)}
         />
-      </div>
-      <div className="flex items-center justify-between my-4">
-        <ERPCheckbox
+          <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("recover_until_sync")}
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
-        <div>
-          <ERPButton
+      </div>
+        <ERPFormButtons
+           onClear={handleClear}
+           isLoading={isLoading}
+           onCancel={handleClose}
+           onSubmit={handleSubmit}
+         />
+          {/* <ERPButton
             title={t("reset")}
             variant="primary"
             className="h-10 w-24"
             loading={isLoading}
             onClick={handleSubmit}>
-          </ERPButton>
-        </div>
-      </div>
+          </ERPButton> */}
+      
     </div>
   );
 });

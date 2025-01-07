@@ -35,6 +35,8 @@ interface TemplateProps {
   templateKey: string;
   isOpen: boolean;
   closeModal: () => void;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 const initialState: NotificationTemplate = {
   id: 0,
@@ -79,15 +81,22 @@ const headerOptions = {
 };
 const api = new APIClient();
 const EmailTemplate: React.FC<TemplateProps> = React.memo(
-  ({ channel, isOpen, templateKey, closeModal }) => {
+  ({ channel, isOpen, templateKey, closeModal,isMaximized,modalHeight }) => {
     const [formState, setFormState] = useState<NotificationTemplate>(initialState);
     const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const { t } = useTranslation();
 
-    // const onClose = useCallback(() => {
-    //   closeModal();
-    // }, []);
+   const [Height, setHeight] = useState<{
+     mobile: number;
+     windows: number;
+   }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = isMaximized ? modalHeight - 270 : modalHeight - 400;  
+    setHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
 
     const handleFieldChange = (field: any, value: any) => {
       setFormState((prevState) => ({
@@ -164,9 +173,9 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               label="Subject"
               onChange={(e) => handleFieldChange("Subject", e.target?.value)}
             />
-            <div className="form-group">
+            <div className="">
               <HtmlEditor
-                height={300}
+                height={Height.windows}
                 value={formState.content?.Body}
                 onValueChanged={valueChanged}
               >

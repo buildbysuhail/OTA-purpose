@@ -42,8 +42,12 @@ interface DynamicFormProps {
   onSubmit: (data: FormDataStructure) => void;
   onCancel: () => void;
 }
+interface UserTypePrivilegeManageProps {
+  isMaximized?: boolean; 
+  modalHeight?:any
+}
 const api = new APIClient();
-const UserTypePrivilegeManage: React.FC = React.memo(() => {
+const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:UserTypePrivilegeManageProps) => {
   const expandedRowKeys = [1, 2, 10];
   const [postData, setPostData] = useState<UserTypePrivilegeManageData>(
     initialUserTypePrivilegeManageData
@@ -58,6 +62,18 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [recursive, setRecursive] = useState(false);
   const [selectionMode, setSelectionMode] = useState("all");
+
+  const [treeHeight, setTreeHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = modalHeight - 180; 
+    setTreeHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
+
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
     let sdsd = rights.filter(
@@ -450,7 +466,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
     <div className="w-full flex justify-start ">
       <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 ">
         <TreeList
-          height={window.innerHeight - 200}
+          height={treeHeight.windows}
           ref={gridRef}
           id="userRights"
           dataSource={userRights}

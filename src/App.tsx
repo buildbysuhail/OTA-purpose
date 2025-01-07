@@ -56,6 +56,7 @@ import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import ERPAttachment from "./components/ERPComponents/erp-attachment";
 import { ApplicationSettingsType } from "./pages/settings/system/application-settings-types/application-settings-types";
+import AutoClicker from "./Nodevwatermark";
 
 export const LoadingAnimation = () => {
   return (
@@ -217,6 +218,7 @@ function App() {
           }}
         />
         <Switcher />
+        <AutoClicker/>
 
         <div className="page" onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>

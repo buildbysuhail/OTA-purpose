@@ -1540,7 +1540,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                     (el as any).__reactRefHandlers = { contains: () => true };
                   }
                 }}
-                className={`${isInModal?"combobox-dropdown-modal" :"combobox-dropdown"} absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
+                className={`${isInModal?"combobox-dropdown !combobox-dropdown-modal " :"combobox-dropdown"} absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
                 style={{
                   width: comboboxRef.current?.offsetWidth || "auto",
                   top: (comboboxRef.current?.getBoundingClientRect().bottom ?? 0) + window.scrollY,

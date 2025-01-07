@@ -114,7 +114,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
                 groupPanelVisible={true}
                   heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
-                  filterText="{___ (ledgername)} {**** as of (asonDate)}"
+                  filterText="{___ (ledgerame)} {**** as of (asonDate)}"
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}

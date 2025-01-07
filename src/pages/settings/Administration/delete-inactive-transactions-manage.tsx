@@ -42,7 +42,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   // }, []);
   const { t } = useTranslation("administration");
   return (
-    <div className="w-full pt-4">
+    <div className="w-full modal-content">
       <div className="grid grid-cols-1 gap-3">
         <ERPDateInput
           {...getFieldProps("date")}

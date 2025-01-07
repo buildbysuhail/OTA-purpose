@@ -706,6 +706,7 @@ const BarcodePrint: React.FC = () => {
               <div className="box-body">
                 <ERPDevGrid
                   columns={columns}
+                  // heightToAdjustOnWindows={500}
                   gridHeader={t("barcode_print")}
                   hideGridAddButton={true}
                   hideDefaultSearchPanel={true}

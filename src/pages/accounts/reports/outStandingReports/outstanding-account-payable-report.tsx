@@ -105,7 +105,7 @@ const OutstandingAccountPayableReport = () => {
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue( cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          {`${ cellElement.data?.balance == null ? '' :  getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },
@@ -123,7 +123,7 @@ const OutstandingAccountPayableReport = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}

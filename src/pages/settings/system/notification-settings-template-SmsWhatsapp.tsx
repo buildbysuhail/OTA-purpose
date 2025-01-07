@@ -23,6 +23,8 @@ interface TemplateProps {
   templateKey:string;
   isOpen:boolean;
   closeModal: () => void;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 const initialState: NotificationTemplate = {
   id: 0,
@@ -35,12 +37,23 @@ const initialState: NotificationTemplate = {
   isActive: false,
 };
 const api = new APIClient();
-const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templateKey, isOpen, closeModal }) => {
+  const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templateKey, isOpen, closeModal,isMaximized,modalHeight }) => {
     const [formState, setFormState] =useState<NotificationTemplate>(initialState);
     const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const { t } = useTranslation();
 
+   const [Height, setHeight] = useState<{
+     mobile: number;
+     windows: number;
+   }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50; 
+    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 600; 
+    setHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized,modalHeight]);
+  
     const handleFieldChange = (
       field: keyof typeof initialState,
       value: any
@@ -101,7 +114,8 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="w-full">
           <div className="grid grid-cols-1 gap-3">
-            <div className="form-group">
+            <div className=""
+            >
               <label
                 htmlFor="content"
                 className="block text-sm font-medium text-gray-700"
@@ -113,8 +127,9 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
                 name="content"
                 value={formState.content}
                 onChange={(e) => handleFieldChange("content", e.target?.value)}
-                rows={5}
+                // rows={!isMaximized ? 6 : 
                 placeholder="Enter template content"
+                style={{height:`${ Height.windows}px`}}
                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>

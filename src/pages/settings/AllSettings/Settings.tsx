@@ -150,7 +150,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.companyProfile.isOpen || false}
         title={t("company_profile")}
         width="w-full max-w-[800px]"
-        isForm={true}
+        isForm
         closeModal={() => {
           dispatch(toggleCompanyProfilePopup({ isOpen: false }));
         }}

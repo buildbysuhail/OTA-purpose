@@ -84,7 +84,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
 
   return (
-    <div className="w-full">
+    <div className="w-full modal-content">
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("accGroupName")}

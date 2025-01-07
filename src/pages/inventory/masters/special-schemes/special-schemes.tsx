@@ -271,7 +271,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
         <Tab label="Special Price" value="specialPrice" />
         <Tab label="FOC Scheme" value="FOCScheme" />
       </Tabs>
-      <div className="p-4">
+      <div className="px-4 pt-4 pb-2 ">
         {activeTab === 'specialPrice' &&
           <>
             <div>

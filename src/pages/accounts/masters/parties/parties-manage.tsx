@@ -165,7 +165,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       }};
 
     return (
-      <div className="w-full bordered-tab relative pb-16">
+      <div className="w-full bordered-tab relative">
         <div className="mt-[1.5rem]">
           <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
             <ERPInput

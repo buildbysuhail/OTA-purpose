@@ -87,7 +87,7 @@ export const AccountLedgerManage = () => {
   const { t } = useTranslation("masters");
 
   return (
-    <div className="w-full">
+    <div className="w-full modal-content">
       <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("ledgerCode")}

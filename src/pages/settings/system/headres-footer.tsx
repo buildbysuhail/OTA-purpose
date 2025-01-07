@@ -56,7 +56,7 @@ const HeadersAndFooters : React.FC = React.memo(() => {
     const { t } = useTranslation("system");
   
     return (
-      <div className="w-full pt-4">
+      <div className="w-full modal-content">
     <div className='flex flex-col sm:flex-row justify-start items-center gap-4'>
       <div className='flex flex-col gap-4'>
         <h4 className='font-medium text-gray-500'>{t("headers")}</h4>

@@ -77,6 +77,7 @@ const ERPModal = React.memo(
     const [isMaximized, setIsMaximized] = useState(false);
     const [modalHeight, setModalHeight] = useState(0);
 
+ 
     useEffect(() => {
       const updateModalHeight = () => {
         // Add extra padding to ensure content fits
@@ -85,7 +86,7 @@ const ERPModal = React.memo(
         const padding = 40; // Extra padding for safety
 
         const height = isMaximized
-          ? window.innerHeight - 50
+          ? window.innerHeight - 100
           : window.innerHeight - 300;
 
         setModalHeight(height);
@@ -194,12 +195,11 @@ const ERPModal = React.memo(
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
                     } ${isRemoveSomething ? "px-0" : "px-5"}`}
                     style={{
-                      ...(isMaximized
-                        ? { height: `${modalHeight}px` }
-                        : { maxHeight: `${modalHeight}px` }),
+                      height: isMaximized ? `${modalHeight}px` : 'auto',
+                      maxHeight: `${modalHeight}px`,
+                      // minHeight: `${minHeight}px`,
                       display: "flex",
                       flexDirection: "column",
-                      // minHeight: minHeight ? `${minHeight}px` : "auto",
                     }}
                   >
                     <DialogTitle
@@ -245,11 +245,11 @@ const ERPModal = React.memo(
                     </DialogTitle>
 
                     <div className="flex flex-col justify-between flex-grow "
-             
+          
                     >
                     
                      <ERPScrollArea
-                        customStyle={`${modalHeight-50}px`}
+                        maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
                         className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto"
                       
                       >

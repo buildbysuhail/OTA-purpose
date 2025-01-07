@@ -133,7 +133,7 @@ const handleClear = async ()=>{
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 bg-[#ffffff]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="p-4">
+          <div className="px-4 pt-4 pb-2 ">
           <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>{t("counter_settings")}</h1>
           <div className="grid grid-cols-1 gap-4 md:w-[550px] my-3">
                 <ErpInput

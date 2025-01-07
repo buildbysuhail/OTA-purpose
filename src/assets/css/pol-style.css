@@ -31,7 +31,9 @@
 .erp-modal{
   z-index: 52 !important;
 }
-
+.modal-content{
+  margin-bottom: 70px;
+}
 .combobox-dropdown {
   z-index: 40 !important;
 }

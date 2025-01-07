@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
@@ -19,6 +19,21 @@ const CollectionReport = () => {
   const { t } = useTranslation('accountsReport');
   const [filter, setFilter] = useState<CollectionReport>({ from: new Date() });
   const rootState = useRootState();
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "refNo",
+      summaryType: "max",
+      showInGroupFooter:true,
+      alignByColumn:true
+    },
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      showInGroupFooter:true,
+      alignByColumn:true
+    },
+  ];
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -98,7 +113,7 @@ const CollectionReport = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="p-4">
+            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
@@ -118,6 +133,8 @@ const CollectionReport = () => {
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}
+                  summaryItems={summaryItems}
+                  showSummary={false}
                 ></ErpDevGrid>
               </div>
             </div>

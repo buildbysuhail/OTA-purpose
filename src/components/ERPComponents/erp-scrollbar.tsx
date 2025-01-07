@@ -5,11 +5,11 @@ import { RootState } from "../../redux/store";
 interface CustomScrollbarProps extends React.HTMLAttributes<HTMLDivElement> {
     className?: string;
     thumbHeight?: number;
-    customStyle?:string;
+    maxHeight?: string | number;
   }
   
   export const ERPScrollArea = forwardRef<HTMLDivElement, CustomScrollbarProps>(
-    ({ className = '', children,thumbHeight = 20, customStyle, ...props }, ref) => {
+    ({ className = '', children,thumbHeight = 20, maxHeight, ...props }, ref) => {
       const appState = useAppSelector(
         (state: RootState) => state.AppState?.appState
       );
@@ -20,7 +20,7 @@ interface CustomScrollbarProps extends React.HTMLAttributes<HTMLDivElement> {
           className={` scrollbar ${scrollbarWidth}  ${className}`}
           style={
             {
-              maxHeight:`${customStyle}`,
+              maxHeight:maxHeight,
                 "--scrollbar-thumb": `rgb(${appState.scrollbarColor ?? "219,223,225"})`,
                 "--scrollbar-track": "rgb(241,245,249)",
                 "--tw-scrollbar-thumb": `rgb(${appState.scrollbarColor ?? "219,223,225"})`,

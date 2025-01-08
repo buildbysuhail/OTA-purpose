@@ -100,6 +100,7 @@ const CashBookSummary = () => {
                   method={ActionType.POST}
                   gridId="grd_cash_book_summary"
                   enablefilter={true}
+                  showFilterInitially={false}
                   filterContent={<CashBookReportFilter />}
                   filterInitialData={CashBookReportFilterInitialState}
                   reload={true}

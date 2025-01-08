@@ -44,30 +44,12 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
-    //       {cellElement.data.ledgerNameIN}
-    //     </span>
-       
-    //   ),
-    // },
-
     cellRender: (cellElement: any, cellInfo: any) => (
       <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
-              {cellElement.data.isGroupCashIN == true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
+              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
       </span>
-      
     ),
   },
-    // {
-    //   dataField: "accGroupNameIN",
-    //   caption: t("accGroupNameIN"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 300,
-    //   showInPdf:true,
-    // },
     {
       dataField: "cashFlowIN",
       caption: t("in_amount"),
@@ -92,7 +74,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-red' : 'font-bold text-green'}`}>
-        {cellElement.data.isGroupCashOut == true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
+        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
         </span>
       ),
     },
@@ -133,34 +115,31 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                 rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText="{___ as of (month)} {___(year)}"
-                  gridHeader={origin=="cash_flow"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}
+                  filterText=": Month-Year : {___(month)} - {****(year)}"
+                  gridHeader={origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary }
                   method={ActionType.POST}
-                  gridId="grd_cashflow_bankflow_drilldown_new"
+                  gridId="grd_cashflow_bankflow_drilldown_summary"
                   popupAction={toggleCostCentrePopup}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
-                //   childPopupPropsDynamic={(dataField: string) => ({
-                //     title:  t(`cash_flow_report_detailed`),
-                //     width: "700px",
-                //     isForm: false,
-                //     content: dataField == "ledgerNameIN" ? <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                //       // ,
-                //       // reportType:"Cash",
-                //     }} /> : <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                //       // ,
-                //       // reportType:"Cash",
-                //     }} />,
-                //     drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
-                //     bodyProps: dataField == "accGroupIDIN" ?"accGroupIDIN":"AccGroupIDOut",
-                //  //   enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
-                //   })}
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title:origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary"),
+                    width: "700px",
+                    isForm: false,
+                    content: 
+                    dataField == "ledgerNameIN" ?
+                    <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                        }} />
+                    :  <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                    }} />
+                      ,
+                    drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
+                    bodyProps: dataField == "ledgerNameIN" ? "accGroupIDIN" : "accGroupIDOut",
+                  })}
                   // childPopupProps={{
                   //   content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                  //     // ,
-                  //     // reportType:"Cash",
                   //   }} />,
                   //   title: t("cash_flow_report_detailed"),
                   //   isForm: false,
@@ -170,19 +149,17 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                   //   origin:"cash_flow",
                   //   //  enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
                   // }}
-                  childPopupProps={{
-                    content: <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                      // ,
-                      // reportType:"Cash",
-                    }} />,
-                    title: t("cash_flow_report_detailed"),
-                    isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "ledgerNameOut",
-                    bodyProps: "accGroupIDOut",
-                    origin:"cash_flow",
-                    //  enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
-                  }}
+                  // childPopupProps={{
+                  //   content: <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                  //   }} />,
+                  //   title: t("cash_flow_report_detailed"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "ledgerNameOut",
+                  //   bodyProps: "accGroupIDOut",
+                  //   origin:"cash_flow",
+                  //   //  enableFn: (data: any) => (data?.isGroupCashOut==true&&data?.ledgerNameOut!="TOTAL") ||(data?.isGroupCashIN==true&&data?.ledgerNameIN!="TOTAL"||data?.ledgerNameIN!="NET FLOW")
+                  // }}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -123,6 +123,7 @@ const OutstandingAccountReceivableReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   filterText="as of {asonDate}, Interval : Daily {routeID > 0 && , Sales Route : [routeName]}"
                   gridHeader={t("account_receivable")}

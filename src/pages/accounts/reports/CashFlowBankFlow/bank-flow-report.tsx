@@ -10,6 +10,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
 import CashBankFlowDetailedReport from "./cash-bank-flow-detailed-report";
+import CashBankFlowDetailedSummaryReport from "./cash-bank-flow-summary-report";
 
 const BankFlowReport = () => {
   const dispatch = useAppDispatch();
@@ -108,6 +109,7 @@ const BankFlowReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                
                   allowGrouping={true}
                   columns={columns}
                   filterText=" as of {asonDate}"
@@ -125,18 +127,30 @@ const BankFlowReport = () => {
                   reload={true}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <CashBankFlowDetailedReport postData={
-                      { ...filter,
-                        reportType:"Bank",
-                      }} />,
+                    content: <CashBankFlowDetailedSummaryReport postData={{...filter,
+                      reportType:"Bank",
+                    }} />,
                     title: t("bank_flow_report_detailed"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
                     bodyProps: "year,monthNum",
-                    origin:"bank_flow",
+                    origin:"bank_flow", 
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}
+                  // childPopupProps={{
+                  //   content: <CashBankFlowDetailedReport postData={
+                  //     { ...filter,
+                  //       reportType:"Bank",
+                  //     }} />,
+                  //   title: t("bank_flow_report_detailed"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "month",
+                  //   bodyProps: "year,monthNum",
+                  //   origin:"bank_flow",
+                  //   enableFn: (data: any) => data?.month != "TOTAL"
+                  // }}
                 ></ErpDevGrid>
               </div>
             </div>

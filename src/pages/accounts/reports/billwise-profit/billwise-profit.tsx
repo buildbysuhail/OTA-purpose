@@ -258,6 +258,7 @@ const BillwiseProfit = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                showTotalCount={false}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   filterText="from {fromDate} to {toDate} {brandID > 0 && ,Brand : [brandName]} {colour != '' && , Colour : [colour]} {warranty != '' && , Warranty : [warranty]}"

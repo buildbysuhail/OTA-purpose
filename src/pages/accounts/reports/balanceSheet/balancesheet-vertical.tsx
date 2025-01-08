@@ -32,10 +32,10 @@ const BalancesheetVertical = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      // cellRender: (cellElement: any, cellInfo: any) => {
+      //   return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
           
-      }
+      // }
     },
     {
       dataField: "ledgerID",
@@ -217,48 +217,25 @@ const BalancesheetVertical = () => {
                   method={ActionType.POST}
                   // postData={postdata}
                   gridId="grd_balancesheet_vertical"
-                  //             {(Data.accGroupID!=0&&
-                  //               <ERPModal
-                  //   isOpen={isOpenDetails.isOpen}
-                  //   // title={t("bank_cards")}
-                  //   title="Balance Sheet"
-                  //   width="w-full max-w-[90%]"
-                  //   isForm={true}
-                  //   closeModal={() => {
-                  //     setIsOpenDetails({ isOpen: false, key: 0 });
-                  //   }}
-                  //   content={
-                  // <BalancesheetDetails
-                  //   postData={{
-                  //     accGroupID: isOpenDetails.key,
-                  //     asOnDate: filter.asOnDate,
-                  //   }}
-                  //   groupName={isOpenDetails.groupName}
-                  // />
-                  //   }
-                  // />:
-
+                 
                   childPopupPropsDynamic={(dataField: string) => ({
                     title: dataField == "accGroupID" ? t(`balance_detailed`) : t(`monthwise_balance`),
                     width: "700px",
                     isForm: false,
-                    content: dataField == "accGroupID" ? <BalancesheetDetails
+                    content: 
+                    dataField == "accGroupID" ?
+                     <BalancesheetDetails
                       postData={{
-                        // accGroupID: isOpenDetails.key,
                         asOnDate: filter.asOnDate,
                       }}
-                      rowData={{groupName:"sdsdssd"}}
-                      groupName={isOpenDetails.groupName}
-                    /> : <CashBookMonthWise postData={
+                    /> 
+                    : <CashBookMonthWise postData={
                       {
                         asOnDate: filter.asOnDate
-                      }} />,
-                    // content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                      }} />
+                      ,
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
-                    // drillDownCells: "accGroupID,ledgerID",
-                    // bodyProps: "ledgerID,accGroupID",
-                    // enableFn: () => dataField?.ledgerID === "active", // Corrected to match expected type
                   })}
 
                 // )}

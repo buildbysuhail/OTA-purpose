@@ -123,11 +123,11 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  filterText="{___ as of (month)} {___(year)}"
-                  gridHeader={origin=="cash_flow"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}
+                   filterText=" : {___(ledgerNameIN)}: Month-Year : {****(month)} - {****(year)}"
+                  gridHeader={origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary_in }
                   method={ActionType.POST}
-                  gridId="grd_cashflow_bankflow_drilldown_new"
+                  gridId="grd_cashflow_bankflow_drilldown_summary_in"
                   popupAction={toggleCostCentrePopup}
                 postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}

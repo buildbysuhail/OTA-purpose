@@ -132,7 +132,7 @@ const CashFlowReport = () => {
                     width: "mw-100",
                     drillDownCells: "month",
                     bodyProps: "year,monthNum",
-                    origin:"cash_flow",
+                    origin:"cash_flow", 
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}
                   // childPopupProps={{

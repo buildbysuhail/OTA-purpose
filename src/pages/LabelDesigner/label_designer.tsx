@@ -1622,8 +1622,7 @@ useEffect (() => {
                     selectedComponent.type !== DesignerElementType.image && (
                       <Box sx={{ mb: 1 }}>
                         {selectedComponent.type === DesignerElementType.field ? (
-                          <>
-                         {templateGroup === "barcode" ?(
+                        
                              <ERPDataCombobox
                              id="content"
                              data={selectedComponent}
@@ -1633,7 +1632,7 @@ useEffect (() => {
                                valueKey: "value",
                                labelKey: "label",
                              }}
-                             options={fields.map((field) => ({
+                             options={fields.map((field) => ({ 
                             value: field
                               .replace(/[\[\]]/g, "") // Remove square brackets
                               .replace(/([-_\s][a-z])/gi, (match) => match.toUpperCase().replace(/[-_\s]/g, "")) // Convert to camelCase
@@ -1644,28 +1643,7 @@ useEffect (() => {
                                handlePropertyChange("content", data.content)
                              }
                              />
-                         ):(
-                          <ERPDataCombobox
-                          id="content"
-                          data={selectedComponent}
-                          label="Content"
-                          field={{
-                            id: "content",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={AccountMasterFields?.map((field, index) => ({
-                            value: field,
-                            label: field,
-                          }))}
-                          onChangeData={(data) =>
-                            handlePropertyChange("content", data.content)
-                          }
-                         />
-                         )
-                         
-                         } 
-                        </>
+                       
                        
                         ) : selectedComponent.type === DesignerElementType.qrCode ? (
                           <ERPDataCombobox
@@ -1719,6 +1697,7 @@ useEffect (() => {
                          />
                         ) }
                         </Box>
+
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
                       id="x"
@@ -1731,6 +1710,7 @@ useEffect (() => {
                       }
                     />
                   </Box>
+
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
                       id="y"
@@ -2714,6 +2694,7 @@ useEffect (() => {
                 </Box>
               )}
             </Box>
+
             {templateGroup === "barcode" && (
               <Box hidden={activeTab !== "label"}>
                 <Box sx={{ mb: 1 }}>
@@ -2973,7 +2954,7 @@ useEffect (() => {
                   />
                 </Box>
 
-                {templateGroup !== "barcode" && (
+                {/* {templateGroup !== "barcode" && (
                   <>
                   <Box sx={{ mb: 1 }}>
                     <ERPDataCombobox
@@ -2995,6 +2976,8 @@ useEffect (() => {
                       label="Page Size"
                     />
                   </Box>
+
+
                   {templateData?.propertiesState?.pageSize !== "Custom" && (
                     <Box sx={{ mb: 1 }}>
                     <ERPDataCombobox
@@ -3023,9 +3006,9 @@ useEffect (() => {
                   )}
                   </>
                   
-                )}
+                )} */}
 
-                {templateData?.propertiesState?.pageSize === "Custom" && (
+                {/* {templateData?.propertiesState?.pageSize === "Custom" && (
                   <Box sx={{ mb: 1 }}>
                     <div className="flex justify-start items-center space-x-1">
                       <ERPInput
@@ -3056,7 +3039,7 @@ useEffect (() => {
                       />
                     </div>
                   </Box>
-                )}
+                )} */}
 
                 <Box sx={{ mb: 1 }}>
                   <InputLabel

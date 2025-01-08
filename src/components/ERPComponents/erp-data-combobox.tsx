@@ -32,7 +32,7 @@ import ERPElementValidationMessage from "./erp-element-validation-message";
 import { X } from "lucide-react";
 
 interface Option {
-  value: string;
+  value: any;
   label: string;
   is_active?: boolean;
   name?: string;
@@ -669,19 +669,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
   const clearSelection = (e?: React.MouseEvent) => {
-    
-    e?.stopPropagation();
-    setQuery("");
-    setIsOpen(false);
-    setInputValue("");
-    setInitial(null);
-    setActiveIndex(-1);
-    setFilteredItems(items);
-    handleChange?.(field?.id??"", null);
-    onChange?.(null);
-    onChangeData?.({ ...data, [id]: null });
-    handleChangeData?.(field?.id??"", null);
-    onSelectItem?.(null);
+    handleItemClick({label: "", value: null, is_active: false,name: ""});
+   
   };
   const handleItemClick = (value: Option) => {
     setInitial(value);
@@ -1494,7 +1483,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 // }}
                 onClick={(e) => {
                   if (disabled) return;
-                  e.stopPropagation();
                   clearSelection();
                   setIsOpen(false);
                 }}

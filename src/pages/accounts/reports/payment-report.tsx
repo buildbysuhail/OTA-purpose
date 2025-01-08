@@ -61,7 +61,6 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>

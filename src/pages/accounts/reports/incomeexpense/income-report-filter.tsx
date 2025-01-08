@@ -10,11 +10,9 @@ import { useTranslation } from "react-i18next";
 const IncomeReportFilter = ({
   getFieldProps,
   handleFieldChange,
-  t,
-  filter,
+  getFormState,
 }: any) => {
-  // const { t } = useTranslation('accountsReport');
-  // const [filter, setFilter] = useState<any>(IncomeReportFilterInitialState);
+  const { t } = useTranslation("accountsReport");
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -32,14 +30,11 @@ const IncomeReportFilter = ({
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
-      {JSON.stringify(filter)}
       <ERPDataCombobox
         {...getFieldProps("accGroupID")}
         label={t("group_under")}
         field={{
           id: "accGroupID",
-          // getListUrl: Urls.data_SelectAccGroupsUnderAccGroupIDForCombo,
-          // params: `accGroupID=${8}`,
           getListUrl: `${Urls.data_SelectAccGroupsUnderAccGroupIDForCombo}${8}`,
           valueKey: "id",
           labelKey: "name",
@@ -48,20 +43,25 @@ const IncomeReportFilter = ({
           handleFieldChange({ accGroupID: data.accGroupID })
         }
       />
-      <ERPDataCombobox
-        {...getFieldProps("accLedgerID")}
-        label={t("ledger")}
-        field={{
-          id: "accLedgerID",
-          getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${8}`,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) =>
-          handleFieldChange("accLedgerID", data.accLedgerID)
-        }
-      />
-      <ERPDataCombobox
+      {getFormState()?.data?.accGroupID != undefined && (
+        <ERPDataCombobox
+          {...getFieldProps("accLedgerID")}
+          label={t("ledger")}
+          field={{
+            id: "accLedgerID",
+            getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${
+              getFormState()?.data?.accGroupID
+            }`,
+            //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange("accLedgerID", data.accLedgerID)
+          }
+        />
+      )}
+        <ERPDataCombobox
         {...getFieldProps("salesmanID")}
         label={t("salesman")}
         field={{

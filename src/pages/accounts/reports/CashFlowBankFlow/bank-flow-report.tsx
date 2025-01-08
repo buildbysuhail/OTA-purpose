@@ -112,7 +112,7 @@ const BankFlowReport = () => {
                 
                   allowGrouping={true}
                   columns={columns}
-                  filterText=" as of {asonDate}"
+                   filterText=" as of {--- (finTo)}"
                   gridHeader={t("bank_flow_report")}
                   dataUrl={Urls.acc_reports_bank_flow}
                   method={ActionType.POST}

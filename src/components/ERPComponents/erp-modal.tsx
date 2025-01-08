@@ -80,14 +80,18 @@ const ERPModal = React.memo(
  debugger;
     useEffect(() => {
       const updateModalHeight = () => {
-        // Add extra padding to ensure content fits
-        const headerHeight = 60; // Height of the header
-        const footerHeight = (!isForm && isButton) ? 70 : 0; // Height of the footer if present
-        const padding = 40; // Extra padding for safety
+        
+        const headerHeight = 60;
+        const footerHeight = (!isForm && isButton) ? 70 : 0; 
+        const padding = 40; 
+        // ? heightToAdjustOnWindowsInModal
+        // : wh - heightToAdjustOnWindows < 300
+        // ? 300
+        // : wh - heightToAdjustOnWindows;
 
         const height = isMaximized
           ? window.innerHeight - 100
-          : window.innerHeight - 300;
+          : window.innerHeight - 300 < 300 ? 300 : window.innerHeight - 300;
 
         setModalHeight(height);
       };
@@ -191,13 +195,13 @@ const ERPModal = React.memo(
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
                     className={`erp-modal${
                       isOpen ? "-opened" : "closed"
-                    } transform bg-white text-left align-middle shadow-xl transition-all ${
+                    } transform bg-white text-left align-middle shadow-xl transition-all  ${
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
                     } ${isRemoveSomething ? "px-0" : "px-5"}`}
                     style={{
                       height: isMaximized ? `${modalHeight}px` : 'auto',
                       maxHeight: `${modalHeight}px`,
-                      // minHeight: `${minHeight}px`,
+                      // minHeight: `300px`,
                       display: "flex",
                       flexDirection: "column",
                     }}
@@ -244,11 +248,12 @@ const ERPModal = React.memo(
                       </div>
                     </DialogTitle>
 
-                    <div className="flex flex-col justify-between flex-grow ">
+                    <div className="flex flex-col justify-between flex-grow "
+                    >
       
                      <ERPScrollArea
                         maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
-                        className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto"
+                        className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto "
                       
                       >
                         {content &&

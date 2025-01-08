@@ -1,8 +1,6 @@
-import { useState } from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
@@ -13,14 +11,16 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { t } = useTranslation('accountsReport')
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
@@ -44,7 +44,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           { value: "Cheque", label: "Cheque" },
         ]}
         onChangeData={(data) => {
-          handleFieldChange('voucherType', data.voucherType);
+          handleFieldChange("voucherType", data.voucherType);
         }}
       />
       <ERPDataCombobox
@@ -56,7 +56,9 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange({ accGroupID: data.accGroupID })}
+        onChangeData={(data) =>
+          handleFieldChange({ accGroupID: data.accGroupID })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("accLedgerID")}
@@ -68,20 +70,28 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
+        onChangeData={(data) =>
+          handleFieldChange("accLedgerID", data.accLedgerID)
+        }
       />
-      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
-      <ERPDataCombobox
-        {...getFieldProps("salesRouteID")}
-        label={t("sales_route")}
-        field={{
-          id: "salesRouteID",
-          getListUrl: Urls.data_salesRoute,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
-      />}
+      {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+        <ERPDataCombobox
+          {...getFieldProps("salesRouteID")}
+          label={t("sales_route")}
+          field={{
+            id: "salesRouteID",
+            getListUrl: Urls.data_salesRoute,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onSelectItem={(data) =>
+            handleFieldChange({
+              salesRouteID: data.value,
+              salesRouteName: data.name,
+            })
+          }
+        />
+      )}
       <ERPDataCombobox
         {...getFieldProps("employeeID")}
         label={t("employee")}
@@ -91,7 +101,9 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({employeeID: data.value, employeeName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({ employeeID: data.value, employeeName: data.name })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("costCenterID")}
@@ -102,16 +114,22 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCenterID', data.costCenterID)}
+        onChangeData={(data) =>
+          handleFieldChange("costCenterID", data.costCenterID)
+        }
       />
-      <ERPCheckbox
-        {...getFieldProps("isIncludePI_CP")}
-        label={t("include_pi_cash_paid_amount")}
-        onChangeData={(data) => handleFieldChange("isIncludePI_CP", data.isIncludePI_CP)}
-      />
+      <div className="flex items-center">
+        <ERPCheckbox
+          {...getFieldProps("isIncludePI_CP")}
+          label={t("include_pi_cash_paid_amount")}
+          onChangeData={(data) =>
+            handleFieldChange("isIncludePI_CP", data.isIncludePI_CP)
+          }
+        />
+      </div>
     </div>
   );
-}
+};
 export default PaymentReportFilter;
 export const PaymentReportFilterInitialState = {
   dateFrom: new Date(),

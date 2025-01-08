@@ -103,7 +103,7 @@ const Templates = ({ }) => {
     }
   };
 
-  const getTemplates = async () => {0
+  const getTemplates = async () => {
     setLoading(true);
     var res = await api.getAsync(Urls.templates, `template_group=${templateGroup}`);
     handlePlainResponse(res, () => {
@@ -118,16 +118,11 @@ const Templates = ({ }) => {
   };
 
   useEffect(() => {
-    
+  
     setTempData([]);
     getTemplates();
   }, [templateGroup]);
 
-  /* ########################################################################################### */
-
-  // console.log("Template_data", tempData, templateGroup);
-
-  /* ########################################################################################### */
   const { t } = useTranslation("system");
   return (
     <>
@@ -219,8 +214,9 @@ const Templates = ({ }) => {
                               <PencilIcon
                                 title={t("edit")}
                                 className="w-3 text-accent cursor-pointer"
-                                onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
+                                // onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
                                 // onClick={() => navigate(`/label-designer/${temp?.id}`)}
+                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
                               />
                             </div>
                             <div>
@@ -318,6 +314,12 @@ interface ChooseTemplateProps {
   tempData: any;
 }
 
+// interface ChooseTemplateProps {
+//   templateGroup: TemplateGroupTypes;
+//   setShowTemplateListing: any;
+//   tempData: any;
+// }
+
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -347,8 +349,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-     navigate(`/label-designer/new?template_group=${templateGroup}`) 
-
+       templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    //  navigate(`/label-designer/new?template_group=${templateGroup}`) 
   };
 
   return (

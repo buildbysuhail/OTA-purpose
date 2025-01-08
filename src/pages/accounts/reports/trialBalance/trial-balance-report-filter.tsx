@@ -7,12 +7,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 
-
-const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-  const userSession = useSelector(
-    (state: RootState) => state.UserSession
-  );
-  const { t } = useTranslation('accountsReport')
+const TrialBalanceReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+}: any) => {
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
@@ -25,21 +25,23 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
+        onChangeData={(data) =>
+          handleFieldChange("accGroupID", data.accGroupID)
+        }
       />
-      <div className="flex items-center gap-4">
-        <ERPDateInput
-          {...getFieldProps("asonDate")}
-          label={t("as_on_date")}
-          onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
-          autoFocus={true}
-        />
-        {/* <ERPDateInput
+      <ERPDateInput
+        {...getFieldProps("asonDate")}
+        label={t("as_on_date")}
+        onChangeData={(data: any) =>
+          handleFieldChange("asonDate", data.asonDate)
+        }
+        autoFocus={true}
+      />
+      {/* <ERPDateInput
         {...getFieldProps("toDate")}
         label={t("To")}
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
       /> */}
-      </div>
       <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
@@ -49,14 +51,19 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+        onChangeData={(data) =>
+          handleFieldChange("costCentreID", data.costCentreID)
+        }
       />
-      {userSession.countryId==Countries.India &&
-      <ERPCheckbox
-      {...getFieldProps("isExcludeZeroBalance")}
-      label={t("excludeZeroBalance")}
-      onChangeData={(data) => handleFieldChange('isExcludeZeroBalance', data.isExcludeZeroBalance)}
-    />}
+      {userSession.countryId == Countries.India && (
+        <ERPCheckbox
+          {...getFieldProps("isExcludeZeroBalance")}
+          label={t("excludeZeroBalance")}
+          onChangeData={(data) =>
+            handleFieldChange("isExcludeZeroBalance", data.isExcludeZeroBalance)
+          }
+        />
+      )}
       {/* <ERPCheckbox
       {...getFieldProps("isPeriodWise")}
       label={t("Period_wise")}
@@ -64,7 +71,7 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
     /> */}
     </div>
   );
-}
+};
 export default TrialBalanceReportFilter;
 export const TrialBalanceReportFilterInitialState = {
   accGroupID: -1,
@@ -72,5 +79,5 @@ export const TrialBalanceReportFilterInitialState = {
   asonDate: new Date(),
   costCentreID: 0,
   isPeriodWise: false,
-  isExcludeZeroBalance:false,
+  isExcludeZeroBalance: false,
 };

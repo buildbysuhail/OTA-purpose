@@ -119,8 +119,8 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                rowData={rowData}
-                remoteOperations={{filtering:false,paging:false,sorting:false}}
+                 rowData={rowData}
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
                    filterText=" : {___(ledgerNameIN)}: Month-Year : {****(month)} - {****(year)}"

@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -17,14 +17,28 @@ interface CashFlowBankFlowDetailedSummaryProps {
   contentProps?: any;
   rowData?: any;
   origin?:any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 
-const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps> = ({ postData, contentProps,rowData,origin }) => {
+const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps> = ({ postData, contentProps,rowData,origin,isMaximized,modalHeight }) => {
 
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
+
+    const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+  
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 50; 
+      let gridHeightWindows = modalHeight - 180; 
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized,modalHeight]);
+
   const columns: DevGridColumn[] = [
 
     // {
@@ -42,7 +56,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      minWidth: 200,
       showInPdf:true,
     cellRender: (cellElement: any, cellInfo: any) => (
       <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
@@ -56,7 +70,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      minWidth: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashIN == false ? 'pr-8 ' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':'font-bold text-green'}`}>
@@ -70,7 +84,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      minWidth: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-red' : 'font-bold text-green'}`}>
@@ -84,7 +98,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
     //   dataType: "string",
     //   allowSearch: true,
     //   allowFiltering: true,
-    //   width: 300,
+    //   minWidth: 200,
     //   showInPdf:true,
     // },
     {
@@ -93,7 +107,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      minWidth: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashOut == false ? 'pr-8 ' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-red' :'font-bold text-green'}`}>
@@ -103,15 +117,16 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
     },
    
   ];
-  debugger;
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                heightToAdjustOnWindowsInModal={gridHeight.windows}
                 rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}

@@ -153,7 +153,6 @@ interface ERPDevGridProps {
   hideGridHeader?: boolean;
   gridHeader?: string;
   filterText?: string;
-  condition ?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -404,7 +403,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       remoteOperations = true,
-      condition ,
       focusedRowEnabled = false,
       onRowClick,
       onFilterChanged,
@@ -906,7 +904,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const dynamicProps = childPopupPropsDynamic
         ? childPopupPropsDynamic(event.column?.dataField)
         : childPopupProps;
-debugger;
+
       // Check if the clicked cell's field matches dynamicProps.drillDownCells
       const _drillDownCells = dynamicProps?.drillDownCells.split(",");
       const _drillDownCell = _drillDownCells.find(
@@ -941,7 +939,6 @@ debugger;
           updatedBodyProps
         );
         // Update bodyProps state
-        debugger;
         onCellClick && onCellClick(event);
         setBodyProps(updatedBodyProps);
         setIsChildOpen({
@@ -1098,11 +1095,6 @@ debugger;
       //     }
       //   }
     }, []);
-    const handleRowPrepared = (e: any) => {
-      if (e.rowType === "data" && condition != undefined && condition(e.data)) {
-        e.rowElement.style.display = "none"; // Hide row
-      }
-    };
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
 
@@ -1122,7 +1114,6 @@ debugger;
             allowColumnReordering={allowColumnReordering}
             allowColumnResizing={allowColumnResizing}
             columnAutoWidth={columnAutoWidth}
-            onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={onRowClick}

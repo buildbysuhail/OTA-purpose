@@ -20,7 +20,9 @@ const IncomeReportFilter = ({
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
@@ -68,18 +70,25 @@ const IncomeReportFilter = ({
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesmanID', data.salesmanID)}
+        onChangeData={(data) =>
+          handleFieldChange("salesmanID", data.salesmanID)
+        }
       />
-        <ERPDataCombobox
+      <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
         field={{
-          id: "costCentreID", 
+          id: "costCentreID",
           getListUrl: Urls.data_costcentres,
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            costCentreID: data.value,
+            costCentreName: data.name,
+          })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -90,11 +99,16 @@ const IncomeReportFilter = ({
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            salesRouteID: data.value,
+            salesRouteName: data.name,
+          })
+        }
       />
     </div>
   );
-}
+};
 export default IncomeReportFilter;
 export const IncomeReportFilterInitialState = {
   dateFrom: new Date(),

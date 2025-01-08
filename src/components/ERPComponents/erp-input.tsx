@@ -161,39 +161,39 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
     
 
-    useEffect(() => {
+    // useEffect(() => {
 
-      const handleWheel = (event: WheelEvent) => {
-        if (type === 'number') {
-          event.preventDefault();
-          const delta = event.deltaY < 0 ? 1 : -1;
-          const currentValue = parseFloat(value as string) || 0;
-          const newValue = currentValue + delta * (step ? parseFloat(step.toString()) : 1);
+    //   const handleWheel = (event: WheelEvent) => {
+    //     if (type === 'number') {
+    //       event.preventDefault();
+    //       const delta = event.deltaY < 0 ? 1 : -1;
+    //       const currentValue = parseFloat(value as string) || 0;
+    //       const newValue = currentValue + delta * (step ? parseFloat(step.toString()) : 1);
 
-          if ((min === undefined || newValue >= parseFloat(min.toString())) &&
-            (max === undefined || newValue <= parseFloat(max.toString()))) {
-            const changeEvent = {
-              target: { value: newValue.toString() }
-            } as React.ChangeEvent<HTMLInputElement>;
-            handleChange(changeEvent);
-          }
-          if (Voucherno) {
-          console.log(event.deltaY < 0 ? 'Mouse Scroll Up' : 'Mouse Scroll Down');
-          }
-        }
-      };
+    //       if ((min === undefined || newValue >= parseFloat(min.toString())) &&
+    //         (max === undefined || newValue <= parseFloat(max.toString()))) {
+    //         const changeEvent = {
+    //           target: { value: newValue.toString() }
+    //         } as React.ChangeEvent<HTMLInputElement>;
+    //         handleChange(changeEvent);
+    //       }
+    //       if (Voucherno) {
+    //       console.log(event.deltaY < 0 ? 'Mouse Scroll Up' : 'Mouse Scroll Down');
+    //       }
+    //     }
+    //   };
 
-      const inputElement = document.getElementById(id);
-      if (inputElement) {
-        inputElement.addEventListener('wheel', handleWheel, { passive: false });
-      }
+    //   const inputElement = document.getElementById(id);
+    //   if (inputElement) {
+    //     inputElement.addEventListener('wheel', handleWheel, { passive: false });
+    //   }
 
-      return () => {
-        if (inputElement) {
-          inputElement.removeEventListener('wheel', handleWheel);
-        }
-      };
-    }, [id, value, min, max, step, handleChange]);
+    //   return () => {
+    //     if (inputElement) {
+    //       inputElement.removeEventListener('wheel', handleWheel);
+    //     }
+    //   };
+    // }, [id, value, min, max, step, handleChange]);
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {

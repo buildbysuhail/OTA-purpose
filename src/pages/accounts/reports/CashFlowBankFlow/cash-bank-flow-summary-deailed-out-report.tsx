@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -15,14 +15,27 @@ interface CashFlowBankFlowSummaryDetailedOutProps {
   contentProps?: any;
   rowData?: any;
   origin?:any;
+  isMaximized?: boolean; 
+  modalHeight?:any
 }
 
-const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetailedOutProps> = ({ postData, contentProps,rowData,origin }) => {
-
+const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetailedOutProps> = ({ postData, contentProps,rowData,origin,isMaximized,modalHeight }) => {  
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
+
+    const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+  
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 50; 
+      let gridHeightWindows = modalHeight - 180; 
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized,modalHeight]);
+
   const columns: DevGridColumn[] = [
 
     // {
@@ -115,11 +128,11 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                rowData={rowData}
-                remoteOperations={{filtering:false,paging:false,sorting:false}}
+                 <ErpDevGrid
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
+                  rowData={rowData}
+                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
                    filterText=" : {___(ledgerNameOut)}: Month-Year : {___(month)} - {****(year)}"
@@ -128,12 +141,13 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
                   method={ActionType.POST}
                   gridId="grd_cashflow_bankflow_drilldown_summary_out"
                   popupAction={toggleCostCentrePopup}
-                postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
                 ></ErpDevGrid>
+
+
               </div>
-            </div>
           </div>
         </div>
       </div>

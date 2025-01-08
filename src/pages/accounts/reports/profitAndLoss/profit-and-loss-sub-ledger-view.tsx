@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -13,9 +13,11 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface ProfitAndLossSubledgerwiseViewProps {
   postData: any;
   groupName?: string;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
 
-const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = ({ postData, groupName }) => {
+const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = ({ postData, groupName, isMaximized, modalHeight }) => {
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
     key: number;
@@ -23,13 +25,24 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
   }>({ isOpen: false, key: 0 });
   const [filter, setFilter] = useState<any>(postData);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
-  const { getFormattedValue } = useNumberFormat()
+  const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const rootState = useRootState();
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "branchID",
-      caption: t('branchId'),
+      caption: t("branchId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -49,7 +62,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledgerID",
@@ -66,25 +79,34 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {cellElement.data.ledgerName}
-        </span>) :
+        return cellElement.data.ledgerName === "TOTAL" ? (
+          <span className={`${cellElement.data.ledgerName === "TOTAL" ? "font-bold text-red" : ""}`}>
+            {cellElement.data.ledgerName}
+          </span>
+        ) : (
           <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-      }
+        );
+      },
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-red" : "" }`}>
+          {`${
+            cellElement.data?.debit == 0 || cellElement.data?.debit == null
+              ? ""
+              : cellElement.data.debit < 0
+              ? getFormattedValue(-1 * cellElement.data.debit)
+              : getFormattedValue(cellElement.data.debit)
+          }`}
         </span>
       ),
     },
@@ -95,10 +117,16 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-red" : "" }`}>
+          {`${
+            cellElement.data?.credit == 0 || cellElement.data?.credit == null
+              ? ""
+              : cellElement.data.credit < 0
+              ? getFormattedValue(-1 * cellElement.data.credit)
+              : getFormattedValue(cellElement.data.credit)
+          }`}
         </span>
       ),
     },
@@ -109,11 +137,16 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-
+        <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-red" : "" }`}>
+          {`${
+            cellElement.data?.balance == 0 || cellElement.data?.balance == null
+              ? ""
+              : cellElement.data.balance < 0
+              ? getFormattedValue(-1 * cellElement.data.balance)
+              : getFormattedValue(cellElement.data.balance)
+          }`}
         </span>
       ),
     },
@@ -132,7 +165,6 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
   //       groupName: item.ledgerName,
   //     });
   //   };
-
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -141,11 +173,11 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   filterText=" {**** as of (asOnDate)}"
                   gridHeader={groupName}
-                  dataUrl={Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
+                  dataUrl={ Urls.acc_reports_account_ledger_balance_view_sub_group_inc }
                   postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
@@ -154,17 +186,20 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
                   gridId="grd_profit_and_loss_drill_down"
                   reload={true}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                      {
-                        asOnDate: filter.asOnDate,
-                        fromDate: filter.dateFrom
-                      }} />,
+                    content: (
+                      <CashBookMonthWise
+                        postData={{
+                          asOnDate: filter.asOnDate,
+                          fromDate: filter.dateFrom,
+                        }}
+                      />
+                    ),
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
-                    enableFn: (data: any) => data?.ledgerID != 0
+                    enableFn: (data: any) => data?.ledgerID != 0,
                   }}
                 ></ErpDevGrid>
               </div>

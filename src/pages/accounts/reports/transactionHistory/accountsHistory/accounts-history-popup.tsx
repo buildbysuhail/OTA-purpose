@@ -1,17 +1,35 @@
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
 interface AccountsHistoryPopupProps {
-  contentProps?: any
+  contentProps?: any;
   enablefilter?: boolean;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
-  const { t } = useTranslation('accountsReport');
+const AccountsHistoryPopup = ({
+  contentProps,
+  isMaximized,
+  modalHeight,
+}: AccountsHistoryPopupProps) => {
+  const { t } = useTranslation("accountsReport");
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -23,7 +41,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -38,12 +56,14 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      ),
     },
     {
       dataField: "accountName",
@@ -63,7 +83,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -110,31 +130,34 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                heightToAdjustOnWindows={window.innerHeight-649}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   gridHeader={t("accounts_transaction_history_popup")}
-                  dataUrl= {Urls.acc_reports_accounts_history_popup}
+                  dataUrl={Urls.acc_reports_accounts_history_popup}
                   method={ActionType.POST}
-                  postData ={contentProps.oldAccTransactionMasterID!=0?contentProps:null}
+                  postData={
+                    contentProps.oldAccTransactionMasterID != 0
+                      ? contentProps
+                      : null
+                  }
                   gridId="grd_accounts_history_popup"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                    childPopupProps={{
-                      content: <AccountsHistoryPopup/>,
-                      title: t("accounts_transaction_history_popup"),
-                      isForm: false,
-                      width: "mw-100",
-                      drillDownCells: "vchNo",
-                      bodyProps: "oldAccTransactionMasterID"
-                    }}
+                  childPopupProps={{
+                    content: <AccountsHistoryPopup />,
+                    title: t("accounts_transaction_history_popup"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "vchNo",
+                    bodyProps: "oldAccTransactionMasterID",
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

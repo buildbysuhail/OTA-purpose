@@ -135,6 +135,18 @@ const TrialBalance = () => {
                   hideGridAddButton={true}
                   reload={true}
                   filterWidth="100"
+                  rowVisibleFn = {(data: any) => data?.isGroup == undefined || data?.isGroup == false || (data?.showSummaryOnly != undefined && data?.isGroup == true)}
+                  customToolbarItems={[{
+                    location: 'after', item: (
+                      <button
+                        onClick={() => setShowValidation(true)}
+                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center hover:bg-gray-100 text-lg">
+                        <i className="ri-upload-line text-sm"></i>
+                      </button>)
+                  }]}
+                  rowVisibleFnFields = {[{
+
+                  }]}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TrialBalanceReportFilter />}
@@ -149,7 +161,7 @@ const TrialBalance = () => {
                     drillDownCells: "particulars",
                     bodyProps: "ledgerID",
                     origin:"trialBalance",
-                    enableFn: (data: any) => data?.isGroup == false && data?.particulars != "TOTAL"
+                    
                   }}
                 ></ErpDevGrid>
               </div>

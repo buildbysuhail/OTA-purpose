@@ -9,14 +9,16 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 
 interface BalancesheetDetailsProps {
   postData: any;
   groupName?: string;
   rowData?: any;
+  contentProps?: any;
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps }) => {
   
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
@@ -108,10 +110,10 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                 rowData={rowData}
                   heightToAdjustOnWindows={window.innerHeight - 649}
                   columns={columns}
+                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}
                   filterText="{___(groupName)} {**** as of (asOnDate)}"
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
-                  postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
                   showFilterInitially={true}

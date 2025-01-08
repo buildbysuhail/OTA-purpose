@@ -31,12 +31,14 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
         <ERPDateInput
           {...getFieldProps("asonDate")}
           label={t("date_from")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
           autoFocus={true}
         />
         <ERPDateInput
           {...getFieldProps("toDate")}
           label={t("date_to")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>

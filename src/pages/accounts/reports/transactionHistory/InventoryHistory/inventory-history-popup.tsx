@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
@@ -12,8 +12,10 @@ import InventoryHistoryDetails from "./inventory-history-details";
 interface InventoryHistoryPopupProps {
   contentProps?: any
   enablefilter?: boolean;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
+const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:InventoryHistoryPopupProps) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -21,6 +23,16 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -121,6 +133,7 @@ const InventoryHistoryPopup = ({contentProps}:InventoryHistoryPopupProps) => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   postData ={contentProps}
                   gridHeader={t("inventory_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_inventory_history_popup}

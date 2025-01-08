@@ -426,7 +426,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
-      heightToAdjustOnWindows = 150,
+      heightToAdjustOnWindows =  showTotalCount ? 150 : 100,
       heightToAdjustOnWindowsInModal,
       popupAction,
       changeReload,

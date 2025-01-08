@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
@@ -17,14 +17,28 @@ interface BalancesheetDetailsProps {
   groupName?: string;
   rowData?: any;
   contentProps?: any;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps }) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, }) => {
   
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
+
+    const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+  
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 50;
+      let gridHeightWindows = modalHeight - 180;
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized, modalHeight]);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "accGroupName",
@@ -104,11 +118,11 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                rowData={rowData}
-                  heightToAdjustOnWindows={window.innerHeight - 649}
+                  rowData={rowData}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}

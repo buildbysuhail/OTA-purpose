@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -15,14 +15,28 @@ interface OutstandingAccountAgingAnalysisProps {
   groupName?: string;
   contentProps?: any;
   rowData?: any;
+  isMaximized?: boolean;
+  modalHeight?: any;
 }
-const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData }) => {
+const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData,isMaximized,modalHeight }) => {
 // const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
     const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
   const rootState = useRootState();
+
+    const [gridHeight, setGridHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
+  
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 50;
+      let gridHeightWindows = modalHeight - 180;
+      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized, modalHeight]);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
@@ -107,13 +121,13 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 rowData={rowData}
                 // allowGrouping={true}
                 // groupPanelVisible={true}
-                  heightToAdjustOnWindows={window.innerHeight-649}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   filterText="{___ (ledgerame)} {**** as of (asonDate)}"
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}

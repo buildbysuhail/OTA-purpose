@@ -30,6 +30,7 @@ const AccountsHistoryPopup = ({
     let gridHeightWindows = modalHeight - 180;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
+  
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -131,7 +132,7 @@ const AccountsHistoryPopup = ({
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   heightToAdjustOnWindowsInModal={gridHeight.windows}

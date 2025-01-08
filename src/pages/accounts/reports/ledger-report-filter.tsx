@@ -1,43 +1,42 @@
-import { useState } from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
-import moment from 'moment';
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 
-const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
+const LedgerReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  formState,
+}: any) => {
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   // const [reload,setReload]= useState(false);
   return (
     <div className="grid grid-cols-1 my-4  md:grid-cols-2 gap-4">
       {/* Date Range Section */}
       <div className="flex items-center gap-4">
+
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
+
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("to")}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
-
-      {/* All Checkbox */}
-      <ERPCheckbox
-        {...getFieldProps("showAll")}
-        label={t("all")}
-        onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
-      />
 
       {/* Ledger Code Section */}
       <ERPDataCombobox
@@ -49,10 +48,14 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
           labelKey: "alias",
-          nameKey:"name",
+          nameKey: "name",
         }}
         onSelectItem={(data) => {
-          handleFieldChange({ledgerID: data.value, ledgerName: data.name, ledgerCode: data.label});
+          handleFieldChange({
+            ledgerID: data.value,
+            ledgerName: data.name,
+            ledgerCode: data.label,
+          });
           // setReload(!reload);
         }}
       />
@@ -67,9 +70,15 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
           labelKey: "name",
-          nameKey:'alias',
+          nameKey: "alias",
         }}
-        onSelectItem={(data) =>{ handleFieldChange({ledgerID: data.value, ledgerName: data.label,ledgerCode:data.name})}}
+        onSelectItem={(data) => {
+          handleFieldChange({
+            ledgerID: data.value,
+            ledgerName: data.label,
+            ledgerCode: data.name,
+          });
+        }}
       />
 
       {/* Related Ledger Section */}
@@ -83,7 +92,9 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('relLedgerID', data.relLedgerID)}
+        onChangeData={(data) =>
+          handleFieldChange("relLedgerID", data.relLedgerID)
+        }
       />
 
       {/* Cost Centre Section */}
@@ -96,42 +107,66 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,CostCenterName:data.label})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            costCentreID: data.value,
+            CostCenterName: data.label,
+          })
+        }
       />
-      {applicationSettings.accountsSettings?.allowSalesCounter == true &&
-      <ERPDataCombobox
-        {...getFieldProps("counterID")}
-        label={t("counter_id")}
-        field={{
-          id: "counterID",
-          getListUrl: Urls.data_counters,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) => handleFieldChange('counterID', data.counterID)}
-      />}
-      {formState.ledgerID != undefined && formState.ledgerID != null && formState.ledgerID != 0 && applicationSettings.accountsSettings?.maintainProjectSite == true &&
-        < ERPDataCombobox
-          {...getFieldProps("project")}
-          label={t("project")}
+
+      {applicationSettings.accountsSettings?.allowSalesCounter == true && (
+        <ERPDataCombobox
+          {...getFieldProps("counterID")}
+          label={t("counter_id")}
           field={{
-            id: "project",
-            getListUrl: `${Urls.data_projects_by_ledgerid}${formState.ledgerID}`,
-            // params: `ledgerID=${formState.ledgerID}`,
+            id: "counterID",
+            getListUrl: Urls.data_counters,
             valueKey: "id",
             labelKey: "name",
           }}
-          // reload={reload}
-          onChangeData={(data: any) => handleFieldChange('project', data.project)}
+          onChangeData={(data) =>
+            handleFieldChange("counterID", data.counterID)
+          }
         />
-      }
+      )}
+      
+      {formState.ledgerID != undefined &&
+        formState.ledgerID != null &&
+        formState.ledgerID != 0 &&
+        applicationSettings.accountsSettings?.maintainProjectSite == true && (
+          <ERPDataCombobox
+            {...getFieldProps("project")}
+            label={t("project")}
+            field={{
+              id: "project",
+              getListUrl: `${Urls.data_projects_by_ledgerid}${formState.ledgerID}`,
+              // params: `ledgerID=${formState.ledgerID}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            // reload={reload}
+            onChangeData={(data: any) =>
+              handleFieldChange("project", data.project)
+            }
+          />
+        )}
 
       {/* Checkboxes Grid */}
       <div className="col-span-2 grid grid-cols-2 gap-4">
+        {/* All Checkbox */}
+        <ERPCheckbox
+          {...getFieldProps("showAll")}
+          label={t("all")}
+          onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
+        />
+
         <ERPCheckbox
           {...getFieldProps("showSummary")}
           label={t("summary_wise")}
-          onChangeData={(data) => handleFieldChange('showSummary', data.showSummary)}
+          onChangeData={(data) =>
+            handleFieldChange("showSummary", data.showSummary)
+          }
         />
 
         {/* <ERPCheckbox
@@ -155,29 +190,38 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, formState }: any
         <ERPCheckbox
           {...getFieldProps("showOpeningBal")}
           label={t("opening_balance")}
-          onChangeData={(data) => handleFieldChange('showOpeningBal', data.showOpeningBal)}
+          onChangeData={(data) =>
+            handleFieldChange("showOpeningBal", data.showOpeningBal)
+          }
         />
 
         <ERPCheckbox
           {...getFieldProps("showSeparateColorForDebitBalance")}
           label={t("show_separate_color_for_debit_balance")}
-          onChangeData={(data) => handleFieldChange('showSeparateColorForDebitBalance', data.showSeparateColorForDebitBalance)}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "showSeparateColorForDebitBalance",
+              data.showSeparateColorForDebitBalance
+            )
+          }
         />
 
         <ERPCheckbox
           {...getFieldProps("showPendingCheques")}
           label={t("show_pending_cheques")}
-          onChangeData={(data) => handleFieldChange('showPendingCheques', data.showPendingCheques)}
+          onChangeData={(data) =>
+            handleFieldChange("showPendingCheques", data.showPendingCheques)
+          }
         />
       </div>
     </div>
   );
-}
+};
 export default LedgerReportFilter;
 export const LedgerReportFilterInitialState = {
   // dateFrom: new Date(-45), // Default empty string
-  dateFrom: moment().subtract(45, 'days').toDate(),
-  dateTo: new Date(), // Default empty string 
+  dateFrom: moment().subtract(45, "days").toDate(),
+  dateTo: new Date(), // Default empty string
   showAll: false, // Default to false
   ledgerCode: "", // Default empty string
   ledgerID: 0, // Default to 0

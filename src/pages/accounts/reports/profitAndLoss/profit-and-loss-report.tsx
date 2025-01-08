@@ -3,23 +3,22 @@ import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
-import { Clock1, FileDown, Forward, Printer, RectangleVertical, X } from "lucide-react";
+import {  Clock1,  FileDown,  Forward,  Printer,  RectangleVertical,  X} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import ProfitAndLossReportFilter, { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
+import ProfitAndLossReportFilter, {  ProfitAndLossReportFilterInitialState} from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
-  setIsOpenDetails: (isOpen: any) => void
+  setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
-  const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation('accountsReport')
+  const { getFormattedValue } = useNumberFormat();
+  const { t } = useTranslation("accountsReport");
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
     setIsOpenDetails({
@@ -31,26 +30,50 @@ const ProfitAndLossRow: React.FC<{
 
   return (
     <tr>
-      <td className={`py-2 ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"}`}
+      <td
+        className={`py-2 ${
+          item.title == "M"
+            ? "text-[#8B4513]"
+            : item.title == "L"
+            ? ""
+            : item.groupName == "TOTAL"
+            ? "text-sm font-bold text-[#f00]"
+            : "text-[#3b82f6]"
+        }`}
         style={{
-          paddingLeft: item.title == "M" ? "0px" : item.title == "G" ? "20px" : "10px",
+          paddingLeft:
+            item.title == "M" ? "0px" : item.title == "G" ? "20px" : "10px",
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}>
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
-          {item.groupName} 
+          {item.groupName}
         </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
-          <a href="#"
+          <a
+            href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M" ? "text-[#8B4513]" : item.title == "L" ? "" : item.groupName == "TOTAL" ? "text-sm font-bold text-[#f00]" : "text-[#3b82f6]"}`}
+            className={`py-2 hover:text-[#1d4ed8] ${
+              item.title == "M"
+                ? "text-[#8B4513]"
+                : item.title == "L"
+                ? ""
+                : item.groupName == "TOTAL"
+                ? "text-sm font-bold text-[#f00]"
+                : "text-[#3b82f6]"
+            }`}
             style={{
-              paddingLeft: item.title == "M" ? "0px" : item.title == "" ? "10px" : item.title == "L" ? "20px" : "20px",
+              paddingLeft:
+                item.title == "M"
+                  ? "0px"
+                  : item.title == ""
+                  ? "10px"
+                  : item.title == "L"
+                  ? "20px"
+                  : "20px",
               fontWeight: item.title == "M" ? "bold" : "normal",
-            }}
-          // className="text-[#3b82f6] hover:text-[#1d4ed8]"
-          >
+            }}>
             {getFormattedValue(item.total)}
           </a>
         </td>
@@ -65,85 +88,99 @@ const HorizontalProfitAndLoss: React.FC<{
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const expense = data?.filter((item: any) => item?.transType == "E");
   const income = data?.filter((item: any) => item?.transType == "I");
   return (
     <div className="relative">
-    <div className="grid grid-cols-2 gap-4 bg-white">
-      <div>
-        {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
-        <table className="w-full text-left border-collapse bg-white">
-          <thead>
-            <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("expense")}</th>
-              <th className="py-2 text-end pe-2">{t("amount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-          {expense?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
-              <ProfitAndLossRow
-                key={`asset-${index}`}
-                item={item}
-                setIsOpenDetails={setIsOpenDetails}
-              />
-            ))}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-2 gap-4 bg-white">
+        <div>
+          {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
+          <table className="w-full text-left border-collapse bg-white">
+            <thead>
+              <tr className="bg-gray-400">
+                <th className="py-2 ps-2">{t("expense")}</th>
+                <th className="py-2 text-end pe-2">{t("amount")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expense
+                ?.filter((x) => x.groupName != "TOTAL")
+                .map((item: any, index: number) => (
+                  <ProfitAndLossRow
+                    key={`asset-${index}`}
+                    item={item}
+                    setIsOpenDetails={setIsOpenDetails}
+                  />
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
+          <table className="w-full text-left border-collapse bg-white">
+            <thead>
+              <tr className="bg-gray-400">
+                <th className="py-2 ps-2">{t("income")}</th>
+                <th className="py-2 text-end pe-2">{t("amount")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {income
+                ?.filter((x) => x.groupName != "TOTAL")
+                .map((item: any, index: number) => (
+                  <ProfitAndLossRow
+                    key={`liability-${index}`}
+                    item={item}
+                    setIsOpenDetails={setIsOpenDetails}
+                  />
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div>
-        {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
-        <table className="w-full text-left border-collapse bg-white">
-          <thead>
-            <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("income")}</th>
-              <th className="py-2 text-end pe-2">{t("amount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {income?.filter(x=>x.groupName!="TOTAL").map((item: any, index: number) => (
-              <ProfitAndLossRow
-                key={`liability-${index}`}
-                item={item}
-                setIsOpenDetails={setIsOpenDetails}
-              />
-            ))}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">
+            {getFormattedValue(
+              data?.find(
+                (item: any) =>
+                  item?.transType === "E" && item?.groupName === "TOTAL"
+              )?.total || 0
+            )}
+          </h6>
+        </div>
+        <div className="grid grid-cols-2 bg-gray-50 p-2">
+          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
+          <h6 className="text-sm font-bold text-[#f00] text-right">
+            {getFormattedValue(
+              data?.find(
+                (item: any) =>
+                  item?.transType === "I" && item?.groupName === "TOTAL"
+              )?.total || 0
+            )}
+          </h6>
+        </div>
       </div>
     </div>
-     <div className="grid grid-cols-2 gap-4">
-     <div className="grid grid-cols-2 bg-gray-50 p-2">
-       <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-       <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
- item?.transType === "E" && item?.groupName === "TOTAL"
-)?.total || 0)}</h6>
-     </div>
-     <div className="grid grid-cols-2 bg-gray-50 p-2">
-       <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-       <h6 className="text-sm font-bold text-[#f00] text-right">{getFormattedValue( data?.find((item: any) =>
- item?.transType === "I" && item?.groupName === "TOTAL"
-)?.total || 0)}</h6>
-     </div>
-   </div>
-   </div>
   );
 };
 
 const ProfitAndLossReport = () => {
   const [data, setData] = useState<any[]>([]);
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
+  const [filter, setFilter] = useState<any>( ProfitAndLossReportFilterInitialState );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filterValidations,setFilterValidations]=useState();
+  const [filterValidations, setFilterValidations] = useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
     key: number;
     groupName?: string;
   }>({ isOpen: false, key: 0 });
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
@@ -160,17 +197,18 @@ const ProfitAndLossReport = () => {
       Urls.acc_reports_profit_and_loss,
       _filter || filter
     );
-    if (
-      res != undefined &&
-      res.isOk != undefined &&
-      res.isOk == false
-    ) {
+
+    if (res != undefined && res.isOk != undefined && res.isOk == false) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => {  return true});
+      setShowFilter((prev: any) => {
+        return true;
+      });
+
     } else {
       setFilterValidations(undefined);
       setShowFilter(false);
     }
+
     setData(res?.data || []);
     setLoading(false);
   };
@@ -185,8 +223,13 @@ const ProfitAndLossReport = () => {
       setFilter({});
       setFilterShowCount((prev) => prev + 1);
     }
+
     setShowFilter(false);
   }, [filterShowCount]);
+
+  const goToPreviousPage = () => {
+    window.history.back();
+  };
 
   return (
     <div className="p-6 bg-white">
@@ -205,8 +248,7 @@ const ProfitAndLossReport = () => {
           <div className="flex items-center ms-auto space-x-4">
             <button
               className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
-              onClick={() => setIsVerticalView(!isVerticalView)}
-            >
+              onClick={() => setIsVerticalView(!isVerticalView)}>
               <RectangleVertical className="mr-2" />
               <span className="mr-2">
                 {isVerticalView ? t("show_horizontal") : t("show_vertical")}
@@ -222,8 +264,8 @@ const ProfitAndLossReport = () => {
                 />
                 <label
                   htmlFor="toggle"
-                  className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                ></label>
+                  className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer">
+                </label>
               </div>
             </button>
 
@@ -235,15 +277,17 @@ const ProfitAndLossReport = () => {
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={filterValidations} title={"Profit and Loss"}              />
+                onClose={onCloseFilter}
+                validations={filterValidations}
+                title={"Profit and Loss"}
+              />
             </button>
+
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
               <Forward className="pe-2" />
               <span>{t("share")}</span>
-              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
-                0
-              </span>
+              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">  0  </span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-clock me-1"></i> */}
@@ -260,7 +304,9 @@ const ProfitAndLossReport = () => {
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button
+              onClick={goToPreviousPage}
+              className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />
@@ -270,7 +316,18 @@ const ProfitAndLossReport = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          From {new Date(filter.fromDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })} to {new Date(filter.toDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+          From{" "}
+          {new Date(filter.fromDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          })}{" "}
+          to{" "}
+          {new Date(filter.toDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          })}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (
@@ -295,9 +352,11 @@ const ProfitAndLossReport = () => {
             ) : (
               <table className="w-full text-left border-collapse bg-white">
                 <thead>
-                <tr className={"bg-white"}>
+                  <tr className={"bg-white"}>
                     <th className="py-2 ps-2">{t("account")}</th>
-                    <th className="font-bold py-2 text-end pe-2 bg-white">{t("total")}</th>
+                    <th className="font-bold py-2 text-end pe-2 bg-white">
+                      {t("total")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
@@ -317,8 +376,7 @@ const ProfitAndLossReport = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-      {(isOpenDetails.key !== 0 && isOpenDetails.key !== -400 &&
-
+      {isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
         <ERPModal
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
@@ -329,7 +387,7 @@ const ProfitAndLossReport = () => {
             setIsOpenDetails({ isOpen: false, key: 0 });
           }}
           content={
-            isOpenDetails.key == -500 ?
+            isOpenDetails.key == -500 ? (
               <ProfitAndLossClosingStockDetails
                 postData={{
                   fromDate: filter.fromDate,
@@ -337,20 +395,26 @@ const ProfitAndLossReport = () => {
                   valuationUsing: filter.valuationUsing,
                 }}
                 groupName={isOpenDetails.groupName}
-              /> :
+              />
+            ) : (
               <ProfitAndLossSubledgerwiseView
                 postData={{
                   accGroupID: isOpenDetails.key,
-                  expAccGroupID: isOpenDetails.key === 19 ? 23 : isOpenDetails.key === 10 ? 26 : 0,
+                  expAccGroupID:
+                    isOpenDetails.key === 19
+                      ? 23
+                      : isOpenDetails.key === 10
+                      ? 26
+                      : 0,
                   dateFrom: filter.fromDate,
                   asOnDate: filter.toDate,
                   isDateForm: true,
                 }}
                 groupName={isOpenDetails.groupName}
               />
+            )
           }
         />
-
       )}
     </div>
   );

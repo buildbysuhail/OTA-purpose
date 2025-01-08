@@ -7,11 +7,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 
-const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-  const { t } = useTranslation('accountsReport')
-  const userSession = useSelector(
-    (state: RootState) => state.UserSession
-  );
+const BillwiseProfitReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
+  const userSession = useSelector((state: RootState) => state.UserSession);
   return (
     <div className="grid grid-cols-2 gap-4">
       {/* Date Range */}
@@ -19,7 +20,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
         <ERPDateInput
           {...getFieldProps("fromDate")}
           label={t("date_from")}
-          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+          onChangeData={(data: any) =>
+            handleFieldChange("fromDate", data.fromDate)
+          }
         />
         <ERPDateInput
           {...getFieldProps("toDate")}
@@ -42,7 +45,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('productGroupId', data.productGroupId)}
+        onChangeData={(data) =>
+          handleFieldChange("productGroupId", data.productGroupId)
+        }
       />
       {/* </div> */}
       {/* <div className="flex items-center gap-2">
@@ -59,7 +64,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('productId', data.productId)}
+        onChangeData={(data) => handleFieldChange("productId", data.productId)}
       />
       {/* </div> */}
       {/* Customer Selection */}
@@ -77,7 +82,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('partyID', data.partyID)}
+        onChangeData={(data) => handleFieldChange("partyID", data.partyID)}
       />
       {/* </div> */}
       {/* Sales Related Fields
@@ -95,7 +100,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesmanID', data.salesmanID)}
+        onChangeData={(data) =>
+          handleFieldChange("salesmanID", data.salesmanID)
+        }
       />
       {/* </div> */}
       {/* <div className="flex items-center gap-2">
@@ -112,7 +119,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesRouteID', data.salesRouteID)}
+        onChangeData={(data) =>
+          handleFieldChange("salesRouteID", data.salesRouteID)
+        }
       />
       {/* </div> */}
       {/* Product Attributes
@@ -130,7 +139,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({brandID: data.value,brandName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({ brandID: data.value, brandName: data.name })
+        }
       />
       {/* </div> */}
       {/* <div className="flex items-center gap-2">
@@ -147,7 +158,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({colour: data.name})}
+        onSelectItem={(data) => handleFieldChange({ colour: data.name })}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -164,7 +175,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "name",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({warranty: data.name})}
+        onSelectItem={(data) => handleFieldChange({ warranty: data.name })}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -181,7 +192,7 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('warehouse', data.warehouse)}
+        onChangeData={(data) => handleFieldChange("warehouse", data.warehouse)}
       />
       {/* </div>
       <div className="flex items-center gap-2">
@@ -198,7 +209,9 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('groupCategoryID', data.groupCategoryID)}
+        onChangeData={(data) =>
+          handleFieldChange("groupCategoryID", data.groupCategoryID)
+        }
       />
       {/* </div>  */}
       <ERPDataCombobox
@@ -210,41 +223,49 @@ const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('sectionID', data.sectionID)}
+        onChangeData={(data) => handleFieldChange("sectionID", data.sectionID)}
       />
       {/* Additional Options */}
-      <div className="space-y-2">
         <ERPCheckbox
           {...getFieldProps("useAvgPrice")}
           label={t("set_cost_as_avg_price")}
-          onChangeData={(data) => handleFieldChange('useAvgPrice', data.useAvgPrice)}
+          onChangeData={(data) =>
+            handleFieldChange("useAvgPrice", data.useAvgPrice)
+          }
         />
-        <div className="flex gap-4">
-          <ERPCheckbox
-            {...getFieldProps("showFifoRate")}
-            label={t("set_cost_as_FIFO_avg_price")}
-            onChangeData={(data) => handleFieldChange('showFifoRate', data.showFifoRate)}
-          />
-          <ERPCheckbox
-            {...getFieldProps("includeVATinProfit")}
-            label={userSession.countryId == Countries.India ? t("include_TAX_in_profit") : t("include_VAT_in_profit")}
-            onChangeData={(data) => handleFieldChange('includeVATinProfit', data.includeVATinProfit)}
-          />
-        </div>
+        <ERPCheckbox
+          {...getFieldProps("showFifoRate")}
+          label={t("set_cost_as_FIFO_avg_price")}
+          onChangeData={(data) =>
+            handleFieldChange("showFifoRate", data.showFifoRate)
+          }
+        />
+        <ERPCheckbox
+          {...getFieldProps("includeVATinProfit")}
+          label={
+            userSession.countryId == Countries.India
+              ? t("include_TAX_in_profit")
+              : t("include_VAT_in_profit")
+          }
+          onChangeData={(data) =>
+            handleFieldChange("includeVATinProfit", data.includeVATinProfit)
+          }
+        />
         <ERPCheckbox
           {...getFieldProps("showFast")}
           label={t("show_fast")}
-          onChangeData={(data) => handleFieldChange('showFast', data.showFast)}
+          onChangeData={(data) => handleFieldChange("showFast", data.showFast)}
         />
-      </div>
-      <ERPCheckbox
-        {...getFieldProps("isconsiderSE")}
-        label={t("consider_SE")}
-        onChangeData={(data) => handleFieldChange('isconsiderSE', data.isconsiderSE)}
-      />
+        <ERPCheckbox
+          {...getFieldProps("isconsiderSE")}
+          label={t("consider_SE")}
+          onChangeData={(data) =>
+            handleFieldChange("isconsiderSE", data.isconsiderSE)
+          }
+        />
     </div>
   );
-}
+};
 export default BillwiseProfitReportFilter;
 export const BillwiseProfitReportFilterInitialState = {
   fromDate: new Date(),

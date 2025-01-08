@@ -44,6 +44,7 @@ const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }:
         <ERPDataCombobox
           {...getFieldProps("routeID")}
           label={t("sales_route")}
+          className="w-full"
           field={{
             id: "routeID",
             getListUrl: Urls.data_salesRoute,

@@ -7,7 +7,12 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 
-const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) => {
+const IncomeReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  t,
+  filter,
+}: any) => {
   // const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<any>(IncomeReportFilterInitialState);
 
@@ -17,7 +22,9 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
@@ -25,8 +32,7 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
-      safvan
-   {JSON.stringify(filter)}
+      {JSON.stringify(filter)}
       <ERPDataCombobox
         {...getFieldProps("accGroupID")}
         label={t("group_under")}
@@ -38,7 +44,9 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange({ accGroupID: data.accGroupID })}
+        onChangeData={(data) =>
+          handleFieldChange({ accGroupID: data.accGroupID })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("accLedgerID")}
@@ -49,9 +57,11 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
-      /> 
-        <ERPDataCombobox
+        onChangeData={(data) =>
+          handleFieldChange("accLedgerID", data.accLedgerID)
+        }
+      />
+      <ERPDataCombobox
         {...getFieldProps("salesmanID")}
         label={t("salesman")}
         field={{
@@ -60,18 +70,25 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesmanID', data.salesmanID)}
+        onChangeData={(data) =>
+          handleFieldChange("salesmanID", data.salesmanID)
+        }
       />
-        <ERPDataCombobox
+      <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
         field={{
-          id: "costCentreID", 
+          id: "costCentreID",
           getListUrl: Urls.data_costcentres,
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            costCentreID: data.value,
+            costCentreName: data.name,
+          })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -82,11 +99,16 @@ const IncomeReportFilter = ({ getFieldProps, handleFieldChange,t,filter }: any) 
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            salesRouteID: data.value,
+            salesRouteName: data.name,
+          })
+        }
       />
     </div>
   );
-}
+};
 export default IncomeReportFilter;
 export const IncomeReportFilterInitialState = {
   dateFrom: new Date(),

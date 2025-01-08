@@ -110,7 +110,7 @@ const CashFlowReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  filterText=" as of {asonDate}"
+                  filterText=" as of {--- (finTo)}"
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
@@ -131,7 +131,7 @@ const CashFlowReport = () => {
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
-                    bodyProps: "year,monthNum",
+                    bodyProps: "year,monthNum,month",
                     origin:"cash_flow", 
                     enableFn: (data: any) => data?.month != "TOTAL"
                   }}

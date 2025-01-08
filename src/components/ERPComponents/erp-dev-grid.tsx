@@ -153,6 +153,7 @@ interface ERPDevGridProps {
   hideGridHeader?: boolean;
   gridHeader?: string;
   filterText?: string;
+  condition ?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -403,6 +404,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       remoteOperations = true,
+      condition ,
       focusedRowEnabled = false,
       onRowClick,
       onFilterChanged,
@@ -423,7 +425,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
-      heightToAdjustOnWindows = 100,
+      heightToAdjustOnWindows = 150,
       heightToAdjustOnWindowsInModal,
       popupAction,
       changeReload,
@@ -904,7 +906,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const dynamicProps = childPopupPropsDynamic
         ? childPopupPropsDynamic(event.column?.dataField)
         : childPopupProps;
-
+debugger;
       // Check if the clicked cell's field matches dynamicProps.drillDownCells
       const _drillDownCells = dynamicProps?.drillDownCells.split(",");
       const _drillDownCell = _drillDownCells.find(
@@ -939,6 +941,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           updatedBodyProps
         );
         // Update bodyProps state
+        debugger;
         onCellClick && onCellClick(event);
         setBodyProps(updatedBodyProps);
         setIsChildOpen({
@@ -1095,6 +1098,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       //     }
       //   }
     }, []);
+    const handleRowPrepared = useCallback(
+      (e: any) => {
+        if (e.rowType === "data" && condition != undefined && condition(e.data)) {
+          e.rowElement.style.display = "none"; // Hide row
+        }
+      },
+      [condition] // Add dependencies here
+    );
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
 
@@ -1114,6 +1125,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             allowColumnReordering={allowColumnReordering}
             allowColumnResizing={allowColumnResizing}
             columnAutoWidth={columnAutoWidth}
+            onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={onRowClick}
@@ -1305,7 +1317,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
           {showTotalCount == true && (
-            <div className="mt-4 p-3 bg-gray rounded-md border border-gray">
+            <div className="p-3 bg-gray border border-gray">
               <span className="text-gray font-semibold">Total Records: </span>
               <span className="text-gray">{totalRowCount}</span>
             </div>

@@ -221,7 +221,7 @@ interface ERPDevGridProps {
     bodyProps?: string;
     enableFilter?: boolean;
     origin?: string;
-    enableFn?: () => boolean;
+    enableFn?: (data: any) => boolean;
   };
   [key: string]: any; // To allow other props to be passed
 }

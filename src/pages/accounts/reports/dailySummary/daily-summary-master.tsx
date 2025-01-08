@@ -54,7 +54,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
           <div className="">
             <div className="p-4">
               <ERPDateInput
-                id="3nsactionDate"
+                id="transactionDate"
                 value={filter.filter.transactionDate}
                 customSize='sm'
                 data={filter.filter}

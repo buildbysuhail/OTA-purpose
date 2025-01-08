@@ -7,15 +7,21 @@ import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 
-const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) => {
-  const { t } = useTranslation('accountsReport');
+const ExpenseReportFilter = ({
+  getFieldProps,
+  handleFieldChange,
+  getFormState,
+}: any) => {
+  const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
+          onChangeData={(data: any) =>
+            handleFieldChange("dateFrom", data.dateFrom)
+          }
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
@@ -23,7 +29,7 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) =
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
-   
+
       <ERPDataCombobox
         {...getFieldProps("accGroupID")}
         label={t("group_under")}
@@ -33,21 +39,29 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange({ accGroupID: data.accGroupID })}
+        onChangeData={(data) =>
+          handleFieldChange({ accGroupID: data.accGroupID })
+        }
       />
-      <ERPDataCombobox
-        {...getFieldProps("accLedgerID")}
-        label={t("ledger")}
-        field={{
-          id: "accLedgerID",
-          getListUrl:`${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${filter?.accGroupID}`,
-        //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
-      />
+      {getFormState()?.data?.accGroupID != undefined && (
         <ERPDataCombobox
+          {...getFieldProps("accLedgerID")}
+          label={t("ledger")}
+          field={{
+            id: "accLedgerID",
+            getListUrl: `${Urls.data_SelectAccLedgersByAccGroupIDForCombo}${
+              getFormState()?.data?.accGroupID
+            }`,
+            //  params: filter?.accGroupID == undefined || filter?.accGroupID == null || filter?.accGroupID == 0 ? `ledgerID=0&ledgerType=${LedgerType.All}` : '',
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange("accLedgerID", data.accLedgerID)
+          }
+        />
+      )}
+      <ERPDataCombobox
         {...getFieldProps("salesmanID")}
         label={t("salesman")}
         field={{
@@ -56,18 +70,25 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('salesmanID', data.salesmanID)}
+        onChangeData={(data) =>
+          handleFieldChange("salesmanID", data.salesmanID)
+        }
       />
-        <ERPDataCombobox
+      <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
         field={{
-          id: "costCentreID", 
+          id: "costCentreID",
           getListUrl: Urls.data_costcentres,
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({costCentreID: data.value,costCentreName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            costCentreID: data.value,
+            costCentreName: data.name,
+          })
+        }
       />
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -78,11 +99,16 @@ const ExpenseReportFilter = ({ getFieldProps, handleFieldChange,filter }: any) =
           valueKey: "id",
           labelKey: "name",
         }}
-        onSelectItem={(data) => handleFieldChange({salesRouteID:data.value,salesRouteName:data.name})}
+        onSelectItem={(data) =>
+          handleFieldChange({
+            salesRouteID: data.value,
+            salesRouteName: data.name,
+          })
+        }
       />
     </div>
   );
-}
+};
 export default ExpenseReportFilter;
 export const ExpenseReportFilterInitialState = {
   dateFrom: new Date(),

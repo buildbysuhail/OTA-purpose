@@ -77,7 +77,7 @@ const ERPModal = React.memo(
     const [isMaximized, setIsMaximized] = useState(false);
     const [modalHeight, setModalHeight] = useState(0);
 
- 
+ debugger;
     useEffect(() => {
       const updateModalHeight = () => {
         // Add extra padding to ensure content fits

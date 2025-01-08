@@ -61,9 +61,13 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-      ),
+      cellRender: (cellElement: any, cellInfo: any) => {
+        debugger;
+        return (
+          cellElement.data.oldAccTransactionMasterID > 0 ? <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate> : cellElement.value
+          
+        )
+      },
     },
     {
       dataField: "accountName",
@@ -151,6 +155,7 @@ const AccountsHistoryPopup = ({
                     width: "mw-100",
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID",
+                    enableFn: (data: any) => data.oldAccTransactionMasterID > 0
                   }}
                 ></ErpDevGrid>
               </div>

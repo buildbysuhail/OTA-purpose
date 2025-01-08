@@ -18,6 +18,7 @@ const TrialBalance = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
+    const [showValidation, setShowValidation] = useState(false);
   const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
@@ -28,7 +29,7 @@ const TrialBalance = () => {
       visible: false,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      // cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
       dataField: "particulars",
@@ -41,7 +42,7 @@ const TrialBalance = () => {
         <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
           {/* {cellElement.data.particulars} */}
           {
-            cellElement.data.isGroup != true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
+            cellElement.data.isGroup !== true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
           }
           
         </span>
@@ -83,7 +84,7 @@ const TrialBalance = () => {
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null||cellElement.data.isGroup == true? '0' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null||cellElement.data.isGroup == true? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },

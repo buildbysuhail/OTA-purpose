@@ -85,7 +85,9 @@ const ProfitAndLossRow: React.FC<{
     </tr>
   );
 };
-
+const goToPreviousPage = () => {
+  window.history.back();
+};
 // Horizontal format component
 const HorizontalProfitAndLoss: React.FC<{
   data: any[];
@@ -349,10 +351,7 @@ const ProfitAndLossDetailedReport = () => {
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button
-              onClick={goToPreviousPage}
-              className="flex items-center bg-gray-100 p-2 rounded-md"
-            >
+            <button onClick={goToPreviousPage} className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />

@@ -248,7 +248,7 @@ const AccountLedgerType = () => {
                 columns={columns}
                 gridHeader={t("acc_ledger")}
                 dataUrl={Urls.account_ledger}
-                gridId="grd_user_type"
+                gridId="grd_acc_ledger"
                 popupAction={toggleAccountLedgerPopup}
                 gridAddButtonType="popup"
                 changeReload={(reload: any) => { dispatch(toggleAccountLedgerPopup({ ...rootState, reload: reload })) }}

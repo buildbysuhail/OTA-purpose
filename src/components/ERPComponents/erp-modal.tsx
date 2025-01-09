@@ -68,7 +68,7 @@ const ERPModal = React.memo(
     isFullHeight = false,
     isRemoveSomething = false,
     width = "w-full",
-    minHeight,
+    minHeight=300,
     closeOnSubmit = true,
     disableOutsideClickClose = true,
     customPosition = false,
@@ -90,8 +90,8 @@ const ERPModal = React.memo(
         // : wh - heightToAdjustOnWindows;
 
         const height = isMaximized
-          ? window.innerHeight - 100
-          : window.innerHeight - 300 < 300 ? 300 : window.innerHeight - 300;
+          ? window.innerHeight - 50
+          : window.innerHeight < minHeight ? window.innerHeight: window.innerHeight - 200 < minHeight ? minHeight : window.innerHeight -200;
 
         setModalHeight(height);
       };
@@ -201,7 +201,7 @@ const ERPModal = React.memo(
                     style={{
                       height: isMaximized ? `${modalHeight}px` : 'auto',
                       maxHeight: `${modalHeight}px`,
-                      // minHeight: `300px`,
+                      // minHeight: minHeight ? `${minHeight}px` : '',
                       display: "flex",
                       flexDirection: "column",
                     }}

@@ -1350,6 +1350,7 @@ debugger;
         {(childPopupProps || childPopupPropsDynamic) && (
           <ERPModal
             isOpen={isChildOpen.isOpen}
+            minHeight={800}
             title={
               childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).title

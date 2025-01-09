@@ -77,7 +77,7 @@ const TrialBalance = () => {
     {
       dataField: "debit",
       caption: t('debit'),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -91,7 +91,7 @@ const TrialBalance = () => {
     {
       dataField: "credit",
       caption: t("credit"),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,

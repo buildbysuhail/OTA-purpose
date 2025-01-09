@@ -55,6 +55,13 @@ const TrialBalanceReportFilter = ({
           handleFieldChange("costCentreID", data.costCentreID)
         }
       />
+      <ERPCheckbox
+          {...getFieldProps("showGroupSummaryOnly")}
+          label={t("show_group_summary")}
+          onChangeData={(data) =>
+            handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
+          }
+        />
       {userSession.countryId == Countries.India && (
         <ERPCheckbox
           {...getFieldProps("isExcludeZeroBalance")}
@@ -80,4 +87,5 @@ export const TrialBalanceReportFilterInitialState = {
   costCentreID: 0,
   isPeriodWise: false,
   isExcludeZeroBalance: false,
+  showGroupSummaryOnly:false
 };

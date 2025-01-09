@@ -26,6 +26,7 @@ import Urls from "../../redux/urls";
 import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
+import { TemplateDto } from "./Designer/interfaces";
 
 interface DesignSectionType {
   id: number;
@@ -159,13 +160,19 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
-    const activeTemplate = {
+    const tmpTemplate = {
       ...templateData.activeTemplate,
-      thumbImage: dataUrl,
       propertiesState: {
         ...templateData.activeTemplate.propertiesState,
         template_group: templateGroup
       }
+    }
+    const activeTemplate: TemplateDto = {
+      // ...templateData.activeTemplate,
+      templateName: tmpTemplate.propertiesState?.templateName??"",
+      thumbImage: dataUrl,
+      content: JSON.stringify(tmpTemplate);
+      
 
     }
     await dispatch(setTemplate(activeTemplate));

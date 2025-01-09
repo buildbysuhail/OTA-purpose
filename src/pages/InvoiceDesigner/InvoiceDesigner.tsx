@@ -160,6 +160,7 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
+    debugger;
     const tmpTemplate = {
       ...templateData.activeTemplate,
       propertiesState: {
@@ -169,11 +170,18 @@ const InvoiceDesigner = () => {
     }
     const activeTemplate: TemplateDto = {
       // ...templateData.activeTemplate,
+      templateType:tmpTemplate.propertiesState.template_type??"standard",
+      templateKind:tmpTemplate.propertiesState.template_kind??"standard",
+      templateGroup:tmpTemplate.propertiesState.template_group??"",
       templateName: tmpTemplate.propertiesState?.templateName??"",
       thumbImage: dataUrl,
-      content: JSON.stringify(tmpTemplate)
-      
-
+      content: JSON.stringify(tmpTemplate),
+      isCurrent:false,
+      backgroundImage:tmpTemplate.background_image??"",
+      backgroundImageHeader:tmpTemplate.background_image_header??"",
+      backgroundImageFooter:tmpTemplate.background_image_footer??"",
+      signatureImage:tmpTemplate.signature_image??"",
+      branchId:0
     }
     await dispatch(setTemplate(activeTemplate));
     setLoading(true); 

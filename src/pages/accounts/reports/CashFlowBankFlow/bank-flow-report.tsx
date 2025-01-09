@@ -100,6 +100,16 @@ const BankFlowReport = () => {
         </span>
       ),
     },
+    {
+      dataField: "showSummary",
+      caption: t('show_summary'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true, 
+      width: 250,
+      showInPdf:true,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+    },
   ];
   return (
     <Fragment>
@@ -126,18 +136,18 @@ const BankFlowReport = () => {
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
-                  childPopupProps={{
-                    content: <CashBankFlowDetailedSummaryReport postData={{...filter,
-                      reportType:"Bank",
-                    }} />,
-                    title: t("bank_flow_report_detailed"),
-                    isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "month",
-                    bodyProps: "year,monthNum",
-                    origin:"bank_flow", 
-                    enableFn: (data: any) => data?.month != "TOTAL"
-                  }}
+                  // childPopupProps={{
+                  //   content: <CashBankFlowDetailedSummaryReport postData={{...filter,
+                  //     reportType:"Bank",
+                  //   }} />,
+                  //   title: t("bank_flow_report_detailed"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "month",
+                  //   bodyProps: "year,monthNum",
+                  //   origin:"bank_flow", 
+                  //   enableFn: (data: any) => data?.month != "TOTAL"
+                  // }}
                   // childPopupProps={{
                   //   content: <CashBankFlowDetailedReport postData={
                   //     { ...filter,
@@ -151,6 +161,26 @@ const BankFlowReport = () => {
                   //   origin:"bank_flow",
                   //   enableFn: (data: any) => data?.month != "TOTAL"
                   // }}
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title:dataField == "showSummary"? t("bank_flow_summary"):t("bank_flow_detailed"),
+                    width: "700px",
+                    isForm: false,
+                    content: 
+                    dataField == "showSummary" ?
+                    <CashBankFlowDetailedSummaryReport postData={{...filter,
+                      reportType:"Bank",
+                    }} />
+                    :  
+                    dataField == "month" ?
+                    <CashBankFlowDetailedReport postData={
+                      { ...filter,
+                        reportType:"Bank",
+                      }} />
+                      : null
+                      ,
+                    drillDownCells: dataField == "showSummary" ? "showSummary" : "month",
+                    bodyProps: dataField == "showSummary" ? "year,monthNum,month" : "year,monthNum",
+                  })}
                 ></ErpDevGrid>
               </div>
             </div>

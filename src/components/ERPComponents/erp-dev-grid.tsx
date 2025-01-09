@@ -66,7 +66,14 @@ import {
 import type { Column as ColumnType } from "devextreme/ui/data_grid";
 import { RootState } from "../../redux/store";
 import { UserModel } from "../../redux/slices/user-session/reducer";
+import ERPCheckbox from "./erp-checkbox";
 
+interface CustomFilterItemsType {
+  keyField: string;
+  location: "before" | "after";
+  type: "checkbox" | "input";
+  label: string;
+}
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -148,13 +155,13 @@ interface ERPDevGridProps {
   onKeyDown?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
-  customToolbarItems?: ToolbarItem[];
+  customFilterItems?: CustomFilterItemsType[];
   hideDefaultExportButton?: boolean;
   hideDefaultSearchPanel?: boolean;
   hideGridHeader?: boolean;
   gridHeader?: string;
   filterText?: string;
-  condition ?: any;
+  rowVisibleFn?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -250,108 +257,46 @@ const createStore = async (
   bodyProps?: any,
   setFilterValidations?: any,
   setShowFilter?: any,
-  setTotalRowCount?: any
+  setTotalRowCount?: any,
+  remoteOperations?: any,
+  customFilterItems?: any
 ) => {
-  return new CustomStore({
+  return (remoteOperations == false || remoteOperations?.paging == false) &&  customFilterItems != undefined &&  customFilterItems != null
+  ? await loadData(
+    keyExpr,
+    dataUrl ?? "",
+    enablefilter,
+    allowEditing,
+    method,
+    postData,
+    filterData,
+    initialFilters,
+    paramNames,
+    bodyProps,
+    setFilterValidations,
+    setShowFilter,
+    setTotalRowCount,
+    {}
+  ) 
+  : new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
-      if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
-        loadOptions.filter = initialFilters.map((f) => {
-          if (f.value instanceof Date) {
-            // Format the date as ISO string
-            return [
-              f.field,
-              f.operation,
-              formatDate(f.value, "yyyy-MM-ddTHH:mm:ss"),
-            ];
-          }
-          return [f.field, f.operation, f.value];
-        });
-      }
-
-      const params = Object.fromEntries(
-        paramNames
-          .filter((paramName) => isNotEmpty(loadOptions[paramName]))
-          .map((paramName) => [
-            paramName,
-            JSON.stringify(loadOptions[paramName]),
-          ])
+        await loadData(
+        keyExpr,
+        dataUrl ?? "",
+        enablefilter,
+        allowEditing,
+        method,
+        postData,
+        filterData,
+        initialFilters,
+        paramNames,
+        bodyProps,
+        setFilterValidations,
+        setShowFilter,
+        setTotalRowCount,
+        loadOptions
       );
-
-      // Append filterData to params
-      if (enablefilter && filterData) {
-        Object.entries(filterData).forEach(([key, value]) => {
-          params[key] = JSON.stringify(value);
-        });
-      }
-
-      const queryString = new URLSearchParams(params).toString();
-
-      try {
-        setFilterValidations(undefined);
-        const result =
-          method === ActionType.GET
-            ? await api.get(dataUrl, queryString)
-            : method === ActionType.POST
-            ? await api.postAsync(
-                dataUrl,
-                filterData != undefined && Object.keys(filterData).length > 0
-                  ? filterData
-                  : postData != undefined
-                  ? postData
-                  : {},
-                queryString
-              )
-            : null;
-
-        if (
-          result != undefined &&
-          result.isOk != undefined &&
-          result.isOk == false
-        ) {
-          ERPToast.show(result.message, "error");
-        }
-
-        if (
-          result != undefined &&
-          result.isOk != undefined &&
-          result.isOk == false
-        ) {
-          setFilterValidations(result.validations);
-          setShowFilter(true);
-        } else {
-          setFilterValidations(undefined);
-        }
-        setTotalRowCount((prev: number) =>
-          prev <= 0 ? result.dataRowCount != undefined && result.dataRowCount != null ? result.dataRowCount: result.totalCount : prev
-        );
-        return result != undefined
-          ? result.isOk != undefined && result.isOk == false
-            ? {
-                data: [],
-                totalCount: -1,
-                summary: {},
-                groupCount: 0,
-              }
-            : {
-                data: result.data,
-                totalCount: result.totalCount,
-              }
-          : {
-              data: [],
-              totalCount: -1,
-              summary: {},
-              groupCount: 0,
-            };
-      } catch (err) {
-        console.error("Load failed:", err);
-        return {
-          data: [],
-          totalCount: 0,
-          summary: {},
-          groupCount: 0,
-        };
-      }
     },
     ...(allowEditing && {
       insert: async (values) => {
@@ -366,6 +311,134 @@ const createStore = async (
     }),
   });
 };
+const loadData = async ( keyExpr: string | string[] | undefined,
+  dataUrl: string,
+  enablefilter: boolean,
+  allowEditing?: boolean,
+  method?: ActionType,
+  postData?: any,
+  filterData?: any,
+  initialFilters?: Array<{
+    field: string;
+    value: any;
+    operation: FilterOperation;
+  }>,
+  paramNames: string[] = [
+    "skip",
+    "take",
+    "requireTotalCount",
+    "sort",
+    "filter",
+  ],
+  bodyProps?: any,
+  setFilterValidations?: any,
+  setShowFilter?: any,
+  setTotalRowCount?: any,
+  loadOptions?: any
+) => {
+  if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
+    loadOptions.filter = initialFilters.map((f) => {
+      if (f.value instanceof Date) {
+        // Format the date as ISO string
+        return [
+          f.field,
+          f.operation,
+          formatDate(f.value, "yyyy-MM-ddTHH:mm:ss"),
+        ];
+      }
+      return [f.field, f.operation, f.value];
+    });
+  }
+
+  const params = Object.fromEntries(
+    paramNames
+      .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+      .map((paramName) => [
+        paramName,
+        JSON.stringify(loadOptions[paramName]),
+      ])
+  );
+
+  // Append filterData to params
+  if (enablefilter && filterData) {
+    Object.entries(filterData).forEach(([key, value]) => {
+      params[key] = JSON.stringify(value);
+    });
+  }
+
+  const queryString = new URLSearchParams(params).toString();
+
+  try {
+    setFilterValidations(undefined);
+    const result =
+      method === ActionType.GET
+        ? await api.get(dataUrl, queryString)
+        : method === ActionType.POST
+        ? await api.postAsync(
+            dataUrl,
+            filterData != undefined && Object.keys(filterData).length > 0
+              ? filterData
+              : postData != undefined
+              ? postData
+              : {},
+            queryString
+          )
+        : null;
+
+    if (
+      result != undefined &&
+      result.isOk != undefined &&
+      result.isOk == false
+    ) {
+      ERPToast.show(result.message, "error");
+    }
+
+    if (
+      result != undefined &&
+      result.isOk != undefined &&
+      result.isOk == false
+    ) {
+      setFilterValidations(result.validations);
+      setShowFilter(true);
+    } else {
+      setFilterValidations(undefined);
+    }
+    setTotalRowCount((prev: number) =>
+      prev <= 0
+        ? result.dataRowCount != undefined && result.dataRowCount != null
+          ? result.dataRowCount
+          : result.totalCount
+        : prev
+    );
+    return result != undefined
+      ? result.isOk != undefined && result.isOk == false
+        ? {
+            data: [],
+            totalCount: -1,
+            summary: {},
+            groupCount: 0,
+          }
+        : {
+            data: result.data,
+            totalCount: result.totalCount,
+            dataRowCount: result.dataRowCount,
+          }
+      : {
+          data: [],
+          totalCount: -1,
+          summary: {},
+          groupCount: 0,
+        };
+  } catch (err) {
+    console.error("Load failed:", err);
+    return {
+      data: [],
+      totalCount: 0,
+      summary: {},
+      groupCount: 0,
+    };
+  }
+}
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 // Forward the ref
@@ -405,7 +478,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       remoteOperations = true,
-      condition ,
+      rowVisibleFn,
       focusedRowEnabled = false,
       onRowClick,
       onFilterChanged,
@@ -415,7 +488,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onKeyDown,
       onExporting,
       onContentReady,
-      customToolbarItems = [],
+      customFilterItems = [],
       hideDefaultExportButton = false,
       hideDefaultSearchPanel = false,
       hideGridHeader = false,
@@ -426,7 +499,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
-      heightToAdjustOnWindows =  showTotalCount ? 150 : 100,
+      heightToAdjustOnWindows = showTotalCount ? 150 : 100,
       heightToAdjustOnWindowsInModal,
       popupAction,
       changeReload,
@@ -476,13 +549,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
-    const userSession = useAppSelector((state: RootState) => state.UserSession as any);
+    const userSession = useAppSelector(
+      (state: RootState) => state.UserSession as any
+    );
     const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
     }>({ mobile: 500, windows: 500 });
     const [addButtonText, setAddButtonText] = useState<string>(
       gridAddButtonText == "Add" ? t("add") : gridAddButtonText
+    );
+    const [customFilterItemsState, setCustomFilterItemsState] = useState<any>(
+      {}
     );
     const onPopupOpenClick = useCallback(() => {
       popupAction &&
@@ -582,11 +660,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     //   setShowFilter(false);
     // }, []);
 
-    const [currentStore, setCurrentStore] = useState<CustomStore<
-      any,
-      any
-    > | null>(null);
-    const [store, setStore] = useState<CustomStore | null>(null);
+    const [currentStore, setCurrentStore] = useState<any>(null);
+    const [store, setStore] = useState<any>(null);
+    const [staticStore, setStaticStore] = useState<any>(null);
     useEffect(() => {
       const fetchStore = async () => {
         if (data) {
@@ -623,10 +699,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             bodyProps,
             setFilterValidations,
             setShowFilter,
-            setTotalRowCount
+            setTotalRowCount,
+            remoteOperations,
+            customFilterItems
           );
+          // if()
+          // {
+          //   setStaticStore(newStore)
+          // }
+          // else {
           setCurrentStore(newStore);
-          setStore(newStore);
+          setStore(newStore);            
+          // }
           if (_reload === true) {
             changeReload && changeReload(false);
           }
@@ -648,7 +732,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       isPdfMode,
     ]);
     const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
-    const memoizedStore = useMemo(() => store, [store]);
+    const memoizedStore = useMemo(() => (remoteOperations == false || remoteOperations?.paging == false) &&  customFilterItems != undefined &&  customFilterItems != null
+    ? store?.data?.filter((x: any) => customFilterItems?.showSummaryOnly != true || (customFilterItems?.showSummaryOnly == true && x?.isGroup == true)) 
+    : store, [store, customFilterItems]);
     //SAfvan
     // const switchPdf = useCallback((e: any) => {
     //   setIsPdfMode((prevpdf: boolean) => {
@@ -681,7 +767,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [preferences, gridInstance]);
     const onGridReady = (e: any) => {
-      debugger;
+      
       setGridInst(e.component);
     };
     const onExportingHandler = useCallback(
@@ -907,7 +993,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const dynamicProps = childPopupPropsDynamic
         ? childPopupPropsDynamic(event.column?.dataField)
         : childPopupProps;
-debugger;
+      
       // Check if the clicked cell's field matches dynamicProps.drillDownCells
       const _drillDownCells = dynamicProps?.drillDownCells.split(",");
       const _drillDownCell = _drillDownCells.find(
@@ -942,7 +1028,7 @@ debugger;
           updatedBodyProps
         );
         // Update bodyProps state
-        debugger;
+        
         onCellClick && onCellClick(event);
         setBodyProps(updatedBodyProps);
         setIsChildOpen({
@@ -1066,7 +1152,7 @@ debugger;
                     innerPlaceholder.includes("finTo")
                   ) {
                     // If the placeholder is a date, format it
-                    return formatDate(userSession[(innerPlaceholder)]);
+                    return formatDate(userSession[innerPlaceholder]);
                   }
                   return userSession != undefined
                     ? userSession[innerPlaceholder] || "N/A"
@@ -1122,18 +1208,23 @@ debugger;
       //     }
       //   }
     }, []);
-    const handleRowPrepared = useCallback(
-      (e: any) => {
-        if (e.rowType === "data" && condition != undefined && condition(e.data)) {
-          e.rowElement.style.display = "none"; // Hide row
-        }
-      },
-      [condition] // Add dependencies here
-    );
+    // const handleRowPrepared = useCallback(
+    //   (e: any) => {
+    //     debugger;
+    //     const d =rowVisibleFn(customFilterItemsState,e.data);
+    //     if (
+    //       e.rowType === "data" && rowVisibleFn != undefined &&
+    //       d == false
+          
+    //     ) {
+    //       e.rowElement.style.display = "none"; // Hide row
+    //     }
+    //   },
+    //   [rowVisibleFn] // Add dependencies here
+    // );
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
 
-   
     return (
       <Fragment>
         <div className={className}>
@@ -1149,7 +1240,7 @@ debugger;
             allowColumnReordering={allowColumnReordering}
             allowColumnResizing={allowColumnResizing}
             columnAutoWidth={columnAutoWidth}
-            onRowPrepared={handleRowPrepared}
+            // onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={onRowClick}
@@ -1278,18 +1369,31 @@ debugger;
                   </div>
                 </Item>
               )}
-              {customToolbarItems
+              {customFilterItems
                 ?.filter((item: any) => item.location === "before")
                 .map((toolbarItem: any, index: any) => (
-                  <Item key={index} location="before">
-                    {toolbarItem.item}
-                  </Item>
-                ))}
-              {customToolbarItems
-                ?.filter((item: any) => item.location === "after")
-                .map((toolbarItem: any, index: any) => (
-                  <Item key={index} location="after">
-                    {toolbarItem.item}
+                  <Item
+                    key={`toolbar-item-${toolbarItem.keyField}-${index}`}
+                    location="before"
+                  >
+                    {toolbarItem.type === "checkbox" && (
+                      <ERPCheckbox
+                        id={toolbarItem.keyField}
+                        checked={customFilterItemsState[toolbarItem.keyField]}
+                        data={customFilterItemsState}
+                        label={toolbarItem.label}
+                        onChangeData={(data) => {
+                          debugger
+                          setCustomFilterItemsState((prev: any) => ({
+                            ...prev,
+                            [toolbarItem.keyField]: data[toolbarItem.keyField],
+                          }));
+                          if (gridRef.current) {
+                            const sd = gridRef.current.instance();
+                          }
+                        }}
+                      />
+                    )}
                   </Item>
                 ))}
             </Toolbar>
@@ -1336,7 +1440,6 @@ debugger;
                   />
                 ))}
               </Summary>
-              
             )}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
@@ -1347,39 +1450,47 @@ debugger;
             </div>
           )}
         </div>
-        {(childPopupProps || childPopupPropsDynamic) && (
-          <ERPModal
-            isOpen={isChildOpen.isOpen}
-            title={
-              childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).title
-                : childPopupProps?.title
-            }
-            width={
-              childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).width
-                : childPopupProps?.width
-            }
-            isForm={
-              childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).isForm
-                : childPopupProps?.isForm
-            }
-            origin={
-              childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).origin
-                : childPopupProps?.origin
-            }
-            closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
-            content={
-              childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).content
-                : childPopupProps?.content
-            }
-            rowData={isChildOpen.data}
-            contentProps={isChildOpen.props}
-          />
-        )}
+        {(childPopupProps || childPopupPropsDynamic) &&
+          ((childPopupPropsDynamic != undefined &&
+            childPopupPropsDynamic(isChildOpen.key).content != undefined &&
+            childPopupPropsDynamic(isChildOpen.key).content != null) ||
+            (childPopupProps != undefined &&
+              childPopupProps.content != undefined &&
+              childPopupProps.content != null)) && (
+            <ERPModal
+              isOpen={isChildOpen.isOpen}
+              title={
+                childPopupPropsDynamic
+                  ? childPopupPropsDynamic(isChildOpen.key).title
+                  : childPopupProps?.title
+              }
+              width={
+                childPopupPropsDynamic
+                  ? childPopupPropsDynamic(isChildOpen.key).width
+                  : childPopupProps?.width
+              }
+              isForm={
+                childPopupPropsDynamic
+                  ? childPopupPropsDynamic(isChildOpen.key).isForm
+                  : childPopupProps?.isForm
+              }
+              origin={
+                childPopupPropsDynamic
+                  ? childPopupPropsDynamic(isChildOpen.key).origin
+                  : childPopupProps?.origin
+              }
+              closeModal={() => {
+                setIsChildOpen({ isOpen: false, props: {} });
+              }}
+              content={
+                childPopupPropsDynamic
+                  ? childPopupPropsDynamic(isChildOpen.key).content
+                  : childPopupProps?.content
+              }
+              rowData={isChildOpen.data}
+              contentProps={isChildOpen.props}
+            />
+          )}
       </Fragment>
     );
   }

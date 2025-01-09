@@ -70,7 +70,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        debugger;
+        
         return (
           cellElement.data.oldInvTransactionID > 0 ? <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate> : cellElement.value
           
@@ -154,7 +154,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
                     title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
                     width: "700px",
                     isForm: false,
-                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : dataField == "details" ?<InventoryHistoryDetails/>: null,
                     drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
                     bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
                     enableFn: (data: any) => dataField == "vchNo" ?  data.oldInvTransactionID > 0 : true

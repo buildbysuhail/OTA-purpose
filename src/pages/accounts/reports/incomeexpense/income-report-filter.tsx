@@ -1,9 +1,5 @@
-import { useState } from "react";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 
@@ -20,6 +16,7 @@ const IncomeReportFilter = ({
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
+          className="w-full"
           onChangeData={(data: any) =>
             handleFieldChange("dateFrom", data.dateFrom)
           }
@@ -27,6 +24,7 @@ const IncomeReportFilter = ({
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("to")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>

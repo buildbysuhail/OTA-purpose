@@ -20,11 +20,10 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
   getFieldProps,
   handleFieldChange,
 }) => {
-  
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-2 gap-4">
       <ERPDateInput
         {...getFieldProps("asOnDate")}
         label={t("as_on_date")}
@@ -32,7 +31,6 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
           handleFieldChange("asOnDate", data.asOnDate)
         }
       />
-
       <ERPDataCombobox
         {...getFieldProps("valuationUsing")}
         label={t("stock_value")}
@@ -46,33 +44,23 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
           handleFieldChange("valuationUsing", data.valuationUsing)
         }
       />
-
       <ERPInput
         {...getFieldProps("closingStock")}
         label={t("closing_stock")}
         type="number"
         defaultValue="0.00"
-        onChangeData={({ closingStock }: any) => handleFieldChange("closingStock", parseInt(closingStock) || 0)}
+        onChangeData={({ closingStock }: any) =>
+          handleFieldChange("closingStock", parseInt(closingStock) || 0)
+        }
         // onChangeData={(data: { closingStock: number }) =>
         //   handleFieldChange("closingStock", data.closingStock)
         // }
       />
-
-      {/* Commented out but kept for reference
-      <ERPCheckbox
-        {...getFieldProps("showVertical")}
-        label={t("show_vertical")}
-        onChangeData={(data: { showVertical: boolean }) => 
-          handleFieldChange("showVertical", data.showVertical)
-        }
-      /> 
-      */}
     </div>
   );
 };
 
 export default BalanceSheetFilter;
-
 export const BalanceSheetFilterInitialState: BalanceSheetFilterState = {
   asOnDate: new Date(),
   valuationUsing: "SPP",

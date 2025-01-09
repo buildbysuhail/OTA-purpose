@@ -21,18 +21,19 @@ const LedgerReportFilter = ({
   return (
     <div className="grid grid-cols-1 my-4  md:grid-cols-2 gap-4">
       {/* Date Range Section */}
+      
       <div className="flex items-center gap-4">
-
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
+          className="w-full"
           onChangeData={(data: any) =>
             handleFieldChange("dateFrom", data.dateFrom)
           }
         />
-
         <ERPDateInput
           {...getFieldProps("dateTo")}
+          className="w-full"
           label={t("to")}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
@@ -130,7 +131,7 @@ const LedgerReportFilter = ({
           }
         />
       )}
-      
+
       {formState.ledgerID != undefined &&
         formState.ledgerID != null &&
         formState.ledgerID != 0 &&

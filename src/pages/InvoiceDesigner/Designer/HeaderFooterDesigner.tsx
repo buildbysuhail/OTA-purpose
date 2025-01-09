@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { FooterState, HeaderState } from "./interfaces";
 import { TemplateImagesTypes } from "../InvoiceDesigner";
@@ -13,6 +13,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateBackgroundImageFooter, setTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
 
 interface TempImageProps {
 }
@@ -32,7 +33,12 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     const [currentTab, setTab] = useState<"header" | "footer" | "">("header");
 
     const templateGroup = searchParams?.get("template_group");
+    const [maxHeight, setMaxHeight] = useState<number>(500);
 
+    useEffect(() => {
+        let wh= window.innerHeight; 
+        setMaxHeight(wh);
+    }, []);
 
     /* ######################################################################################### */
 
@@ -49,16 +55,21 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     }
 
     return (
-        <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
-            <div
+         <ERPScrollArea 
+            className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
+            {/* <div
                 className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
                 onClick={() => setTab(currentTab === "header" ? "" : "header")}
             >
-                Header <ChevronDownIcon className={`h-5  ${currentTab === "header" ? "" : "-rotate-90"} transition-all`} />
-            </div>
+                Header 
+                <ChevronDownIcon className={`h-5   -rotate-90 transition-all`} />
+            </div> */}
 
-            {currentTab === "header" && <div className="transition-all  flex flex-col gap-5 bg-white p-4">
+            <div className="transition-all  flex flex-col gap-5 bg-white p-4">
                 {/* */}
+                <label htmlFor="header " className="font-regular text-sm">
+                 Header :-
+                </label>
                 <ERPInput
                     id="bgColor"
                     type="color"
@@ -155,20 +166,24 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         max={60}
                     />
                 }
-            </div>}
+            </div>
 
-            <div
+            {/* <div
                 className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
                 onClick={() => setTab(currentTab === "footer" ? "" : "footer")}
             >
-                Footer <ChevronDownIcon className={`h-5  ${currentTab === "footer" ? "" : "-rotate-90"} transition-all`} />
-            </div>
+                Footer 
+                <ChevronDownIcon className={`h-5   -rotate-90 transition-all`} />
+            </div> */}
 
 
 
             {/* */}
-            {currentTab === "footer" &&
+        
                 <div className="transition-all  flex flex-col gap-5 bg-white p-4">
+                <label htmlFor="footer" className="font-regular text-sm">
+                    Footer :-
+                </label>
                     <ERPCheckbox
                         label="Show Show Page Number"
                         id="showAdditionalPageNumber"
@@ -257,9 +272,9 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         }
                     </div>
                 </div>
-            }
+         
 
-        </div>
+       </ERPScrollArea>
     );
 };
 

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import { PropertiesState } from "./interfaces";
 import { TemplateImagesTypes } from "../InvoiceDesigner";
@@ -13,6 +13,9 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { handleSetTemplateBackgroundImage, setTemplateBackgroundImage, setTemplatePropertiesState, setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import VoucherType from "../../../enums/voucher-types";
+import ERPRadio from "../../../components/ERPComponents/erp-radio";
+import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+import ERPSlider from "../../../components/ERPComponents/erp-slider";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -39,14 +42,16 @@ const retailPageSizes = [
 const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
 
   /* ########################################################################################### */
-
-  
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
   const dispatch = useDispatch();
   const inputFile = useRef<HTMLInputElement>(null);
-  const [currentTab, setTab] = useState<"temp_props" | "font_props" | "bg_props" | "">("temp_props");
+  const [maxHeight, setMaxHeight] = useState<number>(500);
 
+  useEffect(() => {
+    let wh= window.innerHeight; 
+    setMaxHeight(wh);
+  }, []);
 
   const isRetailTemplate = () => {
     return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize!));
@@ -54,9 +59,10 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
   /* ########################################################################################### */
 
   return (
-    <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
+    <ERPScrollArea 
+    className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
 
-      <div
+      {/* <div
         className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
         onClick={() => setTab(currentTab === "temp_props" ? "" : "temp_props")}
       >
@@ -64,13 +70,13 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         <div>
           <ChevronDownIcon className={`h-5  ${currentTab === "temp_props" ? "" : "-rotate-90"} transition-all`} />
         </div>
-      </div>
+      </div> */}
 
-      {currentTab === "temp_props" && <div className="transition-all  flex flex-col gap-4 bg-white p-4">
+       <div className="transition-all  flex flex-col gap-4  p-4 ">
 
         {/* */}
         <div>
-          <label htmlFor="template_name" className="font-light text-red-500 text-sm">
+          <label htmlFor="template_name" className="font-light text-[#ef4444] text-sm">
             Template Name *
           </label>
           <ERPInput
@@ -84,11 +90,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         {/* */}
 
         {/* */}
-        <div className="flex items-center justify-between">
-          <label htmlFor="page_size" className="font-light text-sm">
-            Page Size
-          </label>
+      
           <ERPDataCombobox
+          
             defaultValue={propertiesState?.pageSize ?? "A4"}
             // value={propertiesState?.pageSize ?? "A4"}
             field={{
@@ -103,14 +107,14 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             }}
             id="pageSize"
             options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
-            noLabel
+            label="Page Size"
           />
-        </div>
+      
+      
         {/* */}
 
         {/* */}
-        {/* <div className="flex items-center justify-between">
-          <div className="font-light text-sm">Orientation</div>
+      
           <ERPDataCombobox
             id="orientation"
             field={{
@@ -119,7 +123,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               valueKey: "value",
               labelKey: "label",
             }}
-            data={propertiesState?.pageSize}
+            data={propertiesState}
             onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, orientation: data.orientation} )
             }}
@@ -128,9 +132,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               { label: "Portrait", value: "portrait" },
               { label: "Landscape", value: "landscape" },
             ]}
-            noLabel
+            label="Orientation"
           />
-        </div> */}
+      
         {/* */}
 
         {/* */}
@@ -203,7 +207,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         </div>
         {/* */}
 
-        {["sales_invoice"]?.includes(templateGroup!) &&
+        {["SI"]?.includes(templateGroup!) &&
           <div>
             <ERPCheckbox
               id="includePaymentStub"
@@ -237,33 +241,47 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             </div>}
           </div>
         }
-      </div>}
+      </div>
 
 
-      <div
-        className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+      {/* <div
+        className="flex justify-between items-center pb-4 border-b cursor-pointer  p-4"
         onClick={() => setTab(currentTab === "font_props" ? "" : "font_props")}
       >
         <div>Font</div>
         <div>
           <ChevronDownIcon className={`h-5  ${currentTab === "font_props" ? "" : "-rotate-90"} transition-all`} />
         </div>
-      </div>
+      </div> */}
 
 
-      {currentTab === "font_props" && <div className="transition-all  flex flex-col gap-4 bg-white p-4">
+      <div className="transition-all  flex flex-col gap-4  p-4">
         <div className="flex flex-col gap-2 mt-1">
           <ERPDataCombobox
             id="font"
             label="PDF Font"
-            defaultValue={propertiesState?.font ?? "Helvetica"}
-            handleChange={(id, value) => onChange?.({ ...propertiesState, font: value?.value })}
-            options={[
-              { label: "Helvetica", value: "Helvetica" },
-              { label: "Courier", value: "Courier" },
-              { label: "Times-Roman", value: "Times-Roman" },
-            ]}
+            defaultValue={propertiesState?.font_family ?? "Helvetica"}
+            handleChange={(id, value) => onChange?.({ ...propertiesState, font_family: value?.value })}
+            
+              options={[
+                { value: "Roboto", label: "Roboto" },
+                { value: "RobotoMono", label: "RobotoMono" },
+                { value: "FiraSans", label: "FiraSans" },
+              ]}
           />
+           <ERPDataCombobox
+            id="fontStyle"
+            label="Font Style"
+            defaultValue={propertiesState?.fontStyle ?? "Helvetica"}
+            handleChange={(id, value) => onChange?.({ ...propertiesState, fontStyle: value?.value })}
+            
+              options={[
+                { value: "normal", label: "normal" },
+                { value: "bold", label: "bold" },
+                { value: "italic", label: "italic" },
+              ]}
+          />
+           
           <ERPStepInput
             value={propertiesState?.font_size}
             onChange={(font_size) => onChange?.({ ...propertiesState, font_size })}
@@ -274,10 +292,43 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             max={28}
             step={1}
           />
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3 ">
+                <ERPSlider
+                  id="font_weight"
+                  label="Font Weight"
+                  // className="bg-slate-300"
+                  value={propertiesState?.font_weight}
+                  onChange={(e) =>
+                      onChange?.({ ...propertiesState, font_weight: parseInt(e.target.value,10) })
+                  }
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+              </div>
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="font_weight"
+                  type="number"
+                  noLabel
+                  value={propertiesState?.font_weight}
+                  data={propertiesState}
+                  onChange={(e) =>
+                    onChange?.({ ...propertiesState, font_weight: parseInt(e.target.value,10) })
+                  }
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+
+              </div>
+            </div>
+        
           <ERPInput
             value={propertiesState?.font_color}
             onChange={(e) => onChange?.({ ...propertiesState, font_color: e.target?.value })}
-            label="Font Color"
+            label="Fore Color"
             id="font_color"
             placeholder=" "
             type="color"
@@ -291,20 +342,20 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             type="color"
           />
         </div>
-      </div>}
+      </div>
 
-      <div
-        className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+      {/* <div
+        className="flex justify-between items-center pb-4 border-b cursor-pointer  p-4"
         onClick={() => setTab(currentTab === "bg_props" ? "" : "bg_props")}
       >
         <div>Background</div>
         <div>
           <ChevronDownIcon className={`h-5  ${currentTab === "bg_props" ? "" : "-rotate-90"} transition-all`} />
         </div>
-      </div>
+      </div> */}
 
       {/* */}
-      {currentTab === "bg_props" && <div className="transition-all  flex flex-col gap-4 bg-white p-4">
+       <div className="transition-all  flex flex-col gap-4  p-4">
         <label htmlFor="background" className="font-regular text-sm">
           Background Image
         </label>
@@ -355,8 +406,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             }
 
             <ERPDataCombobox
+             data={propertiesState}
               label="Image Position"
-              id="position"
+              id="bg_image_position"
               defaultValue={propertiesState?.bg_image_position ?? "top left"}
               handleChange={(id, value) => {
                 
@@ -390,13 +442,14 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             placeholder=""
           />
         </div>
-      </div>}
+      </div>
       {/* */}
 
       {/* */}
 
 
-    </div>
+    </ERPScrollArea>
+    
   );
 };
 

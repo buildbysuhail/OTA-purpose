@@ -8,9 +8,10 @@ import {
 } from "@heroicons/react/24/outline";
 
 import InvoicePreview from "./InvoicePreview";
+import AccountPreview from "./accountPreview";
 import TotalDesigner from "./Designer/TotalDesigner";
 import FooterDesigner from "./Designer/FooterDesigner";
-import { DummyInvoiceData } from "./constants/DummyData";
+import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
 import ItemTableDesigner from "./Designer/ItemTableDesigner";
 import PropertiesDesigner from "./Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
@@ -26,6 +27,7 @@ import Urls from "../../redux/urls";
 import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
+import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 
 interface DesignSectionType {
   id: number;
@@ -38,7 +40,7 @@ interface DesignSectionType {
 const designSections: Array<DesignSectionType> = [
   {
     id: 1,
-    name: "General",
+    name: "Template Properties",
     description: "Template 1 description",
     type: "properties",
     icon: <DocumentTextIcon />,
@@ -77,13 +79,6 @@ const designSections: Array<DesignSectionType> = [
     type: "others",
     icon: <TicketIcon />,
   },
-  {
-    id: 7,
-    name: "General",
-    description: "Barcode Design",
-    type: "barcode",
-    icon: <TicketIcon />,
-  },
 ];
 
 
@@ -109,7 +104,7 @@ const InvoiceDesigner = () => {
   });
 
 
-  const [designTabs, setDesignTabs] = useState( designSections?.filter((tab) => tab?.id != 7 ));
+  const [designTabs, setDesignTabs] = useState( designSections);
   const [currentSection, setSection] = useState(designSections[0]);
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
@@ -201,11 +196,6 @@ const InvoiceDesigner = () => {
     }
   };
 
-  /* ####################################################################### */
-
-  // console.log(`InvoiceDesigner,  : templateData `, tempDetails);
-
-  /* ####################################################################### */
 
   return (
     <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark ">
@@ -215,7 +205,7 @@ const InvoiceDesigner = () => {
         <div className="flex flex-col">
           <div className=" flex items-center justify-center border-b h-[69px]  ">
             <button
-              onClick={() => templateGroup ? navigate(`/templates?template_group=${templateGroup}`) : navigate("/templates?template_group=sales_invoice")}
+              onClick={() => templateGroup ? navigate(`/templates?template_group=${templateGroup}`) : navigate("/templates?template_group=SI")}
               className=" bg-gray-100 hover:bg-gray-50 p-2 rounded-full ">
               <ArrowLeftIcon className=" w-5 h-5" />
             </button>
@@ -240,7 +230,7 @@ const InvoiceDesigner = () => {
 
       <div className="flex flex-col border-r min-w-[280px] w-[500px] h-full print:hidden ">
         {/* Save Template Option  */}
-        <div className="flex justify-between items-center border-b p-4">
+        <div className="flex justify-between items-center border-b p-4 ">
           <h1 className="text-base">{currentSection.name}</h1>
           <div>
             <button
@@ -307,7 +297,14 @@ const InvoiceDesigner = () => {
       </div>
 
       {/* Preview  */}
-      <InvoicePreview templateGroupId={templateGroup} data={DummyInvoiceData} />
+      {["CP","CR"].includes(templateGroup) &&
+      <>
+      <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} />
+      </>
+      }
+      {["SI","SR"].includes(templateGroup) &&
+          <InvoicePreview templateGroupId={templateGroup} data={DummyInvoiceData} />
+      }
       {/* */}
     </div >
   );

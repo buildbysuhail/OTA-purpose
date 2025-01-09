@@ -699,6 +699,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               unit: "pt",
               format: "a4",
             });
+            
             // Store original column visibility states
             const pageTitle = `${gridHeader} - ${header}`;
             let currentY = 30; // Start position for content
@@ -1100,7 +1101,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Dynamically replace placeholders using a regular expression
 
       return formatStringWithConditions(_gridHeader, data);
-    }, [gridHeader, filter]);
+    }, [gridHeader, filter, rowData]);
 
     const onCellPrepared = useCallback((e: any) => {
       //   // Get dynamic properties

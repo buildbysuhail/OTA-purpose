@@ -144,6 +144,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
+                  
                 ></ErpDevGrid>
 
 

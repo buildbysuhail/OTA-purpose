@@ -1,10 +1,9 @@
-
 import React, { forwardRef, useEffect, useState } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+// import moment from "moment";
+import moment from 'moment-timezone';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { TextField, TextFieldProps, Typography } from "@mui/material";
 import ERPInput from "./erp-input";
 import { dateTrimmer } from "../../utilities/Utils";
@@ -13,7 +12,8 @@ import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { getFocusableElements, handleNavigation } from "../../utilities/shortKeys";
 
-dayjs.extend(utc);
+moment.tz.setDefault("UTC");
+
 interface ERPDateInputProps {
   id: string;
   label?: string;
@@ -76,13 +76,15 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
 }, ref) => {
   const formatDate = (date: string | undefined) => {
     if (!date) return undefined;
-    return dayjs(date).format("YYYY-MM-DD");
+    return moment(date).utc().format("YYYY-MM-DD");
   };
+
   const appState = useAppSelector(
     (state: RootState) => state?.AppState?.appState
   );
 
   const moveToNextField = () => {
+    debugger;
     const allFocusableElements = getFocusableElements();
     const currentIndex = allFocusableElements?.findIndex(
       (element) => element === document.activeElement
@@ -142,8 +144,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       ))
       : text;
   }
-  const getSizeStyles = () => {
 
+  const getSizeStyles = () => {
     const commonMuiStyles = {
       borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
       color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`,
@@ -153,24 +155,20 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       "& .MuiFilledInput-underline, &:before": {
         borderBottomColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
       },
-
       "&:hover .MuiOutlinedInput-notchedOutline": {
         borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       "&:hover .MuiFilledInput-underline, &:hover:before": {
         borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
-
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
-      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
-      {
+      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
         borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       margin: "0",
-      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
-      {
+      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
         padding: "0 0.75rem",
       },
     };
@@ -183,10 +181,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-
             fontSize: "12px",
-            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-              (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(8px, 14px) scale(1)"
@@ -203,7 +199,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                   : "translate(13px, -6px) scale(0.80)",
           },
         };
-      case "md": // md
+      case "md":
         return {
           "& .MuiInputBase-root": {
             height: _variant === "filled" ? "2.8rem" : "2.5rem",
@@ -212,8 +208,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "13px",
-            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-              (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(10px, 18px) scale(1)"
@@ -238,16 +233,14 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-
             fontSize: "14px",
-            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-              (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(10px, 21px) scale(1)"
                 : _variant === "standard"
                   ? "translate(0, 15px) scale(1)"
-                  : "translate(10px, 15px) scale(1)"
+                  : "translate(10px, 15px) scale(1)",
           },
           "& .MuiInputLabel-shrink": {
             transform:
@@ -258,12 +251,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                   : "translate(15px, -9px) scale(0.90)",
           },
         };
-
-
       case "customize":
         return {
           "& .MuiInputBase-root": {
-
             height: `${appState?.inputBox?.inputHeight ?? 3}rem`,
             fontSize: `${appState?.inputBox?.fontSize ?? 16}px`,
             fontWeight: appState?.inputBox?.fontWeight ?? 500,
@@ -271,34 +261,30 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
-            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' :
-              (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
-                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 20
-                }px) scale(1)`
+                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 20}px) scale(1)`
                 : _variant === "standard"
-                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15
-                  }px) scale(1)`
-                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 12
-                  }px) scale(1)`,
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`
+                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 12}px) scale(1)`,
           },
           "& .MuiInputLabel-shrink": {
             transform:
               _variant === "filled"
-                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -1
-                }px) scale(0.88)`
+                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -1}px) scale(0.88)`
                 : _variant === "standard"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6
-                  }px) scale(0.88)`
-                  : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${appState?.inputBox?.adjustD ?? -9
-                  }px) scale(0.88)`,
+                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
+                  : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${appState?.inputBox?.adjustD ?? -9}px) scale(0.88)`,
           },
         };
     }
   };
+
   const sizeStyles = getSizeStyles();
-  const handleChange = (newValue: dayjs.Dayjs | null) => {
+
+  const handleChange = (newValue: moment.Moment | null) => {
+    debugger;
     if (!newValue) {
       if (onChange) {
         const event = {
@@ -310,9 +296,10 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         onChangeData({ ...data, [id]: null });
       }
       return;
+      debugger;
     }
 
-    const formattedDate = newValue?.utc(true)?.format();
+    const formattedDate = newValue.utc().format();
 
     if (onChange) {
       const event = {
@@ -324,22 +311,22 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     if (onChangeData && data) {
       onChangeData({ ...data, [id]: formattedDate });
     }
-    setTimeout(() => {
-      moveToNextField();
-    }, 10);
+    // setTimeout(() => {
+    //   moveToNextField();
+    // }, 10);
   };
 
   const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target?.value;
+    const inputValue = e.target.value;
     let newValue: string | null = null;
 
     if (inputValue !== "") {
-      const parsedDate = dayjs(inputValue)?.utc(true);
-      newValue = parsedDate?.isValid() ? parsedDate?.format() : null; // Validate and format the date
+      const parsedDate = moment(inputValue).utc();
+      newValue = parsedDate.isValid() ? parsedDate.format() : null; // Validate and format the date
     }
 
     if (onChange) {
-      onChange({ ...e, target: { ...e?.target, value: newValue ?? "", } }); // Ensure consistent value
+      onChange({ ...e, target: { ...e.target, value: newValue ?? "" } }); // Ensure consistent value
     }
 
     if (onChangeData && data) {
@@ -347,8 +334,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     }
   };
 
-
-  if (_useMUI == true) {
+  if (_useMUI === true) {
     return (
       <div className={className}
         style={{
@@ -356,15 +342,16 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           marginTop: `${appState?.inputBox?.marginTop ?? 0}px`
         }}
       >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
           <DatePicker
             label={label}
             disabled={disabled || readonly}
-            value={value ? dayjs(value) : null}
+            value={value ? moment(value).utc() : null}
             onChange={handleChange}
-            minDate={minDate ? dayjs(minDate) : minDateKey ? dayjs(data?.[minDateKey]) : undefined}
-            maxDate={maxDate ? dayjs(maxDate) : maxDateKey ? dayjs(data?.[maxDateKey]) : undefined}
+            minDate={minDate ? moment(minDate).utc() : minDateKey ? moment(data?.[minDateKey]).utc() : undefined}
+            maxDate={maxDate ? moment(maxDate).utc() : maxDateKey ? moment(data?.[maxDateKey]).utc() : undefined}
             closeOnSelect={true}
+            format="DD/MM/YYYY" 
             onClose={() => {
               if (value) {
                 setTimeout(() => {
@@ -378,8 +365,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 variant: _variant,
                 fullWidth: true,
                 onKeyDown: (e) => {
-                  if (e?.key === 'Enter' && value) {
-                    e?.preventDefault();
+                  if (e.key === 'Enter' && value) {
+                    e.preventDefault();
                     moveToNextField();
                   } else {
                     handleNavigation(e);
@@ -410,7 +397,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   }
 
   const displayValue = formatDate(value) || formatDate(defaultValue) || "";
-  if (_useMUI == undefined || _useMUI == false) {
+  if (_useMUI === undefined || _useMUI === false) {
     return (
       <div className={className}>
         <ERPInput
@@ -439,4 +426,5 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     );
   }
 });
+
 export default ERPDateInput;

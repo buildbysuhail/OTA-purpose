@@ -165,7 +165,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_detailed"):t("bank_flow_report_detailed")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed }
                   method={ActionType.POST}
-                  gridId="grd_cashflow_bankflow_drilldown"
+                  gridId="grd_cashflow_bankflow_drilldown_detailed"
                   popupAction={toggleCostCentrePopup}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}

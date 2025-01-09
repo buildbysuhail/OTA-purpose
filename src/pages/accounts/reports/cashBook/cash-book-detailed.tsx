@@ -215,6 +215,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
             <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   rowData={rowData}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}

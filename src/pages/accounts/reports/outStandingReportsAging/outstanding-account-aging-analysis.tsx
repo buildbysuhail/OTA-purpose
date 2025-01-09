@@ -125,6 +125,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 rowData={rowData}
+                remoteOperations={{ paging: false, filtering: false, sorting: false }}
                 // allowGrouping={true}
                 // groupPanelVisible={true}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}

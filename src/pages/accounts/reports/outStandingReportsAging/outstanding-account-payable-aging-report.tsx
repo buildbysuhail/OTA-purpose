@@ -52,22 +52,22 @@ const OutstandingAccountPayableAgingReport = () => {
     // </span>
     //     ),
     //   },
-    // {
-    //   dataField: "debit",
-    //   caption: t('debit'),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "credit",
-    //   caption: t("credit"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
     {
       dataField: "balance",
       caption: t("balance"),

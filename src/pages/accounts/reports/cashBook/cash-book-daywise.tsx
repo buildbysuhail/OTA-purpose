@@ -155,6 +155,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterText="of {___(ledgerName)},{___ month of (month)} {___ (year)}"
                   gridHeader={t("ledger_report_daywise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}

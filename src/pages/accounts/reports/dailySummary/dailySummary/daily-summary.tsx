@@ -375,7 +375,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-              //  remoteOperations={{filtering:true,paging:true,sorting:true}}
+               remoteOperations={{filtering:true,paging:true,sorting:true}}
                 columns={detailsColumns}
                 gridHeader={t("daily_summary_detailed")}
                 dataUrl={Urls.acc_reports_daily_summary_detailed}

@@ -216,7 +216,7 @@ const Templates = ({ }) => {
                                 className="w-3 text-accent cursor-pointer"
                                 // onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
                                 // onClick={() => navigate(`/label-designer/${temp?.id}`)}
-                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
+                                onClick={() => templateGroup == "barcode" ?  navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`)}
                               />
                             </div>
                             <div>
@@ -242,7 +242,7 @@ const Templates = ({ }) => {
                   </div>
                 </div>
 
-                <PSModel isOpen={showPreview.show} closeModal={() => setShowPreview({ show: false })}>
+                {/* <PSModel isOpen={showPreview.show} closeModal={() => setShowPreview({ show: false })}>
                   <div>
                     <div className=" relative text-lg border-b text-center py-2 font-medium">
                       <h1>{showPreview.template?.propertiesState?.templateName}</h1>
@@ -294,7 +294,7 @@ const Templates = ({ }) => {
                       </div>
                     </div>
                   </div>
-                </PSModel>
+                </PSModel> */}
               </div>
             </div>
           </div>

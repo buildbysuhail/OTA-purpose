@@ -73,7 +73,7 @@ const DownloadStandardPreview = ({
     },
   });
 
-  const templateFont = ["borel", "Poppins"].includes(template?.propertiesState?.font!) ? "Helvetica" : template?.propertiesState?.font
+  const templateFont = ["borel", "Poppins"].includes(template?.propertiesState?.font_family!) ? "Helvetica" : template?.propertiesState?.font_family
 
   return (
     <Document>

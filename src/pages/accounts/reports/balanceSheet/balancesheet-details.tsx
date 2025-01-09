@@ -58,7 +58,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' :  getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
     },

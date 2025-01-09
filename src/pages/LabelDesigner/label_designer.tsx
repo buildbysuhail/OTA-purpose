@@ -737,7 +737,7 @@ useEffect (() => {
   const handleSave = async (dataUrl: string) => {
 
     setLoading(true);
-    debugger;
+    
     try {
     const tmpTemplate = {
       ...templateData,

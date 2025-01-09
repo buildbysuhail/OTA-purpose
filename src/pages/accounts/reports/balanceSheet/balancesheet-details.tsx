@@ -109,7 +109,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
         return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.ledgerName}
         </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
       }
     },
   ];

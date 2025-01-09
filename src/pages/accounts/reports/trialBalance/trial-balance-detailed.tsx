@@ -66,7 +66,7 @@ const TrialBalancePeriodwise = () => {
       cellRender: (cellElement: any, cellInfo: any) => 
          (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName === "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
           {
-            cellElement.data.isGroup !== true &&cellElement.data.ledgerName!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerName}</>)
+            cellElement.data.isGroup !== true &&cellElement.data.ledgerName!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerName}</>)
           }
         </span>
         ) 

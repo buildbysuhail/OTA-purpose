@@ -60,7 +60,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       showInPdf:true,
     cellRender: (cellElement: any, cellInfo: any) => (
       <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
-              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
+              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameIN"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
       </span>
     ),
   },
@@ -88,7 +88,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-red' : 'font-bold text-green'}`}>
-        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
+        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameOut"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
         </span>
       ),
     },

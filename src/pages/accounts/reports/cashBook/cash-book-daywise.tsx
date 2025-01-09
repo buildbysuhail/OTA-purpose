@@ -52,7 +52,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowFiltering: true,
       width: 120,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}  field="transactionDate" ></DrillDownCellTemplate>
     },
     {
       dataField: "ledgerName",

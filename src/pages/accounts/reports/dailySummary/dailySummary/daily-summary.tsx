@@ -323,30 +323,30 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     const filteredColumns = updatedColumns.filter((column) => {
       // Add logic for filtering based on voucherType
       if (["SI"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
       }
       if (["SR","SRCRD","SRCASH"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
       }
       if (["NS"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
       }
       if (["SICRD"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
       }
       if (["BNKAMT"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
+        return ["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
       }
       if (["CASHSI"].includes(event.data?.cType ?? "")) {
-        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
+        return ["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
       }
       if (["CR", "CP", "BR"].includes(event.data?.cType ?? "")) {
-        return !["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
+        return ["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
       } else {
-        return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
+        return ["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
       }
     });
-    debugger;
+    
     setDetailsColumns(filteredColumns);
     setReload(true)
   }, []);

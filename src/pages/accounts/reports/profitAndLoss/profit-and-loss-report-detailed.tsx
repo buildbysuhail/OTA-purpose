@@ -26,6 +26,7 @@ const ProfitAndLossRow: React.FC<{
       isOpen: true,
       key: item.groupID,
       groupName: item.groupName,
+      title: item.title,
     });
   };
 
@@ -428,7 +429,9 @@ const ProfitAndLossDetailedReport = () => {
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0 });
           }}
+          
           content={
+        
             isOpenDetails.key == -500 ? (
               <ProfitAndLossClosingStockDetails
                 postData={{
@@ -438,7 +441,8 @@ const ProfitAndLossDetailedReport = () => {
                 }}
                 groupName={isOpenDetails.groupName}
               />
-            ) : isOpenDetails.title == "L" ? (
+            ) : isOpenDetails.title === "L" ? (
+
               <CashBookMonthWise
                 postData={{
                   // accGroupID: isOpenDetails.key,
@@ -446,6 +450,7 @@ const ProfitAndLossDetailedReport = () => {
                   // dateFrom: filter.fromDate,
                   asOnDate: filter.toDate,
                   ledgerID: isOpenDetails.key,
+                  fromDate:filter.fromDate
                 }}
                 groupName={isOpenDetails.groupName}
               />

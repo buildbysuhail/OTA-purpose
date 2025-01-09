@@ -65,7 +65,7 @@ const AccountsHistoryPopup = ({
       cellRender: (cellElement: any, cellInfo: any) => {
         
         return (
-          cellElement.data.oldAccTransactionMasterID > 0 ? <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate> : cellElement.value
+          cellElement.data.oldAccTransactionMasterID > 0 ? <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate> : cellElement.value
           
         )
       },

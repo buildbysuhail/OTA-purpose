@@ -84,7 +84,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   );
 
   const moveToNextField = () => {
-    debugger;
+    
     const allFocusableElements = getFocusableElements();
     const currentIndex = allFocusableElements?.findIndex(
       (element) => element === document.activeElement
@@ -284,7 +284,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   const sizeStyles = getSizeStyles();
 
   const handleChange = (newValue: moment.Moment | null) => {
-    debugger;
+    
     if (!newValue) {
       if (onChange) {
         const event = {
@@ -296,7 +296,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         onChangeData({ ...data, [id]: null });
       }
       return;
-      debugger;
+      
     }
 
     const formattedDate = newValue.utc().format();

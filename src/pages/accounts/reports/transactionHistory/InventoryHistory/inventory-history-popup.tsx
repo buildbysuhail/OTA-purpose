@@ -72,7 +72,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       cellRender: (cellElement: any, cellInfo: any) => {
         
         return (
-          cellElement.data.oldInvTransactionID > 0 ? <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate> : cellElement.value
+          cellElement.data.oldInvTransactionID > 0 ? <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate> : cellElement.value
           
         )
       },
@@ -127,7 +127,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="details"></DrillDownCellTemplate>
     },
   ];
   return (

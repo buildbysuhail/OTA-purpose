@@ -55,7 +55,7 @@ const BankFlowReport = () => {
         return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.month}
         </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
       }
     },
     {
@@ -108,7 +108,7 @@ const BankFlowReport = () => {
       allowFiltering: true, 
       width: 250,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="showSummary"></DrillDownCellTemplate>
     },
   ];
   return (

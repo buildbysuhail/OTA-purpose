@@ -43,7 +43,7 @@ const OutstandingAccountPayableAgingReport = () => {
         return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.ledgername}`}
         </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="ledgername"></DrillDownCellTemplate>
       }
     },
     //     cellRender: (cellElement: any, cellInfo: any) => (

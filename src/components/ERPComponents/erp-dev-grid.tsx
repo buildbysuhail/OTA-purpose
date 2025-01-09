@@ -65,6 +65,7 @@ import {
 // import dxDataGrid, { Grouping} from "devextreme/ui/data_grid";
 import type { Column as ColumnType } from "devextreme/ui/data_grid";
 import { RootState } from "../../redux/store";
+import { UserModel } from "../../redux/slices/user-session/reducer";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -322,7 +323,7 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0 ? result.totalCount : prev
+          prev <= 0 ? result.dataRowCount != undefined && result.dataRowCount != null ? result.dataRowCount: result.totalCount : prev
         );
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
@@ -475,7 +476,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
-    const userSession = useAppSelector((state: RootState) => state.UserSession);
+    const userSession = useAppSelector((state: RootState) => state.UserSession as any);
     const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -1046,6 +1047,29 @@ debugger;
                   }
                   return postData != undefined
                     ? postData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("---")) {
+          const [l, r] = placeholder.split("---");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date") ||
+                    innerPlaceholder.includes("finFrom") ||
+                    innerPlaceholder.includes("finTo")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(userSession[(innerPlaceholder)]);
+                  }
+                  return userSession != undefined
+                    ? userSession[innerPlaceholder] || "N/A"
                     : "N/A"; // Return the value from formState, or "N/A" if not found
                 }
               )

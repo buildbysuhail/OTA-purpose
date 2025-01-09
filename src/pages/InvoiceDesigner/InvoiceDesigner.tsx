@@ -26,6 +26,7 @@ import Urls from "../../redux/urls";
 import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
+import { TemplateDto } from "./Designer/interfaces";
 
 interface DesignSectionType {
   id: number;
@@ -159,14 +160,28 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
-    const activeTemplate = {
+    debugger;
+    const tmpTemplate = {
       ...templateData.activeTemplate,
-      thumbImage: dataUrl,
       propertiesState: {
         ...templateData.activeTemplate.propertiesState,
         template_group: templateGroup
       }
-
+    }
+    const activeTemplate: TemplateDto = {
+      // ...templateData.activeTemplate,
+      templateType:tmpTemplate.propertiesState.template_type??"standard",
+      templateKind:tmpTemplate.propertiesState.template_kind??"standard",
+      templateGroup:tmpTemplate.propertiesState.template_group??"",
+      templateName: tmpTemplate.propertiesState?.templateName??"",
+      thumbImage: dataUrl,
+      content: JSON.stringify(tmpTemplate),
+      isCurrent:false,
+      backgroundImage:tmpTemplate.background_image??"",
+      backgroundImageHeader:tmpTemplate.background_image_header??"",
+      backgroundImageFooter:tmpTemplate.background_image_footer??"",
+      signatureImage:tmpTemplate.signature_image??"",
+      branchId:0
     }
     await dispatch(setTemplate(activeTemplate));
     setLoading(true); 

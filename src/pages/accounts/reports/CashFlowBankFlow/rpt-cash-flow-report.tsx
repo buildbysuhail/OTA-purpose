@@ -98,6 +98,16 @@ const CashFlowReport = () => {
         </span>
       ),
     },
+    {
+      dataField: "showSummary",
+      caption: t('show_summary'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true, 
+      width: 80,
+      showInPdf:true,
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+    },
   ];
   return (
     <Fragment>
@@ -110,7 +120,7 @@ const CashFlowReport = () => {
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                  filterText=" as of {asonDate}"
+                  filterText=" as of {--- (finTo)}"
                   gridHeader={t("cash_flow_report")}
                   dataUrl={Urls.acc_reports_cash_flow }
                   method={ActionType.POST}
@@ -123,18 +133,18 @@ const CashFlowReport = () => {
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
-                  childPopupProps={{
-                    content: <CashBankFlowDetailedSummaryReport postData={{...filter,
-                      reportType:"Cash",
-                    }} />,
-                    title: t("cash_flow_report_detailed"),
-                    isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "month",
-                    bodyProps: "year,monthNum",
-                    origin:"cash_flow", 
-                    enableFn: (data: any) => data?.month != "TOTAL"
-                  }}
+                  // childPopupProps={{
+                  //   content: <CashBankFlowDetailedSummaryReport postData={{...filter,
+                  //     reportType:"Cash",
+                  //   }} />,
+                  //   title: t("cash_flow_report_detailed"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "month",
+                  //   bodyProps: "year,monthNum,month",
+                  //   origin:"cash_flow", 
+                  //   enableFn: (data: any) => data?.month != "TOTAL"
+                  // }}
                   // childPopupProps={{
                   //   content: <CashBankFlowDetailedReport />,
                   //   title: t("cash_flow_detailed"),
@@ -143,6 +153,26 @@ const CashFlowReport = () => {
                   //   drillDownCells: "month",
                   //   bodyProps: "year,monthNum,reportType,asonDate",
                   // }}
+                  childPopupPropsDynamic={(dataField: string) => ({
+                    title:dataField == "showSummary"? t("cash_flow_summary"):t("cash_flow_detailed"),
+                    width: "700px",
+                    isForm: false,
+                    content: 
+                    dataField == "showSummary" ?
+                    <CashBankFlowDetailedSummaryReport postData={{...filter,
+                      reportType:"Cash",
+                    }} />
+                    :  
+                    dataField == "month" ?
+                    <CashBankFlowDetailedReport postData={
+                      { ...filter,
+                        reportType:"Cash",
+                      }} />
+                      : null
+                      ,
+                    drillDownCells: dataField == "showSummary" ? "showSummary" : "month",
+                    bodyProps: dataField == "showSummary" ? "year,monthNum,month" : "year,monthNum",
+                  })}
                 ></ErpDevGrid>
               </div>
             </div>

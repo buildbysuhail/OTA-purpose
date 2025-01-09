@@ -154,7 +154,7 @@ const CashFlowReport = () => {
                   //   bodyProps: "year,monthNum,reportType,asonDate",
                   // }}
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title:dataField == "showSummary"? t("cash_flow_summary"):t("cash_flow_detailed"),
+                    title:dataField == "showSummary"? t("cash_flow_report_summary"):t("cash_flow_report_detailed"),
                     width: "700px",
                     isForm: false,
                     content: 
@@ -168,8 +168,8 @@ const CashFlowReport = () => {
                       { ...filter,
                         reportType:"Cash",
                       }} />
-                      : null
-                      ,
+                      : null,
+                    origin:"cash_flow",
                     drillDownCells: dataField == "showSummary" ? "showSummary" : "month",
                     bodyProps: dataField == "showSummary" ? "year,monthNum,month" : "year,monthNum",
                   })}

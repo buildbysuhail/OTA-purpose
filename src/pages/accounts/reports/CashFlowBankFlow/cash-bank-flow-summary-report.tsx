@@ -154,6 +154,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                       ,
                     drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
                     bodyProps: dataField == "ledgerNameIN" ? "accGroupIDIN" : "accGroupIDOut",
+                    origin:"cash_flow",
                   })}
                   // childPopupProps={{
                   //   content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)

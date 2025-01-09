@@ -162,7 +162,7 @@ const BankFlowReport = () => {
                   //   enableFn: (data: any) => data?.month != "TOTAL"
                   // }}
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title:dataField == "showSummary"? t("bank_flow_summary"):t("bank_flow_detailed"),
+                    title:dataField == "showSummary"? t("bank_flow_report_summary"):t("bank_flow_report_detailed"),
                     width: "700px",
                     isForm: false,
                     content: 

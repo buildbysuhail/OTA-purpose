@@ -63,12 +63,15 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName === "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {cellElement.data.ledgerName}
-        </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
-      }
+      cellRender: (cellElement: any, cellInfo: any) => 
+         (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.ledgerName === "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+          {
+            cellElement.data.isGroup !== true &&cellElement.data.ledgerName!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerName}</>)
+          }
+        </span>
+        ) 
+
+      
     },
     {
       dataField: "openingDebit",

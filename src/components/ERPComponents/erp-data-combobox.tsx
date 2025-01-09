@@ -1487,7 +1487,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                   setIsOpen(false);
                 }}
                 // className="p-1 hover:bg-gray-100 rounded-full"
-                className={`p-1 ${!disabled ? 'hover:bg-gray-100' : ''} rounded-full`}
+                className={`p-1 ${!disabled ? 'hover:bg-[rgba(0,0,0,0.44)]' : ''} rounded-full`}
                 aria-label="Clear selection"
               >
                 <XMarkIcon
@@ -1503,7 +1503,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
             )}
               <Combobox.Button
                 // className="p-1 hover:bg-gray-100 rounded-full"
-                className={`p-1 ${!disabled ? 'hover:bg-gray-100' : ''} rounded-full`}
+                className={`p-1 ${!disabled ? 'hover:bg-[rgba(0,0,0,0.44)]' : ''} rounded-full`}
                 onClick={(e) => {
                   e.stopPropagation();
                   !disabled && setIsOpen(!isOpen);

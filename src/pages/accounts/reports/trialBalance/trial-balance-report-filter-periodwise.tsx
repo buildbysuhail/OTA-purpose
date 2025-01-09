@@ -16,17 +16,6 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
-      <ERPDataCombobox
-        {...getFieldProps("accGroupID")}
-        label={t("a/c_group_balance")}
-        field={{
-          id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
-      />
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("asonDate")}
@@ -42,6 +31,17 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>
+      <ERPDataCombobox
+        {...getFieldProps("accGroupID")}
+        label={t("a/c_group_balance")}
+        field={{
+          id: "accGroupID",
+          getListUrl: Urls.data_acc_groups,
+          valueKey: "id",
+          labelKey: "name",
+        }}
+        onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
+      />
       <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}

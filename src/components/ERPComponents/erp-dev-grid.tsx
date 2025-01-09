@@ -154,7 +154,7 @@ interface ERPDevGridProps {
   hideGridHeader?: boolean;
   gridHeader?: string;
   filterText?: string;
-  condition ?: any;
+  condition?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -225,6 +225,7 @@ interface ERPDevGridProps {
     enableFn?: (data: any) => boolean;
   };
   [key: string]: any; // To allow other props to be passed
+  enableScrollButton?: boolean;
 }
 const api = new APIClient();
 const createStore = async (
@@ -323,7 +324,11 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0 ? result.dataRowCount != undefined && result.dataRowCount != null ? result.dataRowCount: result.totalCount : prev
+          prev <= 0
+            ? result.dataRowCount != undefined && result.dataRowCount != null
+              ? result.dataRowCount
+              : result.totalCount
+            : prev
         );
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
@@ -405,7 +410,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       remoteOperations = true,
-      condition ,
+      condition,
       focusedRowEnabled = false,
       onRowClick,
       onFilterChanged,
@@ -426,7 +431,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
-      heightToAdjustOnWindows =  showTotalCount ? 150 : 100,
+      heightToAdjustOnWindows = showTotalCount ? 150 : 100,
       heightToAdjustOnWindowsInModal,
       popupAction,
       changeReload,
@@ -465,18 +470,62 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         bodyProps: "",
       },
       childPopupPropsDynamic,
+      enableScrollButton = true,
       ...props
     },
     ref
   ) => {
     const gridRef = useRef<any>(null); // Use `any` for the instance
+
+    const [isAtBottom, setIsAtBottom] = useState(false);
+
+    // Handle scroll events
+    const handleScroll = useCallback(() => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const scrollTop = gridInstance.getScrollable().scrollTop();
+        const scrollHeight = gridInstance.getScrollable().scrollHeight();
+        const clientHeight = gridInstance.getScrollable().clientHeight();
+
+        if (scrollTop + clientHeight >= scrollHeight) {
+          setIsAtBottom(true);
+        } else {
+          setIsAtBottom(false);
+        }
+      }
+    }, []);
+
+    // Scroll to top or bottom
+    const scrollTo = useCallback((position: number) => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const scrollable = gridInstance.getScrollable();
+        const scrollHeight = scrollable.scrollHeight();
+        scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight });
+      }
+    }, []);
+
+    // Attach scroll event listener
+    useEffect(() => {
+      if (gridRef.current && enableScrollButton) {
+        const gridInstance = gridRef.current.instance();
+        gridInstance.getScrollable().on("scroll", handleScroll);
+
+        return () => {
+          gridInstance.getScrollable().off("scroll", handleScroll);
+        };
+      }
+    }, [enableScrollButton, handleScroll]);
+
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
     }));
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
-    const userSession = useAppSelector((state: RootState) => state.UserSession as any);
+    const userSession = useAppSelector(
+      (state: RootState) => state.UserSession as any
+    );
     const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -907,7 +956,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const dynamicProps = childPopupPropsDynamic
         ? childPopupPropsDynamic(event.column?.dataField)
         : childPopupProps;
-debugger;
+      debugger;
       // Check if the clicked cell's field matches dynamicProps.drillDownCells
       const _drillDownCells = dynamicProps?.drillDownCells.split(",");
       const _drillDownCell = _drillDownCells.find(
@@ -1066,7 +1115,7 @@ debugger;
                     innerPlaceholder.includes("finTo")
                   ) {
                     // If the placeholder is a date, format it
-                    return formatDate(userSession[(innerPlaceholder)]);
+                    return formatDate(userSession[innerPlaceholder]);
                   }
                   return userSession != undefined
                     ? userSession[innerPlaceholder] || "N/A"
@@ -1124,7 +1173,11 @@ debugger;
     }, []);
     const handleRowPrepared = useCallback(
       (e: any) => {
-        if (e.rowType === "data" && condition != undefined && condition(e.data)) {
+        if (
+          e.rowType === "data" &&
+          condition != undefined &&
+          condition(e.data)
+        ) {
           e.rowElement.style.display = "none"; // Hide row
         }
       },
@@ -1133,7 +1186,6 @@ debugger;
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
 
-   
     return (
       <Fragment>
         <div className={className}>
@@ -1222,6 +1274,17 @@ debugger;
                       <span className="text-sm">{gridHeader}</span>&nbsp;{""}
                       {header}
                     </div>
+                  </div>
+                </Item>
+              )}
+              {enableScrollButton && (
+                <Item>
+                  <div  title={isAtBottom ? "Scroll to top" : "Scroll to bottom"}>
+                    <button
+                      onClick={() => scrollTo(isAtBottom ? 0 : 100)}
+                      className="flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2">
+                      {isAtBottom ? "↑" : "↓"}
+                    </button>
                   </div>
                 </Item>
               )}
@@ -1336,7 +1399,6 @@ debugger;
                   />
                 ))}
               </Summary>
-              
             )}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>

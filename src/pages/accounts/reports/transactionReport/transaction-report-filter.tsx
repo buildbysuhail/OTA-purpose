@@ -50,27 +50,27 @@ const TransactionReportFilter = ({
           className="max-w-[150px]"
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
+        {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+          <ERPDataCombobox
+            {...getFieldProps("salesRouteID")}
+            label={t("sales_route")}
+            className="max-w-[325px]"
+            field={{
+              id: "salesRouteID",
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) =>
+              handleFieldChange({
+                salesRouteID: data.value,
+                salesRouteName: data.name,
+              })
+            }
+          />
+        )}
       </div>
 
-      {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-        <ERPDataCombobox
-          {...getFieldProps("salesRouteID")}
-          label={t("sales_route")}
-          className="max-w-[325px]"
-          field={{
-            id: "salesRouteID",
-            getListUrl: Urls.data_salesRoute,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) =>
-            handleFieldChange({
-              salesRouteID: data.value,
-              salesRouteName: data.name,
-            })
-          }
-        />
-      )}
       {/* </div> */}
 
       {/* <div className="relative"> */}
@@ -87,7 +87,6 @@ const TransactionReportFilter = ({
                 isDr: boolean;
                 isCr: boolean;
               }) => {
-                
                 let updates = frmState;
                 // if (frmState.allChecked) {
 

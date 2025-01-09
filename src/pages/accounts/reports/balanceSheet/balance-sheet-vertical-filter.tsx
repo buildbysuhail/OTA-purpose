@@ -24,7 +24,7 @@ import Urls from "../../../../redux/urls";
    const { t } = useTranslation('accountsReport');
 
    return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-2 gap-4">
       <ERPDateInput
         {...getFieldProps("asOnDate")}
         label={t("as_on_date")}
@@ -72,7 +72,6 @@ import Urls from "../../../../redux/urls";
 };
 
 export default BalanceSheetVerticalFilter;
-
 export const BalanceSheetVerticalFilterInitialState= {
   asOnDate: new Date(),
   valuationUsing: "SPP",

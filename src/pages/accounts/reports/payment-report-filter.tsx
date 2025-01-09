@@ -18,6 +18,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}
+          className="w-full"
           onChangeData={(data: any) =>
             handleFieldChange("dateFrom", data.dateFrom)
           }
@@ -25,6 +26,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("to")}
+          className="w-full"
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>

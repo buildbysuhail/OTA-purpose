@@ -32,7 +32,6 @@ type TemplateKindType =
     backgroundImageFooter?: string;
     signatureImage?: string;
     content?: string;
-    templateDescription?: string;
     isCurrent?: boolean;
   }
 export interface TemplateState {

@@ -152,7 +152,7 @@ const InventoryHistoryReport = () => {
                     title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
                     width: "700px",
                     isForm: false,
-                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : <InventoryHistoryDetails/>,
+                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> :dataField == "details" ? <InventoryHistoryDetails/> : null,
                     drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
                     bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
                   })}

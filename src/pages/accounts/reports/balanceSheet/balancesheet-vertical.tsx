@@ -229,10 +229,11 @@ const BalancesheetVertical = () => {
                         asOnDate: filter.asOnDate,
                       }}
                     /> 
-                    : <CashBookMonthWise postData={
+                    : dataField == "ledgerID" ? <CashBookMonthWise postData={
                       {
                         asOnDate: filter.asOnDate
                       }} />
+                      : null
                       ,
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",

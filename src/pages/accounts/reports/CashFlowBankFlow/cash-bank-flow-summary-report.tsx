@@ -147,8 +147,10 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                     dataField == "ledgerNameIN" ?
                     <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
                         }} />
-                    :  <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                    }} />
+                    :  
+                    dataField == "ledgerNameOut" ?
+                    <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />
+                      : null
                       ,
                     drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
                     bodyProps: dataField == "ledgerNameIN" ? "accGroupIDIN" : "accGroupIDOut",

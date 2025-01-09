@@ -122,7 +122,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       showInPdf:true,
     },
   ];
-  debugger;
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

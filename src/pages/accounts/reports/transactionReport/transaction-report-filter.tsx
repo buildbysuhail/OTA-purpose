@@ -87,7 +87,7 @@ const TransactionReportFilter = ({
                 isDr: boolean;
                 isCr: boolean;
               }) => {
-                debugger;
+                
                 let updates = frmState;
                 // if (frmState.allChecked) {
 

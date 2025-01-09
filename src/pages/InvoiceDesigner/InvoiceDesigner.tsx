@@ -171,7 +171,7 @@ const InvoiceDesigner = () => {
       // ...templateData.activeTemplate,
       templateName: tmpTemplate.propertiesState?.templateName??"",
       thumbImage: dataUrl,
-      content: JSON.stringify(tmpTemplate);
+      content: JSON.stringify(tmpTemplate)
       
 
     }

@@ -130,7 +130,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                 rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText=": Month-Year : {___(month)} - {****(year)}"
+                  filterText="as of {___(month)} {****(year)}"
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary }
                   method={ActionType.POST}

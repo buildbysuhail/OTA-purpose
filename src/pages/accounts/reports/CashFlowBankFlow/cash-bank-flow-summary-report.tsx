@@ -60,7 +60,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       showInPdf:true,
     cellRender: (cellElement: any, cellInfo: any) => (
       <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-green'}`}>
-              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
+              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameIN"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
       </span>
     ),
   },
@@ -88,7 +88,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-red' : 'font-bold text-green'}`}>
-        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
+        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameOut"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
         </span>
       ),
     },
@@ -130,7 +130,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                 rowData={rowData}
                 remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
-                  filterText=": Month-Year : {___(month)} - {****(year)}"
+                  filterText="as of {___(month)} {****(year)}"
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary }
                   method={ActionType.POST}
@@ -147,11 +147,14 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                     dataField == "ledgerNameIN" ?
                     <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
                         }} />
-                    :  <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                    }} />
+                    :  
+                    dataField == "ledgerNameOut" ?
+                    <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />
+                      : null
                       ,
                     drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
                     bodyProps: dataField == "ledgerNameIN" ? "accGroupIDIN" : "accGroupIDOut",
+                    origin:"cash_flow",
                   })}
                   // childPopupProps={{
                   //   content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)

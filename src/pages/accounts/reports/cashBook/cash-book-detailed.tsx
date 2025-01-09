@@ -215,10 +215,11 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
             <div>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   rowData={rowData}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
-                  filterText="of {___(ledgerName)},{___ day of (transactionDate)}"
+                  filterText="for {___(ledgerName)},{___ day of (transactionDate)}"
                   gridHeader={t("ledger_report_detailed")}
                   dataUrl={Urls.acc_reports_cash_book_transactionwise}
                   method={ActionType.POST}

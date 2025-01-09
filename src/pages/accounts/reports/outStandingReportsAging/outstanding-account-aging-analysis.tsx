@@ -125,11 +125,12 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 rowData={rowData}
+                remoteOperations={{ paging: false, filtering: false, sorting: false }}
                 // allowGrouping={true}
                 // groupPanelVisible={true}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
-                  filterText="{___ (ledgerame)} {**** as of (asonDate)}"
+                  filterText=" for {___ (ledgername)} {**** as of (asonDate)}"
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}

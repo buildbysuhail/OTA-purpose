@@ -40,13 +40,10 @@ const TrialBalance = () => {
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
-          {/* {cellElement.data.particulars} */}
           {
-            cellElement.data.isGroup !== true  ? (<DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
-          }
-          
+            cellElement.data.isGroup !== true &&cellElement.data.particulars!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
+          }   
         </span>
-        
       ),
     },
     {
@@ -77,21 +74,21 @@ const TrialBalance = () => {
     {
       dataField: "debit",
       caption: t('debit'),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null||cellElement.data.isGroup == true? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
     },
     {
       dataField: "credit",
       caption: t("credit"),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -136,17 +133,12 @@ const TrialBalance = () => {
                   hideGridAddButton={true}
                   reload={true}
                   filterWidth="100"
-                  rowVisibleFn = {(data: any) => data?.isGroup == undefined || data?.isGroup == false || (data?.showSummaryOnly != undefined && data?.isGroup == true)}
-                  customToolbarItems={[{
-                    location: 'after', item: (
-                      <button
-                        onClick={() => setShowValidation(true)}
-                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center hover:bg-gray-100 text-lg">
-                        <i className="ri-upload-line text-sm"></i>
-                      </button>)
-                  }]}
-                  rowVisibleFnFields = {[{
-
+                  // rowVisibleFn = {(filter: any,data: any) => filter?.showSummaryOnly != true || (filter?.showSummaryOnly == true && data?.isGroup == true)}
+                  customFilterItems={[{
+                    keyField: "showSummaryOnly",
+                    location: "before",
+                    type: "checkbox",
+                    label: "Show Summary Only"
                   }]}
                   enablefilter={true}
                   showFilterInitially={true}
@@ -162,7 +154,7 @@ const TrialBalance = () => {
                     drillDownCells: "particulars",
                     bodyProps: "ledgerID",
                     origin:"trialBalance",
-                    
+                    enableFn: (data: any) => data.isGroup == true ||data.particulars=="TOTAL" ? false  : true
                   }}
                 ></ErpDevGrid>
               </div>

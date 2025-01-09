@@ -73,6 +73,7 @@ import {
   PropertiesState,
   QRCodeProps,
   tableColumns,
+  TemplateDto,
   TemplateState,
 } from "../InvoiceDesigner/Designer/interfaces";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
@@ -734,10 +735,33 @@ useEffect (() => {
   };
 
   const handleSave = async (dataUrl: string) => {
+
     setLoading(true);
+    
     try {
-      const outData = { ...templateData, thumbImage: dataUrl };
-      const res = await api.postAsync(Urls.templates, outData);
+    const tmpTemplate = {
+      ...templateData,
+      propertiesState: {
+        ...templateData.propertiesState,
+        template_group: templateGroup
+      }
+    }
+    const activeTemplate: TemplateDto = {
+      // ...templateData.activeTemplate,
+      templateType:tmpTemplate.propertiesState.template_type??"standard",
+      templateKind:tmpTemplate.propertiesState.template_kind??"standard",
+      templateGroup:tmpTemplate.propertiesState.template_group??"",
+      templateName: tmpTemplate.propertiesState?.templateName??"",
+      thumbImage: dataUrl,
+      content: JSON.stringify(tmpTemplate),
+      isCurrent:false,
+      backgroundImage:tmpTemplate.background_image??"",
+      backgroundImageHeader:tmpTemplate.background_image_header??"",
+      backgroundImageFooter:tmpTemplate.background_image_footer??"",
+      signatureImage:tmpTemplate.signature_image??"",
+      branchId:0
+    }
+      const res = await api.postAsync(Urls.templates, activeTemplate);
       handleResponse(res, () => {
         navigate(`/templates?template_group=${templateGroup}`);
       });

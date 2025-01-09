@@ -11,6 +11,7 @@ export const initialGridPreference: GridPreference = {
     backgroundColor: "rgb(25,118,210,1)",
     foreColor: "rgb(25,118,210,1)",
     columnPreferences: [],
+    
     // groupIndex:0
   };
 export interface DevGridColumn {
@@ -28,6 +29,7 @@ export interface DevGridColumn {
     alignment?: "center" | "left" | "right";
     showInPdf?: boolean | false;
     allowEditing?: boolean;
+    format?: string;
     visible?: boolean;
     visibleDynamic?: (filter: any) => boolean;
     captionDynamic?: (filter: any) => string;
@@ -37,6 +39,7 @@ export interface DevGridColumn {
   }
   const initialColumnPreference: ColumnPreference = {
     dataField: '',
+    format: '',
     isLocked: false,
     caption: "Column Header",        // string: the text to display in the header
     width: 150,                         // number: column width in pixels
@@ -58,6 +61,7 @@ export interface DevGridColumn {
     caption: string;
     isLocked: boolean;
     dataField: string;
+    format?: string;
     width?: number;
     minWidth?: number;
     alignment: 'left' | 'center' | 'right';

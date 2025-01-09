@@ -469,6 +469,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     },
     ref
   ) => {
+    
     const gridRef = useRef<any>(null); // Use `any` for the instance
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
@@ -535,6 +536,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       set_reload(reload);
     }, [reload]);
     useEffect(() => {
+      
       setGridCols(columns);
     }, []);
     useEffect(() => {
@@ -543,12 +545,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [filterInitialData]);
     useEffect(() => {
+      
       if (gridId != "" && columns != undefined && columns != null) {
         onApplyPreferences(getInitialPreference(gridId, columns));
       }
     }, [gridId]);
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
+        
         setPreferences(pref);
         const updatedColumns = applyGridColumnPreferences(columns, pref);
         setGridCols(updatedColumns);
@@ -681,7 +685,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [preferences, gridInstance]);
     const onGridReady = (e: any) => {
-      debugger;
+      
       setGridInst(e.component);
     };
     const onExportingHandler = useCallback(
@@ -907,7 +911,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const dynamicProps = childPopupPropsDynamic
         ? childPopupPropsDynamic(event.column?.dataField)
         : childPopupProps;
-debugger;
+
       // Check if the clicked cell's field matches dynamicProps.drillDownCells
       const _drillDownCells = dynamicProps?.drillDownCells.split(",");
       const _drillDownCell = _drillDownCells.find(
@@ -942,7 +946,7 @@ debugger;
           updatedBodyProps
         );
         // Update bodyProps state
-        debugger;
+        
         onCellClick && onCellClick(event);
         setBodyProps(updatedBodyProps);
         setIsChildOpen({
@@ -1385,7 +1389,7 @@ debugger;
     );
   }
 );
-const _DrillDownCellTemplate = ({ data }: { data: any }) => {
+const _DrillDownCellTemplate = ({ data, field, inputFormat= "DD-MM-YYYY" }: { data: any, field: string, inputFormat?: string }) => {
   if (
     data.value !== undefined &&
     data.value !== null &&
@@ -1393,7 +1397,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
     data.value !== 0
   ) {
     console.log(data.column.dataType);
-
+    debugger;
     return (
       <a
         href="#"
@@ -1404,7 +1408,7 @@ const _DrillDownCellTemplate = ({ data }: { data: any }) => {
         }}
       >
         {data.column.dataType === "date"
-          ? moment(data.value, "DD-MM-YYYY").format("DD/MMM/YYYY") // Change this format as needed
+          ? moment(data.data[field],inputFormat).format("DD/MMM/YYYY") // Change this format as needed
           : data.value.toString()}
       </a>
     );

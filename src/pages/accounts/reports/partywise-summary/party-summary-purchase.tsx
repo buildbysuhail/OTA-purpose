@@ -13,7 +13,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
     const { getFormattedValue } = useNumberFormat()
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] =useState<PartySummaryPurchase>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [

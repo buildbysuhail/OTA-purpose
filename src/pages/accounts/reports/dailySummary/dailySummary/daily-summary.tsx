@@ -315,38 +315,39 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
 ];
   const [detailsColumns, setDetailsColumns] = useState<any>(detailColumnsTemp);
   useEffect(() => {
+    
+  }, [voucherType]);
+  const onRowClick = useCallback((event: any) => {
+    setVoucherType(event.data?.cType);
     const updatedColumns = [...detailColumnsTemp]
     const filteredColumns = updatedColumns.filter((column) => {
       // Add logic for filtering based on voucherType
-      if (["SI"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
+      if (["SI"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","bankAmount","salesMan"].includes(column.dataField);
       }
-      if (["SR","SRCRD","SRCASH"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
+      if (["SR","SRCRD","SRCASH"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","cashAmount","creditAmount","salesMan"].includes(column.dataField);
       }
-      if (["NS"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
+      if (["NS"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","salesMan"].includes(column.dataField);
       }
-      if (["SICRD"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
+      if (["SICRD"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","total","creditAmt","salesMan"].includes(column.dataField);
       }
-      if (["BNKAMT"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
+      if (["BNKAMT"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","bankAmount","userName","signature","salesMan"].includes(column.dataField);
       }
-      if (["CASHSI"].includes(voucherType ?? "")) {
-        return !["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
+      if (["CASHSI"].includes(event.data?.cType ?? "")) {
+        return ["invTransactionMasterID","branchID", "date", "vrType", "voucherPrefix", "voucherNumber", "partyName","address1","grandTotal","cashReceived","bankAmount","totalDiscount","userName","signature"].includes(column.dataField);
       }
-      if (["CR", "CP", "BR"].includes(voucherType ?? "")) {
-        return !["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
+      if (["CR", "CP", "BR"].includes(event.data?.cType ?? "")) {
+        return ["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
       } else {
-        return !["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
+        return ["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
       }
     });
     
     setDetailsColumns(filteredColumns);
-  }, [voucherType]);
-  const onRowClick = useCallback((event: any) => {
-    setVoucherType(event.data?.cType);
     setReload(true)
   }, []);
   return (
@@ -374,8 +375,8 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
-              //  remoteOperations={{filtering:true,paging:true,sorting:true}}
+            { voucherType != undefined && voucherType != null && voucherType != "" &&  <ErpDevGrid
+               remoteOperations={{filtering:true,paging:true,sorting:true}}
                 columns={detailsColumns}
                 gridHeader={t("daily_summary_detailed")}
                 dataUrl={Urls.acc_reports_daily_summary_detailed}
@@ -389,11 +390,11 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
                     setReload(reload);
                   }
                 }}
-                gridId="grd_daily_summary_detailed"
+                gridId={`grd_daily_summary_detailed${voucherType}`}
                 popupAction={toggleCostCentrePopup}
                 hideGridAddButton={true}
                 reload={reload}
-              ></ErpDevGrid>
+              ></ErpDevGrid>}
             </div>
           </div>
         </div>

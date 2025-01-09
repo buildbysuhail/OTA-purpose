@@ -43,7 +43,7 @@ const OutstandingAccountPayableAgingReport = () => {
         return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {`${cellElement.data?.ledgername}`}
         </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="ledgername"></DrillDownCellTemplate>
       }
     },
     //     cellRender: (cellElement: any, cellInfo: any) => (
@@ -52,22 +52,22 @@ const OutstandingAccountPayableAgingReport = () => {
     // </span>
     //     ),
     //   },
-    // {
-    //   dataField: "debit",
-    //   caption: t('debit'),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "credit",
-    //   caption: t("credit"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
     {
       dataField: "balance",
       caption: t("balance"),

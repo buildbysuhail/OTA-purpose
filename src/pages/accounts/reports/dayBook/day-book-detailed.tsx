@@ -21,6 +21,7 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      format: 'MMMM dd, yyyy',
       showInPdf:true,
     },
     {

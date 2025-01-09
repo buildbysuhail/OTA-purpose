@@ -26,7 +26,7 @@ interface TransactionReportCheckboxProps {
 const TransactionReportfilterCheckboxes: React.FC<
   TransactionReportCheckboxProps
 > = ({ allTransactions, setAllTransactions, onDataChange, getFormState }) => {
-  debugger;
+  
   // Calculate the number of full columns (7 items each) and any remaining items
   const { t } = useTranslation('accountsReport');
   const fullColumns = Math.floor(allTransactions?.length / 7);
@@ -37,7 +37,7 @@ const TransactionReportfilterCheckboxes: React.FC<
   //   onDataChange(formState);
   // }, [formState]);
   useEffect(() => {
-    debugger;
+    
     const data = getFormState().data;
     const updates: { [key: string]: any } = {
       isDr: data?.drCr == "drCr" || data?.drCr == "dr",
@@ -91,11 +91,11 @@ const TransactionReportfilterCheckboxes: React.FC<
   //   });
   // }, [allTransactions]);
   const onChangeData = (data: any) => {
-    debugger;
+    
     setFormState((prev: any) => {
-      debugger;
+      
       const sdsds = allTransactions?.map((tr: any) => {
-        debugger;
+        
         return {
           ...tr, // Spread existing properties
           checked: tr.id == data.id ? data[data.id] : tr.checked, // Add new `checked` property
@@ -154,9 +154,9 @@ const TransactionReportfilterCheckboxes: React.FC<
         data={formState}
         label={t("debitTransaction")}
         onChangeData={(data) => {
-          debugger;
+          
           setFormState((prev: any) => {
-            debugger;
+            
             const st = {
               ...prev,
               isDr: data.isDr,

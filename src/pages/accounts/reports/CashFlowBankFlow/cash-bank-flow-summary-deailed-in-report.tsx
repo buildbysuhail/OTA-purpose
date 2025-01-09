@@ -110,7 +110,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
       showInPdf:true,
     },
   ];
-  debugger;
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -123,7 +123,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   allowGrouping={true}
                   columns={columns}
-                   filterText=" : {___(ledgerNameIN)}: Month-Year : {****(month)} - {****(year)}"
+                   filterText=" for {___(ledgerNameIN)}, month of {****(month)} {****(year)}"
                   gridHeader={origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary")}
                   dataUrl={Urls.acc_reports_cash_bank_flow_detailed_summary_in }
                   method={ActionType.POST}

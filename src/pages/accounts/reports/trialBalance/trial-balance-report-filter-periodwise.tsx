@@ -16,17 +16,6 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
-      <ERPDataCombobox
-        {...getFieldProps("accGroupID")}
-        label={t("a/c_group_balance")}
-        field={{
-          id: "accGroupID",
-          getListUrl: Urls.data_acc_groups,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
-      />
       <div className="flex items-center gap-4">
         <ERPDateInput
           {...getFieldProps("asonDate")}
@@ -43,6 +32,17 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
         />
       </div>
       <ERPDataCombobox
+        {...getFieldProps("accGroupID")}
+        label={t("a/c_group_balance")}
+        field={{
+          id: "accGroupID",
+          getListUrl: Urls.data_acc_groups,
+          valueKey: "id",
+          labelKey: "name",
+        }}
+        onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
+      />
+      <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
         field={{
@@ -53,6 +53,13 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
         }}
         onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
       />
+         <ERPCheckbox
+          {...getFieldProps("showGroupSummaryOnly")}
+          label={t("show_group_summary")}
+          onChangeData={(data) =>
+            handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
+          }
+        />
       {userSession.countryId==Countries.India &&
       <ERPCheckbox
       {...getFieldProps("isExcludeZeroBalance")}
@@ -70,4 +77,5 @@ export const TrialBalancePeriodwiseReportFilterInitialState = {
   costCentreID: 0,
   isPeriodWise: true,
   isExcludeZeroBalance:false,
+  showGroupSummaryOnly:false
 };

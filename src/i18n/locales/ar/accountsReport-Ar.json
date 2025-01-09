@@ -375,6 +375,14 @@
     "inFlow": "التدفق الداخل",
     "outFlow": "التدفق الخارج",
     "netFlow": "صافي التدفق",
-    "account_report": "تقرير الحساب"
+    "account_report": "تقرير الحساب",
+    
+    "particulars_in_flow": "التفاصيل الواردة",
+    "in_amount": "المبلغ الوارد",
+    "particulars_out_flow": "التفاصيل الصادرة",
+    "out_amount": "المبلغ الصادر",
+    "cash_flow_report_summary": "ملخص تقرير التدفق النقدي",
+    "bank_flow_report_summary": "ملخص تقرير التدفق البنكي",
+    "show_summary": "عرض الملخص"
 
 }

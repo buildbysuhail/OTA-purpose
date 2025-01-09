@@ -119,6 +119,7 @@ const DailySummaryGlobal = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                showTotalCount={false}
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
                   gridHeader={t("daily_summary_report")}

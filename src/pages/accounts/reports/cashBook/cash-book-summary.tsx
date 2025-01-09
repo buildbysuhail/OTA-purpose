@@ -29,7 +29,7 @@ const CashBookSummary = () => {
         return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
           {cellElement.data.ledgerName}
         </span>) :
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
       }
     },
     {
@@ -93,6 +93,7 @@ const CashBookSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterWidth="100"
                   filterText="as of {asonDate}"
                   gridHeader={t("cash_book_summary")}

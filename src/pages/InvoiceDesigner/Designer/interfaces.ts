@@ -19,7 +19,21 @@ type TemplateKindType =
   | "premium"
   | "universal"
   | "retail";
-
+  export interface TemplateDto {
+    id?: number;
+    branchId?: number;
+    templateType?: string;
+    templateKind?: string;
+    templateGroup?: string;
+    templateName?: string;
+    thumbImage?: string;
+    backgroundImage?: string;
+    backgroundImageHeader?: string;
+    backgroundImageFooter?: string;
+    signatureImage?: string;
+    content?: string;
+    isCurrent?: boolean;
+  }
 export interface TemplateState {
   id?: string | number | undefined;
   thumbImage?: string;

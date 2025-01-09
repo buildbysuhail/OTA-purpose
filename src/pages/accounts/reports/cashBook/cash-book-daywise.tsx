@@ -52,7 +52,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       allowFiltering: true,
       width: 120,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}  field="transactionDate" ></DrillDownCellTemplate>
     },
     {
       dataField: "ledgerName",
@@ -155,7 +155,8 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText="of {___(ledgerName)},{___ month of (month)} {___ (year)}"
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
+                  filterText="for {___(ledgerName)},{___ month of (month)} {___ (year)}"
                   gridHeader={t("ledger_report_daywise")}
                   dataUrl={Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}

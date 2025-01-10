@@ -131,12 +131,16 @@ export const useAccTransaction = (
   };
 
   const { hasRight } = useUserRights();
-  const loadAccTransVoucher = async (usingManualInvNumber: boolean = false) => {
+  const loadAccTransVoucher = async (usingManualInvNumber: boolean = false, voucherNumber?: number) => {
+    const tmpVoucherNumber = voucherNumber != undefined ? voucherNumber : Number(formState.transaction.master.voucherNumber);
+    if(tmpVoucherNumber <= 0) {
+      return false;
+    }
     // clearControlForNew();
     undoEditMode();
     try {
       const params = {
-        VoucherNumber: formState.transaction?.master?.voucherNumber,
+        VoucherNumber: tmpVoucherNumber,
         VoucherPrefix: formState.transaction?.master?.voucherPrefix || "",
         VoucherType: formState.transaction?.master?.voucherType || "",
         FormType: formState.transaction?.master?.formType || "",
@@ -959,6 +963,8 @@ export const useAccTransaction = (
       }
     }));
   }
+  const handleDelete = async () => {
+  }
   // Edit button handler
   const handleEdit = async () => {
     const validateTransactionDateRes = 
@@ -1071,6 +1077,7 @@ export const useAccTransaction = (
     enableCombo,
     disableCombo,
     handleEdit,
+    handleDelete,
     printVoucher
   };
 };

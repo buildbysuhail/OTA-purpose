@@ -36,6 +36,7 @@ export interface DevGridColumn {
     groupIndex?:any;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
+    cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any) => React.ReactNode;
   }
   const initialColumnPreference: ColumnPreference = {
     dataField: '',

@@ -29,21 +29,10 @@ const AccountPreviewWrapper = ({
   docTitle,
   currency,
 }: AccountPreviewProps) => {
-
-  
-  // let fontStyle = "Roboto"
-  // switch (template?.propertiesState?.font_family) {
-  //   case "Roboto": fontStyle = "font-Helvetica"
-  //     break;
-  //   case "RobotoMono": fontStyle = "font-TimesRoman"
-  //     break;
-  //   case "FiraSans": fontStyle = "font-Courier"
-  //     break;
-  // }
-
+ 
   return (
    <div className="">
-     <div>
+     <div className="flex flex-col  ">
       <Header
         data={data}
         template={template}
@@ -58,6 +47,7 @@ const AccountPreviewWrapper = ({
     </div>
    </div>
   );
+
 };
 
 export default AccountPreviewWrapper;

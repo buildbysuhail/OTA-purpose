@@ -194,7 +194,6 @@ export interface PropertiesState {
   // font_style?: string;
 
   /// Label Properties
-  label_font_family?:string;
   label_font_size?: number;
   label_font_color?: string;
   label_font_weight?: number;
@@ -596,7 +595,6 @@ export const initialTemplateState: ActionState<TemplateState> = {
       font_color: "#000000",
       font_weight: 400,
       fontStyle: "normal",
-      label_font_family:"Roboto",
       label_font_size: 10,
       label_font_color: "#000000",
       label_font_weight: 400,

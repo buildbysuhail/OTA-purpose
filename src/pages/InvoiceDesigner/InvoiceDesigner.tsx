@@ -29,6 +29,8 @@ import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
 import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 import { TemplateDto } from "./Designer/interfaces";
+import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn";
+import { PDFViewer } from "@react-pdf/renderer";
 
 interface DesignSectionType {
   id: number;
@@ -111,6 +113,13 @@ const InvoiceDesigner = () => {
 
   const templateGroup = searchParams?.get("template_group")! as VoucherType | string; 
 
+  const [maxHeight, setMaxHeight] = useState<number>(500);
+
+  useEffect(() => {
+    let wh= window.innerHeight; 
+    setMaxHeight(wh);
+  }, []);
+
   /* ####################################################################### */
 
   const getPDFTemplateData = () => {
@@ -152,6 +161,9 @@ const InvoiceDesigner = () => {
     if (id !== "new") getPDFTemplateData();
   }, []);
 
+  const templateWrap = useSelector(
+    (state: any) => state?.Template
+  ) as TemplateReducerState;
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
@@ -314,7 +326,11 @@ const InvoiceDesigner = () => {
       {/* Preview  */}
       {["CP","CR"].includes(templateGroup) &&
       <>
-      <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} />
+      {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}
+      <PDFViewer width="100%" height="auto"style={{ maxHeight: `${maxHeight}px` , margin:"20px" }}>
+       <AccountTransactionsTemplate template={templateData.activeTemplate} data={DummyVoucherData} /> 
+       </PDFViewer>
+     
       </>
       }
       {["SI","SR"].includes(templateGroup) &&

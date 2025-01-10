@@ -67,9 +67,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
 
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
                 {/* */}
-                <label htmlFor="header " className="font-regular text-sm">
-                 Header :-
-                </label>
+              
+                <h6 className="bg-[#80808012] p-[2px]">Header</h6>
                 <ERPInput
                     id="bgColor"
                     type="color"
@@ -181,9 +180,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
             {/* */}
         
                 <div className="transition-all  flex flex-col gap-5 bg-white p-4">
-                <label htmlFor="footer" className="font-regular text-sm">
-                    Footer :-
-                </label>
+                <h6 className="bg-[#80808012] p-[2px]">Footer</h6>
                     <ERPCheckbox
                         label="Show Show Page Number"
                         id="showAdditionalPageNumber"

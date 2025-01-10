@@ -123,6 +123,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               valueKey: "value",
               labelKey: "label",
             }}
+            defaultData={propertiesState?.orientation ?? "Portrait"}
             data={propertiesState}
             onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, orientation: data.orientation} )
@@ -232,7 +233,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               <ERPDataCombobox
                 id="Payment Stub Position"
                 defaultValue={propertiesState?.payment_stub_position ?? "new_page"}
-                handleChange={(id, value) => onChange?.({ ...propertiesState, payment_stub_position: value?.value })}
+                onChangeData={(data: any) => {
+                  onChange?.({ ...propertiesState, payment_stub_position: data.payment_stub_position} )
+                }}
                 options={[
                   { label: "On a Seperate Page", value: "new_page" },
                   { label: "On Existing Page", value: "same_page" },
@@ -258,29 +261,47 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
       <div className="transition-all  flex flex-col gap-4  p-4">
         <div className="flex flex-col gap-2 mt-1">
           <ERPDataCombobox
-            id="font"
+            id="font_family"
             label="PDF Font"
-            defaultValue={propertiesState?.font_family ?? "Helvetica"}
-            handleChange={(id, value) => onChange?.({ ...propertiesState, font_family: value?.value })}
-            
+            field={{
+              id: "font_family",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={propertiesState}
+            defaultValue={propertiesState?.font_family ?? "Roboto"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...propertiesState, font_family: data.font_family} )
+            }}
+         
               options={[
                 { value: "Roboto", label: "Roboto" },
                 { value: "RobotoMono", label: "RobotoMono" },
                 { value: "FiraSans", label: "FiraSans" },
               ]}
           />
-           <ERPDataCombobox
+           {/* <ERPDataCombobox
             id="fontStyle"
             label="Font Style"
-            defaultValue={propertiesState?.fontStyle ?? "Helvetica"}
-            handleChange={(id, value) => onChange?.({ ...propertiesState, fontStyle: value?.value })}
+            data={propertiesState}
+            field={{
+              id: "fontStyle",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            defaultValue={propertiesState?.fontStyle ?? "normal"}
+            onChangeData={(data: any) => {
+              onChange?.({ ...propertiesState, fontStyle: data.fontStyle} )
+            }}
             
               options={[
                 { value: "normal", label: "normal" },
-                { value: "bold", label: "bold" },
+                { value: "oblique", label: "oblique" },
                 { value: "italic", label: "italic" },
               ]}
-          />
+          /> */}
            
           <ERPStepInput
             value={propertiesState?.font_size}
@@ -324,6 +345,74 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
               </div>
             </div>
+        </div>
+        <div className="flex flex-col gap-2 mt-1">
+        
+           <ERPDataCombobox
+            id="label_font_style"
+            label="Label Font Style"
+            defaultValue={propertiesState?.label_font_style ?? "normal"}
+            data={propertiesState}
+            field={{
+              id: "label_font_style",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onChangeData={(data: any) => {
+              onChange?.({ ...propertiesState, label_font_style: data.label_font_style} )
+            }}
+            
+              options={[
+                { value: "normal", label: "normal" },
+                { value: "oblique", label: "oblique" },
+                { value: "italic", label: "italic" },
+              ]}
+          />
+    
+           
+          <ERPStepInput
+            value={propertiesState?.label_font_size}
+            onChange={(label_font_size) => onChange?.({ ...propertiesState, label_font_size})}
+            label="Label Font Size"
+            id="label_font_size"
+            placeholder=" "
+            min={8}
+            max={28}
+            step={1}
+          />
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3 ">
+                <ERPSlider
+                  id="label_font_weight"
+                  label="Label Font Weight"
+                  className="bg-slate-300"
+                  value={propertiesState?.label_font_weight}
+                  onChange={(e) =>
+                      onChange?.({ ...propertiesState, label_font_weight: parseInt(e.target.value,10) })
+                  }
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+              </div>
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="label_font_weight"
+                  type="number"
+                  noLabel
+                  value={propertiesState?.label_font_weight}
+                  data={propertiesState}
+                  onChange={(e) =>
+                    onChange?.({ ...propertiesState, label_font_weight: parseInt(e.target.value,10) })
+                  }
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+
+              </div>
+            </div>
         
           <ERPInput
             value={propertiesState?.font_color}
@@ -342,6 +431,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             type="color"
           />
         </div>
+
       </div>
 
       {/* <div
@@ -409,6 +499,12 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
              data={propertiesState}
               label="Image Position"
               id="bg_image_position"
+              field={{
+                id: "bg_image_position",
+                required: true,
+                valueKey: "value",
+                labelKey: "label",
+              }}
               defaultValue={propertiesState?.bg_image_position ?? "top left"}
               handleChange={(id, value) => {
                 

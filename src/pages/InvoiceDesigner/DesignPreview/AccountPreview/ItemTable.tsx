@@ -44,8 +44,8 @@ const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreview
   })
 
   return (
-    <div style={{ paddingLeft, paddingRight }}>
-      <table className="w-full">
+    <div style={{ paddingLeft, paddingRight  }}>
+      <table className="w-full ">
         <thead>
           <tr style={styles?.theadStyle} className="bg-slate-100 text-xs">
 

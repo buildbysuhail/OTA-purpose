@@ -688,8 +688,154 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       
       setGridInst(e.component);
     };
+    
+    const formatStringWithConditions = (
+      formatString: string,
+      formState: any
+    ): string => {
+      // Helper function to format dates in dd/MM/yyyy format
+      const formatDate = (dateStr: string): string => {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return "N/A";
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      // Function to evaluate and replace placeholders and conditions
+      const evaluateExpression = (expression: string, data: any): boolean => {
+        // Create a safer scope for evaluating the expression by passing 'data' as an argument
+        try {
+          return new Function(...Object.keys(data), `return ${expression};`)(
+            ...Object.values(data)
+          );
+        } catch (error) {
+          console.error("Error evaluating expression:", error);
+          return false; // Return false in case of error
+        }
+      };
+
+      // Replace placeholders and conditions
+      return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
+        // Handle conditional expressions using '&&'
+        if (placeholder.includes("&&")) {
+          const [condition, trueValue] = placeholder.split("&&");
+          const conditionResult = evaluateExpression(
+            condition.trim(),
+            formState
+          );
+          const result = conditionResult
+            ? trueValue.replace(
+                /\[([^\]]+)\]/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(formState[innerPlaceholder]);
+                  }
+                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("___")) {
+          const [l, r] = placeholder.split("___");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return rowData != undefined
+                      ? formatDate(rowData[innerPlaceholder])
+                      : "N/A";
+                  }
+                  return rowData != undefined
+                    ? rowData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("****")) {
+          const [l, r] = placeholder.split("****");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(postData[innerPlaceholder]);
+                  }
+                  return postData != undefined
+                    ? postData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (placeholder.includes("---")) {
+          const [l, r] = placeholder.split("---");
+          const result = r
+            ? r.replace(
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date") ||
+                    innerPlaceholder.includes("finFrom") ||
+                    innerPlaceholder.includes("finTo")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return formatDate(userSession[(innerPlaceholder)]);
+                  }
+                  return userSession != undefined
+                    ? userSession[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                }
+              )
+            : "";
+
+          return result;
+        } else if (formState[placeholder] !== undefined) {
+          // Handle regular placeholders
+          if (placeholder.includes("date") || placeholder.includes("Date")) {
+            // If the placeholder is a date, format it
+            return formatDate(formState[placeholder]);
+          }
+          return formState[placeholder] || "N/A";
+        }
+        return "N/A";
+      });
+    };
+
+    
+    const header = useMemo(() => {
+      if (!filterText || !filter) return filterText || "";
+
+      const data = filter;
+      const _gridHeader = filterText.toString();
+      // Dynamically replace placeholders using a regular expression
+
+      return formatStringWithConditions(_gridHeader, data);
+    }, [gridHeader, filter]);
+
     const onExportingHandler = useCallback(
+      
       (e: any) => {
+        debugger;
         if (onExporting) {
           onExporting(e);
         } else {
@@ -699,8 +845,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               unit: "pt",
               format: "a4",
             });
+            const pageTitle = `${gridHeader} - ${!filterText || !filter ? filterText || "" : formatStringWithConditions(filterText.toString(), filter)}`;
+            // 
             // Store original column visibility states
-            const pageTitle = `${gridHeader} - ${header}`;
+            // const pageTitle = `${gridHeader} - ${header}`;
             let currentY = 30; // Start position for content
 
             // Set font size for company details and addresses
@@ -904,7 +1052,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }
         }
       },
-      [onExporting, gridId, preferences, gridCols]
+      [onExporting, gridId, preferences, gridCols,header]
     );
 
     const handleCellClick = useCallback((event: any) => {
@@ -959,148 +1107,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         // const sd = 223;
       }
     }, []);
-
-    const formatStringWithConditions = (
-      formatString: string,
-      formState: any
-    ): string => {
-      // Helper function to format dates in dd/MM/yyyy format
-      const formatDate = (dateStr: string): string => {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return "N/A";
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-      };
-
-      // Function to evaluate and replace placeholders and conditions
-      const evaluateExpression = (expression: string, data: any): boolean => {
-        // Create a safer scope for evaluating the expression by passing 'data' as an argument
-        try {
-          return new Function(...Object.keys(data), `return ${expression};`)(
-            ...Object.values(data)
-          );
-        } catch (error) {
-          console.error("Error evaluating expression:", error);
-          return false; // Return false in case of error
-        }
-      };
-
-      // Replace placeholders and conditions
-      return formatString.replace(/{([^}]+)}/g, (match, placeholder) => {
-        // Handle conditional expressions using '&&'
-        if (placeholder.includes("&&")) {
-          const [condition, trueValue] = placeholder.split("&&");
-          const conditionResult = evaluateExpression(
-            condition.trim(),
-            formState
-          );
-          const result = conditionResult
-            ? trueValue.replace(
-                /\[([^\]]+)\]/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(formState[innerPlaceholder]);
-                  }
-                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
-                }
-              )
-            : "";
-
-          return result;
-        } else if (placeholder.includes("___")) {
-          const [l, r] = placeholder.split("___");
-          const result = r
-            ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return rowData != undefined
-                      ? formatDate(rowData[innerPlaceholder])
-                      : "N/A";
-                  }
-                  return rowData != undefined
-                    ? rowData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
-                }
-              )
-            : "";
-
-          return result;
-        } else if (placeholder.includes("****")) {
-          const [l, r] = placeholder.split("****");
-          const result = r
-            ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(postData[innerPlaceholder]);
-                  }
-                  return postData != undefined
-                    ? postData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
-                }
-              )
-            : "";
-
-          return result;
-        } else if (placeholder.includes("---")) {
-          const [l, r] = placeholder.split("---");
-          const result = r
-            ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date") ||
-                    innerPlaceholder.includes("finFrom") ||
-                    innerPlaceholder.includes("finTo")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(userSession[(innerPlaceholder)]);
-                  }
-                  return userSession != undefined
-                    ? userSession[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
-                }
-              )
-            : "";
-
-          return result;
-        } else if (formState[placeholder] !== undefined) {
-          // Handle regular placeholders
-          if (placeholder.includes("date") || placeholder.includes("Date")) {
-            // If the placeholder is a date, format it
-            return formatDate(formState[placeholder]);
-          }
-          return formState[placeholder] || "N/A";
-        }
-        return "N/A";
-      });
-    };
-
-    const header = useMemo(() => {
-      if (!filterText || !filter) return filterText || "";
-
-      const data = filter;
-      const _gridHeader = filterText.toString();
-      // Dynamically replace placeholders using a regular expression
-
-      return formatStringWithConditions(_gridHeader, data);
-    }, [gridHeader, filter]);
 
     const onCellPrepared = useCallback((e: any) => {
       //   // Get dynamic properties

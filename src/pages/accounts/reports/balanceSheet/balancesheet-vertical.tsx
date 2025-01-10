@@ -32,6 +32,13 @@ const BalancesheetVertical = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        
+        return (
+          cellElement.data.accGroupID > 0 ? <DrillDownCellTemplate data={cellElement} field="accGroupID"></DrillDownCellTemplate> : cellElement.value
+          
+        )
+      },
       // cellRender: (cellElement: any, cellInfo: any) => {
       //   return <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
           
@@ -43,6 +50,13 @@ const BalancesheetVertical = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        
+        return (
+          cellElement.data.ledgerID > 0 ? <DrillDownCellTemplate data={cellElement} field="ledgerID"></DrillDownCellTemplate> : cellElement.value
+          
+        )
+      },
     },
     {
       dataField: "accGroup",

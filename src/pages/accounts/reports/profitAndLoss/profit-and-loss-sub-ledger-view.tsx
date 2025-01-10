@@ -189,7 +189,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
                     content: (
                       <CashBookMonthWise
                         postData={{
-                          asOnDate: filter.asOnDate,
+                          asonDate: filter.asOnDate,
                           fromDate: filter.dateFrom,
                         }}
                       />

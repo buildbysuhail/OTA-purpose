@@ -10,7 +10,7 @@ interface BalanceSheetFilterProps {
 }
 
 interface BalanceSheetFilterState {
-  asOnDate: Date;
+  asonDate: Date;
   valuationUsing: string;
   closingStock: number;
   showVertical: boolean;
@@ -25,10 +25,10 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <ERPDateInput
-        {...getFieldProps("asOnDate")}
+        {...getFieldProps("asonDate")}
         label={t("as_on_date")}
-        onChangeData={(data: { asOnDate: Date }) =>
-          handleFieldChange("asOnDate", data.asOnDate)
+        onChangeData={(data: { asonDate: Date }) =>
+          handleFieldChange("asonDate", data.asonDate)
         }
       />
       <ERPDataCombobox
@@ -62,7 +62,7 @@ const BalanceSheetFilter: React.FC<BalanceSheetFilterProps> = ({
 
 export default BalanceSheetFilter;
 export const BalanceSheetFilterInitialState: BalanceSheetFilterState = {
-  asOnDate: new Date(),
+  asonDate: new Date(),
   valuationUsing: "SPP",
   closingStock: 0,
   showVertical: false,

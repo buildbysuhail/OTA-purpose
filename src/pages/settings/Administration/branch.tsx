@@ -14,7 +14,7 @@ import { BranchGridManage } from "./branch-manage";
 
 const BranchGrid = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('masters');
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {

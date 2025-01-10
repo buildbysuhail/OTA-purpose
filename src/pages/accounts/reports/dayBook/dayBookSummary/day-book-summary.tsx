@@ -37,7 +37,7 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender:(cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="voucherType"></DrillDownCellTemplate>
     },
     {
       dataField: "particulars",

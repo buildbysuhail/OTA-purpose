@@ -103,7 +103,8 @@ const BalancesheetVertical = () => {
                   : ""
             }`}
         >
-          {cellElement.data.debit}
+         {`${ cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
+ 
         </span>
       ),
     },
@@ -128,7 +129,7 @@ const BalancesheetVertical = () => {
                   : ""
             }`}
         >
-          {cellElement.data.credit}
+            {`${ cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
@@ -226,12 +227,12 @@ const BalancesheetVertical = () => {
                     dataField == "accGroupID" ?
                      <BalancesheetDetails
                       postData={{
-                        asOnDate: filter.asOnDate,
+                        asonDate: filter.asonDate,
                       }}
                     /> 
                     : dataField == "ledgerID" ? <CashBookMonthWise postData={
                       {
-                        asOnDate: filter.asOnDate
+                        asonDate: filter.asonDate
                       }} />
                       : null
                       ,

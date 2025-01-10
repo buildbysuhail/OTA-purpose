@@ -87,7 +87,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
     },
     {
       dataField: "debit",

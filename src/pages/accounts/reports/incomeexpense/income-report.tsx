@@ -123,6 +123,7 @@ const IncomeReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   allowGrouping={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"

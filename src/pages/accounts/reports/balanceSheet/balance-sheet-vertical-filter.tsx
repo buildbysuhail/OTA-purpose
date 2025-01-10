@@ -26,10 +26,10 @@ import Urls from "../../../../redux/urls";
    return (
     <div className="grid grid-cols-2 gap-4">
       <ERPDateInput
-        {...getFieldProps("asOnDate")}
+        {...getFieldProps("asonDate")}
         label={t("as_on_date")}
-        onChangeData={(data: { asOnDate: Date }) =>
-          handleFieldChange("asOnDate", data.asOnDate)
+        onChangeData={(data: { asonDate: Date }) =>
+          handleFieldChange("asonDate", data.asonDate)
         }
       />
 
@@ -73,7 +73,7 @@ import Urls from "../../../../redux/urls";
 
 export default BalanceSheetVerticalFilter;
 export const BalanceSheetVerticalFilterInitialState= {
-  asOnDate: new Date(),
+  asonDate: new Date(),
   valuationUsing: "SPP",
   closingStock: 0
   // showVertical: true,

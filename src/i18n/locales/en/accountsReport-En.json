@@ -401,6 +401,7 @@
     "out_amount":"Out Amount",
     "cash_flow_report_summary":"Cash Flow Report Summary",
     "bank_flow_report_summary":"Bank Flow Report Summary",
-    "show_summary":"Show Summary"
+    "show_summary":"Show Summary",
+    "show_group_summary":"Show Group Summary"
 
 }

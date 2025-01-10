@@ -72,7 +72,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.ledgerName
            
               }`}
@@ -87,7 +87,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.amount == null 
             ? '0'
               : getFormattedValue(cellElement.data.amount)
@@ -114,7 +114,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       cellRender: (cellElement: any, cellInfo: any) => {
         
         return (
-          <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+          <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data.ledgerName === "TOTAL"?  
                  getFormattedValue(parseFloat(cellElement.data?.balance)):cellElement.data?.balance
                 }`}

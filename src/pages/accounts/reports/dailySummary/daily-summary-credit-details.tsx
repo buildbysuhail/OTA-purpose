@@ -72,7 +72,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.partyName }`}
         </span>
       ),
@@ -85,7 +85,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.total == null 
             ? '0'
               : getFormattedValue(cellElement.data.total)
@@ -101,7 +101,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.receivedAmount == null 
             ? '0'
               : getFormattedValue(cellElement.data.receivedAmount)
@@ -117,7 +117,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.balance == null 
             ? '0'
               : getFormattedValue(cellElement.data.balance)

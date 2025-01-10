@@ -63,7 +63,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
   {cellElement.data.form}
   </span>
       ),
@@ -86,7 +86,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red ' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C] ' : ''}`}>
   {cellElement.data.billTotal}
   </span>
       ),
@@ -110,7 +110,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),

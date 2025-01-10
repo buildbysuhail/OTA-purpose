@@ -96,7 +96,7 @@ const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.quantity == null || cellElement.data?.quantity == 0
             ? ''
             : cellElement.data.ledgerName === "TOTAL"
@@ -148,7 +148,7 @@ const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.netValue == null || cellElement.data?.netValue == 0
             ? ''
             : cellElement.data.ledgerName === "TOTAL"
@@ -174,7 +174,7 @@ const PartySummaryPurchase: React.FC<PartySummaryFilter> = ({ filter }) => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.netAmount == null || cellElement.data?.netAmount == 0
             ? ''
             : cellElement.data.ledgerName === "TOTAL"

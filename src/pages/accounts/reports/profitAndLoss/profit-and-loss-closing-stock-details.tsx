@@ -25,7 +25,7 @@ const ProfitAndLossClosingStockDetails: FC<ProfitAndLossClosingStockProps> = ({ 
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
           {cellElement.data.voucherType}
         </span>
       ),
@@ -37,7 +37,7 @@ const ProfitAndLossClosingStockDetails: FC<ProfitAndLossClosingStockProps> = ({ 
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.voucherType === "TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
           {cellElement.data.totalValue}
         </span>
       ),

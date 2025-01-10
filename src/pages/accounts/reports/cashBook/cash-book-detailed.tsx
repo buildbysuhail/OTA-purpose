@@ -79,7 +79,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -98,7 +98,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -129,7 +129,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -161,7 +161,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >

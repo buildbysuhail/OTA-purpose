@@ -67,7 +67,7 @@ const CollectionReport = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -97,7 +97,7 @@ const CollectionReport = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} `}
         </span>
       ),

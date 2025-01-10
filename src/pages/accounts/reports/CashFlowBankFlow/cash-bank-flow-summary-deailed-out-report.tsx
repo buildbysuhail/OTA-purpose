@@ -56,7 +56,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true? 'font-bold text-green' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': ''}`}>
+        <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': ''}`}>
           {cellElement.data.ledgerNameIN}
         </span>
       ),
@@ -79,7 +79,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-red' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':''}`}>
           {`${ cellElement.data?.cashFlowIN == null ? '' : getFormattedValue(cellElement.data.cashFlowIN)}`}
         </span>
       ),
@@ -93,7 +93,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true? 'font-bold text-green' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-red': ''}`}>
+        <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-[#DC143C]': ''}`}>
           {cellElement.data.ledgerNameOut}
         </span>
       ),
@@ -107,7 +107,7 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-red' :''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :''}`}>
           {`${ cellElement.data?.cashFlowOut == null ? '' :  getFormattedValue(cellElement.data.cashFlowOut)}`}
         </span>
       ),

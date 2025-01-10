@@ -584,26 +584,41 @@ export const getItemRate = (data: any, pathName: any) => {
 
 export const identifyDateFormat = (dateString: string) => {
   const formats = [
-      "DD-MM-YYYY",
-      "MM-DD-YYYY",
-      "YYYY-MM-DD",
-      "DD/MM/YYYY",
-      "MM/DD/YYYY",
-      "YYYY/MM/DD",
-      "DD.MM.YYYY",
-      "YYYY.MM.DD",
-      "DD MMM YYYY",
-      "MMM DD, YYYY",
-      "YYYY MMM DD"
-  ];
+    // Date only
+    "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD", "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD",
+    "DD.MM.YYYY", "YYYY.MM.DD",
+    "DD MMM YYYY", "MMM DD, YYYY", "YYYY MMM DD",
 
-  for (const format of formats) {
-      if (moment(dateString, format, true).isValid()) {
-          return format;
-      }
-  }
+    // Date and time without timezone
+    "DD-MM-YYYY HH:mm", "MM-DD-YYYY HH:mm", "YYYY-MM-DD HH:mm",
+    "DD/MM/YYYY HH:mm", "MM/DD/YYYY HH:mm", "YYYY/MM/DD HH:mm",
+    "DD.MM.YYYY HH:mm", "YYYY.MM.DD HH:mm",
 
-  return "Unknown format";
+    // Date and time with seconds
+    "DD-MM-YYYY HH:mm:ss", "MM-DD-YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss",
+    "DD/MM/YYYY HH:mm:ss", "MM/DD/YYYY HH:mm:ss", "YYYY/MM/DD HH:mm:ss",
+    "DD.MM.YYYY HH:mm:ss", "YYYY.MM.DD HH:mm:ss",
+
+    // Date and time with milliseconds
+    "DD-MM-YYYY HH:mm:ss.SSS", "MM-DD-YYYY HH:mm:ss.SSS", "YYYY-MM-DD HH:mm:ss.SSS",
+    "DD/MM/YYYY HH:mm:ss.SSS", "MM/DD/YYYY HH:mm:ss.SSS", "YYYY/MM/DD HH:mm:ss.SSS",
+    "DD.MM.YYYY HH:mm:ss.SSS", "YYYY.MM.DD HH:mm:ss.SSS",
+
+    // Time only
+    "HH:mm", "HH:mm:ss", "HH:mm:ss.SSS",
+
+    // ISO 8601 variants
+    moment.ISO_8601
+];
+
+// Check all formats
+for (const format of formats) {
+    if (moment(dateString, format, true).isValid()) {
+        return format === moment.ISO_8601 ? "ISO 8601" : format;
+    }
+}
+
+return "Unknown format";
 }
 export const getVoucherNameFromPath = (path: string) => {
   let voucherName: any;

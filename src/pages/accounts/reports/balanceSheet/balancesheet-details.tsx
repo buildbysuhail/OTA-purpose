@@ -11,7 +11,6 @@ import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
-
 interface BalancesheetDetailsProps {
   postData: any;
   groupName?: string;
@@ -127,7 +126,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   columns={columns}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}
-                  filterText="{___(groupName)} {**** as of (asonDate)}"
+                  filterText="{___(accGroup)} {**** as of (asonDate)}"
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   hideGridAddButton={true}
                   enablefilter={false}

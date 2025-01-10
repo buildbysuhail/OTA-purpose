@@ -60,7 +60,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate>
     },
     {
       dataField: "form",
@@ -125,7 +125,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="details"></DrillDownCellTemplate>
     },
   ];
   return (

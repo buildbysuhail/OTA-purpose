@@ -67,7 +67,7 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate>
     },
     {
       dataField: "form",

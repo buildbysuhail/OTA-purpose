@@ -315,7 +315,7 @@ const BalanceSheet = () => {
         {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
         {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">
-          As of {new Date(filter.asOnDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
+          As of {new Date(filter.asonDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "2-digit" })}
         </p>
         {/* <p className="text-center mb-4">As of {filter.asOnDate.toString("MMMM dd yyyy")}</p> */}
         {loading ? (

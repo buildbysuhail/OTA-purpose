@@ -86,7 +86,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
             {cellElement.data.ledgerName}
           </span>
         ) : (
-          <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
+          <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
         );
       },
     },

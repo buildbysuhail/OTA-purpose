@@ -83,6 +83,7 @@ const DayBookSummary = () => {
       dataField: "balance",
       caption: t("balance"),
       dataType: "number",
+      visible:false,
       allowSearch: true,
       allowFiltering: true,
       width: 250,

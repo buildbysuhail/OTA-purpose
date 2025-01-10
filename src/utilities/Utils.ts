@@ -6,6 +6,7 @@ import ERPToast from "../components/ERPComponents/erp-toast";
 import { thisYear } from "../utilities/ERPDateFilterData";
 import { RootState } from "../redux/store";
 import { AppState } from "../redux/slices/app/types";
+import moment from "moment";
 
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -581,7 +582,29 @@ export const getItemRate = (data: any, pathName: any) => {
   return itemRate;
 };
 
+export const identifyDateFormat = (dateString: string) => {
+  const formats = [
+      "DD-MM-YYYY",
+      "MM-DD-YYYY",
+      "YYYY-MM-DD",
+      "DD/MM/YYYY",
+      "MM/DD/YYYY",
+      "YYYY/MM/DD",
+      "DD.MM.YYYY",
+      "YYYY.MM.DD",
+      "DD MMM YYYY",
+      "MMM DD, YYYY",
+      "YYYY MMM DD"
+  ];
 
+  for (const format of formats) {
+      if (moment(dateString, format, true).isValid()) {
+          return format;
+      }
+  }
+
+  return "Unknown format";
+}
 export const getVoucherNameFromPath = (path: string) => {
   let voucherName: any;
   const index = path?.lastIndexOf("/");

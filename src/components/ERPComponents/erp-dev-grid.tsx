@@ -59,6 +59,7 @@ import { StockLedgerFilterInitialState } from "../../pages/inventory/reports/sto
 import ERPToast from "./erp-toast";
 import moment from "moment";
 import {
+  identifyDateFormat,
   isNullOrUndefinedOrEmpty,
   mergeObjectsRemovingIdenticalKeys,
 } from "../../utilities/Utils";
@@ -154,7 +155,7 @@ interface ERPDevGridProps {
   hideGridHeader?: boolean;
   gridHeader?: string;
   filterText?: string;
-  condition ?: any;
+  condition?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
@@ -323,7 +324,11 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0 ? result.dataRowCount != undefined && result.dataRowCount != null ? result.dataRowCount: result.totalCount : prev
+          prev <= 0
+            ? result.dataRowCount != undefined && result.dataRowCount != null
+              ? result.dataRowCount
+              : result.totalCount
+            : prev
         );
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
@@ -405,7 +410,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       remoteOperations = true,
-      condition ,
+      condition,
       focusedRowEnabled = false,
       onRowClick,
       onFilterChanged,
@@ -426,7 +431,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
-      heightToAdjustOnWindows =  showTotalCount ? 150 : 100,
+      heightToAdjustOnWindows = showTotalCount ? 150 : 100,
       heightToAdjustOnWindowsInModal,
       popupAction,
       changeReload,
@@ -469,7 +474,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     },
     ref
   ) => {
-    
     const gridRef = useRef<any>(null); // Use `any` for the instance
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
@@ -477,7 +481,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
-    const userSession = useAppSelector((state: RootState) => state.UserSession as any);
+    const userSession = useAppSelector(
+      (state: RootState) => state.UserSession as any
+    );
     const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
@@ -536,7 +542,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       set_reload(reload);
     }, [reload]);
     useEffect(() => {
-      
       setGridCols(columns);
     }, []);
     useEffect(() => {
@@ -545,14 +550,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [filterInitialData]);
     useEffect(() => {
-      
       if (gridId != "" && columns != undefined && columns != null) {
         onApplyPreferences(getInitialPreference(gridId, columns));
       }
     }, [gridId]);
     const onApplyPreferences = useCallback(
       (pref: GridPreference) => {
-        
         setPreferences(pref);
         const updatedColumns = applyGridColumnPreferences(columns, pref);
         setGridCols(updatedColumns);
@@ -685,22 +688,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     }, [preferences, gridInstance]);
     const onGridReady = (e: any) => {
-      
       setGridInst(e.component);
     };
-    
+
     const formatStringWithConditions = (
       formatString: string,
       formState: any
     ): string => {
       // Helper function to format dates in dd/MM/yyyy format
       const formatDate = (dateStr: string): string => {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return "N/A";
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
+        const format = identifyDateFormat(dateStr);
+        const date = moment(dateStr, format);
+        debugger;
+        return date.format("DD/MM/YYYY");
       };
 
       // Function to evaluate and replace placeholders and conditions
@@ -799,7 +799,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     innerPlaceholder.includes("finTo")
                   ) {
                     // If the placeholder is a date, format it
-                    return formatDate(userSession[(innerPlaceholder)]);
+                    return formatDate(userSession[innerPlaceholder]);
                   }
                   return userSession != undefined
                     ? userSession[innerPlaceholder] || "N/A"
@@ -821,21 +821,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       });
     };
 
-    
     const header = useMemo(() => {
       if (!filterText || !filter) return filterText || "";
 
       const data = filter;
       const _gridHeader = filterText.toString();
       // Dynamically replace placeholders using a regular expression
-
+      
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
     const onExportingHandler = useCallback(
-      
       (e: any) => {
-        debugger;
+        
         if (onExporting) {
           onExporting(e);
         } else {
@@ -845,8 +843,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               unit: "pt",
               format: "a4",
             });
-            const pageTitle = `${gridHeader} - ${!filterText || !filter ? filterText || "" : formatStringWithConditions(filterText.toString(), filter)}`;
-            // 
+            const pageTitle = `${gridHeader} - ${
+              !filterText || !filter
+                ? filterText || ""
+                : formatStringWithConditions(filterText.toString(), filter)
+            }`;
+            //
             // Store original column visibility states
             // const pageTitle = `${gridHeader} - ${header}`;
             let currentY = 30; // Start position for content
@@ -1052,7 +1054,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }
         }
       },
-      [onExporting, gridId, preferences, gridCols,header]
+      [onExporting, gridId, preferences, gridCols, header]
     );
 
     const handleCellClick = useCallback((event: any) => {
@@ -1094,7 +1096,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           updatedBodyProps
         );
         // Update bodyProps state
-        
+
         onCellClick && onCellClick(event);
         setBodyProps(updatedBodyProps);
         setIsChildOpen({
@@ -1134,7 +1136,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }, []);
     const handleRowPrepared = useCallback(
       (e: any) => {
-        if (e.rowType === "data" && condition != undefined && condition(e.data)) {
+        if (
+          e.rowType === "data" &&
+          condition != undefined &&
+          condition(e.data)
+        ) {
           e.rowElement.style.display = "none"; // Hide row
         }
       },
@@ -1143,7 +1149,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
 
-   
     return (
       <Fragment>
         <div className={className}>
@@ -1346,7 +1351,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   />
                 ))}
               </Summary>
-              
             )}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
@@ -1395,7 +1399,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     );
   }
 );
-const _DrillDownCellTemplate = ({ data, field, inputFormat= "DD-MM-YYYY" }: { data: any, field: string, inputFormat?: string }) => {
+const _DrillDownCellTemplate = ({
+  data,
+  field,
+  inputFormat = "DD-MM-YYYY",
+}: {
+  data: any;
+  field: string;
+  inputFormat?: string;
+}) => {
   if (
     data.value !== undefined &&
     data.value !== null &&
@@ -1403,7 +1415,7 @@ const _DrillDownCellTemplate = ({ data, field, inputFormat= "DD-MM-YYYY" }: { da
     data.value !== 0
   ) {
     console.log(data.column.dataType);
-    debugger;
+    
     return (
       <a
         href="#"
@@ -1414,7 +1426,7 @@ const _DrillDownCellTemplate = ({ data, field, inputFormat= "DD-MM-YYYY" }: { da
         }}
       >
         {data.column.dataType === "date"
-          ? moment(data.data[field],inputFormat).format("DD/MMM/YYYY") // Change this format as needed
+          ? moment(data.data[field], inputFormat).format("DD/MMM/YYYY") // Change this format as needed
           : data.value.toString()}
       </a>
     );

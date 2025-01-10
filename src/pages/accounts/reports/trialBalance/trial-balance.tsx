@@ -39,7 +39,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
+        <span style={{color: cellElement.data.isGroup == true ? 'rgb(25, 84, 166)' : cellElement.data.particulars == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
           {
             cellElement.data.isGroup !== true &&cellElement.data.particulars!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
           }   

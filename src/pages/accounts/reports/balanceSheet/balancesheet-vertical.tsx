@@ -229,6 +229,7 @@ const BalancesheetVertical = () => {
                       postData={{
                         asonDate: filter.asonDate,
                       }}
+                      origin="detailed"
                     /> 
                     : dataField == "ledgerID" ? <CashBookMonthWise postData={
                       {
@@ -236,9 +237,10 @@ const BalancesheetVertical = () => {
                       }} />
                       : null
                       ,
-                      origin:"trialBalance",
+          
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
+                  
                   })}
 
                 // )}

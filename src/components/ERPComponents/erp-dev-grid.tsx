@@ -188,6 +188,7 @@ interface ERPDevGridProps {
   onRowRemoving?: (e: any) => void;
   rowRender?: (row: any) => React.ReactNode;
   cellRender?: (cell: any) => React.ReactNode;
+  cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any) => React.ReactNode;
   locale?: string;
   columnRenderingMode?: any;
   rowRenderingMode?: "standard" | "virtual";
@@ -451,6 +452,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onRowRemoving,
       rowRender,
       cellRender,
+      cellRenderDynamic,
       locale,
       columnRenderingMode = "standard",
       rowRenderingMode = "standard",
@@ -1395,7 +1397,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 minWidth={column.minWidth}
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
-                cellRender={column.cellRender}
+                cellRender= { column.cellRenderDynamic == undefined && column.cellRender == undefined ? undefined : (cellElement: any, cellInfo: any) => {
+                  debugger;
+                  if (column.cellRenderDynamic) {
+                      return column.cellRenderDynamic(cellElement, cellInfo, filter);
+                  }
+                  if (column.cellRender) {
+                      return column.cellRender(cellElement, cellInfo);
+                  }
+              }}
                 visible={
                   column.visibleDynamic != undefined
                     ? column.visibleDynamic(filter)

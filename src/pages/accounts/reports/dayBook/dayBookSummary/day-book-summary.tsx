@@ -46,7 +46,7 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -60,7 +60,7 @@ const DayBookSummary = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.debit}
         </span>
       ),
@@ -74,7 +74,7 @@ const DayBookSummary = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.credit}
         </span>
       ),
@@ -88,7 +88,7 @@ const DayBookSummary = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-  <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
+  <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
   {`${ cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),

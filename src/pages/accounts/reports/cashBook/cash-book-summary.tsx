@@ -26,7 +26,7 @@ const CashBookSummary = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.ledgerName}
         </span>) :
           <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
@@ -41,7 +41,7 @@ const CashBookSummary = () => {
       width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -55,7 +55,7 @@ const CashBookSummary = () => {
       width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -69,7 +69,7 @@ const CashBookSummary = () => {
       width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),

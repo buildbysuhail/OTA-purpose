@@ -58,9 +58,9 @@ const BalancesheetVertical = () => {
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-                ? "font-bold text-green"
+                ? "font-bold text-[#2E8B57]"
                 : cellElement.data.isGroup == true
-                  ? "pl-4 font-bold text-red"
+                  ? "pl-4 font-bold text-[#DC143C]"
                   : ""
             }`}
         >
@@ -97,9 +97,9 @@ const BalancesheetVertical = () => {
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-                ? "font-bold text-green"
+                ? "font-bold text-[#2E8B57]"
                 : cellElement.data.isGroup == true
-                  ? "pl-4 font-bold text-red"
+                  ? "pl-4 font-bold text-[#DC143C]"
                   : ""
             }`}
         >
@@ -123,9 +123,9 @@ const BalancesheetVertical = () => {
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-                ? "font-bold text-green"
+                ? "font-bold text-[#2E8B57]"
                 : cellElement.data.isGroup == true
-                  ? "pl-4 font-bold text-red"
+                  ? "pl-4 font-bold text-[#DC143C]"
                   : ""
             }`}
         >
@@ -148,9 +148,9 @@ const BalancesheetVertical = () => {
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-                ? "font-bold text-green"
+                ? "font-bold text-[#2E8B57]"
                 : cellElement.data.isGroup == true
-                  ? "pl-4 font-bold text-red"
+                  ? "pl-4 font-bold text-[#DC143C]"
                   : ""
             }`}
         >
@@ -173,9 +173,9 @@ const BalancesheetVertical = () => {
               ? "font-bold text-blue"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
-                ? "font-bold text-green"
+                ? "font-bold text-[#2E8B57]"
                 : cellElement.data.isGroup == true
-                  ? "pl-4 font-bold text-red"
+                  ? "pl-4 font-bold text-[#DC143C]"
                   : ""
             }`}
         >

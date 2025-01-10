@@ -50,7 +50,7 @@ const CashFlowReport = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.month}
         </span>) :
           <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
@@ -65,7 +65,7 @@ const CashFlowReport = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
         {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -79,7 +79,7 @@ const CashFlowReport = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -93,7 +93,7 @@ const CashFlowReport = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : getFormattedValue(cellElement.data.monthBal)}`}
         </span>
       ),

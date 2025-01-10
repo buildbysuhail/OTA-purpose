@@ -39,7 +39,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-red' : 'pl-4'}`}>
+        <span style={{color: cellElement.data.isGroup == true ? 'rgb(61 108 161)' : cellElement.data.particulars == "TOTAL" ? 'rgb(241 55 66)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
           {
             cellElement.data.isGroup !== true &&cellElement.data.particulars!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
           }   
@@ -53,7 +53,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
           {cellElement.data.groupNameInArabic}
         </span>
       ),
@@ -66,7 +66,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
           {cellElement.data.ledgerNameInArabic}
         </span>
       ),
@@ -80,7 +80,7 @@ const TrialBalance = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -94,7 +94,7 @@ const TrialBalance = () => {
       width: 250,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -108,7 +108,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.isGroup}
         </span>
       ),

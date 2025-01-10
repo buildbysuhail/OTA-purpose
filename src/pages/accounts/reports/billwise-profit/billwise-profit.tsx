@@ -46,7 +46,7 @@ const BillwiseProfit = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.productName}
         </span>
       ),
@@ -135,7 +135,7 @@ const BillwiseProfit = () => {
                 : getFormattedValue(salesPrice);
 
           return (
-            <span className="font-bold text-red">
+            <span className="font-bold text-[#DC143C]">
               {formattedValue}
             </span>
           );
@@ -154,7 +154,7 @@ const BillwiseProfit = () => {
       allowFiltering: true,
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.totCost == 0 || cellElement.data?.totCost == null ? '' :  getFormattedValue(cellElement.data.totCost)}`}
         </span>
       ),
@@ -167,7 +167,7 @@ const BillwiseProfit = () => {
       allowFiltering: true,
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.netAmount == 0 || cellElement.data?.netAmount == null ? '' :  getFormattedValue(cellElement.data.netAmount)}`}
         </span>
       ),
@@ -181,7 +181,7 @@ const BillwiseProfit = () => {
       width: 110,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' :  getFormattedValue(cellElement.data.profit)}`}
         </span>
       ),
@@ -195,7 +195,7 @@ const BillwiseProfit = () => {
       width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' :  getFormattedValue(cellElement.data.markupPerc)}`}
         </span>
       ),
@@ -209,7 +209,7 @@ const BillwiseProfit = () => {
       width: 120,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : getFormattedValue(cellElement.data.marginPerc)}`}
         </span>
       ),
@@ -237,7 +237,7 @@ const BillwiseProfit = () => {
                 : getFormattedValue(vat);
 
           return (
-            <span className="font-bold text-red">
+            <span className="font-bold text-[#DC143C]">
               {formattedValue}
             </span>
           );

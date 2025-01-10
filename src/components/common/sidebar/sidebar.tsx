@@ -61,12 +61,12 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   });
   useEffect(() => {
     if (type == "settings") {
-      let st: [] = [];
+      let st = menuitems;
       if (userSession.userTypeCode == "BA") {
-        st = menuitems.filter((x: any) => x.title != "branches");
+        st = st.filter((x: any) => x.title != "branches");
       }
       if (userSession.userTypeCode == "BA") {
-        st = menuitems.filter((x: any) => x.title != "branch_info");
+        st = st.filter((x: any) => x.title != "branch_info");
       }
       const sd = st.map((x: any) =>
         x.children?.map((item: any) => {

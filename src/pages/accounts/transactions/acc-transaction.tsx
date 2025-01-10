@@ -151,7 +151,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     handleRowClick,
     handleFieldKeyDown,
     loadTemporaryRows,
-    handleDelete,
     save,
     enableCombo,
     disableCombo,
@@ -1060,7 +1059,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        handleDelete()
+                        deleteAccTransVoucher()
                       }}
                     >
                       <Trash2 className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />

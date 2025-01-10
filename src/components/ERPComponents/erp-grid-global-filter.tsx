@@ -19,6 +19,7 @@ interface ErpGridGlobalFilterProps {
   onApplyFilters?: (filters: any) => void;
   toogleFilter?: boolean;
   onClose?: () => void;
+  onOpened?: ( status : boolean) => void;
 }
 
 const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
@@ -31,6 +32,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   title,
   toogleFilter = false,
   onClose,
+  onOpened
 }) => {
   
   
@@ -97,7 +99,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
     if (onApplyFilters) onApplyFilters(formState.data ?? {});
   };
   useEffect(() => {
-    
+    debugger;
     if (toogleFilter == true) {
       setIsOpen(true);
     }
@@ -105,6 +107,12 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
       setIsOpen(false);
     }
   }, [toogleFilter]);
+  useEffect(() => {
+    debugger;
+    if(isOpen) {
+      onOpened && onOpened(true);
+    }
+  }, [isOpen]);
   useEffect(() => {
     setFormState((prev: any) => ({
       ...prev,

@@ -238,16 +238,18 @@ const ProfitAndLossDetailedReport = () => {
       });
     } else {
       setFilterValidations(undefined);
-      setShowFilter(false);
+      // setShowFilter(false);
     }
     setData(res?.data || []);
     setLoading(false);
   };
 
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-    LoadAsync(_filter);
-  }, []);
+  const onApplyFilter = async (_filter: any) => {
+    debugger;
+        setShowFilter(false);
+        setFilter({ ..._filter });
+        await LoadAsync(_filter);
+      };
 
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
@@ -326,6 +328,7 @@ const ProfitAndLossDetailedReport = () => {
                 onApplyFilters={(filters) => onApplyFilter(filters)}
                 onClose={onCloseFilter}
                 validations={filterValidations}
+                onOpened={(status: any) => setShowFilter(status)}
                 title={"Profit and Loss Detailed"}
               />
             </button>

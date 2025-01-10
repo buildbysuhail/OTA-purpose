@@ -195,18 +195,19 @@ const BalanceSheet = () => {
       setShowFilter((prev: any) => { return true });
     } else {
       setFilterValidations(undefined);
-      setShowFilter(false);
     }
     setData(res?.data || []);
     setLoading(false);
   };
 
-  const onApplyFilter = useCallback((_filter: any) => {
+  const onApplyFilter = async (_filter: any) => {
+debugger;
+    setShowFilter(false);
     setFilter({ ..._filter });
-    LoadAsync(_filter);
-  }, []);
+    await LoadAsync(_filter);
+  };
 
-  const onCloseFilter = useCallback(() => {
+  const onCloseFilter = useCallback(() => {1
     if (filterShowCount === 0) {
       setFilter({});
       setFilterShowCount((prev) => prev + 1);
@@ -244,7 +245,6 @@ const BalanceSheet = () => {
                 </label>
               </div>
             </div> */}
-
             <button
               className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
               onClick={() => setIsVerticalView(!isVerticalView)}>
@@ -280,6 +280,7 @@ const BalanceSheet = () => {
                 }} />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
+                onOpened={(status: any) => setShowFilter(status)}
                 onClose={onCloseFilter} validations={filterValidations} title={"Balance sheet"} />
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">

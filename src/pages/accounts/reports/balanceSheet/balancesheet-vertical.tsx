@@ -236,6 +236,7 @@ const BalancesheetVertical = () => {
                       }} />
                       : null
                       ,
+                      origin:"trialBalance",
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                   })}

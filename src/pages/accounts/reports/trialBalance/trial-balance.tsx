@@ -153,7 +153,6 @@ const TrialBalance = () => {
                     width: "mw-100",
                     drillDownCells: "particulars",
                     bodyProps: "ledgerID",
-                    origin:"trialBalance",
                     enableFn: (data: any) => data.isGroup == true ||data.particulars=="TOTAL" ? false  : true
                   }}
                 ></ErpDevGrid>

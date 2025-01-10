@@ -186,5 +186,20 @@
     "country_sub_division": "Country sub division",
 
     "group_name":"Group Name",
-    "group_head":"Group Head"
+    "group_head":"Group Head",
+
+    "branch":"Branch",
+    "branch_code":"Branch Code",
+    "branch_name":"Branch Name",
+    "branch_manager":"Branch Manager",
+    "land_phone":"Land Phone",
+    "register_no":"Register Number",
+    "district":"District",
+    "city":"City",
+    "registration_number":"Registration Number",
+    "use_main_branch_inventory":"Use Main Branch Inventory",
+    "financial_year_from":"Financial Year From",
+    "financial_year_to":"Financial Year To",
+    "confirm_password":"Confirm Password",
+    "pin_code":"Pin Code"
 }

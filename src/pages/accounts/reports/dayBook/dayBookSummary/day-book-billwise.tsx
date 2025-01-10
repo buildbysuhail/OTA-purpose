@@ -81,7 +81,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -101,7 +101,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -121,7 +121,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >
@@ -141,7 +141,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         <span
           className={`${
             cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-red text-lg"
+              ? "font-bold text-[#DC143C] text-lg"
               : ""
           }`}
         >

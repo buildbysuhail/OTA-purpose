@@ -42,7 +42,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.ledgername}`}
         </span>) :
           <DrillDownCellTemplate data={cellElement} field="ledgername"></DrillDownCellTemplate>
@@ -73,7 +73,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={'font-bold text-red'}>
+        <span className={'font-bold text-[#DC143C]'}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
@@ -88,7 +88,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p1 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
         </span>
       ),
@@ -103,7 +103,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p2 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period2 == 0 || cellElement.data?.period2 == null ? '' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
         </span>
       ),
@@ -118,7 +118,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p3 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period3 == 0 || cellElement.data?.period3 == null ? '' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
         </span>
       ),
@@ -133,7 +133,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p4 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period4 == 0 || cellElement.data?.period4 == null ? '' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
         </span>
       ),
@@ -148,7 +148,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p5 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
         </span>
       ),
@@ -163,7 +163,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : '0'}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
           {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
         </span>
       ),
@@ -178,7 +178,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf:true,
       // visibleDynamic: (filter: any) => filter.p6 > 0,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
         </span>
       ),

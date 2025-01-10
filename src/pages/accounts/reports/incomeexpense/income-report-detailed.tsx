@@ -36,7 +36,7 @@ const IncomeReportDetailed = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.accGroupName}
         </span>
       ),
@@ -92,7 +92,7 @@ const IncomeReportDetailed = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
         {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -106,7 +106,7 @@ const IncomeReportDetailed = () => {
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
          {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -121,7 +121,7 @@ const IncomeReportDetailed = () => {
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span
-          className={`${"font-bold text-red"
+          className={`${"font-bold text-[#DC143C]"
             }`}
         >
           {`${cellElement.data?.balance == null

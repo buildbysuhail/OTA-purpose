@@ -64,7 +64,7 @@ const TransactionReport = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -104,7 +104,7 @@ const TransactionReport = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
@@ -122,7 +122,7 @@ const TransactionReport = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"

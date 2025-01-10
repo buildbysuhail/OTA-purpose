@@ -59,7 +59,7 @@ const DayBookDetailed = () => {
       width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.particulars}
         </span>
       ),
@@ -97,7 +97,7 @@ const DayBookDetailed = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
@@ -115,7 +115,7 @@ const DayBookDetailed = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
@@ -133,7 +133,7 @@ const DayBookDetailed = () => {
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${"font-bold text-red"}`}>
+        <span className={`${"font-bold text-[#DC143C]"}`}>
           {`${cellElement.data?.balance == null
             ? '0'
             : cellElement.data.balance < 0

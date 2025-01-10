@@ -27,7 +27,7 @@ const CashSummary = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
           {cellElement.data.party}
         </span>
       ),
@@ -40,7 +40,7 @@ const CashSummary = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
           {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1 * cellElement.data.billed) : getFormattedValue(cellElement.data.billed)}`}
         </span>
       ),

@@ -83,7 +83,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
         {`${cellElement.data?.particulars }`}
         </span>
       ),
@@ -97,7 +97,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
         {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -111,7 +111,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -125,7 +125,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),

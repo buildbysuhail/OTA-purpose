@@ -56,7 +56,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       width: 90,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' :  getFormattedValue(cellElement.data.balance)}`}
         </span>
       ),
@@ -78,7 +78,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
@@ -92,7 +92,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
         </span>
       ),
@@ -105,7 +105,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.ledgerName}
         </span>) :
           <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>

@@ -36,7 +36,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       visible: false,
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.cType}
         </span>
       ),
@@ -49,7 +49,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.cType === "NS" || cellElement.data.cType === "CRS" || cellElement.data.cType === "CASHSI" || cellElement.data.cType === "CB" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.description}
         </span>
       ),
@@ -62,7 +62,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       showInPdf:true,
           cellRender: (cellElement: any, cellInfo: any) => (
-            <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red':''}`}>
+            <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-[#DC143C]':''}`}>
       {`${ cellElement.data?.amount == null ? '0' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
       </span>
           ),
@@ -112,7 +112,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.ledgerName}`}
         </span>
       ),
@@ -125,7 +125,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.partyName}`}
         </span>
       ),
@@ -139,7 +139,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.total == null 
             ? '0'
               : getFormattedValue(cellElement.data.total)
@@ -155,7 +155,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.cashAmount == null 
             ? '0'
               : getFormattedValue(cellElement.data.cashAmount)
@@ -171,7 +171,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.creditAmount == null 
             ? '0'
               : getFormattedValue(cellElement.data.creditAmount)
@@ -187,7 +187,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.bankAmount == null 
             ? '0'
               : getFormattedValue(cellElement.data.bankAmount)
@@ -211,7 +211,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.amount == null 
             ? '0'
               : getFormattedValue(cellElement.data.amount)
@@ -228,7 +228,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-red' : ''}`}>
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.discount == null 
             ? '0'
               : getFormattedValue(cellElement.data.discount)

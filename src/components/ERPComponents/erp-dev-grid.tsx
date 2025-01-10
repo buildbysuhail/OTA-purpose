@@ -698,9 +698,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Helper function to format dates in dd/MM/yyyy format
       const formatDate = (dateStr: string): string => {
         const format = identifyDateFormat(dateStr);
-        const date = moment(dateStr, format);
+        let date;
+
+        // Explicit handling for ISO 8601
+        if (format === "ISO 8601") {
+            date = moment(dateStr); // ISO 8601 is natively supported
+        } else {
+            date = moment(dateStr, format);
+        }
         debugger;
-        return date.format("DD/MM/YYYY");
+        const str= date.format("DD/MM/YYYY");
+        return str;
       };
 
       // Function to evaluate and replace placeholders and conditions

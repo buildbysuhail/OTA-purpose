@@ -18,10 +18,10 @@ interface BalancesheetDetailsProps {
   contentProps?: any;
   isMaximized?: boolean;
   modalHeight?: any;
-  origin:string,
+  origin?:string,
 }
 const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, origin}) => {
-  
+  debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
@@ -119,7 +119,6 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="">
-              safvan {origin}
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
@@ -127,7 +126,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   columns={columns}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
-                  gridHeader={origin}
+                  gridHeader={t("acc_group_view")}
                   // filterText="{ ___(accGroup)} {**** as of (asonDate)}"
                   filterText={`for {${origin == "detailed" ? '___(accGroup)': '___(groupName)'}}, {**** as of (asonDate)}`}
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}

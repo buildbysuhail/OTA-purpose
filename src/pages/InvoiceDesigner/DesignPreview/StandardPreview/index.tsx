@@ -33,7 +33,7 @@ const StandardPreviewWrapper = ({
   
   let fontStyle = "font-Poppins"
 
-  switch (template?.propertiesState?.font) {
+  switch (template?.propertiesState?.font_family) {
     case "Helvetica": fontStyle = "font-Helvetica"
       break;
     case "Times-Roman": fontStyle = "font-TimesRoman"

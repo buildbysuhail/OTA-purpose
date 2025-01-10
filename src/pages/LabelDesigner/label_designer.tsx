@@ -790,6 +790,8 @@ useEffect (() => {
     }
   };
 
+
+
   const handlePagePropsChange = (
     property: keyof PropertiesState,
     value: any
@@ -1455,22 +1457,22 @@ useEffect (() => {
           onDragOver={(e) => e.preventDefault()}
           style={{
             width:
-              templateGroup === "barcode"
-                ? (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
-                  (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
-                : templateData?.propertiesState?.pageSize !== "Custom"
-                ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
-                :"",
+             (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+             (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
+                // : templateData?.propertiesState?.pageSize !== "Custom"
+                // ? templateData.propertiesState?.orientation === "portrait"? paperWidth:paperHeight 
+                // :"",
             maxHeight:
-              templateGroup === "barcode"
-                ? (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
-                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
-                : templateData?.propertiesState?.pageSize !== "Custom"
-                ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
-                :`` ,
+              // templateGroup === "barcode"
+              //   ?
+                 (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+                  (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
+                // : templateData?.propertiesState?.pageSize !== "Custom"
+                // ?templateData.propertiesState?.orientation === "portrait"? paperHeight:paperWidth 
+                // :`` ,
           }}
         >
-          {templateGroup === "barcode" ? (
+          {/* {templateGroup === "barcode" ? ( */}
             <ResizableBox
               width={templateData?.barcodeState?.labelState?.labelWidth ?? 300}
               height={
@@ -1538,7 +1540,8 @@ useEffect (() => {
                 )}
               </div>
             </ResizableBox>
-          ) : templateData?.propertiesState?.pageSize === "Custom" ? (
+
+          {/* ) : templateData?.propertiesState?.pageSize === "Custom" ? (
             <ResizableBox
               width={Number(templateData.propertiesState.width) || 300}
               height={Number(templateData.propertiesState.height) || 300}
@@ -1584,7 +1587,8 @@ useEffect (() => {
                 renderComponent
               )}
             </div>
-          )}
+          )
+          } */}
         </div>
       </div>
 

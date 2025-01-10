@@ -65,7 +65,7 @@ const DownloadRetailPreview = ({
     },
   });
 
-  const templateFont = template?.propertiesState?.font === "Poppins" ? "Courier" : template?.propertiesState?.font
+  const templateFont = template?.propertiesState?.font_family === "Poppins" ? "Courier" : template?.propertiesState?.font_family
 
   const currentBranch = useCurrentBranch();
   return (

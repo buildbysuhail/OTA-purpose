@@ -31,20 +31,19 @@ const AccountPreviewWrapper = ({
 }: AccountPreviewProps) => {
 
   
-  let fontStyle = "font-Poppins"
-
-  switch (template?.propertiesState?.font) {
-    case "Helvetica": fontStyle = "font-Helvetica"
-      break;
-    case "Times-Roman": fontStyle = "font-TimesRoman"
-      break;
-    case "Courier": fontStyle = "font-Courier"
-      break;
-  }
+  // let fontStyle = "Roboto"
+  // switch (template?.propertiesState?.font_family) {
+  //   case "Roboto": fontStyle = "font-Helvetica"
+  //     break;
+  //   case "RobotoMono": fontStyle = "font-TimesRoman"
+  //     break;
+  //   case "FiraSans": fontStyle = "font-Courier"
+  //     break;
+  // }
 
   return (
    <div className="">
-     <div className={`${fontStyle} `}>
+     <div>
       <Header
         data={data}
         template={template}

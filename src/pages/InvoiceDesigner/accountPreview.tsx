@@ -41,8 +41,9 @@ import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
 import VoucherType from "../../enums/voucher-types";
+import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 
-interface InvoicePreviewProps {
+interface accountPreviewProps {
   data?: any;
   docTitle?: string;
   docIDKey?: string;
@@ -54,26 +55,20 @@ interface InvoicePreviewProps {
 export type PDFVoucherTypes = "normal" | "deliveryNote" | "packingSlip";
 
 const AssociatedCustomerPDFList = [
-  "sales_order",
-  "sales_return",
-  "sales_invoice",
-  "sales_estimate",
-  "payment_receipts",
-  "retainer_invoice",
-  "retainer_invoice_receipts",
+"CP"
 ];
 
 const AssociatedVendorPDFList = ["purchase_invoice", "purchase_order"];
 const api = new APIClient();
 
-const InvoicePreview = ({
+const AccountPreview = ({
   data,
   docIDKey,
   docTitle,
-  templateGroupId = "sales_invoice",
+  templateGroupId = "CP",
   showOptions = true,
   endpointUrl,
-}: InvoicePreviewProps) => {
+}: accountPreviewProps) => {
   
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -157,28 +152,31 @@ const InvoicePreview = ({
 
   /* ########################################################################################### */
 
-  let paperWidth;
-  const backgroundColor = templateData?.propertiesState?.bg_color || "#fff";
+
+  let paperWidth, paperHeight;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":
-      paperWidth = "w-[450px]";
+      paperWidth = "420pt"; // 5.83in x 8.27in
+      paperHeight = "595pt";
       break;
     case "A4":
-      paperWidth = "w-[500px]";
+      paperWidth = "589pt"; // 8.27in x 11.69in
+      paperHeight = "842pt";
       break;
     case "LETTER":
-      paperWidth = "w-[600px]";
+      paperWidth = "612pt"; // 8.5in x 11in
+      paperHeight = "792pt";
       break;
     case "3Inch":
-      paperWidth = "w-[210px]";
+      paperWidth = "216pt"; // 3in x 6in
+      paperHeight = "432pt";
       break;
     case "4Inch":
-      paperWidth = "w-[260px]";
+      paperWidth = "288pt"; // 4in x 8in
+      paperHeight = "576pt";
       break;
-    default:
-      paperWidth = "w-[500px]";
   }
 
   /* ####################################################################### */
@@ -385,33 +383,24 @@ const InvoicePreview = ({
     <Fragment>
       {!templatesInfo?.loading ? (
         <div className=" relative flex flex-col items-center bg-[#f9f9fb] overflow-auto p-7 print:p-0 h-full w-full">
-          safvan
           <div
-            id="invoicePreview"
-            style={generalBackGroundStyle}
-            className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
+            id="accountPreview"
+            style={{
+               ...generalBackGroundStyle,
+               width:paperWidth,
+               height:paperHeight,
+            }}
+            className={`flex  flex-col gap-4 relative shadow-md print:m-0 print:w-full print:shadow-none`}
           >
-            {
-            paperSize === "3Inch" || paperSize === "4Inch" ? (
-              <RetailPreviewWrapper
-                data={data}
-                docIDKey={docIDKey}
-                docTitle={docTitle}
-                template={templateData}
-                currency={currencySymbol || undefined}
-                templateGroupId={templateGroupId}
-              />
-            ) : (
-              <StandardPreviewWrapper
-                data={data}
-                docIDKey={docIDKey}
-                docTitle={docTitle}
-                template={templateData}
-                currency={currencySymbol || undefined}
-                templateGroupId={templateGroupId}
-              />
-            )
-            }
+            <AccountPreviewWrapper
+            data={data}
+            docIDKey={docIDKey}
+            docTitle={docTitle}
+            template={templateData}
+            currency={currencySymbol || undefined}
+            templateGroupId={templateGroupId}
+            />
+          
           </div>
           {showOptions && (
             <div className="absolute flex flex-col top-3 right-3 ">
@@ -515,4 +504,4 @@ const InvoicePreview = ({
   );
 };
 
-export default InvoicePreview;
+export default AccountPreview;

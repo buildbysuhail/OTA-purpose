@@ -18,14 +18,17 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
   const titleFontSize = headerState?.docTitleFontSize || 16;
 
   /// font size and color
+  const fontFamily= template?.propertiesState?.font_family|| "Roboto";
   const fontSize = template?.propertiesState?.font_size || 12;
   const color = template?.propertiesState?.font_color || "#000";
-  const fontWeight = template?.propertiesState?.font_weight || "normal";
-
+  const fontWeight = template?.propertiesState?.font_weight || 400;
+  const fontStyle = template?.propertiesState?.fontStyle || "normal";
   /// label font size and color
+  const labelFontFamily= template?.propertiesState?.label_font_family|| "Roboto";
   const labelFontSize = template?.propertiesState?.label_font_size || 12;
   const labelColor = template?.propertiesState?.label_font_color || "#000";
-  const labelFontWeight = template?.propertiesState?.label_font_weight || "normal";
+  const labelFontWeight = template?.propertiesState?.label_font_weight || 400;
+  const labelFontStyle= template?.propertiesState?.label_font_style || "normal";
 
   /// Header background color
   const backgroundColor = template?.headerState?.bgColor || "#ffff";
@@ -66,45 +69,60 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
       color: labelColor,
       fontSize: labelFontSize,
       fontWeight: labelFontWeight,
+      fontStyle:labelFontStyle,
+      fontFamily:labelFontFamily
     },
-    fontStyles: { color, fontSize, fontWeight }
+    fontStyles: {
+       color, 
+       fontSize, 
+       fontWeight ,
+       fontStyle,
+       fontFamily
+      }
   }
 
   /* ######################################################################################### */
 
   return (
-    <div className="flex flex-col items-center justify-center  w-full ">
+    <div  className="flex flex-col items-center justify-center  w-full ">
       {/* invoice header bg image  */}
       <div style={generalHeaderBGStyle} className="top-0 left-0 h-[50px] w-full overflow-hidden"></div>
       {/* Company Info */}
-      <div style={{ paddingLeft, paddingRight }} className=" relative flex w-full z-10 flex-wrap">
-        <div className="flex-1 flex flex-col text-xs ">
-          {headerState?.showLogo && <img src={currentBranch?.logo} style={{ width: 80 * logoWidthRatio }} className="mt-2 mb-2" draggable={false} />}
-          {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold">{currentBranch?.name}</a>}
-          {headerState?.showOrgAddress && (
+      <div style={{ paddingLeft, paddingRight, }} className=" relative flex w-full z-10 flex-wrap ">
+        <div className="flex-1 flex flex-col  text-xs ">
+          {headerState?.showLogo && <img src={currentBranch?.logo} style={{ width: 80 * logoWidthRatio }} className="my-1" draggable={false} />}
+          {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold ">{currentBranch?.name}</a>}
+        
+        </div>
+        {headerState?.showOrgAddress && (
             <div style={styles.labelStyles} className="flex flex-col">
               {currentBranch.address?.map((org: any, idx: number) => (
                 <p key={`ADDK_${idx}`}>{org}</p>
               ))}
             </div>
           )}
-        </div>
-
-        <div style={{ fontSize, color }} className={`mt-2 flex-1 flex flex-col text-xs text-right`}>
+         <div className="w-full border-t my-4"/> 
+         {/* <div style={{ fontSize, color }} className={`mt-2 flex-1 flex flex-col text-xs text-right`}>
           {headerState?.showDocTitle && <a style={{ color: titleColor, fontSize: titleFontSize }} className="text-[18px] font-medium mb-2">
             {docTitleVal}
           </a>}
           {headerState?.showNumberField && <a style={styles.labelStyles}>{headerState.numberField} : {docID}</a>}
           {headerState?.showBalanceDue && <a style={styles.labelStyles}>Balance Due </a>}
           {headerState?.showBalanceDue && <a style={{ fontWeight }}>{currency} {data?.balance_due}</a>}
-        </div>
+        </div> */}
 
       </div>
+         {headerState?.showDocTitle &&
+          <a style={{ color: titleColor, fontSize: titleFontSize }} className="text-[18px] font-medium mb-2 flex items-center border-b border-gray-400">
+            {docTitleVal}
+          </a>}
       <div style={{ paddingLeft, paddingRight }} className="relative flex w-full z-10 flex-wrap mt-4 px-8">
+     
         <div className="flex-1 flex flex-col gap-2 w-1/2">
-          {headerState?.hasBillTo && (
+        
+          {/* {headerState?.hasBillTo && (
             <div className="flex flex-col w-full flex-wrap">
-              {/* Billing Info */}
+             
               {data?.customer?.billing_address && (
                 <div style={styles.fontStyles} className="flex-1 flex flex-col">
                   <a style={styles.labelStyles} className=" text-[10px] font-bold">Bill To </a>
@@ -116,7 +134,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
               )}
             </div>
           )}
-          {/* Shiping Info */}
+     
           {headerState?.hasShipTo && (
             <div className="flex relative w-full z-10 flex-wrap">
               {billingAddress && (
@@ -130,7 +148,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
         <div style={styles.fontStyles} className="flex-1 flex flex-col text-xs text-right w-1/2">
           <table>
@@ -245,8 +263,8 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
         </div>
       </div>
       {/** */}
-      {headerState?.recieptInfo?.showReceiptTable && <RecieptTablePreview data={data} template={template} currency={currency} />}
-      {headerState?.accountSummary?.showAccountSummary && <AccountSummaryPreview data={data} template={template} currency={currency} />}
+      {/* {headerState?.recieptInfo?.showReceiptTable && <RecieptTablePreview data={data} template={template} currency={currency} />}
+      {headerState?.accountSummary?.showAccountSummary && <AccountSummaryPreview data={data} template={template} currency={currency} />} */}
       {/** */}
     </div >
   );
@@ -254,158 +272,158 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
 
 export default Header;
 
-const RecieptTablePreview = ({ data, template, currency }: AccountPreviewProps) => {
-  const headerState = template?.headerState;
-  // const currencySymbol = getCurrentCurrencySymbol();
+// const RecieptTablePreview = ({ data, template, currency }: AccountPreviewProps) => {
+//   const headerState = template?.headerState;
+//   // const currencySymbol = getCurrentCurrencySymbol();
 
-  /// Padings
-  const paddingLeft = template?.propertiesState?.padding?.left;
-  const paddingRight = template?.propertiesState?.padding?.right;
+//   /// Padings
+//   const paddingLeft = template?.propertiesState?.padding?.left;
+//   const paddingRight = template?.propertiesState?.padding?.right;
 
-  return (
-    <div
-      style={{
-        paddingLeft,
-        paddingRight,
-      }}
-      className="w-full"
-    >
-      <div className="border-t py-5 flex w-full">
-        <div className=" grid grid-cols-4 py-3 w-full">
-          <div className=" col-span-3 flex flex-col gap-2">
-            {headerState?.recieptInfo?.showReceiptNumber && (
-              <div className=" col-span-1 flex justify-between">
-                <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptNumberLabel || "Payment #"}</div>
-                <div className=" border-b w-2/3 text-left text-xs">{data?.voucher_number}</div>
-              </div>
-            )}
-            {headerState?.recieptInfo?.showReceiptDate && (
-              <div className=" col-span-1 flex justify-between">
-                <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptDateLabel || "Payment Date"}</div>
-                <div className=" border-b w-2/3 text-left text-xs">{data?.created_at && dateTrimmer(data?.created_at)}</div>
-              </div>
-            )}
-            {headerState?.recieptInfo?.showReceiptReference && (
-              <div className=" col-span-1 flex justify-between">
-                <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptReferenceLabel || "Reference Number"}</div>
-                <div className=" border-b w-2/3 text-left text-xs truncate">{data?.reference_number}</div>
-              </div>
-            )}
-            {headerState?.recieptInfo?.showReceiptMode && (
-              <div className=" col-span-1 flex justify-between">
-                <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptModeLabel || "Payment Mode"}</div>
-                <div className=" border-b w-2/3 text-left text-xs">{data?.payment_mode?.name}</div>
-              </div>
-            )}
-            {headerState?.recieptInfo?.showReceiptAmount && (
-              <div className=" col-span-1 flex justify-between">
-                <div className="text-slate-500 w-1/3 text-xs">{"Amount In Words"}</div>
-                <div className=" border-b w-2/3 text-left text-xs">{getAmountInWords(Number(data?.total_amount), currency)}{ }</div>
-              </div>
-            )}
-          </div>
-          <div className=" col-span-1 px-2">
-            <div
-              style={{
-                backgroundColor: headerState?.recieptInfo?.amtReceivedBgColor,
-              }}
-              className=" flex flex-col text-xs h-full w-full items-center justify-center"
-            >
-              <div
-                style={{
-                  fontSize: headerState?.recieptInfo?.amtReceivedFontSize,
-                  color: headerState?.recieptInfo?.amtReceivedFontColor,
-                }}
-                className="text-center w-full px-3"
-              >
-                {headerState?.recieptInfo?.amtReceivedLabel}
-              </div>
-              <div
-                style={{
-                  fontSize: headerState?.recieptInfo?.amtReceivedFontSize,
-                  color: headerState?.recieptInfo?.amtReceivedFontColor,
-                }}
-              >
-                {headerState?.recieptInfo?.currencySymbolPosition !== "after" && currency}
-                {" "}{data?.total_amount}{" "}
-                {headerState?.recieptInfo?.currencySymbolPosition === "after" && currency}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div
+//       style={{
+//         paddingLeft,
+//         paddingRight,
+//       }}
+//       className="w-full"
+//     >
+//       <div className="border-t py-5 flex w-full">
+//         <div className=" grid grid-cols-4 py-3 w-full">
+//           <div className=" col-span-3 flex flex-col gap-2">
+//             {headerState?.recieptInfo?.showReceiptNumber && (
+//               <div className=" col-span-1 flex justify-between">
+//                 <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptNumberLabel || "Payment #"}</div>
+//                 <div className=" border-b w-2/3 text-left text-xs">{data?.voucher_number}</div>
+//               </div>
+//             )}
+//             {headerState?.recieptInfo?.showReceiptDate && (
+//               <div className=" col-span-1 flex justify-between">
+//                 <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptDateLabel || "Payment Date"}</div>
+//                 <div className=" border-b w-2/3 text-left text-xs">{data?.created_at && dateTrimmer(data?.created_at)}</div>
+//               </div>
+//             )}
+//             {headerState?.recieptInfo?.showReceiptReference && (
+//               <div className=" col-span-1 flex justify-between">
+//                 <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptReferenceLabel || "Reference Number"}</div>
+//                 <div className=" border-b w-2/3 text-left text-xs truncate">{data?.reference_number}</div>
+//               </div>
+//             )}
+//             {headerState?.recieptInfo?.showReceiptMode && (
+//               <div className=" col-span-1 flex justify-between">
+//                 <div className="text-slate-500 w-1/3 text-xs">{headerState?.recieptInfo?.receiptModeLabel || "Payment Mode"}</div>
+//                 <div className=" border-b w-2/3 text-left text-xs">{data?.payment_mode?.name}</div>
+//               </div>
+//             )}
+//             {headerState?.recieptInfo?.showReceiptAmount && (
+//               <div className=" col-span-1 flex justify-between">
+//                 <div className="text-slate-500 w-1/3 text-xs">{"Amount In Words"}</div>
+//                 <div className=" border-b w-2/3 text-left text-xs">{getAmountInWords(Number(data?.total_amount), currency)}{ }</div>
+//               </div>
+//             )}
+//           </div>
+//           <div className=" col-span-1 px-2">
+//             <div
+//               style={{
+//                 backgroundColor: headerState?.recieptInfo?.amtReceivedBgColor,
+//               }}
+//               className=" flex flex-col text-xs h-full w-full items-center justify-center"
+//             >
+//               <div
+//                 style={{
+//                   fontSize: headerState?.recieptInfo?.amtReceivedFontSize,
+//                   color: headerState?.recieptInfo?.amtReceivedFontColor,
+//                 }}
+//                 className="text-center w-full px-3"
+//               >
+//                 {headerState?.recieptInfo?.amtReceivedLabel}
+//               </div>
+//               <div
+//                 style={{
+//                   fontSize: headerState?.recieptInfo?.amtReceivedFontSize,
+//                   color: headerState?.recieptInfo?.amtReceivedFontColor,
+//                 }}
+//               >
+//                 {headerState?.recieptInfo?.currencySymbolPosition !== "after" && currency}
+//                 {" "}{data?.total_amount}{" "}
+//                 {headerState?.recieptInfo?.currencySymbolPosition === "after" && currency}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
-export const AccountSummaryPreview = ({ data, template, currency }: AccountPreviewProps) => {
-  const headerState = template?.headerState;
+// export const AccountSummaryPreview = ({ data, template, currency }: AccountPreviewProps) => {
+//   const headerState = template?.headerState;
 
-  /// Padings
-  const paddingLeft = template?.propertiesState?.padding?.left;
-  const paddingRight = template?.propertiesState?.padding?.right;
+//   /// Padings
+//   const paddingLeft = template?.propertiesState?.padding?.left;
+//   const paddingRight = template?.propertiesState?.padding?.right;
 
-  return (
-    <div
-      style={{
-        paddingLeft,
-        paddingRight,
-      }}
-      className="flex w-full"
-    >
-      <div className="w-1/2"></div>
-      <div className="w-1/2 flex flex-col text-xs">
-        <div className="border-t border-b py-1 text-right">
-          {data?.customDate
-            ? `From ${data?.customDate?.split("&")[0]?.split("=")[1]}`
-            : `From ${data?.date?.split("&")[0]?.split("=")[1] ?? " 2020-01-01"}`}
-          <span className="px-3">|</span>
-          {data?.customDate
-            ? `To ${data?.customDate?.split("&")[1]?.split("=")[1]}`
-            : `To ${data?.date?.split("&")[1]?.split("=")[1] ?? "2030-12-31"}`}
-        </div>
-        <div className="py-2 my-1 bg-gray-200 px-2">{headerState?.accountSummary?.accountSummaryLabel || "Account Summary"}</div>
-        <div className="flex flex-col gap-1">
-          {headerState?.accountSummary?.showOpeningBalance && (
-            <div className="flex px-2">
-              <div className="w-1/2 ">{headerState?.accountSummary?.openingBalanceLabel || "Opening Balance"}</div>
-              <div className="flex  w-1/2  justify-end">
-                {(data && data?.statementData?.[0] && `${currency} ${data?.statementData?.[0]?.opening_balance ?? "0.00"}`) ?? "0.00"}
-              </div>
-            </div>
-          )}
+//   return (
+//     <div
+//       style={{
+//         paddingLeft,
+//         paddingRight,
+//       }}
+//       className="flex w-full"
+//     >
+//       <div className="w-1/2"></div>
+//       <div className="w-1/2 flex flex-col text-xs">
+//         <div className="border-t border-b py-1 text-right">
+//           {data?.customDate
+//             ? `From ${data?.customDate?.split("&")[0]?.split("=")[1]}`
+//             : `From ${data?.date?.split("&")[0]?.split("=")[1] ?? " 2020-01-01"}`}
+//           <span className="px-3">|</span>
+//           {data?.customDate
+//             ? `To ${data?.customDate?.split("&")[1]?.split("=")[1]}`
+//             : `To ${data?.date?.split("&")[1]?.split("=")[1] ?? "2030-12-31"}`}
+//         </div>
+//         <div className="py-2 my-1 bg-gray-200 px-2">{headerState?.accountSummary?.accountSummaryLabel || "Account Summary"}</div>
+//         <div className="flex flex-col gap-1">
+//           {headerState?.accountSummary?.showOpeningBalance && (
+//             <div className="flex px-2">
+//               <div className="w-1/2 ">{headerState?.accountSummary?.openingBalanceLabel || "Opening Balance"}</div>
+//               <div className="flex  w-1/2  justify-end">
+//                 {(data && data?.statementData?.[0] && `${currency} ${data?.statementData?.[0]?.opening_balance ?? "0.00"}`) ?? "0.00"}
+//               </div>
+//             </div>
+//           )}
 
-          {headerState?.accountSummary?.showInvoicedAmount && (
-            <div className="flex px-2">
-              <div className="w-1/2 ">{headerState?.accountSummary?.invoicedAmountLabel || "Invoiced Amount"}</div>
-              <div className="flex  w-1/2  justify-end">
-                {/* {data &&
-                  data?.statementData?.[1] &&
-                  (`${currency} ${data?.statementData?.[1]?.invoice_amount ?? "0.00"}` ??
-                    `${currency} ${data?.statementData?.[1]?.billed_amount ?? "0.00"}` ??
-                    "0.00")} */}
-              </div>
-            </div>
-          )}
+//           {headerState?.accountSummary?.showInvoicedAmount && (
+//             <div className="flex px-2">
+//               <div className="w-1/2 ">{headerState?.accountSummary?.invoicedAmountLabel || "Invoiced Amount"}</div>
+//               <div className="flex  w-1/2  justify-end">
+//                 {/* {data &&
+//                   data?.statementData?.[1] &&
+//                   (`${currency} ${data?.statementData?.[1]?.invoice_amount ?? "0.00"}` ??
+//                     `${currency} ${data?.statementData?.[1]?.billed_amount ?? "0.00"}` ??
+//                     "0.00")} */}
+//               </div>
+//             </div>
+//           )}
 
-          {headerState?.accountSummary?.showAmountPaid && (
-            <div className="flex px-2">
-              <div className="w-1/2 ">{headerState?.accountSummary?.amountPaidLabel || "Amount Paid"}</div>
-              <div className="flex  w-1/2  justify-end">
-                {/* {data && data?.statementData?.[2] && (`${currency} ${data?.statementData?.[2]?.payment_received ?? "0.00"}` ?? "0.00")} */}
-              </div>
-            </div>
-          )}
-          {headerState?.accountSummary?.showBalanceDue && (
-            <div className="flex border-t pt-2 mt-1 px-2">
-              <div className="w-1/2 ">{headerState?.accountSummary?.balanceDueLabel || "Balance Due"} </div>
-              <div className="flex  w-1/2  justify-end">
-                {(data && data?.statementData?.[4] && ` ${currency} ${data?.statementData?.[4]?.balance_due ?? "0.00"}`) || "0.00"}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+//           {headerState?.accountSummary?.showAmountPaid && (
+//             <div className="flex px-2">
+//               <div className="w-1/2 ">{headerState?.accountSummary?.amountPaidLabel || "Amount Paid"}</div>
+//               <div className="flex  w-1/2  justify-end">
+//                 {/* {data && data?.statementData?.[2] && (`${currency} ${data?.statementData?.[2]?.payment_received ?? "0.00"}` ?? "0.00")} */}
+//               </div>
+//             </div>
+//           )}
+//           {headerState?.accountSummary?.showBalanceDue && (
+//             <div className="flex border-t pt-2 mt-1 px-2">
+//               <div className="w-1/2 ">{headerState?.accountSummary?.balanceDueLabel || "Balance Due"} </div>
+//               <div className="flex  w-1/2  justify-end">
+//                 {(data && data?.statementData?.[4] && ` ${currency} ${data?.statementData?.[4]?.balance_due ?? "0.00"}`) || "0.00"}
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

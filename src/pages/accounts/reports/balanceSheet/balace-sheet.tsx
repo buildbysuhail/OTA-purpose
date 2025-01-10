@@ -19,7 +19,7 @@ const BalanceSheetRow: React.FC<{
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    
+
     setIsOpenDetails({
       isOpen: true,
       key: item.groupID,
@@ -45,7 +45,22 @@ const BalanceSheetRow: React.FC<{
               paddingRight: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
               fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
             }}>
-            {getFormattedValue(item.total)}
+          {`${item.transType == "L" 
+  ? (item.title == "M"
+      ? getFormattedValue(item.total)
+      : item.total > 0
+        ? '(-)' + getFormattedValue(item.total)
+        : item.total === 0
+          ? getFormattedValue(0)
+          : getFormattedValue(-1 * item.total))
+  : (item.title == "M"
+      ? getFormattedValue(item.total)
+      : item.total < 0
+        ? '(-)' + getFormattedValue(-1 * item.total)
+        : item.total === 0
+          ? getFormattedValue(0)
+          : getFormattedValue(item.total))}`}
+
           </a>
         </td>
       )}
@@ -96,7 +111,7 @@ const HorizontalBalanceSheet: React.FC<{
                   item={item}
                   setIsOpenDetails={(data: any) => {
                     setIsOpenDetails(data);
-                    
+
                   }}
                 />
               ))}
@@ -118,7 +133,7 @@ const HorizontalBalanceSheet: React.FC<{
                   item={item}
                   setIsOpenDetails={(data: any) => {
                     setIsOpenDetails(data);
-                    
+
                   }}
                 />
               ))}
@@ -146,14 +161,14 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filterValidations,setFilterValidations]=useState();
+  const [filterValidations, setFilterValidations] = useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
     isOpen: boolean;
     key: number;
     groupName?: string;
     item?: any
-  }>({ isOpen: false, key: 0, item: {}});
+  }>({ isOpen: false, key: 0, item: {} });
   const { t } = useTranslation('accountsReport');
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
@@ -177,7 +192,7 @@ const BalanceSheet = () => {
       res.isOk == false
     ) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => {  return true});
+      setShowFilter((prev: any) => { return true });
     } else {
       setFilterValidations(undefined);
       setShowFilter(false);
@@ -260,12 +275,12 @@ const BalanceSheet = () => {
                 initialData={BalanceSheetFilterInitialState}
                 content={<BalanceSheetFilter getFieldProps={function (fieldName: string) {
                   throw new Error("Function not implemented.");
-                } } handleFieldChange={function (field: string | object, value?: any): void {
+                }} handleFieldChange={function (field: string | object, value?: any): void {
                   throw new Error("Function not implemented.");
-                } } />}
+                }} />}
                 toogleFilter={showFilter}
                 onApplyFilters={(filters) => onApplyFilter(filters)}
-                onClose={onCloseFilter} validations={filterValidations} title={"Balance sheet"}/>
+                onClose={onCloseFilter} validations={filterValidations} title={"Balance sheet"} />
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
@@ -337,7 +352,7 @@ const BalanceSheet = () => {
                       item={item ?? []}
                       setIsOpenDetails={(data: any) => {
                         setIsOpenDetails(data);
-                        
+
                       }}
                     />
                   ))}
@@ -352,7 +367,7 @@ const BalanceSheet = () => {
       </div>
       {/* {JSON.stringify(isOpenDetails.item)} */}
       {(isOpenDetails.key > 0 &&
-      
+
         <ERPModal
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
@@ -360,12 +375,13 @@ const BalanceSheet = () => {
           width="w-full max-w-[90%]"
           isForm={true}
           closeModal={() => {
-            setIsOpenDetails({ isOpen: false, key: 0 ,item:{}});
+            setIsOpenDetails({ isOpen: false, key: 0, item: {} });
           }}
           rowData={isOpenDetails.item}
           content={
             <BalancesheetDetails
-              postData={{...filter, accGroupID: isOpenDetails.key
+              postData={{
+                ...filter, accGroupID: isOpenDetails.key
               }}
               groupName={isOpenDetails.groupName}
             />

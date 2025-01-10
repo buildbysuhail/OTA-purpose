@@ -18,7 +18,7 @@ const DefaultSRTemplates: DeafultTemplateProps[] = [
       },
       propertiesState: {
         bg_color: "#ffffff",
-        font: "Poppins",
+        font_family: "Poppins",
         font_size: 12,
         font_color: "#000000",
         font_weight: 400,

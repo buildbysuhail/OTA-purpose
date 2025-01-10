@@ -3,13 +3,16 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
+import TransactrionHistoryReportFilter, {
+  TransactrionHistoryReportFilterInitialState,
+} from "../transaction-history-report-filter";
 import InventoryHistoryDetails from "./inventory-history-details";
 import InventoryHistoryPopup from "./inventory-history-popup";
-
 
 const InventoryHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -18,7 +21,7 @@ const InventoryHistoryReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -31,7 +34,7 @@ const InventoryHistoryReport = () => {
     },
     {
       dataField: "date",
-      caption: t('transaction_date'),
+      caption: t("transaction_date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -60,7 +63,16 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return cellElement.data.oldInvTransactionID > 0 ? (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        ) : (
+          cellElement.value
+        );
+      },
     },
     {
       dataField: "form",
@@ -104,7 +116,7 @@ const InventoryHistoryReport = () => {
     },
     {
       dataField: "userName",
-      caption: t('user_name'),
+      caption: t("user_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -112,7 +124,7 @@ const InventoryHistoryReport = () => {
     },
     {
       dataField: "oldInvTransactionID",
-      caption: t('old_invTransaction_id'),
+      caption: t("old_invTransaction_id"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -125,7 +137,12 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="details"></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <DrillDownCellTemplate
+          data={cellElement}
+          field="details"
+        ></DrillDownCellTemplate>
+      ),
     },
   ];
   return (
@@ -144,17 +161,30 @@ const InventoryHistoryReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactrionHistoryReportFilter />}
-                  filterInitialData={TransactrionHistoryReportFilterInitialState}
+                  filterInitialData={
+                    TransactrionHistoryReportFilterInitialState
+                  }
                   filterWidth="150"
                   hideGridAddButton={true}
                   reload={true}
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
+                    title:
+                      dataField == "vchNo"
+                        ? t(`inventory_transaction_history_popup`)
+                        : t(`productsDetailedReportTransaction`),
                     width: "700px",
                     isForm: false,
-                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> :dataField == "details" ? <InventoryHistoryDetails/> : null,
+                    content:
+                      dataField == "vchNo" ? (
+                        <InventoryHistoryPopup />
+                      ) : dataField == "details" ? (
+                        <InventoryHistoryDetails />
+                      ) : null,
                     drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
-                    bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
+                    bodyProps:
+                      dataField == "vchNo"
+                        ? "oldInvTransactionID"
+                        : "invTransactionMasterID",
                   })}
                 ></ErpDevGrid>
               </div>

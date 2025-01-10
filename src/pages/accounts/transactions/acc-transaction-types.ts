@@ -234,6 +234,11 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
   manualInvoiceNumber: "",
 };
 // AccDetailInput interface
+export interface AccTransactionRowForOutPut extends AccTransactionRow {
+  relatedLedgerCode: string;
+  particulars: string;
+
+}
 export interface AccTransactionRow {
   slNo?: number;
   accTransMasterID: number;

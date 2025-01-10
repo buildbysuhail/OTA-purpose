@@ -3,26 +3,32 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import InventoryHistoryDetails from "./inventory-history-details";
 
 interface InventoryHistoryPopupProps {
-  contentProps?: any
+  contentProps?: any;
   enablefilter?: boolean;
   isMaximized?: boolean;
   modalHeight?: any;
 }
-const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:InventoryHistoryPopupProps) => {
+const InventoryHistoryPopup = ({
+  contentProps,
+  isMaximized,
+  modalHeight,
+}: InventoryHistoryPopupProps) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -42,16 +48,16 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -59,22 +65,25 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
-        
-        return (
-          cellElement.data.oldInvTransactionID > 0 ? <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate> : cellElement.value
-          
-        )
+        return cellElement.data.oldInvTransactionID > 0 ? (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        ) : (
+          cellElement.value
+        );
       },
     },
     {
@@ -84,7 +93,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "cashReceived",
@@ -93,7 +102,7 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -113,12 +122,12 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
     },
     {
       dataField: "invTransactionMasterID",
-      caption: t('invTransaction_master_id'),
+      caption: t("invTransaction_master_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false,
     },
     {
       dataField: "details",
@@ -127,7 +136,12 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="details"></DrillDownCellTemplate>
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <DrillDownCellTemplate
+          data={cellElement}
+          field="details"
+        ></DrillDownCellTemplate>
+      ),
     },
   ];
   return (
@@ -140,9 +154,9 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
                 <ErpDevGrid
                   columns={columns}
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
-                  postData ={contentProps}
+                  postData={contentProps}
                   gridHeader={t("inventory_transaction_history_popup")}
-                  dataUrl= {Urls.acc_reports_inventory_history_popup}
+                  dataUrl={Urls.acc_reports_inventory_history_popup}
                   method={ActionType.POST}
                   gridId="grd_inventory_history_popup"
                   popupAction={toggleCostCentrePopup}
@@ -151,13 +165,27 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
                   // gridAddButtonType="popup"
                   reload={true}
                   childPopupPropsDynamic={(dataField: string) => ({
-                    title: dataField == "vchNo" ? t(`inventory_transaction_history_popup`) : t(`productsDetailedReportTransaction`),
+                    title:
+                      dataField == "vchNo"
+                        ? t(`inventory_transaction_history_popup`)
+                        : t(`productsDetailedReportTransaction`),
                     width: "700px",
                     isForm: false,
-                    content: dataField == "vchNo" ? <InventoryHistoryPopup/> : dataField == "details" ?<InventoryHistoryDetails/>: null,
+                    content:
+                      dataField == "vchNo" ? (
+                        <InventoryHistoryPopup />
+                      ) : dataField == "details" ? (
+                        <InventoryHistoryDetails />
+                      ) : null,
                     drillDownCells: dataField == "vchNo" ? "vchNo" : "details",
-                    bodyProps: dataField == "vchNo" ?"oldInvTransactionID":"invTransactionMasterID",
-                    enableFn: (data: any) => dataField == "vchNo" ?  data.oldInvTransactionID > 0 : true
+                    bodyProps:
+                      dataField == "vchNo"
+                        ? "oldInvTransactionID"
+                        : "invTransactionMasterID",
+                    enableFn: (data: any) =>
+                      dataField == "vchNo"
+                        ? data.oldInvTransactionID > 0
+                        : true,
                   })}
                 ></ErpDevGrid>
               </div>
@@ -165,7 +193,6 @@ const InventoryHistoryPopup = ({contentProps,isMaximized, modalHeight,}:Inventor
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

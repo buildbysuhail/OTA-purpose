@@ -108,7 +108,7 @@ const initconformPassWord = {
 
 export const BranchGridManage: React.FC = React.memo(() => {
   const [confirmPassword, setConfirmPassword] = useState(initconformPassWord);
-  const { t } = useTranslation();
+  const { t } = useTranslation('masters');
   const dispatch = useDispatch();
   const rootState = useRootState();
   const userSession = useAppSelector((state: RootState) => state.UserSession);

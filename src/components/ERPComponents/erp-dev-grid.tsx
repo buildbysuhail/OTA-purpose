@@ -67,6 +67,7 @@ import {
 import type { Column as ColumnType } from "devextreme/ui/data_grid";
 import { RootState } from "../../redux/store";
 import { UserModel } from "../../redux/slices/user-session/reducer";
+import { arabicFontBase64 } from "./arabicFont";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -226,6 +227,7 @@ interface ERPDevGridProps {
     enableFn?: (data: any) => boolean;
   };
   [key: string]: any; // To allow other props to be passed
+  enableScrollButton?: boolean;
 }
 const api = new APIClient();
 const createStore = async (
@@ -470,6 +472,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         bodyProps: "",
       },
       childPopupPropsDynamic,
+      enableScrollButton = true,
       ...props
     },
     ref
@@ -698,9 +701,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Helper function to format dates in dd/MM/yyyy format
       const formatDate = (dateStr: string): string => {
         const format = identifyDateFormat(dateStr);
-        const date = moment(dateStr, format);
+        let date;
+
+        // Explicit handling for ISO 8601
+        if (format === "ISO 8601") {
+            date = moment(dateStr); // ISO 8601 is natively supported
+        } else {
+            date = moment(dateStr, format);
+        }
         debugger;
-        return date.format("DD/MM/YYYY");
+        const str= date.format("DD/MM/YYYY");
+        return str;
       };
 
       // Function to evaluate and replace placeholders and conditions
@@ -827,13 +838,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const data = filter;
       const _gridHeader = filterText.toString();
       // Dynamically replace placeholders using a regular expression
-      
+
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
     const onExportingHandler = useCallback(
       (e: any) => {
-        
         if (onExporting) {
           onExporting(e);
         } else {
@@ -843,6 +853,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               unit: "pt",
               format: "a4",
             });
+
+            const arabicFont = arabicFontBase64;
+            doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
+            doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
+            doc.setFont("Amiri");
+
             const pageTitle = `${gridHeader} - ${
               !filterText || !filter
                 ? filterText || ""
@@ -884,6 +900,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               });
               currentY += 15; // Add spacing
             }
+            doc.setFont("Amiri");
             doc.setFontSize(12);
             doc.text(pageTitle, 40, currentY, { align: "left" });
 
@@ -1148,6 +1165,44 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     );
 
     const [totalRowCount, setTotalRowCount] = useState<number>(0);
+    const [isAtBottom, setIsAtBottom] = useState(false);
+
+    // Handle scroll events
+    const handleScroll = useCallback(() => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const scrollTop = gridInstance.getScrollable().scrollTop();
+        const scrollHeight = gridInstance.getScrollable().scrollHeight();
+        const clientHeight = gridInstance.getScrollable().clientHeight();
+
+        if (scrollTop + clientHeight >= scrollHeight) {
+          setIsAtBottom(true);
+        } else {
+          setIsAtBottom(false);
+        }
+      }
+    }, []);
+
+    const scrollTo = useCallback((position: number) => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const scrollable = gridInstance.getScrollable();
+        const scrollHeight = scrollable.scrollHeight();
+        scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight });
+      }
+    }, []);
+
+    // Attach scroll event listener
+    useEffect(() => {
+      if (gridRef.current && enableScrollButton) {
+        const gridInstance = gridRef.current.instance();
+        gridInstance.getScrollable().on("scroll", handleScroll);
+
+        return () => {
+          gridInstance.getScrollable().off("scroll", handleScroll);
+        };
+      }
+    }, [enableScrollButton, handleScroll]);
 
     return (
       <Fragment>
@@ -1237,6 +1292,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       <span className="text-sm">{gridHeader}</span>&nbsp;{""}
                       {header}
                     </div>
+                  </div>
+                </Item>
+              )}
+              {enableScrollButton && (
+                <Item>
+                  <div  title={isAtBottom ? "Scroll to top" : "Scroll to bottom"}>
+                    <button
+                      type="button"
+                      onClick={() => scrollTo(isAtBottom ? 0 : 100)}
+                      className="flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2">
+                      {isAtBottom ? "↑" : "↓"}
+                    </button>
                   </div>
                 </Item>
               )}
@@ -1415,7 +1482,7 @@ const _DrillDownCellTemplate = ({
     data.value !== 0
   ) {
     console.log(data.column.dataType);
-    
+
     return (
       <a
         href="#"

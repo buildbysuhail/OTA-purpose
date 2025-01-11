@@ -1,13 +1,11 @@
+import { formatDate } from "devextreme/localization";
 import React, { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { DevGridColumn } from "../components/types/dev-grid-column";
-import ERPGridActions from "../components/ERPComponents/erp-grid-actions";
-import ERPDevGrid from "../components/ERPComponents/erp-dev-grid";
-import { useAppDispatch } from "../utilities/hooks/useAppDispatch";
-import { useRootState } from "../utilities/hooks/useRootState";
-import { formatDate } from "devextreme/localization";
-import { DummyVoucherData } from "./InvoiceDesigner/constants/DummyData";
-import urls from "../redux/urls";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import urls from "../../../redux/urls";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -18,63 +16,13 @@ const toggleTransactionPopup = (payload: {
   payload,
 });
 
-const AccTransactionGrid: React.FC = () => {
+
+const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: string}> = ({
+  voucherType,
+  transactionType,
+}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-
-  const transformedData = useMemo(() => {
-    return DummyVoucherData.details.map((detail) => ({
-      accTransactionMasterID: DummyVoucherData.master.accTransactionMasterID,
-      accTransactionDetailID: detail.accTransactionDetailID,
-      departmentID: DummyVoucherData.master.departmentID,
-      costCentreID: DummyVoucherData.master.costCentreID,
-      billwiseMasterID: DummyVoucherData.master.billwiseMasterID,
-      employeeID: DummyVoucherData.master.employeeID,
-      invTransactionID: DummyVoucherData.master.invTransactionID,
-      transactionDate: DummyVoucherData.master.transactionDate,
-      prevTransDate: DummyVoucherData.master.prevTransDate,
-      bankDate: DummyVoucherData.master.bankDate,
-      voucherPrefix: DummyVoucherData.master.voucherPrefix,
-      voucherNumber: DummyVoucherData.master.voucherNumber,
-      referenceNumber: DummyVoucherData.master.referenceNumber,
-      referenceDate: DummyVoucherData.master.referenceDate,
-      dueDate: DummyVoucherData.master.dueDate,
-      particulars: DummyVoucherData.master.particulars,
-      totalDebit: DummyVoucherData.master.totalDebit,
-      billwiseTotalAdjAmt: DummyVoucherData.master.billwiseTotalAdjAmt,
-      billwiseAdjAmt: DummyVoucherData.master.billwiseAdjAmt,
-      totalCredit: DummyVoucherData.master.totalCredit,
-      totDiscount: DummyVoucherData.master.totDiscount,
-      empIncentive: DummyVoucherData.master.empIncentive,
-      commonNarration: DummyVoucherData.master.commonNarration,
-      remarks: DummyVoucherData.master.remarks,
-      voucherType: DummyVoucherData.master.voucherType,
-      formType: DummyVoucherData.master.formType,
-      debitNoteTransID: DummyVoucherData.master.debitNoteTransID,
-      creditNoteTransID: DummyVoucherData.master.creditNoteTransID,
-      currencyID: DummyVoucherData.master.currencyID,
-      accTransDetailID: DummyVoucherData.master.accTransDetailID,
-      adjustedTransDetailID: DummyVoucherData.master.adjustedTransDetailID,
-      currencyRate: DummyVoucherData.master.currencyRate,
-      isPosted: DummyVoucherData.master.isPosted,
-      randomKey: DummyVoucherData.master.randomKey,
-      onlineTrans: DummyVoucherData.master.onlineTrans,
-      isEdit: DummyVoucherData.master.isEdit,
-      checkStatus: DummyVoucherData.master.checkStatus,
-      checkBouncedDate: DummyVoucherData.master.checkBouncedDate,
-      drCr: DummyVoucherData.master.drCr,
-      isSalesView: DummyVoucherData.master.isSalesView,
-      branchID: DummyVoucherData.master.branchID,
-      counterID: DummyVoucherData.master.counterID,
-      refBranchID: DummyVoucherData.master.refBranchID,
-      uuid: DummyVoucherData.master.uuid,
-      OrderDate: DummyVoucherData.master.transactionDate,
-      CustomerStoreCity: "N/A",
-      CustomerStoreState: "N/A",
-      SaleAmount: detail.amount,
-      actions: detail,
-    }));
-  }, []);
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -634,7 +582,8 @@ const AccTransactionGrid: React.FC = () => {
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 columns={columns}
-                dataUrl={urls.acc_transaction_grid}
+                dataUrl={`${urls.acc_transaction_base}${transactionType}/List`}
+                // postData={{voucherType: voucherType, transactionType: transactionType}} 
                 gridHeader={t("Transactions")}
                 gridId="transaction-grid"
                 gridAddButtonType="popup"

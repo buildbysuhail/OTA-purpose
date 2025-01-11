@@ -298,6 +298,7 @@ inv_reports_stock_flow:"",
   acc_transaction_base: "/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
   acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
+  acc_transaction_grid:"/Accounts/CashPayment/List Page",
 
   // Accounts End
   //Grid Preference

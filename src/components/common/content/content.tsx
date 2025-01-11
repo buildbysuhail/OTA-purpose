@@ -159,6 +159,7 @@ const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
+const AccTransactionGrid = lazy(() => import("../../../pages/acc-transacton-grid"));
 
 // Inventory Masters
 const ProductGroup = lazy(
@@ -378,6 +379,7 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
         <Route path="/integration/test-input-button" element={<TestInputButton />} />
+        <Route path="/integration/acc-transaction-grid" element={<AccTransactionGrid />} />
         {/* Integration End */}
 
         {/* Templates starts */}

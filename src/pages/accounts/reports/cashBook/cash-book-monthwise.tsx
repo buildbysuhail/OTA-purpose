@@ -24,9 +24,10 @@ interface CashBookMonthWiseProps {
   origin?: any;
   isMaximized?: boolean; 
   modalHeight?:any
+  originTo?:any
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight}) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight,originTo}) => {
   
   // interface CashBookMonthWiseFilters {
   //   from: Date
@@ -157,7 +158,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText={`for {${origin == "trialBalance" ? '___(particulars)': '___(ledgerName)'}}, {**** as of (asonDate)}`}
+                  filterText={`for {${origin == "trialBalance" ? '___(particulars)': originTo== "PandL" ? '___(groupName)' : '___(ledgerName)'}}, {**** as of (asonDate)}`}
                   gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}

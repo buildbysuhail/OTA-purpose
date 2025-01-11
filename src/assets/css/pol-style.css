@@ -276,3 +276,13 @@
   white-space: nowrap !important; 
   overflow: visible !important;
 }
+
+.dark .font-normal {
+  color: white;
+}
+
+.dark input {
+  color-scheme: dark;
+}
+
+

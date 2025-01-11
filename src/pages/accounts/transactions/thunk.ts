@@ -21,7 +21,7 @@ export interface AccVoucherOutPut {
 }
 export const loadAccVoucher = createAsyncThunk<AccVoucherOutPut, loadAccVoucherInput>('loadAccTransMaster', async (input) => {
 
-  debugger;
+  
   const response = await api.getAsync(
     `${Urls.acc_transaction_base}${input.transactionType}`,
     new URLSearchParams(input.params).toString()

@@ -41,7 +41,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
       showInPdf:true,
     },
     {
@@ -50,8 +50,12 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
       showInPdf:true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          {`${cellElement.data?.ledgerName}`}
+        </span>
+      ),
     },
     {
       dataField: "partyName",
@@ -59,7 +63,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
       showInPdf:true,
     },
     {
@@ -68,7 +72,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "form",
@@ -76,6 +80,7 @@ const PartySummarySales: React.FC<PartySummaryFilter> = ({ filter }) => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
       dataField: "productName",

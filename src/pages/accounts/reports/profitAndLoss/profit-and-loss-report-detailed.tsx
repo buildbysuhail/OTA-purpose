@@ -245,7 +245,7 @@ const ProfitAndLossDetailedReport = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-    debugger;
+    
         setShowFilter(false);
         setFilter({ ..._filter });
         await LoadAsync(_filter);
@@ -455,7 +455,10 @@ const ProfitAndLossDetailedReport = () => {
                   ledgerID: isOpenDetails.key,
                   fromDate:filter.fromDate
                 }}
+            
                 groupName={isOpenDetails.groupName}
+                rowData={isOpenDetails.groupName}
+                originTo = "PandL"
               />
             ) : (
               <ProfitAndLossSubledgerwiseView

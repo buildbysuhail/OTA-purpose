@@ -476,6 +476,24 @@ const Content: FC<ContentProps> = () => {
             />
             <Route
               key={index}
+              path={`/accounts/transactions/${route.transactionType}List`}
+              element={
+                <RouteGuard formCode={route.formCode} action={route.action}>
+                  <AccTransactionFormContainer
+                    voucherType={route.voucherType}
+                    transactionType={route.transactionType}
+                    formCode={route.formCode}
+                    voucherPrefix={""}
+                    formType={route.formType}
+                    title={route.title}
+                    drCr={route.drCr}
+                    voucherNo={0}
+                  />
+                </RouteGuard>
+              }
+            />
+            <Route
+              key={index}
               path={`/accounts/transactions/${route.transactionType}/:voucherNo`}
               element={
                 <RouteGuard formCode={route.formCode} action={route.action}>

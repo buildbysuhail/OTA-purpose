@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
@@ -43,7 +44,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
               (x.visible != undefined && x.visible == true)
           )
           .map((firstlevel: any) => (
-            <>
+            <> 
               {
                 firstlevel?.disabled ? (
                   <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
@@ -54,10 +55,21 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                   ) : (
                     <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
                        {firstlevel.type === "link" ?
-                            <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''}`}>
+                            <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
                               {firstlevel.icon}
-                              <span className="">
+                              <span className="relative flex items-center">
+                                <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap"
+                                title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}
+                                 >
                                 {t(firstlevel.title)}
+                                </div>
+                                  {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
+                                    <span className=" fixed ml-[147px] hidden group-hover:block">
+                                      <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : ''}`}>
+                                      <Plus />
+                                      </Link>
+                                    </span>
+                                  }
                                 {firstlevel.badgetxt ? (
                                   <span className={firstlevel.class}>
                                     {firstlevel.badgetxt}

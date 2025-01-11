@@ -127,6 +127,7 @@ export const MENUITEMS = [
     children: [
       ...transactionRoutes.map((route) => ({
         path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}`,
+        addPath: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}List`,
         type: "link",
         active: false,
         selected: false,

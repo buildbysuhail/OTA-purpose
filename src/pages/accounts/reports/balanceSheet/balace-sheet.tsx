@@ -19,7 +19,7 @@ const BalanceSheetRow: React.FC<{
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    debugger;
+    
 
     setIsOpenDetails({
       isOpen: true,
@@ -202,7 +202,7 @@ const BalanceSheet = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-debugger;
+
     setShowFilter(false);
     setFilter({ ..._filter });
     await LoadAsync(_filter);
@@ -385,8 +385,8 @@ debugger;
               postData={{
                 ...filter, accGroupID: isOpenDetails.key
               }}
-              origin="balancesheet"
-              groupName={isOpenDetails.groupName}
+              originFrom={'balancesheet'}
+              groupName={'balancesheet'}
               rowData={isOpenDetails.item}
               
             />

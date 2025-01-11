@@ -3,10 +3,14 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { Fragment } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
+import TransactrionHistoryReportFilter, {
+  TransactrionHistoryReportFilterInitialState,
+} from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
 
 // interface AccountsHistoryReport {
@@ -20,7 +24,7 @@ const AccountsHistoryReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   // const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -31,16 +35,16 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "date",
-      caption: t('transaction_date'),
+      caption: t("transaction_date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "modifiedDate",
@@ -49,7 +53,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     // {
     //   dataField: "timeStamp",
@@ -66,8 +70,17 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="vchNo"></DrillDownCellTemplate>
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return cellElement.data.oldAccTransactionMasterID > 0 ? (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        ) : (
+          cellElement.value
+        );
+      },
     },
     {
       dataField: "form",
@@ -76,7 +89,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accountName",
@@ -85,7 +98,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -94,16 +107,16 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "credit",
@@ -112,7 +125,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "narration",
@@ -121,7 +134,7 @@ const AccountsHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actionStatus",
@@ -133,7 +146,7 @@ const AccountsHistoryReport = () => {
     },
     {
       dataField: "userName",
-      caption: t('user_name'),
+      caption: t("user_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -159,7 +172,9 @@ const AccountsHistoryReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactrionHistoryReportFilter />}
-                  filterInitialData={TransactrionHistoryReportFilterInitialState}
+                  filterInitialData={
+                    TransactrionHistoryReportFilterInitialState
+                  }
                   filterWidth="150"
                   // gridAddButtonType="popup"
                   reload={true}
@@ -169,7 +184,8 @@ const AccountsHistoryReport = () => {
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "vchNo",
-                    bodyProps: "oldAccTransactionMasterID"
+                    bodyProps: "oldAccTransactionMasterID",
+                    enableFn: (data: any) => data.oldAccTransactionMasterID > 0,
                   }}
                 ></ErpDevGrid>
               </div>

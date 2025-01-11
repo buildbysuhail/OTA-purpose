@@ -14,10 +14,10 @@ const Nodevwatermark: React.FC = () => {
 
         if (element instanceof HTMLElement) {
           element.click();
-          console.log("Element clicked successfully.");
+          console?.log("Element clicked successfully.");
           clearInterval(interval); // Stop checking once the element is found and clicked
         } else {
-          console.warn("Element not found, retrying...");
+          console?.warn("Element not found, retrying...");
         }
       }, 500); // Retry every 500ms
     };

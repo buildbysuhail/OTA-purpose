@@ -42,6 +42,7 @@ import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
 import VoucherType from "../../enums/voucher-types";
 import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
+import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 
 interface accountPreviewProps {
   data?: any;
@@ -102,6 +103,12 @@ const AccountPreview = ({
     currencySymbol || ""
   );
 
+  const [maxHeight, setMaxHeight] = useState<number>(1000);
+
+  useEffect(() => {
+      let wh= window.innerHeight; 
+      setMaxHeight(wh);
+  }, []);
   /* ########################################################################################### */
   const getTemplateInfo = (): { content?: TemplateState } => {
     // checking  :  if  voucher wise templpate Id available
@@ -153,29 +160,29 @@ const AccountPreview = ({
   /* ########################################################################################### */
 
 
-  let paperWidth, paperHeight;
+  let paperWidth=500, paperHeight=500;
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":
-      paperWidth = "420pt"; // 5.83in x 8.27in
-      paperHeight = "595pt";
+      paperWidth = 420; // 5.83in x 8.27in
+      paperHeight = 595;
       break;
     case "A4":
-      paperWidth = "589pt"; // 8.27in x 11.69in
-      paperHeight = "842pt";
+      paperWidth = 589; // 8.27in x 11.69in
+      paperHeight = 842;
       break;
     case "LETTER":
-      paperWidth = "612pt"; // 8.5in x 11in
-      paperHeight = "792pt";
+      paperWidth = 612; // 8.5in x 11in
+      paperHeight = 792;
       break;
     case "3Inch":
-      paperWidth = "216pt"; // 3in x 6in
-      paperHeight = "432pt";
+      paperWidth = 216; // 3in x 6in
+      paperHeight = 432;
       break;
     case "4Inch":
-      paperWidth = "288pt"; // 4in x 8in
-      paperHeight = "576pt";
+      paperWidth = 288; // 4in x 8in
+      paperHeight = 576;
       break;
   }
 
@@ -380,26 +387,30 @@ const AccountPreview = ({
   };
 
   return (
-    <Fragment>
+    <ERPScrollArea 
+    className={`overflow-y-auto  h-full max-h-[${maxHeight - 100}px] `}>
       {!templatesInfo?.loading ? (
         <div className=" relative flex flex-col items-center bg-[#f9f9fb] overflow-auto p-7 print:p-0 h-full w-full">
           <div
             id="accountPreview"
             style={{
                ...generalBackGroundStyle,
-               width:paperWidth,
-               height:paperHeight,
+               width:templateData?.propertiesState?.orientation === "portrait" ? `${paperWidth}pt` : `${paperHeight}pt`,
+               height:templateData?.propertiesState?.orientation === "portrait" ?  `${paperHeight}pt`:`${paperWidth}pt`,
             }}
             className={`flex  flex-col gap-4 relative shadow-md print:m-0 print:w-full print:shadow-none`}
           >
-            <AccountPreviewWrapper
-            data={data}
-            docIDKey={docIDKey}
-            docTitle={docTitle}
-            template={templateData}
-            currency={currencySymbol || undefined}
-            templateGroupId={templateGroupId}
-            />
+         
+                <AccountPreviewWrapper
+                data={data}
+                docIDKey={docIDKey}
+                docTitle={docTitle}
+                template={templateData}
+                currency={currencySymbol || undefined}
+                templateGroupId={templateGroupId}
+              />
+           
+         
           
           </div>
           {showOptions && (
@@ -500,7 +511,7 @@ const AccountPreview = ({
           <MiniLoader />
         </div>
       )}
-    </Fragment>
+    </ERPScrollArea>
   );
 };
 

@@ -186,6 +186,7 @@ const ProfitAndLossReport = () => {
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
+    
     if (filterShowCount == 0) {
       setShowFilter(true);
     } else {
@@ -199,35 +200,36 @@ const ProfitAndLossReport = () => {
       Urls.acc_reports_profit_and_loss,
       _filter || filter
     );
-
-    if (res != undefined && res.isOk != undefined && res.isOk == false) {
+    if (
+      res != undefined &&
+      res.isOk != undefined &&
+      res.isOk == false
+    ) {
+      
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => {
-        return true;
-      });
-
+      setShowFilter((prev: any) => { return true });
     } else {
       setFilterValidations(undefined);
-      setShowFilter(false);
     }
-
     setData(res?.data || []);
     setLoading(false);
   };
 
-  const onApplyFilter = useCallback((_filter: any) => {
-    setFilter({ ..._filter });
-    LoadAsync(_filter);
-  }, []);
-
-  const onCloseFilter = useCallback(() => {
-    if (filterShowCount === 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-    }
-
-    setShowFilter(false);
-  }, [filterShowCount]);
+  const onApplyFilter = async (_filter: any) => {
+    
+        setShowFilter(false);
+        setFilter({ ..._filter });
+        await LoadAsync(_filter);
+      };
+    
+      const onCloseFilter = useCallback(() => {1
+        if (filterShowCount === 0) {
+          setFilter({});
+          setFilterShowCount((prev) => prev + 1);
+        }
+        
+        setShowFilter(false);
+      }, [filterShowCount]);
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -281,6 +283,7 @@ const ProfitAndLossReport = () => {
                 onApplyFilters={(filters) => onApplyFilter(filters)}
                 onClose={onCloseFilter}
                 validations={filterValidations}
+                onOpened={(status: any) => setShowFilter(status)}
                 title={"Profit and Loss"}
               />
             </button>
@@ -328,6 +331,8 @@ const ProfitAndLossReport = () => {
             month: "long",
             day: "2-digit",
           })}
+          
+          safvan{showFilter.toString()}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (

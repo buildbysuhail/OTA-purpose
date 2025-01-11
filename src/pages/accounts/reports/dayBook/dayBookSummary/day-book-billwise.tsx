@@ -135,6 +135,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
       width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (

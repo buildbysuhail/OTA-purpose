@@ -139,6 +139,7 @@ const LedgerReport = () => {
       ),
     },
     {
+      
       dataField: "balance",
       caption: t("balance"),
       dataType: "number",
@@ -146,13 +147,12 @@ const LedgerReport = () => {
       allowFiltering: true,
       showInPdf:true,
       width: 170,
-      cellRender: (cellElement: any, cellInfo: any) => (
+      cellRenderDynamic: (cellElement: any, cellInfo: any, filter: any) => (
         <span
-          className={`${"font-bold text-[#DC143C]"
-            }`}
+          className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]": 'text-[#DC143C]'} font-bold`}
         >
           {`${cellElement.data?.balance == null
-            ? '0'
+            ? ''
             : cellElement.data.balance < 0
               ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
               : getFormattedValue(cellElement.data.balance) + ' Dr'}`}

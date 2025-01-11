@@ -5,10 +5,20 @@ import { RootState } from "../../../../redux/store";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { AccountPreviewProps } from "./index";
 
-const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}: AccountPreviewProps) => {
-  const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
+const Header = ({
+  template,
+  data,
+  docTitle,
+  docIDKey,
+  templateGroupId,
+  currency,
+}: AccountPreviewProps) => {
+  const logoWidthRatio = template?.headerState?.logoSize
+    ? template.headerState?.logoSize / 100
+    : 0.5;
   const headerState = template?.headerState;
-
+  const  totalState = template?.totalState;
+  const footerState = template?.footerState;
   /// Padings
   const paddingLeft = template?.propertiesState?.padding?.left;
   const paddingRight = template?.propertiesState?.padding?.right;
@@ -18,24 +28,25 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
   const titleFontSize = headerState?.docTitleFontSize || 16;
 
   /// font size and color
-  const fontFamily= template?.propertiesState?.font_family|| "Roboto";
+  const fontFamily = template?.propertiesState?.font_family || "Roboto";
   const fontSize = template?.propertiesState?.font_size || 12;
   const color = template?.propertiesState?.font_color || "#000";
   const fontWeight = template?.propertiesState?.font_weight || 400;
   const fontStyle = template?.propertiesState?.fontStyle || "normal";
   /// label font size and color
-  const labelFontFamily= template?.propertiesState?.label_font_family|| "Roboto";
   const labelFontSize = template?.propertiesState?.label_font_size || 12;
   const labelColor = template?.propertiesState?.label_font_color || "#000";
   const labelFontWeight = template?.propertiesState?.label_font_weight || 400;
-  const labelFontStyle= template?.propertiesState?.label_font_style || "normal";
+  const labelFontStyle =template?.propertiesState?.label_font_style || "normal";
 
   /// Header background color
   const backgroundColor = template?.headerState?.bgColor || "#ffff";
 
-  const orgNameFontColor = headerState?.OrganizationFontColor || "#000"
-  const orgNameFontSize = headerState?.OrganizationFontSize || 12
-  const billingAddress = data?.addresses?.find((val: any) => val?.address?.address_type?.is_for == "customer");
+  const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
+  const orgNameFontSize = headerState?.OrganizationFontSize || 12;
+  const billingAddress = data?.addresses?.find(
+    (val: any) => val?.address?.address_type?.is_for == "customer"
+  );
 
   const custNameFontColor = headerState?.customerNameFontColor;
   const custNameFontSize = headerState?.customerNameFontSize || 12;
@@ -45,23 +56,26 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
   const docID = data?.[docIDKey || "sales_invoice_no"] || "";
   const currentBranch = useCurrentBranch();
 
-
   /* ######################################################################################### */
-  
-  const [generalHeaderBGStyle, setGeneralHeaderBGStyle] = useState<any>({ height: paddingTop, backgroundColor, backgroundPosition: 'top left' });
 
-  useEffect(() => { 
+  const [generalHeaderBGStyle, setGeneralHeaderBGStyle] = useState<any>({
+    height: paddingTop,
+    backgroundColor,
+    backgroundPosition: "top left",
+  });
+
+  useEffect(() => {
     setGeneralHeaderBGStyle((previous: any) => ({
       ...previous,
-      backgroundColor:backgroundColor,
+      backgroundColor: backgroundColor,
       height: paddingTop,
       backgroundImage: `url(${template?.background_image_header})`,
       backgroundRepeat: "no-repeat",
-      backgroundPosition: template?.headerState?.bg_image_header_position ?? "top left",
-      backgroundSize: "cover"
-      }));
-    
-  }, [template, template?.headerState?.bg_image_header_position])
+      backgroundPosition:
+        template?.headerState?.bg_image_header_position ?? "top left",
+      backgroundSize: "cover",
+    }));
+  }, [template, template?.headerState?.bg_image_header_position]);
   /* ######################################################################################### */
 
   const styles = {
@@ -69,58 +83,197 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
       color: labelColor,
       fontSize: labelFontSize,
       fontWeight: labelFontWeight,
-      fontStyle:labelFontStyle,
-      fontFamily:labelFontFamily
+      fontStyle: labelFontStyle,
+      fontFamily: fontFamily,
     },
     fontStyles: {
-       color, 
-       fontSize, 
-       fontWeight ,
-       fontStyle,
-       fontFamily
-      }
-  }
+      color,
+      fontSize,
+      fontWeight,
+      fontStyle,
+      fontFamily,
+    },
+  };
 
   /* ######################################################################################### */
 
   return (
-    <div  className="flex flex-col items-center justify-center  w-full ">
+    <div className="flex flex-col items-center justify-center  w-full border-b border-slate-300 mb-[30px]">
       {/* invoice header bg image  */}
-      <div style={generalHeaderBGStyle} className="top-0 left-0 h-[50px] w-full overflow-hidden"></div>
+      <div
+        style={generalHeaderBGStyle}
+        className="top-0 left-0 h-[50px] w-full overflow-hidden"
+      ></div>
       {/* Company Info */}
-      <div style={{ paddingLeft, paddingRight, }} className=" relative flex w-full z-10 flex-wrap ">
+      <div
+        style={{ paddingLeft, paddingRight }}
+        className=" relative flex w-full z-10 flex-wrap "
+      >
         <div className="flex-1 flex flex-col  text-xs ">
-          {headerState?.showLogo && <img src={currentBranch?.logo} style={{ width: 80 * logoWidthRatio }} className="my-1" draggable={false} />}
-          {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold ">{currentBranch?.name}</a>}
-        
+          {headerState?.showLogo && (
+            <img
+              src={currentBranch?.logo}
+              style={{ width: 80 * logoWidthRatio }}
+              className="my-1"
+              draggable={false}
+            />
+          )}
+          {headerState?.showOrgName && (
+            <a
+              style={{ color: orgNameFontColor, fontSize: orgNameFontSize }}
+              className="capitalize font-semibold "
+            >
+              {currentBranch?.name}
+            </a>
+          )}
         </div>
         {headerState?.showOrgAddress && (
-            <div style={styles.labelStyles} className="flex flex-col">
-              {currentBranch.address?.map((org: any, idx: number) => (
-                <p key={`ADDK_${idx}`}>{org}</p>
-              ))}
+          <div style={styles.labelStyles} className="flex flex-col">
+            {currentBranch.address?.map((org: any, idx: number) => (
+              <p key={`ADDK_${idx}`}>{org}</p>
+            ))}
+          </div>
+        )}
+        <div className="w-full border-t my-4" />
+      </div>
+     {/* doc Title */}
+      {headerState?.showDocTitle && (
+        <a
+          style={{ color: titleColor, fontSize: titleFontSize }}
+          className="text-[18px] font-medium mb-2 flex items-center border-b border-gray-400"
+        >
+          {docTitleVal}
+        </a>
+      )}
+      {/* Amount Info */}
+      <div
+        style={{ paddingLeft, paddingRight }}
+        className="relative flex flex-wrap w-full z-10  space-x-10 my-[40px] "
+      >
+        <div className="flex-1 flex-col space-y-4 basis-2/3">
+          {headerState?.showDateField && (
+            <div className="flex justify-between items-start">
+              <span style={styles.labelStyles}>
+                {headerState?.dateField || "Payment Date"}
+              </span>
+              <span
+                style={styles.fontStyles}
+                className="border-b border-gray-500 w-2/3"
+              >
+                {dateTrimmer(data.master?.dueDate)}
+              </span>
             </div>
           )}
-         <div className="w-full border-t my-4"/> 
-         {/* <div style={{ fontSize, color }} className={`mt-2 flex-1 flex flex-col text-xs text-right`}>
-          {headerState?.showDocTitle && <a style={{ color: titleColor, fontSize: titleFontSize }} className="text-[18px] font-medium mb-2">
-            {docTitleVal}
-          </a>}
-          {headerState?.showNumberField && <a style={styles.labelStyles}>{headerState.numberField} : {docID}</a>}
-          {headerState?.showBalanceDue && <a style={styles.labelStyles}>Balance Due </a>}
-          {headerState?.showBalanceDue && <a style={{ fontWeight }}>{currency} {data?.balance_due}</a>}
-        </div> */}
 
+          {headerState?.showReference && (
+            <div className="flex justify-between items-start">
+              <span style={styles.labelStyles}>
+                {headerState?.reference || "Reference Number"}
+              </span>
+              <span
+                style={styles.fontStyles}
+                className="border-b border-gray-500 w-2/3"
+              >
+                {data.master?.referenceNumber}
+              </span>
+            </div>
+          )}
+
+          {headerState?.showTransactionType && (
+            <div className="flex justify-between items-start">
+              <span style={styles.labelStyles}>
+                {headerState?.transactionType || "Payment Mode"}
+              </span>
+              <span
+                style={styles.fontStyles}
+                className="border-b border-gray-500 w-2/3"
+              >
+               {data?.master.transaction_type ?? "Cash"}
+              </span>
+            </div>
+          )}
+
+          {totalState?.showAmoutInWords && (
+            <div className="flex justify-between items-start">
+              <span style={styles.labelStyles}>
+                Total In Words
+              </span>
+              <span
+                style={styles.fontStyles}
+                className="border-b border-gray-500 w-2/3"
+              >
+               {getAmountInWords(Number(data.master?.totalDebit), currency)}
+              </span>
+              
+            </div>
+          )}
+        </div>
+
+        <div style={{fontFamily:styles.fontStyles.fontFamily}} className="h-32 w-40 bg-[#65a30d] p-4  opacity-80 flex flex-col items-center justify-center text-white text-sm font-light">
+          <p>Amount Received</p>
+          <span>{data.master?.totalDebit}</span>
+        </div>
       </div>
-         {headerState?.showDocTitle &&
-          <a style={{ color: titleColor, fontSize: titleFontSize }} className="text-[18px] font-medium mb-2 flex items-center border-b border-gray-400">
-            {docTitleVal}
-          </a>}
-      <div style={{ paddingLeft, paddingRight }} className="relative flex w-full z-10 flex-wrap mt-4 px-8">
-     
-        <div className="flex-1 flex flex-col gap-2 w-1/2">
-        
-          {/* {headerState?.hasBillTo && (
+
+     <div style={{ paddingLeft, paddingRight }} className="flex justify-between my-[40px] w-full">
+     {headerState?.hasBillTo && (
+            <div className="flex flex-col w-full ">
+
+                <div style={styles.fontStyles} className="flex-1 flex flex-col space-y-1 items-start ">
+                  <a style={styles.labelStyles} >{headerState?.billTo ?? "Received From"}</a>
+                  <a style={{ color: custNameFontColor, fontSize: custNameFontSize }} className="">"Nizam Karippali"</a>
+                  <a>Dubai</a>
+                  <a>Karama 123ft</a>
+                  <a>Ho No:1223</a>
+                </div>
+              
+            </div>
+      )}
+    {footerState?.showSignature && (
+       <div className=" flex flex-col w-full justify-start items-end  border-b border-gray-500">
+         
+         <a
+           style={styles.fontStyles}
+         >
+           {footerState?.signatureLabel ?? "Authority Signature"}
+         </a>
+  
+       {headerState?.showLogo && (
+         <img
+           src={currentBranch?.logo}
+           style={{ width: 80 * logoWidthRatio }}
+           draggable={false}
+         />
+       )}
+      
+     </div>
+    )}
+
+     </div>
+    <div style={{ paddingLeft, paddingRight }} className="flex flex-col space-y-1 justify-start my-[40px] w-full">
+    {template?.footerState?.showNotesLabel && (
+          <>
+            <div
+              style={styles.labelStyles}
+            >
+              <a className="">{template?.footerState?.notesLabel || "Notes"} </a>
+            </div>
+            <a style={{ 
+               ...styles.fontStyles,
+              fontSize: template?.footerState?.noteFontSize 
+              }}>
+              { data?.master?.notes ?? "Payment has been received by cash" }
+            </a>
+          </>
+        )}
+    </div>
+    </div>
+  );
+};
+
+export default Header;
+{
+  /* {headerState?.hasBillTo && (
             <div className="flex flex-col w-full flex-wrap">
              
               {data?.customer?.billing_address && (
@@ -148,17 +301,19 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
                 </div>
               )}
             </div>
-          )} */}
-        </div>
-        <div style={styles.fontStyles} className="flex-1 flex flex-col text-xs text-right w-1/2">
+          )} */
+}
+
+{
+  /* <div style={styles.fontStyles} className="flex-1 flex flex-col basis-2/3">
           <table>
             <tbody>
-              {headerState?.showDateField && data?.created_at && (
+              {headerState?.showDateField && (
                 <tr>
-                  <td style={styles.labelStyles} className="text-[10px] font-bold">
-                    {headerState?.dateField || "Invoice Date"} :
+                  <td style={styles.labelStyles} className="text-[17px] font-bold">
+                    {headerState?.dateField || "Payment Date"} 
                   </td>
-                  <td>{dateTrimmer(data?.created_at)}</td>
+                  <td className="border-b">{dateTrimmer(data.master?.dueDate)}</td>
                 </tr>
               )}
 
@@ -198,7 +353,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
                 </tr>
               )}
 
-              {/** INV ADJUST */}
+
               {headerState?.showReasonField && data?.reason?.name && (
                 <tr>
                   <td style={styles.labelStyles} className=" text-[10px] font-bold flex justify-end">
@@ -260,17 +415,19 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
               )}
             </tbody>
           </table>
-        </div>
-      </div>
-      {/** */}
-      {/* {headerState?.recieptInfo?.showReceiptTable && <RecieptTablePreview data={data} template={template} currency={currency} />}
-      {headerState?.accountSummary?.showAccountSummary && <AccountSummaryPreview data={data} template={template} currency={currency} />} */}
-      {/** */}
-    </div >
-  );
-};
+        </div> */
+}
 
-export default Header;
+{
+  /** */
+}
+{
+  /* {headerState?.recieptInfo?.showReceiptTable && <RecieptTablePreview data={data} template={template} currency={currency} />}
+      {headerState?.accountSummary?.showAccountSummary && <AccountSummaryPreview data={data} template={template} currency={currency} />} */
+}
+{
+  /** */
+}
 
 // const RecieptTablePreview = ({ data, template, currency }: AccountPreviewProps) => {
 //   const headerState = template?.headerState;

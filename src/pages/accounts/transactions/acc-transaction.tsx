@@ -1044,7 +1044,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <i className="fas fa-cog ms-1"></i>
                 </div>
                 <div className="flex items-center justify-end space-x-4 p-1 w-full">
-                  {/* Change Button */}
+                  {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
                     title={t("change")}
@@ -1052,7 +1052,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        deleteAccTransVoucher();
+                        loadTemporaryRows();
                       }}
                     >
                       <Replace className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
@@ -1067,7 +1067,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        loadTemporaryRows();
+                        deleteAccTransVoucher()
                       }}
                     >
                       <Trash2 className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
@@ -1188,15 +1188,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         label={formState.formElements.voucherNumber.label}
                         value={formState.transaction.master.voucherNumber}
                         type="number"
-                        Voucherno={true}
+                        showCustomNumberChanger={true}
                         className="max-w-[200px]"
-                        onChange={(e) =>
+                        onChange={(e: any) => {
                           dispatch(
                             accFormStateTransactionMasterHandleFieldChange({
                               fields: { voucherNumber: e.target?.value },
                             })
                           )
-                        }
+                          if(e.isCustomNumberChangerEvent == true) {
+                            loadAccTransVoucher(false, e.target?.value);
+                          }
+                        }}
                         disabled={
                           formState.formElements.voucherNumber?.disabled ||
                           formState.formElements.pnlMasters?.disabled

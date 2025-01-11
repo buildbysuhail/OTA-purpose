@@ -65,7 +65,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   className?: string;
   inputClassName?: string;
   noLabel?: boolean;
-  Voucherno?: false | true ;
+  showCustomNumberChanger?: false | true ;
   labelDirection?: "horizontal" | "vertical";
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
@@ -113,7 +113,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       max,
       pattern,
       noLabel,
-      Voucherno,
+      showCustomNumberChanger,
       labelDirection = "vertical",
       prefix,
       suffix,
@@ -528,7 +528,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               )}
               {/* {!noLabel && ( */}
               {/* {type === "number" && ( */}
-              {Voucherno && (
+              {showCustomNumberChanger && (
                 <div
                   className="absolute right-0 top-0 h-full flex flex-col  "
                   style={{
@@ -569,8 +569,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         newValue <= parseFloat(max.toString())
                       ) {
                         const event = {
+                          isCustomNumberChangerEvent: true,
                           target: { value: newValue.toString() },
-                        } as React.ChangeEvent<HTMLInputElement>;
+                        } as any;
                         handleChange(event);
                         console.log("Increment clicked, new value:", newValue);
                       }
@@ -605,7 +606,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       ) {
                         const event = {
                           target: { value: newValue.toString() },
-                        } as React.ChangeEvent<HTMLInputElement>;
+                          isCustomNumberChangerEvent: true,
+                        } as any;
                         handleChange(event);
                         console.log("Decrement clicked, new value:", newValue);
                       }
@@ -777,7 +779,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             />
            
 
-          {Voucherno && (
+          {showCustomNumberChanger && (
               // <div className="absolute right-0 top-0 h-full flex flex-col border-l border-gray-300">
               <div
               // className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
@@ -816,8 +818,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
                     if (max === undefined || newValue <= parseFloat(max.toString())) {
                       const event = {
+                        isCustomNumberChangerEvent: true,
                         target: { value: newValue.toString() }
-                      } as React.ChangeEvent<HTMLInputElement>;
+                      } as any;
                       handleChange(event);
                       console.log('Increment clicked, new value:', newValue); // Add this line
                     }
@@ -854,8 +857,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
                     if (min === undefined || newValue >= parseFloat(min.toString())) {
                       const event = {
+                        isCustomNumberChangerEvent: true,
                         target: { value: newValue.toString() }
-                      } as React.ChangeEvent<HTMLInputElement>;
+                      } as any;
                       handleChange(event);
                       console.log('Decrement clicked, new value:', newValue); // Add this line
                     }

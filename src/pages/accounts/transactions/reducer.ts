@@ -420,35 +420,30 @@ const accTransactionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
+      const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
       const payload = action.payload;
-
+  
       if (payload) {
         state.row = { ...AccTransactionRowInitialData };
         // Handle master data
         state.transaction.master = {
-          ...state.transaction.master, // Retain existing state
+          ...state.transaction.master,
           ...payload.master,
-          transactionDate: new Date(
-            payload.master.transactionDate
-          ).toISOString(),
+          transactionDate: new Date(payload.master.transactionDate).toISOString(),
+          currencyRate: payload.details[0].exchangeRate,
           prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
-          // bankDate: new Date(payload.master.bankDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
-          // dueDate: new Date(payload.master.dueDate).toISOString(),
-          // checkBouncedDate: new Date(
-          //   payload.master.checkBouncedDate
-          // ).toISOString(),
         };
-
-        // Handle details data
-
+  
+        if (payload.master.isLocked === true) {
+          state.formElements.lnkUnlockVoucher.visible = true;
+        }
+  
         let BillwiseAccTransDetailID = 0;
         state.transaction.details = payload.details.map((detail, index) => {
-          let _LedgerID = 0;
-          return {
+          const baseDetail = {
             ...detail,
-
-            slNo: index + 1, // Reset slNo to start from 1
+            slNo: index + 1,
             amountFC: detail.amount,
             bankDate: detail.bankDate
               ? new Date(detail.bankDate).toISOString()
@@ -460,65 +455,124 @@ const accTransactionSlice = createSlice({
               ? new Date(detail.checkBouncedDate).toISOString()
               : new Date(2000, 0, 1).toISOString(),
           };
+  
+          // Handle voucher type specific logic
+          switch (payload.master.voucherType) {
+            case 'CP':
+            case 'BP':
+            case 'CN':
+            case 'CQP':
+            case 'SV':
+            case 'PBP':
+              return {
+                ...baseDetail,
+                ledgerCode: detail.ledgerCode,
+                ledgerName: detail.ledgerName,
+                ledgerId: detail.ledgerId,
+              };
+  
+            case 'CR':
+            case 'BR':
+            case 'DN':
+            case 'CQR':
+            case 'PV':
+            case 'PBR':
+              BillwiseAccTransDetailID++;
+              return {
+                ...baseDetail,
+                ledgerCode: detail.relatedLedgerCode,
+                ledgerName: detail.particulars,
+                ledgerId: detail.relatedLedgerId,
+              };
+  
+            case 'JV':
+              BillwiseAccTransDetailID++;
+              if (payload.master.drCr === 'Dr') {
+                return {
+                  ...baseDetail,
+                  ledgerCode: detail.relatedLedgerCode,
+                  ledgerName: detail.particulars,
+                  ledgerId: detail.relatedLedgerId,
+                };
+              } else {
+                return {
+                  ...baseDetail,
+                  ledgerCode: detail.ledgerCode,
+                  ledgerName: detail.ledgerName,
+                  ledgerId: detail.ledgerId,
+                };
+              }
+  
+            case 'OB':
+            case 'MJV':
+              return {
+                ...baseDetail,
+                ledgerCode: detail.ledgerCode,
+                ledgerName: detail.ledgerName,
+                ledgerId: detail.ledgerId,
+                drCr: Number(detail.debit) > 0 ? 'Debit' : 'Credit',
+              };
+  
+            default:
+              return baseDetail;
+          }
         });
+  
         // Handle attachments
         state.transaction.attachments = payload.attachments || [];
-
+  
         // Calculate total amount
         if (payload.details?.length > 0) {
-          state.total = payload.details.reduce(
-            (total: number, detail: AccTransactionRow) => {
-              const amount =
-                payload.master.voucherType !== VoucherType.MultiJournal
-                  ? detail.amount
-                  : detail.debit;
-              return total + (amount || 0);
-            },
-            0
-          );
-
-          // Determine masterAccountID
+          state.total = payload.details.reduce((total, detail) => {
+            const amount =
+              payload.master.voucherType !== VoucherType.MultiJournal
+                ? detail.amount
+                : detail.debit;
+            return total + (amount || 0);
+          }, 0);
+  
+          // Set master account ID based on voucher type
           const firstDetail = payload.details[0];
           switch (payload.master.voucherType) {
-            case "CP":
-            case "BP":
-            case "CN":
-            case "CQP":
-            case "SV":
-            case "PBP":
+            case 'CP':
+            case 'BP':
+            case 'CN':
+            case 'CQP':
+            case 'SV':
+            case 'PBP':
               state.masterAccountID = firstDetail.relatedLedgerId;
               break;
-
-            case "CR":
-            case "BR":
-            case "DN":
-            case "CQR":
-            case "PV":
-            case "PBR":
+  
+            case 'CR':
+            case 'BR':
+            case 'DN':
+            case 'CQR':
+            case 'PV':
+            case 'PBR':
               state.masterAccountID = firstDetail.ledgerId;
               break;
-
-            case "JV":
+  
+            case 'JV':
               state.transaction.master.drCr =
-                payload.master.drCr === "Dr" ? "Debit" : "Credit";
+                payload.master.drCr === 'Dr' ? 'Debit' : 'Credit';
               state.masterAccountID =
-                payload.master.drCr === "Dr"
+                payload.master.drCr === 'Dr'
                   ? firstDetail.ledgerId
                   : firstDetail.relatedLedgerId;
               break;
-
-            default:
-              break;
           }
+  
+          // Handle billwise transactions , Handled in Api
+          // if (applicationSettings?.accountsSettings?.maintainBillwiseAccount) {
+           
         }
-
+  
         state.transactionLoading = false;
         state.formElements.pnlMasters.disabled = true;
         state.formElements.btnSave.disabled = true;
         state.transaction.master.totalAmount = calculateTotal(state);
       }
     });
-
     builder.addCase(loadAccVoucher.rejected, (state) => {
       state.transactionLoading = false;
       state.transaction = accTransactionInitialData;

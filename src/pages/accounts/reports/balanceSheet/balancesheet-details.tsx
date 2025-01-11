@@ -18,9 +18,10 @@ interface BalancesheetDetailsProps {
   contentProps?: any;
   isMaximized?: boolean;
   modalHeight?: any;
+  originFrom?:string,
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, }) => {
-  
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, originFrom, rowData, contentProps,isMaximized,modalHeight}) => {
+  debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');
@@ -126,7 +127,8 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   columns={columns}
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}
-                  filterText="{___(accGroup)} {**** as of (asonDate)}"
+                  // filterText="{ ___(accGroup)} {**** as of (asonDate)}"
+                  filterText={`for {${originFrom == "detailed" ? '___(accGroup)': '___(groupName)'}}, {**** as of (asonDate)}`}
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   hideGridAddButton={true}
                   enablefilter={false}

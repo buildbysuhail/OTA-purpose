@@ -192,7 +192,7 @@ export const DummyVoucherData ={
     "bankDate": "2024-12-04T00:00:00",
     "voucherPrefix": "",
     "voucherNumber": 2,
-    "referenceNumber": "",
+    "referenceNumber": "526468465eet",
     "referenceDate": "2024-12-04T00:00:00",
     "dueDate": "2024-12-04T00:00:00",
     "particulars": "CASH A/C (MADEENA VAN)",

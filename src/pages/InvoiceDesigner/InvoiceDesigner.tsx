@@ -31,6 +31,7 @@ import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 import { TemplateDto } from "./Designer/interfaces";
 import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn";
 import { PDFViewer } from "@react-pdf/renderer";
+import useCurrentBranch from "../../utilities/hooks/use-current-branch";
 
 interface DesignSectionType {
   id: number;
@@ -99,6 +100,7 @@ const InvoiceDesigner = () => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
+  const currentBranch = useCurrentBranch();
 
   const [loading, setLoading] = useState(false);
   const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
@@ -328,7 +330,7 @@ const InvoiceDesigner = () => {
       <>
       {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}
       <PDFViewer width="100%" height="auto"style={{ maxHeight: `${maxHeight}px` , margin:"20px" }}>
-       <AccountTransactionsTemplate template={templateData.activeTemplate} data={DummyVoucherData} /> 
+       <AccountTransactionsTemplate template={templateData.activeTemplate} data={DummyVoucherData} currentBranch={currentBranch} /> 
        </PDFViewer>
      
       </>

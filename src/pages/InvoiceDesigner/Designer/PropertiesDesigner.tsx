@@ -247,17 +247,6 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
       </div>
 
 
-      {/* <div
-        className="flex justify-between items-center pb-4 border-b cursor-pointer  p-4"
-        onClick={() => setTab(currentTab === "font_props" ? "" : "font_props")}
-      >
-        <div>Font</div>
-        <div>
-          <ChevronDownIcon className={`h-5  ${currentTab === "font_props" ? "" : "-rotate-90"} transition-all`} />
-        </div>
-      </div> */}
-
-
       <div className="transition-all  flex flex-col gap-4  p-4">
         <div className="flex flex-col gap-2 mt-1">
           <ERPDataCombobox
@@ -281,7 +270,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 { value: "FiraSans", label: "FiraSans" },
               ]}
           />
-           {/* <ERPDataCombobox
+           <ERPDataCombobox
             id="fontStyle"
             label="Font Style"
             data={propertiesState}
@@ -298,10 +287,10 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             
               options={[
                 { value: "normal", label: "normal" },
-                { value: "oblique", label: "oblique" },
+               
                 { value: "italic", label: "italic" },
               ]}
-          /> */}
+          />
            
           <ERPStepInput
             value={propertiesState?.font_size}
@@ -365,7 +354,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             
               options={[
                 { value: "normal", label: "normal" },
-                { value: "oblique", label: "oblique" },
+               
                 { value: "italic", label: "italic" },
               ]}
           />

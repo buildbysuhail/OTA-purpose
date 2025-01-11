@@ -243,15 +243,16 @@ const BalancesheetVertical = () => {
                       postData={{
                         asonDate: filter.asonDate,
                       }}
-                      origin="detailed"
+                      originFrom="detailed"
                     /> 
                     : dataField == "ledgerID" ? <CashBookMonthWise postData={
                       {
                         asonDate: filter.asonDate
-                      }} />
+                      }} 
+                      origin="trialBalance"
+                      />
                       : null
                       ,
-          
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                   

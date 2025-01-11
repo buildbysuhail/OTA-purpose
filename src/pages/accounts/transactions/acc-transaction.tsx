@@ -984,11 +984,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const goToPreviousPage = () => {
     window.history.back();
   };
+
+      const appState = useAppSelector(
+        (state: RootState) => state.AppState?.appState
+      );
+
+  // const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
+  // const [bgColor, setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true ? '#ffffff' : '#ffffff1a') : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
+   
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className="bg-white space-y-6 p-4">
+        <div className=  {`${appState.mode == 'dark' ? "!bg-black" : ``} bg-white space-y-6 p-4`}>
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -1145,7 +1153,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
 
           <div className="grid grid-cols-2 gap-8 !mt-12">
-            <div className="">
+            <div className= {`${appState.mode == 'dark' ? "bg-black" : ``}  `}>
               <div className="grid grid-cols-1 leading-none lg:w-3/4">
                 <div className="flex items-center gap-2">
                   {formState.formElements.voucherPrefix.visible && (

@@ -186,7 +186,7 @@ const ProfitAndLossReport = () => {
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
-    debugger;
+    
     if (filterShowCount == 0) {
       setShowFilter(true);
     } else {
@@ -205,7 +205,7 @@ const ProfitAndLossReport = () => {
       res.isOk != undefined &&
       res.isOk == false
     ) {
-      debugger;
+      
       setFilterValidations(res.validations);
       setShowFilter((prev: any) => { return true });
     } else {
@@ -216,7 +216,7 @@ const ProfitAndLossReport = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-    debugger;
+    
         setShowFilter(false);
         setFilter({ ..._filter });
         await LoadAsync(_filter);
@@ -227,7 +227,7 @@ const ProfitAndLossReport = () => {
           setFilter({});
           setFilterShowCount((prev) => prev + 1);
         }
-        debugger;
+        
         setShowFilter(false);
       }, [filterShowCount]);
 

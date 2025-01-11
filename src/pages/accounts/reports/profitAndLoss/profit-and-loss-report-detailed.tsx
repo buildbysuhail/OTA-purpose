@@ -455,7 +455,10 @@ const ProfitAndLossDetailedReport = () => {
                   ledgerID: isOpenDetails.key,
                   fromDate:filter.fromDate
                 }}
+            
                 groupName={isOpenDetails.groupName}
+                rowData={isOpenDetails.groupName}
+                originTo = "PandL"
               />
             ) : (
               <ProfitAndLossSubledgerwiseView

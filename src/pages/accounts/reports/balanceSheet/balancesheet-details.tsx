@@ -20,7 +20,7 @@ interface BalancesheetDetailsProps {
   modalHeight?: any;
   originFrom?:string,
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, originFrom, rowData, contentProps,isMaximized,modalHeight}) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, originFrom}) => {
   debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);

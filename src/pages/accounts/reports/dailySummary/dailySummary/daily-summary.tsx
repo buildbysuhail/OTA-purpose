@@ -68,6 +68,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
           ),
     },
   ];
+
   const detailColumnsTemp = [
     {
       dataField: "date",
@@ -342,8 +343,15 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       }
       if (["CR", "CP", "BR"].includes(event.data?.cType ?? "")) {
         return ["accTransactionMasterID", "date", "vrType", "voucherPrefix", "voucherNumber","ledgerCode", "ledgerName","amount","discount","employee"].includes(column.dataField);
-      } else {
-        return ["amount", "discount", "employee", "ledgerName"].includes(column.dataField);
+      } 
+      if (["CB", "CRS", "CD","TMR"].includes(event.data?.cType ?? "")) {
+        // return ["vrType"].includes(column.dataField);
+        return [];
+      } 
+      else {
+
+        // return [""];
+        return [""].includes(column.dataField);
       }
     });
     
@@ -375,7 +383,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
-            { voucherType != undefined && voucherType != null && voucherType != "" &&  <ErpDevGrid
+            { voucherType != undefined && voucherType != null && voucherType != "" && !["CB","CRS","CD","TMR"].includes(voucherType)&& <ErpDevGrid
                remoteOperations={{filtering:true,paging:true,sorting:true}}
                 columns={detailsColumns}
                 gridHeader={t("daily_summary_detailed")}

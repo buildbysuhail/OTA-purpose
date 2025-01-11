@@ -7,6 +7,7 @@ import { useAppDispatch } from "../utilities/hooks/useAppDispatch";
 import { useRootState } from "../utilities/hooks/useRootState";
 import { formatDate } from "devextreme/localization";
 import { DummyVoucherData } from "./InvoiceDesigner/constants/DummyData";
+import urls from "../redux/urls";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -633,7 +634,7 @@ const AccTransactionGrid: React.FC = () => {
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 columns={columns}
-                data={transformedData}
+                dataUrl={urls.acc_transaction_grid}
                 gridHeader={t("Transactions")}
                 gridId="transaction-grid"
                 gridAddButtonType="popup"

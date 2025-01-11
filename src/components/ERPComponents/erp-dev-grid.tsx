@@ -711,7 +711,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } else {
             date = moment(dateStr, format);
         }
-        debugger;
+        
         const str= date.format("DD/MM/YYYY");
         return str;
       };
@@ -1398,7 +1398,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
                 cellRender= { column.cellRenderDynamic == undefined && column.cellRender == undefined ? undefined : (cellElement: any, cellInfo: any) => {
-                  debugger;
+                  
                   if (column.cellRenderDynamic) {
                       return column.cellRenderDynamic(cellElement, cellInfo, filter);
                   }

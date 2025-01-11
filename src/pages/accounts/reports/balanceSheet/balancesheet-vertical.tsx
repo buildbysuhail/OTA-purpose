@@ -243,7 +243,7 @@ const BalancesheetVertical = () => {
                       postData={{
                         asonDate: filter.asonDate,
                       }}
-                      origin="detailed"
+                      originFrom="detailed"
                     /> 
                     : dataField == "ledgerID" ? <CashBookMonthWise postData={
                       {

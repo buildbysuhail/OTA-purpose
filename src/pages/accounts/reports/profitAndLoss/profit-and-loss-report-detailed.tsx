@@ -245,7 +245,7 @@ const ProfitAndLossDetailedReport = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-    debugger;
+    
         setShowFilter(false);
         setFilter({ ..._filter });
         await LoadAsync(_filter);

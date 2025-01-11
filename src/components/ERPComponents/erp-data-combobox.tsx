@@ -214,6 +214,10 @@ const Row = ({
   const isActive = activeIndex === index;
   const sizeClasses = getSizeClasses(data.customSize);
 
+     const appState = useAppSelector(
+        (state: RootState) => state.AppState?.appState
+      );
+
   return (
     <Combobox.Option
       style={style}
@@ -228,7 +232,7 @@ const Row = ({
       // }
       className={({ active }) => {
         const hoverTextClass = "hover:text-dark"; // Explicit hover text color
-        const hoverBgClass = "hover:bg-gray-300"; // Explicit hover background color
+        const hoverBgClass = appState.mode === 'dark' ? 'hover:bg-[#ffffff1f]' : 'hover:bg-gray-300'; // Explicit hover background color
         const dynamicHoverClass = `hover:${setFgAccordingToBgPrimary()}`; // Ensure this returns a valid Tailwind class
 
         return `relative cursor-pointer select-none w-full rounded-sm 
@@ -542,7 +546,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
     let border, bgCol;
     if (appState?.mode === "dark") {
       border = isFocused || isHovered ? "#ffffff" : "#ffffff1a";
-      bgCol = isFocused ? "#ffffff" : "#ffffff1a";
+      bgCol = isFocused ? "#313334" : "#ffffff1a";  
     } else {
       border =
         isFocused || isHovered
@@ -1335,7 +1339,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
         <div className="flex justify-between">
           <label
             className={`capitalize block   text-left rtl:text-right ${
-              appState?.mode == "dark" ? "form-label" : ""
+              appState?.mode == "dark" ? "" : ""
             } 
           ${labelDirection === "vertical" ? "" : ""}`}
             style={{
@@ -1369,7 +1373,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
           </label>
           <label
               className={`capitalize block text-right rtl:text-left ${
-                appState?.mode == "dark" ? "form-label" : ""
+                appState?.mode == "dark" ? "" : ""
               }`}
               style={{
                 fontSize: _customSize
@@ -1445,7 +1449,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               disabled={disabled}
             />
             <div
-              className={`absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center m-[2px] pr-1`}
+              className={`absolute inset-y-0 ltr:right-0 ${appState.mode == 'dark' ? "" : ``} rtl:left-0 flex items-center m-[2px] pr-1`}
               style={{
                 background:
                   initial?.value !== undefined &&
@@ -1528,7 +1532,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                     (el as any).__reactRefHandlers = { contains: () => true };
                   }
                 }}
-                className={`${isInModal?"combobox-dropdown-modal combobox-dropdown " :"combobox-dropdown"} absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
+                className={`${isInModal?"combobox-dropdown-modal combobox-dropdown " :"combobox-dropdown"} ${appState.mode == 'dark' ? "!bg-[#313334] " : ``} absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
                 style={{
                   width: comboboxRef.current?.offsetWidth || "auto",
                   top: (comboboxRef.current?.getBoundingClientRect().bottom ?? 0) + window.scrollY,

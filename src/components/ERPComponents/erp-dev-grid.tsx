@@ -706,7 +706,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         let date;
 
         // Explicit handling for ISO 8601
-        if (format === "ISO 8601") {
+        if(format == "Unknown format") {
+          date = moment(dateStr); 
+        }
+        else if (format === "ISO 8601") {
             date = moment(dateStr); // ISO 8601 is natively supported
         } else {
             date = moment(dateStr, format);

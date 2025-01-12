@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // import { handleResponse } from '../HandleResponse';
 import { customJsonParse } from "../../../utilities/jsonConverter";
@@ -58,6 +58,7 @@ const api = new APIClient();
 export const useAccTransaction = (
   transactionType: string,
   btnSaveRef: any,
+  btnAddRef: any,
   ledgerCodeRef?: any,
   ledgerIdRef?: any,
   masterAccountRef?: any,
@@ -65,7 +66,10 @@ export const useAccTransaction = (
   amountRef?: any,
   drCrRef?: any,
   narrationRef?: any,
-  voucherNumberRef?: any
+  voucherNumberRef?: any,
+  chequeNumberRef?: any,
+  remarksRef?: any
+
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -84,8 +88,12 @@ export const useAccTransaction = (
   // };
   const focusBtnSave = () => {
     if (btnSaveRef.current) {
-      // btnSaveRef.current.style.backgroundColor = '#000'
       btnSaveRef.current.focus();
+    }
+  };
+  const focusBtnAdd = () => {
+    if (btnAddRef.current) {
+      btnAddRef.current.focus();
     }
   };
   const focusAmount = () => {
@@ -127,6 +135,16 @@ export const useAccTransaction = (
   const focusVoucherNumber = () => {
     if (voucherNumberRef.current) {
       voucherNumberRef.current.focus();
+    }
+  };
+  const focusChequeNumber = () => {
+    if (chequeNumberRef.current) {
+      chequeNumberRef.current.focus();
+    }
+  };
+  const focusRemarks = () => {
+    if (remarksRef.current) {
+      remarksRef.current.focus();
     }
   };
 
@@ -847,6 +865,8 @@ export const useAccTransaction = (
       handleAmountKeyDown(key);
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
+    } else if (field === "narration") {
+      handleNarrationKeyDown(key);
     }
   };
   const handleGridKeyDown = (
@@ -920,6 +940,45 @@ export const useAccTransaction = (
         focusNarration();
       } else {
         focusDrCr();
+      }
+    }
+  };
+  const handleNarrationKeyDown = (e: any) => {
+    // Handle Enter key
+    if (e.key === 'Enter') {
+      
+      const isChequeVoucher = formState.transaction.master.voucherType === 'CQP' || formState.transaction.master.voucherType === 'CQR';
+      const isPaymentReceipt = formState.transaction.master.voucherType === 'BP' || formState.transaction.master.voucherType === 'BR';
+      
+      if (applicationSettings.accountsSettings?.maintainBillwiseAccount && formState.formElements.btnBillWise.visible == true) {
+        if (!isPaymentReceipt || !isChequeVoucher) {
+          // Handle billwise click
+          dispatch(accFormStateHandleFieldChange({fields:{showbillwise: true}}));
+        } else {
+          focusChequeNumber();
+        }
+
+        if (isChequeVoucher) {
+          focusChequeNumber();
+        }
+      } 
+      else if (applicationSettings.accountsSettings?.maintainCostCenter && formState.formElements.costCentreId.visible == true) {
+        focusCostCenterRef();
+      } 
+      else {
+        focusBtnAdd();
+      }
+
+      // Final check for cheque vouchers
+      if (isChequeVoucher) {
+        focusChequeNumber();
+      }
+    }
+    // Handle Down arrow key
+    else if (e.key === 'ArrowDown') {
+      if (formState.previousNarration) {
+        // Update narration with previous value
+        formState.row.narration = formState.previousNarration;
       }
     }
   };

@@ -22,6 +22,7 @@ type ERPModalProps = {
   closeModal: (reload: boolean) => void;
   content?: any;
   rowData?: any;
+  postData?: any;
   contentProps?: any;
   origin?: string;
   footer?: any;
@@ -51,6 +52,7 @@ const ERPModal = React.memo(
     closeModal,
     content,
     rowData,
+    postData,
     contentProps,
     footer,
     origin,
@@ -77,7 +79,7 @@ const ERPModal = React.memo(
     const [isMaximized, setIsMaximized] = useState(false);
     const [modalHeight, setModalHeight] = useState(0);
 
- 
+
     useEffect(() => {
       const updateModalHeight = () => {
         
@@ -263,6 +265,7 @@ const ERPModal = React.memo(
                             modalHeight: modalHeight, // Pass isMaximized to the content
                             rowData: rowData,
                             origin: origin,
+                            postData: postData,
                           })}
                       </ERPScrollArea>
 

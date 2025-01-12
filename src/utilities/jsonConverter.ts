@@ -1,6 +1,7 @@
 export function customJsonParse<T>(jsonString: string): T {
     try {
-        return JSON.parse(jsonString, (key, value) => {
+        const utf8Decoder = new TextDecoder("utf-8"); 
+        return JSON.parse(utf8Decoder.decode(new Uint8Array([...jsonString].map(char => char.charCodeAt(0)))), (key, value) => {
             if (value && typeof value === 'object' && !Array.isArray(value)) {
                 const newObj: { [key: string]: any } = {};
                 for (const k in value) {

@@ -20,12 +20,15 @@ const ProfitAndLossRow: React.FC<{
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
+  
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    event.preventDefault();
+   
+
     setIsOpenDetails({
       isOpen: true,
       key: item.groupID,
       groupName: item.groupName,
+      item: item,
       title: item.title,
     });
   };
@@ -213,6 +216,7 @@ const ProfitAndLossDetailedReport = () => {
     key: number;
     groupName?: string;
     title?: string;
+    item?: any;
   }>({ isOpen: false, key: 0 });
   const { t } = useTranslation("accountsReport");
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
@@ -422,15 +426,15 @@ const ProfitAndLossDetailedReport = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-      {isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
+      {isOpenDetails.isOpen == true  && isOpenDetails.item !==  undefined && isOpenDetails.item !== null && isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
         <ERPModal
-          isOpen={isOpenDetails.isOpen}
+          isOpen={isOpenDetails.isOpen && isOpenDetails.item !==  undefined && isOpenDetails.item !== null}
           // title={t("bank_cards")}
-          title="Account Report"
+          title="Safvan"
           width="w-full max-w-[90%]"
           isForm={true}
           closeModal={() => {
-            setIsOpenDetails({ isOpen: false, key: 0 });
+            setIsOpenDetails({ isOpen: false, key: 0, item:undefined });
           }}
           
           content={
@@ -447,18 +451,8 @@ const ProfitAndLossDetailedReport = () => {
             ) : isOpenDetails.title === "L" ? (
 
               <CashBookMonthWise
-                postData={{
-                  // accGroupID: isOpenDetails.key,
-                  // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
-                  // dateFrom: filter.fromDate,
-                  asOnDate: filter.toDate,
-                  ledgerID: isOpenDetails.key,
-                  fromDate:filter.fromDate
-                }}
-            
-                groupName={isOpenDetails.groupName}
-                rowData={isOpenDetails.groupName}
-                originTo = "PandL"
+                
+          groupName={isOpenDetails.groupName}
               />
             ) : (
               <ProfitAndLossSubledgerwiseView
@@ -478,6 +472,17 @@ const ProfitAndLossDetailedReport = () => {
               />
             )
           }
+          postData={{
+            // accGroupID: isOpenDetails.key,
+            // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
+            // dateFrom: filter.fromDate,
+            asOnDate: filter.toDate,
+            ledgerID: isOpenDetails.key,
+            fromDate:filter.fromDate
+          }}
+      
+          rowData={isOpenDetails.item}
+          origin = "PandL"
         />
       )}
     </div>

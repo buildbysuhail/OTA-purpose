@@ -131,11 +131,11 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
           data-jump-to={jumpTo}
           data-jump-target={jumpTarget}
           style={sizeStyles.checkbox}
-          className={`form-check-input ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${inputClassName}`}
+          className={`form-check-input ${disabled ?  'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${appState.mode == 'dark' ? "!bg-[#313334] !border-[#f2f4f538] " : ``} ${inputClassName}`}
           {...props}
         />
         {!noLabel && (
-          <span className={`ml-2 ${labelClassName} ${disabled ? 'text-gray-400' : ''} text-black`} style={sizeStyles.label}>
+          <span className={`ml-2 ${labelClassName} ${disabled ? 'text-gray-400' : ''} ${appState.mode == 'dark' ? " !text-white " : ``} text-black`} style={sizeStyles.label}>
             {iLabel}
             {required && !noLabel && "*"}
           </span>

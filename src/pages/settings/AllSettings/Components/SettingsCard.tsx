@@ -131,7 +131,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
                       </p>
                     ) : (
                       <p
-                        className={` text-xs cursor-pointer hover:text-accent transition-all ease-in-out p-1 hover:bg-gray-400 hover:rounded-[5px] ${appState.mode == 'dark' ? "text-white " : ``} text-black `}
+                        className={` text-xs cursor-pointer hover:text-accent transition-all ease-in-out p-1 hover:bg-gray-400 hover:text-black hover:rounded-[5px] ${appState.mode == 'dark' ? "text-white " : ``} text-black `}
                         onClick={() => {
                           route?.path && route?.type === "link"
                             ? navigate(route?.path)

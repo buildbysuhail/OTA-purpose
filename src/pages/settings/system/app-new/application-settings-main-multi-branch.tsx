@@ -11,6 +11,8 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useApplicationMiscSettings } from "../../../../utilities/hooks/use-application-misc-settings";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -493,13 +495,17 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
     setHasMatchedItems(hasMatchingItems);
   }, [filterText])
 
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+
   return (
     <>
      {items.filter((component) => component.condition == true).length > 0 && (
       <div>
         <div  key={key}  ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}>
           <h1
-            className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${
+            className={`h-[50px] text-[20px] ${appState.mode == 'dark' ? "!bg-[#404344bf] " : ``} font-normal flex items-center my-2 rounded-md px-2 ${
               blinkSection === "mainMultiBranch"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
@@ -508,7 +514,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
             {t("multi_branch")}
           </h1>
           <div key="mainMultiBranch" className="space-y-4">
-            <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
+            <div className={`border border-solid ${appState.mode == 'dark' ? " !border-[#f2f4f538] " : ``} border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
               <div
                 className={`grid ${
                   isCompactView

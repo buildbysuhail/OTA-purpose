@@ -7,6 +7,8 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -179,6 +181,9 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
     const hasMatchingItems = items.some((component) => component.condition);
     setHasMatchedItems(hasMatchingItems);
   }, [filterText])
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
 
   return (
     <>
@@ -189,7 +194,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           ref={(el) => (subItemsRef.current["accountsHR"] = el)}
         >
           <h1
-            className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${
+            className={`h-[50px] text-[20px] ${appState.mode == 'dark' ? "!bg-[#404344bf] " : ``} font-normal flex items-center my-2 rounded-md px-2 ${
               blinkSection === "accountsHR"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
@@ -199,7 +204,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             {t("hr")}
           </h1>
           <div key="accountsHR" className="space-y-4">
-            <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
+            <div className={`border border-solid ${appState.mode == 'dark' ? " !border-[#f2f4f538] " : ``} border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
               <div
                 className={`grid ${
                   isCompactView

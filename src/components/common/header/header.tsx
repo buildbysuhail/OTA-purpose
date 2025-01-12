@@ -29,6 +29,8 @@ import LanguageSwitcher from "./language-switcher";
 import { useSelector } from "react-redux";
 import * as switcherdata from "../switcher/switcherdata/switcherdata";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+import { Button } from "../../../dark/Button";
+import { Moon, Sun } from "lucide-react";
 
 interface HeaderProps {}
 
@@ -669,7 +671,7 @@ const Header: FC<HeaderProps> = () => {
                 </div> */}
                 <div className="flex items-center space-x-4">
                   {/* <span className="text-sm font-medium">☀️</span> */}
-                  <div
+                  {/* <div
                     className={`relative w-12 h-5 flex items-center bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-full cursor-pointer transition-colors duration-300 ease-in-out shadow-lg`}
                     onClick={() => {
                       appState.mode === "light"
@@ -683,10 +685,24 @@ const Header: FC<HeaderProps> = () => {
                           ? "translate-x-6"
                           : "translate-x-1"
                       }`}
-                    ></div>
-                  </div>
+                    ></div> */}
+                  {/* </div> */}
                   {/* <span className="text-sm font-medium">🌙</span> */}
                 </div>
+              </div>
+              <div className="flex items-center">
+                {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
+                <Button 
+                 onClick={() => {
+                  appState.mode === "light"
+                    ? switcherdata.Dark(updateAppState, appState)
+                    : switcherdata.Light(updateAppState, appState);
+                }} 
+                variant="ghost" 
+                size="icon">
+                  {appState.mode === 'dark' ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
+                  <span className="sr-only">Toggle dark mode</span>
+                </Button>
               </div>
               <LanguageSwitcher></LanguageSwitcher>
               <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown  [--placement:bottom-right] rtl:[--placement:bottom-left]">

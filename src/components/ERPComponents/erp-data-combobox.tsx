@@ -1425,7 +1425,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 borderRadius: `${appState?.inputBox?.borderRadius}px`,
                 backgroundColor: bgColor,
               }}
-              className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
+              className={`form-control ${sizeClasses?.input} ${appState.mode == 'dark' ? "!bg-[#313334] " : ``} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
               onChange={handleInputChange}
               onClick={(e) => {
@@ -1447,7 +1447,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               disabled={disabled}
             />
             <div
-              className={`absolute inset-y-0 ltr:right-0 ${appState.mode == 'dark' ? "" : ``} rtl:left-0 flex items-center m-[2px] pr-1`}
+              className={`absolute inset-y-0 ltr:right-0 ${appState.mode == 'dark' ? "!bg-[#2d2d2d] " : ``} rtl:left-0 flex items-center m-[2px] pr-1`}
               style={{
                 background:
                   initial?.value !== undefined &&

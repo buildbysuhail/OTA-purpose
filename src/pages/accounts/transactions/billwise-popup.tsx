@@ -12,39 +12,58 @@ import {
   Item,
   Summary,
   TotalItem,
+  KeyboardNavigation,
 } from "devextreme-react/cjs/data-grid";
 import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useDispatch } from "react-redux";
+import { accFormStateBillWiseRowUpdate } from "./reducer";
+import { BillwiseData } from "./acc-transaction-types";
+import _cloneDeep from "lodash/cloneDeep";
 interface BillWisePopupProps {
-  isMaximized?: boolean; 
-  modalHeight?:any // Add isMaximized as an optional prop
+  isMaximized?: boolean;
+  modalHeight?: any; // Add isMaximized as an optional prop
 }
 
-const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
+const BillWisePopup: FC<BillWisePopupProps> = ({
+  isMaximized,
+  modalHeight,
+}) => {
+  const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
+  const [store, setStore] = useState<any>(JSON.parse(JSON.stringify(formState.billwiseData)));
+
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows = wh - 230; 
+    let gridHeightWindows = wh - 230;
     setGridHeight(gridHeightWindows);
-  }, [isMaximized,modalHeight]);
+  }, [isMaximized, modalHeight]);
 
+  useEffect(() => {
+    const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
+    setStore(clonedData);
+  }, [formState.billwiseData]);
   const handleSelectionChange = (e: any) => {
-    const { data } = e;
-    const updatedStore = formState.billwiseData .map((item: any) => {
-      if (item.SiNo === data.SiNo) {
-        return {
-          ...item,
-          Select: data.Select,
-          AmountToAssign: data.Select ? item.Amount : 0,
-          BalanceAfter: data.Select ? 0 : item.Balance
-        };
-      }
-      return item;
-    });
-    // setStore(updatedStore);
+  
   };
+
+  const [enterKeyAction, setEnterKeyAction] =
+    useState<DataGridTypes.EnterKeyAction>("startEdit");
+  const [enterKeyDirection, setEnterKeyDirection] =
+    useState<DataGridTypes.EnterKeyDirection>("row");
+  const onRowUpdating = (e: any) => {
+    const updatedRow = { ...e.oldData, ...e.newData };
+
+    setStore((prevStore: any) =>
+      prevStore.map((item: any) =>
+        item.slNo === updatedRow.slNo ? updatedRow : item
+      )
+    );
+    e.newData = updatedRow;
+  };
+
   //  ==========================================================================================
   return (
     <Fragment>
@@ -52,11 +71,13 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="">
+              {formState.row.amount}
               <div className="grid grid-cols-1 gap-3">
+                Safvan {store.length}
                 <DataGrid
                   id="TestPopup"
                   height={gridHeight}
-                  dataSource={formState.billwiseData}
+                  dataSource={store}
                   className="custom-data-grid"
                   showBorders={true}
                   columnAutoWidth={true}
@@ -65,13 +86,21 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                   allowColumnResizing={true}
                   allowColumnReordering={true}
                   onRowUpdated={handleSelectionChange}
+                  // onSelectionChanged={handleSelectionChange}
+                  onRowUpdating={onRowUpdating}
                   editing={{
                     allowUpdating: true,
-                    mode: "cell", 
+                    mode: "cell",
                     allowAdding: false,
                     allowDeleting: false,
                   }}
                 >
+                  <KeyboardNavigation
+                    editOnKeyPress={true}
+                    enterKeyAction={"startEdit"}
+                    enterKeyDirection={"column"}
+                  />
+
                   <FilterRow visible={true} />
                   <SearchPanel visible={true} />
                   <ColumnFixing enabled={true} />
@@ -85,6 +114,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={50}
                   />
                   <Column
@@ -93,6 +123,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                   />
                   <Column
@@ -101,6 +132,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                   />
                   <Column
@@ -109,6 +141,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                   />
                   <Column
@@ -117,6 +150,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                   />
                   <Column
@@ -125,6 +159,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                   />
                   <Column
@@ -133,6 +168,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                   />
                   <Column
@@ -141,6 +177,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                   />
                   <Column
@@ -149,6 +186,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={130}
                   />
                   <Column
@@ -157,6 +195,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                   />
                   <Column
                     dataField="voucherPrefix"
@@ -164,6 +203,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={130}
                   />
                   <Column
@@ -172,6 +212,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                     visible={false}
                   />
@@ -181,6 +222,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                     visible={false}
                   />
@@ -190,6 +232,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={100}
                     visible={false}
                   />
@@ -199,6 +242,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                     visible={false}
                   />
@@ -208,6 +252,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
+                    allowEditing={true}
                     width={150}
                     visible={false}
                   />
@@ -247,7 +292,12 @@ const BillWisePopup: FC<BillWisePopupProps> = ({ isMaximized,modalHeight}) => {
               </div>
               <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
                 <strong className="mr-3">Net Adjustment </strong>
-                <span className="">{formState.billwiseData?.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span>
+                <span className="">
+                  {formState.billwiseData?.reduce(
+                    (total, item) => total + (item.AmountToAssign || 0),
+                    0
+                  )}
+                </span>
               </div>
             </div>
           </div>

@@ -980,6 +980,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               columnWidths: pdfColumnsWidths,
               topLeft: { x: 0, y: currentY },
             }).then(() => {
+              originalColumnVisibility.forEach((column: any) => {
+                e.component.columnOption(column.dataField, "visible", column.visible);
+              });
+            
+              // Restore wordWrapEnabled option
+              e.component.option("wordWrapEnabled", false);
+            
+              e.component.endUpdate(); // Ensure updates are applied
+              e.component.repaint();  // Force re-render if necessary
               doc.save(`${gridId}.pdf`);
             });
           } else if (e.format === "xlsx") {

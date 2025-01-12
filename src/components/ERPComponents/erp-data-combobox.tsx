@@ -1433,9 +1433,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 !disabled && setIsOpen(!isOpen);
               }}
               onKeyDown={handleKeyDown}
-              placeholder={
-                t("select") + " " + (label || id?.replaceAll("_", " "))
-              }
+              placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onFocus={handleFocus}
@@ -1445,7 +1443,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               autoFocus={autoFocus}
               title={initial?.label || ""}
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
-              readOnly={!disabled}
+              readOnly={disabled}
               disabled={disabled}
             />
             <div

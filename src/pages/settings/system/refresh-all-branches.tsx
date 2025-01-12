@@ -26,7 +26,7 @@ export const initialRefreshAllBranches = {
 
 export const RefreshAllBranches: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   const {
     isEdit,
@@ -39,7 +39,10 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
   } = useFormManager<RefreshAllBranches>({
     url: Urls.refreshAllBranches,
     onClose: useCallback(
-      () => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null,reload: false })),
+      () =>
+        dispatch(
+          toggleRefreshAllBranches({ isOpen: false, key: null, reload: false })
+        ),
       [dispatch]
     ),
     onSuccess: useCallback(

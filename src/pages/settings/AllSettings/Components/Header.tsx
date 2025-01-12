@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface MenuItem {
   title: string;
@@ -111,15 +113,20 @@ const Header: React.FC = () => {
   useEffect(() => {
     searchInputRef.current?.focus();
   }, []);
+
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+  
   return (
-    <div className="py-6 px-4 flex flex-col gap-4">
+    <div className="py-6 px-4 flex flex-col gap-4 ">
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />
           <h3 className="text-base font-medium">Settings</h3>
         </div>
         <div
-          className="flex gap-1 items-center py-1 px-2 bg-gray-50 rounded-md border cursor-pointer"
+          className={`flex gap-1 items-center py-1 px-2 ${appState.mode == 'dark' ? "!bg-[#313334] border-[#f2f4f538]  " : ``} bg-gray-50 rounded-md border cursor-pointer`}
           onClick={handleNavigation}
         >
           <p className="text-[10px]">Close</p>
@@ -128,12 +135,12 @@ const Header: React.FC = () => {
       </div>
       <div className="w-full relative">
       <div className="flex h-10">
-        <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">
+        <div className={`h-full p-2 ${appState.mode == 'dark' ? "!bg-[#313334] border-[#f2f4f538] " : ``} bg-slate-50 border border-r-0 rounded-md rounded-r-none`}>
           <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
         </div>
         <input
           ref={searchInputRef}
-          className="custom-input"
+          className={` ${appState.mode == 'dark' ? "!bg-[#313334] !border-[#f2f4f538] " : ``}custom-input`}
           value={search}
           onChange={handleSearch}
           onKeyDown={handleKeyDown}
@@ -180,15 +187,19 @@ export default Header;
 export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
   const { t } = useTranslation();
 
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+
   return (
     <div
       className={`${isOpen ? "max-h-[300px]" : "h-0"
         } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
     >
-      <div className="flex flex-col">
+      <div className={`flex flex-col ${appState.mode == 'dark' ? "!bg-[#313334] " : ``} `}>
         {searchResults.length > 0 ? (
           searchResults.map((item, idx) => (
-            <div className="w-full p-1" key={`SR_${idx}`}>
+            <div className={`w-full p-1 `} key={`SR_${idx}`}>
               <p
                 className={`text-[13px] rounded-lg p-2 cursor-pointer ${idx === selectedIndex
                   ? "bg-primary text-white"

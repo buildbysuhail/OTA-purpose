@@ -108,12 +108,15 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
     userSession?.userTypeCode,
     userSession?.countryId,
   ]);
+   const appState = useAppSelector(
+      (state: RootState) => state.AppState.appState
+    );
 
   return (
-    <div className="w-auto bg-gray-50 rounded-lg p-5 border flex flex-grow ">
+    <div className={` w-auto bg-gray-50 ${appState.mode == 'dark' ? "!bg-[#313334] border-[#f2f4f538] " : ``} rounded-lg p-5 border flex flex-grow `}>
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
-          <p className="text-sm font-medium text-black  ">{t(data?.title)}</p>
+          <p className={`text-sm font-medium ${appState.mode == 'dark' ? "text-white " : ``} text-black  `}>{t(data?.title)}</p>
         </div>
         <div className={`grid grid-cols-${data?.columns ? data?.columns : 1}`}>
           {distributedItems.map((columnItems: any, idx: number) => (
@@ -128,7 +131,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
                       </p>
                     ) : (
                       <p
-                        className="text-xs cursor-pointer hover:text-accent transition-all ease-in-out p-1 hover:bg-gray-400 hover:rounded-[5px] text-black"
+                        className={` text-xs cursor-pointer hover:text-accent transition-all ease-in-out p-1 hover:bg-gray-400 hover:rounded-[5px] ${appState.mode == 'dark' ? "text-white " : ``} text-black `}
                         onClick={() => {
                           route?.path && route?.type === "link"
                             ? navigate(route?.path)

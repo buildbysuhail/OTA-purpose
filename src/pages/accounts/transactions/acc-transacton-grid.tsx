@@ -6,6 +6,7 @@ import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import { ActionType } from "../../../redux/types";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -582,7 +583,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 columns={columns}
-                dataUrl={`${urls.acc_transaction_base}${transactionType}/List`}
+                dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
+                method={ActionType.GET}
                 // postData={{voucherType: voucherType, transactionType: transactionType}} 
                 gridHeader={t("Transactions")}
                 gridId="transaction-grid"

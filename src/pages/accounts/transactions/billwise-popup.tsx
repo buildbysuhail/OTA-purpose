@@ -1,12 +1,11 @@
 import { FC, Fragment, useEffect, useState } from "react";
-import { DataGrid, Toolbar } from "devextreme-react";
+import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
 import {
   Column,
   Paging,
   Scrolling,
   DataGridTypes,
   ColumnFixing,
-  LoadPanel,
   FilterRow,
   SearchPanel,
   Item,
@@ -14,16 +13,16 @@ import {
   TotalItem,
   KeyboardNavigation,
 } from "devextreme-react/cjs/data-grid";
-import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
-import { accFormStateBillWiseRowUpdate } from "./reducer";
-import { BillwiseData } from "./acc-transaction-types";
 import _cloneDeep from "lodash/cloneDeep";
+import { CheckCircle2 } from "lucide-react";
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+
 interface BillWisePopupProps {
   isMaximized?: boolean;
-  modalHeight?: any; // Add isMaximized as an optional prop
+  modalHeight?: any;
 }
 
 const BillWisePopup: FC<BillWisePopupProps> = ({
@@ -33,7 +32,9 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
-  const [store, setStore] = useState<any>(JSON.parse(JSON.stringify(formState.billwiseData)));
+  const [store, setStore] = useState<any>(
+    JSON.parse(JSON.stringify(formState.billwiseData))
+  );
 
   useEffect(() => {
     let wh = modalHeight;
@@ -45,23 +46,34 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
     setStore(clonedData);
   }, [formState.billwiseData]);
-  const handleSelectionChange = (e: any) => {
-  
-  };
+  const handleSelectionChange = (e: any) => {};
 
   const [enterKeyAction, setEnterKeyAction] =
     useState<DataGridTypes.EnterKeyAction>("startEdit");
   const [enterKeyDirection, setEnterKeyDirection] =
     useState<DataGridTypes.EnterKeyDirection>("row");
+
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
-
     setStore((prevStore: any) =>
       prevStore.map((item: any) =>
         item.slNo === updatedRow.slNo ? updatedRow : item
       )
     );
     e.newData = updatedRow;
+  };
+
+  const handleCheckboxChange = (checked: boolean, rowData: any) => {
+    const updatedStore = store.map((item: any) =>
+      item.slNo === rowData.slNo
+        ? {
+            ...item,
+            isSelected: checked,
+            billwiseAmount: checked ? item.amount : 0,
+          }
+        : item
+    );
+    setStore(updatedStore);
   };
 
   //  ==========================================================================================
@@ -73,6 +85,34 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
             <div className="">
               {formState.row.amount}
               <div className="grid grid-cols-1 gap-3">
+                {/* <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
+                    {formState.ledgerData?.imageUrl ? (
+                      <img
+                        src={formState.ledgerData?.partyPhoto || profile}
+                        alt="Ledger"
+                        className="w-8 h-8 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="text-lg font-medium text-gray-600">
+                        {formState.ledgerData?.name?.[0] || "-"}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {formState.row.ledgerName}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">
+                        {formState.ledgerData?.code || "-"}
+                      </span>
+                      {formState.ledgerData?.isVerified && (
+                        <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      )}
+                    </div>
+                  </div>
+                </div> */}
                 Safvan {store.length}
                 <DataGrid
                   id="TestPopup"
@@ -117,6 +157,25 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={50}
                   />
+
+                  <Column
+                    dataField="isSelected"
+                    caption="Select"
+                    dataType="boolean"
+                    width={70}
+                    allowFiltering={false}
+                    allowSearch={false}
+                    allowEditing={true}
+                    cellRender={(cellData: any) => (
+                      <CheckBox
+                        value={cellData.value}
+                        onValueChanged={(e) => {
+                          handleCheckboxChange(e.value, cellData.data);
+                        }}
+                      />
+                    )}
+                  />
+
                   <Column
                     dataField="voucherType"
                     caption="VoucherType"
@@ -126,6 +185,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={100}
                   />
+
                   <Column
                     dataField="voucherNumber"
                     caption="BillNo"
@@ -135,6 +195,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={150}
                   />
+
                   <Column
                     dataField="transactionDate"
                     caption="TransactionDate"
@@ -144,6 +205,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={100}
                   />
+
                   <Column
                     dataField="amount"
                     caption="Amount"
@@ -153,6 +215,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={100}
                   />
+
                   <Column
                     dataField="adjustedAmount"
                     caption="Adjusted Amount"
@@ -162,6 +225,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={150}
                   />
+
                   <Column
                     dataField="billwiseAmount"
                     caption="Amount To Set"
@@ -171,6 +235,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={100}
                   />
+
                   <Column
                     dataField="referenceNumber"
                     caption="ReferenceNumber"
@@ -180,6 +245,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={150}
                   />
+
                   <Column
                     dataField="financialYearID"
                     caption="FinancialYearID"
@@ -189,6 +255,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={130}
                   />
+
                   <Column
                     dataField="formType"
                     caption="FormType"
@@ -197,6 +264,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowSearch={true}
                     allowEditing={true}
                   />
+
                   <Column
                     dataField="voucherPrefix"
                     caption="VoucherPrefix"
@@ -206,6 +274,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     allowEditing={true}
                     width={130}
                   />
+
                   <Column
                     dataField="partyName"
                     caption="PartyName"
@@ -216,6 +285,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     width={150}
                     visible={false}
                   />
+
                   <Column
                     dataField="referenceDate"
                     caption="Reference Date"
@@ -226,6 +296,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     width={100}
                     visible={false}
                   />
+
                   <Column
                     dataField="FormType"
                     caption="Form Type"
@@ -236,6 +307,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     width={100}
                     visible={false}
                   />
+
                   <Column
                     dataField="balance"
                     caption="Balance After"
@@ -246,6 +318,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     width={150}
                     visible={false}
                   />
+
                   <Column
                     dataField="drCr"
                     caption="DrCr"
@@ -256,6 +329,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     width={150}
                     visible={false}
                   />
+
                   <Toolbar>
                     <Item name="searchPanel" />
                   </Toolbar>
@@ -263,27 +337,31 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   {/* Add Summary for "Amount" column */}
                   <Summary>
                     <TotalItem
-                      column="Amount"
+                      column="amount"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
+
                     <TotalItem
-                      column="Adjusted Amount"
+                      column="adjustedAmount"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
+
                     <TotalItem
-                      column="Balance"
+                      column="balance"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
+
                     <TotalItem
-                      column="Amount to Set"
+                      column="billwiseAmount"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
+
                     <TotalItem
-                      column="Balance After"
+                      column="balance"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
@@ -291,10 +369,11 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                 </DataGrid>
               </div>
               <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
-                <strong className="mr-3">Net Adjustment </strong>
+                <strong className="mr-3">Net Adjustment</strong>
                 <span className="">
-                  {formState.billwiseData?.reduce(
-                    (total, item) => total + (item.AmountToAssign || 0),
+                  {store.reduce(
+                    (total: number, item: any) =>
+                      total + (item.billwiseAmount || 0),
                     0
                   )}
                 </span>

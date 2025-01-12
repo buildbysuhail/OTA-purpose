@@ -413,6 +413,7 @@ export interface AccUserConfig {
   counterAssignedCashLedgerId: number
 }
 export interface AccTransactionFormState {
+  store: any;
   formCode: string; // FORMCODE
   isCleared: boolean; // IsCleared
   isBounced: boolean; // IsBounced

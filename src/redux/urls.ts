@@ -273,6 +273,7 @@ const Urls = {
   acc_reports_closing_stock_details: "/Accounts/RptProfitAndLoss/ClosingStockDetails/",
   acc_reports_income_expense_report: "/Accounts/RptIncomeExpense/Expense/",
   acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
+  acc_reports_income_expense_statement: "/Accounts/RptIncomeExpense/IncomeExpenseStmt/",
   acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
   acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
   acc_reports_cash_bank_flow_detailed: "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",

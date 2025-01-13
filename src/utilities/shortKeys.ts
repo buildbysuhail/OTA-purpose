@@ -140,17 +140,17 @@ const handleKeyPress = (event: KeyboardEvent) => {
 let isInitialized = false;
 
 export const initializeShortKeys = () => {
-  if (!isInitialized) {
-    document.addEventListener('keydown', handleKeyPress);
-    isInitialized = true;
-  }
+  // if (!isInitialized) {
+  //   document.addEventListener('keydown', handleKeyPress);
+  //   isInitialized = true;
+  // }
 };
 
 export const cleanupShortKeys = () => {
-  if (isInitialized) {
-    document.removeEventListener('keydown', handleKeyPress);
-    isInitialized = false;
-  }
+  // if (isInitialized) {
+  //   document.removeEventListener('keydown', handleKeyPress);
+  //   isInitialized = false;
+  // }
 };
 
 export const getFocusableElements = () => {

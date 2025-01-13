@@ -771,7 +771,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               pattern={pattern}
               step={step}
               accept={accept}
-              onKeyDown={disableEnterNavigation == true ? undefined :onKeyDown != undefined ? onKeyDown : handleNavigation}
+              onKeyDown={(e) => {
+                debugger; disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)  : handleNavigation
+              }}
               onKeyUp={onKeyUp}
               data-skip={skip}
               data-jump-to={jumpTo}

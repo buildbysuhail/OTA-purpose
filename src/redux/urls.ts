@@ -334,6 +334,8 @@ inv_reports_stock_flow:"",
 
   //Transaction
     // common
+    
+    log_user_action: "/Accounts/",
     get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
     get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
     get_and_set_transaction_edit_mode: "/Core/TransactionBase/GetAndSetTransactionEditMode/",

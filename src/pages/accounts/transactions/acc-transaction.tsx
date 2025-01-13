@@ -155,8 +155,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     enableCombo,
     disableCombo,
     handleEdit,
-    printVoucher,
     clearControls,
+    printCheque,
+    printVoucher,
+    printPaymentReceiptAdvice,
+    handleLoadByRefNo
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -984,19 +987,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const goToPreviousPage = () => {
     window.history.back();
   };
-
-      const appState = useAppSelector(
-        (state: RootState) => state.AppState?.appState
-      );
-
-  // const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
-  // const [bgColor, setBgColor] = useState<string>(appState.mode == 'dark' ? (isFocused == true ? '#ffffff' : '#ffffff1a') : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `)
-   
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className=  {`${appState.mode == 'dark' ? "!bg-black" : ``} bg-white space-y-6 p-4`}>
+        <div className="bg-white space-y-6 p-4">
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -1112,7 +1107,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        printVoucher(formState.transaction);
+                        printVoucher();
                       }}
                     >
                       <Printer className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
@@ -1153,7 +1148,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
 
           <div className="grid grid-cols-2 gap-8 !mt-12">
-            <div className= {`${appState.mode == 'dark' ? "bg-black" : ``}  `}>
+            <div className="">
               <div className="grid grid-cols-1 leading-none lg:w-3/4">
                 <div className="flex items-center gap-2">
                   {formState.formElements.voucherPrefix.visible && (
@@ -1183,7 +1178,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         ref={voucherNumberRef}
                         id="voucherNumber"
                         onKeyUp={(e) => {
-                          handleFieldKeyDown("voucherNumber", e);
+                          handleKeyDown("voucherNumber", e);
                         }}
                         label={formState.formElements.voucherNumber.label}
                         value={formState.transaction.master.voucherNumber}
@@ -1400,6 +1395,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="grid grid-cols-1 leading-none lg:full">
                 <div className="grid grid-cols-2 gap-2">
                   {formState.formElements.referenceNumber.visible && (
+                   <>
                     <ERPInput
                       id="referenceNumber"
                       label={formState.formElements.referenceNumber.label}
@@ -1417,6 +1413,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.pnlMasters?.disabled
                       }
                     />
+                    <ERPButton id="btnLoadByRef" title="loadByRef" onClick={handleLoadByRefNo}></ERPButton>
+                   </>
                   )}
                   {formState.formElements.transactionDate.visible && (
                     <ERPDateInput
@@ -1475,6 +1473,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           })
                         )
                       }
+                      onSelectItem={(e) => {
+                        handleKeyDown("ledgerCode", e);
+                      }}
                       field={{
                         valueKey: "id",
                         labelKey: "name",
@@ -1576,7 +1577,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   value={formState.row.ledgerCode}
                   ref={ledgerCodeRef}
                   onKeyDown={(e) => {
-                    handleFieldKeyDown("ledgerCode", e);
+                    handleKeyDown("ledgerCode", e);
                   }}
                   onChange={(e) =>
                     dispatch(
@@ -1651,7 +1652,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   type="number"
                   value={formState.row.amount}
                   onKeyDown={(e) => {
-                    handleFieldKeyDown("amount", e);
+                    handleKeyDown("amount", e);
                   }}
                   onChange={(e) =>
                     dispatch(
@@ -1894,7 +1895,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-            onKeyDown={(e) => handleFieldKeyDown("grid", e)}
+            onKeyDown={(e) => handleKeyDown("grid", e)}
             onSelectionChanged={onSelectionChanged}
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows

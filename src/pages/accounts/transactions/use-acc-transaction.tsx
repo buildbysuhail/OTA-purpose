@@ -34,6 +34,7 @@ import {
   AccTransactionFormState,
   AccTransactionMaster,
   AccTransactionRow,
+  PrintTransProps,
 } from "./acc-transaction-types";
 import {
   isNullOrUndefinedOrEmpty,
@@ -42,6 +43,8 @@ import {
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { validateTransactionDate } from "./functions";
+import { printCheque_AccTransaction } from "./acc-print-trans-service";
+import { useAccPrint } from "./use-print";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -77,6 +80,9 @@ export const useAccTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.AppState.softwareDate
   );
+  const {printVoucher,
+    printCheque,
+    printPaymentReceiptAdvice} = useAccPrint()
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -174,38 +180,7 @@ export const useAccTransaction = (
       return null;
     }
   };
-  const deleteAccTransVoucher = async (
-    usingManualInvNumber: boolean = false
-  ) => {
-    // clearControlForNew();
-    const params = {
-      VoucherNumber: formState.transaction?.master?.voucherNumber,
-      VoucherPrefix: formState.transaction?.master?.voucherPrefix || "",
-      VoucherType: formState.transaction?.master?.voucherType || "",
-      FormType: formState.transaction?.master?.formType || "",
-      MannualInvoiceNumber:
-        formState.transaction?.master?.referenceNumber || "",
-      SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
-    };
-    if (formState.transaction?.master?.accTransMasterID > 0) {
-      const res = await appDispatch(
-        deleteAccVoucher({
-          accTransactionMasterID:
-            formState.transaction?.master?.accTransMasterID,
-          transactionType: transactionType,
-        })
-      ).unwrap();
-      if (res != undefined && res.isOk != true) {
-        ERPAlert.show({
-          title: "failed",
-          text: res.message,
-          onConfirm: () => {
-            return false;
-          },
-        });
-      }
-    }
-  };
+ 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode() {
     if (formState.isEdit) {
@@ -383,8 +358,7 @@ export const useAccTransaction = (
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
-  const PrintPaymentReceiptAdvice = (voucher: AccTransactionData) => {};
-  const printVoucher = (voucher: AccTransactionData) => {};
+ 
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -474,9 +448,9 @@ export const useAccTransaction = (
             userSession.dbIdValue.trim() == "BAHAMDOON" &&
             formState.isBahamdoonPOSReceipt != true
           ) {
-            PrintPaymentReceiptAdvice(params);
+            printPaymentReceiptAdvice();
           } else {
-            printVoucher(params);
+            printVoucher();
           }
         }
         if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
@@ -867,6 +841,8 @@ export const useAccTransaction = (
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
       handleNarrationKeyDown(key);
+    } else if (field === "employee") {
+      handleEmployeeKeyDown(key);
     }
   };
   const handleGridKeyDown = (
@@ -942,6 +918,10 @@ export const useAccTransaction = (
         focusDrCr();
       }
     }
+  };
+  const handleEmployeeKeyDown = (e: any) => {
+    // Handle Enter key
+    focusLedgerCode()
   };
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
@@ -1022,8 +1002,7 @@ export const useAccTransaction = (
       }
     }));
   }
-  const handleDelete = async () => {
-  }
+ 
   // Edit button handler
   const handleEdit = async () => {
     const validateTransactionDateRes = 
@@ -1090,34 +1069,57 @@ export const useAccTransaction = (
       console.error('Error handling edit:', error);
     }
   };
+  
+  // Delete button handler
+  const deleteAccTransVoucher = async () => {
+    if (formState.transaction.master?.isLocked) {
+      ERPAlert.show({
+        title: 'Warning',
+        text: 'This voucher is locked. Cannot be edited/deleted.',
+        icon: 'warning'
+      });
+      return;
+    }
 
-  // // Delete button handler
-  // const handleDelete = async () => {
-  //   if (formState.isLocked) {
-  //     ERPAlert.show({
-  //       title: 'Warning',
-  //       text: 'This voucher is locked. Cannot be edited/deleted.',
-  //       icon: 'warning'
-  //     });
-  //     return;
-  //   }
+    ERPAlert.show({
+      title: 'Confirm Delete',
+      text: 'Are you sure you want to delete this voucher?',
+      icon: 'warning',
+      confirmButtonText: 'Yes, delete it!',
+      onConfirm: async () => {
+        try {
+          if (formState.transaction?.master?.accTransMasterID > 0) {
+            const res = await appDispatch(
+              deleteAccVoucher({
+                accTransactionMasterID:
+                  formState.transaction?.master?.accTransMasterID,
+                transactionType: transactionType,
+              })
+            ).unwrap();
+            if (res != undefined && res.isOk != true) {
+              ERPAlert.show({
+                title: "failed",
+                text: res.message,
+                onConfirm: () => {
+                  return false;
+                },
+              });
+            }
+          }
+          clearControls();
+        } catch (error) {
+          console.error('Error deleting voucher:', error);
+        }
+      }
+    });
+  };
+  const handleLoadByRefNo = useCallback(() => {
+    if (formState.transaction.master.referenceNumber) {
+      loadAccTransVoucher(true);
+    }
+  }, [loadAccTransVoucher]);
 
-  //   ERPAlert.show({
-  //     title: 'Confirm Delete',
-  //     text: 'Are you sure you want to delete this voucher?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes, delete it!',
-  //     onConfirm: async () => {
-  //       try {
-  //         await deleteAccTransVoucher();
-  //         clearControls();
-  //       } catch (error) {
-  //         console.error('Error deleting voucher:', error);
-  //       }
-  //     }
-  //   });
-  // };
+
 
   return {
     undoEditMode,
@@ -1136,7 +1138,9 @@ export const useAccTransaction = (
     enableCombo,
     disableCombo,
     handleEdit,
-    handleDelete,
-    printVoucher
+    handleLoadByRefNo,
+    printCheque,
+    printVoucher,
+    printPaymentReceiptAdvice
   };
 };

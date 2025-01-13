@@ -587,3 +587,12 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formElements: initialFormElements,
   saving: false
 }
+export interface PrintTransProps {
+  masterAccount: string;
+  details: AccTransactionRow[];
+  voucherType: string;
+  formType: string;
+  vrPrefix: string;
+  vrNumber: string;
+  isPrintPreview: boolean;
+}

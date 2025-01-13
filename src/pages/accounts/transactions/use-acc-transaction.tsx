@@ -856,7 +856,10 @@ export const useAccTransaction = (
     applicationSettings?: ApplicationSettingsType
   ) => {
     debugger;
-    if (field === "grid") {
+    if (field === "test") {
+      focusLedgerCombo();
+    } 
+    else if (field === "grid") {
       handleGridKeyDown(key, gridRef, applicationSettings);
     } else if (field === "ledgerCode") {
       handleLedgerCodeKeyDown(key);

@@ -106,11 +106,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const btnAddRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
-  const ledgerIdRef = useRef<HTMLInputElement>(null);
+  const ledgerIdRef = useRef<any>(null);
   const masterAccountRef = useRef<HTMLInputElement>(null);
   const costCenterRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
+  const chequeNumberRef = useRef<HTMLInputElement>(null);
+  const remarksRef = useRef<HTMLInputElement>(null);
   const drCrRef = useRef<HTMLInputElement>(null); // Example for a dropdown/select
   const narrationRef = useRef<HTMLInputElement>(null); // Example for a textarea
   const erpGridRef = useRef<any>(null); // Reference to ERPDevGrid
@@ -164,15 +167,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     createNewVoucher,
   } = useAccTransaction(
     transactionType ?? "",
-    btnSaveRef,
-    ledgerCodeRef,
-    ledgerIdRef,
-    masterAccountRef,
-    costCenterRef,
-    amountRef,
-    drCrRef,
-    narrationRef,
-    voucherNumberRef
+  btnSaveRef,
+  btnAddRef,
+  ledgerCodeRef,
+  ledgerIdRef,
+  masterAccountRef,
+  costCenterRef,
+  amountRef,
+  drCrRef,
+  narrationRef,
+  voucherNumberRef,
+  chequeNumberRef,
+  remarksRef
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -1684,7 +1690,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div> */}
                 </>
               )}
-
+<ERPButton title="test" onClick={() => handleFieldKeyDown("test","")}></ERPButton>
               {formState.formElements.amount.visible && (
                 <ERPInput
                   ref={amountRef}
@@ -1766,6 +1772,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ref={narrationRef}
                   id="narration"
                   className="w-full"
+                  disableEnterNavigation
                   label={formState.formElements.narration.label}
                   value={formState.row.narration}
                   onChange={(e) =>

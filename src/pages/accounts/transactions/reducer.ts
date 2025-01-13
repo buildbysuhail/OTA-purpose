@@ -59,7 +59,7 @@ const accTransactionSlice = createSlice({
       state.row.accTransactionDetailId = 0;
       state.previousNarration = "";
       state.row.checkStatus = "P";
-      state.row.exchangeRate = 1;
+      state.transaction.master.currencyRate = 1;
       state.row.currencyId = 0;
       state.transaction.master.referenceNumber = "";
       state.row.chqDate = new Date().toISOString();
@@ -436,7 +436,7 @@ const accTransactionSlice = createSlice({
           ...state.transaction.master,
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
-          currencyRate: payload.details[0].exchangeRate,
+          currencyRate: payload.master.currencyRate,
           prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
         };

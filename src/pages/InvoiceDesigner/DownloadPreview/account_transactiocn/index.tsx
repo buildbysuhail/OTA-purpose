@@ -11,29 +11,9 @@ export interface AccountTransactionProps {
   template?: TemplateState;
   currentBranch?: any;
 }
-const AccountTransactionsTemplate = ({ data, template, currentBranch }: AccountTransactionProps) => {
-  // const [generalBackGroundStyle, setGeneralBackGroundStyle] = useState<any>({
-  //   backgroundRepeat: "no-repeat",
-  //   backgroundColor: template?.propertiesState?.bg_color || "#fff",
-  //   backgroundPosition:
-  //     template?.propertiesState?.bg_image_position ?? "top left",
-  // });
-  // console.log(template?.propertiesState?.orientation,"property state");
-  
-  // useEffect(() => {
-    
-  //   setGeneralBackGroundStyle((previous: any) => ({
-  //     ...previous,
-  //     // backgroundImage: template?.background_image
-  //     //   ? `url(${template?.background_image})`
-  //     //   : "",
-  //     backgroundRepeat: "no-repeat",
-  //     backgroundColor: template?.propertiesState?.bg_color,
-  //     backgroundPosition:
-  //       template?.propertiesState?.bg_image_position ?? "top left",
-  //   }));
-  // }, [template, template?.propertiesState?.bg_image_position]);
 
+
+const AccountTransactionsTemplate = ({ data, template, currentBranch }: AccountTransactionProps) => {
   let paperWidth=500, paperHeight=500;
   
   const paperSize = template?.propertiesState?.pageSize || "A4";
@@ -71,8 +51,6 @@ const paddingTop = template?.propertiesState?.padding?.top || 10;
 const paddingBottom = template?.propertiesState?.padding?.bottom || 10
 const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
 
-
-
 return (
   <Document>
     <FontRegistration />
@@ -81,44 +59,60 @@ return (
       orientation={pageOrientation}
       wrap
     >
-      {/* page Header */}
-
-
-      {/* Container for Background Image and Content */}
-      <View style={{
-         position: 'relative', width: '100%', height: '100%' ,
-         backgroundColor: template?.propertiesState?.bg_color || "#fff",
-         }}>
-        {/* Background Image */}
-        {template?.background_image && (
-          <Image
-            src={template.background_image}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: -20, 
-            }}
-          />
-        )}
-
-        {/* Content */}
+      {/* Main Container */}
+      <View style={{ flex: 1, flexDirection: 'column', width: '100%', height: '100%' }}>
+        {/* Header */}
         <View style={{
-           position: 'relative', zIndex: 50 ,
-           padding:`${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
-           }}>
-        
-          <Header data={data} template={template} currentBranch={currentBranch}/>
-          {/* Add other components like Table, Header, Footer here */}
+          backgroundColor: template?.headerState?.bgColor || "#275297",
+          height: `${paddingTop}pt`, // Fixed height for the header
+          width: '100%',
+        }}>
+          {/* Add header content here if needed */}
+        </View>
+
+        {/* Main Content */}
+        <View style={{
+          flex: 1, // Takes up remaining space
+          position: 'relative',
+          backgroundColor: template?.propertiesState?.bg_color || "#fff",
+          
+        }}>
+          {/* Background Image */}
+          {template?.background_image && (
+            <Image
+              src={template.background_image}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: -20,
+              }}
+            />
+          )}
+
+          {/* Content */}
+          <View style={{ position: 'relative', zIndex: 50 ,
+            padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
+          }}>
+            <Header data={data} template={template} currentBranch={currentBranch} />
+            <Table data={data} template={template} />
+            {/* Add other components like Table, Header, Footer here */}
+          </View>
+        </View>
+
+        {/* Footer */}
+        <View style={{
+          backgroundColor: template?.footerState?.bg_color || "#275297",
+          height: `${paddingBottom}pt`, // Fixed height for the footer
+          width: '100%',
+        }}>
+          {/* Add footer content here if needed */}
         </View>
       </View>
-      {/* page footer */}
-      
     </Page>
   </Document>
 );
 };
-
 export default AccountTransactionsTemplate;

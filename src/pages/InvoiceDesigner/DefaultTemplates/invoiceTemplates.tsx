@@ -4,6 +4,36 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Standard Template  ################ */
+      accTableState:{
+        showInvoiceNumber: true,
+        InvoiceNumberLabel: "Invoice Number",
+        InvoiceNumberWidth: "15%",
+      
+        // Invoice Date Fields
+        showInvoiceDate: true,
+        InvoiceDateLabel: "Invoice Date",
+        InvoiceDateWidth: "15%",
+      
+        // Invoice Amount Fields
+        showInvoiceAmount: true,
+        InvoiceAmountLabel: "Invoice Amount",
+        InvoiceAmountWidth: "20%",
+      
+        // Withholding Tax Fields
+        showWithholdingTax: true,
+        WithholdingTaxLabel: "Withholding Tax",
+        WithholdingTaxWidth: "15%",
+      
+        // TCS Amount Fields
+        showTCSAmount: true,
+        TCSAmountLabel: "TCS Amount",
+        TCSAmountWidth: "15%",
+      
+        // Payment Amount Fields
+        showPaymentAmount: true,
+        PaymentAmountLabel: "Payment Amount",
+        PaymentAmountWidth: "20%",
+      },
       totalState: {
         showTotalSection: true,
         showSubTotalLabel: true,
@@ -106,6 +136,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         taxLabel: "Tax",
         taxWidth: "10%",
       },
+   
     },
     is_default: true,
     is_primary: true,
@@ -114,7 +145,36 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Retail- Standard Template  ################ */
-
+      accTableState:{
+        showInvoiceNumber: true,
+        InvoiceNumberLabel: "Invoice Number",
+        InvoiceNumberWidth: "15%",
+      
+        // Invoice Date Fields
+        showInvoiceDate: true,
+        InvoiceDateLabel: "Invoice Date",
+        InvoiceDateWidth: "15%",
+      
+        // Invoice Amount Fields
+        showInvoiceAmount: true,
+        InvoiceAmountLabel: "Invoice Amount",
+        InvoiceAmountWidth: "20%",
+      
+        // Withholding Tax Fields
+        showWithholdingTax: true,
+        WithholdingTaxLabel: "Withholding Tax",
+        WithholdingTaxWidth: "15%",
+      
+        // TCS Amount Fields
+        showTCSAmount: true,
+        TCSAmountLabel: "TCS Amount",
+        TCSAmountWidth: "15%",
+      
+        // Payment Amount Fields
+        showPaymentAmount: true,
+        PaymentAmountLabel: "Payment Amount",
+        PaymentAmountWidth: "20%",
+      },
       totalState: {
         balanceFontSize: 8,
         shippingLabel: "Shipping",

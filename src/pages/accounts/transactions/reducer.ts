@@ -59,7 +59,7 @@ const accTransactionSlice = createSlice({
       state.row.accTransactionDetailId = 0;
       state.previousNarration = "";
       state.row.checkStatus = "P";
-      state.row.exchangeRate = 1;
+      state.transaction.master.currencyRate = 1;
       state.row.currencyId = 0;
       state.transaction.master.referenceNumber = "";
       state.row.chqDate = new Date().toISOString();
@@ -271,29 +271,11 @@ const accTransactionSlice = createSlice({
       }
     },
 
-    // Update a specific row in the transaction details
-    accFormStateBillWiseRowUpdate: (
-      state,
-      action: PayloadAction<{
-        data: any;
-      }>
-    ) => {
-      
-      const _data = action.payload.data
-      const serializedRow: any = {
-        ..._data
-      };
-      const index = state.billwiseData?.findIndex(
-        (x) => x.SiNo === _data.SiNo
-      );
-      if (index !== -1) {
-        
-        state.billwiseData[index] = { ...state.billwiseData[index], ...serializedRow }; // Update existing row
-      } else {
-        ERPToast.show(
-          `Row with slNo ${_data.slNo} not found. Cannot edit row.`
-        );
-      }
+    accFormStateClearBillWiseInDetails: (state) => {
+      // Iterate over all rows in details
+      state.transaction.details?.forEach((row) => {
+        row.billwiseDetails = "";
+      });
     },
     // Remove a specific row from the transaction details by index
     accFormStateTransactionDetailsRowRemove: (
@@ -454,7 +436,7 @@ const accTransactionSlice = createSlice({
           ...state.transaction.master,
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
-          currencyRate: payload.details[0].exchangeRate,
+          currencyRate: payload.master.currencyRate,
           prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
         };
@@ -642,7 +624,7 @@ export const {
   updateFormElement,
   accFormStateTransactionDetailsSetSlNo,
   loadTempRows,
-  accFormStateBillWiseRowUpdate
+  accFormStateClearBillWiseInDetails
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

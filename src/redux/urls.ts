@@ -172,7 +172,7 @@ const Urls = {
   FinancialYear: "/Core/FinancialYear/",
   DayClose: "/Core/DayClose/",
   Remainder: "/Core/Remainder/",
-  userActionReport: "/Core/UserAction/",
+  userActionReport: "/Core/UserAction/Report",
   currencyExchange: "/Core/ExchangeRates/",
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
@@ -335,7 +335,7 @@ inv_reports_stock_flow:"",
   //Transaction
     // common
     
-    log_user_action: "/Accounts/",
+    log_user_action: "/Core/UserAction/",
     get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
     get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
     get_and_set_transaction_edit_mode: "/Core/TransactionBase/GetAndSetTransactionEditMode/",

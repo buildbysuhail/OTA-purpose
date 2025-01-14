@@ -136,7 +136,6 @@ const Urls = {
   // AccountSettings/Preferences
   updateLanguage: "/Core/Preferences/UpdateLanguage/",
   updatePreference: "/Core/Preferences/UpdatePreference/",
-  UpdateLocalSettings: "/Core/Preferences/UpdateLocalSettings/",
   updateUserThemes: "/Core/Preferences/UpdateUserThemes/",
   getLanguage: "/Core/Preferences/GetLanguage/",
   getPreference: "/Core/Preferences/GetPreference/",
@@ -217,8 +216,8 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  post_acc_user_config:"/Core/UpdateLocalSettings",
-  get_acc_user_config:"/Core/GetLocalSettings",
+  post_acc_user_config:"/Core/Preferences/UpdateLocalSettings",
+  get_acc_user_config:"/Core/Preferences/GetLocalSettings",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start

@@ -26,15 +26,18 @@ const BankStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) =>
       </div>
       <ERPDataCombobox
         {...getFieldProps("bankLedgerID")}
-        label={t("stock_value")}
+        label={t("bank_ledger")}
         field={{
           id: "bankLedgerID",
           getListUrl: Urls.data_acc_ledgers,
-          params: `ledgerID = 0 & ledgerType=${LedgerType.BankAccount}`,
+          params: `ledgerID=0&ledgerType=${LedgerType.BankAccount}`,
+          // getListUrl: Urls.data_acc_ledgers,
+          // params: `ledgerID = 0 & ledgerType=${LedgerType.BankAccount}`,
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data) => handleFieldChange('bankLedgerID', data.bankLedgerID)}
+        // onChangeData={(data) => handleFieldChange('bankLedgerID', data.bankLedgerID)}
+        onSelectItem={(data) => handleFieldChange({bankLedgerID: data.value,BankLedgerName:data.label})}
       />
 
     </div>
@@ -44,5 +47,5 @@ export default BankStatementReportFilter;
 export const BankStatementReportFilterInitialState = {
   dateFrom: new Date(),
   dateTo: new Date(),
-  bankLedgerID: 21,
+  bankLedgerID: 0,
 };

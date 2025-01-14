@@ -48,9 +48,10 @@ export const deleteAccVoucher = createAsyncThunk<ResponseModel<string>, deleteAc
   }
 );
 export const unlockAccTransactionMaster = createAsyncThunk<any, any>('unlockAccTransactionMaster', async (accTransMasterID) => {
+  debugger;
   const response = await await api.postAsync(
-    `${Urls.unlock_acc_transaction_master}`,
-    accTransMasterID 
+    `${Urls.unlock_acc_transaction_master}${accTransMasterID}`,
+    {} 
   );
   return response;
 });

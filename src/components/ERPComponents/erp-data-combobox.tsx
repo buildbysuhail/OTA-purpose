@@ -53,8 +53,11 @@ interface ERPDataComboboxProps {
   onSelectItem?: (item?: any) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  disableEnterNavigation?: boolean;
+  onKeyDown?: (e: any) => void;
+  onKeyUp?: (e: any) => void;
   field?: {
-    id?: string;
+    id?: string; 
     getListUrl?: string;
     getListUrlDynamic?: (value: any) => string;
     valueKey?: string;
@@ -69,6 +72,7 @@ interface ERPDataComboboxProps {
   value?: any;
   labelDirection?: "horizontal" | "vertical";
   reload?: boolean;
+  changeReload?: (action: boolean) => void;
   required?: boolean;
   className?: string;
   labelInfo?: any;
@@ -396,6 +400,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   onSelectItem,
   onFocus,
   onBlur,
+  onKeyDown,
+  onKeyUp,
+  disableEnterNavigation,
   options,
   field,
   defaultData,
@@ -410,7 +417,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   multiple,
   autoFocus,
   disabled = false,
-  reload = false,
+  reload = undefined,
+  changeReload,
   labelDirection = "vertical",
   labelInfo,
   labelInfoProps,
@@ -463,7 +471,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   const handleBlur = () => {
     setIsFocused(false);
   };
-
+ const [_reload, set_reload] = useState(reload);
+    useEffect(() => {
+      set_reload(reload);
+    }, [reload]);
   useEffect(() => {
     const handleScroll = () => {
       if (isOpen && comboboxRef.current) {
@@ -586,8 +597,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   }, []);
 
   useEffect(() => {
+    debugger;
     console.log(`freezeDataLoad${field?.freezeDataLoad}`);
     console.log(`disabledApiCall${disabledApiCall}`);
+    if (_reload !== undefined && _reload !== true) {
+      return;
+    }
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
@@ -596,7 +611,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
     field?.getListUrlDynamic,
     field?.params,
     field?.freezeDataLoad,
-    reload,
+    _reload,
     disabledApiCall,
   ]);
 
@@ -623,6 +638,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
+      if (_reload === true) {
+        changeReload && changeReload(false);
+      }
       setLoading(false);
     }
   };
@@ -701,46 +719,46 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   };
 
   const handleKeyDownEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const formInputs = Array.from(
-        document.querySelectorAll(
-          "input:not([disabled]), select:not([disabled]), textarea:not([disabled])"
-        )
-      );
+    // if (e.key === "Enter") {
+    //   e.preventDefault();
+    //   const formInputs = Array.from(
+    //     document.querySelectorAll(
+    //       "input:not([disabled]), select:not([disabled]), textarea:not([disabled])"
+    //     )
+    //   );
 
-      const currentIndex = formInputs.indexOf(e.target as HTMLInputElement);
-      // Handle jump-to logic
-      const jumpToAttr = (e.target as HTMLElement).getAttribute("data-jump-to");
-      if (jumpToAttr) {
-        const jumpTargetElement = formInputs.find(
-          (el) => el.getAttribute("data-jump-target") === jumpToAttr
-        ) as HTMLElement;
-        if (jumpTargetElement) {
-          jumpTargetElement.focus();
-          return;
-        }
-      }
+    //   const currentIndex = formInputs.indexOf(e.target as HTMLInputElement);
+    //   // Handle jump-to logic
+    //   const jumpToAttr = (e.target as HTMLElement).getAttribute("data-jump-to");
+    //   if (jumpToAttr) {
+    //     const jumpTargetElement = formInputs.find(
+    //       (el) => el.getAttribute("data-jump-target") === jumpToAttr
+    //     ) as HTMLElement;
+    //     if (jumpTargetElement) {
+    //       jumpTargetElement.focus();
+    //       return;
+    //     }
+    //   }
 
-      const isShiftKey = e.shiftKey;
-      let nextIndex = isShiftKey ? currentIndex - 1 : currentIndex + 1;
-      // Find next non-skipped input
-      while (nextIndex >= 0 && nextIndex < formInputs.length) {
-        const nextElement = formInputs[nextIndex] as HTMLElement;
-        const skipAttr = nextElement.getAttribute("data-skip");
-        if (skipAttr !== "true") {
-          break;
-        }
-        nextIndex = isShiftKey ? nextIndex - 1 : nextIndex + 1;
-      }
-      // Focus next available input if found
-      if (nextIndex >= 0 && nextIndex < formInputs.length) {
-        (formInputs[nextIndex] as HTMLElement).focus();
-      }
-    }
+    //   const isShiftKey = e.shiftKey;
+    //   let nextIndex = isShiftKey ? currentIndex - 1 : currentIndex + 1;
+    //   // Find next non-skipped input
+    //   while (nextIndex >= 0 && nextIndex < formInputs.length) {
+    //     const nextElement = formInputs[nextIndex] as HTMLElement;
+    //     const skipAttr = nextElement.getAttribute("data-skip");
+    //     if (skipAttr !== "true") {
+    //       break;
+    //     }
+    //     nextIndex = isShiftKey ? nextIndex - 1 : nextIndex + 1;
+    //   }
+    //   // Focus next available input if found
+    //   if (nextIndex >= 0 && nextIndex < formInputs.length) {
+    //     (formInputs[nextIndex] as HTMLElement).focus();
+    //   }
+    // }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<any>) => {
     if (!isOpen) {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         setIsOpen(true);
@@ -1272,7 +1290,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               required={required}
               variant={_variant}
               sx={sizeStyles.mui}
-              onKeyDown={handleKeyDownEnter}
+              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined) : handleKeyDown(e)}
+              onKeyUp={onKeyUp}
               data-skip={skip}
               data-jump-to={jumpTo}
               data-jump-target={jumpTarget}
@@ -1432,7 +1451,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 e.stopPropagation();
                 !disabled && setIsOpen(!isOpen);
               }}
-              onKeyDown={handleKeyDown}
+              onKeyDown = { (e) =>{ if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {setIsOpen(true);}
+                 disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown(e)}}
+              onKeyUp={onKeyUp}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}

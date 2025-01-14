@@ -77,6 +77,7 @@ const Urls = {
   data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
+
   data_company_id: "/Core/Branch/GetBranchData",
 
   // Auth
@@ -172,8 +173,9 @@ const Urls = {
   FinancialYear: "/Core/FinancialYear/",
   DayClose: "/Core/DayClose/",
   Remainder: "/Core/Remainder/",
-  userActionReport: "/Core/UserAction/",
+  userActionReport: "/Core/UserAction/Report",
   currencyExchange: "/Core/ExchangeRates/",
+  currencyExchangeRate:"/Core/ExchangeRates/GetCurrencyExchangeRate",
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
@@ -273,6 +275,7 @@ const Urls = {
   acc_reports_closing_stock_details: "/Accounts/RptProfitAndLoss/ClosingStockDetails/",
   acc_reports_income_expense_report: "/Accounts/RptIncomeExpense/Expense/",
   acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
+  acc_reports_income_expense_statement: "/Accounts/RptIncomeExpense/IncomeExpenseStmt/",
   acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
   acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
   acc_reports_cash_bank_flow_detailed: "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",
@@ -335,7 +338,7 @@ inv_reports_stock_flow:"",
   //Transaction
     // common
     
-    log_user_action: "/Accounts/",
+    log_user_action: "/Core/UserAction/",
     get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
     get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
     get_and_set_transaction_edit_mode: "/Core/TransactionBase/GetAndSetTransactionEditMode/",
@@ -344,7 +347,7 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
-    partiesBankNames:"/Core/SelectPartiesBankNames",
+    partiesBankNames:"/Core/TransactionBase/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
     set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
     get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"

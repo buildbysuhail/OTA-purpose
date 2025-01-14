@@ -4,251 +4,6 @@ import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { TemplateState } from "../../Designer/interfaces";
 
-// const Header = ({ data, template, currentBranch }: { data: any; template?: TemplateState; currentBranch: any}) => {
-//   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
-//   const billingAddress = data?.addresses?.find((val: any) => val?.address?.address_type?.is_for == "customer");
-
-  /// font size and color
-  // const fontSize = template?.propertiesState?.font_size || 12;
-  // const color = template?.propertiesState?.font_color || "#000";
-  // const fontWeight = template?.propertiesState?.font_weight || "normal";
-  // const currentBranch = useCurrentBranch();
-
-  /// label font size and color
-  // const labelFontSize = template?.propertiesState?.label_font_size || 12;
-  // const labelColor = template?.propertiesState?.label_font_color || "#000";
-  // const labelFontWeight = template?.propertiesState?.label_font_weight || "normal";
-  // return (
-  //   <View
-  //     style={{
-  //       display: "flex",
-  //       flexDirection: "column",
-  //       alignItems: "center",
-  //       justifyContent: "center",
-  //       width: "100%",
-  //       marginVertical: 20,
-  //     }}
-  //   >
-  //     <View
-  //       style={{
-  //         display: "flex",
-  //         flexDirection: "row",
-  //         justifyContent: "space-between",
-  //         width: "100%",
-  //         zIndex: 10,
-  //         flexWrap: "wrap",
-  //       }}
-  //     >
-  //       <View
-  //         style={{
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           fontSize: "0.75rem",
-  //           lineHeight: "1rem",
-  //           paddingBottom: "10pt",
-  //         }}
-  //       >
-  //         <Image
-  //           style={{ width: 80 * logoWidthRatio }}
-  //           src={{
-  //             uri: currentBranch?.logo??"",
-  //             method: "GET",
-  //             headers: { "Cache-Control": "no-cache" },
-  //             body: "",
-  //           }}
-  //         />
-  //         <View
-  //           style={{
-  //             fontSize: labelFontSize,
-  //             color: labelColor,
-  //             fontWeight: labelFontWeight,
-  //             display: "flex",
-  //             flexDirection: "column",
-  //             paddingVertical: "10px",
-  //           }}
-  //         >
-  //           <Text>{currentBranch?.name}</Text>
-  //         </View>
-  //         <View
-  //           style={{
-  //             fontSize: labelFontSize,
-  //             color: labelColor,
-  //             fontWeight: labelFontWeight,
-  //             display: "flex",
-  //             flexDirection: "column",
-  //           }}
-  //         >
-  //           {currentBranch?.address?.map((org: any, index: number) => (
-  //             <Text key={`ADDR_${index}`}>{org}</Text>
-  //           ))}
-  //         </View>
-  //       </View>
-  //       <View
-  //         style={{
-  //           fontSize,
-  //           color,
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           lineHeight: "1rem",
-  //           textAlign: "right",
-  //           justifyContent: "flex-start",
-  //         }}
-  //       >
-          {/* <Text style={{ fontSize: "18px", fontWeight: 500, marginBottom: "0.5pt", color: "#be3a31" }}>{preference?.document_title}</Text> */}
-          {/* <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-            <Text
-              style={{
-                fontSize: labelFontSize,
-                color: labelColor,
-                fontWeight: labelFontWeight,
-                paddingVertical: "5px",
-              }}
-            > */}
-              {/* {preference?.transaction_number || "#"} : {data?.sales_invoice_no} */}
-            {/* </Text>
-          </View> */}
-          {/* {preference?.balance_due_enable && (
-            <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-              <Text
-                style={{
-                  fontSize: labelFontSize,
-                  color: labelColor,
-                  fontWeight: labelFontWeight,
-                  marginTop: "15pt",
-                }}
-              >
-                {preference?.balance_due || "Balance Due"} : {data?.balance_due}
-              </Text>
-            </View>
-          )} */}
-        {/* </View>
-      </View>
-      <View
-        style={{
-          marginTop: "2pt",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-          zIndex: 10,
-          flexWrap: "wrap",
-        }}
-      >
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "50%",
-            gap: "2pt",
-          }}
-        > */}
-          {/* {preference?.bill_to_enable && (
-            <View
-              style={{
-                fontSize,
-                color,
-                fontWeight,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: labelFontSize,
-                  color: labelColor,
-                  fontWeight: labelFontWeight,
-                }}
-              >
-                {preference?.bill_to || "Bill To"}
-              </Text>
-              <Text>{data?.customer?.name}</Text>
-              <Text>{data?.customer?.billing_address?.address}</Text>
-              <Text>{data?.customer?.billing_address?.city}</Text>
-              <Text>{data?.customer?.billing_address?.country}</Text>
-            </View>
-          )} */}
-
-          {/* {preference?.delivery_to_enable && (
-            <View
-              style={{
-                display: "flex",
-                width: "100%",
-                zIndex: 10,
-              }}
-            >
-              {billingAddress && (
-                <View
-                  style={{
-                    fontSize,
-                    color,
-                    fontWeight,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: labelFontSize,
-                      color: labelColor,
-                      fontWeight: labelFontWeight,
-                      marginTop: "10pt",
-                    }}
-                  >
-                    {preference?.delivery_to || "Ship To"}
-                  </Text>
-                  <Text>{data?.customer?.name},</Text>
-                  {billingAddress?.address?.address_1 && <Text>{billingAddress?.address?.address_1},</Text>}
-                  {billingAddress?.address?.address_2 && <Text>{billingAddress?.address?.address_2},</Text>}
-                  {billingAddress?.address?.address_3 && <Text>{billingAddress?.address?.address_3},</Text>}
-                  <Text>{billingAddress?.address?.zip_code}</Text>
-                </View>
-              )}
-            </View>
-          )} */}
-//         </View>
-//         <View
-//           style={{
-//             fontSize,
-//             color,
-//             fontWeight,
-//             display: "flex",
-//             flexDirection: "column",
-//             lineHeight: "1rem",
-//             textAlign: "right",
-//             width: "50%",
-//             justifyContent: "center",
-//           }}
-//         >
-//           <View
-//             style={{
-//               fontSize: labelFontSize,
-//               color: labelColor,
-//               fontWeight: labelFontWeight,
-//               display: "flex",
-//               flexDirection: "row",
-//               width: "100%",
-//             }}
-//           >
-//             <View style={{ width: "50%" }}>
-        
-//             </View>
-//             <View style={{ width: "50%" }}>
-//               <Text>{dateTrimmer(data?.created_at)}</Text>
-//             </View>
-//           </View>
-
-      
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// export default Header;
-
-
-
-
 const styles = StyleSheet.create({
   container: {
     display: "flex",
@@ -310,20 +65,20 @@ const styles = StyleSheet.create({
   billTo: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    width: "60%",
   },
   signature: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    width: "40%",
     justifyContent: "flex-start",
     alignItems: "flex-end",
-    borderBottom: "1px solid #6b7280",
+    
   },
   notes: {
     display: "flex",
     flexDirection: "column",
-    marginVertical: 40,
+    marginVertical: 20,
   },
 });
 
@@ -360,17 +115,6 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
   const custNameFontSize = headerState?.customerNameFontSize || 12;
 
   const docTitleVal =  headerState?.docTitle;
-  const numberField = docTitleVal && headerState?.numberField;
-  const docID = data?.[docIDKey || "account_transaction"] || "";
-
-  const generalHeaderBGStyle = {
-    height: paddingTop,
-    backgroundColor,
-    backgroundImage: template?.background_image_header ? `url(${template.background_image_header})` : undefined,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: template?.headerState?.bg_image_header_position ?? "top left",
-    backgroundSize: "cover",
-  };
 
   const labelStyles = {
     color: labelColor,
@@ -472,25 +216,41 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
       </View>
 
       {/* Bill To and Signature */}
-      <View style={[styles.companyInfo, { paddingLeft, paddingRight, marginVertical: 40 }]}>
+      <View style={[styles.companyInfo, { marginVertical: 20 }]}>
         {headerState?.hasBillTo && (
           <View style={styles.billTo}>
             <Text style={labelStyles}>{headerState?.billTo ?? "Received From"}</Text>
-            <Text style={{ color: custNameFontColor, fontSize: custNameFontSize }}>"Nizam Karippali"</Text>
-            <Text>Dubai</Text>
-            <Text>Karama 123ft</Text>
-            <Text>Ho No:1223</Text>
+            <Text style={{
+              ...fontStyles,
+               color: custNameFontColor, fontSize: custNameFontSize 
+               }}>
+                "Nizam Karippali"
+            </Text>
+            <Text style={fontStyles}>Dubai</Text>
+            <Text style={fontStyles}>Karama 123ft</Text>
+            <Text style={fontStyles}>Ho No:1223</Text>
+            {headerState?.hasShipTo && (
+            <>
+                <Text style={labelStyles}>{headerState?.billTo ?? "BillTo"}</Text>
+                <Text style={fontStyles}>Ho No:1223</Text>
+            </>
+          
+            )}
+           
           </View>
         )}
         {footerState?.showSignature && (
           <View style={styles.signature}>
             <Text style={fontStyles}>{footerState?.signatureLabel ?? "Authority Signature"}</Text>
+            <View style={{ width: "100%", borderBottom: "0.5px solid #DFDFDF", display: "flex", justifyContent: "flex-end" }}>
             {headerState?.showLogo && (
               <Image
                 src={currentBranch?.logo}
-                style={[styles.logo, { width: 80 * logoWidthRatio }]}
+                style={[styles.logo, { width: 80 * logoWidthRatio, alignSelf: "flex-end" }]}
               />
             )}
+          </View>
+            
           </View>
         )}
       </View>
@@ -504,6 +264,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
           </Text>
         </View>
       )}
+       <View style={{ width: "100%", borderTop: "0.5px solid #DFDFDF", marginVertical: 16 }} />
     </View>
   );
 };

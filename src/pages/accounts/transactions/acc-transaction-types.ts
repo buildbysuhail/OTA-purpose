@@ -85,6 +85,7 @@ export interface FormElementState {
   visible: boolean;
   disabled: boolean;
   label: string;
+  reload?: boolean;
 }
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
@@ -121,6 +122,7 @@ export interface AccTransactionMaster {
   // accTransDetailId: number;
   adjustedTransDetailId: number;
   currencyRate?: number;
+  currencyName?: number;
   isPosted: boolean;
   randomKey: number;
   onlineTrans: string;
@@ -262,8 +264,6 @@ export interface AccTransactionRow {
   projectSiteId: number;
   narration: string;
   currencyId: number;
-  currencyName: string;
-  exchangeRate?: number;
   adjAmount?: number;
   bankDate: string;
   chqDate: string;
@@ -303,7 +303,6 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   projectSiteId: 0,
   narration: "",
   currencyId: 1,
-  exchangeRate: undefined,
   adjAmount: undefined,
   bankDate: new Date().toISOString(),
   chequeNumber: "",
@@ -327,7 +326,6 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   ledger: "",
   drCr: "",
   ledgerName: "",
-  currencyName: "",
   projectName: "",
   costCentreName: 0,
   billwiseDetails: "",
@@ -585,7 +583,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   masterBalanceLoading: false,
   groupName: undefined,
   formElements: initialFormElements,
-  saving: false
+  saving: false,
+  store: undefined
 }
 export interface PrintTransProps {
   masterAccount: string;

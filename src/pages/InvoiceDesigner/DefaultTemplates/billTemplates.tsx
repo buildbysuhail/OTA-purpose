@@ -6,7 +6,6 @@ export interface DeafultTemplateProps {
   is_default: boolean;
   is_primary: boolean;
   voucher_type: VoucherType | string;
-
   status?: "current";
   logo?: string | null;
   background?: string | null;

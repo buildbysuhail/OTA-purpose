@@ -23,9 +23,14 @@ import {
   clearState,
   setUserRight,
   updateFormElement,
+  accFormStateClearBillWiseInDetails,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
-import { loadAccVoucher, deleteAccVoucher } from "./thunk";
+import {
+  loadAccVoucher,
+  deleteAccVoucher,
+  unlockAccTransactionMaster,
+} from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
@@ -37,6 +42,7 @@ import {
   PrintTransProps,
 } from "./acc-transaction-types";
 import {
+  isEnterKey,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
 } from "../../../utilities/Utils";
@@ -72,7 +78,6 @@ export const useAccTransaction = (
   voucherNumberRef?: any,
   chequeNumberRef?: any,
   remarksRef?: any
-
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -80,9 +85,8 @@ export const useAccTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.AppState.softwareDate
   );
-  const {printVoucher,
-    printCheque,
-    printPaymentReceiptAdvice} = useAccPrint()
+  const { printVoucher, printCheque, printPaymentReceiptAdvice } =
+    useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -118,7 +122,6 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCode = () => {
-    
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
     }
@@ -155,9 +158,15 @@ export const useAccTransaction = (
   };
 
   const { hasRight } = useUserRights();
-  const loadAccTransVoucher = async (usingManualInvNumber: boolean = false, voucherNumber?: number) => {
-    const tmpVoucherNumber = voucherNumber != undefined ? voucherNumber : Number(formState.transaction.master.voucherNumber);
-    if(tmpVoucherNumber <= 0) {
+  const loadAccTransVoucher = async (
+    usingManualInvNumber: boolean = false,
+    voucherNumber?: number
+  ) => {
+    const tmpVoucherNumber =
+      voucherNumber != undefined
+        ? voucherNumber
+        : Number(formState.transaction.master.voucherNumber);
+    if (tmpVoucherNumber <= 0) {
       return false;
     }
     // clearControlForNew();
@@ -180,7 +189,7 @@ export const useAccTransaction = (
       return null;
     }
   };
- 
+
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode() {
     if (formState.isEdit) {
@@ -213,6 +222,13 @@ export const useAccTransaction = (
     const nextVoucherNumber = response || 1;
 
     return nextVoucherNumber;
+  };
+  const selectVoucherForms = async (voucherType: string) => {
+    const response = await api.getAsync(
+      `${Urls.voucher_selector}${voucherType}`
+    );
+
+    return response;
   };
 
   const validate = (): boolean => {
@@ -273,13 +289,16 @@ export const useAccTransaction = (
         icon: "warning",
         title:
           "Transaction Date validation failed(Check Financial Year period)",
-          text: validateTransDate.message
+        text: validateTransDate.message,
       });
       return false;
     }
 
     // Validate transaction amount
-    if (formState.transaction.master.totalAmount === null || formState.transaction.master.totalAmount == 0) {
+    if (
+      formState.transaction.master.totalAmount === null ||
+      formState.transaction.master.totalAmount == 0
+    ) {
       ERPAlert.show({
         icon: "warning",
         title: "Invalid Transaction Amount",
@@ -358,7 +377,7 @@ export const useAccTransaction = (
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
- 
+
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -428,10 +447,13 @@ export const useAccTransaction = (
     );
   };
   const save = async () => {
-    
-    dispatch(accFormStateHandleFieldChange({fields:{
-      saving: true
-    }}));
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          saving: true,
+        },
+      })
+    );
     if (validate() == true) {
       const params: AccTransactionData = {
         master: attachMaster(),
@@ -482,10 +504,14 @@ export const useAccTransaction = (
           title: saveRes.message,
         });
       }
-      
-      dispatch(accFormStateHandleFieldChange({fields:{
-        saving: false
-      }}));
+
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            saving: false,
+          },
+        })
+      );
     }
   };
   const clearControls = async () => {
@@ -554,7 +580,6 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async () => {
-    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
@@ -662,7 +687,7 @@ export const useAccTransaction = (
           accFormStateTransactionDetailsRowAdd({
             row: formState.row,
             applicationSettings: applicationSettings,
-            exchangeRate: formState.row.exchangeRate ?? 1,
+            exchangeRate: formState.transaction.master.currencyRate ?? 1,
             isForeignCurrencyEnabled: formState.foreignCurrency,
             userSession: userSession,
           })
@@ -764,7 +789,6 @@ export const useAccTransaction = (
           },
         })
       );
-      
 
       // Update row data in form state
       dispatch(
@@ -830,27 +854,43 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    
-    if (field === "grid") {
+    debugger;
+    if (field === "test") {
+      focusLedgerCombo();
+    } else if (field === "grid") {
       handleGridKeyDown(key, gridRef, applicationSettings);
     } else if (field === "ledgerCode") {
       handleLedgerCodeKeyDown(key);
     } else if (field === "amount") {
       handleAmountKeyDown(key);
+    } else if (field === "costCentre") {
+      focusBtnAdd();
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);
+    } else if (field === "ledgerId") {
+      handleLedgerIdKeyDown(key);
+    } else if (field === "bankDate") {
+      if (isEnterKey(key)) {
+        dispatch(
+          accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+        );
+      }
+    } else if (field === "commonNarration") {
+      if (isEnterKey(key)) {
+        focusLedgerCode();
+      }
     }
   };
+
   const handleGridKeyDown = (
     key: any,
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    
     if (key === "e" || key === "E" || key === "Enter") {
       focusLedgerCombo();
     }
@@ -863,7 +903,6 @@ export const useAccTransaction = (
         icon: "warning",
         confirmButtonText: "Yes, delete it!",
         onConfirm: () => {
-          
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           dispatch(
@@ -880,11 +919,10 @@ export const useAccTransaction = (
 
   // Ledger code keydown handler
   const handleLedgerCodeKeyDown = async (e: any) => {
-    
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}/${formState.row.ledgerCode}`
+          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode}`
         );
 
         if (response && response > 0) {
@@ -907,10 +945,16 @@ export const useAccTransaction = (
     }
   };
 
+  const handleLedgerIdKeyDown = async (id: any) => {
+    if (id > 0) {
+      focusAmount();
+    }
+  };
+
   // Amount keydown handler
   const handleAmountKeyDown = (e: any) => {
-    
-    if (e.key === "Enter") {
+    debugger;
+    if (e === "Enter") {
       const voucherType = formState.transaction.master.voucherType;
       if (voucherType !== "OB" && voucherType !== "MJV") {
         focusNarration();
@@ -921,19 +965,27 @@ export const useAccTransaction = (
   };
   const handleEmployeeKeyDown = (e: any) => {
     // Handle Enter key
-    focusLedgerCode()
+    focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
-    if (e.key === 'Enter') {
-      
-      const isChequeVoucher = formState.transaction.master.voucherType === 'CQP' || formState.transaction.master.voucherType === 'CQR';
-      const isPaymentReceipt = formState.transaction.master.voucherType === 'BP' || formState.transaction.master.voucherType === 'BR';
-      
-      if (applicationSettings.accountsSettings?.maintainBillwiseAccount && formState.formElements.btnBillWise.visible == true) {
+    if (e === "Enter") {
+      const isChequeVoucher =
+        formState.transaction.master.voucherType === "CQP" ||
+        formState.transaction.master.voucherType === "CQR";
+      const isPaymentReceipt =
+        formState.transaction.master.voucherType === "BP" ||
+        formState.transaction.master.voucherType === "BR";
+
+      if (
+        applicationSettings.accountsSettings?.maintainBillwiseAccount &&
+        formState.formElements.btnBillWise.visible == true
+      ) {
         if (!isPaymentReceipt || !isChequeVoucher) {
           // Handle billwise click
-          dispatch(accFormStateHandleFieldChange({fields:{showbillwise: true}}));
+          dispatch(
+            accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+          );
         } else {
           focusChequeNumber();
         }
@@ -941,11 +993,12 @@ export const useAccTransaction = (
         if (isChequeVoucher) {
           focusChequeNumber();
         }
-      } 
-      else if (applicationSettings.accountsSettings?.maintainCostCenter && formState.formElements.costCentreId.visible == true) {
+      } else if (
+        applicationSettings.accountsSettings?.maintainCostCenter &&
+        formState.formElements.costCentreId.visible == true
+      ) {
         focusCostCenterRef();
-      } 
-      else {
+      } else {
         focusBtnAdd();
       }
 
@@ -955,7 +1008,7 @@ export const useAccTransaction = (
       }
     }
     // Handle Down arrow key
-    else if (e.key === 'ArrowDown') {
+    else if (e.key === "ArrowDown") {
       if (formState.previousNarration) {
         // Update narration with previous value
         formState.row.narration = formState.previousNarration;
@@ -966,8 +1019,8 @@ export const useAccTransaction = (
   // Voucher number navigation handlers
   const handleVoucherNumberKeyUp = async (e: any) => {
     const currentNumber = Number(formState.transaction.master.voucherNumber);
-    
-    if (e.key == "ArrowDown" || e.key == "ArrowUp" || e.key == "Enter") {
+
+    if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
       if (currentNumber > 0) {
         await loadAccTransVoucher();
       }
@@ -979,34 +1032,37 @@ export const useAccTransaction = (
   };
 
   const enableCombo = async () => {
-    dispatch(updateFormElement({
-      fields: {
-        employee: { disabled: false},
-        jvDrCr: { disabled: false },
-        masterAccount: { disabled: false },
-        referenceDate: { disabled: false },
-        transactionDate: { disabled: false },
-        linkEdit: { visible: true },
-      }
-    }));
-  }
+    dispatch(
+      updateFormElement({
+        fields: {
+          employee: { disabled: false },
+          jvDrCr: { disabled: false },
+          masterAccount: { disabled: false },
+          referenceDate: { disabled: false },
+          transactionDate: { disabled: false },
+          linkEdit: { visible: true },
+        },
+      })
+    );
+  };
   const disableCombo = async () => {
-    dispatch(updateFormElement({
-      fields: {
-        employee: { disabled: true},
-        jvDrCr: { disabled: true },
-        masterAccount: { disabled: true },
-        referenceDate: { disabled: true },
-        transactionDate: { disabled: true },
-        linkEdit: { visible: false },
-      }
-    }));
-  }
- 
+    dispatch(
+      updateFormElement({
+        fields: {
+          employee: { disabled: true },
+          jvDrCr: { disabled: true },
+          masterAccount: { disabled: true },
+          referenceDate: { disabled: true },
+          transactionDate: { disabled: true },
+          linkEdit: { visible: false },
+        },
+      })
+    );
+  };
+
   // Edit button handler
   const handleEdit = async () => {
-    const validateTransactionDateRes = 
-    validateTransactionDate(
+    const validateTransactionDateRes = validateTransactionDate(
       new Date(new Date(formState.transaction.master.transactionDate)),
       false,
       userSession,
@@ -1016,17 +1072,17 @@ export const useAccTransaction = (
     );
     if (!validateTransactionDateRes.valid) {
       ERPAlert.show({
-        title: 'Warning',
+        title: "Warning",
         text: validateTransactionDateRes.message,
-        icon: 'warning'
+        icon: "warning",
       });
     }
 
     if (formState.transaction.master.isLocked) {
       ERPAlert.show({
-        title: 'Warning',
-        text: 'This voucher is locked. Cannot be edited/deleted.',
-        icon: 'warning'
+        title: "Warning",
+        text: "This voucher is locked. Cannot be edited/deleted.",
+        icon: "warning",
       });
       return;
     }
@@ -1035,57 +1091,62 @@ export const useAccTransaction = (
       const result = await api.postAsync(
         Urls.get_and_set_transaction_edit_mode,
         {
-          transactionType: 'A',
-          transactionMasterId: formState.transaction.master.accTransMasterID
+          transactionType: "A",
+          transactionMasterId: formState.transaction.master.accTransMasterID,
         }
       );
 
       if (!result?.isOk == true) {
-        dispatch(accFormStateHandleFieldChange({
-          fields: {
-            isEdit: true
-          }
-        }));
-        dispatch(updateFormElement({
-          fields: {
-            btnSave: { disabled: !hasRight(formState.formCode, UserAction.Add)  },
-            btnDelete: { disabled: true },
-            btnPrint: { disabled: true },
-            btnEdit: { disabled: true },
-            pnlMasters: { disabled: false },
-            dxGrid: { disabled: true },
-          }
-        }));
-
+        dispatch(
+          accFormStateHandleFieldChange({
+            fields: {
+              isEdit: true,
+            },
+          })
+        );
+        dispatch(
+          updateFormElement({
+            fields: {
+              btnSave: {
+                disabled: !hasRight(formState.formCode, UserAction.Add),
+              },
+              btnDelete: { disabled: true },
+              btnPrint: { disabled: true },
+              btnEdit: { disabled: true },
+              pnlMasters: { disabled: false },
+              dxGrid: { disabled: true },
+            },
+          })
+        );
       } else {
-        const editInfo = result.message.split(';');
+        const editInfo = result.message.split(";");
         ERPAlert.show({
-          title: 'Voucher in Use',
+          title: "Voucher in Use",
           text: `This Voucher is already in use by ${editInfo[1]} on system ${editInfo[0]} at ${editInfo[2]}`,
-          icon: 'warning'
+          icon: "warning",
         });
       }
     } catch (error) {
-      console.error('Error handling edit:', error);
+      console.error("Error handling edit:", error);
     }
   };
-  
+
   // Delete button handler
   const deleteAccTransVoucher = async () => {
     if (formState.transaction.master?.isLocked) {
       ERPAlert.show({
-        title: 'Warning',
-        text: 'This voucher is locked. Cannot be edited/deleted.',
-        icon: 'warning'
+        title: "Warning",
+        text: "This voucher is locked. Cannot be edited/deleted.",
+        icon: "warning",
       });
       return;
     }
 
     ERPAlert.show({
-      title: 'Confirm Delete',
-      text: 'Are you sure you want to delete this voucher?',
-      icon: 'warning',
-      confirmButtonText: 'Yes, delete it!',
+      title: "Confirm Delete",
+      text: "Are you sure you want to delete this voucher?",
+      icon: "warning",
+      confirmButtonText: "Yes, delete it!",
       onConfirm: async () => {
         try {
           if (formState.transaction?.master?.accTransMasterID > 0) {
@@ -1108,9 +1169,9 @@ export const useAccTransaction = (
           }
           clearControls();
         } catch (error) {
-          console.error('Error deleting voucher:', error);
+          console.error("Error deleting voucher:", error);
         }
-      }
+      },
     });
   };
   const handleLoadByRefNo = useCallback(() => {
@@ -1119,7 +1180,84 @@ export const useAccTransaction = (
     }
   }, [loadAccTransVoucher]);
 
+  const handleRefresh = async () => {
+    try {
+      debugger;
+      const currentLedgerId = formState.row.ledgerId;
+      const currentMasterAccountId = formState.masterAccountID;
 
+      dispatch(
+        updateFormElement({
+          fields: {
+            ledgerId: { reload: true },
+            masterAccount: { reload: true },
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    }
+  };
+  const createNewVoucher = async () => {
+    try {
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: { isEdit: false },
+        })
+      );
+      dispatch(
+        updateFormElement({
+          fields: {
+            btnEdit: { disabled: true },
+            btnDelete: { disabled: true },
+            btnPrint: { disabled: true },
+            btnSave: {
+              disabled: !hasRight(formState.formCode, UserAction.Add),
+            },
+            pnlMasters: { disabled: false },
+            dxGrid: { disabled: false },
+          },
+        })
+      );
+
+      // Clear billwise details
+      dispatch(accFormStateClearBillWiseInDetails());
+
+      // Get new voucher details
+      const selectVoucherData = await selectVoucherForms(
+        formState.transaction.master.voucherType
+      );
+      const getVoucherNumber = await getNextVoucherNumber(
+        formState.transaction.master.formType,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.voucherPrefix
+      );
+
+      dispatch(
+        accFormStateTransactionMasterHandleFieldChange({
+          fields: {
+            voucherPrefix: selectVoucherData.lastPrefix,
+            voucherNumber: getVoucherNumber,
+            accTransMasterID: 0,
+            transactionDate: clientSession.softwareDate,
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error creating new voucher:", error);
+      // Handle error appropriately
+    }
+  };
+  const unlockVoucher = async () => {
+    try {
+       await appDispatch(unlockAccTransactionMaster(
+        formState.transaction.master.accTransMasterID
+      ))
+    } catch (error) {
+      console.error("Error creating new voucher:", error);
+      // Handle error appropriately
+    }
+  };
 
   return {
     undoEditMode,
@@ -1141,6 +1279,9 @@ export const useAccTransaction = (
     handleLoadByRefNo,
     printCheque,
     printVoucher,
-    printPaymentReceiptAdvice
+    printPaymentReceiptAdvice,
+    handleRefresh,
+    createNewVoucher,
+    unlockVoucher,
   };
 };

@@ -1451,7 +1451,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 e.stopPropagation();
                 !disabled && setIsOpen(!isOpen);
               }}
-              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown}
+              onKeyDown = { (e) =>{ if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {setIsOpen(true);}
+                 disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDownEnter}}
               onKeyUp={onKeyUp}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}

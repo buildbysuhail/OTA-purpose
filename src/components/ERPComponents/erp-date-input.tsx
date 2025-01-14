@@ -456,7 +456,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                   fullWidth: true,
 
                   onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)
-                      : handleKeyDown,
+                      : undefined,
                   onKeyUp: onKeyUp,
                   // onKeyDown: (e) => {
                   //   if (e.key === 'Enter' && value) {

@@ -658,7 +658,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             appearance: "textfield", // For cross-browser consistency
           },
         },
-        onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown,
+        onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): undefined,
         onKeyUp: onKeyUp,
       };
       return (

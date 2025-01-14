@@ -751,3 +751,12 @@ if(obj1 == undefined || obj2 == undefined) {
   const out = { ...obj1, ...filteredObj2 } as T & U;
   return out;
 };
+export const isEnterKey = (key: string | number) => {
+  return (
+    key === "Enter" || 
+    key === "enter" || 
+    key === "E" || 
+    key === 13 || // Numeric key code for Enter
+    key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
+  );
+};

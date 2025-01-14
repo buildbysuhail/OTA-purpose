@@ -17,17 +17,20 @@ import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
 import _cloneDeep from "lodash/cloneDeep";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
-import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface BillWisePopupProps {
   isMaximized?: boolean;
   modalHeight?: any;
+  onMaximizeChange?: (maximized: boolean) => void;
 }
 
 const BillWisePopup: FC<BillWisePopupProps> = ({
   isMaximized,
   modalHeight,
+  onMaximizeChange,
 }) => {
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -35,6 +38,12 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
+
+  useEffect(() => {
+    if (isMaximized && onMaximizeChange) {
+      onMaximizeChange(true);
+    }
+  }, [isMaximized, onMaximizeChange]);
 
   useEffect(() => {
     let wh = modalHeight;
@@ -46,6 +55,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
     setStore(clonedData);
   }, [formState.billwiseData]);
+
   const handleSelectionChange = (e: any) => {};
 
   const [enterKeyAction, setEnterKeyAction] =
@@ -83,37 +93,51 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="">
-              {formState.row.amount}
               <div className="grid grid-cols-1 gap-3">
-                {/* <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-                    {formState.ledgerData?.imageUrl ? (
-                      <img
-                        src={formState.ledgerData?.partyPhoto || profile}
-                        alt="Ledger"
-                        className="w-8 h-8 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="text-lg font-medium text-gray-600">
-                        {formState.ledgerData?.name?.[0] || "-"}
+                <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
+                  <Item location="before">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
+                        {formState.ledgerData?.imageUrl ? (
+                          <img
+                            src={formState.ledgerData?.partyPhoto}
+                            alt="Ledger"
+                            className="w-8 h-8 object-cover rounded"
+                          />
+                        ) : (
+                          <div className="text-lg font-medium text-gray-600">
+                            {formState.ledgerData?.name?.[0] || "-"}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">
-                      {formState.row.ledgerName}
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {formState.row.ledgerName}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm text-gray-600">
+                            {formState.ledgerData?.code || "-"}
+                          </span>
+                          {formState.ledgerData?.isVerified && (
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm text-gray-600">
-                        {formState.ledgerData?.code || "-"}
-                      </span>
-                      {formState.ledgerData?.isVerified && (
-                        <CheckCircle2 className="w-4 h-4 text-green-500" />
-                      )}
-                    </div>
-                  </div>
-                </div> */}
-                Safvan {store.length}
+                  </Item>
+                  <Item location="after">
+                    <ERPCheckbox
+                      label="Show debit transaction also"
+                      className="text-[12px] font-medium p-3"
+                      id={""}
+                    />
+                  </Item>
+                  <Item location="after">
+                    <p className="text-[12px] font-medium p-3 mx-2">
+                      Amount to adjust : {formState.row.amount}
+                    </p>
+                  </Item>
+                </Toolbar>
                 <DataGrid
                   id="TestPopup"
                   height={gridHeight}
@@ -142,10 +166,10 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   />
 
                   <FilterRow visible={true} />
-                  <SearchPanel visible={true} />
+                  <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
                   <Scrolling mode="standard" />
-                  <Paging defaultPageSize={100} />
+                  <Paging enabled={false} />
                   {/* <LoadPanel visible={true} /> */}
 
                   <Column
@@ -330,10 +354,6 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     visible={false}
                   />
 
-                  <Toolbar>
-                    <Item name="searchPanel" />
-                  </Toolbar>
-
                   {/* Add Summary for "Amount" column */}
                   <Summary>
                     <TotalItem
@@ -368,15 +388,22 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   </Summary>
                 </DataGrid>
               </div>
-              <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
-                <strong className="mr-3">Net Adjustment</strong>
-                <span className="">
-                  {store.reduce(
-                    (total: number, item: any) =>
-                      total + (item.billwiseAmount || 0),
-                    0
-                  )}
-                </span>
+              <div className="flex items-center justify-between">
+                <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
+                  <strong className="mr-3">Net Adjustment</strong>
+                  <span className="">
+                    {store.reduce(
+                      (total: number, item: any) =>
+                        total + (item.billwiseAmount || 0),
+                      0
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <ERPButton title="Auto save" className="mr-2" />
+                  <ERPButton title="Save" className="mr-2" />
+                  <ERPButton title="Cancel" />
+                </div>
               </div>
             </div>
           </div>

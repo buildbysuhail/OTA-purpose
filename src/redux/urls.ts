@@ -77,6 +77,7 @@ const Urls = {
   data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
+
   data_company_id: "/Core/Branch/GetBranchData",
 
   // Auth
@@ -174,6 +175,7 @@ const Urls = {
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/Report",
   currencyExchange: "/Core/ExchangeRates/",
+  currencyExchangeRate:"/Core/ExchangeRates/GetCurrencyExchangeRate",
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
@@ -215,7 +217,7 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  acc_user_config:"",
+  acc_user_config:"/Core/UpdateLocalSettings",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start
@@ -346,7 +348,7 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
-    partiesBankNames:"/Core/SelectPartiesBankNames",
+    partiesBankNames:"/Core/TransactionBase/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
     set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
     get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"

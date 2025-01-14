@@ -47,7 +47,8 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       jumpTo,
       jumpTarget,
       ...props
-    }
+    },
+    ref
   ) => {
     const [variantType, setVariantType] = useState<string>();
     const [isFocused, setIsFocused] = useState(false);
@@ -106,19 +107,22 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
     };
     return (
       <button
+      ref={ref}
         {...commonProps}
         tabIndex={tabIndex}
         type={type}
         disabled={disabled}
         onClick={onClick}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onFocus={(e) => setIsFocused(true)}
+        onBlur={(e) => setIsFocused(false)}
         onKeyDown={handleNavigation}
         data-skip={skip}
         data-jump-to={jumpTo}
         data-jump-target={jumpTarget}
         style={{
-          backgroundColor: isFocused ? appState?.inputBox?.focusBgColor : " ",
+          backgroundColor: isFocused 
+          ? `rgb(${appState?.inputBox?.focusBgColor || '255, 255, 255'})` 
+          : undefined,
         }}
         className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 

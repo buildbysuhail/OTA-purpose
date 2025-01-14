@@ -968,6 +968,7 @@ export const useAccTransaction = (
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
+    debugger;
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =

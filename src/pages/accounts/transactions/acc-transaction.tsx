@@ -1715,7 +1715,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div> */}
                 </>
               )}
-<ERPButton title="test" onClick={() => handleFieldKeyDown("test","")}></ERPButton>
               {formState.formElements.amount.visible && (
                 <ERPInput
                   ref={amountRef}
@@ -1798,6 +1797,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   id="narration"
                   className="w-full"
                   disableEnterNavigation
+                  onKeyDown={(e) => {
+                    handleKeyDown(e,"narration");
+                  }}
                   label={formState.formElements.narration.label}
                   value={formState.row.narration}
                   onChange={(e) =>

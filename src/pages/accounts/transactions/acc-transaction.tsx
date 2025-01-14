@@ -6,7 +6,6 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
 import {
   useAppDispatch,
@@ -17,9 +16,7 @@ import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
-  accFormStateTransactionDetailsRowAdd,
   accFormStateTransactionMasterHandleFieldChange,
-  accFormStateTransactionDetailsSetSlNo,
   setUserRight,
   updateFormElement,
 } from "./reducer";
@@ -34,35 +31,29 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import { useTransaction } from "../../use-transaction";
 import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import AttachmentSidebar from "../../transaction-base/Attachment-button";
-import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import DownloadPreview from "../../LabelDesigner/download-preview";
 import {
-  DummyInvoiceData,
   DummyVoucherData,
 } from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./acc-templates";
-import { handleResponse } from "../../../utilities/HandleResponse";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import {
   Delete,
-  FileDown,
-  Loader,
+  EllipsisVertical,
+  KeyRound,
   Pencil,
   Printer,
   RefreshCw,
   Replace,
-  Settings,
-  Trash,
   Trash2,
   X,
 } from "lucide-react";
@@ -168,17 +159,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     createNewVoucher,
   } = useAccTransaction(
     transactionType ?? "",
-  btnSaveRef,
-  btnAddRef,
-  ledgerCodeRef,
-  ledgerIdRef,
-  masterAccountRef,
-  costCenterRef,
-  amountRef,
-  drCrRef,
-  narrationRef,
-  voucherNumberRef,
-  chequeNumberRef,
+    btnSaveRef,
+    btnAddRef,
+    ledgerCodeRef,
+    ledgerIdRef,
+    masterAccountRef,
+    costCenterRef,
+    amountRef,
+    drCrRef,
+    narrationRef,
+    voucherNumberRef,
+    chequeNumberRef,
   remarksRef
   );
   const applicationSettings = useAppSelector(
@@ -942,21 +933,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }));
   };
 
-  const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
+  // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (popupRef && !popupRef.contains(event.target as Node)) {
-        setShowPopup(false);
-        setIsHovered(false);
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (popupRef && !popupRef.contains(event.target as Node)) {
+  //       setShowPopup(false);
+  //       setIsHovered(false);
+  //     }
+  //   }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupRef]);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [popupRef]);
 
   const [showTotalsPopup, setShowTotalsPopup] = useState(false); // State for showing totals popup
 
@@ -996,11 +987,31 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const goToPreviousPage = () => {
     window.history.back();
   };
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setIsPopupVisible(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
+
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className="bg-white space-y-6 p-4">
+        <div className="dark:bg-dark-bg bg-white space-y-6 p-4">
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -1059,7 +1070,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         loadTemporaryRows();
                       }}
                     >
-                      <Replace className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Replace className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1074,7 +1085,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         deleteAccTransVoucher();
                       }}
                     >
-                      <Trash2 className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Trash2 className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1087,7 +1098,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={handleRefresh}
                     >
-                      <RefreshCw className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <RefreshCw className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
                   {/* createNewVoucher */}
@@ -1099,7 +1110,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={createNewVoucher}
                     >
-                      <Replace className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Replace className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1114,7 +1125,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         handleEdit();
                       }}
                     >
-                      <Pencil className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Pencil className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1129,7 +1140,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         printVoucher();
                       }}
                     >
-                      <Printer className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Printer className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1144,7 +1155,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         clearControls();
                       }}
                     >
-                      <Delete className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Delete className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1153,20 +1164,98 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <AccTransactionUserConfig />
                   </div>
 
+                  <div className="relative"> 
+                    <button
+                    onClick={() => setIsPopupVisible(!isPopupVisible)}
+                    // onClick={handleButtonClick}
+                    className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                    title={t("previous_page")}
+                  >
+                    <EllipsisVertical className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                  </button>
+
+                  {isPopupVisible && (
+                    <div
+                      ref={popupRef} // Attach ref to the popup
+                      className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                      style={{
+                        top: '100%', // Position the popup right below the button
+                        left: '-170px',   // Align it with the left edge of the button
+                        width: '221px', // Set your desired width
+                        marginTop: '8px', // Add some spacing between the button and the popup
+                      }}
+                    >
+                      <div className="flex justify-between items-center">
+                        <h6 className="text-sm font-semibold">print button</h6>
+                        {/* <button
+                          onClick={() => setIsPopupVisible(false)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          <X className="w-6 h-6" />
+                        </button> */}
+                      </div>
+                      <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                      <ul className="space-y-1">
+                        <li>
+                          <button 
+                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
+                            onClick={(e) => {
+                              e.preventDefault(); // Prevent default link behavior
+                              printPaymentReceiptAdvice(formState);
+                            }}
+                          >
+                            <Printer  className="h-4 w-4" />
+                            {/* <span>printPaymentReceiptAdvice</span> */}
+                            <span>printPayment</span>
+                          </button>
+                        </li>
+                        
+                        {formState.formElements.lnkUnlockVoucher.visible && (
+                          <li>
+                            <button 
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              onClick={(e) => {
+                                e.preventDefault(); // Prevent default link behavior
+                                debugger; 
+                                unlockVoucher();
+                              }}
+                            >
+                              <KeyRound  className="h-4 w-4" />
+                              {/* <span>UnlockVoucher_Click</span> */}
+                              <span>UnlockVoucher</span>
+                            </button>
+                          </li>
+                        )} 
+                      </ul>
+                    </nav>
+                    </div>
+                  )}
+                  </div>
+
                   {/* Previous Page Button */}
                   <button
                     onClick={goToPreviousPage}
                     className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                     title={t("previous_page")}
                   >
-                    <X className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                    <X className="w-4 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 !mt-12">
+          <div
+            className="grid grid-cols-2 gap-8 !mt-12"
+            style={{
+              maxWidth: formState.userConfig?.maxWidth,
+              marginLeft:
+                formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight:
+                formState.userConfig?.alignment === "right" ? "0" : "auto",
+              textAlign: formState.userConfig?.alignment,
+            }}
+          >
             <div className="">
               <div className="grid grid-cols-1 leading-none lg:w-3/4">
                 <div className="flex items-center gap-2">
@@ -1354,63 +1443,63 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  {formState.formElements.foreignCurrency.visible == true && (
+                {formState.formElements.foreignCurrency.visible == true && (
                     <>
-                      {formState.formElements.currencyID.visible && (
-                        <ERPDataCombobox
-                          id="currencyID"
-                          data={formState.row}
-                          label={formState.formElements.currencyID.label}
-                          value={formState.transaction.master.currencyId}
-                          field={{
-                            valueKey: "id",
-                            labelKey: "name",
-                            nameKey: "rate",
-                            getListUrl: Urls.data_currencies,
-                          }}
-                          onSelectItem={(e) => {
-                            dispatch(
-                              accFormStateTransactionMasterHandleFieldChange({
-                                fields: {
-                                  currencyId: e.value,
-                                  currencyRate: e.rate,
+                  {formState.formElements.currencyID.visible && (
+                    <ERPDataCombobox
+                      id="currencyID"
+                      data={formState.row}
+                      label={formState.formElements.currencyID.label}
+                      value={formState.transaction.master.currencyId}
+                      field={{
+                        valueKey: "id",
+                        labelKey: "name",
+                        nameKey: "rate",
+                        getListUrl: Urls.data_currencies,
+                      }}
+                      onSelectItem={(e) => {
+                        dispatch(
+                          accFormStateTransactionMasterHandleFieldChange({
+                            fields: {
+                              currencyId: e.value,
+                              currencyRate: e.rate,
                                   currencyName: e.label,
-                                },
-                              })
-                            );
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: {},
-                              })
-                            );
-                          }}
-                          disabled={
-                            formState.formElements.currencyID?.disabled ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
-                        />
-                      )}
+                            },
+                          })
+                        );
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: {},
+                          })
+                        );
+                      }}
+                      disabled={
+                        formState.formElements.currencyID?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
 
-                      {formState.formElements.exchangeRate.visible && (
-                        <ERPInput
-                          id="currencyRate"
-                          min={0}
-                          label={formState.formElements.exchangeRate.label}
-                          type="number"
-                          value={formState.transaction.master.currencyRate}
-                          onChange={(e) =>
-                            dispatch(
-                              accFormStateTransactionMasterHandleFieldChange({
-                                fields: { currencyRate: e.target?.value },
-                              })
-                            )
-                          }
-                          disabled={
-                            formState.formElements.exchangeRate?.disabled ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
-                        />
-                      )}
+                  {formState.formElements.exchangeRate.visible && (
+                    <ERPInput
+                     id="currencyRate"
+                      min={0}
+                      label={formState.formElements.exchangeRate.label}
+                      type="number"
+                      value={formState.transaction.master.currencyRate}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateTransactionMasterHandleFieldChange({
+                            fields: { currencyRate: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.exchangeRate?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
                     </>
                   )}
                   {formState.formElements.linkEdit.visible == true && (
@@ -1575,7 +1664,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             fields: { commonNarration: e.target?.value },
                           })
                         )
-                      } 
+                      }
                       disableEnterNavigation = {true}
                       onKeyDown={(e) => {
                         debugger;
@@ -1626,7 +1715,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
           </div>
 
-          <div className="leading-none">
+          <div
+            className="leading-none"
+            style={{
+              maxWidth: formState.userConfig?.maxWidth,
+              marginLeft:
+                formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight:
+                formState.userConfig?.alignment === "right" ? "0" : "auto",
+              textAlign: formState.userConfig?.alignment,
+            }}
+          >
             <div className="flex items-center gap-2">
               {formState.formElements.ledgerCode.visible && (
                 <ERPInput
@@ -1715,7 +1814,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div> */}
                 </>
               )}
-<ERPButton title="test" onClick={() => handleFieldKeyDown("test","")}></ERPButton>
+
               {formState.formElements.amount.visible && (
                 <ERPInput
                   ref={amountRef}
@@ -1790,7 +1889,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
           </div>
 
-          <div className="leading-none">
+          <div
+            className="leading-none"
+            style={{
+              maxWidth: formState.userConfig?.maxWidth,
+              marginLeft:
+                formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight:
+                formState.userConfig?.alignment === "right" ? "0" : "auto",
+              textAlign: formState.userConfig?.alignment,
+            }}
+          >
             <div className="flex items-center gap-2">
               {formState.formElements.narration.visible && (
                 <ERPInput
@@ -1798,6 +1907,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   id="narration"
                   className="w-full"
                   disableEnterNavigation
+                  onKeyDown={(e) => {
+                    handleKeyDown(e,"narration");
+                  }}
                   label={formState.formElements.narration.label}
                   value={formState.row.narration}
                   onChange={(e) =>
@@ -1922,7 +2034,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )}
               </>
             )}
-            {/* {formState.formElements.costCentreId.visible && ( */}
+            {formState.formElements.costCentreId.visible && (
               <ERPDataCombobox
                 id="costCentre"
                 className="min-w-[180px]"
@@ -1938,8 +2050,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 }
                 value={formState.row.costCentreId}
                 onSelectItem={(e) =>
-                {
-                  debugger;
+                  {
+                    debugger;
                   dispatch(
                     accFormStateRowHandleFieldChange({
                       fields: {
@@ -1956,9 +2068,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onKeyDown={(e: any) => {
                         debugger;
                         handleKeyDown(e,"costCentre");
-                      }}
-              />
-            {/* )} */}
+                      }}         
+                           />
+            )}
             <div
               className="text-red-600"
               style={{ fontSize: "12px", color: "chocolate" }}
@@ -2541,7 +2653,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
+        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",

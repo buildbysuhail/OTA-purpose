@@ -55,6 +55,8 @@ export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
   mnuShowConfirmationForEditOnAccounts: boolean;
+  maximizeBillwiseScreenInitially:boolean;
+  alignment: 'left' | 'center' | 'right';
 }
 
 interface FormElementState {
@@ -78,6 +80,7 @@ export const useAccTransaction = (
   voucherNumberRef?: any,
   chequeNumberRef?: any,
   remarksRef?: any
+
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -86,7 +89,7 @@ export const useAccTransaction = (
     (state: RootState) => state.AppState.softwareDate
   );
   const { printVoucher, printCheque, printPaymentReceiptAdvice } =
-    useAccPrint();
+  useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -122,6 +125,7 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCode = () => {
+    
     if (ledgerCodeRef.current) {
       ledgerCodeRef.current.focus();
     }
@@ -189,7 +193,7 @@ export const useAccTransaction = (
       return null;
     }
   };
-
+ 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode() {
     if (formState.isEdit) {
@@ -289,7 +293,7 @@ export const useAccTransaction = (
         icon: "warning",
         title:
           "Transaction Date validation failed(Check Financial Year period)",
-        text: validateTransDate.message,
+          text: validateTransDate.message,
       });
       return false;
     }
@@ -377,7 +381,7 @@ export const useAccTransaction = (
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
-
+ 
   const setupBahamdoonPOSReceipts = () => {
     let master = { ...formState.transaction.master };
     let row = { ...formState.row };
@@ -504,7 +508,7 @@ export const useAccTransaction = (
           title: saveRes.message,
         });
       }
-
+      
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -580,6 +584,7 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async () => {
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
@@ -789,6 +794,7 @@ export const useAccTransaction = (
           },
         })
       );
+      
 
       // Update row data in form state
       dispatch(
@@ -891,6 +897,7 @@ export const useAccTransaction = (
     gridRef: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
+    
     if (key === "e" || key === "E" || key === "Enter") {
       focusLedgerCombo();
     }
@@ -903,6 +910,7 @@ export const useAccTransaction = (
         icon: "warning",
         confirmButtonText: "Yes, delete it!",
         onConfirm: () => {
+          
           const dataGridInstance = gridRef.current.instance(); // Access DataGrid instance
           const focusedRowIndex = dataGridInstance.option("focusedRowIndex");
           dispatch(
@@ -919,6 +927,7 @@ export const useAccTransaction = (
 
   // Ledger code keydown handler
   const handleLedgerCodeKeyDown = async (e: any) => {
+    
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
@@ -968,6 +977,7 @@ export const useAccTransaction = (
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
+    debugger;
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =
@@ -1019,7 +1029,7 @@ export const useAccTransaction = (
   // Voucher number navigation handlers
   const handleVoucherNumberKeyUp = async (e: any) => {
     const currentNumber = Number(formState.transaction.master.voucherNumber);
-
+    
     if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
       if (currentNumber > 0) {
         await loadAccTransVoucher();
@@ -1059,7 +1069,7 @@ export const useAccTransaction = (
       })
     );
   };
-
+ 
   // Edit button handler
   const handleEdit = async () => {
     const validateTransactionDateRes = validateTransactionDate(
@@ -1130,7 +1140,7 @@ export const useAccTransaction = (
       console.error("Error handling edit:", error);
     }
   };
-
+  
   // Delete button handler
   const deleteAccTransVoucher = async () => {
     if (formState.transaction.master?.isLocked) {

@@ -1,40 +1,20 @@
-import React, {
-  forwardRef,
-  memo,
-  KeyboardEvent,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
-import {
-  TextField,
-  InputAdornment,
-  TextFieldProps,
-  Theme,
-  SxProps,
-  Typography,
-} from "@mui/material";
-import {
-  setFgAccordingToBgPrimary,
-  setNestedValue,
-} from "../../utilities/Utils";
+import React, {forwardRef,memo,KeyboardEvent,useEffect,useState} from "react";
+import {TextField,InputAdornment,TextFieldProps,Theme,SxProps,Typography} from "@mui/material";
+import {setNestedValue} from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
-import { Background } from "devextreme-react/cjs/range-selector";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation, }: { validation?: string; }) => validation != undefined && validation != null && validation != "" ? (<div className="text-red text-xs">{validation}</div>) : (null);
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "color">;
 
-
 interface Option {
   value: string;
   label: string;
   is_active?: boolean;
 }
-
 
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
@@ -494,7 +474,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       ...props,
     };
     const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-      handleNavigation(e);
+      if (e.key === "Enter") {
+        handleNavigation(e);
+      }
     };
 
     if (_useMUI == true) {
@@ -658,7 +640,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             appearance: "textfield", // For cross-browser consistency
           },
         },
-        onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): undefined,
+        onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown,
         onKeyUp: onKeyUp,
       };
       return (
@@ -772,7 +754,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               step={step}
               accept={accept}
               onKeyDown={(e) => {
-                debugger; disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)  : handleNavigation
+                disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)  : handleKeyDown(e);
               }}
               onKeyUp={onKeyUp}
               data-skip={skip}

@@ -114,13 +114,13 @@ const DayBookSummary = () => {
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}
                   filterInitialData={DayBookReportFilterInitialState}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged = {(filter: any) => {debugger; setFilter(filter)}}
                   reload={true}
                   gridId="grd_day_book_summary"
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <DayBookBillWise postData={filter}/>,
+                    content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
                     isForm: false,
                     width: "mw-100",
@@ -129,12 +129,14 @@ const DayBookSummary = () => {
                     // enableFn: (data: any) => data?.voucherType != ""
                     //dateFrom,dateTo,costCenterID,
                   }}
+                  postData={filter}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
     </Fragment>
   );
 };

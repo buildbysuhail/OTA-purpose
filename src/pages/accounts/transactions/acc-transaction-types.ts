@@ -1,6 +1,3 @@
-import { UserAction } from "../../../helpers/user-right-helper";
-import { UserModel } from "../../../redux/slices/user-session/reducer";
-
 // AccTransaction interface
 export interface AccTransactionProps {
   voucherType: string;
@@ -105,7 +102,7 @@ export interface AccTransactionMaster {
   referenceDate: string;
   dueDate: string;
   particulars: string;
-  isLocked: boolean; 
+  isLocked: boolean;
   totalDebit?: number;
   billwiseTotalAdjAmt?: number;
   billwiseAdjAmt?: number;
@@ -189,52 +186,52 @@ export interface AccTransactionMasterValidations {
 
 // Initial object with default values
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
-  accTransMasterID: "",
-  departmentId: "",
-  costCentreId: "",
-  billwiseMasterId: "",
-  employeeId: "",
-  invTransactionId: "",
-  transactionDate: "",
+    accTransMasterID: "",
+    departmentId: "",
+    costCentreId: "",
+    billwiseMasterId: "",
+    employeeId: "",
+    invTransactionId: "",
+    transactionDate: "",
 
-  prevTransDate: "",
-  bankDate: "",
-  voucherPrefix: "",
-  voucherNumber: "",
-  referenceNumber: "",
-  referenceDate: "",
-  dueDate: "",
-  particulars: "",
-  totalDebit: "",
-  billwiseTotalAdjAmt: "",
-  billwiseAdjAmt: "",
-  totalCredit: "",
-  totDiscount: "",
-  empIncentive: "",
-  commonNarration: "",
-  remarks: "",
-  voucherType: "",
-  formType: "",
-  debitNoteTransId: "",
-  creditNoteTransId: "",
-  currencyId: "",
-  accTransDetailId: "",
-  adjustedTransDetailId: "",
-  currencyRate: "",
-  isPosted: "",
-  randomKey: "",
-  onlineTrans: "",
-  isEdit: "",
-  checkStatus: "",
-  checkBouncedDate: "",
-  drCr: "",
-  isSalesView: "",
-  branchId: "",
-  counterId: "",
-  refBranchId: "",
-  uuid: "",
-  manualInvoiceNumber: "",
-};
+    prevTransDate: "",
+    bankDate: "",
+    voucherPrefix: "",
+    voucherNumber: "",
+    referenceNumber: "",
+    referenceDate: "",
+    dueDate: "",
+    particulars: "",
+    totalDebit: "",
+    billwiseTotalAdjAmt: "",
+    billwiseAdjAmt: "",
+    totalCredit: "",
+    totDiscount: "",
+    empIncentive: "",
+    commonNarration: "",
+    remarks: "",
+    voucherType: "",
+    formType: "",
+    debitNoteTransId: "",
+    creditNoteTransId: "",
+    currencyId: "",
+    accTransDetailId: "",
+    adjustedTransDetailId: "",
+    currencyRate: "",
+    isPosted: "",
+    randomKey: "",
+    onlineTrans: "",
+    isEdit: "",
+    checkStatus: "",
+    checkBouncedDate: "",
+    drCr: "",
+    isSalesView: "",
+    branchId: "",
+    counterId: "",
+    refBranchId: "",
+    uuid: "",
+    manualInvoiceNumber: "",
+  };
 // AccDetailInput interface
 export interface AccTransactionRowForOutPut extends AccTransactionRow {
   relatedLedgerCode: string;
@@ -404,9 +401,12 @@ export interface BillwiseData {
   VoucherPrefix: string;
 }
 export interface AccUserConfig {
+  maxWidth: any;
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
   mnuShowConfirmationForEditOnAccounts: boolean;
+  maximizeBillwiseScreenInitially: boolean;
+  alignment: "left" | "center" | "right";
   presetCostenterId: number
   counterAssignedCashLedgerId: number
 }
@@ -448,7 +448,7 @@ export interface AccTransactionFormState {
   masterBalance: number; // Master account balance
   masterBalanceLoading: boolean; // Master account balance
   masterAccountName: string; // Master account name
-  previousNarration: string; 
+  previousNarration: string;
   row: AccTransactionRow;
   rowProcessing: boolean;
   transactionProcessing: boolean;
@@ -564,8 +564,14 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   keepNarration: false,
   amountInWords: 'Zero Only',
   userConfig: {
-    clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0,
-    counterAssignedCashLedgerId: 0
+    clearDetailsAfterSaveAccounts: true,
+    keepNarrationForJV: true,
+    mnuShowConfirmationForEditOnAccounts: true,
+    maximizeBillwiseScreenInitially: true,
+    alignment: "center",
+    presetCostenterId: 0,
+    counterAssignedCashLedgerId: 0,
+    maxWidth:" ",
   },
   isBahamdoonPOSReceipt: false,
   unlocking: false,

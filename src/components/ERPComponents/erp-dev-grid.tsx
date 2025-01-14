@@ -227,6 +227,8 @@ interface ERPDevGridProps {
     origin?: string;
     enableFn?: (data: any) => boolean;
   };
+  originDynamic?: (data: any) => any;
+  postDataDynamic?: (data: any) => any;
   [key: string]: any; // To allow other props to be passed
   enableScrollButton?: boolean;
 }
@@ -474,6 +476,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         bodyProps: "",
       },
       childPopupPropsDynamic,
+      originDynamic,
+      postDataDynamic,
       enableScrollButton = true,
       ...props
     },
@@ -1122,8 +1126,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               updatedBodyProps[trimmedProp] = event.data[trimmedProp];
             })
           : {};
+          debugger;
+          const pdata = postDataDynamic != undefined ? postDataDynamic(_drillDownCell) :postData
         const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
-          postData,
+          pdata,
           updatedBodyProps
         );
         // Update bodyProps state
@@ -1139,7 +1145,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         });
         // const sd = 223;
       }
-    }, []);
+    }, [postDataDynamic, postData]);
 
     const onCellPrepared = useCallback((e: any) => {
       //   // Get dynamic properties
@@ -1469,7 +1475,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ? childPopupPropsDynamic(isChildOpen.key).isForm
                 : childPopupProps?.isForm
             }
-            origin={
+            origin={ 
+              originDynamic ? originDynamic(isChildOpen.key) :
               childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).origin
                 : childPopupProps?.origin

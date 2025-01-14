@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
@@ -40,6 +40,16 @@ const IncomExpenseStatement = () => {
       allowFiltering: true,
       width: 80,
       showInPdf:true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return cellElement.data.ledgerID > 0 ? (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="ledgerID"
+          ></DrillDownCellTemplate>
+        ) : (
+          cellElement.value
+        );
+      },
     },
     {
       dataField: "accGroupName",
@@ -136,19 +146,18 @@ const IncomExpenseStatement = () => {
                   gridHeader={t("income_expense_statement")}
                   dataUrl={Urls.acc_reports_income_expense_statement }
                   method={ActionType.POST}
-                  gridId="grd_expense_report"
+                  gridId="grd_income_expense_statement_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth="100"
                   filterContent={<IncomeExpenseStatementFilter />}
+                  onFilterChanged = {(filter: any) => { setFilter(filter)}}
                   filterInitialData={IncomeExpenseStatementFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                     {asonDate: filter.toDate,fromDate:filter.fromDate} 
-                      }
+                    content: <CashBookMonthWise 
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
@@ -158,6 +167,9 @@ const IncomExpenseStatement = () => {
                     
                     enableFn: (data: any) => data.ledgerID<=0 ? false  : true
                   }}
+                  postData={
+                    {asonDate: filter.toDate,fromDate:filter.fromDate} 
+                     }
                 ></ErpDevGrid>
               </div>
             </div>

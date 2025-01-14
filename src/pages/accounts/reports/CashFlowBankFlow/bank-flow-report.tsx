@@ -167,20 +167,18 @@ const BankFlowReport = () => {
                     isForm: false,
                     content: 
                     dataField == "showSummary" ?
-                    <CashBankFlowDetailedSummaryReport postData={{...filter,
-                      reportType:"Bank",
-                    }} />
+                    <CashBankFlowDetailedSummaryReport  />
                     :  
                     dataField == "month" ?
-                    <CashBankFlowDetailedReport postData={
-                      { ...filter,
-                        reportType:"Bank",
-                      }} />
+                    <CashBankFlowDetailedReport  />
                       : null
                       ,
                     drillDownCells: dataField == "showSummary" ? "showSummary" : "month",
                     bodyProps: dataField == "showSummary" ? "year,monthNum,month" : "year,monthNum",
                   })}
+                  postData={{...filter,
+                    reportType:"Bank",
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

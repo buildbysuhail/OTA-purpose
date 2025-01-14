@@ -136,7 +136,6 @@ const Urls = {
   // AccountSettings/Preferences
   updateLanguage: "/Core/Preferences/UpdateLanguage/",
   updatePreference: "/Core/Preferences/UpdatePreference/",
-  UpdateLocalSettings: "/Core/Preferences/UpdateLocalSettings/",
   updateUserThemes: "/Core/Preferences/UpdateUserThemes/",
   getLanguage: "/Core/Preferences/GetLanguage/",
   getPreference: "/Core/Preferences/GetPreference/",
@@ -217,7 +216,8 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  acc_user_config:"",
+  post_acc_user_config:"/Core/Preferences/UpdateLocalSettings",
+  get_acc_user_config:"/Core/Preferences/GetLocalSettings",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start
@@ -256,13 +256,14 @@ const Urls = {
   acc_reports_party_summary_purchase_order: "/Accounts/RptPartyWiseSummary/PurchaseOrder/",
   acc_reports_party_summary_sales_return: "/Accounts/RptPartyWiseSummary/SalesReturn/",
   acc_reports_party_summary_sales_order: "/Accounts/RptPartyWiseSummary/SalesOrder/",
+  acc_reports_bank_statement: "/Accounts/RptBankStatement/BankStatement/",
 
   acc_reports_payable: "/Accounts/RptOutstandingReport/Payable/",
   acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable/",
 
   // acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   // acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-  acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
+
 
   acc_reports_trial_balance: "/Accounts/RptTrialBalance/TrialBalance/",
   acc_reports_trial_balance_detailed: "/Accounts/RptTrialBalance/TrialBalancePeriodwise/",
@@ -286,6 +287,7 @@ const Urls = {
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
+  acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
 
 //inventory
 inv_reports_price_list:"",
@@ -347,7 +349,7 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
-    partiesBankNames:"/Core/SelectPartiesBankNames",
+    partiesBankNames:"/Core/TransactionBase/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
     set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
     get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"

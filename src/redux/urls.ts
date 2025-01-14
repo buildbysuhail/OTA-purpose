@@ -347,7 +347,7 @@ inv_reports_stock_flow:"",
     unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
     ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
     voucher_selector: "/Core/VoucherSelector/",
-    partiesBankNames:"/Core/SelectPartiesBankNames",
+    partiesBankNames:"/Core/TransactionBase/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
     set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
     get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"

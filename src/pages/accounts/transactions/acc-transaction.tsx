@@ -1922,7 +1922,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )}
               </>
             )}
-            {/* {formState.formElements.costCentreId.visible && ( */}
+            {formState.formElements.costCentreId.visible && (
               <ERPDataCombobox
                 id="costCentre"
                 className="min-w-[180px]"
@@ -1958,7 +1958,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         handleKeyDown(e,"costCentre");
                       }}
               />
-            {/* )} */}
+)}
             <div
               className="text-red-600"
               style={{ fontSize: "12px", color: "chocolate" }}

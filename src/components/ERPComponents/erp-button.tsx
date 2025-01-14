@@ -121,8 +121,8 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-target={jumpTarget}
         style={{
           backgroundColor: isFocused 
-        ? `rgb(${appState?.inputBox?.focusBgColor || '255, 255, 255'})` 
-        : undefined,
+          ? `rgb(${appState?.inputBox?.focusBgColor || '255, 255, 255'})` 
+          : undefined,
         }}
         className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 
@@ -134,11 +134,11 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         font-medium 
         ${variantType} 
         ${variant === "status" ? "text-white" : ""} 
-        
+        "focus:bg-red-500"
         ${className}`
           .trim()
           .replace(/\s+/g, " ")}>
-        {isFocused.toString()}
+        {getButtonContent()}
       </button>
     );
   });

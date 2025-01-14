@@ -15,6 +15,7 @@ import {
 } from "../../utilities/shortKeys";
 import { ERPScrollArea } from "./erp-scrollbar";
 import { Minimize2, Maximize2, X } from "lucide-react";
+import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 
 type ERPModalProps = {
   title: string;
@@ -265,7 +266,7 @@ const ERPModal = React.memo(
                             modalHeight: modalHeight, // Pass isMaximized to the content
                             rowData: rowData,
                             origin: origin,
-                            postData: postData,
+                            postData: mergeObjectsRemovingIdenticalKeys(content.postData, postData),
                           })}
                       </ERPScrollArea>
 

@@ -4,16 +4,13 @@ import moment from "moment-timezone";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { TextField, TextFieldProps, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import ERPInput from "./erp-input";
 import { dateTrimmer } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import {
-  getFocusableElements,
-  handleNavigation,
-} from "../../utilities/shortKeys";
+import {  getFocusableElements,handleNavigation} from "../../utilities/shortKeys";
 
 moment.tz.setDefault("UTC");
 
@@ -114,7 +111,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      handleNavigation(e);
+      if (e.key === "Enter") {
+        handleNavigation(e);
+      }
     };
 
     const [_customSize, setCustomSize] = useState(
@@ -454,9 +453,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                   required,
                   variant: _variant,
                   fullWidth: true,
-
                   onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)
-                      : undefined,
+                      : handleKeyDown,
                   onKeyUp: onKeyUp,
                   // onKeyDown: (e) => {
                   //   if (e.key === 'Enter' && value) {

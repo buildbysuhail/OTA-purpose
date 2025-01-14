@@ -24,7 +24,7 @@ import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
+import { setTemplate,  setTemplateAccTableState,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
 import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
@@ -32,6 +32,7 @@ import { TemplateDto } from "./Designer/interfaces";
 import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../utilities/hooks/use-current-branch";
+import AccTableDesigner from "./Designer/accTableDesigner";
 
 interface DesignSectionType {
   id: number;
@@ -293,19 +294,30 @@ const InvoiceDesigner = () => {
         )}
 
         {currentSection.type == "transactions" && (
-          <TransactionDetailsDesigner
-            template={templateData?.activeTemplate}
-            headerState={templateData?.activeTemplate?.headerState}
-            onChange={(headerState) => dispatch(setTemplateHeaderState(headerState))}
-          />
+         
+            <TransactionDetailsDesigner
+              template={templateData?.activeTemplate}
+              headerState={templateData?.activeTemplate?.headerState}
+              onChange={(headerState) => dispatch(setTemplateHeaderState(headerState))}
+            />
         )}
 
         {currentSection.type == "table" && (
+           ["SI", "SR"].includes(templateGroup) ? (
           <ItemTableDesigner
             template={templateData?.activeTemplate}
             itemTableState={templateData?.activeTemplate?.itemTableState}
             onChange={(itemTableState) => dispatch(setTemplateItemTableState(itemTableState))}
-          />
+            />
+          ) : ["CP", "CR"].includes(templateGroup) ? (
+            < AccTableDesigner
+            template={templateData?.activeTemplate}
+            accTableState={templateData?.activeTemplate?.accTableState}
+            onChange={(accTableState) => dispatch(setTemplateAccTableState(accTableState))}
+            />
+          ) : (
+            <></> // Fallback for when neither SI/SR nor CP/CR are matched
+          )
         )}
 
         {currentSection.type == "total" && (

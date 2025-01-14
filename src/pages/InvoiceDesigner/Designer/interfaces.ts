@@ -44,6 +44,7 @@ export interface TemplateState {
   propertiesState?: PropertiesState;
   headerState?: HeaderState;
   itemTableState?: ItemTableState;
+  accTableState?:accTableState;
   totalState?: TotalState;
   footerState?: FooterState;
   barcodeState?: BarcodeState;
@@ -364,7 +365,7 @@ export interface HeaderState {
   };
 }
 
-export interface ItemTableState {
+export interface ItemTableMasterState {
   showTableBorder?: boolean;
   tableBorderColor?: string;
   /// Table Header
@@ -378,19 +379,50 @@ export interface ItemTableState {
   itemRowFontColor?: string;
   itemRowFontSize?: number;
 
-  // Item Description
-  itemDescriptionFontColor?: string;
-  itemDescriptionFontSize?: number;
-
   /////// Labels
   showLineItemNumber?: boolean;
   lineItemNumberLabel?: string;
   lineItemNumberWidth?: string;
+}
+
+export interface accTableState extends ItemTableMasterState{
+  showInvoiceNumber?:boolean;
+  InvoiceNumberLabel?: string;
+  InvoiceNumberWidth?: string;
+
+  showInvoiceDate?:boolean;
+  InvoiceDateLabel?: string;
+  InvoiceDateWidth?: string;
+
+  // Invoice Amount Fields
+  showInvoiceAmount?: boolean;
+  InvoiceAmountLabel?: string;
+  InvoiceAmountWidth?: string;
+
+  // Withholding Tax Fields
+  showWithholdingTax?: boolean;
+  WithholdingTaxLabel?: string;
+  WithholdingTaxWidth?: string;
+
+  // TCS Amount Fields
+  showTCSAmount?: boolean;
+  showTCSSection?:boolean;
+  TCSAmountLabel?: string;
+  TCSAmountWidth?: string;
+
+  // Payment Amount Fields
+  showPaymentAmount?: boolean;
+  PaymentAmountLabel?: string;
+  PaymentAmountWidth?: string;
+}
+export interface ItemTableState extends ItemTableMasterState {
+  // Item Description
+  itemDescriptionFontColor?: string;
+  itemDescriptionFontSize?: number;
 
   showLineItem?: boolean;
   lineItemLabel?: string;
   lineItemWidth?: string;
-
   showDiscription?: boolean;
   discriptionLabel?: string;
 
@@ -851,8 +883,40 @@ export const initialTemplateState: ActionState<TemplateState> = {
       show_page_number: false,
       bg_image_footer_position: "center",
     },
+    accTableState:{
+      showInvoiceNumber: true,
+      InvoiceNumberLabel: "Invoice Number",
+      InvoiceNumberWidth: "15%",
+    
+      // Invoice Date Fields
+      showInvoiceDate: true,
+      InvoiceDateLabel: "Invoice Date",
+      InvoiceDateWidth: "15%",
+    
+      // Invoice Amount Fields
+      showInvoiceAmount: true,
+      InvoiceAmountLabel: "Invoice Amount",
+      InvoiceAmountWidth: "20%",
+    
+      // Withholding Tax Fields
+      showWithholdingTax: true,
+      WithholdingTaxLabel: "Withholding Tax",
+      WithholdingTaxWidth: "15%",
+    
+      // TCS Amount Fields
+      showTCSAmount: true,
+      TCSAmountLabel: "TCS Amount",
+      TCSAmountWidth: "15%",
+    
+      // Payment Amount Fields
+      showPaymentAmount: true,
+      PaymentAmountLabel: "Payment Amount",
+      PaymentAmountWidth: "20%",
+    }
   },
 };
+
+
 export const initialBacodeTemplateState: ActionState<TemplateState> = {
   loading: false,
   error: null,

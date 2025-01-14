@@ -249,6 +249,7 @@ import ExpenseReportDetailed from "../../../pages/accounts/reports/incomeexpense
 import CollectionReport from "../../../pages/accounts/reports/collection-report";
 import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/bank-flow-report";
 import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/rpt-cash-flow-report";
+import IncomExpenseStatement from "../../../pages/accounts/reports/incomeexpense/income-expense-statement";
 const PriceList = lazy(
   () =>
     import(
@@ -549,6 +550,10 @@ const Content: FC<ContentProps> = () => {
         <Route
           path="/accounts/expense_report_detailed"
           element={<ExpenseReportDetailed />}
+        />
+        <Route
+          path="/accounts/income_expense_statement"
+          element={<IncomExpenseStatement />}
         />
           <Route
           path="/accounts/cash_flow"

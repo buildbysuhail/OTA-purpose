@@ -254,13 +254,14 @@ const Urls = {
   acc_reports_party_summary_purchase_order: "/Accounts/RptPartyWiseSummary/PurchaseOrder/",
   acc_reports_party_summary_sales_return: "/Accounts/RptPartyWiseSummary/SalesReturn/",
   acc_reports_party_summary_sales_order: "/Accounts/RptPartyWiseSummary/SalesOrder/",
+  acc_reports_bank_statement: "/Accounts/RptBankStatement/BankStatement/",
 
   acc_reports_payable: "/Accounts/RptOutstandingReport/Payable/",
   acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable/",
 
   // acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   // acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-  acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
+  acc_reports_aging_analysis: "/Accounts/RptBankStatementC/AgingAnalysisReport/",
 
   acc_reports_trial_balance: "/Accounts/RptTrialBalance/TrialBalance/",
   acc_reports_trial_balance_detailed: "/Accounts/RptTrialBalance/TrialBalancePeriodwise/",

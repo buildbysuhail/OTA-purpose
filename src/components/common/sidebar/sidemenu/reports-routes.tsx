@@ -35,6 +35,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/income_expense_statement`, type: 'link', active: false, selected: false, title: 'income_expense_statement' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/cash_flow`, type: 'link', active: false, selected: false, title: 'cash_flow' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/bank_flow`, type: 'link', active: false, selected: false, title: 'bank_flow' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/bank_statement`, type: 'link', active: false, selected: false, title: 'bank_statement' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_report`, type: 'link', active: false, selected: false, title: 'transaction_report' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_history_accounts`, type: 'link', active: false, selected: false, title: 'transaction_history_accounts' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_history_inventory`, type: 'link', active: false, selected: false, title: 'transaction_history_inventory' },

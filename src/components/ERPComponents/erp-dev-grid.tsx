@@ -225,6 +225,7 @@ interface ERPDevGridProps {
     bodyProps?: string;
     enableFilter?: boolean;
     origin?: string;
+    originDynamic?: (data: any) => boolean;
     enableFn?: (data: any) => boolean;
   };
   [key: string]: any; // To allow other props to be passed
@@ -474,6 +475,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         bodyProps: "",
       },
       childPopupPropsDynamic,
+      originDynamic,
       enableScrollButton = true,
       ...props
     },
@@ -1469,7 +1471,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ? childPopupPropsDynamic(isChildOpen.key).isForm
                 : childPopupProps?.isForm
             }
-            origin={
+            origin={ 
+              originDynamic ? originDynamic(isChildOpen.key) :
               childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).origin
                 : childPopupProps?.origin

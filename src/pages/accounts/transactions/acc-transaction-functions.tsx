@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-
-// import { handleResponse } from '../HandleResponse';
-import { customJsonParse } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
   mnuShowConfirmationForEditOnAccounts: boolean;
+  maximizeBillwiseScreenInitially: boolean;
+  alignment: 'left' | 'center' | 'right';
 }
 const api = new APIClient();
 export const updateTransactionEditMode = async (

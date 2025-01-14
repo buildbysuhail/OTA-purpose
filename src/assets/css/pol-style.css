@@ -285,4 +285,6 @@
   color-scheme: dark;
 }
 
-
+.dx-checkbox-indeterminate .dx-checkbox-icon::before {
+  background-color: transparent !important;
+}

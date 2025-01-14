@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
@@ -13,6 +12,7 @@ import { AccUserConfig } from "./acc-transaction-types";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { Settings } from "lucide-react";
+import ERPInput from "../../../components/ERPComponents/erp-input";
 
 const api = new APIClient();
 export const AccTransactionUserConfig = () => {
@@ -23,10 +23,11 @@ export const AccTransactionUserConfig = () => {
   useEffect(() => {
     const fetchUserConfig = async () => {
       try {
-        // const response = await api.get(Urls.acc_user_config);
-        // const _userConfig = atob(response.data);
-        // const userConfig: any = customJsonParse(_userConfig);
-        // dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+        // Fetch user config from the server
+        const response = await api.get(Urls.acc_user_config);
+        const _userConfig = atob(response.data);
+        const userConfig: AccUserConfig = customJsonParse(_userConfig);
+        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
       } catch (error) {
         console.error("Error fetching user config:", error);
       }
@@ -45,6 +46,7 @@ export const AccTransactionUserConfig = () => {
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {
+      setIsOpen(false);
     }
   };
 
@@ -62,19 +64,15 @@ export const AccTransactionUserConfig = () => {
 
   return (
     <>
-      {/* <ERPButton
-      type="button"
-      startIcon="ri-settings-2-line"
-      variant="primary"
-      onClick={()=>setIsOpen(true)}  
-    /> */}
       <div
         className="group relative inline-flex flex-col items-center"
-        // title={t("Settings ")}
-        title="Settings "
+        title="Settings"
       >
-        <button className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={()=>setIsOpen(true)} >
-          <Settings className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+        <button
+          className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+          onClick={() => setIsOpen(true)}
+        >
+          <Settings className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>
       <ERPModal
@@ -85,7 +83,7 @@ export const AccTransactionUserConfig = () => {
         closeModal={() => setIsOpen(false)}
         content={
           <>
-            <div className="grid gird-col-3 gap-6 p-4 ">
+            <div className="grid gird-col-3 gap-6 p-4">
               <ERPCheckbox
                 id="keepNarrationForJV"
                 label="Keep Narration For JV"
@@ -111,7 +109,7 @@ export const AccTransactionUserConfig = () => {
 
               <ERPCheckbox
                 id="mnuShowConfirmationForEditOnAccounts"
-                label="MnuShow Confirmation For Edit On Accounts"
+                label="Show Confirmation For Edit On Accounts"
                 data={formState.userConfig}
                 checked={
                   formState?.userConfig?.mnuShowConfirmationForEditOnAccounts
@@ -123,6 +121,63 @@ export const AccTransactionUserConfig = () => {
                   )
                 }
               />
+
+              <ERPCheckbox
+                id="maximizeBillwiseScreenInitially"
+                label="Maximize Billwise Screen Initially"
+                data={formState.userConfig}
+                checked={formState?.userConfig?.maximizeBillwiseScreenInitially}
+                onChangeData={(e) =>
+                  handleFieldChange(
+                    "maximizeBillwiseScreenInitially",
+                    e.maximizeBillwiseScreenInitially
+                  )
+                }
+              />
+
+              <ERPInput
+                id="maxWidth"
+                label="Max Width"
+                placeholder="Max Width (e.g., 1200px)"
+                type="text"
+                data={formState.userConfig}
+                value={formState?.userConfig?.maxWidth}
+                onChangeData={(e: { maxWidth: any }) =>
+                  handleFieldChange("maxWidth", e.maxWidth)
+                }
+              />
+
+              <div>
+                <ERPButton
+                  title="Left"
+                  variant={
+                    formState?.userConfig?.alignment === "left"
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => handleFieldChange("alignment", "left")}
+                  className="mr-2"
+                />
+                <ERPButton
+                  title="Center"
+                  variant={
+                    formState?.userConfig?.alignment === "center"
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => handleFieldChange("alignment", "center")}
+                  className="mr-2"
+                />
+                <ERPButton
+                  title="Right"
+                  variant={
+                    formState?.userConfig?.alignment === "right"
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => handleFieldChange("alignment", "right")}
+                />
+              </div>
             </div>
             <div className="w-full p-2 flex justify-end space-x-2">
               <ERPButton

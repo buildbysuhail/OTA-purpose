@@ -430,7 +430,7 @@ const ProfitAndLossDetailedReport = () => {
         <ERPModal
           isOpen={isOpenDetails.isOpen && isOpenDetails.item !==  undefined && isOpenDetails.item !== null}
           // title={t("bank_cards")}
-          title="Safvan"
+          title={isOpenDetails.key == -500 ?"Inventory Value":isOpenDetails.title === "L" ?"Ledger Report monthview":"Account Ledger" }
           width="w-full max-w-[90%]"
           isForm={true}
           closeModal={() => {
@@ -472,14 +472,34 @@ const ProfitAndLossDetailedReport = () => {
               />
             )
           }
-          postData={{
+          postData={isOpenDetails.key == -500 ?
+
+           { fromDate: filter.fromDate,
+                  toDate: filter.toDate,
+                  valuationUsing: filter.valuationUsing}
+                  :
+                  isOpenDetails.title === "L"?
+                  { asOnDate: filter.toDate,
+                    ledgerID: isOpenDetails.key,
+                    fromDate:filter.fromDate}:
+                  {
+                    accGroupID: isOpenDetails.key,
+                    expAccGroupID:
+                      isOpenDetails.key === 19
+                        ? 23
+                        : isOpenDetails.key === 10
+                        ? 26
+                        : 0,
+                    dateFrom: filter.fromDate,
+                    asOnDate: filter.toDate,
+                    isDateForm: true,
+                  }
+                  
             // accGroupID: isOpenDetails.key,
             // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
             // dateFrom: filter.fromDate,
-            asOnDate: filter.toDate,
-            ledgerID: isOpenDetails.key,
-            fromDate:filter.fromDate
-          }}
+          
+          }
       
           rowData={isOpenDetails.item}
           origin = "PandL"

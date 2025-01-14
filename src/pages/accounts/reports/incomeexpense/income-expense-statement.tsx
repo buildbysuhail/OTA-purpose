@@ -146,19 +146,18 @@ const IncomExpenseStatement = () => {
                   gridHeader={t("income_expense_statement")}
                   dataUrl={Urls.acc_reports_income_expense_statement }
                   method={ActionType.POST}
-                  gridId="grd_expense_report"
+                  gridId="grd_income_expense_statement_report"
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth="100"
                   filterContent={<IncomeExpenseStatementFilter />}
+                  onFilterChanged = {(filter: any) => { setFilter(filter)}}
                   filterInitialData={IncomeExpenseStatementFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                     {asonDate: filter.toDate,fromDate:filter.fromDate} 
-                      }
+                    content: <CashBookMonthWise 
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
@@ -168,6 +167,9 @@ const IncomExpenseStatement = () => {
                     
                     enableFn: (data: any) => data.ledgerID<=0 ? false  : true
                   }}
+                  postData={
+                    {asonDate: filter.toDate,fromDate:filter.fromDate} 
+                     }
                 ></ErpDevGrid>
               </div>
             </div>

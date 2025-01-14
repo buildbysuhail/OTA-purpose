@@ -108,15 +108,17 @@ const CashBookSummary = () => {
                   hideGridAddButton={true}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={
-                      { ...filter }} />,
+                    content: <CashBookMonthWise  />,
                     title: t("acc_group_monthview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0
+                    
                   }}
+                  postData={
+                    { ...filter }}
                 ></ErpDevGrid>
               </div>
             </div>

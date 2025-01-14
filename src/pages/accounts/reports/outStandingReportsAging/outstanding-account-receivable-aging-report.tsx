@@ -209,7 +209,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                   filterInitialData={OutstandingAgingReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <OutstandingAccountAgingAnalysis postData={{ ...filter, PartyType: "AR" }} />,
+                    content: <OutstandingAccountAgingAnalysis  />,
                     title: t("account_aging_analysis"),
                     isForm: true,
                     width: "mw-100",
@@ -218,6 +218,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                     //"asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"
                     enableFn: (data: any) => data?.ledgername != "TOTAL"
                   }}
+                  postData={{ ...filter, PartyType: "AR" }}
                 ></ErpDevGrid>
               </div>
             </div>

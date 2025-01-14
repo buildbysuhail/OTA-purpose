@@ -12,7 +12,7 @@ import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 import CashFlowBankFlowSummaryDetailedInReport from "./cash-bank-flow-summary-deailed-in-report";
 import CashFlowBankFlowSummaryDetailedOutReport from "./cash-bank-flow-summary-deailed-out-report";
 interface CashFlowBankFlowDetailedSummaryProps {
-  postData: any;
+  postData?: any;
   groupName?: string;
   contentProps?: any;
   rowData?: any;
@@ -136,7 +136,7 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                   method={ActionType.POST}
                   gridId="grd_cashflow_bankflow_drilldown_summary"
                   popupAction={toggleCostCentrePopup}
-                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+                  // postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   reload={true}
                   hideGridAddButton={true}
                   childPopupPropsDynamic={(dataField: string) => ({
@@ -145,17 +145,18 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
                     isForm: false,
                     content: 
                     dataField == "ledgerNameIN" ?
-                    <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
-                        }} />
+                    <CashFlowBankFlowSummaryDetailedInReport  />
                     :  
                     dataField == "ledgerNameOut" ?
-                    <CashFlowBankFlowSummaryDetailedOutReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />
+                    <CashFlowBankFlowSummaryDetailedOutReport />
                       : null
                       ,
                     drillDownCells: dataField == "ledgerNameIN" ? "ledgerNameIN" : "ledgerNameOut",
                     bodyProps: dataField == "ledgerNameIN" ? "accGroupIDIN" : "accGroupIDOut",
                     origin:"cash_flow",
                   })}
+                  postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
+                  }}
                   // childPopupProps={{
                   //   content: <CashFlowBankFlowSummaryDetailedInReport postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)
                   //   }} />,

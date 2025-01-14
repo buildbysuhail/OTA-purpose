@@ -95,7 +95,7 @@ const BankStatementReport = () => {
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(cellElement.data.debit)
+              ? getFormattedValue(parseFloat(cellElement.data.debit))
               : cellElement.data.debit}`}
         </span>
       ),
@@ -113,7 +113,7 @@ const BankStatementReport = () => {
           {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(cellElement.data.credit)
+              ? getFormattedValue(parseFloat(cellElement.data.credit) )
               : cellElement.data.credit}`}
         </span>
       ),
@@ -222,7 +222,7 @@ const BankStatementReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="from {dateFrom} to {dateTo} {bankLedgerID > 0 && ,Bank Ledger: [ledgerName]}"
+                  filterText="from {dateFrom} to {dateTo} {bankLedgerID > 0 && , Bank Ledger: [BankLedgerName]}"
                   gridHeader={t("bank_statement")}
                   dataUrl={Urls.acc_reports_bank_statement}
                   method={ActionType.POST}

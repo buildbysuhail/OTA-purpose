@@ -249,15 +249,19 @@ const BalancesheetVertical = () => {
                       {
                         asonDate: filter.asonDate
                       }} 
-                      origin="trialBalance"
+                     
                       />
                       : null
                       ,
                     drillDownCells: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
-                  
+             
                   })}
-
+                  postData={
+                    {
+                      asonDate: filter.asonDate
+                    }} 
+                  originDynamic={(dataField: string) => dataField == "accGroupID" ? "detailed" : "trialBalance"}
                 // )}
                 ></ErpDevGrid>
               </div>

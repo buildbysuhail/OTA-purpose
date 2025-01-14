@@ -77,6 +77,7 @@ const Urls = {
   data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
+
   data_company_id: "/Core/Branch/GetBranchData",
 
   // Auth
@@ -174,6 +175,7 @@ const Urls = {
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/Report",
   currencyExchange: "/Core/ExchangeRates/",
+  currencyExchangeRate:"/Core/ExchangeRates/GetCurrencyExchangeRate",
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",

@@ -53,8 +53,11 @@ interface ERPDataComboboxProps {
   onSelectItem?: (item?: any) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  disableEnterNavigation?: boolean;
+  onKeyDown?: (e: any) => void;
+  onKeyUp?: (e: any) => void;
   field?: {
-    id?: string;
+    id?: string; 
     getListUrl?: string;
     getListUrlDynamic?: (value: any) => string;
     valueKey?: string;
@@ -397,6 +400,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
   onSelectItem,
   onFocus,
   onBlur,
+  onKeyDown,
+  onKeyUp,
+  disableEnterNavigation,
   options,
   field,
   defaultData,
@@ -1284,7 +1290,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               required={required}
               variant={_variant}
               sx={sizeStyles.mui}
-              onKeyDown={handleKeyDownEnter}
+              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined) : handleKeyDownEnter}
+              onKeyUp={onKeyUp}
               data-skip={skip}
               data-jump-to={jumpTo}
               data-jump-target={jumpTarget}
@@ -1444,7 +1451,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 e.stopPropagation();
                 !disabled && setIsOpen(!isOpen);
               }}
-              onKeyDown={handleKeyDown}
+              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown}
+              onKeyUp={onKeyUp}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}

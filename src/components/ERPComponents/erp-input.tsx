@@ -44,6 +44,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   label?: string;
   placeholder?: string;
   onChangeData?: (data: any) => void;
+  disableEnterNavigation?: boolean;
   onKeyDown?: (e: any) => void;
   onKeyUp?: (e: any) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -76,7 +77,6 @@ interface ERPInputProps extends ERPInputBaseProps {
   autoFocus?: boolean;
   customSize?: "sm" | "md" | "lg" | "customize";
   useMUI?: boolean;
-  disableEnterNavigation?: boolean;
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
@@ -658,7 +658,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             appearance: "textfield", // For cross-browser consistency
           },
         },
-        onKeyDown:disableEnterNavigation == true ? undefined : onKeyDown != undefined ? onKeyDown: handleKeyDown,
+        onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown,
         onKeyUp: onKeyUp,
       };
       return (

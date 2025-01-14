@@ -163,6 +163,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     printVoucher,
     printPaymentReceiptAdvice,
     handleLoadByRefNo,
+    unlockVoucher,
     handleRefresh,
     createNewVoucher,
   } = useAccTransaction(
@@ -1224,6 +1225,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 {formState.formElements.masterAccount.visible && (
                   <div>
                     <ERPDataCombobox
+                    isInModal ={false}
                       id="masterAccount"
                       label={formState.formElements.masterAccount.label}
                       value={formState.masterAccountID}
@@ -1342,6 +1344,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.bankDate?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
+                      disableEnterNavigation
+                      onKeyDown={(e) => {
+                        debugger;
+                        handleKeyDown(e,"bankDate");
+                      }}
                     />
                   )}
                 </div>
@@ -1358,6 +1365,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           field={{
                             valueKey: "id",
                             labelKey: "name",
+                            nameKey: "rate",
                             getListUrl: Urls.data_currencies,
                           }}
                           onSelectItem={(e) => {
@@ -1365,7 +1373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               accFormStateTransactionMasterHandleFieldChange({
                                 fields: {
                                   currencyId: e.value,
-                                  currencyRate: e.name,
+                                  currencyRate: e.rate,
                                   currencyName: e.label,
                                 },
                               })
@@ -1447,6 +1455,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         id="btnLoadByRef"
                         title="loadByRef"
                         onClick={handleLoadByRefNo}
+                      ></ERPButton>
+                      {formState.formElements.lnkUnlockVoucher.visible == true &&
+                      <ERPButton
+                        id="UnlockVoucher_Click"
+                        title="UnlockVoucher_Click"
+                        onClick={() => {debugger; unlockVoucher()}}
+                      ></ERPButton>
+}
+                      <ERPButton
+                        id="printPaymentReceiptAdvice"
+                        title="printPaymentReceiptAdvice"
+                        onClick={() => printPaymentReceiptAdvice(formState)}
                       ></ERPButton>
                     </>
                   )}
@@ -1555,7 +1575,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             fields: { commonNarration: e.target?.value },
                           })
                         )
-                      }
+                      } 
+                      disableEnterNavigation = {true}
+                      onKeyDown={(e) => {
+                        debugger;
+                        handleKeyDown(e,"commonNarration");
+                      }}
                       disabled={
                         formState.formElements.commonNarration?.disabled ||
                         formState.formElements.pnlMasters?.disabled
@@ -1813,6 +1838,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )}
                 {formState.formElements.btnAdd.visible == true && (
                   <ERPButton
+                  ref={btnAddRef}
                     title={formState.formElements.btnAdd.label}
                     variant="primary"
                     jumpTo="save"
@@ -1896,7 +1922,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )}
               </>
             )}
-            {formState.formElements.costCentreId.visible && (
+            {/* {formState.formElements.costCentreId.visible && ( */}
               <ERPDataCombobox
                 id="costCentre"
                 className="min-w-[180px]"
@@ -1910,7 +1936,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   formState.userConfig.presetCostenterId > 0 ||
                   formState.formElements.costCentreId.disabled
                 }
+                value={formState.row.costCentreId}
                 onSelectItem={(e) =>
+                {
+                  debugger;
                   dispatch(
                     accFormStateRowHandleFieldChange({
                       fields: {
@@ -1918,10 +1947,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         costCentreName: e.label,
                       },
                     })
-                  )
+                  );
+                  handleFieldKeyDown("costCentre", "Enter")
                 }
+                
+              }
+              disableEnterNavigation
+                      onKeyDown={(e: any) => {
+                        debugger;
+                        handleKeyDown(e,"costCentre");
+                      }}
               />
-            )}
+            {/* )} */}
             <div
               className="text-red-600"
               style={{ fontSize: "12px", color: "chocolate" }}

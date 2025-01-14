@@ -26,7 +26,11 @@ import {
   accFormStateClearBillWiseInDetails,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
-import { loadAccVoucher, deleteAccVoucher } from "./thunk";
+import {
+  loadAccVoucher,
+  deleteAccVoucher,
+  unlockAccTransactionMaster,
+} from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useTransaction } from "../../use-transaction";
@@ -38,6 +42,7 @@ import {
   PrintTransProps,
 } from "./acc-transaction-types";
 import {
+  isEnterKey,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
 } from "../../../utilities/Utils";
@@ -218,15 +223,9 @@ export const useAccTransaction = (
 
     return nextVoucherNumber;
   };
-  const selectVoucherForms = async (
-    
-    voucherType: string
-  ) => {
+  const selectVoucherForms = async (voucherType: string) => {
     const response = await api.getAsync(
-      
-      `${
-        Urls.voucher_selector
-      }${voucherType}`
+      `${Urls.voucher_selector}${voucherType}`
     );
 
     return response;
@@ -858,13 +857,14 @@ export const useAccTransaction = (
     debugger;
     if (field === "test") {
       focusLedgerCombo();
-    } 
-    else if (field === "grid") {
+    } else if (field === "grid") {
       handleGridKeyDown(key, gridRef, applicationSettings);
     } else if (field === "ledgerCode") {
       handleLedgerCodeKeyDown(key);
     } else if (field === "amount") {
       handleAmountKeyDown(key);
+    } else if (field === "costCentre") {
+      focusBtnAdd();
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
@@ -873,8 +873,19 @@ export const useAccTransaction = (
       handleEmployeeKeyDown(key);
     } else if (field === "ledgerId") {
       handleLedgerIdKeyDown(key);
+    } else if (field === "bankDate") {
+      if (isEnterKey(key)) {
+        dispatch(
+          accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+        );
+      }
+    } else if (field === "commonNarration") {
+      if (isEnterKey(key)) {
+        focusLedgerCode();
+      }
     }
   };
+
   const handleGridKeyDown = (
     key: any,
     gridRef: any,
@@ -1213,8 +1224,14 @@ export const useAccTransaction = (
       dispatch(accFormStateClearBillWiseInDetails());
 
       // Get new voucher details
-      const selectVoucherData = await selectVoucherForms(formState.transaction.master.voucherType);
-      const getVoucherNumber = await getNextVoucherNumber(formState.transaction.master.formType, formState.transaction.master.voucherType, formState.transaction.master.voucherPrefix);
+      const selectVoucherData = await selectVoucherForms(
+        formState.transaction.master.voucherType
+      );
+      const getVoucherNumber = await getNextVoucherNumber(
+        formState.transaction.master.formType,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.voucherPrefix
+      );
 
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
@@ -1226,7 +1243,16 @@ export const useAccTransaction = (
           },
         })
       );
-      
+    } catch (error) {
+      console.error("Error creating new voucher:", error);
+      // Handle error appropriately
+    }
+  };
+  const unlockVoucher = async () => {
+    try {
+       await appDispatch(unlockAccTransactionMaster(
+        formState.transaction.master.accTransMasterID
+      ))
     } catch (error) {
       console.error("Error creating new voucher:", error);
       // Handle error appropriately
@@ -1255,6 +1281,7 @@ export const useAccTransaction = (
     printVoucher,
     printPaymentReceiptAdvice,
     handleRefresh,
-    createNewVoucher
+    createNewVoucher,
+    unlockVoucher,
   };
 };

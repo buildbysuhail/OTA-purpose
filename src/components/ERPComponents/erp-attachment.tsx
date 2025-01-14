@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import React, { useState, useCallback, Dispatch, SetStateAction } from "react";
+import React, { useState, useCallback, Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 interface FileUpload {
   id: string;
@@ -17,6 +17,7 @@ interface ERPAttachmentProps {
 export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
   const [files, setFiles] = useState<FileUpload[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -83,12 +84,23 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setIsOpen]);
+
   return (
-    <div className=" w-full  p-2  self-end max-h-[100%] overflow-auto  pb-[64px]">
+    <div  className=" w-full  p-2  self-end max-h-[100%] overflow-auto  pb-[64px]">
       <button
         className="text-gray-500 hover:text-gray-700 right-0"
         onClick={() => {
-          
           setIsOpen(false);
         }}
       >

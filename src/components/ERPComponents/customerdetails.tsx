@@ -2,16 +2,13 @@
 
 import {
   Dispatch,
-  JSXElementConstructor,
   Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
   SetStateAction,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import {
-  ChevronRight,
   X,
   CheckCircle2,
   AlertTriangle,
@@ -20,9 +17,6 @@ import {
   Receipt,
   UserPlus,
 } from "lucide-react";
-import { Address } from "./address";
-import { ContactPersons } from "./contact-persons";
-import { ActivityLog } from "./erp-activitylog";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import profile from "../../assets/images/faces/profile-circle.512x512.png";
@@ -60,6 +54,28 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   //       return <CircleDot className="h-4 w-4 text-gray-500" />
   //   }
   // }
+
+  const customerDetailsRef = useRef<HTMLDivElement>(null);
+
+  // Handle clicks outside the component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        customerDetailsRef.current &&
+        !customerDetailsRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup the event listener on unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setIsOpen]);
 
   function getFormattedValue(value: number | string): string {
     if (typeof value === "number") {
@@ -153,7 +169,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 overflow-auto ">
+    <div className="max-w-2xl mx-auto p-4 overflow-auto " ref={customerDetailsRef}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">

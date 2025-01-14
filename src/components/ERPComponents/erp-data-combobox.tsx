@@ -758,7 +758,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
     // }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<any>) => {
     if (!isOpen) {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         setIsOpen(true);
@@ -1290,7 +1290,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
               required={required}
               variant={_variant}
               sx={sizeStyles.mui}
-              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined) : handleKeyDownEnter}
+              onKeyDown = { (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined) : handleKeyDown(e)}
               onKeyUp={onKeyUp}
               data-skip={skip}
               data-jump-to={jumpTo}
@@ -1452,7 +1452,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(({
                 !disabled && setIsOpen(!isOpen);
               }}
               onKeyDown = { (e) =>{ if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {setIsOpen(true);}
-                 disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDownEnter}}
+                 disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined): handleKeyDown(e)}}
               onKeyUp={onKeyUp}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}

@@ -48,6 +48,8 @@ import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import {
   Delete,
+  EllipsisVertical,
+  KeyRound,
   Pencil,
   Printer,
   RefreshCw,
@@ -931,21 +933,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }));
   };
 
-  const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
+  // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (popupRef && !popupRef.contains(event.target as Node)) {
-        setShowPopup(false);
-        setIsHovered(false);
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (popupRef && !popupRef.contains(event.target as Node)) {
+  //       setShowPopup(false);
+  //       setIsHovered(false);
+  //     }
+  //   }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupRef]);
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [popupRef]);
 
   const [showTotalsPopup, setShowTotalsPopup] = useState(false); // State for showing totals popup
 
@@ -985,11 +987,31 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const goToPreviousPage = () => {
     window.history.back();
   };
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setIsPopupVisible(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
+
   return (
     <div className="relative">
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
-        <div className="bg-white space-y-6 p-4">
+        <div className="dark:bg-dark-bg bg-white space-y-6 p-4">
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
@@ -1140,6 +1162,74 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* Settings  Button */}
                   <div>
                     <AccTransactionUserConfig />
+                  </div>
+
+                  <div className="relative"> 
+                    <button
+                    onClick={() => setIsPopupVisible(!isPopupVisible)}
+                    // onClick={handleButtonClick}
+                    className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                    title={t("previous_page")}
+                  >
+                    <EllipsisVertical className="w-6 h-6 text-gray-600 hover:text-gray-800 transition-colors" />
+                  </button>
+
+                  {isPopupVisible && (
+                    <div
+                      ref={popupRef} // Attach ref to the popup
+                      className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                      style={{
+                        top: '100%', // Position the popup right below the button
+                        left: '-170px',   // Align it with the left edge of the button
+                        width: '221px', // Set your desired width
+                        marginTop: '8px', // Add some spacing between the button and the popup
+                      }}
+                    >
+                      <div className="flex justify-between items-center">
+                        <h6 className="text-sm font-semibold">print button</h6>
+                        {/* <button
+                          onClick={() => setIsPopupVisible(false)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          <X className="w-6 h-6" />
+                        </button> */}
+                      </div>
+                      <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                      <ul className="space-y-1">
+                        <li>
+                          <button 
+                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
+                            onClick={(e) => {
+                              e.preventDefault(); // Prevent default link behavior
+                              printPaymentReceiptAdvice(formState);
+                            }}
+                          >
+                            <Printer  className="h-4 w-4" />
+                            {/* <span>printPaymentReceiptAdvice</span> */}
+                            <span>printPayment</span>
+                          </button>
+                        </li>
+                        
+                        {formState.formElements.lnkUnlockVoucher.visible && (
+                          <li>
+                            <button 
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              onClick={(e) => {
+                                e.preventDefault(); // Prevent default link behavior
+                                debugger; 
+                                unlockVoucher();
+                              }}
+                            >
+                              <KeyRound  className="h-4 w-4" />
+                              {/* <span>UnlockVoucher_Click</span> */}
+                              <span>UnlockVoucher</span>
+                            </button>
+                          </li>
+                        )} 
+                      </ul>
+                    </nav>
+                    </div>
+                  )}
                   </div>
 
                   {/* Previous Page Button */}
@@ -2563,7 +2653,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
+        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",

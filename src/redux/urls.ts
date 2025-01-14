@@ -217,7 +217,8 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
-  acc_user_config:"/Core/UpdateLocalSettings",
+  post_acc_user_config:"/Core/UpdateLocalSettings",
+  get_acc_user_config:"/Core/GetLocalSettings",
   acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
   acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start

@@ -24,9 +24,12 @@ export const AccTransactionUserConfig = () => {
     const fetchUserConfig = async () => {
       try {
         // Fetch user config from the server
-        const response = await api.get(Urls.acc_user_config);
+        const response = await api.get(Urls.get_acc_user_config);
         const _userConfig = atob(response.data);
         const userConfig: AccUserConfig = customJsonParse(_userConfig);
+
+
+
         dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
       } catch (error) {
         console.error("Error fetching user config:", error);
@@ -39,8 +42,8 @@ export const AccTransactionUserConfig = () => {
   const postUserConfig = async () => {
     try {
       const response = await api.post(
-        `${Urls.acc_user_config}`,
-        btoa(JSON.stringify(formState.userConfig))
+        `${Urls.post_acc_user_config}`,
+        formState.userConfig
       );
       handleResponse(response);
     } catch (error) {

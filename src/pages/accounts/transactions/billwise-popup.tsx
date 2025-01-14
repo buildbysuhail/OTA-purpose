@@ -149,6 +149,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   showRowLines={true}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
+                  remoteOperations = {{filtering:false, grouping:false, groupPaging:false, paging:false, sorting:false, summary:false}}
                   onRowUpdated={handleSelectionChange}
                   // onSelectionChanged={handleSelectionChange}
                   onRowUpdating={onRowUpdating}

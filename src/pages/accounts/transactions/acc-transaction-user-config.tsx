@@ -13,11 +13,52 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { Settings } from "lucide-react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-
+import { inputBox } from "../../../redux/slices/app/types";
+import InputBoxStyling from "../../../components/ERPComponents/erp-inputboxStyle-preference";
+import { hexToRgb } from "../../../components/common/switcher/switcherdata/switcherdata";
 const api = new APIClient();
+interface pageBgColor{
+  pageBgColor:string
+}
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [inputBox, setInputBox] = useState<inputBox>({
+    inputStyle: "normal",
+    inputSize: "md",
+    checkButtonInputSize: "md",
+    inputHeight: 0,
+    fontSize: 14,
+    fontWeight: 400,
+    labelFontSize: 14,
+    otherLabelFontSize: 14,
+    inputBgColor: "128, 128, 128",
+    borderColor: "128, 128, 128",
+    selectColor: "128, 128, 128",
+    fontColor: "0, 0, 0",
+    labelColor: "0, 0, 0",
+    borderFocus: "0, 0, 0",
+    borderRadius: 4,
+    adjustA: 0,
+    adjustB: 0,
+    adjustC: 0,
+    adjustD: 0,
+    marginTop: 0,
+    marginBottom: 0,
+    focusForeColor: "0, 0, 0",
+    focusBgColor: "255, 255, 255",
+  });
+
+  const [page,setPage] = useState({
+    pageBgColor:"252,252,252"
+  })
+
+  const handleInputBoxChange = (field: keyof inputBox, value: any) => {
+    setInputBox((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -81,7 +122,8 @@ export const AccTransactionUserConfig = () => {
       <ERPModal
         isOpen={isOpen}
         title="User Config"
-        width="w-full max-w-[600px]"
+        width="w-full max-w-[1000px]"
+        minHeight={800}
         isForm={true}
         closeModal={() => setIsOpen(false)}
         content={
@@ -182,6 +224,44 @@ export const AccTransactionUserConfig = () => {
                 />
               </div>
             </div>
+            <div className="flex flex-col">
+              <div className="flex items-center my-1">
+                  <label htmlFor="pageBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
+                    Page Background Color
+                  </label>
+                  <div className="ti-form-radio">
+                    <div
+                      className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                      style={{
+                        backgroundColor: `rgb(${page?.pageBgColor})`,
+                      }}
+                    >
+                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                      <input
+                        type="color"
+                        value={page?.pageBgColor}
+                        onChange={(e) => {
+                          const rgb = hexToRgb(e.target?.value);
+                          if (rgb) {
+                            setPage((prev) => ({
+                              ...prev,
+                              pageBgColor: `${rgb.r},${rgb.g},${rgb.b}`,
+                            }));
+                          }
+                        }}
+                        className="opacity-0 w-full h-full cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+            <p className="switcher-style-head ">Input Box Style:</p>
+            <InputBoxStyling
+            isInputBgColor
+            inputBox={inputBox}
+            onInputBoxChange={handleInputBoxChange}
+          />
+            </div>
+          
             <div className="w-full p-2 flex justify-end space-x-2">
               <ERPButton
                 title="Cancel"

@@ -1,4 +1,4 @@
-import React, {forwardRef,memo,KeyboardEvent,useEffect,useState} from "react";
+import React, {forwardRef,memo,KeyboardEvent,useEffect,useState, cloneElement} from "react";
 import {TextField,InputAdornment,TextFieldProps,Theme,SxProps,Typography} from "@mui/material";
 import {setNestedValue} from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -48,6 +48,8 @@ interface ERPInputProps extends ERPInputBaseProps {
   noLabel?: boolean;
   showCustomNumberChanger?: false | true ;
   labelDirection?: "horizontal" | "vertical";
+  labelInfo?: any;
+  labelInfoProps?: any;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   onClickPrefix?: () => void;
@@ -95,6 +97,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       noLabel,
       showCustomNumberChanger,
       labelDirection = "vertical",
+      labelInfo,
+      labelInfoProps,
       prefix,
       suffix,
       step,
@@ -672,6 +676,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
           }}>
           {!noLabel && (
+            <div className="flex justify-between">
             <label
               className={`capitalize  text-left rtl:text-right ${appState?.mode == 'dark' ? "#000" : `rgb(${appState?.inputBox?.labelColor})`} ${labelClassName}
               ${labelDirection === "vertical" ? "" : ""}`}
@@ -693,6 +698,41 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               {`${iLabel}  ${labelDirection === "horizontal" ? ":" : ""}`}
               {required && !noLabel && "*"}
             </label>
+            <label
+              className={`capitalize block text-right rtl:text-left ${
+                appState?.mode == "dark" ? "form-label" : ""
+              }`}
+              style={{
+                fontSize: _customSize
+                  ? _customSize === "sm"
+                    ? "12px"
+                    : _customSize === "md"
+                    ? "14px"
+                    : _customSize === "lg"
+                    ? "16px"
+                    : `${appState?.inputBox?.labelFontSize}px`
+                  : `14px`,
+                color:
+                  appState?.mode === "dark"
+                    ? "rgb(225,224,224)"
+                    : appState?.inputBox?.labelColor
+                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : "rgb(84,84,84)",
+                transform:
+                  _customSize === "customize"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 10
+                      }px) scale(1)`
+                    : ``,
+              }}
+            >
+              {labelInfo &&
+              cloneElement(
+              labelInfo,
+              labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
+            )}
+            </label>
+        </div>
           )}
 
           <div className={`flex  ${labelDirection === "vertical" ? "" : "basis-2/3"}}`}>

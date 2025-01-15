@@ -1216,9 +1216,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <ERPInput
                         disableEnterNavigation={true}
                         ref={voucherNumberRef}
-                        id="voucherNumber"
+                        id="voucherNumber" 
                         onKeyUp={(e) => {
-                          handleKeyDown("voucherNumber", e);
+                          handleKeyDown(e,"voucherNumber");
                         }}
                         label={formState.formElements.voucherNumber.label}
                         value={formState.transaction.master.voucherNumber}
@@ -1235,6 +1235,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             loadAccTransVoucher(false, e.target?.value);
                           }
                         }}
+                        
                         disabled={
                           formState.formElements.voucherNumber?.disabled ||
                           formState.formElements.pnlMasters?.disabled

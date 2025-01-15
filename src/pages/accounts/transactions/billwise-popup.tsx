@@ -279,118 +279,60 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     onClose();
   }
   const handleSave = () => {
-    // try {
-    //   if (userSession.countryId == Countries.India) {
-    //     let vrNumbers = { current: "" };
+    try {
+      if (isFromAccTrans) {
+        if (!validate()) return;
+        const billwiseString = getBillwiseString();
+        const amtAdjusted = getTotalAmountToSet();
+        dispatch(
+          accFormStateRowHandleFieldChange({
+            fields: {
+              billwiseDetails:
+                amtAdjusted > 0 ? billwiseString.billwiseString : "" 
+            },
+          })
+        );
 
-    //     if (isFromAccTrans) {
-    //       if (!validate()) return;
+        if (amtAdjusted < 0) {
+          ERPAlert.show({
+            title: "failed",
+            text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+          });
+          return;
+        }
 
-    //       const amtAdjusted = getTotalAmountToSet();
-    //       dispatch(
-    //         accFormStateRowHandleFieldChange({
-    //           fields: {
-    //             billwiseDetails:
-    //               amtAdjusted > 0 ? getBillwiseString().billwiseString : "",
-    //               narration: 
-    //           },
-    //         })
-    //       );
+        if (Number(formState.row.amount ?? 0) < amtAdjusted) {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: {
+                amount: amtAdjusted,
+                
+              },
+            })
+          );
+        }
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              remarks: formState.transaction.master.remarks + "BW:" + billwiseString.vrNumbers                
+            },
+          })
+        );
 
-    //       if (amtAdjusted < 0) {
-    //         ERPAlert.show({
-    //           title: "failed",
-    //           text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
-    //         });
-    //         return;
-    //       }
+        closeBillwie()
+      } else if (isFromCashTender) {
+        if (!validate()) return;
 
-    //       if (Number(formState.row.amount ?? 0) < amtAdjusted) {
-    //         dispatch(
-    //           accFormStateRowHandleFieldChange({
-    //             fields: {
-    //               amount: amtAdjusted,
-                  
-    //             },
-    //           })
-    //         );
-    //       }
-    //       dispatch(
-    //         accFormStateTransactionMasterHandleFieldChange({
-    //           fields: {
-    //             remarks: formState.transaction.master.remarks + "BW:" + vrNumbers.current                
-    //           },
-    //         })
-    //       );
-
-    //       closeBillwie()
-    //     } else if (isFromCashTender) {
-    //       if (!validate()) return;
-
-    //       frmCashTender.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmCashTender.txtCashReceived.current.value =
-    //           amtAdjusted.toString();
-    //       }
-
-    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else {
-    //       saveBillwiseDetails();
-    //       onClose();
-    //     }
-    //   } else {
-    //     let vrNumbers = { current: "" };
-
-    //     if (isFromAccTrans) {
-    //       if (!validate()) return;
-
-    //       frmAccTrans.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (amtAdjusted < 0) {
-    //         frmAccTrans.txtBillWiseDetails.current.value = "";
-    //         showMessageBox(
-    //           "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero."
-    //         );
-    //         return;
-    //       }
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmAccTrans.txtAmount.current.value = amtAdjusted.toString();
-    //       }
-
-    //       frmAccTrans.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else if (isFromCashTender) {
-    //       if (!validate()) return;
-
-    //       frmCashTender.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmCashTender.txtCashReceived.current.value =
-    //           amtAdjusted.toString();
-    //       }
-
-    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else {
-    //       saveBillwiseDetails();
-    //       onClose();
-    //     }
-    //   }
-    // } catch (error) {
-    //   setError(`An error occurred: ${error.message}`);
-    // }
+        
+      } else {
+       
+      }
+    } catch (error: any) {
+      ERPAlert.show({
+        title: "failed",
+        text: `An error occurred: ${error.message}`,
+      });
+    }
   };
 
   const calculateNetAdjustment = () => {

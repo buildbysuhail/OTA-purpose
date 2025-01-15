@@ -214,13 +214,15 @@ export const useAccTransaction = (
   const getNextVoucherNumber = async (
     formType: string,
     voucherType: string,
-    prefix: string
+    voucherPrefix: string,
+    isVoucherPrefix:boolean,
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : "null"}&voucherType= ${
-        voucherType ? voucherType : "null"
-      }&prefix=${prefix ? prefix : "null"}`
+      `formType=${formType ? formType : ""
+      }&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""
+      }&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false}`
     );
 
     const nextVoucherNumber = response || 1;
@@ -572,7 +574,8 @@ export const useAccTransaction = (
     getNextVoucherNumber(
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
-      formState.transaction.master.voucherPrefix
+      formState.transaction.master.voucherPrefix,
+      false
     );
     focusLedgerCode();
   };
@@ -1241,7 +1244,8 @@ export const useAccTransaction = (
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
-        formState.transaction.master.voucherPrefix
+        formState.transaction.master.voucherPrefix,
+        false
       );
 
       dispatch(

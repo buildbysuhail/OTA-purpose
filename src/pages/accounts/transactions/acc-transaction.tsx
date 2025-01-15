@@ -237,7 +237,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           voucherNumber:
             voucherNo != undefined && voucherNo > 0
               ? voucherNo
-              : getNextVoucherNumber(formType, voucherType, voucherPrefix),
+              : getNextVoucherNumber(formType, voucherType, voucherPrefix,false),
         },
       })
     );
@@ -616,7 +616,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const nextVoucherNumber = await getNextVoucherNumber(
       formType,
       voucherType,
-      voucherPrefix
+      voucherPrefix,
+      false
     );
 
     dispatch(

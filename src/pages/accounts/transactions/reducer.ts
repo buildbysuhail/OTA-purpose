@@ -539,6 +539,7 @@ const accTransactionSlice = createSlice({
   
           // Set master account ID based on voucher type
           const firstDetail = payload.details[0];
+          debugger;
           switch (payload.master.voucherType) {
             case 'CP':
             case 'BP':

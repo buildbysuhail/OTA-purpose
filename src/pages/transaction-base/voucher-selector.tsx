@@ -18,13 +18,6 @@ const api = new APIClient();
 const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType, onRowDblClick }) => {
   const { t } = useTranslation();
   const [data,setData] = useState<{data: any, totalCount: number}>();
-  const _onRowDblClick = (e: any) => {
-
-    const _onRowDblClick = (e: any) => {
-      // Check if onRowDblClick callback exists and pass the row data
-      onRowDblClick && onRowDblClick(e.data);
-  }
-  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -87,7 +80,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType, onRowDbl
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  onRowDblClick={_onRowDblClick}
+                  onRowDblClick={onRowDblClick}
                   heightToAdjustOnWindows={300}
                   gridHeader={t("account_payable_aging_report")}
                   data={data}

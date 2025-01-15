@@ -135,6 +135,7 @@ export interface inputBox {
   fontWeight: number;
   labelFontSize: number;
   otherLabelFontSize: number;
+  inputBgColor?:string;
   borderColor: string;
   selectColor: string;
   fontColor: string;

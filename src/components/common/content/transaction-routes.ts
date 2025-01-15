@@ -13,7 +13,6 @@ export interface TransactionRoute {
   visibleFn?: (userSession: UserModel) => boolean;
 }
 export const transactionRoutes: TransactionRoute[] = [
-  // Cash Payments
   {
     formCode: "CP",
     action: UserAction.Show,

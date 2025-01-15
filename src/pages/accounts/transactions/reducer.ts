@@ -426,14 +426,14 @@ const accTransactionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
-      const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
+      // const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
       const payload = action.payload;
-  
+  debugger;
       if (payload) {
         state.row = { ...AccTransactionRowInitialData };
         // Handle master data
         state.transaction.master = {
-          ...state.transaction.master,
+          // ...state.transaction.master,
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
           currencyRate: payload.master.currencyRate,
@@ -488,7 +488,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.relatedLedgerCode,
                 ledgerName: detail.particulars,
-                ledgerId: detail.relatedLedgerId,
+                ledgerId: detail.relatedLedgerID,
               };
   
             case 'JV':
@@ -498,7 +498,7 @@ const accTransactionSlice = createSlice({
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
                   ledgerName: detail.particulars,
-                  ledgerId: detail.relatedLedgerId,
+                  ledgerId: detail.relatedLedgerID,
                 };
               } else {
                 return {
@@ -539,6 +539,7 @@ const accTransactionSlice = createSlice({
   
           // Set master account ID based on voucher type
           const firstDetail = payload.details[0];
+          debugger;
           switch (payload.master.voucherType) {
             case 'CP':
             case 'BP':
@@ -546,7 +547,7 @@ const accTransactionSlice = createSlice({
             case 'CQP':
             case 'SV':
             case 'PBP':
-              state.masterAccountID = firstDetail.relatedLedgerId;
+              state.masterAccountID = firstDetail.relatedLedgerID;
               break;
   
             case 'CR':
@@ -564,7 +565,7 @@ const accTransactionSlice = createSlice({
               state.masterAccountID =
                 payload.master.drCr === 'Dr'
                   ? firstDetail.ledgerId
-                  : firstDetail.relatedLedgerId;
+                  : firstDetail.relatedLedgerID;
               break;
           }
   

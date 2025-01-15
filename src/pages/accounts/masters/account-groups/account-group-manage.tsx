@@ -176,7 +176,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           <a
             href="#"
             onClick={handleGroupOrder}
-            className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+            className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500"
           >
             {t("group_order")}
           </a>
@@ -184,7 +184,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         <a
           href="#"
           onClick={handleTranslation}
-          className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+          className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500"
         >
           Translate to Arabic
         </a>

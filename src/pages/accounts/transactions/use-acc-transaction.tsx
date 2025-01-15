@@ -214,13 +214,15 @@ export const useAccTransaction = (
   const getNextVoucherNumber = async (
     formType: string,
     voucherType: string,
-    prefix: string
+    voucherPrefix: string,
+    isVoucherPrefix:boolean,
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : "null"}&voucherType= ${
-        voucherType ? voucherType : "null"
-      }&prefix=${prefix ? prefix : "null"}`
+      `formType=${formType ? formType : ""
+      }&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""
+      }&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false}`
     );
 
     const nextVoucherNumber = response || 1;
@@ -451,6 +453,7 @@ export const useAccTransaction = (
     );
   };
   const save = async () => {
+    debugger;
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -571,7 +574,8 @@ export const useAccTransaction = (
     getNextVoucherNumber(
       formState.transaction.master.formType,
       formState.transaction.master.voucherType,
-      formState.transaction.master.voucherPrefix
+      formState.transaction.master.voucherPrefix,
+      false
     );
     focusLedgerCode();
   };
@@ -1240,7 +1244,8 @@ export const useAccTransaction = (
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
-        formState.transaction.master.voucherPrefix
+        formState.transaction.master.voucherPrefix,
+        false
       );
 
       dispatch(
@@ -1265,6 +1270,113 @@ export const useAccTransaction = (
       ))
     } catch (error) {
       console.error("Error creating new voucher:", error);
+      // Handle error appropriately
+    }
+  };
+  const isLedgerBillwiseApplicable = async (ledgerId: number) => {
+    try {
+       return await api.getAsync(`${Urls.is_ledger_billwise_applicable}${ledgerId}`)
+    } catch (error) {
+      return false; 
+      // Handle error appropriately
+    }
+  };
+  const openBillwise = async() => {
+    const billwise = await api.getAsync(
+      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
+        formState.row.ledgerId
+      }&DrCr=${
+        formState.transaction.master.drCr
+      }&AccTransactionDetailID=${
+        formState.row.accTransactionDetailId ?? 0
+      }`
+    );
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          billwiseData: billwise,
+          ledgerBillWiseLoading: false,
+        },
+      })
+    );
+  }
+  const billwiseChanged = async (showBillwise: boolean) => {
+    try {
+      let drCr = "";
+      const loadLedgerData = async () => {
+        switch (formState.transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "DN":
+          case "CQP":
+          case "SV":
+          case "SRV":
+          case "PBP":
+            drCr = "Dr";
+  
+          case "CR":
+          case "BR":
+          case "CN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+            drCr = "Cr";
+  
+          case "OB":
+          case "MJV":
+            drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
+  
+          case "JV":
+            drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
+        }
+        if (
+          formState.showbillwise === true &&
+          formState.row.ledgerId &&
+          formState.ledgerData != null
+        ) {
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                ledgerBillWiseLoading: true,
+              },
+            })
+          );
+  
+          try {
+            if (
+              formState.showbillwise === true &&
+              formState.row.ledgerId &&
+              formState.ledgerData != null
+            ) {
+              
+  
+              // if () {
+                if (await isLedgerBillwiseApplicable((formState.transaction.master.voucherType === "CN" || formState.transaction.master.voucherType === "DN")
+                  ? formState.masterAccountID : formState.row.ledgerId)) {
+                    openBillwise();
+                // } 
+              }
+            }
+          } catch (error) {}
+        }
+        else
+        {
+          if(applicationSettings.accountsSettings?.billwiseMandatory && formState.row.billwiseDetails != "") {
+            dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
+          }
+          if(formState.formElements.costCentreId.visible == false) {
+            addOrEditRow();
+            focusLedgerCode();
+            
+          } else {
+            focusCostCenterRef();
+          }
+        }
+      };
+  
+      loadLedgerData();
+    } catch (error) {
+      return false; 
       // Handle error appropriately
     }
   };
@@ -1293,5 +1405,6 @@ export const useAccTransaction = (
     handleRefresh,
     createNewVoucher,
     unlockVoucher,
+    billwiseChanged,
   };
 };

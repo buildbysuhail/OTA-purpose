@@ -332,7 +332,7 @@ const ProfitAndLossReport = () => {
             day: "2-digit",
           })}
           
-          safvan{showFilter.toString()}
+          {showFilter.toString()}
         </p>
         {/* <DateDisplay filter={{ toDate: new Date('2023-12-20') }} /> */}
         {loading ? (

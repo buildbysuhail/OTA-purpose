@@ -24,16 +24,26 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
-import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
+import {
+  accFormStateHandleFieldChange,
+  accFormStateRowHandleFieldChange,
+  accFormStateTransactionMasterHandleFieldChange,
+} from "./reducer";
+import VoucherType from "../../../enums/voucher-types";
+import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 
 interface BillwiseProps {
-  
-  onSave: (
+  onSave?: (
     billwiseDetails: string,
     totalAmount: number,
     vrNumbers: string
   ) => void;
-  onClose: () => void;
+  onAutoPost?: (
+    billwiseDetails: string,
+    totalAmount: number,
+    vrNumbers: string
+  ) => void;
+  onClose?: () => void;
   isMaximized?: boolean;
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
@@ -55,15 +65,13 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
-  
-  const [ledgerName, setLedgerName] = useState<string>('');
-const [amount, setAmount] = useState<number>(0);
-const [ledgerId, setLedgerId] = useState<string>('');
-const [drCr, setDrCr] = useState<string>('');
-const [accTransactionDetailId, setAccTransactionDetailId] = useState<number>(0);
-const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(undefined);
-const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(undefined);
-const [billwiseString, setBillwiseString] = useState<string | undefined>(undefined);
+
+  const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(
+    undefined
+  );
+  const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(
+    undefined
+  );
 
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
@@ -77,7 +85,40 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     let gridHeightWindows = wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
-
+  useEffect(() => {
+    const voucherType = formState.transaction.master.voucherType;
+    if (
+      voucherType == VoucherType.CashPayment ||
+      voucherType == VoucherType.CashReceipt ||
+      voucherType == VoucherType.BankPayment ||
+      voucherType == VoucherType.BankReceipt ||
+      voucherType == VoucherType.ChequePayment ||
+      voucherType == VoucherType.ChequeReceipt ||
+      voucherType == VoucherType.DebitNote ||
+      voucherType == VoucherType.CreditNote ||
+      voucherType == VoucherType.JournalVoucher ||
+      voucherType == VoucherType.MultiJournal ||
+      voucherType == VoucherType.OpeningBalance ||
+      voucherType == VoucherType.ClosingBalance ||
+      voucherType == VoucherType.CashPaymentEstimate ||
+      voucherType == VoucherType.CashReceiptEstimate ||
+      voucherType == VoucherType.JournalVoucherSpecial ||
+      voucherType == VoucherType.TaxOnExpensePayment
+    ) {
+      setIsFromAccTrans(true);
+    }
+    // else if( voucherType == VoucherType.SalesReturn || voucherType == VoucherType.PurchaseReturn ||
+    //   voucherType == VoucherType.ServiceReturn || voucherType == VoucherType.SalesDiscount)
+    // {
+    //   setIsFromAccTrans(true);
+    // }
+    // // else if(CashCounterTender)
+    // // {
+    // // }
+    else {
+      closeBillwise();
+    }
+  }, [isMaximized, modalHeight]);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
     setStore(clonedData);
@@ -117,15 +158,6 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
       });
       setStore(updatedStore);
     }
-    // const updatedStore = store.map((item: any) =>
-    //   item.slNo === rowData.slNo
-    //     ? {
-    //         ...item,
-    //         isSelected: checked,
-    //         billwiseAmount: checked ? item.amount : 0,
-    //       }
-    //     : item
-    // );
   };
 
   const onRowUpdating = (e: any) => {
@@ -143,7 +175,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       debugger;
-      if (showAllTransactions || row.drCr !== drCr) {
+      if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -161,16 +193,17 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
   }, [showAllTransactions]);
   useEffect(() => {
     const loadBillwiseTransactions = async () => {
+      debugger;
       try {
         // Replace with your actual API call
         const response = await fetch(
-          `/api/billwise/transactions?ledgerId=${ledgerId}&drCr=${drCr}&accTransactionDetailId=${accTransactionDetailId}`
+          `/api/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`
         );
         const data = await response.json();
 
         let lastIndex = 0;
         const formattedData = data?.map((row: any, index: number) => {
-          if (showAllTransactions || row.drCr !== drCr) {
+          if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
             const _it = {
               ...row,
               slNo: lastIndex + 1,
@@ -191,8 +224,8 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
 
         setStore(formattedData);
 
-        if (billwiseString) {
-          generateGridFromBillwiseString(billwiseString);
+        if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+          generateGridFromBillwiseString(formState.row.billwiseDetails);
         }
       } catch (error) {
         console.error("Error loading billwise transactions:", error);
@@ -200,7 +233,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     };
 
     loadBillwiseTransactions();
-  }, [ledgerId, drCr, accTransactionDetailId, billwiseString]);
+  }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
     const rows = billwiseStr.split("|");
@@ -255,6 +288,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     );
   };
   const validate = () => {
+    debugger;
     const totalAmount = getTotalAmountToSet();
 
     if (totalAmount < 0) {
@@ -262,141 +296,96 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
         title: "failed",
         text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
       });
+      return false;
     }
 
-    if (formState.row.amount ?? 0 < totalAmount) {
+    if ((formState.row.amount ?? 0) < totalAmount) {
       ERPAlert.show({
         title: "failed",
         text: "Total adjustment amount exceeds the available amount.",
       });
+      
+    return false;
     }
 
     return true;
   };
-  const closeBillwie = () => {
-    dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
-    
-    onClose();
-  }
+  const closeBillwise = () => {
+    dispatch(
+      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+    );
+
+    onClose && onClose();
+  };
   const handleSave = () => {
-    // try {
-    //   if (userSession.countryId == Countries.India) {
-    //     let vrNumbers = { current: "" };
+    try {
+      debugger;
+      if (isFromAccTrans) {
+        if (!validate()) return;
+        const billwiseString = getBillwiseString();
+        const amtAdjusted = getTotalAmountToSet();
+        dispatch(
+          accFormStateRowHandleFieldChange({
+            fields: {
+              billwiseDetails:
+                amtAdjusted > 0 ? billwiseString.billwiseString : "",
+            },
+          })
+        );
 
-    //     if (isFromAccTrans) {
-    //       if (!validate()) return;
+        if (amtAdjusted < 0) {
+          ERPAlert.show({
+            title: "failed",
+            text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+          });
+          return;
+        }
 
-    //       const amtAdjusted = getTotalAmountToSet();
-    //       dispatch(
-    //         accFormStateRowHandleFieldChange({
-    //           fields: {
-    //             billwiseDetails:
-    //               amtAdjusted > 0 ? getBillwiseString().billwiseString : "",
-    //               narration: 
-    //           },
-    //         })
-    //       );
-
-    //       if (amtAdjusted < 0) {
-    //         ERPAlert.show({
-    //           title: "failed",
-    //           text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
-    //         });
-    //         return;
-    //       }
-
-    //       if (Number(formState.row.amount ?? 0) < amtAdjusted) {
-    //         dispatch(
-    //           accFormStateRowHandleFieldChange({
-    //             fields: {
-    //               amount: amtAdjusted,
-                  
-    //             },
-    //           })
-    //         );
-    //       }
-    //       dispatch(
-    //         accFormStateTransactionMasterHandleFieldChange({
-    //           fields: {
-    //             remarks: formState.transaction.master.remarks + "BW:" + vrNumbers.current                
-    //           },
-    //         })
-    //       );
-
-    //       closeBillwie()
-    //     } else if (isFromCashTender) {
-    //       if (!validate()) return;
-
-    //       frmCashTender.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmCashTender.txtCashReceived.current.value =
-    //           amtAdjusted.toString();
-    //       }
-
-    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else {
-    //       saveBillwiseDetails();
-    //       onClose();
-    //     }
-    //   } else {
-    //     let vrNumbers = { current: "" };
-
-    //     if (isFromAccTrans) {
-    //       if (!validate()) return;
-
-    //       frmAccTrans.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (amtAdjusted < 0) {
-    //         frmAccTrans.txtBillWiseDetails.current.value = "";
-    //         showMessageBox(
-    //           "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero."
-    //         );
-    //         return;
-    //       }
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmAccTrans.txtAmount.current.value = amtAdjusted.toString();
-    //       }
-
-    //       frmAccTrans.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else if (isFromCashTender) {
-    //       if (!validate()) return;
-
-    //       frmCashTender.txtBillWiseDetails.current.value =
-    //         getBillwiseString(vrNumbers);
-    //       const amtAdjusted = getTotalAmountToSet();
-
-    //       if (Number(amountToAdjust) < amtAdjusted) {
-    //         frmCashTender.txtCashReceived.current.value =
-    //           amtAdjusted.toString();
-    //       }
-
-    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
-    //       clearGridView();
-    //       onClose();
-    //     } else {
-    //       saveBillwiseDetails();
-    //       onClose();
-    //     }
-    //   }
-    // } catch (error) {
-    //   setError(`An error occurred: ${error.message}`);
-    // }
+        if (Number(formState.row.amount ?? 0) < amtAdjusted) {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: {
+                amount: amtAdjusted,
+              },
+            })
+          );
+        }
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              remarks:
+                formState.transaction.master.remarks +
+                "BW:" +
+                billwiseString.vrNumbers,
+            },
+          })
+        );
+        debugger;
+        onSave &&
+          onSave(
+            billwiseString.billwiseString,
+            (formState.row.amount ?? 0) < amtAdjusted
+              ? amtAdjusted
+              : (formState.row.amount ?? 0),
+            billwiseString.vrNumbers
+          );
+        closeBillwise();
+      } else if (isFromCashTender) {
+        if (!validate()) return;
+      } else {
+      }
+    } catch (error: any) {
+      ERPAlert.show({
+        title: "failed",
+        text: `An error occurred: ${error.message}`,
+      });
+    }
   };
 
   const calculateNetAdjustment = () => {
     return store.reduce((total: any, row: any) => {
       const amt = parseFloat(row.billwiseAmount) || 0;
-      return total + (row.drCr === drCr ? -amt : amt);
+      return total + (row.drCr === formState.transaction.master.drCr ? -amt : amt);
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
@@ -415,8 +404,10 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
   }, [store]);
 
   return (
-    <Card className={`w-full ${isMaximized ? "max-w-full":"max-w-6xl"}`}
-    elevation={0}>
+    <Card
+      className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
+      elevation={0}
+    >
       <CardHeader></CardHeader>
       <CardContent>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
@@ -453,7 +444,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
           <Item location="after">
             <ERPCheckbox
               label={`Show ${
-                drCr === "Dr" ? "Debit" : "Credit"
+                formState.transaction.master.drCr === "Dr" ? "Debit" : "Credit"
               } Transactions also`}
               className="text-[12px] font-medium p-3"
               id={""}
@@ -469,7 +460,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
         </Toolbar>
         safvan : {showAllTransactions.toString()}
         {
-          store?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+          store?.filter((row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr)
             .length
         }
         <DataGrid
@@ -478,7 +469,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
           id="TestPopup"
           // height={gridHeight}
           dataSource={store?.filter(
-            (row: any) => showAllTransactions || row.drCr !== drCr
+            (row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr
           )}
           height={gridHeight}
           className="custom-data-grid"
@@ -746,7 +737,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
           </div>
           <div>
             <ERPButton title="Auto save" className="mr-2" />
-            <ERPButton title="Save" className="mr-2" />
+            <ERPButton title="Save" onClick={handleSave} className="mr-2" />
             <ERPButton title="Cancel" />
           </div>
         </div>

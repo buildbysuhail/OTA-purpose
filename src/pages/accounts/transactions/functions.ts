@@ -68,7 +68,7 @@ export const validateTransactionDate = (
     return { valid: false, message: "Invalid Financial year." };
   }
 
-  if (transDate < userSession.finFrom || transDate > userSession.finTo) {
+  if ((moment(transDate) < moment(userSession.finFrom)) || (moment(transDate) > moment(userSession.finTo))) {
     return {
       valid: false,
       message: "Transaction date is outside the financial period.",

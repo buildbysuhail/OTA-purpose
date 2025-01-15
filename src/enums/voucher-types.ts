@@ -1,5 +1,5 @@
 enum VoucherType {
-  TaxOnExpenses = "TXP",
+  TaxOnExpensePayment = "TXP",
   DamageExpirySubstitute = "SUB",
   GoodsDeliveryReturn = "DR",
   SalesInvoice = "SI",
@@ -46,11 +46,14 @@ enum VoucherType {
   InterBranchTransfer = "IBT",
   SalesReturn = "SR",
   AssetDepreciation = "DEP",
-  PurchaseEstimation = "PE",
+  PurchaseEstimate = "PE",
   PurchaseQuotation = "PQ",
   StockTransferExcessSpecial = "EX_SP",
   PurchaseOrderTransist = "POT",
   RequestForQuotation = "RFQ",
+  JournalVoucherSpecial = "JVSP",
+  ServiceReturn = "SVRT",
+  SalesDiscount = "SD"
 }
 
 export default VoucherType;

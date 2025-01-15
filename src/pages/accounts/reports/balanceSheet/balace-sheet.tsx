@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ExcelJS from "exceljs";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../../redux/store";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
@@ -197,6 +200,9 @@ const BalanceSheet = () => {
     groupName?: string;
     item?: any;
   }>({ isOpen: false, key: 0, item: {} });
+  const userSession = useAppSelector(
+    (state: RootState) => state.UserSession as any
+  );
   const { t } = useTranslation("accountsReport");
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
@@ -270,42 +276,91 @@ const BalanceSheet = () => {
   const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Balance Sheet");
-
-    // Add title and date
-    worksheet.mergeCells("A1:D1");
-    const titleCell = worksheet.getCell("A1");
-    titleCell.value = `As of ${new Date(filter.asonDate).toLocaleDateString(
-      "en-US",
-      {
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-      }
-    )}`;
-    titleCell.alignment = {
-      horizontal: "center",
-      vertical: "middle",
-      wrapText: true,
-    };
-    titleCell.font = { bold: true };
-
+  
+    // Add page title
+    const pageTitle = `Balance Sheet - As of ${new Date(
+      filter.asonDate
+    ).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    })}`;
+  
+    // Merge cells for the title
+    const lastColumnLetter = String.fromCharCode(64 + 4); // Assuming 4 columns (A, B, C, D)
+    let mergeRange = `A1:${lastColumnLetter}1`;
+    worksheet.mergeCells(mergeRange);
+    worksheet.getCell(`A1`).value = pageTitle;
+    worksheet.getCell(`A1`).font = { bold: true, size: 12 };
+    worksheet.getCell(`A1`).alignment = { horizontal: "left" };
+  
+    let currentRow = 2; // Start from row 2 after the title
+  
+    // Add header footer information from userSession
+    if (
+      userSession.headerFooter != undefined &&
+      !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+    ) {
+      mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+      worksheet.mergeCells(mergeRange);
+      worksheet.getCell(`A${currentRow}`).value =
+        userSession.headerFooter.heading7;
+      worksheet.getCell(`A${currentRow}`).font = {
+        bold: true,
+        size: 13,
+      };
+      worksheet.getCell(`A${currentRow}`).alignment = {
+        horizontal: "left",
+      };
+      currentRow += 1;
+    }
+    if (
+      userSession.headerFooter != undefined &&
+      !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+    ) {
+      mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+      worksheet.mergeCells(mergeRange);
+      worksheet.getCell(`A${currentRow}`).value =
+        userSession.headerFooter.heading8;
+      worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+      worksheet.getCell(`A${currentRow}`).alignment = {
+        horizontal: "left",
+      };
+      currentRow += 1;
+    }
+    if (
+      userSession.headerFooter != undefined &&
+      !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+    ) {
+      mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
+      worksheet.mergeCells(mergeRange);
+      worksheet.getCell(`A${currentRow}`).value =
+        userSession.headerFooter.heading9;
+      worksheet.getCell(`A${currentRow}`).font = { size: 9 };
+      worksheet.getCell(`A${currentRow}`).alignment = {
+        horizontal: "left",
+      };
+      currentRow += 1;
+    }
+  
     // Headers
-    worksheet.mergeCells("A3:B3");
-    worksheet.mergeCells("C3:D3");
+    worksheet.mergeCells(`A${currentRow}:B${currentRow}`);
+    worksheet.mergeCells(`C${currentRow}:D${currentRow}`);
     const headers = [
       { header: "Liabilities", key: "liabilities" },
       { header: "Amount", key: "liabilitiesAmount" },
       { header: "Assets", key: "assets" },
       { header: "assetsAmount", key: "assetsAmount" },
     ];
-    worksheet.getRow(3).values = ["Liabilities", "Amount", "Assets", "Amount"];
-    worksheet.getRow(3).font = { bold: true };
-    worksheet.getRow(3).fill = {
+    worksheet.getRow(currentRow).values = ["Liabilities", "Amount", "Assets", "Amount"];
+    worksheet.getRow(currentRow).font = { bold: true };
+    worksheet.getRow(currentRow).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD3D3D3" },
     };
-
+    currentRow += 1;
+  
     // Filter and prepare data
     const assets = data.filter(
       (item) => item?.transType === "A" && item?.groupName !== "TOTAL"
@@ -314,44 +369,20 @@ const BalanceSheet = () => {
       (item) => item?.transType === "L" && item?.groupName !== "TOTAL"
     );
     const maxLength = Math.max(assets.length, liabilities.length);
-
+  
     // Add data rows
-    let currentRow = 4;
-
-    // Add Capital Accounts section
-    const capitalAccounts = liabilities.filter(
-      (item) => item.title === "M" && item.groupName === "Capital Accounts"
-    );
-    // if (capitalAccounts.length > 0) {
-    //   worksheet.getCell(`A${currentRow}`).value = "Capital Accounts";
-    //   worksheet.getCell(`B${currentRow}`).value = capitalAccounts[0].total;
-    //   worksheet.getCell(`A${currentRow}`).font = {
-    //     color: { argb: "3b82f6" },
-    //     bold: true,
-    //   };
-    //   worksheet.getCell(`B${currentRow}`).font = {
-    //     color: { argb: "3b82f6" },
-    //     bold: true,
-    //   };
-    //   currentRow++;
-    // }
-
-    // Add data rows with proper formatting
     for (let i = 0; i < maxLength; i++) {
       if (liabilities[i]) {
         worksheet.getCell(`A${currentRow}`).value = liabilities[i].groupName;
-    
         worksheet.getCell(`B${currentRow}`).value =
           liabilities[i].transType == "L"
             ? liabilities[i].title == "M"
               ? getFormattedValue(liabilities[i].total)
               : liabilities[i].total > 0
-              ? "(-)" +getFormattedValue(liabilities[i].total)
+              ? "(-)" + getFormattedValue(liabilities[i].total)
               : liabilities[i].total === 0
               ? getFormattedValue(0)
               : getFormattedValue(-1 * liabilities[i].total)
-
-
             : liabilities[i].title == "M"
             ? getFormattedValue(liabilities[i].total)
             : liabilities[i].total < 0
@@ -359,8 +390,7 @@ const BalanceSheet = () => {
             : liabilities[i].total === 0
             ? getFormattedValue(0)
             : getFormattedValue(liabilities[i].total);
-      
-    
+  
         if (liabilities[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -372,11 +402,9 @@ const BalanceSheet = () => {
           };
           worksheet.getCell(`A${currentRow}`).alignment = {
             horizontal: "left",
-            // indent: 2,
           };
           worksheet.getCell(`B${currentRow}`).alignment = {
             horizontal: "right",
-            // indent: 2,
           };
         } else {
           worksheet.getCell(`A${currentRow}`).font = {
@@ -395,45 +423,40 @@ const BalanceSheet = () => {
           };
         }
       }
-
+  
       if (assets[i]) {
         worksheet.getCell(`C${currentRow}`).value = assets[i].groupName;
-
         worksheet.getCell(`D${currentRow}`).value =
-        assets[i].transType == "L"
-        ? assets[i].title == "M"
-          ?getFormattedValue(assets[i].total)
-          : assets[i].total > 0
-          ? "(-)" +getFormattedValue(assets[i].total)
-          : assets[i].total === 0
-          ? getFormattedValue(0)
-          : getFormattedValue(-1 * assets[i].total)
-          
-        : assets[i].title == "M"
-        ?getFormattedValue(assets[i].total)
-        : assets[i].total < 0
-        ? "(-)" + getFormattedValue(-1 * assets[i].total)
-        : assets[i].total === 0
-        ? getFormattedValue(0)
-        : getFormattedValue(assets[i].total);
-    
+          assets[i].transType == "L"
+            ? assets[i].title == "M"
+              ? getFormattedValue(assets[i].total)
+              : assets[i].total > 0
+              ? "(-)" + getFormattedValue(assets[i].total)
+              : assets[i].total === 0
+              ? getFormattedValue(0)
+              : getFormattedValue(-1 * assets[i].total)
+            : assets[i].title == "M"
+            ? getFormattedValue(assets[i].total)
+            : assets[i].total < 0
+            ? "(-)" + getFormattedValue(-1 * assets[i].total)
+            : assets[i].total === 0
+            ? getFormattedValue(0)
+            : getFormattedValue(assets[i].total);
+  
         if (assets[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
             color: { argb: "3b82f6" },
           };
-
           worksheet.getCell(`D${currentRow}`).font = {
             bold: true,
             color: { argb: "3b82f6" },
           };
           worksheet.getCell(`C${currentRow}`).alignment = {
             horizontal: "left",
-            // indent: 2,
           };
           worksheet.getCell(`D${currentRow}`).alignment = {
             horizontal: "right",
-            // indent: 2,
           };
         } else {
           worksheet.getCell(`C${currentRow}`).font = {
@@ -454,20 +477,22 @@ const BalanceSheet = () => {
       }
       currentRow++;
     }
-
+  
     // Add totals
     const totalRow = currentRow;
     worksheet.getCell(`A${totalRow}`).value = "Total";
     worksheet.getCell(`B${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "L" && item?.groupName === "TOTAL"
-      )?.total) || 0;
+      getFormattedValue(
+        data.find((item) => item?.transType === "L" && item?.groupName === "TOTAL")
+          ?.total
+      ) || 0;
     worksheet.getCell(`C${totalRow}`).value = "Total";
     worksheet.getCell(`D${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "A" && item?.groupName === "TOTAL"
-      )?.total) || 0;
-
+      getFormattedValue(
+        data.find((item) => item?.transType === "A" && item?.groupName === "TOTAL")
+          ?.total
+      ) || 0;
+  
     // Format totals row
     ["A", "B", "C", "D"].forEach((col) => {
       worksheet.getCell(`${col}${totalRow}`).font = {
@@ -477,31 +502,27 @@ const BalanceSheet = () => {
     });
     worksheet.getCell(`A${totalRow}`).alignment = {
       horizontal: "left",
-      // indent: 2,
     };
     worksheet.getCell(`B${totalRow}`).alignment = {
       horizontal: "right",
-      // indent: 2,
     };
     worksheet.getCell(`C${totalRow}`).alignment = {
       horizontal: "left",
-      // indent: 2,
     };
     worksheet.getCell(`D${totalRow}`).alignment = {
       horizontal: "right",
-      // indent: 2,
     };
+  
     // Set column widths
     worksheet.columns.forEach((column) => {
       column.width = 30;
     });
-
+  
     // Format amounts as numbers
     ["B", "D"].forEach((col) => {
       worksheet.getColumn(col).numFmt = "#,##0.00";
-      // worksheet.getColumn(col).alignment = { horizontal: "right" };
     });
-
+  
     // Generate Excel file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {

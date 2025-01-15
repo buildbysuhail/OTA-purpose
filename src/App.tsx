@@ -221,7 +221,7 @@ function App() {
         <Switcher />
         <AutoClicker/>
 
-        <div className="page" onClick={Bodyclickk}>
+        <div className="page dark:!bg-dark-bg" onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
               <Route path="login" element={<Login />} />

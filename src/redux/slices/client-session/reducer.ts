@@ -16,7 +16,10 @@ const clientSessionSlice = createSlice({
   initialState,
   reducers: {
     setClientSession: (state, action: PayloadAction<ClientSessionModel>) => {
-      return action.payload;
+      return {
+        ...action.payload,
+        softwareDate: new Date().toISOString()
+      };
     },
   },
 });

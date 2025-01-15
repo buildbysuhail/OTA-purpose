@@ -82,7 +82,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, []);
   return (
     <>
-      {openVoucherSelector == true ? (
+      {/* {openVoucherSelector == true ? (
         <ERPModal
         isForm
         isFullHeight
@@ -112,7 +112,16 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           transactionType={transactionType}
         />
         
-      )}
+      )} */}
+      <AccTransactionForm
+          voucherType={voucherType}
+          voucherPrefix={data.voucherPrefix}
+          formType={data.formType}
+          formCode={formCode}
+          title={title}
+          drCr={drCr}
+          transactionType={transactionType}
+        />
     </>
   );
 };

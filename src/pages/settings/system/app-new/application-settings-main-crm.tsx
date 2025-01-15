@@ -129,9 +129,7 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
     const hasMatchingItems = items.some((component) => component.condition);
     setHasMatchedItems(hasMatchingItems);
   }, [filterText])
-  const appState = useAppSelector(
-    (state: RootState) => state.AppState.appState
-  );
+
 
   return (
     <>
@@ -139,7 +137,7 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         <div>
           <div key={key} ref={(el) => (subItemsRef.current["mainCRM"] = el)}>
             <h1
-              className={`h-[50px] text-[20px] ${appState.mode == 'dark' ? "!bg-[#404344bf] " : ``} font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "mainCRM"
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "mainCRM"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
                 }`}
@@ -147,7 +145,7 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               {t("crm")}
             </h1>
             <div key="mainCRM" className="space-y-4">
-              <div className={`border border-solid ${appState.mode == 'dark' ? " !border-[#f2f4f538] " : ``} border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
+              <div className={`border border-solid dark:!bg-dark-bg dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
                 <div
                   className={`grid ${isCompactView
                     ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"

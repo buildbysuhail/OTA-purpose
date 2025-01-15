@@ -692,15 +692,20 @@ const Header: FC<HeaderProps> = () => {
               </div>
               <div className="flex items-center">
                 {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
-                <Button 
-                 onClick={() => {
-                  appState.mode === "light"
-                    ? switcherdata.Dark(updateAppState, appState)
-                    : switcherdata.Light(updateAppState, appState);
-                }} 
-                variant="ghost" 
-                size="icon">
-                  {appState.mode === 'dark' ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
+                <Button
+                  onClick={() => {
+                    appState.mode === "light"
+                      ? switcherdata.Dark(updateAppState, appState)
+                      : switcherdata.Light(updateAppState, appState);
+                  }}
+                  variant="ghost"
+                  size="icon"
+                >
+                  {appState.mode === "dark" ? (
+                    <Sun className="h-[1.2rem] w-[1.2rem]" />
+                  ) : (
+                    <Moon className="h-[1.2rem] w-[1.2rem]" />
+                  )}
                   <span className="sr-only">Toggle dark mode</span>
                 </Button>
               </div>

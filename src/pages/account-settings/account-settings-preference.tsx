@@ -39,6 +39,7 @@ import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import MUIERPDataCombobox from "../../components/ERPComponents/erp-data-combobox-mui";
 import { ERPScrollArea} from "../../components/ERPComponents/erp-scrollbar";
+import InputBoxStyling from "../../components/ERPComponents/erp-inputboxStyle-preference";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -1206,11 +1207,17 @@ const resetInputBox = async ()=>{
                     //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
                      >
                      </ERPButton>
+
+
                       </div>
-                    
+                      <InputBoxStyling
+                        inputBox={appState.inputBox}
+                        onInputBoxChange={handleInputBoxStyleChange}
+                        // resetInputBox={resetInputBox}
+                      />
                      
                         
-                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-start  mt-5 switcher-style">
+                        {/* <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-start  mt-5 switcher-style">
                              <ERPInput
                               id="inputBox"
                               label="Demo Input"
@@ -1264,9 +1271,9 @@ const resetInputBox = async ()=>{
                      
                             
                            
-                        </div>
+                        </div> */}
 
-                        <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
+                        {/* <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
                           <div className="flex items-center">
                             <input
                               type="radio"
@@ -1371,8 +1378,8 @@ const resetInputBox = async ()=>{
                               Fill
                             </label>
                           </div>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
+                        </div> */}
+                        {/* <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
                           <div className="flex items-center">
                             <input
                               type="radio"
@@ -1462,8 +1469,8 @@ const resetInputBox = async ()=>{
                               customize
                             </label>
                           </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style">
+                        </div> */}
+                        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
@@ -1552,10 +1559,10 @@ const resetInputBox = async ()=>{
                             </div>
                           </div>
                         
-                        </div>
+                        </div> */}
                       </div>
 
-                      <div className="py-3">
+                      {/* <div className="py-3">
                         {appState.inputBox?.inputSize === "customize" && (
                           <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
                             <div className="flex items-center space-x-3">
@@ -2101,8 +2108,8 @@ const resetInputBox = async ()=>{
                         </div>
                    
                       
-                      </div>
-
+                      </div> */}
+{/* 
                       <div className="">
                         <p className="switcher-style-head">
                           Radio & Check Box:
@@ -2215,7 +2222,7 @@ const resetInputBox = async ()=>{
                             </label>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <div className="w-full p-2 flex justify-end space-x-2">

@@ -242,7 +242,7 @@ const BalanceSheet = () => {
   }, [filterShowCount]);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-
+  const { getFormattedValue } = useNumberFormat();
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
@@ -340,8 +340,27 @@ const BalanceSheet = () => {
     for (let i = 0; i < maxLength; i++) {
       if (liabilities[i]) {
         worksheet.getCell(`A${currentRow}`).value = liabilities[i].groupName;
-        worksheet.getCell(`B${currentRow}`).value = liabilities[i].total;
+    
+        worksheet.getCell(`B${currentRow}`).value =
+          liabilities[i].transType == "L"
+            ? liabilities[i].title == "M"
+              ? getFormattedValue(liabilities[i].total)
+              : liabilities[i].total > 0
+              ? "(-)" +getFormattedValue(liabilities[i].total)
+              : liabilities[i].total === 0
+              ? getFormattedValue(0)
+              : getFormattedValue(-1 * liabilities[i].total)
 
+
+            : liabilities[i].title == "M"
+            ? getFormattedValue(liabilities[i].total)
+            : liabilities[i].total < 0
+            ? "(-)" + getFormattedValue(-1 * liabilities[i].total)
+            : liabilities[i].total === 0
+            ? getFormattedValue(0)
+            : getFormattedValue(liabilities[i].total);
+      
+    
         if (liabilities[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -350,6 +369,14 @@ const BalanceSheet = () => {
           worksheet.getCell(`B${currentRow}`).font = {
             bold: true,
             color: { argb: "3b82f6" },
+          };
+          worksheet.getCell(`A${currentRow}`).alignment = {
+            horizontal: "left",
+            // indent: 2,
+          };
+          worksheet.getCell(`B${currentRow}`).alignment = {
+            horizontal: "right",
+            // indent: 2,
           };
         } else {
           worksheet.getCell(`A${currentRow}`).font = {
@@ -371,15 +398,42 @@ const BalanceSheet = () => {
 
       if (assets[i]) {
         worksheet.getCell(`C${currentRow}`).value = assets[i].groupName;
-        worksheet.getCell(`D${currentRow}`).value = assets[i].total;
+
+        worksheet.getCell(`D${currentRow}`).value =
+        assets[i].transType == "L"
+        ? assets[i].title == "M"
+          ?getFormattedValue(assets[i].total)
+          : assets[i].total > 0
+          ? "(-)" +getFormattedValue(assets[i].total)
+          : assets[i].total === 0
+          ? getFormattedValue(0)
+          : getFormattedValue(-1 * assets[i].total)
+          
+        : assets[i].title == "M"
+        ?getFormattedValue(assets[i].total)
+        : assets[i].total < 0
+        ? "(-)" + getFormattedValue(-1 * assets[i].total)
+        : assets[i].total === 0
+        ? getFormattedValue(0)
+        : getFormattedValue(assets[i].total);
+    
         if (assets[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
             color: { argb: "3b82f6" },
           };
+
           worksheet.getCell(`D${currentRow}`).font = {
             bold: true,
             color: { argb: "3b82f6" },
+          };
+          worksheet.getCell(`C${currentRow}`).alignment = {
+            horizontal: "left",
+            // indent: 2,
+          };
+          worksheet.getCell(`D${currentRow}`).alignment = {
+            horizontal: "right",
+            // indent: 2,
           };
         } else {
           worksheet.getCell(`C${currentRow}`).font = {
@@ -405,14 +459,14 @@ const BalanceSheet = () => {
     const totalRow = currentRow;
     worksheet.getCell(`A${totalRow}`).value = "Total";
     worksheet.getCell(`B${totalRow}`).value =
-      data.find(
+    getFormattedValue(  data.find(
         (item) => item?.transType === "L" && item?.groupName === "TOTAL"
-      )?.total || 0;
+      )?.total) || 0;
     worksheet.getCell(`C${totalRow}`).value = "Total";
     worksheet.getCell(`D${totalRow}`).value =
-      data.find(
+    getFormattedValue(  data.find(
         (item) => item?.transType === "A" && item?.groupName === "TOTAL"
-      )?.total || 0;
+      )?.total) || 0;
 
     // Format totals row
     ["A", "B", "C", "D"].forEach((col) => {
@@ -421,7 +475,22 @@ const BalanceSheet = () => {
         color: { argb: "FF0000" },
       };
     });
-
+    worksheet.getCell(`A${totalRow}`).alignment = {
+      horizontal: "left",
+      // indent: 2,
+    };
+    worksheet.getCell(`B${totalRow}`).alignment = {
+      horizontal: "right",
+      // indent: 2,
+    };
+    worksheet.getCell(`C${totalRow}`).alignment = {
+      horizontal: "left",
+      // indent: 2,
+    };
+    worksheet.getCell(`D${totalRow}`).alignment = {
+      horizontal: "right",
+      // indent: 2,
+    };
     // Set column widths
     worksheet.columns.forEach((column) => {
       column.width = 30;

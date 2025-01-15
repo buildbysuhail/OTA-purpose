@@ -496,7 +496,7 @@ export const initialFormElements = {
   ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
   ledgerId: { visible: true, disabled: false, label: "Ledger" },
   amount: { visible: true, disabled: false, label: "Amount" },
-  drCr: { visible: false, disabled: false, label: "Amount" },
+  drCr: { visible: false, disabled: false, label: "Dr/Cr" },
   narration: { visible: true, disabled: false, label: "Narration" },
   currencyID: { visible: true, disabled: false, label: "Currency" },
   exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },

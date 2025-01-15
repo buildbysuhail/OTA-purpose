@@ -1295,11 +1295,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       </span>
                     </div> */}
                     <div className="flex flex-wrap gap-4">
-                      {formState.formElements.drCr.visible && (
+                      {formState.formElements.jvDrCr.visible && (
                         <ERPDataCombobox
                           id="drCr"
                           className="w-[70px]"
-                          label={formState.formElements.drCr.label}
+                          label={formState.formElements.jvDrCr.label}
                           value={formState.transaction.master.drCr}
                           data={formState.transaction.master}
                           onChange={(e) =>
@@ -1318,7 +1318,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             { value: "Cr", label: "Credit" },
                           ]}
                           disabled={
-                            formState.formElements.drCr?.disabled ||
+                            formState.formElements.jvDrCr?.disabled ||
                             formState.formElements.pnlMasters?.disabled
                           }
                         />

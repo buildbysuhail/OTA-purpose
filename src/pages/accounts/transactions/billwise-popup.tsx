@@ -28,12 +28,17 @@ import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFor
 
 interface BillwiseProps {
   
-  onSave: (
+  onSave?: (
     billwiseDetails: string,
     totalAmount: number,
     vrNumbers: string
   ) => void;
-  onClose: () => void;
+  onAutoPost?: (
+    billwiseDetails: string,
+    totalAmount: number,
+    vrNumbers: string
+  ) => void;
+  onClose?: () => void;
   isMaximized?: boolean;
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
@@ -117,15 +122,6 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
       });
       setStore(updatedStore);
     }
-    // const updatedStore = store.map((item: any) =>
-    //   item.slNo === rowData.slNo
-    //     ? {
-    //         ...item,
-    //         isSelected: checked,
-    //         billwiseAmount: checked ? item.amount : 0,
-    //       }
-    //     : item
-    // );
   };
 
   const onRowUpdating = (e: any) => {
@@ -276,10 +272,12 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
   const closeBillwie = () => {
     dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
     
-    onClose();
+    onClose && onClose();
   }
   const handleSave = () => {
     try {
+      
+    debugger;
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -318,7 +316,8 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
             },
           })
         );
-
+debugger;
+        onSave && onSave(billwiseString.billwiseString, (formState.row.amount ?? 0) < amtAdjusted ? amtAdjusted : formState.row.amount ?? 0, billwiseString.vrNumbers)
         closeBillwie()
       } else if (isFromCashTender) {
         if (!validate()) return;
@@ -688,7 +687,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
           </div>
           <div>
             <ERPButton title="Auto save" className="mr-2" />
-            <ERPButton title="Save" className="mr-2" />
+            <ERPButton title="Save" onClick={handleSave} className="mr-2" />
             <ERPButton title="Cancel" />
           </div>
         </div>

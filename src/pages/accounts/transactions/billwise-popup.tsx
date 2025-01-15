@@ -12,6 +12,7 @@ import {
   Summary,
   TotalItem,
   KeyboardNavigation,
+  Selection,
 } from "devextreme-react/cjs/data-grid";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -20,21 +21,41 @@ import _cloneDeep from "lodash/cloneDeep";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { Card, CardContent, CardHeader } from "@mui/material";
 
-interface BillWisePopupProps {
+interface BillwiseProps {
+  ledgerName: string;
+  amount: number;
+  ledgerId: string;
+  drCr: string;
+  accTransactionDetailId: number;
+  billwiseString?: string;
+  onSave: (billwiseDetails: string, totalAmount: number, vrNumbers: string) => void;
+  onClose: () => void;
   isMaximized?: boolean;
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
 }
 
-const BillWisePopup: FC<BillWisePopupProps> = ({
+const BillwiseComponent = ({
+  ledgerName,
+  amount,
+  ledgerId,
+  drCr =  "Dr",
+  accTransactionDetailId,
+  billwiseString = '',
+  onSave,
+  onClose,
   isMaximized,
   modalHeight,
   onMaximizeChange,
-}) => {
+}: BillwiseProps) => {
+  
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const [gridHeight, setGridHeight] = useState<number>(500);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [netAdjustment, setNetAdjustment] = useState(0);const [gridHeight, setGridHeight] = useState<number>(500);
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
@@ -56,12 +77,49 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
     setStore(clonedData);
   }, [formState.billwiseData]);
 
-  const handleSelectionChange = (e: any) => {};
+  const handleSelectionChange = (e: any) => {
+    debugger;
+    const selectedKeys = Array.isArray(e.currentSelectedRowKeys) 
+    ? e.currentSelectedRowKeys.map((key: number) => ({ key, isSelected: true })) 
+    : [];
+  
+  const deselectedKeys = Array.isArray(e.currentDeselectedRowKeys) 
+    ? e.currentDeselectedRowKeys.map((key: number) => ({ key, isSelected: false })) 
+    : [];
+  
+  const mergedKeys = [...selectedKeys, ...deselectedKeys];
+    if (mergedKeys != null && mergedKeys.length > 0) {
+      let updatedStore = {
+        ...store
+      }
+      mergedKeys.forEach((item: any) => {
+        updatedStore = store.map((storeItem: any) =>
+          item.key === storeItem.slNo
+            ? {
+                ...storeItem,
+                isSelected: item.isSelected,
+                billwiseAmount: item.isSelected == true ? storeItem.amount : 0,
+              }
+            : storeItem
+        );
+        
+      });
+      setStore(updatedStore);
+      
+    }
+    // const updatedStore = store.map((item: any) =>
+    //   item.slNo === rowData.slNo
+    //     ? {
+    //         ...item,
+    //         isSelected: checked,
+    //         billwiseAmount: checked ? item.amount : 0,
+    //       }
+    //     : item
+    // );
+    
+  };
 
-  const [enterKeyAction, setEnterKeyAction] =
-    useState<DataGridTypes.EnterKeyAction>("startEdit");
-  const [enterKeyDirection, setEnterKeyDirection] =
-    useState<DataGridTypes.EnterKeyDirection>("row");
+  
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
@@ -73,28 +131,147 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
     e.newData = updatedRow;
   };
 
-  const handleCheckboxChange = (checked: boolean, rowData: any) => {
-    const updatedStore = store.map((item: any) =>
-      item.slNo === rowData.slNo
-        ? {
-            ...item,
-            isSelected: checked,
-            billwiseAmount: checked ? item.amount : 0,
+  // Load billwise transactions
+  useEffect(() => {
+
+    let lastIndex = 0;
+    const formattedData = store?.map((row: any, index: number) => {
+      debugger;
+      if (showAllTransactions || row.drCr !== drCr) {
+        const _it = {
+          ...row,
+          slNo: lastIndex + 1, // Assign a serial number for matching rows
+        };
+        lastIndex = lastIndex+1;
+        return _it;
+      } else {
+        return {
+          ...row,
+          slNo: undefined, // Set slNo to undefined for non-matching rows
+        };
+      }
+    });
+    setStore(formattedData);
+  },[showAllTransactions]);
+  useEffect(() => {
+    const loadBillwiseTransactions = async () => {
+      try {
+        // Replace with your actual API call
+        const response = await fetch(`/api/billwise/transactions?ledgerId=${ledgerId}&drCr=${drCr}&accTransactionDetailId=${accTransactionDetailId}`);
+        const data = await response.json();
+        
+    let lastIndex = 0;
+        const formattedData = data?.map((row: any, index: number) => {
+          if (showAllTransactions || row.drCr !== drCr) {
+            const _it = {
+              ...row,
+              slNo: lastIndex + 1,
+              isSelected: false,
+              amountToSet: 0
+            };
+            lastIndex = lastIndex+1;
+            return _it;
+          } else {
+            return {
+              ...row,
+          slNo: undefined,
+          isSelected: false,
+          amountToSet: 0
+            };
           }
-        : item
-    );
-    setStore(updatedStore);
+        });
+        
+        setStore(formattedData);
+
+        if (billwiseString) {
+          generateGridFromBillwiseString(billwiseString);
+        }
+      } catch (error) {
+        console.error('Error loading billwise transactions:', error);
+      }
+    };
+
+    loadBillwiseTransactions();
+  }, [ledgerId, drCr, accTransactionDetailId, billwiseString]);
+
+  
+  const generateGridFromBillwiseString = (billwiseStr: string) => {
+    const rows = billwiseStr.split('|');
+    const updatedData = [...store];
+
+    rows.forEach(row => {
+      const [transDetailId, amt] = row.split('^');
+      const rowIndex = updatedData.findIndex(item => 
+        item.accTransDetailId.toString() === transDetailId
+      );
+      
+      if (rowIndex !== -1) {
+        updatedData[rowIndex].amountToSet = parseFloat(amt);
+        updatedData[rowIndex].isSelected = parseFloat(amt) > 0;
+      }
+    });
+
+    setStore(updatedData);
   };
 
-  //  ==========================================================================================
+  const getBillwiseString = () => {
+    let vrNumbers = '';
+    const billwiseString = store
+      .filter((row: any) => row.amountToSet > 0)
+      .map((row: any) => {
+        if (row.amountToSet > 0) {
+          vrNumbers += `${row.billNo},`;
+        }
+        return `${row.accTransDetailId}^${row.amountToSet}`;
+      })
+      .join('|');
+
+    return { billwiseString, vrNumbers };
+  };
+
+  const handleSave = () => {
+    const { billwiseString, vrNumbers } = getBillwiseString();
+    const totalAdjusted = calculateNetAdjustment();
+    
+    if (totalAdjusted > amount) {
+      alert('Adjustment amount cannot exceed the transaction amount');
+      return;
+    }
+
+    onSave(billwiseString, totalAdjusted, vrNumbers);
+  };
+
+  const calculateNetAdjustment = () => {
+    return store.reduce((total: any, row: any) => {
+      const amt = parseFloat(row.amountToSet) || 0;
+      return total + (row.drCr === drCr ? -amt : amt);
+    }, 0);
+  };
+  const handleRowPrepared = (e: any) => {
+    const DRCR = "YourCondition"; // Replace with your DRCR condition
+    const VisibleRow = true; // Replace with your visibility condition
+
+    if (e.rowType === "data") {
+      if (e.data.DrCrCol === DRCR) {
+        e.rowElement.style.backgroundColor = "red"; // Apply red background
+        e.rowElement.style.display = VisibleRow ? "" : "none"; // Set row visibility
+      }
+
+     
+    }
+  };
+  useEffect(() => {
+    setNetAdjustment(calculateNetAdjustment());
+  }, [store]);
+
+  
   return (
-    <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="">
-              <div className="grid grid-cols-1 gap-3">
-                <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
+    <Card className="w-full max-w-6xl">
+      <CardHeader>
+
+      </CardHeader>
+      <CardContent>
+      <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
                   <Item location="before">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
@@ -127,9 +304,11 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   </Item>
                   <Item location="after">
                     <ERPCheckbox
-                      label="Show debit transaction also"
+                       label={`Show ${drCr === 'Dr' ? 'Debit' : 'Credit'} Transactions also`}
                       className="text-[12px] font-medium p-3"
                       id={""}
+                      checked={showAllTransactions}
+                      onChange={(e) => setShowAllTransactions(!!e.target.checked)}
                     />
                   </Item>
                   <Item location="after">
@@ -138,21 +317,44 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     </p>
                   </Item>
                 </Toolbar>
-                <DataGrid
+                safvan : {showAllTransactions.toString()}
+                {store?.filter((row: any) => 
+                    showAllTransactions || row.drCr !== drCr
+                  ).length}
+      <DataGrid
+                  key={"slNo"}
+                  keyExpr={"slNo"}
                   id="TestPopup"
-                  height={gridHeight}
-                  dataSource={store}
+                  // height={gridHeight}
+                  dataSource={store?.filter((row: any) => 
+                    showAllTransactions || row.drCr !== drCr
+                  )}
+                  height = {gridHeight}
                   className="custom-data-grid"
                   showBorders={true}
                   columnAutoWidth={true}
                   showColumnLines={false}
                   showRowLines={true}
+                  scrolling={{
+                    mode: "virtual",
+                    columnRenderingMode: "virtual",
+                    preloadEnabled: true,
+                    rowRenderingMode: "virtual",
+                  }}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
-                  remoteOperations = {{filtering:false, grouping:false, groupPaging:false, paging:false, sorting:false, summary:false}}
+                  remoteOperations={{
+                    filtering: false,
+                    grouping: false,
+                    groupPaging: false,
+                    paging: false,
+                    sorting: false,
+                    summary: false,
+                  }}
+                  onRowPrepared={handleRowPrepared}
                   onRowUpdated={handleSelectionChange}
-                  // onSelectionChanged={handleSelectionChange}
-                  onRowUpdating={onRowUpdating}
+                  onSelectionChanged={handleSelectionChange}
+                  // onRowUpdating={onRowUpdating}
                   editing={{
                     allowUpdating: true,
                     mode: "cell",
@@ -165,25 +367,29 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     enterKeyAction={"startEdit"}
                     enterKeyDirection={"column"}
                   />
-
+                  <Selection
+                    mode="multiple"
+                    selectAllMode={"allPages"}
+                    showCheckBoxesMode={"always"}
+                  />
                   <FilterRow visible={true} />
                   <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
                   <Scrolling mode="standard" />
                   <Paging enabled={false} />
                   {/* <LoadPanel visible={true} /> */}
-
+                 
                   <Column
                     dataField="slNo"
-                    caption="SiNo"
+                    caption="slNo"
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={50}
                   />
 
-                  <Column
+                  {/* <Column
                     dataField="isSelected"
                     caption="Select"
                     dataType="boolean"
@@ -199,7 +405,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                         }}
                       />
                     )}
-                  />
+                  /> */}
 
                   <Column
                     dataField="voucherType"
@@ -207,7 +413,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={100}
                   />
 
@@ -217,7 +423,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                   />
 
@@ -227,7 +433,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={100}
                   />
 
@@ -237,7 +443,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={100}
                   />
 
@@ -247,7 +453,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                   />
 
@@ -267,7 +473,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                   />
 
@@ -277,7 +483,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={130}
                   />
 
@@ -287,7 +493,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                   />
 
                   <Column
@@ -296,7 +502,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={130}
                   />
 
@@ -306,7 +512,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                     visible={false}
                   />
@@ -317,7 +523,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={100}
                     visible={false}
                   />
@@ -328,7 +534,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={100}
                     visible={false}
                   />
@@ -339,7 +545,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                     visible={false}
                   />
@@ -350,7 +556,7 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     width={150}
                     visible={false}
                   />
@@ -387,8 +593,9 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                       displayFormat="{0}"
                     />
                   </Summary>
+
                 </DataGrid>
-              </div>
+              
               <div className="flex items-center justify-between">
                 <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
                   <strong className="mr-3">Net Adjustment</strong>
@@ -406,12 +613,9 @@ const BillWisePopup: FC<BillWisePopupProps> = ({
                   <ERPButton title="Cancel" />
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Fragment>
+      </CardContent>
+    </Card>
   );
 };
 
-export default BillWisePopup;
+export default BillwiseComponent;

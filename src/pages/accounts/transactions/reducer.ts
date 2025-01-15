@@ -488,7 +488,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.relatedLedgerCode,
                 ledgerName: detail.particulars,
-                ledgerId: detail.relatedLedgerId,
+                ledgerId: detail.relatedLedgerID,
               };
   
             case 'JV':
@@ -498,7 +498,7 @@ const accTransactionSlice = createSlice({
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
                   ledgerName: detail.particulars,
-                  ledgerId: detail.relatedLedgerId,
+                  ledgerId: detail.relatedLedgerID,
                 };
               } else {
                 return {
@@ -547,7 +547,7 @@ const accTransactionSlice = createSlice({
             case 'CQP':
             case 'SV':
             case 'PBP':
-              state.masterAccountID = firstDetail.relatedLedgerId;
+              state.masterAccountID = firstDetail.relatedLedgerID;
               break;
   
             case 'CR':
@@ -565,7 +565,7 @@ const accTransactionSlice = createSlice({
               state.masterAccountID =
                 payload.master.drCr === 'Dr'
                   ? firstDetail.ledgerId
-                  : firstDetail.relatedLedgerId;
+                  : firstDetail.relatedLedgerID;
               break;
           }
   

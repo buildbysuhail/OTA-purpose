@@ -248,7 +248,7 @@ export interface AccTransactionRow {
   groupName: string;
   ledger: string;
   drCr: string;
-  relatedLedgerId: number;
+  relatedLedgerID: number;
   amount?: number;
   amountFC?: number;
   hasDiscount?: boolean;
@@ -289,7 +289,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransMasterID: 0,
   accTransactionDetailId: 0,
   ledgerId: 0,
-  relatedLedgerId: 0,
+  relatedLedgerID: 0,
   amount: undefined,
   discount: undefined,
   debit: undefined,

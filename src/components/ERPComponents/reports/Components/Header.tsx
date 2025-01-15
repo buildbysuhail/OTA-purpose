@@ -62,7 +62,7 @@ const Header = () => {
           <h3 className="text-base font-medium">Settings</h3>
         </div>
         <div
-          className="flex gap-1 items-center py-1 px-2 bg-gray-50 rounded-md border cursor-pointer"
+          className="flex gap-1 items-center py-1 px-2 dark:bg-dark-bg dark:border-dark-border bg-gray-50 rounded-md border cursor-pointer"
           onClick={() => {
             dispatch({ type: "minimize", minimize: false });
             setTimeout(() => {
@@ -76,11 +76,11 @@ const Header = () => {
       </div>
       <div className="w-full relative">
         <div className="flex h-10">
-          <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">
+          <div className="h-full p-2 dark:bg-dark-bg dark:border-dark-border bg-slate-50 border border-r-0 rounded-md rounded-r-none">
             <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
           </div>
           <input
-            className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
+            className=" dark:bg-dark-bg dark:border-dark-border w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
             onChange={(e: any) => {
               
@@ -118,7 +118,7 @@ const SearchResultBar = ({ isOpen, searchResults }: any) => {
         isOpen ? "max-h-[300px]" : "h-0"
       } absolute w-full overflow-y-auto  bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
     >
-      <div className="flex flex-col">
+      <div className="dark:bg-dark-bg flex flex-col">
         {searchResults?.length > 0 ? (
           searchResults?.map((item: any, idx: number) => {
             return (

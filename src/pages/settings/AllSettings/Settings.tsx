@@ -90,7 +90,7 @@ const Settings = () => {
 
   return (
     <Fragment>
-      <div className="flex flex-col w-full h-full">
+      <div className="dark:bg-dark-bg flex flex-col w-full h-full">
         <div className="bg-[url('/settings_bg.png')]">
           <div className="max-w-4xl mx-auto w-full h-full">
             <Header />

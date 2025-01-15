@@ -388,9 +388,9 @@ export default function SettingsPage() {
       "Determine how numerical values are rounded in calculations and financial reports.",
   };
 
-  const appState = useAppSelector(
-    (state: RootState) => state.AppState.appState
-  );
+  // const appState = useAppSelector(
+  //   (state: RootState) => state.AppState.appState
+  // );
 
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
@@ -405,7 +405,7 @@ export default function SettingsPage() {
         )}
       </button>
       <aside
-        className={`fixed z-20 ${appState.mode == 'dark' ? "!bg-[#313334] ! border-[#404344bf] " : ``} bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
+        className={`fixed z-20 dark:!bg-dark-bg dark:border-dark-border  bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 ltr:border-r rtl:border-l `}
       >
@@ -500,7 +500,7 @@ export default function SettingsPage() {
       )}
       {/* main */}
       <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto scrollbar-thin scrollbar-track-gray scrollbar-thumb-gray hover:scrollbar-thumb-gray dark:scrollbar-track-gray dark:scrollbar-thumb-gray dark:hover:scrollbar-thumb-gray scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-        <div className={`flex items-center justify-between z-[53] fixed ${appState.mode == 'dark' ? "!bg-[#313334] " : ``} bg-white shadow w-[-webkit-fill-available] p-2`}>
+        <div className={`flex items-center justify-between z-[53] fixed  dark:!bg-dark-bg bg-white shadow w-[-webkit-fill-available] p-2`}>
           <button
             className="md:hidden mr-2 p-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -512,13 +512,13 @@ export default function SettingsPage() {
             id="search-input"
             type="search"
             placeholder="Search (Ctrl+Shift+F)"
-            className={`w-2/5 rounded-md dark:placeholder-dark-text focus:border-accent focus:outline-accent ${appState.mode == 'dark' ? "!bg-[#313334] !border-[#f2f4f538] " : ``} active:border-accent active:outline-accent`}
+            className={`w-2/5 rounded-md dark:placeholder-dark-text focus:border-accent focus:outline-accent dark:!bg-dark-bg dark:border-dark-border  active:border-accent active:outline-accent`}
             onChange={onFilterChange}
             autoFocus
           />
           <LayoutToggle onToggle={setIsCompactView} />
         </div>
-        <div className={`p-4 ${appState.mode == 'dark' ? "!bg-[#313334] " : ``}`}>
+        <div className={`p-4 dark:!bg-dark-bg`}>
           <style>{`@keyframes blink {0%, 100% { background-color: #f1f1f1; }50% { background-color: rgb(var(--primary)); }  }.blink-animation {animation: blink 2s ease-in-out;}`}</style>
           <section
             key="main"
@@ -914,7 +914,7 @@ export default function SettingsPage() {
         </div>
       </main>
 
-      <div className={`flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 ${appState.mode == 'dark' ? "!bg-[#313334] " : ``} bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
+      <div className={`flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
         <ERPButton
           title={t("save_settings")}
           variant="primary"

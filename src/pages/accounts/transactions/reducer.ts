@@ -426,9 +426,9 @@ const accTransactionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
-      const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
+      // const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
       const payload = action.payload;
-  
+  debugger;
       if (payload) {
         state.row = { ...AccTransactionRowInitialData };
         // Handle master data

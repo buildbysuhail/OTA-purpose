@@ -57,6 +57,7 @@ import { setApplicationSettings } from "./redux/slices/app/application-settings-
 import ERPAttachment from "./components/ERPComponents/erp-attachment";
 import { ApplicationSettingsType } from "./pages/settings/system/application-settings-types/application-settings-types";
 import AutoClicker from "./Nodevwatermark";
+// import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
   return (

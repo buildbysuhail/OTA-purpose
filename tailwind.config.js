@@ -58,6 +58,12 @@ theme: {
       blink: 'blinker 1s linear infinite',
     },
     colors: {
+      'dark-label': '#e1e0e0',
+      'dark-text': '#e1e0e0',
+      'dark-bg': '#313334',
+      'dark-bg-header': '#404344bf',
+      'dark-hover-text': '#000000',
+      'dark-border': '#f2f4f538',
       gray: {
         100: "#f9fafb",
         200: "#f2f4f5",

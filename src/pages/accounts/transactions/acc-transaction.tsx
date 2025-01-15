@@ -990,16 +990,38 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+  //       setIsPopupVisible(false);
+  //     }
+  //   }
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      // Check if the click is outside the popup AND not on the button
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
         setIsPopupVisible(false);
       }
     }
 
+    // Attach the event listener
     document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener on component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -1166,6 +1188,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
                   <div className="relative"> 
                     <button
+                    ref={buttonRef}
                     onClick={() => setIsPopupVisible(!isPopupVisible)}
                     // onClick={handleButtonClick}
                     className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"

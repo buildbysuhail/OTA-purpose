@@ -106,6 +106,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           voucherType={voucherType}
           voucherPrefix={data.voucherPrefix}
           formType={data.formType}
+          voucherNo={data.voucherNo}
           formCode={formCode}
           title={title}
           drCr={drCr}

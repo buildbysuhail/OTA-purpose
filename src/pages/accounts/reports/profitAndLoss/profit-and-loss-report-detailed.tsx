@@ -12,7 +12,7 @@ import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-
+import ExcelJS from "exceljs";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -219,6 +219,7 @@ const ProfitAndLossDetailedReport = () => {
     item?: any;
   }>({ isOpen: false, key: 0 });
   const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat();
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
@@ -266,7 +267,253 @@ const ProfitAndLossDetailedReport = () => {
   const goToPreviousPage = () => {
     window.history.back();
   };
+const handleExport = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Profit And Loss");
 
+    // Add title and date
+    worksheet.mergeCells("A1:D1");
+    const titleCell = worksheet.getCell("A1");
+    titleCell.value = 
+   `From
+    ${new Date(filter.fromDate).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    })}
+    to
+    ${new Date(filter.toDate).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    })}`;
+
+    
+    
+    // `As of ${new Date(filter.asonDate).toLocaleDateString(
+    //   "en-US",
+    //   {
+    //     year: "numeric",
+    //     month: "long",
+    //     day: "2-digit",
+    //   }
+    // )}`;
+    titleCell.alignment = {
+      horizontal: "center",
+      vertical: "middle",
+      wrapText: true,
+    };
+    titleCell.font = { bold: true };
+
+    // Headers
+    worksheet.mergeCells("A3:B3");
+    worksheet.mergeCells("C3:D3");
+    const headers = [
+      { header: "Expense", key: "expense" },
+      { header: "Amount", key: "expenseAmount" },
+      { header: "Income", key: "income" },
+      { header: "Amount", key: "incomeAmount" },
+    ];
+    worksheet.getRow(3).values = ["Expense", "Amount", "Income", "Amount"];
+    worksheet.getRow(3).font = { bold: true };
+    worksheet.getRow(3).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD3D3D3" },
+    };
+
+    // Filter and prepare data
+    const expense = data.filter(
+      (item) => item?.transType === "E" && item?.groupName !== "TOTAL"
+    );
+    const income = data.filter(
+      (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
+    );
+    const maxLength = Math.max(expense.length, income.length);
+
+    // Add data rows
+    let currentRow = 4;
+
+    // Add Capital Accounts section
+    // const capitalAccounts = expense.filter(
+    //   (item) => item.title === "M" && item.groupName === "Capital Accounts"
+    // );
+    // if (capitalAccounts.length > 0) {
+    //   worksheet.getCell(`A${currentRow}`).value = "Capital Accounts";
+    //   worksheet.getCell(`B${currentRow}`).value = capitalAccounts[0].total;
+    //   worksheet.getCell(`A${currentRow}`).font = {
+    //     color: { argb: "3b82f6" },
+    //     bold: true,
+    //   };
+    //   worksheet.getCell(`B${currentRow}`).font = {
+    //     color: { argb: "3b82f6" },
+    //     bold: true,
+    //   };
+    //   currentRow++;
+    // }
+
+    // Add data rows with proper formatting
+    for (let i = 0; i < maxLength; i++) {
+      if (expense[i]) {
+        worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
+    
+        worksheet.getCell(`B${currentRow}`).value =getFormattedValue(expense[i].total)
+
+      
+    
+        if (expense[i].title === "M") {
+          worksheet.getCell(`A${currentRow}`).font = {
+            bold: true,
+            color: { argb: "3b82f6" },
+          };
+          worksheet.getCell(`B${currentRow}`).font = {
+            bold: true,
+            color: { argb: "3b82f6" },
+          };
+          worksheet.getCell(`A${currentRow}`).alignment = {
+            horizontal: "left",
+            // indent: 2,
+          };
+          worksheet.getCell(`B${currentRow}`).alignment = {
+            horizontal: "right",
+            // indent: 2,
+          };
+        } else {
+          worksheet.getCell(`A${currentRow}`).font = {
+            color: { argb: "000000" },
+          };
+          worksheet.getCell(`B${currentRow}`).font = {
+            color: { argb: "000000" },
+          };
+          worksheet.getCell(`A${currentRow}`).alignment = {
+            horizontal: "left",
+            indent: 2,
+          };
+          worksheet.getCell(`B${currentRow}`).alignment = {
+            horizontal: "right",
+            indent: 2,
+          };
+        }
+      }
+
+      if (income[i]) {
+        worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
+
+        worksheet.getCell(`D${currentRow}`).value =getFormattedValue(income[i].total);
+        // assets[i].transType == "E"
+        // ? assets[i].title == "M"
+        //   ?getFormattedValue(assets[i].total)
+        //   : assets[i].total > 0
+        //   ? "(-)" +getFormattedValue(assets[i].total)
+        //   : assets[i].total === 0
+        //   ? getFormattedValue(0)
+        //   : getFormattedValue(-1 * assets[i].total)
+          
+        // : assets[i].title == "M"
+        // ?getFormattedValue(assets[i].total)
+        // : assets[i].total < 0
+        // ? "(-)" + getFormattedValue(-1 * assets[i].total)
+        // : assets[i].total === 0
+        // ? getFormattedValue(0)
+        // : getFormattedValue(assets[i].total);
+    
+        if (income[i].title === "M") {
+          worksheet.getCell(`C${currentRow}`).font = {
+            bold: true,
+            color: { argb: "3b82f6" },
+          };
+
+          worksheet.getCell(`D${currentRow}`).font = {
+            bold: true,
+            color: { argb: "3b82f6" },
+          };
+          worksheet.getCell(`C${currentRow}`).alignment = {
+            horizontal: "left",
+            // indent: 2,
+          };
+          worksheet.getCell(`D${currentRow}`).alignment = {
+            horizontal: "right",
+            // indent: 2,
+          };
+        } else {
+          worksheet.getCell(`C${currentRow}`).font = {
+            color: { argb: "000000" },
+          };
+          worksheet.getCell(`D${currentRow}`).font = {
+            color: { argb: "000000" },
+          };
+          worksheet.getCell(`C${currentRow}`).alignment = {
+            horizontal: "left",
+            indent: 2,
+          };
+          worksheet.getCell(`D${currentRow}`).alignment = {
+            horizontal: "right",
+            indent: 2,
+          };
+        }
+      }
+      currentRow++;
+    }
+
+    // Add totals
+    const totalRow = currentRow;
+    worksheet.getCell(`A${totalRow}`).value = "Total";
+    worksheet.getCell(`B${totalRow}`).value =
+    getFormattedValue(  data.find(
+        (item) => item?.transType === "I" && item?.groupName === "TOTAL"
+      )?.total) || 0;
+    worksheet.getCell(`C${totalRow}`).value = "Total";
+    worksheet.getCell(`D${totalRow}`).value =
+    getFormattedValue(  data.find(
+        (item) => item?.transType === "E" && item?.groupName === "TOTAL"
+      )?.total) || 0;
+
+    // Format totals row
+    ["A", "B", "C", "D"].forEach((col) => {
+      worksheet.getCell(`${col}${totalRow}`).font = {
+        bold: true,
+        color: { argb: "FF0000" },
+      };
+    });
+    worksheet.getCell(`A${totalRow}`).alignment = {
+      horizontal: "left",
+      // indent: 2,
+    };
+    worksheet.getCell(`B${totalRow}`).alignment = {
+      horizontal: "right",
+      // indent: 2,
+    };
+    worksheet.getCell(`C${totalRow}`).alignment = {
+      horizontal: "left",
+      // indent: 2,
+    };
+    worksheet.getCell(`D${totalRow}`).alignment = {
+      horizontal: "right",
+      // indent: 2,
+    };
+    // Set column widths
+    worksheet.columns.forEach((column) => {
+      column.width = 30;
+    });
+
+    // Format amounts as numbers
+    ["B", "D"].forEach((col) => {
+      worksheet.getColumn(col).numFmt = "#,##0.00";
+      // worksheet.getColumn(col).alignment = { horizontal: "right" };
+    });
+
+    // Generate Excel file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ProfitAndLossDetailed.xlsx";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
   return (
     <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
@@ -354,7 +601,9 @@ const ProfitAndLossDetailedReport = () => {
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center bg-gray-100 p-2 rounded-md"
+              onClick={handleExport}
+            >
               {/* <i className="fas fa-file-export me-1"></i> */}
               <FileDown className="pe-2" />
               <span>{t("export")}</span>

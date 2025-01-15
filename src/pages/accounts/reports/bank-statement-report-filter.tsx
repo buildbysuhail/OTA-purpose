@@ -3,6 +3,7 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { LedgerType } from "../../../enums/ledger-types";
+import moment from "moment";
 
 const BankStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation('accountsReport')
@@ -45,7 +46,8 @@ const BankStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) =>
 }
 export default BankStatementReportFilter;
 export const BankStatementReportFilterInitialState = {
-  dateFrom: new Date(),
+   dateFrom: moment().subtract(30, "days").toDate(),
+  // dateFrom: new Date(),
   dateTo: new Date(),
   bankLedgerID: 0,
 };

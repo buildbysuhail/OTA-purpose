@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
+import VoucherType from "../../../enums/voucher-types";
 
 interface BillwiseProps {
   
@@ -82,7 +83,31 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     let gridHeightWindows = wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
-
+  useEffect(() => {
+    const voucherType = formState.transaction.master.voucherType
+if(voucherType == VoucherType.CashPayment || voucherType == VoucherType.CashReceipt ||
+  voucherType == VoucherType.BankPayment || voucherType == VoucherType.BankReceipt ||
+  voucherType == VoucherType.ChequePayment || voucherType == VoucherType.ChequeReceipt ||
+  voucherType == VoucherType.DebitNote || voucherType == VoucherType.CreditNote || 
+  voucherType == VoucherType.JournalVoucher || voucherType == VoucherType.MultiJournal || 
+  voucherType == VoucherType.OpeningBalance || voucherType == VoucherType.ClosingBalance || 
+  voucherType == VoucherType.CashPaymentEstimate || voucherType == VoucherType.CashReceiptEstimate||
+  voucherType == VoucherType.JournalVoucherSpecial || voucherType == VoucherType.TaxOnExpensePayment)
+{
+setDrCr(formState.transaction.master.drCr);
+setAccTransactionDetailId(formState.row.accTransactionDetailId);
+}
+else if( voucherType == VoucherType.SalesReturn || voucherType == VoucherType.PurchaseReturn ||
+  voucherType == VoucherType.ServiceReturn || voucherType == VoucherType.SalesDiscount)
+{
+}
+// else if(CashCounterTender)
+// {
+// }
+else{
+  closeBillwise();
+}
+  }, [isMaximized, modalHeight]);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
     setStore(clonedData);
@@ -269,7 +294,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
 
     return true;
   };
-  const closeBillwie = () => {
+  const closeBillwise = () => {
     dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
     
     onClose && onClose();
@@ -318,7 +343,7 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
         );
 debugger;
         onSave && onSave(billwiseString.billwiseString, (formState.row.amount ?? 0) < amtAdjusted ? amtAdjusted : formState.row.amount ?? 0, billwiseString.vrNumbers)
-        closeBillwie()
+        closeBillwise()
       } else if (isFromCashTender) {
         if (!validate()) return;
 

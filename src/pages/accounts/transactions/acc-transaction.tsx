@@ -663,7 +663,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       width: 100,
     },
     {
-      dataField: "ledger",
+      dataField: "ledgerName",
       caption: "Ledger",
     },
     {

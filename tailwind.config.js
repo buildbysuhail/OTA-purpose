@@ -60,9 +60,13 @@ theme: {
     colors: {
       'dark-label': '#e1e0e0',
       'dark-text': '#e1e0e0',
-      'dark-bg': '#313334',
+      // 'dark-bg': '#313334',
+      'dark-bg': '#1e1e1f',
+      'dark-bg-card': '#202223',
       'dark-bg-header': '#404344bf',
       'dark-hover-text': '#000000',
+      'dark-hover-black': '#000000',
+      'dark-hover-bg': '#343536',
       'dark-border': '#f2f4f538',
       gray: {
         100: "#f9fafb",

@@ -433,7 +433,7 @@ const accTransactionSlice = createSlice({
         state.row = { ...AccTransactionRowInitialData };
         // Handle master data
         state.transaction.master = {
-          ...state.transaction.master,
+          // ...state.transaction.master,
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
           currencyRate: payload.master.currencyRate,

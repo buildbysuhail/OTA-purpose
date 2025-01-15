@@ -193,6 +193,7 @@ const BillwiseComponent = ({
   }, [showAllTransactions]);
   useEffect(() => {
     const loadBillwiseTransactions = async () => {
+      debugger;
       try {
         // Replace with your actual API call
         const response = await fetch(

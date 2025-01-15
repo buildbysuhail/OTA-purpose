@@ -352,7 +352,8 @@ inv_reports_stock_flow:"",
     partiesBankNames:"/Core/TransactionBase/SelectPartiesBankNames",
     validate_cheque_status:"/Core/TransactionBase/ValidateChequeStatus",
     set_transaction_edit_mode:"/Core/TransactionBase/SetTransactionEditMode",
-    get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate"
+    get_currency_exchange_rate:"/Core/TransactionBase/GetCurrencyExchangeRate",
+    is_ledger_billwise_applicable:"/Core/TransactionBase/IsLedgerBillwiseApplicable"
 };
 
 export default Urls;

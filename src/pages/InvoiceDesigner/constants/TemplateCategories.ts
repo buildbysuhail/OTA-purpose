@@ -25,7 +25,7 @@ export const TemplateTypes: {
   {
     id: 4,
     name: "Tax on Expenses",
-    template_group_id: VoucherType.TaxOnExpenses,
+    template_group_id: VoucherType.TaxOnExpensePayment,
   },
   {
     id: 5,
@@ -250,7 +250,7 @@ export const TemplateTypes: {
   {
     id: 49,
     name: "Purchase Estimation",
-    template_group_id: VoucherType.PurchaseEstimation,
+    template_group_id: VoucherType.PurchaseEstimate,
   },
   {
     id: 50,

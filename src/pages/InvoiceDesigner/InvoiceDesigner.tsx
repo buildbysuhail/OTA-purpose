@@ -51,6 +51,7 @@ import AccTableDesigner from "./Designer/accTableDesigner";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
 import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_voucher";
+import BalanceSheetVerticalTemplate from "./DownloadPreview/balance-sheet/balance-sheet-vertical";
 
 
 interface DesignSectionType {
@@ -483,6 +484,18 @@ const InvoiceDesigner = () => {
       </div>
 
       {/* Preview  */}
+      {["BalanceSheet","ProfitAndLoss"].includes(templateGroup) && (
+        <PDFViewer
+        className="pdf-viewer"
+        width="100%"
+        height="auto"
+        style={{ maxHeight: `${maxHeight}px`, margin: "20px" }}
+       >
+      <BalanceSheetVerticalTemplate
+      template={templateData.activeTemplate}
+      />
+      </PDFViewer>
+      )}
       {["CP", "CR"].includes(templateGroup) && (
         <>
         {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}

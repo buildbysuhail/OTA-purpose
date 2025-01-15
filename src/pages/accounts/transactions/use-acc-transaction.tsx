@@ -1357,7 +1357,7 @@ export const useAccTransaction = (
         }
         else
         {
-          if(applicationSettings.accountsSettings.billwiseMandatory && formState.row.billwiseDetails != "") {
+          if(applicationSettings.accountsSettings?.billwiseMandatory && formState.row.billwiseDetails != "") {
             dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
           }
           if(formState.formElements.costCentreId.visible == false) {

@@ -427,8 +427,8 @@ export default function SettingsPage() {
                 className={`  relative flex items-center w-full px-3 md:px-4 py-1.5 mt-1 md:mt-2 duration-200 border-r-4 text-left
                   ${
                     item.id === activeSection
-                      ? "bg-gray-300 border-primary text-primary"
-                      : "border-transparent hover:bg-gray-200 hover:text-black hover:border-gray-400"
+                      ? "bg-gray-300 border-primary dark:text-black text-primary"
+                      : "border-transparent hover:bg-gray-200 hover:!text-dark-hover-text hover:border-gray-400"
                   }`}
                 onClick={() => scrollToSection(item.id)}
               >
@@ -450,10 +450,10 @@ export default function SettingsPage() {
                       <>
                         <button
                           key={set.key}
-                          className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${
+                          className={`w-full px-3 md:px-4 dark:!dark-label  py-1.5 text-left text-sm ${
                             set.key === activeSubItem
-                              ? "bg-gray-300 border-primary text-primary"
-                              : "border-transparent hover:bg-gray-200 hover:text-black"
+                              ? "bg-gray-300 border-primary dark:text-dark-hover-text text-primary"
+                              : "border-transparent hover:bg-gray-200 hover:!text-dark-hover-text"
                           }  `}
                           onClick={() => scrollToSection(item.id, set.key)}
                         >
@@ -512,7 +512,7 @@ export default function SettingsPage() {
             id="search-input"
             type="search"
             placeholder="Search (Ctrl+Shift+F)"
-            className={`w-2/5 rounded-md focus:border-accent focus:outline-accent ${appState.mode == 'dark' ? "!bg-[#313334] !border-[#f2f4f538] " : ``} active:border-accent active:outline-accent`}
+            className={`w-2/5 rounded-md dark:placeholder-dark-text focus:border-accent focus:outline-accent ${appState.mode == 'dark' ? "!bg-[#313334] !border-[#f2f4f538] " : ``} active:border-accent active:outline-accent`}
             onChange={onFilterChange}
             autoFocus
           />

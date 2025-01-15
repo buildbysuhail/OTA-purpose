@@ -157,7 +157,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
-      <button onClick={() => setIsOpen(true)} className='ti-btn rounded-[2px] '>
+      <button onClick={() => setIsOpen(true)} className='ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] '>
         <i className="ri-apps-line"></i>
       </button>
       <ERPModal

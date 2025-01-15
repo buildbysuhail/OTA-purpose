@@ -1,11 +1,11 @@
-import { MouseEventHandler, useCallback, useEffect, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useRef, useState } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import BalanceSheetFilter, { BalanceSheetFilterInitialState, } from "./balance-sheet-filter";
 import Urls from "../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
-import { Clock1, FileDown, Forward, Printer, RectangleVertical, X, } from "lucide-react";
+import { Clock1, EllipsisVertical, FileDown, Forward, Printer, RectangleVertical, X, } from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
@@ -217,6 +217,31 @@ const BalanceSheet = () => {
     setShowFilter(false);
   }, [filterShowCount]);
 
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  
+    const popupRef = useRef<HTMLDivElement | null>(null);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        // Check if the click is outside the popup AND not on the button
+        if (
+          popupRef.current &&
+          !popupRef.current.contains(event.target as Node) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(event.target as Node)
+        ) {
+          setIsPopupVisible(false);
+        }
+      }
+  
+      // Attach the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Clean up the event listener on component unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
   return (
     <div className="p-6 bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
@@ -308,6 +333,50 @@ const BalanceSheet = () => {
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
+            <div className="relative">
+            <button className="flex items-center bg-gray-100 p-2 rounded-md"
+            ref={buttonRef}
+            onClick={() => setIsPopupVisible(!isPopupVisible)}
+            >
+              {/* <i className="fas fa-file-export me-1"></i> */}
+              <EllipsisVertical className="pe-2" />
+              <span>{t("export")}</span>
+            </button>
+
+            {isPopupVisible && (
+                    <div
+                      ref={popupRef} // Attach ref to the popup
+                      className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                      style={{
+                        top: '100%', // Position the popup right below the button
+                        left: '-139px',   // Align it with the left edge of the button
+                        width: '221px', // Set your desired width
+                        marginTop: '8px', // Add some spacing between the button and the popup
+                      }}
+                    >
+                     
+                      <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                      <ul className="space-y-1">
+                        <li>
+                          
+                        </li>
+                        
+                        
+                          <li>
+                            <button 
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              
+                            >
+                              
+                              
+                              <span>Unlock Voucher</span>
+                            </button>
+                          </li> 
+                      </ul>
+                    </nav>
+                    </div>
+                  )}
+            </div>
             <button onClick={goToPreviousPage} className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}

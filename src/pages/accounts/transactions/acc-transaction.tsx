@@ -157,6 +157,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     unlockVoucher,
     handleRefresh,
     createNewVoucher,
+    billwiseChanged
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -269,91 +270,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, []);
 
   useEffect(() => {
-    let drCr = "";
-    const loadLedgerData = async () => {
-      switch (formState.transaction.master.voucherType) {
-        case "CP":
-        case "BP":
-        case "DN":
-        case "CQP":
-        case "SV":
-        case "SRV":
-        case "PBP":
-          drCr = "Dr";
-
-        case "CR":
-        case "BR":
-        case "CN":
-        case "CQR":
-        case "PV":
-        case "PBR":
-          drCr = "Cr";
-
-        case "OB":
-        case "MJV":
-          drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
-
-        case "JV":
-          drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
-      }
-      if (
-        formState.showbillwise === true &&
-        formState.row.ledgerId &&
-        formState.ledgerData != null
-      ) {
-        dispatch(
-          accFormStateHandleFieldChange({
-            fields: {
-              ledgerBillWiseLoading: true,
-            },
-          })
-        );
-
-        try {
-          if (
-            formState.showbillwise === true &&
-            formState.row.ledgerId &&
-            formState.ledgerData != null
-          ) {
-            const billwise = await api.getAsync(
-              `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-                formState.row.ledgerId
-              }&DrCr=${
-                formState.transaction.master.drCr
-              }&AccTransactionDetailID=${
-                formState.row.accTransactionDetailId ?? 0
-              }`
-            );
-            dispatch(
-              accFormStateHandleFieldChange({
-                fields: {
-                  billwiseData: billwise,
-                  ledgerBillWiseLoading: false,
-                },
-              })
-            );
-
-            // if (voucherType === "CN" || voucherType === "DN") {
-            //   if (isBillwiseApplicable(cbMasterAccount)) {
-            //     handleBillwiseDialog(cbMasterAccount, "");
-            //     focusNext();
-            //   } else {
-            //     focusNext();
-            //   }
-            // } else {
-            //   if (isBillwiseApplicable(cbLedger)) {
-            //     handleBillwiseDialog(cbLedger, "");
-            //     focusNext();
-            //   } else {
-            //     focusNext();
-            //   }
-            // }
-          }
-        } catch (error) {}
-      }
-    };
-
-    loadLedgerData();
+    billwiseChanged(formState.showbillwise)
   }, [formState.showbillwise]);
 
   useEffect(() => {

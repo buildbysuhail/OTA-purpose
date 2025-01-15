@@ -24,11 +24,15 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
-import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
+import {
+  accFormStateHandleFieldChange,
+  accFormStateRowHandleFieldChange,
+  accFormStateTransactionMasterHandleFieldChange,
+} from "./reducer";
 import VoucherType from "../../../enums/voucher-types";
+import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 
 interface BillwiseProps {
-  
   onSave?: (
     billwiseDetails: string,
     totalAmount: number,
@@ -61,15 +65,13 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
-  
-  const [ledgerName, setLedgerName] = useState<string>('');
-const [amount, setAmount] = useState<number>(0);
-const [ledgerId, setLedgerId] = useState<string>('');
-const [drCr, setDrCr] = useState<string>('');
-const [accTransactionDetailId, setAccTransactionDetailId] = useState<number>(0);
-const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(undefined);
-const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(undefined);
-const [billwiseString, setBillwiseString] = useState<string | undefined>(undefined);
+
+  const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(
+    undefined
+  );
+  const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(
+    undefined
+  );
 
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
@@ -84,29 +86,38 @@ const [billwiseString, setBillwiseString] = useState<string | undefined>(undefin
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
   useEffect(() => {
-    const voucherType = formState.transaction.master.voucherType
-if(voucherType == VoucherType.CashPayment || voucherType == VoucherType.CashReceipt ||
-  voucherType == VoucherType.BankPayment || voucherType == VoucherType.BankReceipt ||
-  voucherType == VoucherType.ChequePayment || voucherType == VoucherType.ChequeReceipt ||
-  voucherType == VoucherType.DebitNote || voucherType == VoucherType.CreditNote || 
-  voucherType == VoucherType.JournalVoucher || voucherType == VoucherType.MultiJournal || 
-  voucherType == VoucherType.OpeningBalance || voucherType == VoucherType.ClosingBalance || 
-  voucherType == VoucherType.CashPaymentEstimate || voucherType == VoucherType.CashReceiptEstimate||
-  voucherType == VoucherType.JournalVoucherSpecial || voucherType == VoucherType.TaxOnExpensePayment)
-{
-setDrCr(formState.transaction.master.drCr);
-setAccTransactionDetailId(formState.row.accTransactionDetailId);
-}
-else if( voucherType == VoucherType.SalesReturn || voucherType == VoucherType.PurchaseReturn ||
-  voucherType == VoucherType.ServiceReturn || voucherType == VoucherType.SalesDiscount)
-{
-}
-// else if(CashCounterTender)
-// {
-// }
-else{
-  closeBillwise();
-}
+    const voucherType = formState.transaction.master.voucherType;
+    if (
+      voucherType == VoucherType.CashPayment ||
+      voucherType == VoucherType.CashReceipt ||
+      voucherType == VoucherType.BankPayment ||
+      voucherType == VoucherType.BankReceipt ||
+      voucherType == VoucherType.ChequePayment ||
+      voucherType == VoucherType.ChequeReceipt ||
+      voucherType == VoucherType.DebitNote ||
+      voucherType == VoucherType.CreditNote ||
+      voucherType == VoucherType.JournalVoucher ||
+      voucherType == VoucherType.MultiJournal ||
+      voucherType == VoucherType.OpeningBalance ||
+      voucherType == VoucherType.ClosingBalance ||
+      voucherType == VoucherType.CashPaymentEstimate ||
+      voucherType == VoucherType.CashReceiptEstimate ||
+      voucherType == VoucherType.JournalVoucherSpecial ||
+      voucherType == VoucherType.TaxOnExpensePayment
+    ) {
+      setIsFromAccTrans(true);
+    }
+    // else if( voucherType == VoucherType.SalesReturn || voucherType == VoucherType.PurchaseReturn ||
+    //   voucherType == VoucherType.ServiceReturn || voucherType == VoucherType.SalesDiscount)
+    // {
+    //   setIsFromAccTrans(true);
+    // }
+    // // else if(CashCounterTender)
+    // // {
+    // // }
+    else {
+      closeBillwise();
+    }
   }, [isMaximized, modalHeight]);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
@@ -164,7 +175,7 @@ else{
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       debugger;
-      if (showAllTransactions || row.drCr !== drCr) {
+      if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -185,13 +196,13 @@ else{
       try {
         // Replace with your actual API call
         const response = await fetch(
-          `/api/billwise/transactions?ledgerId=${ledgerId}&drCr=${drCr}&accTransactionDetailId=${accTransactionDetailId}`
+          `/api/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`
         );
         const data = await response.json();
 
         let lastIndex = 0;
         const formattedData = data?.map((row: any, index: number) => {
-          if (showAllTransactions || row.drCr !== drCr) {
+          if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
             const _it = {
               ...row,
               slNo: lastIndex + 1,
@@ -212,8 +223,8 @@ else{
 
         setStore(formattedData);
 
-        if (billwiseString) {
-          generateGridFromBillwiseString(billwiseString);
+        if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+          generateGridFromBillwiseString(formState.row.billwiseDetails);
         }
       } catch (error) {
         console.error("Error loading billwise transactions:", error);
@@ -221,7 +232,7 @@ else{
     };
 
     loadBillwiseTransactions();
-  }, [ledgerId, drCr, accTransactionDetailId, billwiseString]);
+  }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
     const rows = billwiseStr.split("|");
@@ -276,6 +287,7 @@ else{
     );
   };
   const validate = () => {
+    debugger;
     const totalAmount = getTotalAmountToSet();
 
     if (totalAmount < 0) {
@@ -283,26 +295,30 @@ else{
         title: "failed",
         text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
       });
+      return false;
     }
 
-    if (formState.row.amount ?? 0 < totalAmount) {
+    if ((formState.row.amount ?? 0) < totalAmount) {
       ERPAlert.show({
         title: "failed",
         text: "Total adjustment amount exceeds the available amount.",
       });
+      
+    return false;
     }
 
     return true;
   };
   const closeBillwise = () => {
-    dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
-    
+    dispatch(
+      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+    );
+
     onClose && onClose();
-  }
+  };
   const handleSave = () => {
     try {
-      
-    debugger;
+      debugger;
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -311,7 +327,7 @@ else{
           accFormStateRowHandleFieldChange({
             fields: {
               billwiseDetails:
-                amtAdjusted > 0 ? billwiseString.billwiseString : "" 
+                amtAdjusted > 0 ? billwiseString.billwiseString : "",
             },
           })
         );
@@ -329,7 +345,6 @@ else{
             accFormStateRowHandleFieldChange({
               fields: {
                 amount: amtAdjusted,
-                
               },
             })
           );
@@ -337,19 +352,26 @@ else{
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
-              remarks: formState.transaction.master.remarks + "BW:" + billwiseString.vrNumbers                
+              remarks:
+                formState.transaction.master.remarks +
+                "BW:" +
+                billwiseString.vrNumbers,
             },
           })
         );
-debugger;
-        onSave && onSave(billwiseString.billwiseString, (formState.row.amount ?? 0) < amtAdjusted ? amtAdjusted : formState.row.amount ?? 0, billwiseString.vrNumbers)
-        closeBillwise()
+        debugger;
+        onSave &&
+          onSave(
+            billwiseString.billwiseString,
+            (formState.row.amount ?? 0) < amtAdjusted
+              ? amtAdjusted
+              : (formState.row.amount ?? 0),
+            billwiseString.vrNumbers
+          );
+        closeBillwise();
       } else if (isFromCashTender) {
         if (!validate()) return;
-
-        
       } else {
-       
       }
     } catch (error: any) {
       ERPAlert.show({
@@ -362,7 +384,7 @@ debugger;
   const calculateNetAdjustment = () => {
     return store.reduce((total: any, row: any) => {
       const amt = parseFloat(row.billwiseAmount) || 0;
-      return total + (row.drCr === drCr ? -amt : amt);
+      return total + (row.drCr === formState.transaction.master.drCr ? -amt : amt);
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
@@ -381,8 +403,10 @@ debugger;
   }, [store]);
 
   return (
-    <Card className={`w-full ${isMaximized ? "max-w-full":"max-w-6xl"}`}
-    elevation={0}>
+    <Card
+      className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
+      elevation={0}
+    >
       <CardHeader></CardHeader>
       <CardContent>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
@@ -419,7 +443,7 @@ debugger;
           <Item location="after">
             <ERPCheckbox
               label={`Show ${
-                drCr === "Dr" ? "Debit" : "Credit"
+                formState.transaction.master.drCr === "Dr" ? "Debit" : "Credit"
               } Transactions also`}
               className="text-[12px] font-medium p-3"
               id={""}
@@ -435,7 +459,7 @@ debugger;
         </Toolbar>
         safvan : {showAllTransactions.toString()}
         {
-          store?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+          store?.filter((row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr)
             .length
         }
         <DataGrid
@@ -444,7 +468,7 @@ debugger;
           id="TestPopup"
           // height={gridHeight}
           dataSource={store?.filter(
-            (row: any) => showAllTransactions || row.drCr !== drCr
+            (row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr
           )}
           height={gridHeight}
           className="custom-data-grid"

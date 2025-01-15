@@ -240,15 +240,8 @@ const BalancesheetVertical = () => {
                     content: 
                     dataField == "accGroupID" ?
                      <BalancesheetDetails
-                      postData={{
-                        asonDate: filter.asonDate,
-                      }}
-                      originFrom="detailed"
                     /> 
-                    : dataField == "ledgerID" ? <CashBookMonthWise postData={
-                      {
-                        asonDate: filter.asonDate
-                      }} 
+                    : dataField == "ledgerID" ? <CashBookMonthWise 
                      
                       />
                       : null
@@ -257,10 +250,7 @@ const BalancesheetVertical = () => {
                     bodyProps: dataField == "accGroupID" ? "accGroupID" : "ledgerID",
              
                   })}
-                  postData={
-                    {
-                      asonDate: filter.asonDate
-                    }} 
+                  postDataDynamic={(dataField: string) => dataField == "accGroupID" ? { asonDate: filter.asonDate}: {asonDate: filter.asonDate}}
                   originDynamic={(dataField: string) => dataField == "accGroupID" ? "detailed" : "trialBalance"}
                 // )}
                 ></ErpDevGrid>

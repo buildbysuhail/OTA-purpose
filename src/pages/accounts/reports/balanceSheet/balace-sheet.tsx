@@ -19,7 +19,7 @@ const BalanceSheetRow: React.FC<{
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    
+
 
     setIsOpenDetails({
       isOpen: true,
@@ -46,21 +46,21 @@ const BalanceSheetRow: React.FC<{
               paddingRight: item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
               fontWeight: item.title == "M" || item.groupName == "TOTAL" ? "bold" : "normal",
             }}>
-          {`${item.transType == "L" 
-  ? (item.title == "M"
-      ? getFormattedValue(item.total)
-      : item.total > 0
-        ? '(-)' + getFormattedValue(item.total)
-        : item.total === 0
-          ? getFormattedValue(0)
-          : getFormattedValue(-1 * item.total))
-  : (item.title == "M"
-      ? getFormattedValue(item.total)
-      : item.total < 0
-        ? '(-)' + getFormattedValue(-1 * item.total)
-        : item.total === 0
-          ? getFormattedValue(0)
-          : getFormattedValue(item.total))}`}
+            {`${item.transType == "L"
+              ? (item.title == "M"
+                ? getFormattedValue(item.total)
+                : item.total > 0
+                  ? '(-)' + getFormattedValue(item.total)
+                  : item.total === 0
+                    ? getFormattedValue(0)
+                    : getFormattedValue(-1 * item.total))
+              : (item.title == "M"
+                ? getFormattedValue(item.total)
+                : item.total < 0
+                  ? '(-)' + getFormattedValue(-1 * item.total)
+                  : item.total === 0
+                    ? getFormattedValue(0)
+                    : getFormattedValue(item.total))}`}
 
           </a>
         </td>
@@ -208,7 +208,8 @@ const BalanceSheet = () => {
     await LoadAsync(_filter);
   };
 
-  const onCloseFilter = useCallback(() => {1
+  const onCloseFilter = useCallback(() => {
+    1
     if (filterShowCount === 0) {
       setFilter({});
       setFilterShowCount((prev) => prev + 1);
@@ -382,16 +383,14 @@ const BalanceSheet = () => {
           rowData={isOpenDetails.item}
           content={
             <BalancesheetDetails
-              postData={{
-                ...filter, accGroupID: isOpenDetails.key
-              }}
-              originFrom={'balancesheet'}
+              origin={'balancesheet'}
               groupName={'balancesheet'}
               rowData={isOpenDetails.item}
-              
             />
           }
-
+          postData={{
+            ...filter, accGroupID: isOpenDetails.key
+          }}
         />
       )}
     </div>

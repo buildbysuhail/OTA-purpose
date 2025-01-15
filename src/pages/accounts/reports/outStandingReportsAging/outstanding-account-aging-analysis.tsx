@@ -11,7 +11,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 interface OutstandingAccountAgingAnalysisProps {
-  postData: any;
+  postData?: any;
   groupName?: string;
   contentProps?: any;
   rowData?: any;

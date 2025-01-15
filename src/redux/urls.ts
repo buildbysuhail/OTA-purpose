@@ -263,7 +263,7 @@ const Urls = {
 
   // acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   // acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-  acc_reports_aging_analysis: "/Accounts/RptBankStatementC/AgingAnalysisReport/",
+
 
   acc_reports_trial_balance: "/Accounts/RptTrialBalance/TrialBalance/",
   acc_reports_trial_balance_detailed: "/Accounts/RptTrialBalance/TrialBalancePeriodwise/",
@@ -287,6 +287,7 @@ const Urls = {
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
+  acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
 
 //inventory
 inv_reports_price_list:"",

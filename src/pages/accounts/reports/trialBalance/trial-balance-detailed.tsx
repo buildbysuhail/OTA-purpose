@@ -271,7 +271,7 @@ const TrialBalancePeriodwise = () => {
                   filterInitialData={TrialBalancePeriodwiseReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={{...filter, asonDate:filter.toDate}}
+                    content: <CashBookMonthWise 
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
@@ -280,6 +280,7 @@ const TrialBalancePeriodwise = () => {
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.isGroup == false && data?.ledgerName != "TOTAL"
                   }}
+                  postData={{...filter, asonDate:filter.toDate}}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -146,7 +146,7 @@ const TrialBalance = () => {
                   filterInitialData={TrialBalanceReportFilterInitialState}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   childPopupProps={{
-                    content: <CashBookMonthWise postData={filter}
+                    content: <CashBookMonthWise 
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
@@ -156,6 +156,7 @@ const TrialBalance = () => {
                     origin:"trialBalance",
                     enableFn: (data: any) => data.isGroup == true ||data.particulars=="TOTAL" ? false  : true
                   }}
+                  postData={filter}
                 ></ErpDevGrid>
               </div>
             </div>

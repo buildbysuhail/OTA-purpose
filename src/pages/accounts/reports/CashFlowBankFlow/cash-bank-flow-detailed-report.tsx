@@ -14,7 +14,7 @@ import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 
 interface CashFlowBankFlowDetailedProps {
-  postData: any;
+  postData?: any;
   groupName?: string;
   contentProps?: any;
   rowData?: any;

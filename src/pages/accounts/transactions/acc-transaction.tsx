@@ -1945,7 +1945,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ref={btnAddRef}
                     title={formState.formElements.btnAdd.label}
                     variant="primary"
-                    jumpTo="save"
+                    
                     loading={formState.rowProcessing}
                     type="button"
                     onClick={addOrEditRow}

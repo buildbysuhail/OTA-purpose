@@ -25,6 +25,8 @@ import { Url } from "devextreme-react/cjs/chart";
 import { useTranslation } from "react-i18next";
 import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 import VoucherType from "../../enums/voucher-types";
+import { customJsonParse } from "../../utilities/jsonConverter";
+import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 
 interface previewState {
   show: boolean;
@@ -50,6 +52,12 @@ const Templates = ({ }) => {
   );
   const [accountVoucher,setAccountVoucher]=useState(DummyVoucherData)
   /* ########################################################################################### */
+  const [maxSidePage, setMaxSidePage] = useState<number>(500);
+
+  useEffect(() => {
+    let wh= window.innerHeight; 
+    setMaxSidePage(wh);
+  }, []);
 
   let paperWidth;
   const paperSize = showPreview?.template?.propertiesState?.pageSize || "A4";
@@ -128,8 +136,11 @@ const Templates = ({ }) => {
     <>
       {showTemplateListing ? (
         <div className="flex h-full overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
-          <div className=" md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-full">
+          <ERPScrollArea className={`overflow-y-auto overflow-x-hidden md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-full `}
+          maxHeight={`${maxSidePage-60}px`}>
             <h1 className=" font-medium text-xl p-5 mb-5">{t("templates")}</h1>
+                 
+                {/* className={`  flex h-auto  flex-col gap-1`}> */}
             <div className="flex flex-col overflow-auto pb-24 h-full">
               {TemplateTypes.map((template, index) => (
                 <div
@@ -148,7 +159,7 @@ const Templates = ({ }) => {
                 </div>
               ))}
             </div>
-          </div>
+          </ERPScrollArea>
 
           <div className="flex-1 h-full">
             <div className="flex items-center justify-between p-5">
@@ -334,13 +345,14 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
 
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
-
+    let cc: TemplateState = customJsonParse(res.content)
+    debugger;
     const propertiesState = {
-      ...res.propertiesState,
+      ...cc.propertiesState,
       templateName: "Untitled Template " + (length + 1)
     };
     const _template = {
-      ...res,
+      ...cc,
       id: null,
       templateName: "",
       propertiesState: propertiesState

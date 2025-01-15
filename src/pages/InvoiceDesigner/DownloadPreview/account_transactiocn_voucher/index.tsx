@@ -13,7 +13,7 @@ export interface AccountTransactionProps {
 }
 
 
-const AccountTransactionsTemplate = ({ data, template, currentBranch }: AccountTransactionProps) => {
+const AccountTransactionsVoucher = ({ data, template, currentBranch }: AccountTransactionProps) => {
   let paperWidth=500, paperHeight=500;
   
   const paperSize = template?.propertiesState?.pageSize || "A4";
@@ -97,7 +97,7 @@ return (
             padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
           }}>
             <Header data={data} template={template} currentBranch={currentBranch} />
-            <Table data={data} template={template} />
+            {/* <Table data={data} template={template} /> */}
             {/* Add other components like Table, Header, Footer here */}
           </View>
         </View>
@@ -115,4 +115,4 @@ return (
   </Document>
 );
 };
-export default AccountTransactionsTemplate;
+export default AccountTransactionsVoucher;

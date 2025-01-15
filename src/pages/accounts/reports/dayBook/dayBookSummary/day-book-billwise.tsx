@@ -11,7 +11,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 
 interface DayBookBillwiseProps {
-  postData: any;
+  postData?: any;
   groupName?: string;
   contentProps?: any;
   rowData?: any;

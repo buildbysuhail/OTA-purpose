@@ -12,15 +12,15 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 interface BalancesheetDetailsProps {
-  postData: any;
+  postData?: any;
   groupName?: string;
   rowData?: any;
   contentProps?: any;
   isMaximized?: boolean;
   modalHeight?: any;
-  originFrom?:string,
+  origin?:string,
 }
-const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, originFrom}) => {
+const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, origin}) => {
   debugger;
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
@@ -128,7 +128,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                   postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridHeader={t("acc_group_view")}
                   // filterText="{ ___(accGroup)} {**** as of (asonDate)}"
-                  filterText={`for {${originFrom == "detailed" ? '___(accGroup)': '___(groupName)'}}, {**** as of (asonDate)}`}
+                  filterText={`for {${origin == "detailed" ? '___(accGroup)': '___(groupName)'}}, {**** as of (asonDate)}`}
                   dataUrl={Urls.acc_reports_account_ledger_balance_view}
                   hideGridAddButton={true}
                   enablefilter={false}

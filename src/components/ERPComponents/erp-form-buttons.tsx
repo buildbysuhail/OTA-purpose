@@ -47,7 +47,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
 }) => {
   const { t } = useTranslation('main');
   return (
-    <div className="absolute -bottom-0 left-0  w-full  flex justify-end space-x-2 bg-white pt-3  border-t  z-10  pb-[12px] pr-[10px] rounded-b-md">
+    <div className="absolute -bottom-0 left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white pt-3  border-t  z-10  pb-[12px] pr-[10px] rounded-b-md">
       {onClear && (
         <ERPButton
           title={t("clear")}

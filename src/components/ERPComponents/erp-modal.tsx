@@ -198,7 +198,7 @@ const ERPModal = React.memo(
                     // ${isRemoveSomething ? "px-0" : "px-5"}`}>
                     className={`erp-modal${
                       isOpen ? "-opened" : "closed"
-                    } transform bg-white text-left align-middle shadow-xl transition-all  ${
+                    } transform dark:bg-dark-bg bg-white text-left align-middle shadow-xl transition-all  ${
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
                     } ${isRemoveSomething ? "px-0" : "px-5"}`}
                     style={{
@@ -211,7 +211,7 @@ const ERPModal = React.memo(
                   >
                     <DialogTitle
                       as="h3"
-                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-between text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
+                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-between text-lg dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 bg-white"
                       style={{ flex: "0 0 auto" }} // Prevent header from shrinking
                     >
                   
@@ -230,7 +230,7 @@ const ERPModal = React.memo(
                       <div className="flex items-center space-x-2">
                         {isMaximize ? (
                           <button
-                            className="p-2 hover:bg-gray-200 rounded-full"
+                            className="p-2 dark:hover:!text-dark-hover-text hover:bg-gray-200 rounded-full"
                             onClick={() => setIsMaximized(!isMaximized)}
                             aria-label={isMaximized ? "Restore" : "Maximize"}
                           >
@@ -242,7 +242,7 @@ const ERPModal = React.memo(
                           </button>
                         ) : null}
                         <button
-                          className="p-2 hover:bg-gray-200 rounded-full"
+                          className="p-2 dark:hover:!text-dark-hover-text hover:bg-gray-200 rounded-full"
                           onClick={handleClose}
                           aria-label="Close"
                         >

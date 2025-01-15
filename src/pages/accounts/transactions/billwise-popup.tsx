@@ -22,15 +22,17 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { Card, CardContent, CardHeader } from "@mui/material";
+import { Countries } from "../../../redux/slices/user-session/reducer";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
 
 interface BillwiseProps {
-  ledgerName: string;
-  amount: number;
-  ledgerId: string;
-  drCr: string;
-  accTransactionDetailId: number;
-  billwiseString?: string;
-  onSave: (billwiseDetails: string, totalAmount: number, vrNumbers: string) => void;
+  
+  onSave: (
+    billwiseDetails: string,
+    totalAmount: number,
+    vrNumbers: string
+  ) => void;
   onClose: () => void;
   isMaximized?: boolean;
   modalHeight?: any;
@@ -38,28 +40,32 @@ interface BillwiseProps {
 }
 
 const BillwiseComponent = ({
-  ledgerName,
-  amount,
-  ledgerId,
-  drCr =  "Dr",
-  accTransactionDetailId,
-  billwiseString = '',
   onSave,
   onClose,
   isMaximized,
   modalHeight,
   onMaximizeChange,
 }: BillwiseProps) => {
-  
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [netAdjustment, setNetAdjustment] = useState(0);const [gridHeight, setGridHeight] = useState<number>(500);
+  const [searchText, setSearchText] = useState("");
+  const [netAdjustment, setNetAdjustment] = useState(0);
+  const [gridHeight, setGridHeight] = useState<number>(500);
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
+  
+  const [ledgerName, setLedgerName] = useState<string>('');
+const [amount, setAmount] = useState<number>(0);
+const [ledgerId, setLedgerId] = useState<string>('');
+const [drCr, setDrCr] = useState<string>('');
+const [accTransactionDetailId, setAccTransactionDetailId] = useState<number>(0);
+const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(undefined);
+const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(undefined);
+const [billwiseString, setBillwiseString] = useState<string | undefined>(undefined);
 
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     if (isMaximized && onMaximizeChange) {
       onMaximizeChange(true);
@@ -68,7 +74,7 @@ const BillwiseComponent = ({
 
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows = wh - 230;
+    let gridHeightWindows = wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
 
@@ -79,19 +85,25 @@ const BillwiseComponent = ({
 
   const handleSelectionChange = (e: any) => {
     debugger;
-    const selectedKeys = Array.isArray(e.currentSelectedRowKeys) 
-    ? e.currentSelectedRowKeys.map((key: number) => ({ key, isSelected: true })) 
-    : [];
-  
-  const deselectedKeys = Array.isArray(e.currentDeselectedRowKeys) 
-    ? e.currentDeselectedRowKeys.map((key: number) => ({ key, isSelected: false })) 
-    : [];
-  
-  const mergedKeys = [...selectedKeys, ...deselectedKeys];
+    const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
+      ? e.currentSelectedRowKeys.map((key: number) => ({
+          key,
+          isSelected: true,
+        }))
+      : [];
+
+    const deselectedKeys = Array.isArray(e.currentDeselectedRowKeys)
+      ? e.currentDeselectedRowKeys.map((key: number) => ({
+          key,
+          isSelected: false,
+        }))
+      : [];
+
+    const mergedKeys = [...selectedKeys, ...deselectedKeys];
     if (mergedKeys != null && mergedKeys.length > 0) {
       let updatedStore = {
-        ...store
-      }
+        ...store,
+      };
       mergedKeys.forEach((item: any) => {
         updatedStore = store.map((storeItem: any) =>
           item.key === storeItem.slNo
@@ -102,10 +114,8 @@ const BillwiseComponent = ({
               }
             : storeItem
         );
-        
       });
       setStore(updatedStore);
-      
     }
     // const updatedStore = store.map((item: any) =>
     //   item.slNo === rowData.slNo
@@ -116,10 +126,7 @@ const BillwiseComponent = ({
     //       }
     //     : item
     // );
-    
   };
-
-  
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
@@ -133,7 +140,6 @@ const BillwiseComponent = ({
 
   // Load billwise transactions
   useEffect(() => {
-
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       debugger;
@@ -142,7 +148,7 @@ const BillwiseComponent = ({
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
         };
-        lastIndex = lastIndex+1;
+        lastIndex = lastIndex + 1;
         return _it;
       } else {
         return {
@@ -152,62 +158,64 @@ const BillwiseComponent = ({
       }
     });
     setStore(formattedData);
-  },[showAllTransactions]);
+  }, [showAllTransactions]);
   useEffect(() => {
     const loadBillwiseTransactions = async () => {
       try {
         // Replace with your actual API call
-        const response = await fetch(`/api/billwise/transactions?ledgerId=${ledgerId}&drCr=${drCr}&accTransactionDetailId=${accTransactionDetailId}`);
+        const response = await fetch(
+          `/api/billwise/transactions?ledgerId=${ledgerId}&drCr=${drCr}&accTransactionDetailId=${accTransactionDetailId}`
+        );
         const data = await response.json();
-        
-    let lastIndex = 0;
+
+        let lastIndex = 0;
         const formattedData = data?.map((row: any, index: number) => {
           if (showAllTransactions || row.drCr !== drCr) {
             const _it = {
               ...row,
               slNo: lastIndex + 1,
               isSelected: false,
-              amountToSet: 0
+              billwiseAmount: 0,
             };
-            lastIndex = lastIndex+1;
+            lastIndex = lastIndex + 1;
             return _it;
           } else {
             return {
               ...row,
-          slNo: undefined,
-          isSelected: false,
-          amountToSet: 0
+              slNo: undefined,
+              isSelected: false,
+              billwiseAmount: 0,
             };
           }
         });
-        
+
         setStore(formattedData);
 
         if (billwiseString) {
           generateGridFromBillwiseString(billwiseString);
         }
       } catch (error) {
-        console.error('Error loading billwise transactions:', error);
+        console.error("Error loading billwise transactions:", error);
       }
     };
 
     loadBillwiseTransactions();
   }, [ledgerId, drCr, accTransactionDetailId, billwiseString]);
 
-  
   const generateGridFromBillwiseString = (billwiseStr: string) => {
-    const rows = billwiseStr.split('|');
+    const rows = billwiseStr.split("|");
     const updatedData = [...store];
 
-    rows.forEach(row => {
-      const [transDetailId, amt] = row.split('^');
-      const rowIndex = updatedData.findIndex(item => 
-        item.accTransDetailId.toString() === transDetailId
+    rows.forEach((row) => {
+      const [accTransactionDetailID, amount] = row.split("^");
+      const rowIndex = updatedData.findIndex(
+        (item) =>
+          item.accTransactionDetailID.toString() === accTransactionDetailID
       );
-      
+
       if (rowIndex !== -1) {
-        updatedData[rowIndex].amountToSet = parseFloat(amt);
-        updatedData[rowIndex].isSelected = parseFloat(amt) > 0;
+        updatedData[rowIndex].billwiseAmount = parseFloat(amount);
+        updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
       }
     });
 
@@ -215,35 +223,179 @@ const BillwiseComponent = ({
   };
 
   const getBillwiseString = () => {
-    let vrNumbers = '';
+    let vrNumbers = "";
     const billwiseString = store
-      .filter((row: any) => row.amountToSet > 0)
+      .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
-        if (row.amountToSet > 0) {
-          vrNumbers += `${row.billNo},`;
+        if (row.billwiseAmount > 0) {
+          vrNumbers += `${row.TransactionDate},`;
         }
-        return `${row.accTransDetailId}^${row.amountToSet}`;
+        return `${row.accTransDetailId}^${row.billwiseAmount}`;
       })
-      .join('|');
+      .join("|");
 
     return { billwiseString, vrNumbers };
   };
 
-  const handleSave = () => {
-    const { billwiseString, vrNumbers } = getBillwiseString();
-    const totalAdjusted = calculateNetAdjustment();
-    
-    if (totalAdjusted > amount) {
-      alert('Adjustment amount cannot exceed the transaction amount');
-      return;
+  // const handleSave = () => {
+  //   const { billwiseString, vrNumbers } = getBillwiseString();
+  //   const totalAdjusted = calculateNetAdjustment();
+
+  //   if (totalAdjusted > amount) {
+  //     alert('Adjustment amount cannot exceed the transaction amount');
+  //     return;
+  //   }
+
+  //   onSave(billwiseString, totalAdjusted, vrNumbers);
+  // };
+  const getTotalAmountToSet = () => {
+    return store.reduce(
+      (sum: number, item: any) => sum + (item.billwiseAmount || 0),
+      0
+    );
+  };
+  const validate = () => {
+    const totalAmount = getTotalAmountToSet();
+
+    if (totalAmount < 0) {
+      ERPAlert.show({
+        title: "failed",
+        text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+      });
     }
 
-    onSave(billwiseString, totalAdjusted, vrNumbers);
+    if (formState.row.amount ?? 0 < totalAmount) {
+      ERPAlert.show({
+        title: "failed",
+        text: "Total adjustment amount exceeds the available amount.",
+      });
+    }
+
+    return true;
+  };
+  const closeBillwie = () => {
+    dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
+    
+    onClose();
+  }
+  const handleSave = () => {
+    // try {
+    //   if (userSession.countryId == Countries.India) {
+    //     let vrNumbers = { current: "" };
+
+    //     if (isFromAccTrans) {
+    //       if (!validate()) return;
+
+    //       const amtAdjusted = getTotalAmountToSet();
+    //       dispatch(
+    //         accFormStateRowHandleFieldChange({
+    //           fields: {
+    //             billwiseDetails:
+    //               amtAdjusted > 0 ? getBillwiseString().billwiseString : "",
+    //               narration: 
+    //           },
+    //         })
+    //       );
+
+    //       if (amtAdjusted < 0) {
+    //         ERPAlert.show({
+    //           title: "failed",
+    //           text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+    //         });
+    //         return;
+    //       }
+
+    //       if (Number(formState.row.amount ?? 0) < amtAdjusted) {
+    //         dispatch(
+    //           accFormStateRowHandleFieldChange({
+    //             fields: {
+    //               amount: amtAdjusted,
+                  
+    //             },
+    //           })
+    //         );
+    //       }
+    //       dispatch(
+    //         accFormStateTransactionMasterHandleFieldChange({
+    //           fields: {
+    //             remarks: formState.transaction.master.remarks + "BW:" + vrNumbers.current                
+    //           },
+    //         })
+    //       );
+
+    //       closeBillwie()
+    //     } else if (isFromCashTender) {
+    //       if (!validate()) return;
+
+    //       frmCashTender.txtBillWiseDetails.current.value =
+    //         getBillwiseString(vrNumbers);
+    //       const amtAdjusted = getTotalAmountToSet();
+
+    //       if (Number(amountToAdjust) < amtAdjusted) {
+    //         frmCashTender.txtCashReceived.current.value =
+    //           amtAdjusted.toString();
+    //       }
+
+    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
+    //       clearGridView();
+    //       onClose();
+    //     } else {
+    //       saveBillwiseDetails();
+    //       onClose();
+    //     }
+    //   } else {
+    //     let vrNumbers = { current: "" };
+
+    //     if (isFromAccTrans) {
+    //       if (!validate()) return;
+
+    //       frmAccTrans.txtBillWiseDetails.current.value =
+    //         getBillwiseString(vrNumbers);
+    //       const amtAdjusted = getTotalAmountToSet();
+
+    //       if (amtAdjusted < 0) {
+    //         frmAccTrans.txtBillWiseDetails.current.value = "";
+    //         showMessageBox(
+    //           "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero."
+    //         );
+    //         return;
+    //       }
+
+    //       if (Number(amountToAdjust) < amtAdjusted) {
+    //         frmAccTrans.txtAmount.current.value = amtAdjusted.toString();
+    //       }
+
+    //       frmAccTrans.txtRemarks.current.value += "BW:" + vrNumbers.current;
+    //       clearGridView();
+    //       onClose();
+    //     } else if (isFromCashTender) {
+    //       if (!validate()) return;
+
+    //       frmCashTender.txtBillWiseDetails.current.value =
+    //         getBillwiseString(vrNumbers);
+    //       const amtAdjusted = getTotalAmountToSet();
+
+    //       if (Number(amountToAdjust) < amtAdjusted) {
+    //         frmCashTender.txtCashReceived.current.value =
+    //           amtAdjusted.toString();
+    //       }
+
+    //       frmCashTender.txtRemarks.current.value += "BW:" + vrNumbers.current;
+    //       clearGridView();
+    //       onClose();
+    //     } else {
+    //       saveBillwiseDetails();
+    //       onClose();
+    //     }
+    //   }
+    // } catch (error) {
+    //   setError(`An error occurred: ${error.message}`);
+    // }
   };
 
   const calculateNetAdjustment = () => {
     return store.reduce((total: any, row: any) => {
-      const amt = parseFloat(row.amountToSet) || 0;
+      const amt = parseFloat(row.billwiseAmount) || 0;
       return total + (row.drCr === drCr ? -amt : amt);
     }, 0);
   };
@@ -256,140 +408,139 @@ const BillwiseComponent = ({
         e.rowElement.style.backgroundColor = "red"; // Apply red background
         e.rowElement.style.display = VisibleRow ? "" : "none"; // Set row visibility
       }
-
-     
     }
   };
   useEffect(() => {
     setNetAdjustment(calculateNetAdjustment());
   }, [store]);
 
-  
   return (
-    <Card className="w-full max-w-6xl">
-      <CardHeader>
-
-      </CardHeader>
+    <Card className={`w-full ${isMaximized ? "max-w-full":"max-w-6xl"}`}
+    elevation={0}>
+      <CardHeader></CardHeader>
       <CardContent>
-      <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
-                  <Item location="before">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-                        {formState.ledgerData?.imageUrl ? (
-                          <img
-                            src={formState.ledgerData?.partyPhoto}
-                            alt="Ledger"
-                            className="w-8 h-8 object-cover rounded"
-                          />
-                        ) : (
-                          <div className="text-lg font-medium text-gray-600">
-                            {formState.ledgerData?.name?.[0] || "-"}
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {formState.row.ledgerName}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm text-gray-600">
-                            {formState.ledgerData?.code || "-"}
-                          </span>
-                          {formState.ledgerData?.isVerified && (
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Item>
-                  <Item location="after">
-                    <ERPCheckbox
-                       label={`Show ${drCr === 'Dr' ? 'Debit' : 'Credit'} Transactions also`}
-                      className="text-[12px] font-medium p-3"
-                      id={""}
-                      checked={showAllTransactions}
-                      onChange={(e) => setShowAllTransactions(!!e.target.checked)}
-                    />
-                  </Item>
-                  <Item location="after">
-                    <p className="text-[12px] font-medium p-3 mx-2">
-                      Amount to adjust : {formState.row.amount}
-                    </p>
-                  </Item>
-                </Toolbar>
-                safvan : {showAllTransactions.toString()}
-                {store?.filter((row: any) => 
-                    showAllTransactions || row.drCr !== drCr
-                  ).length}
-      <DataGrid
-                  key={"slNo"}
-                  keyExpr={"slNo"}
-                  id="TestPopup"
-                  // height={gridHeight}
-                  dataSource={store?.filter((row: any) => 
-                    showAllTransactions || row.drCr !== drCr
+        <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
+          <Item location="before">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
+                {formState.ledgerData?.imageUrl ? (
+                  <img
+                    src={formState.ledgerData?.partyPhoto}
+                    alt="Ledger"
+                    className="w-8 h-8 object-cover rounded"
+                  />
+                ) : (
+                  <div className="text-lg font-medium text-gray-600">
+                    {formState.ledgerData?.name?.[0] || "-"}
+                  </div>
+                )}
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-900">
+                  {formState.row.ledgerName}
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-gray-600">
+                    {formState.ledgerData?.code || "-"}
+                  </span>
+                  {formState.ledgerData?.isVerified && (
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
                   )}
-                  height = {gridHeight}
-                  className="custom-data-grid"
-                  showBorders={true}
-                  columnAutoWidth={true}
-                  showColumnLines={false}
-                  showRowLines={true}
-                  scrolling={{
-                    mode: "virtual",
-                    columnRenderingMode: "virtual",
-                    preloadEnabled: true,
-                    rowRenderingMode: "virtual",
-                  }}
-                  allowColumnResizing={true}
-                  allowColumnReordering={true}
-                  remoteOperations={{
-                    filtering: false,
-                    grouping: false,
-                    groupPaging: false,
-                    paging: false,
-                    sorting: false,
-                    summary: false,
-                  }}
-                  onRowPrepared={handleRowPrepared}
-                  onRowUpdated={handleSelectionChange}
-                  onSelectionChanged={handleSelectionChange}
-                  // onRowUpdating={onRowUpdating}
-                  editing={{
-                    allowUpdating: true,
-                    mode: "cell",
-                    allowAdding: false,
-                    allowDeleting: false,
-                  }}
-                >
-                  <KeyboardNavigation
-                    editOnKeyPress={true}
-                    enterKeyAction={"startEdit"}
-                    enterKeyDirection={"column"}
-                  />
-                  <Selection
-                    mode="multiple"
-                    selectAllMode={"allPages"}
-                    showCheckBoxesMode={"always"}
-                  />
-                  <FilterRow visible={true} />
-                  <SearchPanel visible={false} />
-                  <ColumnFixing enabled={true} />
-                  <Scrolling mode="standard" />
-                  <Paging enabled={false} />
-                  {/* <LoadPanel visible={true} /> */}
-                 
-                  <Column
-                    dataField="slNo"
-                    caption="slNo"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={50}
-                  />
+                </div>
+              </div>
+            </div>
+          </Item>
+          <Item location="after">
+            <ERPCheckbox
+              label={`Show ${
+                drCr === "Dr" ? "Debit" : "Credit"
+              } Transactions also`}
+              className="text-[12px] font-medium p-3"
+              id={""}
+              checked={showAllTransactions}
+              onChange={(e) => setShowAllTransactions(!!e.target.checked)}
+            />
+          </Item>
+          <Item location="after">
+            <p className="text-[12px] font-medium p-3 mx-2">
+              Amount to adjust : {formState.row.amount}
+            </p>
+          </Item>
+        </Toolbar>
+        safvan : {showAllTransactions.toString()}
+        {
+          store?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            .length
+        }
+        <DataGrid
+          key={"slNo"}
+          keyExpr={"slNo"}
+          id="TestPopup"
+          // height={gridHeight}
+          dataSource={store?.filter(
+            (row: any) => showAllTransactions || row.drCr !== drCr
+          )}
+          height={gridHeight}
+          className="custom-data-grid"
+          showBorders={true}
+          columnAutoWidth={true}
+          showColumnLines={false}
+          showRowLines={true}
+          scrolling={{
+            mode: "virtual",
+            columnRenderingMode: "virtual",
+            preloadEnabled: true,
+            rowRenderingMode: "virtual",
+          }}
+          allowColumnResizing={true}
+          allowColumnReordering={true}
+          remoteOperations={{
+            filtering: false,
+            grouping: false,
+            groupPaging: false,
+            paging: false,
+            sorting: false,
+            summary: false,
+          }}
+          onRowPrepared={handleRowPrepared}
+          onRowUpdated={handleSelectionChange}
+          onSelectionChanged={handleSelectionChange}
+          // onRowUpdating={onRowUpdating}
+          editing={{
+            allowUpdating: true,
+            mode: "cell",
+            allowAdding: false,
+            allowDeleting: false,
+          }}
+        >
+          <KeyboardNavigation
+            editOnKeyPress={true}
+            enterKeyAction={"startEdit"}
+            enterKeyDirection={"column"}
+          />
+          <Selection
+            mode="multiple"
+            selectAllMode={"allPages"}
+            showCheckBoxesMode={"always"}
+          />
+          <FilterRow visible={true} />
+          <SearchPanel visible={false} />
+          <ColumnFixing enabled={true} />
+          <Scrolling mode="standard" />
+          <Paging enabled={false} />
+          {/* <LoadPanel visible={true} /> */}
 
-                  {/* <Column
+          <Column
+            dataField="slNo"
+            caption="slNo"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={50}
+          />
+
+          {/* <Column
                     dataField="isSelected"
                     caption="Select"
                     dataType="boolean"
@@ -407,212 +558,198 @@ const BillwiseComponent = ({
                     )}
                   /> */}
 
-                  <Column
-                    dataField="voucherType"
-                    caption="VoucherType"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={100}
-                  />
+          <Column
+            dataField="voucherType"
+            caption="VoucherType"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={100}
+          />
 
-                  <Column
-                    dataField="voucherNumber"
-                    caption="BillNo"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                  />
+          <Column
+            dataField="voucherNumber"
+            caption="TransactionDate"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
 
-                  <Column
-                    dataField="transactionDate"
-                    caption="TransactionDate"
-                    dataType="date"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={100}
-                  />
+          <Column
+            dataField="transactionDate"
+            caption="TransactionDate"
+            dataType="date"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={100}
+          />
 
-                  <Column
-                    dataField="amount"
-                    caption="Amount"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={100}
-                  />
+          <Column
+            dataField="amount"
+            caption="Amount"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={100}
+          />
 
-                  <Column
-                    dataField="adjustedAmount"
-                    caption="Adjusted Amount"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                  />
+          <Column
+            dataField="adjustedAmount"
+            caption="Adjusted Amount"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
 
-                  <Column
-                    dataField="billwiseAmount"
-                    caption="Amount To Set"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={true}
-                    width={100}
-                  />
+          <Column
+            dataField="billwiseAmount"
+            caption="Amount To Set"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={true}
+            width={100}
+          />
 
-                  <Column
-                    dataField="referenceNumber"
-                    caption="ReferenceNumber"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                  />
+          <Column
+            dataField="referenceNumber"
+            caption="ReferenceNumber"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
 
-                  <Column
-                    dataField="financialYearID"
-                    caption="FinancialYearID"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={130}
-                  />
+          <Column
+            dataField="financialYearID"
+            caption="FinancialYearID"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={130}
+          />
 
-                  <Column
-                    dataField="formType"
-                    caption="FormType"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                  />
+          <Column
+            dataField="formType"
+            caption="FormType"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+          />
 
-                  <Column
-                    dataField="voucherPrefix"
-                    caption="VoucherPrefix"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={130}
-                  />
+          <Column
+            dataField="voucherPrefix"
+            caption="VoucherPrefix"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={130}
+          />
 
-                  <Column
-                    dataField="partyName"
-                    caption="PartyName"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                    visible={false}
-                  />
+          <Column
+            dataField="partyName"
+            caption="PartyName"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+            visible={false}
+          />
 
-                  <Column
-                    dataField="referenceDate"
-                    caption="Reference Date"
-                    dataType="date"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={100}
-                    visible={false}
-                  />
+          <Column
+            dataField="referenceDate"
+            caption="Reference Date"
+            dataType="date"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={100}
+            visible={false}
+          />
 
-                  <Column
-                    dataField="FormType"
-                    caption="Form Type"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={100}
-                    visible={false}
-                  />
+          <Column
+            dataField="FormType"
+            caption="Form Type"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={100}
+            visible={false}
+          />
 
-                  <Column
-                    dataField="balance"
-                    caption="Balance After"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                    visible={false}
-                  />
+          <Column
+            dataField="balance"
+            caption="Balance After"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+            visible={false}
+          />
 
-                  <Column
-                    dataField="drCr"
-                    caption="DrCr"
-                    dataType="string"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    allowEditing={false}
-                    width={150}
-                    visible={false}
-                  />
+          <Column
+            dataField="drCr"
+            caption="DrCr"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+            visible={false}
+          />
 
-                  {/* Add Summary for "Amount" column */}
-                  <Summary>
-                    <TotalItem
-                      column="amount"
-                      summaryType="sum"
-                      displayFormat="{0}"
-                    />
+          {/* Add Summary for "Amount" column */}
+          <Summary>
+            <TotalItem column="amount" summaryType="sum" displayFormat="{0}" />
 
-                    <TotalItem
-                      column="adjustedAmount"
-                      summaryType="sum"
-                      displayFormat="{0}"
-                    />
+            <TotalItem
+              column="adjustedAmount"
+              summaryType="sum"
+              displayFormat="{0}"
+            />
 
-                    <TotalItem
-                      column="balance"
-                      summaryType="sum"
-                      displayFormat="{0}"
-                    />
+            <TotalItem column="balance" summaryType="sum" displayFormat="{0}" />
 
-                    <TotalItem
-                      column="billwiseAmount"
-                      summaryType="sum"
-                      displayFormat="{0}"
-                    />
+            <TotalItem
+              column="billwiseAmount"
+              summaryType="sum"
+              displayFormat="{0}"
+            />
 
-                    <TotalItem
-                      column="balance"
-                      summaryType="sum"
-                      displayFormat="{0}"
-                    />
-                  </Summary>
-
-                </DataGrid>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
-                  <strong className="mr-3">Net Adjustment</strong>
-                  <span className="">
-                    {store.reduce(
-                      (total: number, item: any) =>
-                        total + (item.billwiseAmount || 0),
-                      0
-                    )}
-                  </span>
-                </div>
-                <div>
-                  <ERPButton title="Auto save" className="mr-2" />
-                  <ERPButton title="Save" className="mr-2" />
-                  <ERPButton title="Cancel" />
-                </div>
-              </div>
+            <TotalItem column="balance" summaryType="sum" displayFormat="{0}" />
+          </Summary>
+        </DataGrid>
+        <div className="flex items-center justify-between">
+          <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
+            <strong className="mr-3">Net Adjustment</strong>
+            <span className="">
+              {store.reduce(
+                (total: number, item: any) =>
+                  total + (item.billwiseAmount || 0),
+                0
+              )}
+            </span>
+          </div>
+          <div>
+            <ERPButton title="Auto save" className="mr-2" />
+            <ERPButton title="Save" className="mr-2" />
+            <ERPButton title="Cancel" />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

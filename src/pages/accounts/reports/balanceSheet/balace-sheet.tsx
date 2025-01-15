@@ -408,6 +408,7 @@ const BalanceSheet = () => {
           : assets[i].total === 0
           ? getFormattedValue(0)
           : getFormattedValue(-1 * assets[i].total)
+          
         : assets[i].title == "M"
         ?getFormattedValue(assets[i].total)
         : assets[i].total < 0
@@ -415,13 +416,6 @@ const BalanceSheet = () => {
         : assets[i].total === 0
         ? getFormattedValue(0)
         : getFormattedValue(assets[i].total);
-        //  assets[i].title == "M"
-        //     ? getFormattedValue(assets[i].total)
-        //     : assets[i].total < 0
-        //     ? "(-)" + getFormattedValue(-1 * assets[i].total)
-        //     : assets[i].total === 0
-        //     ? getFormattedValue(0)
-        //     : getFormattedValue(liabilities[i].total)
     
         if (assets[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {

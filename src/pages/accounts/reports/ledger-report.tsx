@@ -9,6 +9,7 @@ import { ActionType } from "../../../redux/types";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
+import { Bold } from "lucide-react";
 
 interface LedgerReport {
   from: Date
@@ -104,11 +105,40 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-          {cellElement.data.particulars}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+            {cellElement.data.particulars}
+          </span>)
+          }
+          },
     },
     {
       dataField: "debit",
@@ -118,11 +148,35 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+        }
+          }
     },
     {
       dataField: "credit",
@@ -132,14 +186,37 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#DC143C' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+       return( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+        {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+      </span>)
+        }
+        },
     },
     {
-      
       dataField: "balance",
       caption: t("balance"),
       dataType: "number",
@@ -147,17 +224,41 @@ const LedgerReport = () => {
       allowFiltering: true,
       showInPdf:true,
       width: 170,
-      cellRenderDynamic: (cellElement: any, cellInfo: any, filter: any) => (
-        <span
-          className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]": 'text-[#DC143C]'} font-bold`}
-        >
-          {`${cellElement.data?.balance == null
-            ? ''
-            : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance) + " Cr"
+              : getFormattedValue(balance) + " Dr";
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?'#129151': '#FF0000',
+            font: {
+              ...exportCell.font,
+              color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
+              size: 15,
+              Bold:true
+            },
+          };
+        }
+        else {
+return(  <span
+  className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?"text-[#129151]":'text-[#DC143C]'} font-bold`}
+>
+  {`${cellElement.data?.balance == null
+    ? ''
+    : cellElement.data.balance < 0
+      ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+      : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+</span>)
+  }}
     },
     {
       dataField: "chequeNumber",

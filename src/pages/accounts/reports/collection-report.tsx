@@ -64,13 +64,40 @@ const CollectionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.particulars}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: isDebit ? "#129151" : "#DC143C",
+              size: 20,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.particulars}
+          </span>)
+          }}
     },
     {
       dataField: "refNo",
@@ -96,11 +123,34 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 250,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.amount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance) 
+              : getFormattedValue(balance) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup===true? '#FF0000' :'',
+            font: {
+              ...exportCell.font,
+              size: 15,
+            },
+          };
+        }
+        else { return(  <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} `}
-        </span>
-      ),
+        </span>)
+      
+        }}
     },
   ];
   return (

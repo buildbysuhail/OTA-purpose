@@ -113,7 +113,7 @@ const ApplicationMiscellaneousComponents: React.FC<ApplicationMiscellaneousProps
             key={key}
             ref={(el) => (subItemsRef.current["miscellaneous"] = el)} >
             <h1
-              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "miscellaneous"
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "miscellaneous"
                   ? "blink-animation bg-[#f1f1f1]"
                   : "bg-[#f1f1f1]"
                 }`}

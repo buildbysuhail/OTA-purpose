@@ -268,7 +268,7 @@ function App() {
       <ERPAttachment />
       </div> */}
       {deviceInfo?.isMobile && (
-        <div className="w-full h-16 bg-white fixed bottom-0 left-0">
+        <div className="w-full h-16 bg-white fixed bottom-0 left-0">            
           <MobileFooter />
         </div>
       )}

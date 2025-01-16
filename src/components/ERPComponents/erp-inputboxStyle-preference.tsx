@@ -44,6 +44,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }));
           }}
           value={demo.inputBox}
+          localInputBox={inputBox}
         />
 
         <ERPDateInput
@@ -56,6 +57,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }));
           }}
           value={demo.dateBox}
+          localInputBox={inputBox}
         />
 
         <ERPDataCombobox
@@ -81,6 +83,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             { value: 4, label: "4" },
             { value: 5, label: "5" },
           ]}
+          localInputBox={inputBox}
         />
       </div>
 

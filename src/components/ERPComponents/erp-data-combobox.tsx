@@ -1,17 +1,18 @@
 "use client";
-import React, {useState,useEffect,useRef,useCallback,cloneElement,forwardRef,memo} from "react";
+import React, { useState, useEffect, useRef, useCallback, cloneElement, forwardRef, memo } from "react";
 import { Combobox } from "@headlessui/react";
-import {CheckIcon,ChevronDownIcon,XMarkIcon} from "@heroicons/react/20/solid";
+import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import {Autocomplete,CircularProgress,TextField,Theme,SxProps,Typography,AutocompleteValue,AutocompleteChangeReason,AutocompleteChangeDetails,Paper} from "@mui/material";
+import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
 import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
 import ERPElementValidationMessage from "./erp-element-validation-message";
+import { inputBox } from "../../redux/slices/app/types";
 
 interface Option {
   value: any;
@@ -76,6 +77,7 @@ interface ERPDataComboboxProps {
   customSize?: "sm" | "md" | "lg" | "customize";
   useMUI?: boolean;
   variant?: "filled" | "outlined" | "standard" | "normal";
+  localInputBox?: inputBox; // Local styling preferences
 }
 
 interface RowProps {
@@ -208,14 +210,6 @@ const Row = ({
     <Combobox.Option
       style={style}
       key={`${item?.value}-${index}`}
-      // className={({ active }) =>
-      //   `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:text-dark hover:${setFgAccordingToBgPrimary()} ${active || isActive
-      //     ? "bg-primary text-white"
-      //     : item.is_active === false
-      //       ? "bg-gray-200 text-gray-400"
-      //       : "text-gray-900"
-      //   } ${sizeClasses?.options}`
-      // }
       className={({ active }) => {
         const hoverTextClass = "hover:text-dark"; // Explicit hover text color
         const hoverBgClass =
@@ -320,12 +314,6 @@ const propsAreEqual = (
 ) => {
   console.log(prevProps);
   console.log(nextProps);
-
-  // Uncomment to debug
-  // logProps(prevProps, 'Previous');
-  // logProps(nextProps, 'Next');
-
-  // Get all keys from both objects to ensure we don't miss any
   const allKeys = Array.from(
     new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
   );
@@ -424,11 +412,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       customSize,
       useMUI,
       variant,
+      localInputBox, // Destructure localInputBox
     }: ERPDataComboboxProps,
     ref
   ) => {
     console.log("Re Rendered");
-
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
@@ -445,8 +433,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
+
+    // Use localInputBox if provided, otherwise fall back to global inputBox state
+    const inputBoxState = localInputBox || appState?.inputBox;
+
     const [_customSize, setCustomSize] = useState(
-      customSize ? customSize : appState?.inputBox?.inputSize
+      customSize ? customSize : inputBoxState?.inputSize
     );
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
     const [_variant, set_variant] = useState<
@@ -488,35 +480,27 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
-        setCustomSize(appState?.inputBox?.inputSize);
+        setCustomSize(inputBoxState?.inputSize);
       }
-    }, [appState?.inputBox?.inputSize]);
+    }, [inputBoxState?.inputSize]);
 
     useEffect(() => {
-      if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
+      if (inputBoxState?.inputStyle !== "normal" && useMUI === undefined) {
         set_useMUI(true);
-      } else if (
-        appState?.inputBox?.inputStyle === "normal" &&
-        useMUI === undefined
-      ) {
+      } else if (inputBoxState?.inputStyle === "normal" && useMUI === undefined) {
         set_useMUI(false);
       }
-    }, [appState?.inputBox?.inputStyle, useMUI]);
+    }, [inputBoxState?.inputStyle, useMUI]);
 
     useEffect(() => {
-      if (
-        appState?.inputBox?.inputStyle !== "normal" &&
-        (variant === undefined || variant === null)
-      ) {
-        set_variant(
-          appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard"
-        );
-      } else if (appState?.inputBox?.inputStyle === "normal") {
+      if (inputBoxState?.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+        set_variant(inputBoxState?.inputStyle as "filled" | "outlined" | "standard");
+      } else if (inputBoxState?.inputStyle === "normal") {
         set_variant(undefined);
       } else {
         set_variant(variant as "filled" | "outlined" | "standard");
       }
-    }, [appState?.inputBox?.inputStyle, variant]);
+    }, [inputBoxState?.inputStyle, variant]);
 
     useEffect(() => {
       if (initial?.label) {
@@ -531,6 +515,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
     }, [initial]);
 
+
     const [borderStyles, setBorderStyles] = useState<string>(
       appState?.mode == "dark"
         ? isFocused == true || isHovered == true
@@ -538,8 +523,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           : "#ffffff1a"
         : `${
             isFocused || isHovered
-              ? `rgb(${appState?.inputBox?.borderFocus})`
-              : `rgb(${appState?.inputBox?.borderColor})`
+              ? `rgb(${inputBoxState?.borderFocus})`
+              : `rgb(${inputBoxState?.borderColor})`
           } `
     );
     const [bgColor, setBgColor] = useState<string>(
@@ -547,8 +532,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         ? isFocused == true
           ? "#ffffff"
           : "#ffffff1a"
-        : `${isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``} `
+        : `${isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``} `
     );
+
     useEffect(() => {
       let border, bgCol;
       if (appState?.mode === "dark") {
@@ -557,9 +543,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       } else {
         border =
           isFocused || isHovered
-            ? `rgb(${appState?.inputBox?.borderFocus})`
-            : `rgb(${appState?.inputBox?.borderColor})`;
-        bgCol = isFocused ? `rgb(${appState?.inputBox?.focusBgColor})` : ``;
+            ? `rgb(${inputBoxState?.borderFocus})`
+            : `rgb(${inputBoxState?.borderColor})`;
+        bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``;
       }
       setBorderStyles(border);
       setBgColor(bgCol);
@@ -567,10 +553,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       appState.mode,
       isFocused,
       isHovered,
-      appState.inputBox?.borderColor,
-      appState.inputBox?.borderFocus,
-      appState.inputBox?.focusBgColor,
-      appState.inputBox?.defaultBgColor,
+      inputBoxState?.borderColor,
+      inputBoxState?.borderFocus,
+      inputBoxState?.focusBgColor,
+      inputBoxState?.defaultBgColor,
     ]);
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -612,11 +598,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       disabledApiCall,
     ]);
 
+
     const loadData = async () => {
       setLoading(true);
       try {
         let params = "";
-        console.log(`options${field?.freezeDataLoad}`);
         if (
           field?.params != undefined &&
           Object.keys(field?.params).length > 0
@@ -665,7 +651,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           return words.every((word) => itemLabel.includes(word));
         });
         setFilteredItems(filtered || []);
-        // setActiveIndex(-1);
       },
       [items]
     );
@@ -703,10 +688,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({ label: "", value: null, is_active: false, name: "" });
     };
+
     const handleItemClick = (value: Option) => {
       setInitial(value);
       setIsOpen(false);
-      // setActiveIndex(-1);
       setQuery("");
       setInputValue(value.label);
       setDisplayValue("");
@@ -717,6 +702,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       handleChangeData?.(field?.id ?? "", value?.value);
       onSelectItem?.(value);
     };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setInputValue(value);
@@ -770,7 +756,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<any>) => {
-      debugger;
       if (!isOpen) {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           setIsOpen(true);
@@ -783,10 +768,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           event.preventDefault();
           handleItemClick(filteredItems[activeIndex]);
         } else {
-          // Move focus to the next input field
           if (disableEnterNavigation) {
             if (onkeydown != undefined) {
-              onKeyDown ? onKeyDown(event): undefined;
+              onKeyDown ? onKeyDown(event) : undefined;
             }
           } else {
             moveToNextInputField(event);
@@ -827,8 +811,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           break;
       }
     };
-
-    const sizeClasses = getSizeClasses(_customSize, appState);
+    const sizeClasses = getSizeClasses(_customSize, inputBoxState);
     const getSizeStyles = () => {
       const styles: {
         mui: SxProps<Theme>;
@@ -839,7 +822,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           fontWeight?: number;
           color?: string;
           borderColor?: string;
-          // borderFocusColor?:string;
         };
       } = {
         mui: {},
@@ -851,47 +833,47 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       };
       const commonMuiStyles = {
         paddingBottom: _variant === "filled" ? "1rem" : "0",
-        borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
+        borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
         color:
           appState?.mode == "dark"
             ? "#ffffff"
-            : `rgb(${appState?.inputBox?.fontColor})`,
+            : `rgb(${inputBoxState?.fontColor})`,
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor:
             appState?.mode == "dark"
               ? "#ffffff1a"
-              : `rgb(${appState?.inputBox?.borderColor})`,
+              : `rgb(${inputBoxState?.borderColor})`,
         },
         "& .MuiFilledInput-underline, &:before": {
           borderBottomColor:
             appState?.mode == "dark"
               ? "#ffffff1a"
-              : `rgb(${appState?.inputBox?.borderColor})`,
+              : `rgb(${inputBoxState?.borderColor})`,
         },
-        "&:hover ?.MuiOutlinedInput-notchedOutline": {
+        "&:hover .MuiOutlinedInput-notchedOutline": {
           borderColor:
             appState?.mode == "dark"
               ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+              : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&:hover .MuiFilledInput-underline, &:hover:before": {
           borderBottomColor:
             appState?.mode == "dark"
               ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+              : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
           borderColor:
             appState?.mode == "dark"
               ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+              : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
           {
             borderBottomColor:
               appState?.mode == "dark"
                 ? "#ffffff"
-                : `rgb(${appState?.inputBox?.borderFocus})`,
+                : `rgb(${inputBoxState?.borderFocus})`,
           },
         margin: "0",
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
@@ -914,8 +896,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 color:
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
-                    : appState?.inputBox?.labelColor
-                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : inputBoxState?.labelColor
+                    ? `rgb(${inputBoxState?.labelColor})`
                     : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
@@ -939,8 +921,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
-                  : `rgb(${appState?.inputBox?.fontColor})`,
-              // padding: "0.25rem 0.75rem"
+                  : `rgb(${inputBoxState?.fontColor})`,
             },
           };
         case "md":
@@ -956,8 +937,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 color:
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
-                    : appState?.inputBox?.labelColor
-                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : inputBoxState?.labelColor
+                    ? `rgb(${inputBoxState?.labelColor})`
                     : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
@@ -981,8 +962,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
-                  : `rgb(${appState?.inputBox?.fontColor})`,
-              // padding: "0.5rem 1rem"
+                  : `rgb(${inputBoxState?.fontColor})`,
             },
           };
         case "lg":
@@ -998,8 +978,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 color:
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
-                    : appState?.inputBox?.labelColor
-                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : inputBoxState?.labelColor
+                    ? `rgb(${inputBoxState?.labelColor})`
                     : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
@@ -1023,64 +1003,62 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
-                  : `rgb(${appState?.inputBox?.fontColor})`,
-              // label: "10px",
-              // padding: "0.75rem 1.25rem"
+                  : `rgb(${inputBoxState?.fontColor})`,
             },
           };
         case "customize":
           return {
             mui: {
               "& .MuiInputBase-root": {
-                height: `${appState?.inputBox?.inputHeight ?? 3}rem`,
-                fontSize: `${appState?.inputBox?.fontSize ?? 16}px`,
-                fontWeight: appState?.inputBox?.fontWeight ?? 500,
+                height: `${inputBoxState?.inputHeight ?? 3}rem`,
+                fontSize: `${inputBoxState?.fontSize ?? 16}px`,
+                fontWeight: inputBoxState?.fontWeight ?? 500,
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
+                fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
                 color:
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
-                    : appState?.inputBox?.labelColor
-                    ? `rgb(${appState?.inputBox?.labelColor})`
+                    : inputBoxState?.labelColor
+                    ? `rgb(${inputBoxState?.labelColor})`
                     : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                        appState?.inputBox?.adjustB ?? 20
+                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                        inputBoxState?.adjustB ?? 20
                       }px) scale(1)`
                     : _variant === "standard"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                        appState?.inputBox?.adjustB ?? 15
+                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                        inputBoxState?.adjustB ?? 15
                       }px) scale(1)`
-                    : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                        appState?.inputBox?.adjustB ?? 12
+                    : `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                        inputBoxState?.adjustB ?? 12
                       }px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
-                        appState?.inputBox?.adjustD ?? -1
+                    ? `translate(${inputBoxState?.adjustC ?? 8}px, ${
+                        inputBoxState?.adjustD ?? -1
                       }px) scale(0.88)`
                     : _variant === "standard"
-                    ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${
-                        appState?.inputBox?.adjustD ?? -6
+                    ? `translate(${inputBoxState?.adjustC ?? 1}px, ${
+                        inputBoxState?.adjustD ?? -6
                       }px) scale(0.88)`
-                    : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${
-                        appState?.inputBox?.adjustD ?? -9
+                    : `translate(${inputBoxState?.adjustC ?? 15}px, ${
+                        inputBoxState?.adjustD ?? -9
                       }px) scale(0.88)`,
               },
             } as SxProps<Theme>,
             regular: {
-              height: `${appState?.inputBox?.inputHeight ?? 2.5}rem`,
-              fontSize: `${appState?.inputBox?.fontSize ?? 15}px`,
-              fontWeight: appState?.inputBox?.fontWeight,
+              height: `${inputBoxState?.inputHeight ?? 2.5}rem`,
+              fontSize: `${inputBoxState?.fontSize ?? 15}px`,
+              fontWeight: inputBoxState?.fontWeight,
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
-                  : `rgb(${appState?.inputBox?.fontColor})`,
+                  : `rgb(${inputBoxState?.fontColor})`,
             },
           };
         default:
@@ -1088,6 +1066,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
     };
 
+    
     function infoWithLineBreaks(text?: string) {
       if (!text) return null;
       return text.includes("/n")
@@ -1141,6 +1120,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     `;
 
     const sizeStyles = getSizeStyles();
+
     if (_useMUI == true) {
       const getOptionSizeStyles = () => {
         switch (customSize) {
@@ -1158,18 +1138,19 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             };
           case "customize":
             return {
-              fontSize: `${appState?.inputBox?.fontSize ?? 15}px`,
+              fontSize: `${inputBoxState?.fontSize ?? 15}px`,
             };
           default:
             return {};
         }
       };
-      // handleItemSelect: (event: React.SyntheticEvent, value: Option | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<Option> | undefined) => void;
+
       const handleItemSelect = (event: any, value: Option | null | any) => {
         if (value) {
           handleItemClick(value);
         }
       };
+
       const ScrollbarStyles = styled("div")`
         .custom-scrollbar {
           &::-webkit-scrollbar {
@@ -1193,63 +1174,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         <div
           className={className}
           style={{
-            marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
-            // marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+            marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${
-              (appState?.inputBox?.marginTop ?? 0) - (labelInfo ? 12 : 0)
+              (inputBoxState?.marginTop ?? 0) - (labelInfo ? 12 : 0)
             }px`,
           }}
         >
-          {/* <Autocomplete
-          id={id}
-          options={items}
-          value={initial}
-          onChange={handleItemSelect}
-          getOptionLabel={(option) => option.label || ""}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
-          loading={loading}
-          disabled={disabled}
-          autoHighlight
-          openOnFocus
-          fullWidth
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
-              required={required}
-              variant={_variant}
-              sx={sizeStyles.mui}
-              onKeyDown={handleKeyDownEnter}
-              data-skip={skip}
-              data-jump-to={jumpTo}
-              data-jump-target={jumpTarget}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <React.Fragment>
-                    {loading ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null}
-                    {params.InputProps.endAdornment}
-                  </React.Fragment>
-                ),
-              }}
-              appState={appState}
-            />
-          )}
-          renderOption={(props, option) => (
-            <li
-              {...props}
-              style={{
-                ...getOptionSizeStyles(),
-                opacity: option.is_active === false ? 0.5 : 1,
-                backgroundColor:
-                  option.is_active === false ? "#f5f5f5" : undefined,
-              }}>
-              {option.label}
-            </li>
-          )}
-        /> */}
           <Autocomplete
             id={id}
             options={items}
@@ -1345,6 +1275,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         </div>
       );
     }
+
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
 
     const truncateValue = (text: string, maxLength: number = 23) => {
@@ -1362,8 +1293,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           }`}
           ref={componentRef}
           style={{
-            marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
-            marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+            marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
+            marginTop: `${inputBoxState?.marginTop ?? 0}px`,
           }}
         >
           {!noLabel && (
@@ -1381,18 +1312,18 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       ? "14px"
                       : _customSize === "lg"
                       ? "16px"
-                      : `${appState?.inputBox?.labelFontSize}px`
+                      : `${inputBoxState?.labelFontSize}px`
                     : `14px`,
                   color:
                     appState?.mode === "dark"
                       ? "rgb(225,224,224)"
-                      : appState?.inputBox?.labelColor
-                      ? `rgb(${appState?.inputBox?.labelColor})`
+                      : inputBoxState?.labelColor
+                      ? `rgb(${inputBoxState?.labelColor})`
                       : "rgb(84,84,84)",
                   transform:
                     _customSize === "customize"
-                      ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                          appState?.inputBox?.adjustB ?? 10
+                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                          inputBoxState?.adjustB ?? 10
                         }px) scale(1)`
                       : ``,
                 }}
@@ -1414,18 +1345,18 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       ? "14px"
                       : _customSize === "lg"
                       ? "16px"
-                      : `${appState?.inputBox?.labelFontSize}px`
+                      : `${inputBoxState?.labelFontSize}px`
                     : `14px`,
                   color:
                     appState?.mode === "dark"
                       ? "rgb(225,224,224)"
-                      : appState?.inputBox?.labelColor
-                      ? `rgb(${appState?.inputBox?.labelColor})`
+                      : inputBoxState?.labelColor
+                      ? `rgb(${inputBoxState?.labelColor})`
                       : "rgb(84,84,84)",
                   transform:
                     _customSize === "customize"
-                      ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                          appState?.inputBox?.adjustB ?? 10
+                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                          inputBoxState?.adjustB ?? 10
                         }px) scale(1)`
                       : ``,
                 }}
@@ -1450,7 +1381,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   borderColor: borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
-                  borderRadius: `${appState?.inputBox?.borderRadius}px`,
+                  borderRadius: `${inputBoxState?.borderRadius}px`,
                   backgroundColor: bgColor,
                 }}
                 className={`form-control ${sizeClasses?.input} ${
@@ -1502,51 +1433,43 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                     initial?.value !== undefined &&
                     initial?.value !== null &&
                     initial?.value !== ""
-                      ? `rgb(${appState?.inputBox?.selectColor})`
+                      ? `rgb(${inputBoxState?.selectColor})`
                       : "#f9f9f9",
                   ...(document.documentElement.dir === "rtl"
                     ? {
                         borderTopLeftRadius: `${
-                          appState?.inputBox?.borderRadius ?? 5
+                          inputBoxState?.borderRadius ?? 5
                         }px`,
                         borderBottomLeftRadius: `${
-                          appState?.inputBox?.borderRadius ?? 5
+                          inputBoxState?.borderRadius ?? 5
                         }px`,
                       }
                     : {
                         borderTopRightRadius: `${
-                          appState?.inputBox?.borderRadius ?? 5
+                          inputBoxState?.borderRadius ?? 5
                         }px`,
                         borderBottomRightRadius: `${
-                          appState?.inputBox?.borderRadius ?? 5
+                          inputBoxState?.borderRadius ?? 5
                         }px`,
                       }),
                 }}
               >
-                {/* Dropdown button */}
                 {enableClearOption &&
                   (initial || inputValue) &&
                   !noXMarkIcon && (
                     <button
                       type="button"
-                      // onClick={(e) => {
-                      //   e.stopPropagation();
-                      //   clearSelection();
-                      //   setIsOpen(false);
-                      // }}
                       onClick={(e) => {
                         if (disabled) return;
                         clearSelection();
                         setIsOpen(false);
                       }}
-                      // className="p-1 hover:bg-gray-100 rounded-full"
                       className={`p-1 ${
                         !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
                       } rounded-full`}
                       aria-label="Clear selection"
                     >
                       <XMarkIcon
-                        // className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
                         className={`${sizeClasses?.icons} text-gray-400 ${
                           !disabled ? "hover:text-gray-500" : ""
                         } transition-transform duration-200 ${
@@ -1557,7 +1480,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                     </button>
                   )}
                 <Combobox.Button
-                  // className="p-1 hover:bg-gray-100 rounded-full"
                   className={`p-1 ${
                     !disabled ? "hover:bg-[rgba(0,0,0,0.44)]" : ""
                   } rounded-full`}

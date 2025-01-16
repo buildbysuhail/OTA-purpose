@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useState } from "react";
-// import moment from "moment";
 import moment from "moment-timezone";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -10,7 +9,8 @@ import { dateTrimmer } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import {  getFocusableElements,handleNavigation} from "../../utilities/shortKeys";
+import { getFocusableElements, handleNavigation } from "../../utilities/shortKeys";
+import { inputBox } from "../../redux/slices/app/types";
 
 moment.tz.setDefault("UTC");
 
@@ -45,6 +45,7 @@ interface ERPDateInputProps {
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
+  localInputBox?: inputBox; // Local styling preferences
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
@@ -80,6 +81,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       skip = false,
       jumpTo,
       jumpTarget,
+      localInputBox, // Destructure localInputBox
       ...props
     },
     ref
@@ -89,9 +91,10 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       return moment(date).utc().format("YYYY-MM-DD");
     };
 
-    const appState = useAppSelector(
-      (state: RootState) => state?.AppState?.appState
-    );
+    const appState = useAppSelector((state: RootState) => state?.AppState?.appState);
+
+    // Use localInputBox if provided, otherwise fall back to global inputBox state
+    const inputBoxState = localInputBox || appState?.inputBox;
 
     const moveToNextField = () => {
       const allFocusableElements = getFocusableElements();
@@ -99,13 +102,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
         (element) => element === document.activeElement
       );
 
-      if (
-        currentIndex !== -1 &&
-        currentIndex < allFocusableElements.length - 1
-      ) {
-        const nextElement = allFocusableElements[
-          currentIndex + 1
-        ] as HTMLElement;
+      if (currentIndex !== -1 && currentIndex < allFocusableElements.length - 1) {
+        const nextElement = allFocusableElements[currentIndex + 1] as HTMLElement;
         nextElement.focus();
       }
     };
@@ -116,45 +114,35 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       }
     };
 
-    const [_customSize, setCustomSize] = useState(
-      customSize ? customSize : appState?.inputBox?.inputSize
-    );
+    const [_customSize, setCustomSize] = useState(customSize ? customSize : inputBoxState?.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
-    const [_variant, set_variant] = useState<
-      "filled" | "outlined" | "standard" | undefined
-    >(variant === "normal" ? undefined : variant);
+    const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
+      variant === "normal" ? undefined : variant
+    );
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
-        setCustomSize(appState?.inputBox?.inputSize);
+        setCustomSize(inputBoxState?.inputSize);
       }
-    }, [appState?.inputBox?.inputSize]);
+    }, [inputBoxState?.inputSize]);
 
     useEffect(() => {
-      if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
+      if (inputBoxState?.inputStyle !== "normal" && useMUI === undefined) {
         set_useMUI(true);
-      } else if (
-        appState?.inputBox?.inputStyle === "normal" &&
-        useMUI === undefined
-      ) {
+      } else if (inputBoxState?.inputStyle === "normal" && useMUI === undefined) {
         set_useMUI(false);
       }
-    }, [appState?.inputBox?.inputStyle, useMUI]);
+    }, [inputBoxState?.inputStyle, useMUI]);
 
     useEffect(() => {
-      if (
-        appState?.inputBox?.inputStyle !== "normal" &&
-        (variant === undefined || variant === null)
-      ) {
-        set_variant(
-          appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard"
-        );
-      } else if (appState?.inputBox?.inputStyle === "normal") {
+      if (inputBoxState?.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+        set_variant(inputBoxState?.inputStyle as "filled" | "outlined" | "standard");
+      } else if (inputBoxState?.inputStyle === "normal") {
         set_variant(undefined);
       } else {
         set_variant(variant as "filled" | "outlined" | "standard");
       }
-    }, [appState?.inputBox?.inputStyle, variant]);
+    }, [inputBoxState?.inputStyle, variant]);
 
     function infoWithLineBreaks(text?: string) {
       if (!text) return null;
@@ -170,54 +158,32 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
     const getSizeStyles = () => {
       const commonMuiStyles = {
-        borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
-        color:
-          appState?.mode == "dark"
-            ? "#ffffff"
-            : `rgb(${appState?.inputBox?.fontColor})`,
+        borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+        color: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.fontColor})`,
         "& .MuiOutlinedInput-notchedOutline": {
-          borderColor:
-            appState?.mode == "dark"
-              ? "#ffffff1a"
-              : `rgb(${appState?.inputBox?.borderColor})`,
+          borderColor: appState?.mode == "dark" ? "#ffffff1a" : `rgb(${inputBoxState?.borderColor})`,
         },
         "& .MuiFilledInput-underline, &:before": {
-          borderBottomColor:
-            appState?.mode == "dark"
-              ? "#ffffff1a"
-              : `rgb(${appState?.inputBox?.borderColor})`,
+          borderBottomColor: appState?.mode == "dark" ? "#ffffff1a" : `rgb(${inputBoxState?.borderColor})`,
         },
         "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor:
-            appState?.mode == "dark"
-              ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+          borderColor: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&:hover .MuiFilledInput-underline, &:hover:before": {
-          borderBottomColor:
-            appState?.mode == "dark"
-              ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+          borderBottomColor: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor:
-            appState?.mode == "dark"
-              ? "#ffffff"
-              : `rgb(${appState?.inputBox?.borderFocus})`,
+          borderColor: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.borderFocus})`,
         },
-        "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
-          {
-            borderBottomColor:
-              appState?.mode == "dark"
-                ? "#ffffff"
-                : `rgb(${appState?.inputBox?.borderFocus})`,
-          },
+        "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
+          borderBottomColor: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.borderFocus})`,
+        },
         margin: "0",
-        "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
-          {
-            padding: "0 0.75rem",
-          },
+        "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
+          padding: "0 0.75rem",
+        },
       };
+
       switch (_customSize) {
         case "sm":
           return {
@@ -231,8 +197,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               color:
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
-                  : appState?.inputBox?.labelColor
-                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState?.labelColor})`
                   : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
@@ -262,8 +228,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               color:
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
-                  : appState?.inputBox?.labelColor
-                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState?.labelColor})`
                   : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
@@ -293,8 +259,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               color:
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
-                  : appState?.inputBox?.labelColor
-                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState?.labelColor})`
                   : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
@@ -315,45 +281,33 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
         case "customize":
           return {
             "& .MuiInputBase-root": {
-              height: `${appState?.inputBox?.inputHeight ?? 3}rem`,
-              fontSize: `${appState?.inputBox?.fontSize ?? 16}px`,
-              fontWeight: appState?.inputBox?.fontWeight ?? 500,
+              height: `${inputBoxState?.inputHeight ?? 3}rem`,
+              fontSize: `${inputBoxState?.fontSize ?? 16}px`,
+              fontWeight: inputBoxState?.fontWeight ?? 500,
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
-              fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
+              fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
               color:
                 appState?.mode === "dark"
                   ? "rgb(225,224,224)"
-                  : appState?.inputBox?.labelColor
-                  ? `rgb(${appState?.inputBox?.labelColor})`
+                  : inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState?.labelColor})`
                   : "rgb(84,84,84)",
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                      appState?.inputBox?.adjustB ?? 20
-                    }px) scale(1)`
+                  ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 20}px) scale(1)`
                   : _variant === "standard"
-                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                      appState?.inputBox?.adjustB ?? 15
-                    }px) scale(1)`
-                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                      appState?.inputBox?.adjustB ?? 12
-                    }px) scale(1)`,
+                  ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 15}px) scale(1)`
+                  : `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 12}px) scale(1)`,
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
-                      appState?.inputBox?.adjustD ?? -1
-                    }px) scale(0.88)`
+                  ? `translate(${inputBoxState?.adjustC ?? 8}px, ${inputBoxState?.adjustD ?? -1}px) scale(0.88)`
                   : _variant === "standard"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${
-                      appState?.inputBox?.adjustD ?? -6
-                    }px) scale(0.88)`
-                  : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${
-                      appState?.inputBox?.adjustD ?? -9
-                    }px) scale(0.88)`,
+                  ? `translate(${inputBoxState?.adjustC ?? 1}px, ${inputBoxState?.adjustD ?? -6}px) scale(0.88)`
+                  : `translate(${inputBoxState?.adjustC ?? 15}px, ${inputBoxState?.adjustD ?? -9}px) scale(0.88)`,
             },
           };
       }
@@ -387,9 +341,6 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       if (onChangeData && data) {
         onChangeData({ ...data, [id]: formattedDate });
       }
-      // setTimeout(() => {
-      //   moveToNextField();
-      // }, 10);
     };
 
     const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -398,11 +349,11 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
 
       if (inputValue !== "") {
         const parsedDate = moment(inputValue).utc();
-        newValue = parsedDate.isValid() ? parsedDate.format() : null; // Validate and format the date
+        newValue = parsedDate.isValid() ? parsedDate.format() : null;
       }
 
       if (onChange) {
-        onChange({ ...e, target: { ...e.target, value: newValue ?? "" } }); // Ensure consistent value
+        onChange({ ...e, target: { ...e.target, value: newValue ?? "" } });
       }
 
       if (onChangeData && data) {
@@ -415,8 +366,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
         <div
           className={className}
           style={{
-            marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
-            marginTop: `${appState?.inputBox?.marginTop ?? 0}px`,
+            marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
+            marginTop: `${inputBoxState?.marginTop ?? 0}px`,
           }}
         >
           <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -453,17 +404,13 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                   required,
                   variant: _variant,
                   fullWidth: true,
-                  onKeyDown: (e) => disableEnterNavigation == true ? (onKeyDown != undefined ? onKeyDown(e) :undefined)
-                      : handleKeyDown,
+                  onKeyDown: (e) =>
+                    disableEnterNavigation == true
+                      ? onKeyDown != undefined
+                        ? onKeyDown(e)
+                        : undefined
+                      : handleKeyDown(e),
                   onKeyUp: onKeyUp,
-                  // onKeyDown: (e) => {
-                  //   if (e.key === 'Enter' && value) {
-                  //     e.preventDefault();
-                  //     moveToNextField();
-                  //   } else {
-                  //     handleNavigation(e);
-                  //   }
-                  // },
                   sx: sizeStyles,
                   inputProps: {
                     shrink: true,
@@ -480,11 +427,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
               {infoWithLineBreaks(info)}
             </Typography>
           )}
-          {validation != undefined &&
-            validation != null &&
-            validation != "" && (
-              <ERPElementValidationMessage validation={validation} />
-            )}
+          {validation != undefined && validation != null && validation != "" && (
+            <ERPElementValidationMessage validation={validation} />
+          )}
         </div>
       );
     }
@@ -499,8 +444,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             customSize={
               customSize == undefined || customSize == null
                 ? customSize
-                : appState?.inputBox?.inputSize
+                : inputBoxState?.inputSize
             }
+            localInputBox={inputBoxState}
             label={label}
             placeholder={placeholder}
             disabled={disabled}

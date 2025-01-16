@@ -18,12 +18,25 @@ import labelDesignerEn from "./locales/en/labelDesigner_En.json";
 import labelDesignerAr from "./locales/ar/labelDesigner-Ar.json";
 import accountsReportEn from "./locales/en/accountsReport-En.json";
 import accountsReportAr from "./locales/ar/accountsReport-Ar.json";
+import transactionEn from "./locales/en/transaction-En.json";
+import transactionAr from "./locales/ar/transaction-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
   lng: "en",
   debug: false,
-  ns: ["main", "masters", "userManage", "administration", "applicationSettings", "system", "integration","labelDesigner"],
+  ns: [
+    "main",
+    "masters",
+    "userManage",
+    "administration",
+    "applicationSettings",
+    "system",
+    "integration",
+    "labelDesigner",
+    "accountsReport",
+    "transaction",
+  ],
   defaultNS: "main",
   resources: {
     en: {
@@ -34,8 +47,9 @@ i18n.use(initReactI18next).init({
       applicationSettings: applicationSettingsEn,
       system: systemEn,
       integration: integrationEn,
-      labelDesigner:labelDesignerEn,
-      accountsReport:accountsReportEn
+      labelDesigner: labelDesignerEn,
+      accountsReport: accountsReportEn,
+      transaction: transactionEn,
     },
     ar: {
       main: mainAr,
@@ -45,8 +59,9 @@ i18n.use(initReactI18next).init({
       applicationSettings: applicationSettingsAr,
       system: systemAr,
       integration: integrationAr,
-      labelDesigner:labelDesignerAr,
-      accountsReport:accountsReportAr
+      labelDesigner: labelDesignerAr,
+      accountsReport: accountsReportAr,
+      transaction: transactionAr,
     },
   },
 });

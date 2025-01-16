@@ -607,7 +607,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
         <div>
           <div key={key} ref={(el) => (subItemsRef.current["inventoryProducts"] = el)}>
             <h1
-              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryProducts"
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryProducts"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
                 }`}

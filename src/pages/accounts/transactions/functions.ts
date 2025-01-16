@@ -74,15 +74,14 @@ export const validateTransactionDate = (
       message: "Transaction date is outside the financial period.",
     };
   }
-
+debugger;
   // Skip post-dated and pre-dated checks if specified
   if (!skipPostDatedAndPredated) {
     const softwareDate = new Date(clientSession.softwareDate);
-
-    // Post-dated transaction validation
+// Post-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPostdatedTrans &&
-      transDate.toDatePartString() !== softwareDate.toDatePartString()
+      moment(transDate).format('YYYY-MM-DD') !== moment(softwareDate).format('YYYY-MM-DD')
     ) {
       if (!hasRight("PRE_POST", UserAction.Blocked)) {
         const maxPostDate = moment().add(
@@ -107,7 +106,7 @@ export const validateTransactionDate = (
     // Pre-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPredatedTrans &&
-      transDate.toDatePartString() !== softwareDate.toDatePartString()
+      moment(transDate).format('YYYY-MM-DD') !== moment(softwareDate).format('YYYY-MM-DD')
     ) {
       if (!hasRight("PRE_POST", UserAction.Blocked)) {
         const minPreDate = moment().subtract(

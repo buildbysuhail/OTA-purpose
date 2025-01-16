@@ -188,7 +188,11 @@ interface ERPDevGridProps {
   onRowRemoving?: (e: any) => void;
   rowRender?: (row: any) => React.ReactNode;
   cellRender?: (cell: any) => React.ReactNode;
-  cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any) => React.ReactNode;
+  cellRenderDynamic?: (
+    cellElement: any,
+    cellInfo: any,
+    filter?: any
+  ) => React.ReactNode;
   locale?: string;
   columnRenderingMode?: any;
   rowRenderingMode?: "standard" | "virtual";
@@ -710,16 +714,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         let date;
 
         // Explicit handling for ISO 8601
-        if(format == "Unknown format") {
-          date = moment(dateStr); 
-        }
-        else if (format === "ISO 8601") {
-            date = moment(dateStr); // ISO 8601 is natively supported
+        if (format == "Unknown format") {
+          date = moment(dateStr);
+        } else if (format === "ISO 8601") {
+          date = moment(dateStr); // ISO 8601 is natively supported
         } else {
-            date = moment(dateStr, format);
+          date = moment(dateStr, format);
         }
-        
-        const str= date.format("DD/MM/YYYY");
+
+        const str = date.format("DD/MM/YYYY");
         return str;
       };
 
@@ -856,6 +859,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         if (onExporting) {
           onExporting(e);
         } else {
+          // Helper function to get rendered cell value
+          const getCellDisplayValue = (
+            cellElement: any,
+            cellInfo: any,
+            column: any
+          ) => {
+            if (column.cellRenderDynamic) {
+              return column.cellRenderDynamic(
+                cellElement,
+                cellInfo,
+                filter,
+                e.format
+              );
+            }
+            if (column.cellRender) {
+              return column.cellRender(cellElement, cellInfo, filter, e.format);
+            }
+            return cellElement.data[column.dataField];
+          };
+
           if (e.format === "pdf") {
             const doc = new jsPDF({
               orientation: "landscape",
@@ -873,12 +896,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ? filterText || ""
                 : formatStringWithConditions(filterText.toString(), filter)
             }`;
-            //
-            // Store original column visibility states
-            // const pageTitle = `${gridHeader} - ${header}`;
-            let currentY = 30; // Start position for content
 
-            // Set font size for company details and addresses
+            let currentY = 30;
+
+            // Header content remains the same
             if (
               userSession.headerFooter != undefined &&
               !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
@@ -887,7 +908,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               doc.text(userSession.headerFooter.heading7, 40, currentY, {
                 align: "left",
               });
-              currentY += 15; // Add spacing
+              currentY += 15;
             }
             if (
               userSession.headerFooter != undefined &&
@@ -907,14 +928,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               doc.text(userSession.headerFooter.heading9, 40, currentY, {
                 align: "left",
               });
-              currentY += 15; // Add spacing
+              currentY += 15;
             }
+
             doc.setFont("Amiri");
             doc.setFontSize(12);
             doc.text(pageTitle, 40, currentY, { align: "left" });
-
-            doc.setFontSize(10); // Reset font size for the grid content
-            // currentY += 20; // Adjust for the next section
             doc.setFontSize(10);
 
             const originalColumnVisibility = e.component
@@ -944,12 +963,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             const pdfColumnsWidths = preferences
               ? preferences.columnPreferences
                   .filter((colPref) => colPref.showInPdf)
-                  .map((colPref) => {
-                    if (!colPref.width) {
-                      return 0;
-                    }
-                    return colPref.width || 150;
-                  })
+                  .map((colPref) => colPref.width || 0)
               : gridCols
                   .filter((col) => col.showInPdf)
                   .map((col) => col.width || 100);
@@ -969,6 +983,35 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
               });
             }
+           
+            // Customize the export to PDF to use rendered values
+            const customizeCell = (options: any) => {
+              
+              if (options.gridCell.rowType != "data") return;
+              // const column = e.component.columnOption(options.gridCell.column.dataField);
+              const column = gridCols.find(
+                (x) => x.dataField == options.gridCell.column.dataField
+              );
+             
+              if (column && column.cellRender) {
+                const renderResult = column.cellRender(
+                  { data: options.gridCell.data },
+                  options.gridCell,
+                  undefined,
+                  options.pdfCell
+                );
+
+                let isDefined = renderResult !== undefined;
+                let isObject = typeof renderResult === "object";
+                let isValidReactElement = React.isValidElement(renderResult);
+
+                if (isDefined && isObject && !isValidReactElement) {
+                  options.pdfCell = renderResult;
+                } else {
+                  options.pdfCell = options.pdfCell; // Retain the original value
+                }
+              }
+            };
 
             e.component.beginUpdate();
             e.component.option("wordWrapEnabled", true);
@@ -983,41 +1026,31 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               component: e.component,
               columnWidths: pdfColumnsWidths,
               topLeft: { x: 0, y: currentY },
+              customizeCell: customizeCell,
             }).then(() => {
               originalColumnVisibility.forEach((column: any) => {
-                e.component.columnOption(column.dataField, "visible", column.visible);
+                e.component.columnOption(
+                  column.dataField,
+                  "visible",
+                  column.visible
+                );
               });
-            
-              // Restore wordWrapEnabled option
+
               e.component.option("wordWrapEnabled", false);
-            
-              e.component.endUpdate(); // Ensure updates are applied
-              e.component.repaint();  // Force re-render if necessary
+              e.component.endUpdate();
+              e.component.repaint();
               doc.save(`${gridId}.pdf`);
             });
           } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
 
-            // Add header section
             const totalColumns = e.component.getVisibleColumns().length;
-
             const lastColumnLetter = String.fromCharCode(64 + totalColumns);
             let currentRow = 1;
             let mergeRange = `A${currentRow}:${lastColumnLetter}${currentRow}`;
 
-            // Keep track of merged ranges to prevent duplication
-            const mergedRanges = new Set();
-
-            // Helper function to merge cells safely
-            // const mergeCellsSafely = (range: any) => {
-            //   if (!mergedRanges.has(`${range}${currentRow}`)) {
-            //     worksheet.mergeCells(`${range}${currentRow}`);
-            //     mergedRanges.add(`${range}${currentRow}`);
-            //   }
-            // };
-
-            // Add header section with merged cells
+            // Header section remains the same
             if (
               userSession.headerFooter != undefined &&
               !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
@@ -1071,13 +1104,48 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             worksheet.getCell(`A${currentRow}`).alignment = {
               horizontal: "left",
             };
-            currentRow += 2; // Add an extra row for spacing
-            // Export grid data starting from the next row
+            currentRow += 2;
+            debugger;
+            // Customize the export to Excel to use rendered values
+            
+            const customizeCell = (options: any) => {
+              debugger;
+              if (options.gridCell.rowType != "data") return;
+              // const column = e.component.columnOption(options.gridCell.column.dataField);
+              const column = gridCols.find(
+                (x) => x.dataField == options.gridCell.column.dataField
+              );
+             
+              if (column && column.cellRender) {
+                const renderResult = column.cellRender(
+                  { data: options.gridCell.data },
+                  options.gridCell,
+                  undefined,
+                  options.excelCell
+                );
+
+                let isDefined = renderResult !== undefined;
+                let isObject = typeof renderResult === "object";
+                let isValidReactElement = React.isValidElement(renderResult);
+
+                if (isDefined && isObject && !isValidReactElement) {
+                  options.excelCell = {
+                    ...options.excelCell,
+                    style: renderResult
+                  } 
+                } else {
+                  options.excelCell = options.excelCell; // Retain the original value
+                }
+              }
+            };
+
+
             exportDataGridToExcel({
               component: e.component,
               worksheet,
               autoFilterEnabled: true,
               topLeftCell: `A${currentRow}`,
+              customizeCell,
             }).then(() => {
               workbook.xlsx.writeBuffer().then((buffer) => {
                 saveAs(
@@ -1091,61 +1159,66 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       },
       [onExporting, gridId, preferences, gridCols, header]
     );
+    const handleCellClick = useCallback(
+      (event: any) => {
+        const dynamicProps = childPopupPropsDynamic
+          ? childPopupPropsDynamic(event.column?.dataField)
+          : childPopupProps;
 
-    const handleCellClick = useCallback((event: any) => {
-      const dynamicProps = childPopupPropsDynamic
-        ? childPopupPropsDynamic(event.column?.dataField)
-        : childPopupProps;
-
-      // Check if the clicked cell's field matches dynamicProps.drillDownCells
-      const _drillDownCells = dynamicProps?.drillDownCells.split(",");
-      const _drillDownCell = _drillDownCells.find(
-        (x: string) => x === event.column?.dataField
-      );
-      const _drillDownDisplayCells =
-        dynamicProps?.drillDownDisplayCells?.split(",");
-
-      if (
-        _drillDownCell !== undefined &&
-        _drillDownCell !== undefined &&
-        event.data[_drillDownCell] != undefined &&
-        event.data[_drillDownCell] != null &&
-        event.data[_drillDownCell] != 0 &&
-        event.data[_drillDownCell] != "" &&
-        (dynamicProps?.enableFn == undefined ||
-          (_drillDownCell !== undefined &&
-            dynamicProps?.enableFn != undefined &&
-            dynamicProps?.enableFn(event.data)))
-      ) {
-        const updatedBodyProps: { [key: string]: any } = {};
-
-        // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-        dynamicProps?.bodyProps != undefined
-          ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-              const trimmedProp = prop.trim();
-              updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-            })
-          : {};
-          debugger;
-          const pdata = postDataDynamic != undefined ? postDataDynamic(_drillDownCell) :postData
-        const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
-          pdata,
-          updatedBodyProps
+        // Check if the clicked cell's field matches dynamicProps.drillDownCells
+        const _drillDownCells = dynamicProps?.drillDownCells.split(",");
+        const _drillDownCell = _drillDownCells.find(
+          (x: string) => x === event.column?.dataField
         );
-        // Update bodyProps state
+        const _drillDownDisplayCells =
+          dynamicProps?.drillDownDisplayCells?.split(",");
 
-        onCellClick && onCellClick(event);
-        setBodyProps(updatedBodyProps);
-        setIsChildOpen({
-          isOpen: true,
-          props: _updatedBodyProps,
-          key: _drillDownCell,
-          drillDownDisplayCells: _drillDownDisplayCells,
-          data: event.data,
-        });
-        // const sd = 223;
-      }
-    }, [postDataDynamic, postData]);
+        if (
+          _drillDownCell !== undefined &&
+          _drillDownCell !== undefined &&
+          event.data[_drillDownCell] != undefined &&
+          event.data[_drillDownCell] != null &&
+          event.data[_drillDownCell] != 0 &&
+          event.data[_drillDownCell] != "" &&
+          (dynamicProps?.enableFn == undefined ||
+            (_drillDownCell !== undefined &&
+              dynamicProps?.enableFn != undefined &&
+              dynamicProps?.enableFn(event.data)))
+        ) {
+          const updatedBodyProps: { [key: string]: any } = {};
+
+          // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
+          dynamicProps?.bodyProps != undefined
+            ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
+                const trimmedProp = prop.trim();
+                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+              })
+            : {};
+          debugger;
+          const pdata =
+            postDataDynamic != undefined
+              ? postDataDynamic(_drillDownCell)
+              : postData;
+          const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
+            pdata,
+            updatedBodyProps
+          );
+          // Update bodyProps state
+
+          onCellClick && onCellClick(event);
+          setBodyProps(updatedBodyProps);
+          setIsChildOpen({
+            isOpen: true,
+            props: _updatedBodyProps,
+            key: _drillDownCell,
+            drillDownDisplayCells: _drillDownDisplayCells,
+            data: event.data,
+          });
+          // const sd = 223;
+        }
+      },
+      [postDataDynamic, postData]
+    );
 
     const onCellPrepared = useCallback((e: any) => {
       //   // Get dynamic properties
@@ -1317,11 +1390,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               )}
               {enableScrollButton && (
                 <Item>
-                  <div  title={isAtBottom ? "Scroll to top" : "Scroll to bottom"}>
+                  <div
+                    title={isAtBottom ? "Scroll to top" : "Scroll to bottom"}
+                  >
                     <button
                       type="button"
                       onClick={() => scrollTo(isAtBottom ? 0 : 100)}
-                      className="flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2">
+                      className="flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
+                    >
                       {isAtBottom ? "↑" : "↓"}
                     </button>
                   </div>
@@ -1415,15 +1491,23 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 minWidth={column.minWidth}
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
-                cellRender= { column.cellRenderDynamic == undefined && column.cellRender == undefined ? undefined : (cellElement: any, cellInfo: any) => {
-                  
-                  if (column.cellRenderDynamic) {
-                      return column.cellRenderDynamic(cellElement, cellInfo, filter);
-                  }
-                  if (column.cellRender) {
-                      return column.cellRender(cellElement, cellInfo);
-                  }
-              }}
+                cellRender={
+                  column.cellRenderDynamic == undefined &&
+                  column.cellRender == undefined
+                    ? undefined
+                    : (cellElement: any, cellInfo: any) => {
+                        if (column.cellRenderDynamic) {
+                          return column.cellRenderDynamic(
+                            cellElement,
+                            cellInfo,
+                            filter
+                          );
+                        }
+                        if (column.cellRender) {
+                          return column.cellRender(cellElement, cellInfo);
+                        }
+                      }
+                }
                 visible={
                   column.visibleDynamic != undefined
                     ? column.visibleDynamic(filter)
@@ -1475,9 +1559,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ? childPopupPropsDynamic(isChildOpen.key).isForm
                 : childPopupProps?.isForm
             }
-            origin={ 
-              originDynamic ? originDynamic(isChildOpen.key) :
-              childPopupPropsDynamic
+            origin={
+              originDynamic
+                ? originDynamic(isChildOpen.key)
+                : childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).origin
                 : childPopupProps?.origin
             }

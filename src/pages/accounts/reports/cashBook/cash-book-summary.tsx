@@ -24,13 +24,53 @@ const CashBookSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerName === "TOTAL" ? (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.ledgerName}
-        </span>) :
-          <DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>
-      }
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance) + " Cr"
+              : getFormattedValue(balance) + " Dr";
+
+              return exportCell != undefined ?  {
+                ...exportCell,
+                text:cellInfo.value,
+                bold: true,
+                alignment: "right",
+                font: {
+                  ...exportCell.font,
+                  color: isDebit ? "#129151" : "#DC143C",
+                  size: 15,
+                }
+              } : undefined;
+        } else {
+          return cellElement.data.ledgerName === "TOTAL" ? (
+            <span
+              className={`${
+                cellElement.data.ledgerName === "TOTAL"
+                  ? "font-bold text-[#DC143C]"
+                  : ""
+              }`}
+            >
+              {cellElement.data.ledgerName}
+            </span>
+          ) : (
+            <DrillDownCellTemplate
+              data={cellElement}
+              field="ledgerName"
+            ></DrillDownCellTemplate>
+          );
+        }
+      },
     },
     {
       dataField: "debit",

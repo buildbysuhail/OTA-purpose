@@ -692,7 +692,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               )
             }
           />
-          <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+          <label className=" ml-2 mr-2 block form-check-label dark:text-dark-label text-gray-700">
             Days
           </label>
         </div>

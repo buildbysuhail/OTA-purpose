@@ -154,7 +154,7 @@ const Header: React.FC = () => {
           border-bottom-right-radius: 0.375rem;
           font-size: 0.75rem;
           padding: 0 0.5rem;
-          transition: all 550ms ease-in-out;
+          // transition: all 550ms ease-in-out;
         }
 
         .custom-input:focus {

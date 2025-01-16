@@ -87,7 +87,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherNo,
   transactionType,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
     `grd_acc_transaction_${voucherType}`
   );
@@ -236,7 +236,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           voucherNumber:
             voucherNo != undefined && voucherNo > 0
               ? voucherNo
-              : getNextVoucherNumber(formType, voucherType, voucherPrefix,false),
+              : getNextVoucherNumber(
+                  formType,
+                  voucherType,
+                  voucherPrefix,
+                  false
+                ),
         },
       })
     );
@@ -648,123 +653,123 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
-      caption: "SI No",
+      caption: t("si_no"),
       width: 60,
       cellRender: (cellElement: any) => <div>{cellElement.value}</div>,
     },
     {
       dataField: "ledgerId",
-      caption: "Ledger ID",
+      caption: t("ledger_ID"),
       width: 100,
     },
     {
       dataField: "ledgerCode",
-      caption: "Ledger Code",
+      caption: t("ledger_code"),
       width: 100,
     },
     {
       dataField: "ledgerName",
-      caption: "Ledger",
+      caption: t("ledger"),
     },
     {
       dataField: "amount",
       dataType: "number",
-      caption: "Amount",
+      caption: t("amount"),
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
       width: 200,
     },
     {
       dataField: "drCr",
-      caption: "Dr/Cr",
+      caption: t("dr/cr"),
       width: 100,
     },
     {
       dataField: "chequeNo",
-      caption: "Cheque No",
+      caption: t("cheque_no"),
       visible: false,
     },
     {
       dataField: "chequeDate",
-      caption: "Cheque Date",
+      caption: t("cheque_date"),
       visible: false,
     },
     {
       dataField: "narration",
-      caption: "Narration",
+      caption: t("narration"),
       visible: false,
     },
     {
       dataField: "billwiseDetails",
-      caption: "Billwise Details",
+      caption: t("billwise_details"),
       visible: false,
     },
     {
       dataField: "accTransaction",
-      caption: "Acc Transaction",
+      caption: t("acc_transaction"),
       visible: false,
     },
     {
       dataField: "discount",
-      caption: "Discount",
+      caption: t("discount"),
       visible: false,
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
       dataField: "costCentreId",
-      caption: "Cost Centre ID",
+      caption: t("cost_centre_id"),
       visible: false,
     },
     {
       dataField: "checkStatus",
-      caption: "Check Status",
+      caption: t("check_status"),
       visible: false,
     },
     {
       dataField: "amountFC",
-      caption: "Amount FC",
+      caption: t("amount_FC"),
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
       visible: false,
     },
     {
       dataField: "nameOnCheque",
-      caption: "Name on Cheque",
+      caption: t("name_on_cheque"),
       visible: false,
     },
     {
       dataField: "bankName",
-      caption: "Bank Name",
+      caption: t("bank_name"),
       visible: false,
     },
     {
       dataField: "debit",
-      caption: "Debit",
+      caption: t("debit"),
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
       visible: false,
     },
     {
       dataField: "credit",
-      caption: "Credit",
+      caption: t("credit"),
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
       visible: false,
     },
     {
       dataField: "projectId",
-      caption: "Project ID",
+      caption: t("project_ID"),
       visible: false,
     },
     {
       dataField: "projects",
-      caption: "Projects",
+      caption: t("projects"),
       visible: false,
     },
     {
       dataField: "action",
-      caption: "",
+      caption: t("action"),
       visible: false,
       cellRender: (cellElement: any, cellInfo: any) => (
         <button
@@ -779,7 +784,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           className="ti-btn-link"
           type="button"
         >
-          <i className="ri-delete-bin-5-line delete-icon" title="Remove"></i>
+          <i
+            className="ri-delete-bin-5-line delete-icon"
+            title={t("remove")}
+          ></i>
         </button>
       ),
     },
@@ -1152,7 +1160,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                 >
                                   <KeyRound className="h-4 w-4" />
                                   {/* <span>UnlockVoucher_Click</span> */}
-                                  <span>Unlock Voucher</span>
+                                  <span>{t("unlock_voucher")}</span>
                                 </button>
                               </li>
                             )}
@@ -1192,7 +1200,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.voucherPrefix.visible && (
                     <ERPInput
                       id="master_voucherPrefix"
-                      label={formState.formElements.voucherPrefix.label}
+                      label={t(formState.formElements.voucherPrefix.label)}
                       value={formState.transaction.master.voucherPrefix}
                       className="max-w-[100px]"
                       onChange={(e) =>
@@ -1218,7 +1226,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         onKeyUp={(e) => {
                           handleKeyDown(e, "voucherNumber");
                         }}
-                        label={formState.formElements.voucherNumber.label}
+                        label={t(formState.formElements.voucherNumber.label)}
                         value={formState.transaction.master.voucherNumber}
                         type="number"
                         showCustomNumberChanger={true}
@@ -1246,7 +1254,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPDataCombobox
                       isInModal={false}
                       id="masterAccount"
-                      label={formState.formElements.masterAccount.label}
+                      label={t(formState.formElements.masterAccount.label)}
                       value={formState.masterAccountID}
                       onChange={(e) =>
                         dispatch(
@@ -1299,7 +1307,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         <ERPDataCombobox
                           id="drCr"
                           className="w-[70px]"
-                          label={formState.formElements.jvDrCr.label}
+                          label={t(formState.formElements.jvDrCr.label)}
                           value={formState.transaction.master.drCr}
                           data={formState.transaction.master}
                           onChange={(e) =>
@@ -1331,7 +1339,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.chequeNumber.visible && (
                     <ERPInput
                       id="chequeNumber"
-                      label={formState.formElements.chequeNumber.label}
+                      label={t(formState.formElements.chequeNumber.label)}
                       value={formState.row.chequeNumber}
                       onChange={(e) =>
                         dispatch(
@@ -1350,7 +1358,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.bankDate.visible && (
                     <ERPDateInput
                       id="bankDate"
-                      label={formState.formElements.bankDate.label}
+                      label={t(formState.formElements.bankDate.label)}
                       value={new Date(formState.row.bankDate)}
                       onChange={(e) =>
                         dispatch(
@@ -1379,7 +1387,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         <ERPDataCombobox
                           id="currencyID"
                           data={formState.row}
-                          label={formState.formElements.currencyID.label}
+                          label={t(formState.formElements.currencyID.label)}
                           value={formState.transaction.master.currencyId}
                           field={{
                             valueKey: "id",
@@ -1414,7 +1422,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         <ERPInput
                           id="currencyRate"
                           min={0}
-                          label={formState.formElements.exchangeRate.label}
+                          label={t(formState.formElements.exchangeRate.label)}
                           type="number"
                           value={formState.transaction.master.currencyRate}
                           onChange={(e) =>
@@ -1440,7 +1448,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           enableCombo();
                         }}
                       >
-                        Edit
+                        {t("edit")}
                       </span>
                     </button>
                   )}
@@ -1456,7 +1464,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <div>
                         <ERPInput
                           id="referenceNumber"
-                          label={formState.formElements.referenceNumber.label}
+                          label={t(formState.formElements.referenceNumber.label)}
                           value={formState.transaction.master.referenceNumber}
                           className="lg:max-w-[300px]"
                           onChange={(e) =>
@@ -1479,9 +1487,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             // ></ERPButton>
                             <div className="relative">
                               {/* <button onClick={handleLoadByRefNo} className="m-[-1px_0_-13px_0] p-[0px_0_7px_0] text-[#0ea5e9]"> */}
-                              <button onClick={handleLoadByRefNo} className="absolute right-0 top-[-5px] text-[#0ea5e9]">
-                              <Ellipsis />
-                            </button>
+                              <button
+                                onClick={handleLoadByRefNo}
+                                className="absolute right-0 top-[-5px] text-[#0ea5e9]"
+                              >
+                                <Ellipsis />
+                              </button>
                             </div>
                           }
                         />
@@ -1507,7 +1518,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.transactionDate.visible && (
                     <ERPDateInput
                       id="transactionDate"
-                      label={formState.formElements.transactionDate.label}
+                      label={t(formState.formElements.transactionDate.label)}
                       className="lg:max-w-[300px]"
                       value={
                         new Date(formState.transaction.master.transactionDate)
@@ -1530,7 +1541,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.referenceDate.visible && (
                     <ERPDateInput
                       id="referenceDate"
-                      label={formState.formElements.referenceDate.label}
+                      label={t(formState.formElements.referenceDate.label)}
                       className="lg:max-w-[300px]"
                       value={
                         new Date(formState.transaction.master.referenceDate)
@@ -1551,7 +1562,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.employee.visible && (
                     <ERPDataCombobox
                       id="employeeId"
-                      label={formState.formElements.employee.label}
+                      label={t(formState.formElements.employee.label)}
                       value={formState.masterAccountID}
                       className="lg:max-w-[300px]"
                       onChange={(e) =>
@@ -1580,7 +1591,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.remarks.visible && (
                     <ERPInput
                       id="remarks"
-                      label={formState.formElements.remarks.label}
+                      label={t(formState.formElements.remarks.label)}
                       value={formState.transaction.master.remarks}
                       className="max-w-full"
                       onChange={(e) =>
@@ -1600,7 +1611,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.commonNarration.visible && (
                     <ERPInput
                       id="notes"
-                      label={formState.formElements.commonNarration.label}
+                      label={t(formState.formElements.commonNarration.label)}
                       className="max-w-full"
                       value={formState.transaction.master.commonNarration}
                       onChange={(e) =>
@@ -1625,7 +1636,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.projectId.visible && (
                     <ERPDataCombobox
                       id="project"
-                      label={formState.formElements.projectId.label}
+                      label={t(formState.formElements.projectId.label)}
                       options={
                         formState.row.ledgerId != undefined &&
                         formState.row.ledgerId != 0
@@ -1676,7 +1687,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <ERPInput
                   id="ledgerCode"
                   className=""
-                  label={formState.formElements.ledgerCode.label}
+                  label={t(formState.formElements.ledgerCode.label)}
                   value={formState.row.ledgerCode}
                   ref={ledgerCodeRef}
                   disableEnterNavigation={true}
@@ -1704,7 +1715,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     ref={ledgerIdRef}
                     id="ledgerId"
                     className="w-full"
-                    label={formState.formElements.ledgerId.label}
+                    label={t(formState.formElements.ledgerId.label)}
                     data={formState.row}
                     reload={formState.formElements.ledgerId.reload}
                     changeReload={(reload: boolean) =>
@@ -1762,7 +1773,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ref={amountRef}
                   id="amount"
                   className=""
-                  label={formState.formElements.amount.label}
+                  label={t(formState.formElements.amount.label)}
                   type="number"
                   value={formState.row.amount}
                   onKeyDown={(e) => {
@@ -1787,7 +1798,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPCheckbox
                     id="hasDiscount"
                     className="pt-[10px] pr-[10px]"
-                    label={formState.formElements.hasDiscount.label}
+                    label={t(formState.formElements.hasDiscount.label)}
                     checked={formState.row.hasDiscount}
                     onChange={(e) =>
                       dispatch(
@@ -1806,7 +1817,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {formState.formElements.discount.visible && (
                 <ERPInput
                   id="discount"
-                  label={formState.formElements.discount.label}
+                  label={t(formState.formElements.discount.label)}
                   value={formState.row.discount}
                   onChange={(e) =>
                     dispatch(
@@ -1826,7 +1837,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
             <div className="flex flex-wrap gap-4">
               <span className="text-blue-600 font-bold self-center">
-                Group Name: {formState.row.groupName}
+                {t("group_name")}: {formState.row.groupName}
               </span>
             </div>
           </div>
@@ -1852,7 +1863,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onKeyDown={(e) => {
                     handleKeyDown(e, "narration");
                   }}
-                  label={formState.formElements.narration.label}
+                  label={t(formState.formElements.narration.label)}
                   value={formState.row.narration}
                   onChange={(e) =>
                     dispatch(
@@ -1912,7 +1923,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <ERPDataCombobox
               id="drCr"
               className="min-w-[70px] max-w-[70px]"
-              label={formState.formElements.drCr.label}
+              label={t(formState.formElements.drCr.label)}
               value={formState.row.drCr}
               onChange={(e) =>
                 dispatch(
@@ -1943,7 +1954,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPInput
                     id="nameOnCheque"
                     className="min-w-[140px] max-w-[200px]"
-                    label={formState.formElements.nameOnCheque.label}
+                    label={t(formState.formElements.nameOnCheque.label)}
                     value={formState.row.nameOnCheque}
                     onChange={(e) =>
                       dispatch(
@@ -1962,7 +1973,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPDataCombobox
                     id="bankName"
                     className="min-w-[180px] max-w-[200px]"
-                    label={formState.formElements.bankName.label}
+                    label={t(formState.formElements.bankName.label)}
                     value={formState.row.bankName}
                     options={formState.row.ledgerId ? undefined : []}
                     field={bankAccountField}
@@ -1979,7 +1990,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <ERPDataCombobox
                 id="costCentre"
                 className="min-w-[180px]"
-                label={formState.formElements.costCentreId.label}
+                label={t(formState.formElements.costCentreId.label)}
                 field={{
                   valueKey: "id",
                   labelKey: "name",
@@ -2013,7 +2024,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               className="text-red-600"
               style={{ fontSize: "12px", color: "chocolate" }}
             >
-              Amount in Words: {formState.amountInWords}
+              {t("amount_in_words")}: {formState.amountInWords}
             </div>
           </div>
 
@@ -2043,11 +2054,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <ERPAlert
               showAnimation="animate__fadeIn"
               hideAnimation="animate__fadeOut"
-              title="In Progress......"
+              title={t("in_progress")}
               icon="warning"
               position="center"
-              confirmButtonText="Ok"
-              cancelButtonText="Cancel"
+              confirmButtonText={t("ok")}
+              cancelButtonText={t("cancel")}
               onConfirm={() => {
                 dispatch(
                   accFormStateHandleFieldChange({
@@ -2072,7 +2083,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
             <ERPPreviousUrlButton></ERPPreviousUrlButton>
             <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
-              Cash payment
+              {t("cash_payment")}
             </h1>
             <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
           </div>
@@ -2081,7 +2092,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
             <div className="flex-1  px-2  rounded-md">
               <label className="block mb-0 font-medium text-center text-sm text-gray-700">
-                Voucher No
+                {t("voucher_no")}
               </label>
               <div className="relative">
                 <input
@@ -2098,7 +2109,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
             <div className="flex-1  px-2 rounded-md">
               <label className="block mb-0 font-medium text-center text-sm text-gray-700">
-                Date
+                {t("date")}
               </label>
               <div className="relative">
                 <input
@@ -2146,7 +2157,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     handleFieldChange("cashacc", data.cashacc)
                   }
                   // label={t("cost_center")}
-                  label="Cash Account"
+                  label={t("cash_account")}
                 />
               </div>
               {/* <div className="mb-4">
@@ -2160,7 +2171,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
                 <ERPInput
                   id="autoUpdateReleaseUpTo"
-                  label="Remark"
+                  label={t("remark")}
                   type="text"
                   data={settings}
                   value={settings?.autoUpdateReleaseUpTo}
@@ -2178,7 +2189,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
                   onClick={() => setShowInputBox(!showInputBox)}
                 >
-                  {showInputBox ? "View Less" : "View More"}
+                  {showInputBox ? t("view_less") : t("view_more")}
                 </button>
               </div>
               {showInputBox && (
@@ -2195,7 +2206,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <div className="mb-1">
                     <ERPInput
                       id="autoUpdateReleaseUpTo"
-                      label="Ref No"
+                      label={t("ref_no")}
                       type="text"
                       data={settings}
                       value={settings?.autoUpdateReleaseUpTo}
@@ -2212,11 +2223,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="block font-medium text-gray-700 text-sm"
                       htmlFor=""
                     >
-                      Ref Date
+                      {t("ref_date")}
                     </label>
                     <input
                       type="date"
-                      placeholder="Ref Date"
+                      placeholder={t("ref_date")}
                       // className="bg-white p-2 border rounded w-full"
                       className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                     />
@@ -2259,7 +2270,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         handleFieldChange("cashacc", data.cashacc)
                       }
                       // label={t("cost_center")}
-                      label="Paid By"
+                      label={t("paid_by")}
                     />
                   </div>
                   {/* <div className="mb-1">
@@ -2273,7 +2284,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <div className="mb-2">
                     <ERPInput
                       id="autoUpdateReleaseUpTo"
-                      label="Notes"
+                      label={t("notes")}
                       type="text"
                       data={settings}
                       value={settings?.autoUpdateReleaseUpTo}
@@ -2290,7 +2301,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               {/* Billed Items Section */}
               <div className="bg-custom-blue mb-1 p-1 rounded-sm text-white">
-                <h2 className="font-light text-sm">Billed Items</h2>
+                <h2 className="font-light text-sm">{t("billed_items")}</h2>
               </div>
               <div className="pt-1">
                 {items.map((item) => (
@@ -2309,7 +2320,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                     <div className="flex justify-between items-center mb-1"></div>
                     <p className="mb-1 text-yellow info">
-                      Discount (%): {item.discount}
+                      {t("discount")}: {item.discount}
                     </p>
                     {/* <p className="text-gray-600 text-sm">Tax: {item.tax}%</p> */}
                   </div>
@@ -2319,13 +2330,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <div className="bg-white shadow-md mb-4 p-4 rounded-lg">
                   <div className="flex justify-between mb-2 text-gray-600 text-sm">
                     <span>
-                      Total Disc:{" "}
+                      {t("total_disc")}:{" "}
                       {items
                         .reduce((total, item) => total + item.discount, 0)
                         .toFixed(1)}
                     </span>
                     <span>
-                      Total Tax Amt:{" "}
+                      {t("total_tax_amt")}:{" "}
                       {items
                         .reduce((total, item) => total + item.tax, 0)
                         .toFixed(1)}
@@ -2333,9 +2344,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
                   <div className="flex justify-between font-semibold text-sm">
                     <span>
-                      Total Qty: {calculateTotalQuantity().toFixed(1)}
+                      {t("total_qty")}: {calculateTotalQuantity().toFixed(1)}
                     </span>
-                    <span>Subtotal: ₹ {calculateSubtotal().toFixed(2)}</span>
+                    <span>{t("subtotal")}: ₹ {calculateSubtotal().toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -2355,9 +2366,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     // size={16}
                   >
                     {" "}
-                    Add Items{" "}
+                    {t("add_items")}{" "}
                   </div>
-                  <div className="pl-1 text-gray-500">(Optional)</div>
+                  <div className="pl-1 text-gray-500">{t("optional")}</div>
                 </button>
               </div>
 
@@ -2386,13 +2397,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
-                title="Save & New"
+                title={t("save_&_new")}
                 onClick={() => {}}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
-                title="Save"
+                title={t("save")}
                 onClick={() => {}}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
@@ -2404,7 +2415,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       <ERPModal
         isFullHeight={true}
         isOpen={formState.showbillwise ?? false}
-        title="Billwise"
+        title={t("billwise")}
         closeModal={() => {
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: false } })
@@ -2420,8 +2431,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           isOpen={isOpen}
           closeButton="LeftArrow"
           hasSubmit={false}
-          closeTitle="Close"
-          title="Add Ledger"
+          closeTitle={t("close")}
+          title={t("add_ledger")}
           width="w-full"
           isFullHeight={true}
           isRemoveSomething={true}
@@ -2443,7 +2454,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <div className="mb-4">
                       <ERPInput
                         id="autoUpdateReleaseUpTo"
-                        label="Ledger Code"
+                        label={t("ledger_code")}
                         type="text"
                         data={settings}
                         value={settings?.autoUpdateReleaseUpTo}
@@ -2470,13 +2481,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           handleFieldChange("cashacc", data.cashacc)
                         }
                         // label={t("cost_center")}
-                        label="Ledger"
+                        label={t("ledger")}
                       />
                     </div>
                     <div className="mb-4">
                       <ERPInput
                         id="autoUpdateReleaseUpTo"
-                        label="Amount"
+                        label={t("amount")}
                         type="number"
                         data={settings}
                         value={settings?.autoUpdateReleaseUpTo}
@@ -2491,7 +2502,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <div className="mb-4">
                       <ERPInput
                         id="autoUpdateReleaseUpTo"
-                        label="Narration"
+                        label={t("narration")}
                         type="string"
                         data={settings}
                         value={settings?.autoUpdateReleaseUpTo}
@@ -2519,7 +2530,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           handleFieldChange("cashacc", data.cashacc)
                         }
                         // label={t("cost_center")}
-                        label="Cost Center"
+                        label={t("cost_center")}
                       />
                     </div>
                   </div>
@@ -2528,7 +2539,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <div className=" pt-1">
                     {/* Discount Section */}
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-gray-600">Discount</span>
+                      <span className="text-gray-600">{t("discount")}</span>
                       <div className="flex items-center">
                         <input
                           type="number"
@@ -2552,7 +2563,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
                       <div>
                         <span className="text-sm font-semibold">
-                          Total Amount:
+                          {t("total_amount")}:
                         </span>
                       </div>
                       <div>
@@ -2567,13 +2578,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div></div>
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
-                  title="Save & New"
+                  title={t("save_&_new")}
                   onClick={() => {}}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
-                  title="Save"
+                  title={t("save")}
                   onClick={() => {}}
                   variant="primary"
                   className="flex-1 !m-0 !rounded-none"
@@ -2601,7 +2612,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
               id="printOnSave"
-              label={formState.formElements.printOnSave.label}
+              label={t(formState.formElements.printOnSave.label)}
               checked={formState.printOnSave}
               onChange={(e) =>
                 dispatch(
@@ -2619,7 +2630,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           {formState.formElements.printPreview.visible && (
             <ERPCheckbox
               id="printPreview"
-              label={formState.formElements.printPreview.label}
+              label={t(formState.formElements.printPreview.label)}
               checked={formState.printPreview}
               onChange={(e) =>
                 dispatch(
@@ -2638,7 +2649,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             formState.formElements.printCheque.visible && (
               <ERPCheckbox
                 id="printCheque"
-                label={formState.formElements.printCheque.label}
+                label={t(formState.formElements.printCheque.label)}
                 checked={formState.printCheque}
                 onChange={(e) =>
                   dispatch(
@@ -2656,7 +2667,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
               id="keepNarration"
-              label={formState.formElements.keepNarration.label}
+              label={t(formState.formElements.keepNarration.label)}
               checked={formState.keepNarration}
               onChange={(e) =>
                 dispatch(
@@ -2673,7 +2684,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           )}
           {(voucherType == "BP" || voucherType == "CQP") && (
             <ERPButton
-              title="Print Cheque"
+              title={t("print_cheque")}
               variant="secondary"
               onClick={() => {
                 /* Handle print cheque */
@@ -2681,24 +2692,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             />
           )}
           <button className="text-blue-600">
-            Template: 'Elite Template'
+            {t("template_elite")}
             <span
               className="hover:underline text-[#0ea5e9] capitalize ml-1"
               onClick={selectTemplates}
             >
-              Change
+              {t("change")}
             </span>
           </button>
           <button className="text-blue-600">
             <AttachmentSidebar displayType="link" />
           </button>
         </div>
-        Total:{" "}
+        {t("total")}:{" "}
         {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
         <div>
           <ERPButton
             ref={btnSaveRef}
-            title="save"
+            title={t("save")}
             jumpTarget="save"
             variant="primary"
             onClick={save}

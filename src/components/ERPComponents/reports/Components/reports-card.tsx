@@ -30,17 +30,17 @@ const ReportsCard = ({ data }: any) => {
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
           {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}
-          <p className="text-sm font-medium">{t(data?.title)}</p>
+          <p className=" dark:!text-dark-text text-sm font-medium">{t(data?.title)}</p>
         </div>
         <div className={`grid grid-cols-${data?.columns ? data?.columns : 1} gap-24`}>
         {distributedItems.map((columnItems: any, idx: number) => {
             return (
                
-        <div className="flex flex-col gap-3" key={`QQEO39_${idx}`}>
+        <div className="flex flex-col " key={`QQEO39_${idx}`}>
           {columnItems.map((route: any, routeIdx: number) => {
                   return (
                     <p
-                      className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1 dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black "
+                      className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black "
                       onClick={() => {
                         // dispatch({ type: "minimize", minimize: false });
                         route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action({isOpen: true})) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");

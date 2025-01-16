@@ -1106,7 +1106,7 @@ export const useAccTransaction = (
         Urls.get_and_set_transaction_edit_mode,
         {
           transactionType: "A",
-          transactionMasterId: formState.transaction.master.accTransMasterID,
+          transactionMasterId: formState.transaction.master.accTransMasterID??0,
         }
       );
 

@@ -649,7 +649,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               )
             }
           />
-          <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+          <label className=" ml-2 mr-2 block form-check-label dark:!text-dark-label text-gray-700">
             {t("days")}
           </label>
         </div>
@@ -692,7 +692,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               )
             }
           />
-          <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+          <label className=" ml-2 mr-2 block form-check-label dark:text-dark-label text-gray-700">
             Days
           </label>
         </div>
@@ -772,7 +772,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             ref={(el) => (subItemsRef.current["mainGeneral"] = el)}
           >
             <h1
-              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header font-normal flex items-center my-2 rounded-md px-2 ${
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${
                 blinkSection === "mainGeneral"
                   ? "blink-animation bg-[#f1f1f1]"
                   : "bg-[#f1f1f1]"

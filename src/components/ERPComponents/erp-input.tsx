@@ -678,7 +678,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           {!noLabel && (
             <div className="flex justify-between">
             <label
-              className={`capitalize  text-left rtl:text-right ${appState?.mode == 'dark' ? "#000" : `rgb(${appState?.inputBox?.labelColor})`} ${labelClassName}
+              className={`capitalize  text-left rtl:text-right dark:!text-dark-label ${appState?.mode == 'dark' ? "#000" : `rgb(${appState?.inputBox?.labelColor})`} ${labelClassName}
               ${labelDirection === "vertical" ? "" : ""}`}
               style={{
                 fontSize: _customSize
@@ -780,7 +780,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
                 }),
               }}
-              className={`form-control ${inputClassName} ${appState.mode == 'dark' ? "!bg-[#313334]" : ``} placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+              className={`form-control ${inputClassName} dark:!bg-dark-bg-card dark:!text-dark-text  placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
               // onWheel={(e) => { type === "number" && (e.target as HTMLInputElement)?.blur(); }}
               onWheel={(e) => { 
                 if (type === "number") {

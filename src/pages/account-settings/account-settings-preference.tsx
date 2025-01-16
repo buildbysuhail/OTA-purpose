@@ -1213,7 +1213,7 @@ const resetInputBox = async ()=>{
                       <InputBoxStyling
                         inputBox={appState.inputBox}
                         onInputBoxChange={handleInputBoxStyleChange}
-                        // resetInputBox={resetInputBox}
+                        
                       />
                      
                         

@@ -44,6 +44,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }));
           }}
           value={demo.inputBox}
+          localInputBox={inputBox}
         />
 
         <ERPDateInput
@@ -56,6 +57,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }));
           }}
           value={demo.dateBox}
+          localInputBox={inputBox}
         />
 
         <ERPDataCombobox
@@ -81,6 +83,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             { value: 4, label: "4" },
             { value: 5, label: "5" },
           ]}
+          localInputBox={inputBox}
         />
       </div>
 
@@ -729,6 +732,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
         <p className="switcher-style-head ">Radio & Check Box:</p>
         <div className="grid grid-cols-2 gap-3 items-center switcher-style">
           <ERPRadio
+          localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}
@@ -742,6 +746,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             label="Demo Radio Button"
           />
           <ERPCheckbox
+          localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}

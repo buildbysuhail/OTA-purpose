@@ -1,11 +1,11 @@
-
 import { forwardRef, useEffect, useState } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { handleNavigation } from "../../utilities/shortKeys";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
+import { inputBox } from "../../redux/slices/app/types";
 
-interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   id: string;
   data?: any;
   label?: string;
@@ -23,127 +23,157 @@ interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
-  customSize?: 'sm' | 'md' | 'lg';
+  customSize?: "sm" | "md" | "lg";
+  localInputBox?: inputBox; // Local styling preferences
 }
 
-const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
-  id,
-  onChangeData,
-  onChange,
-  onFocus,
-  onBlur,
-  data,
-  label,
-  disabled,
-  labelClassName,
-  className,
-  inputClassName,
-  required,
-  noLabel,
-  validation,
-  skip = false,
-  jumpTo,
-  jumpTarget,
-  customSize ,
-  ...props
-}: ERPCheckboxProps, ref) => {
-  const iLabel = label || id?.replaceAll("_", " ");
-  const appState = useAppSelector(
-    (state: RootState) => state.AppState.appState
-  );
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState?.inputBox?.checkButtonInputSize);
- useEffect(() => {
-    if (customSize == undefined || customSize == null) {
-      setCustomSize(appState?.inputBox?.checkButtonInputSize);
-    }
-  }, [appState?.inputBox?.checkButtonInputSize]);
-  const getSizeStyles = () => {
-    switch (_customSize) {
-      case 'sm':
-        return {
-          checkbox: {
-            width: "14px",
-            height: "14px"
-          },
-          label: {
-            fontSize: "12px",
-            lineHeight: "14px"
-          }
-        };
-        case 'md':
+const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
+  (
+    {
+      id,
+      onChangeData,
+      onChange,
+      onFocus,
+      onBlur,
+      data,
+      label,
+      disabled,
+      labelClassName,
+      className,
+      inputClassName,
+      required,
+      noLabel,
+      validation,
+      skip = false,
+      jumpTo,
+      jumpTarget,
+      customSize,
+      localInputBox, // Destructure localInputBox
+      ...props
+    }: ERPCheckboxProps,
+    ref
+  ) => {
+    const iLabel = label || id?.replaceAll("_", " ");
+    const appState = useAppSelector(
+      (state: RootState) => state.AppState.appState
+    );
+
+    // Use localInputBox if provided, otherwise fall back to global inputBox state
+    const inputBoxState = localInputBox || appState?.inputBox;
+
+    const [_customSize, setCustomSize] = useState(
+      customSize ? customSize : inputBoxState?.checkButtonInputSize
+    );
+
+    useEffect(() => {
+      if (customSize == undefined || customSize == null) {
+        setCustomSize(inputBoxState?.checkButtonInputSize);
+      }
+    }, [inputBoxState?.checkButtonInputSize]);
+
+    const getSizeStyles = () => {
+      switch (_customSize) {
+        case "sm":
           return {
             checkbox: {
-             width: "1rem",
-              height: "1rem"
+              width: "14px",
+              height: "14px",
             },
             label: {
-               fontSize: "14px",
-              lineHeight: "1rem"
-            }
+              fontSize: "12px",
+              lineHeight: "14px",
+            },
           };
-      case 'lg':
-        return {
-          checkbox: {
-             width: "1.25rem",
-            height: "1.25rem"
-          },
-          label: {
-           fontSize: "16px",
-            lineHeight: "1.25rem"
-          }
-        };
-      default: 
-        return {
-          checkbox: {
-            width: "1rem",
-            height: "1rem"
-          },
-          label: {
-            fontSize: "14px",
-            lineHeight: "1rem"
-          }
-        };
-    }
-  };
+        case "md":
+          return {
+            checkbox: {
+              width: "1rem",
+              height: "1rem",
+            },
+            label: {
+              fontSize: "14px",
+              lineHeight: "1rem",
+            },
+          };
+        case "lg":
+          return {
+            checkbox: {
+              width: "1.25rem",
+              height: "1.25rem",
+            },
+            label: {
+              fontSize: "16px",
+              lineHeight: "1.25rem",
+            },
+          };
+        default:
+          return {
+            checkbox: {
+              width: "1rem",
+              height: "1rem",
+            },
+            label: {
+              fontSize: "14px",
+              lineHeight: "1rem",
+            },
+          };
+      }
+    };
 
-  const sizeStyles = getSizeStyles();
+    const sizeStyles = getSizeStyles();
 
-  return (
-    <div className={className}>
-      <label className={`inline-flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-        <input
-          ref={ref}
-          type="checkbox"
-          id={id}
-          name={id}
-          onChange={(e) => {
-            
-            onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
-            onChange && onChange(e);
-          }}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={handleNavigation}
-          defaultChecked={false}
-          disabled={disabled}
-          required={required}
-          data-skip={skip}
-          data-jump-to={jumpTo}
-          data-jump-target={jumpTarget}
-          style={sizeStyles.checkbox}
-          className={`form-check-input dark:!bg-dark-bg-card dark:!border-dark-border  ${disabled ?  'opacity-50 cursor-not-allowed' : 'cursor-pointer'}  ${inputClassName}`}
-          {...props}
-        />
-        {!noLabel && (
-          <span className={`ml-2 dark:!text-dark-text ${labelClassName} ${disabled ? 'text-gray-400' : ''}  text-black`} style={sizeStyles.label}>
-            {iLabel}
-            {required && !noLabel && "*"}
-          </span>
-        )}
-      </label>
-      <ERPElementValidationMessage validation={validation} />
-    </div>
-  );
-});
+    return (
+      <div className={className}>
+        <label
+          className={`inline-flex items-center ${
+            disabled ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          <input
+            ref={ref}
+            type="checkbox"
+            id={id}
+            name={id}
+            onChange={(e) => {
+              onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
+              onChange && onChange(e);
+            }}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onKeyDown={handleNavigation}
+            defaultChecked={false}
+            disabled={disabled}
+            required={required}
+            data-skip={skip}
+            data-jump-to={jumpTo}
+            data-jump-target={jumpTarget}
+            style={sizeStyles.checkbox}
+            className={`form-check-input dark:!bg-dark-bg-card dark:!border-dark-border ${
+              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+            } ${inputClassName}`}
+            {...props}
+          />
+          {!noLabel && (
+            <span
+              className={`ml-2 dark:!text-dark-text ${labelClassName} ${
+                disabled ? "text-gray-400" : "text-black"
+              }`}
+              style={{
+                ...sizeStyles.label,
+                color: inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState.labelColor})`
+                  : "#1f2937", // Default label color
+              }}
+            >
+              {iLabel}
+              {required && !noLabel && "*"}
+            </span>
+          )}
+        </label>
+        <ERPElementValidationMessage validation={validation} />
+      </div>
+    );
+  }
+);
 
 export default ERPCheckbox;

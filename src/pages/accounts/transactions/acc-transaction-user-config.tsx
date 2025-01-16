@@ -23,50 +23,31 @@ interface pageBgColor{
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [inputBox, setInputBox] = useState<inputBox>({
-    inputStyle: "normal",
-    inputSize: "md",
-    checkButtonInputSize: "md",
-    inputHeight: 0,
-    fontSize: 14,
-    fontWeight: 400,
-    labelFontSize: 14,
-    otherLabelFontSize: 14,
-    inputBgColor: "128, 128, 128",
-    borderColor: "128, 128, 128",
-    selectColor: "128, 128, 128",
-    fontColor: "0, 0, 0",
-    labelColor: "0, 0, 0",
-    borderFocus: "0, 0, 0",
-    borderRadius: 4,
-    adjustA: 0,
-    adjustB: 0,
-    adjustC: 0,
-    adjustD: 0,
-    marginTop: 0,
-    marginBottom: 0,
-    focusForeColor: "0, 0, 0",
-    focusBgColor: "255, 255, 255",
-  });
-
-  const [page,setPage] = useState({
-    pageBgColor:"252,252,252"
-  })
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
-    setInputBox((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      inputBoxStyle:{
+        ...formState.userConfig.inputBoxStyle,
+        [field]: value,
+      }
+    };
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: { userConfig: updatedUserConfig },
+      })
+    );
   };
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUserConfig = async () => {
       try {
+        debugger;
         // Fetch user config from the server
         const response = await api.get(Urls.get_acc_user_config);
-        const _userConfig = atob(response.data);
+        debugger;
+        const _userConfig = atob(response);
         const userConfig: AccUserConfig = customJsonParse(_userConfig);
 
 
@@ -81,6 +62,7 @@ export const AccTransactionUserConfig = () => {
   }, []);
 
   const postUserConfig = async () => {
+
     try {
       const response = await api.post(
         `${Urls.post_acc_user_config}`,
@@ -224,29 +206,26 @@ export const AccTransactionUserConfig = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center my-1">
-                  <label htmlFor="pageBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
+            <div className="grid grid-cols-2 gap-6 p-4 my-2">
+            <div className="flex items-center ">
+                  <label htmlFor="outerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                     Page Background Color
                   </label>
                   <div className="ti-form-radio">
                     <div
                       className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                       style={{
-                        backgroundColor: `rgb(${page?.pageBgColor})`,
+                        backgroundColor: `rgb(${formState.userConfig?.outerPageBg})`,
                       }}
                     >
                       <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                       <input
                         type="color"
-                        value={page?.pageBgColor}
+                        value={formState.userConfig?.outerPageBg}
                         onChange={(e) => {
                           const rgb = hexToRgb(e.target?.value);
                           if (rgb) {
-                            setPage((prev) => ({
-                              ...prev,
-                              pageBgColor: `${rgb.r},${rgb.g},${rgb.b}`,
-                            }));
+                            handleFieldChange("outerPageBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
                           }
                         }}
                         className="opacity-0 w-full h-full cursor-pointer"
@@ -254,10 +233,40 @@ export const AccTransactionUserConfig = () => {
                     </div>
                   </div>
                 </div>
+
+                <div className="flex items-center">
+                  <label htmlFor="innerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
+                    Form Background Color
+                  </label>
+                  <div className="ti-form-radio">
+                    <div
+                      className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                      style={{
+                        backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
+                      }}
+                    >
+                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                      <input
+                        type="color"
+                        value={formState.userConfig?.innerPageBg}
+                        onChange={(e) => {
+                          const rgb = hexToRgb(e.target?.value);
+                          if (rgb) {
+                            handleFieldChange("innerPageBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
+                          }
+                        }}
+                        className="opacity-0 w-full h-full cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div className="flex flex-col">
+              
             <p className="switcher-style-head ">Input Box Style:</p>
             <InputBoxStyling
             isInputBgColor
-            inputBox={inputBox}
+            inputBox={formState.userConfig?.inputBoxStyle}
             onInputBoxChange={handleInputBoxChange}
           />
             </div>

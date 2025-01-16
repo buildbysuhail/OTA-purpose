@@ -1,3 +1,5 @@
+import { inputBox } from "../../../redux/slices/app/types";
+
 // AccTransaction interface
 export interface AccTransactionProps {
   voucherType: string;
@@ -409,6 +411,9 @@ export interface AccUserConfig {
   alignment: "left" | "center" | "right";
   presetCostenterId: number
   counterAssignedCashLedgerId: number
+  outerPageBg:string;
+  innerPageBg:string;
+  inputBoxStyle:inputBox
 }
 export interface AccTransactionFormState {
   store: any;
@@ -572,6 +577,33 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
     maxWidth:" ",
+    outerPageBg:"0, 0, 0",
+    innerPageBg:"0, 0, 0",
+    inputBoxStyle:{
+        inputStyle: "normal",
+        inputSize: "md",
+        checkButtonInputSize: "md",
+        inputHeight: 0,
+        fontSize: 14,
+        fontWeight: 400,
+        labelFontSize: 14,
+        otherLabelFontSize: 14,
+        inputBgColor: "128, 128, 128",
+        borderColor: "128, 128, 128",
+        selectColor: "128, 128, 128",
+        fontColor: "0, 0, 0",
+        labelColor: "0, 0, 0",
+        borderFocus: "0, 0, 0",
+        borderRadius: 4,
+        adjustA: 0,
+        adjustB: 0,
+        adjustC: 0,
+        adjustD: 0,
+        marginTop: 0,
+        marginBottom: 0,
+        focusForeColor: "0, 0, 0",
+        focusBgColor: "255, 255, 255",
+      }
   },
   isBahamdoonPOSReceipt: false,
   unlocking: false,

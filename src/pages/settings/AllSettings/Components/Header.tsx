@@ -123,13 +123,13 @@ const Header: React.FC = () => {
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />
-          <h3 className="text-base font-medium">Settings</h3>
+          <h3 className="text-base dark:!text-dark-text font-medium">Settings</h3>
         </div>
         <div
           className={`flex gap-1 items-center py-1 px-2 dark:bg-dark-bg-card dark:border-dark-border  bg-gray-50 rounded-md border cursor-pointer`}
           onClick={handleNavigation}
         >
-          <p className="text-[10px]">Close</p>
+          <p className="text-[10px] dark:!text-dark-text">Close</p>
           <XMarkIcon className="w-4 aspect-square stroke-red-600" />
         </div>
       </div>

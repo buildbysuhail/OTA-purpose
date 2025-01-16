@@ -61,9 +61,11 @@ theme: {
       // dark:{
       //   background: '#ff0000',
       // },
-      'dark-label': '#e1e0e0',
+      // 'dark-label': '#e1e0e0',
+      'dark-label': '#bab9b9',
       // 'dark-text': '#e1e0e0',
-      'dark-text': '#E0E0E0',
+      // 'dark-text': '#E0E0E0',
+      'dark-text': '#d1d1d1',
       // 'dark-bg': '#313334',
       'dark-bg': '#1e1e1f',
       'dark-bg-card': '#202223',

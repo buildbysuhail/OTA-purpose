@@ -1369,7 +1369,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           {!noLabel && (
             <div className="flex justify-between">
               <label
-                className={`capitalize block   text-left rtl:text-right ${
+                className={`capitalize block   text-left rtl:text-right dark:!text-dark-label ${
                   appState?.mode == "dark" ? "" : ""
                 } 
           ${labelDirection === "vertical" ? "" : ""}`}
@@ -1453,7 +1453,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   borderRadius: `${appState?.inputBox?.borderRadius}px`,
                   backgroundColor: bgColor,
                 }}
-                className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card placeholder:capitalize`}
+                className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {

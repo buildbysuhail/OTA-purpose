@@ -1453,9 +1453,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   borderRadius: `${appState?.inputBox?.borderRadius}px`,
                   backgroundColor: bgColor,
                 }}
-                className={`form-control ${sizeClasses?.input} ${
-                  appState.mode == "dark" ? "!bg-[#313334] " : ``
-                } placeholder:capitalize`}
+                className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card placeholder:capitalize`}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {
@@ -1494,9 +1492,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 disabled={disabled}
               />
               <div
-                className={`absolute inset-y-0 ltr:right-0 ${
-                  appState.mode == "dark" ? "!bg-[#2d2d2d] " : ``
-                } rtl:left-0 flex items-center m-[2px] pr-1`}
+                className={`absolute inset-y-0 ltr:right-0 dark:!bg-dark-combo-dd rtl:left-0 flex items-center m-[2px] pr-1`}
                 style={{
                   background:
                     initial?.value !== undefined &&
@@ -1589,9 +1585,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                     isInModal
                       ? "combobox-dropdown-modal combobox-dropdown "
                       : "combobox-dropdown"
-                  } ${
-                    appState.mode == "dark" ? "!bg-[#313334] " : ``
-                  } absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
+                  } dark:bg-dark-bg-card absolute  mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md`}
                   style={{
                     width: comboboxRef.current?.offsetWidth || "auto",
                     top:

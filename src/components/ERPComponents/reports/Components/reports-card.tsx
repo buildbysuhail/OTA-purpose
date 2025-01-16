@@ -26,7 +26,7 @@ const ReportsCard = ({ data }: any) => {
 
   const distributedItems = distributeItems();
   return (
-    <div className="w-auto dark:bg-dark-bg dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow ">
+    <div className="w-auto dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow ">
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
           {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}
@@ -40,7 +40,7 @@ const ReportsCard = ({ data }: any) => {
           {columnItems.map((route: any, routeIdx: number) => {
                   return (
                     <p
-                      className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out"
+                      className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1 dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black "
                       onClick={() => {
                         // dispatch({ type: "minimize", minimize: false });
                         route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action({isOpen: true})) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");

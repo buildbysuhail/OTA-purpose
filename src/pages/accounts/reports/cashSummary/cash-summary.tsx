@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { AlignRight } from "lucide-react";
 interface CashSummary {
   from: Date
 }
@@ -49,7 +50,7 @@ const CashSummary = () => {
             textColor: cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color: isDebit ? "#129151" : "#DC143C",
+              color:cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' }:"",
               size: 15,
             }
           } : undefined;
@@ -85,8 +86,11 @@ const CashSummary = () => {
             bold: true,
             alignment: "right",
             textColor: cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' :'',
+            alignmentExcel:{ horizontal: 'right' },
             font: {
+              color:cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' }:"",
               ...exportCell.font,
+              // AlignRight:true,
               size: 15,
             },
           };

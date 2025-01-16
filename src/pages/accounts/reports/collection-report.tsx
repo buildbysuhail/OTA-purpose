@@ -88,7 +88,7 @@ const CollectionReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color: isDebit ? "#129151" : "#DC143C",
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
               size: 20,
             }
           } : undefined;
@@ -142,6 +142,7 @@ const CollectionReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup===true? '#FF0000' :'',
             font: {
               ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? { argb: 'FFFF0000' }:"",
               size: 15,
             },
           };

@@ -97,11 +97,36 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowFiltering: true,
       width: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+       
+          }}
     },
     {
       dataField: "credit",
@@ -111,11 +136,36 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowFiltering: true,
       width: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              ...exportCell.font,
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+       
+          }}
     },
     {
       dataField: "monthBal",
@@ -125,11 +175,36 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowFiltering: true,
       width: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57] text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C] text-lg' : ''}`}>
-          {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
-        </span>
-      ),
+        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+              if (exportCell != undefined) {
+                const balance = cellElement.data?.monthBal;
+                const isDebit = balance >= 0;
+                const value =
+                  balance == null
+                    ? ""
+                    : balance < 0
+                    ? getFormattedValue(-1 * balance) + " Cr"
+                    : getFormattedValue(balance) + " Dr";
+                return {
+                  ...exportCell,
+                  text: value,
+                  bold: true,
+                  alignment: "right",
+                  // textColor:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?'#129151': '#FF0000',
+                  font: {
+                    ...exportCell.font,
+                    // color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
+                    size: 15,
+                    Bold:true
+                  },
+                };
+              }
+              else {
+                return (  <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C] text-lg' : ''}`}>
+                  {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
+                </span>)
+      
+                }}
     },
     {
       dataField: "closingBalance",
@@ -139,11 +214,36 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowFiltering: true,
       width: 250,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-          {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.closingBalance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance) + " Cr"
+              : getFormattedValue(balance) + " Dr";
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            // textColor:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?'#129151': '#FF0000',
+            font: {
+              ...exportCell.font,
+              // color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
+              size: 15,
+              Bold:true
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
+          </span>)
+          }
+        }
     }
   ];
   return (

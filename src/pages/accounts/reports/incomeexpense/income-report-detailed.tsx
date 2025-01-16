@@ -34,12 +34,41 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.accGroupName}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.accGroupName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.accGroupName}
+          </span>)
+        }
+      }
     },
     {
       dataField: "form",
@@ -90,12 +119,36 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-        {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.accGroupName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == null ? '0' : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -104,12 +157,36 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-         {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.accGroupName === "TOTAL" ? '#DC143C' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.accGroupName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == null ? '0' : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balance",
@@ -118,19 +195,44 @@ const IncomeReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${"font-bold text-[#DC143C]"
-            }`}
-        >
-          {`${cellElement.data?.balance == null
-            ? '0'
-            : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance) + 'Cr'
-              : getFormattedValue(cellElement.data.balance) + 'Dr'}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor:  '#FF0000',
+            font: {
+              ...exportCell.font,
+              color: { argb: 'FFFF0000' },
+              size: 15,
+              Bold: true
+            },
+          };
+        }
+        else {
+          return (<span
+            className={`${"font-bold text-[#DC143C]"
+              }`}
+          >
+            {`${cellElement.data?.balance == null
+              ? '0'
+              : cellElement.data.balance < 0
+                ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+                : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+          </span>)
+        }
+      }
     },
 
     {

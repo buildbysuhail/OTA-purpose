@@ -29,11 +29,40 @@ const CashSummaryLedgerwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return(<span className={`${cellElement.data.particulars==="TOTAL" ||cellElement.data.particulars==="Opening Balance"? 'font-bold text-[#DC143C] ' : ''}`}>
+            {cellElement.data.particulars}
+            </span>)
+        
+          }}
     },
     {
       dataField: "debit",
@@ -42,12 +71,35 @@ const CashSummaryLedgerwise = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
- 
-  </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return( <span className={`${cellElement.data.particulars==="TOTAL" ||cellElement.data.particulars==="Opening Balance"? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${ cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+            </span>)
+       
+          }}
     },
     {
       dataField: "credit",
@@ -57,11 +109,35 @@ const CashSummaryLedgerwise = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (  <span className={`${cellElement.data.particulars==="TOTAL" ||cellElement.data.particulars==="Opening Balance"? 'font-bold text-[#DC143C] ' : ''}`}>
+            {`${ cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+            </span>)
+          }
+        }
     },
     {
       dataField: "balance",
@@ -70,11 +146,36 @@ const CashSummaryLedgerwise = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+             if (exportCell != undefined) {
+               const balance = cellElement.data?.balance;
+               const isDebit = balance >= 0;
+               const value =
+                 balance == null
+                   ? ""
+                   : balance < 0
+                   ? getFormattedValue(-1 * balance) + " Cr"
+                   : getFormattedValue(balance) + " Dr";
+               return {
+                 ...exportCell,
+                 text: value,
+                 bold: true,
+                 alignment: "right",
+                 textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
+                 font: {
+                   ...exportCell.font,
+                   color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
+                   size: 15,
+                   Bold:true
+                 },
+               };
+             }
+             else {
+              return(<span className={`${cellElement.data.particulars==="TOTAL" ||cellElement.data.particulars==="Opening Balance"? 'font-bold text-[#DC143C]' : ''}`}>
+                {`${cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}
+                 ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
+               </span>)
+              }}
     },
   ];
   return (

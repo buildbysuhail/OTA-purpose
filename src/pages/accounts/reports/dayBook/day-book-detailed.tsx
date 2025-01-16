@@ -219,8 +219,8 @@ const DayBookDetailed = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
+                ? getFormattedValue(-1 * balance)+'Cr'
+                : getFormattedValue(balance)+'Dr';
 
           return {
             ...exportCell,

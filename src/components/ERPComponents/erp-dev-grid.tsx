@@ -997,7 +997,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 const renderResult = column.cellRender(
                   { data: options.gridCell.data },
                   options.gridCell,
-                  undefined,
+                  filter,
                   options.pdfCell
                 );
 
@@ -1120,7 +1120,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 const renderResult = column.cellRender ? column.cellRender(
                   { data: options.gridCell.data },
                   options.gridCell,
-                  undefined,
+                  filter,
                   options.excelCell.style
                 ): undefined;
 
@@ -1129,8 +1129,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 let isValidReactElement = React.isValidElement(renderResult);
 debugger
                 if (isDefined && isObject && !isValidReactElement) {
-                  options.excelCell.style = renderResult;
+                  options.excelCell.style = {
+                    ...renderResult,
+                    alignment:renderResult.alignmentExcel
+                  };
                   options.excelCell.value = renderResult.text;
+                
                 } else {
                   options.excelCell = options.excelCell; // Retain the original value
                 }
@@ -1503,7 +1507,7 @@ debugger
                           );
                         }
                         if (column.cellRender) {
-                          return column.cellRender(cellElement, cellInfo);
+                          return column.cellRender(cellElement, cellInfo, filter);
                         }
                       }
                 }

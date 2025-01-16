@@ -85,8 +85,8 @@ const PaymentReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color: isDebit ? "#129151" : "#DC143C",
-              size: 20,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
             }
           } : undefined;
         }
@@ -139,6 +139,7 @@ const PaymentReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' :'',
             font: {
               ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
               size: 15,
             },
           };

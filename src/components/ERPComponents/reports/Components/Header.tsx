@@ -59,10 +59,10 @@ const Header = () => {
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />
-          <h3 className="text-base font-medium">Settings</h3>
+          <h3 className=" dark:!text-dark-text text-base font-medium">Settings</h3>
         </div>
         <div
-          className="flex gap-1 items-center py-1 px-2 dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-md border cursor-pointer"
+          className="flex gap-1 items-center py-1 px-2 dark:!text-dark-text dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-md border cursor-pointer"
           onClick={() => {
             dispatch({ type: "minimize", minimize: false });
             setTimeout(() => {

@@ -184,7 +184,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         border = isFocused || isHovered
           ? `rgb(${inputBoxState?.borderFocus})`
           : `rgb(${inputBoxState?.borderColor})`;
-        bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``;
+          // bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : `${inputBoxState?.inputBgColor? `!rgb(${inputBoxState?.inputBgColor})`:``}`;
+          bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : inputBoxState?.inputBgColor ? `rgb(${inputBoxState?.inputBgColor})` : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);
@@ -660,12 +661,30 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   borderBottomLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
                   borderTopRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
                   borderBottomRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
-                  backgroundColor: bgColor,
+                  backgroundColor:bgColor,
                   paddingRight: type === "number" ? "2rem" : undefined,
                   ...(!prefix && !suffix && {
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
                 }}
+                // style={{
+                //   height,
+                //   fontSize,
+                //   fontWeight,
+                //   color,
+                //   borderColor: borderStyles,
+                //   outline: "none",
+                //   transition: "border-color 0.2s ease-in-out",
+                //   borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
+                //   borderBottomLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
+                //   borderTopRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
+                //   borderBottomRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
+                //   backgroundColor: bgCol, // Use the computed background color
+                //   paddingRight: type === "number" ? "2rem" : undefined,
+                //   ...(!prefix && !suffix && {
+                //     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                //   }),
+                // }}
                 className={`form-control ${inputClassName} ${appState.mode == "dark" ? "!bg-[#313334]" : ""} placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                 onWheel={(e) => {
                   if (type === "number") {

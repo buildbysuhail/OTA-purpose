@@ -545,7 +545,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           isFocused || isHovered
             ? `rgb(${inputBoxState?.borderFocus})`
             : `rgb(${inputBoxState?.borderColor})`;
-        bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : ``;
+            bgCol = isFocused ? `rgb(${inputBoxState?.focusBgColor})` : inputBoxState?.inputBgColor ? `rgb(${inputBoxState?.inputBgColor})` : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);

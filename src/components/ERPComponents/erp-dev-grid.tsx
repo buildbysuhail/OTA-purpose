@@ -1116,26 +1116,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 (x) => x.dataField == options.gridCell.column.dataField
               );
              
-              if (column && column.cellRender) {
-                const renderResult = column.cellRender(
+              if (column ) {
+                const renderResult = column.cellRender ? column.cellRender(
                   { data: options.gridCell.data },
                   options.gridCell,
                   undefined,
-                  options.excelCell
-                );
+                  options.excelCell.style
+                ): undefined;
 
                 let isDefined = renderResult !== undefined;
                 let isObject = typeof renderResult === "object";
                 let isValidReactElement = React.isValidElement(renderResult);
-
+debugger
                 if (isDefined && isObject && !isValidReactElement) {
-                  options.excelCell = {
-                    ...options.excelCell,
-                    style: renderResult
-                  } 
+                  options.excelCell.style = renderResult;
+                  options.excelCell.value = renderResult.text;
                 } else {
                   options.excelCell = options.excelCell; // Retain the original value
                 }
+                // options.excelCell.font = { color: { argb: 'FF0000FF' }, underline: true };
               }
             };
 

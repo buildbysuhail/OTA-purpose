@@ -77,17 +77,46 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${
-            cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-[#DC143C] text-lg"
-              : ""
-          }`}
-        >
-          {cellElement.data.particulars}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 20,
+            }
+          } : undefined;
+        }
+        else {
+          return(<span
+            className={`${
+              cellElement.data.particulars === "TOTAL"
+                ? "font-bold text-[#DC143C]"
+                : ""
+            }`}
+          >
+            {cellElement.data.particulars}
+          </span>)
+        
+          }},
     },
     {
       dataField: "debit",
@@ -97,17 +126,36 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${
-            cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-[#DC143C] text-lg"
-              : ""
-          }`}
-        >
-          {cellElement.data.debit}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+              ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
+              :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${ cellElement.data?.debit == null ? '0' : cellElement.data.debit < 0 ?  (-1* cellElement.data.debit) :cellElement.data.particulars === "TOTAL" ?
+                getFormattedValue(cellElement.data.debit):cellElement.data.debit}`}
+         </span>)}
+      }
     },
     {
       dataField: "credit",
@@ -117,17 +165,37 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${
-            cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-[#DC143C] text-lg"
-              : ""
-          }`}
-        >
-          {cellElement.data.credit}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
+                :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return(     <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${ cellElement.data?.credit == null ? '0' : cellElement.data.credit < 0 ?  (-1* cellElement.data.credit) :cellElement.data.particulars === "TOTAL" ?
+               getFormattedValue(cellElement.data.credit):cellElement.data.credit}`}
+        </span>)
+        }
+          }
     },
     {
       dataField: "balance",
@@ -138,29 +206,52 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       visible:false,
       width: 150,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-          className={`${
-            cellElement.data.particulars === "TOTAL"
-              ? "font-bold text-[#DC143C] text-lg"
-              : ""
-          }`}
-        >
-          {`${
-            cellElement.data?.balance == 0 || cellElement.data?.balance == null
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
               ? ""
-              : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance)
-              : getFormattedValue(cellElement.data.balance)
-          } ${
-            cellElement.data?.balance == 0 || cellElement.data?.balance == null
-              ? ""
-              : cellElement.data?.balance >= 0
-              ? "Dr"
-              : "Cr"
-          }`}
-        </span>
-      ),
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span
+            className={`${
+              cellElement.data.particulars === "TOTAL"
+                ? "font-bold text-[#DC143C]"
+                : ""
+            }`}
+          >
+            {`${
+              cellElement.data?.balance == 0 || cellElement.data?.balance == null
+                ? ""
+                : cellElement.data.balance < 0
+                ? getFormattedValue(-1 * cellElement.data.balance)
+                : getFormattedValue(cellElement.data.balance)
+            } ${
+              cellElement.data?.balance == 0 || cellElement.data?.balance == null
+                ? ""
+                : cellElement.data?.balance >= 0
+                ? "Dr"
+                : "Cr"
+            }`}
+          </span>)
+          }}
     },
   ];
   return (

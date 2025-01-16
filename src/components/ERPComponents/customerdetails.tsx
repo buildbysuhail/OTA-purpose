@@ -165,11 +165,14 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   ];
 
   const customerName = {
-    user: 'polosys'
+    user: "polosys",
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 overflow-auto " ref={customerDetailsRef}>
+    <div
+      className="max-w-2xl mx-auto p-4 overflow-auto "
+      ref={customerDetailsRef}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -180,9 +183,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             ></img>
           </div>
           <div>
-            <div className="text-sm text-black">
-              {ledgerData?.partyName}
-            </div>
+            <div className="text-sm text-black">{ledgerData?.partyName}</div>
             <div className="flex items-center gap-1">
               <span className="font-medium">{ledgerData?.partyCategory}</span>
               {/* <h6 className="text-sm text-gray-600">{customerName.user}</h6> */}
@@ -196,7 +197,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             setIsOpen(false);
           }}
         >
-          <X className="h-5 w-5" />
+          <X className="w-[22px] h-[22px] p-1 rounded-full text-[12px] hover:shadow-lg transition-all duration-300 ease-in-out" />
         </button>
       </div>
 
@@ -230,49 +231,59 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {ledgerData?.partyType == "Supp" ||
             (ledgerData?.partyType == "Cust" && (
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center gap-2 text-amber-500 mb-1">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm">Receivables</span>
-                  </div>
-                  <div className="text-xl text-black font-semibold">
-                    {getFormattedValue(ledgerData?.outstandingReceivables)}
-                  </div>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm">Total Sales Amount</span>
-                  </div>
-                  <div className="text-xl text-black font-semibold">
-                    {getFormattedValue(ledgerData?.totalSalesAmount)}
+                <div className="p-3 border rounded-lg">
+                  <div className="flex flex-col justify-center items-center gap-2 text-amber-500 mb-1">
+                    <AlertTriangle className="h-3 w-3" />
+                    <span className="text-[12px] text-gray-600">
+                      Receivables
+                    </span>
+                    <p className="text-[16px] text-black font-semibold">
+                      {getFormattedValue(ledgerData?.outstandingReceivables)}
+                    </p>
                   </div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm">Total Purchase Amount</span>
-                  </div>
-                  <div className="text-xl text-black font-semibold">
-                    {getFormattedValue(ledgerData?.totalPurchaseAmount)}
-                  </div>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm">Total Sales Count</span>
-                  </div>
-                  <div className="text-xl text-black font-semibold">
-                    {ledgerData?.totalSalesCount}
+                <div className="p-3 border rounded-lg">
+                  <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span className="text-[12px] text-gray-600">
+                      Total Sales Amount
+                    </span>
+                    <p className="text-[16px] text-black font-semibold">
+                      {getFormattedValue(ledgerData?.totalSalesAmount)}
+                    </p>
                   </div>
                 </div>
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm">Total Purchase Count</span>
+                <div className="p-3 border rounded-lg">
+                  <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span className="text-[12px] text-gray-600">
+                      Total Purchase Amount
+                    </span>
+                    <p className="text-[16px] text-black font-semibold">
+                      {getFormattedValue(ledgerData?.totalPurchaseAmount)}
+                    </p>
                   </div>
-                  <div className="text-xl text-black font-semibold">
-                    {ledgerData?.totalPurchaseCount}
+                </div>
+                <div className="p-3 border rounded-lg">
+                  <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span className="text-[12px] text-gray-600">
+                      Total Sales Count
+                    </span>
+                    <p className="text-[16px] text-black font-semibold">
+                      {ledgerData?.totalSalesCount}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-3 border rounded-lg">
+                  <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span className="text-[12px] text-gray-600">
+                      Total Purchase Count
+                    </span>
+                    <p className="text-[16px] text-black font-semibold">
+                      {ledgerData?.totalPurchaseCount}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -286,68 +297,88 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Party Type</p>
-                      <div className="w-1/2">{ledgerData?.partyType}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">Party Type</p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.partyType}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Party Category</p>
-                      <div className="w-1/2">{ledgerData?.partyCategory}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        Party Category
+                      </p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.partyCategory}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Price Category</p>
-                      <div className="w-1/2">{ledgerData?.priceCategory}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        Price Category
+                      </p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.priceCategory}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Tax Number</p>
-                      <div className="w-1/2">{ledgerData?.taxNumber}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">Tax Number</p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.taxNumber}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Credit Amount</p>
-                      <div className="w-1/2">
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        Credit Amount
+                      </p>
+                      <div className="w-1/2 text-[12px] text-left">
                         {getFormattedValue(ledgerData?.creditAmount)}
                       </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Credit Days</p>
-                      <div className="w-1/2">{ledgerData?.creditDays}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">Credit Days</p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.creditDays}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Billwise Applicable</p>
-                      <div className="w-1/2">
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        Billwise Applicable
+                      </p>
+                      <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.billwiseApplicable}
                       </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Route Name</p>
-                      <div className="w-1/2">{ledgerData?.routeName}</div>
+                      <p className="text-[#8c8c8c] text-[12px]">Route Name</p>
+                      <div className="w-1/2 text-[12px] text-left">
+                        {ledgerData?.routeName}
+                      </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Created Date</p>
-                      <div className="w-1/2">
+                      <p className="text-[#8c8c8c] text-[12px]">Created Date</p>
+                      <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.createdDate).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c]">Expiry Date</p>
-                      <div className="w-1/2">
+                      <p className="text-[#8c8c8c] text-[12px]">Expiry Date</p>
+                      <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.expiryDate).toLocaleDateString()}
                       </div>
                     </div>
@@ -360,10 +391,12 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {/* Billing Details */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-            <h2 className="text-lg text-black font-semibold text-start">Billing Address</h2>
+              <h2 className="text-lg text-black font-semibold text-start">
+                Billing Address
+              </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-black flex flex-col items-start space-y-1">
+                  <div className="text-gray-700 font-medium text-[12px] flex flex-col items-start space-y-1">
                     {ledgerData?.billingAddress?.length > 0 ? (
                       ledgerData?.billingAddress?.map(
                         (line: any, index: Key | null | undefined) => (
@@ -382,10 +415,12 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {/* Shipping Address */}
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg text-black font-semibold text-start">Shipping Address</h2>
+              <h2 className="text-lg text-black font-semibold text-start">
+                Shipping Address
+              </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-sm text-black flex flex-col items-start space-y-1">
+                  <div className="text-[12px] text-gray-700 font-medium flex flex-col items-start space-y-1">
                     {ledgerData?.shippingAddress?.length > 0 ? (
                       ledgerData.shippingAddress.map(
                         (line: any, index: Key | null | undefined) => (
@@ -400,7 +435,6 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
               </div>
             </div>
           </div>
-          
 
           {/* Address */}
           {/* <div>
@@ -439,24 +473,29 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {activities.map((activity) => {
             const config = getActivityConfig(activity.type);
             return (
-              <div key={activity.id} className="flex items-start gap-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors">
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 `}
-            >
-              <div className={config.iconColor}>{config.icon}</div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-sm text-gray-900">{activity.user}</span>
-                <span className="text-xs text-gray-500">
-                  {activity.timestamp}
-                </span>
+              <div
+                key={activity.id}
+                className="flex items-start gap-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors"
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 `}
+                >
+                  <div className={config.iconColor}>{config.icon}</div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-sm text-gray-900">
+                      {activity.user}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {activity.timestamp}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-0.5 leading-tight">
+                    {activity.message}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-gray-600 mt-0.5 leading-tight">
-                {activity.message}
-              </p>
-            </div>
-          </div>
             );
           })}
         </div>

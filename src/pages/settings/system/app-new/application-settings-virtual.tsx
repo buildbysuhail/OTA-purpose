@@ -50,7 +50,7 @@ const LayoutToggle = ({
   return (
     <div className="flex items-center justify-end">
       <label className="inline-flex items-center cursor-pointer">
-        <span className="mr-2 text-sm">
+        <span className="mr-2 text-sm dark:!text-dark-text ">
           {" "}
           {isCompactView ? "Compact View" : "Expanded View"}{" "}
         </span>
@@ -914,7 +914,7 @@ export default function SettingsPage() {
         </div>
       </main>
 
-      <div className={`flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
+      <div className={`border-t border-solid dark:border-dark-border flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg  bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
         <ERPButton
           title={t("save_settings")}
           variant="primary"

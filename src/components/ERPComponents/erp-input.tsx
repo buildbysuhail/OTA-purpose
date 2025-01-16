@@ -581,7 +581,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           {!noLabel && (
             <div className="flex justify-between">
               <label
-                className={`capitalize text-left rtl:text-right ${appState?.mode == "dark" ? "#000" : `rgb(${inputBoxState?.labelColor})`} ${labelClassName}`}
+                className={`capitalize text-left rtl:text-right dark:!text-dark-label ${appState?.mode == "dark" ? "#000" : `rgb(${inputBoxState?.labelColor})`} ${labelClassName}`}
                 style={{
                   fontSize: _customSize
                     ? _customSize === "sm"

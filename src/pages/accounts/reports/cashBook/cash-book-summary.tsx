@@ -9,6 +9,7 @@ import { ActionType } from "../../../../redux/types";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 import CashBookMonthWise from "./cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import dxColorBox from "devextreme/ui/color_box";
 
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ const CashBookSummary = () => {
         filter: any,
         exportCell: any
       ) => {
+        debugger;
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
@@ -38,28 +40,30 @@ const CashBookSummary = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
-
-              return exportCell != undefined ?  {
-                ...exportCell,
-                text:cellInfo.value,
-                bold: true,
-                alignment: "right",
-                font: {
-                  ...exportCell.font,
-                  color: isDebit ? "#129151" : "#DC143C",
-                  size: 15,
-                }
-              } : undefined;
-        } else {
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 15,
+            }
+            
+          } : undefined;
+        }
+        else {
           return cellElement.data.ledgerName === "TOTAL" ? (
             <span
-              className={`${
-                cellElement.data.ledgerName === "TOTAL"
+              className={`${cellElement.data.ledgerName === "TOTAL"
                   ? "font-bold text-[#DC143C]"
                   : ""
-              }`}
+                }`}
             >
               {cellElement.data.ledgerName}
             </span>
@@ -79,12 +83,38 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+
+        }
+      },
     },
     {
       dataField: "credit",
@@ -93,12 +123,37 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              ...exportCell.font,
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+        }
+      },
     },
     {
       dataField: "balance",
@@ -107,18 +162,43 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          </span>)
+        }
+      },
     },
     {
       dataField: "branch",
       caption: t("branch"),
       dataType: "string",
-      showInPdf:true,
+      showInPdf: true,
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -146,16 +226,16 @@ const CashBookSummary = () => {
                   filterInitialData={CashBookReportFilterInitialState}
                   reload={true}
                   hideGridAddButton={true}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   childPopupProps={{
-                    content: <CashBookMonthWise  />,
+                    content: <CashBookMonthWise />,
                     title: t("acc_group_monthview"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0
-                    
+
                   }}
                   postData={
                     { ...filter }}

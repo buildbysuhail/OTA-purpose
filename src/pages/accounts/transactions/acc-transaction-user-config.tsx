@@ -206,9 +206,9 @@ export const AccTransactionUserConfig = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center my-1">
-                  <label htmlFor="pageBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
+            <div className="grid grid-cols-2 gap-6 p-4 my-2">
+            <div className="flex items-center ">
+                  <label htmlFor="outerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                     Page Background Color
                   </label>
                   <div className="ti-form-radio">
@@ -233,6 +233,36 @@ export const AccTransactionUserConfig = () => {
                     </div>
                   </div>
                 </div>
+
+                <div className="flex items-center">
+                  <label htmlFor="innerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
+                    Form Background Color
+                  </label>
+                  <div className="ti-form-radio">
+                    <div
+                      className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                      style={{
+                        backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
+                      }}
+                    >
+                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                      <input
+                        type="color"
+                        value={formState.userConfig?.innerPageBg}
+                        onChange={(e) => {
+                          const rgb = hexToRgb(e.target?.value);
+                          if (rgb) {
+                            handleFieldChange("innerPageBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
+                          }
+                        }}
+                        className="opacity-0 w-full h-full cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div className="flex flex-col">
+              
             <p className="switcher-style-head ">Input Box Style:</p>
             <InputBoxStyling
             isInputBgColor

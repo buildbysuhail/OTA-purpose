@@ -1818,6 +1818,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="xl:w-[170px] lg:w-[250px]">
                 {formState.formElements.hasDiscount.visible && (
                   <ERPCheckbox
+                  localInputBox={formState?.userConfig.inputBoxStyle}
                     id="hasDiscount"
                     className="pt-[10px] pr-[10px]"
                     label={t(formState.formElements.hasDiscount.label)}
@@ -2660,6 +2661,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         <div className=" flex items-center gap-4">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
+            localInputBox={formState?.userConfig.inputBoxStyle}
               id="printOnSave"
               label={t(formState.formElements.printOnSave.label)}
               checked={formState.printOnSave}
@@ -2678,6 +2680,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           )}
           {formState.formElements.printPreview.visible && (
             <ERPCheckbox
+            localInputBox={formState?.userConfig.inputBoxStyle}
               id="printPreview"
               label={t(formState.formElements.printPreview.label)}
               checked={formState.printPreview}
@@ -2697,6 +2700,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           {(voucherType == "BP" || voucherType == "CQP") &&
             formState.formElements.printCheque.visible && (
               <ERPCheckbox
+              localInputBox={formState?.userConfig.inputBoxStyle}
                 id="printCheque"
                 label={t(formState.formElements.printCheque.label)}
                 checked={formState.printCheque}
@@ -2715,6 +2719,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             )}
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
+            localInputBox={formState?.userConfig.inputBoxStyle}
               id="keepNarration"
               label={t(formState.formElements.keepNarration.label)}
               checked={formState.keepNarration}

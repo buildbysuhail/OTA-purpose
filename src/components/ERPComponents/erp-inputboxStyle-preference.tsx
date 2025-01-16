@@ -732,6 +732,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
         <p className="switcher-style-head ">Radio & Check Box:</p>
         <div className="grid grid-cols-2 gap-3 items-center switcher-style">
           <ERPRadio
+          localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}
@@ -745,6 +746,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             label="Demo Radio Button"
           />
           <ERPCheckbox
+          localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}

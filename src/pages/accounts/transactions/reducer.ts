@@ -51,7 +51,7 @@ const accTransactionSlice = createSlice({
         allowSalesCounter,
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
-      (state.transaction.master.accTransMasterID = 0),
+      (state.transaction.master.accTransactionMasterID = 0),
         (state.row.ledgerCode = "");
       state.transaction.attachments = [];
       state.row.ledgerId = 0;

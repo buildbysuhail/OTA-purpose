@@ -59,9 +59,9 @@ const TransactrionHistoryReportFilter = ({ getFieldProps, handleFieldChange }: a
 }
 export default TransactrionHistoryReportFilter;
 export const TransactrionHistoryReportFilterInitialState = {
-  dateFrom: moment().subtract(10, 'days').toDate(),
+  dateFrom: moment().local().subtract(10, 'days').toDate(),
   dateTo: new Date(),
-  transDateFrom: moment().subtract(90, 'days').toDate(),
+  transDateFrom: moment().local().subtract(90, 'days').toDate(),
   transDateTo: new Date(),
   isEdited: true,
   deleted: false,

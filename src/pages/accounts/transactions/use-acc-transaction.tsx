@@ -86,7 +86,7 @@ export const useAccTransaction = (
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const softwareDate = useAppSelector(
-    (state: RootState) => state.AppState.softwareDate
+    (state: RootState) => state.ClientSession.softwareDate
   );
   const { printVoucher, printCheque, printPaymentReceiptAdvice } =
   useAccPrint();
@@ -161,7 +161,7 @@ export const useAccTransaction = (
     }
   };
 
-  const { hasRight } = useUserRights();
+  const { hasRight, hasBlockedRight  } = useUserRights();
   const loadAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
     voucherNumber?: number
@@ -173,8 +173,9 @@ export const useAccTransaction = (
     if (tmpVoucherNumber <= 0) {
       return false;
     }
+    debugger
     // clearControlForNew();
-    undoEditMode();
+    await undoEditMode(formState.isEdit, formState.transaction.master.accTransactionMasterID);
     try {
       const params = {
         VoucherNumber: tmpVoucherNumber,
@@ -195,12 +196,15 @@ export const useAccTransaction = (
   };
  
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  async function undoEditMode() {
-    if (formState.isEdit) {
+  async function undoEditMode(
+    isEdit: boolean,
+    transactionMasterId: number
+  ): Promise<any> {
+    if (isEdit) {
       try {
         const result = await updateTransactionEditMode(
-          "A",
-          formState.transaction.master.accTransMasterID,
+          "A", // Action type
+          transactionMasterId,
           ""
         );
         console.log("Undo Edit Mode Result:", result);
@@ -288,7 +292,8 @@ export const useAccTransaction = (
       userSession,
       clientSession,
       applicationSettings,
-      hasRight
+      undefined,
+      hasBlockedRight 
     );
     if (!validateTransDate.valid) {
       ERPAlert.show({
@@ -362,7 +367,7 @@ export const useAccTransaction = (
   const attachMaster = (): AccTransactionMaster => {
     const master = { ...formState.transaction.master };
 
-    master.accTransMasterID = formState.isEdit ? master.accTransMasterID : 0;
+    master.accTransactionMasterID = formState.isEdit ? master.accTransactionMasterID : 0;
     // master.bankDate = new Date().toISOString();
     master.checkBouncedDate = new Date().toISOString();
     master.dueDate = master.transactionDate;
@@ -483,7 +488,7 @@ export const useAccTransaction = (
           }
         }
         if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
-          clearControls();
+          clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
         } else {
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
@@ -521,8 +526,9 @@ export const useAccTransaction = (
       );
     }
   };
-  const clearControls = async () => {
-    await undoEditMode();
+  const clearControls = async (isEdit: boolean, accTransactionMasterID:number) => {
+    debugger;
+    await undoEditMode(isEdit,accTransactionMasterID);
     dispatch(
       clearState({
         userSession,
@@ -770,7 +776,7 @@ export const useAccTransaction = (
             text: "Sorry You can't Edit Cleared/Bounced PDC....!!",
             icon: "warning",
           });
-          clearControls();
+          // clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
           dispatch(
             updateFormElement({
               fields: {
@@ -785,7 +791,7 @@ export const useAccTransaction = (
 
       // Handle empty row
       if (!row) {
-        clearControls();
+        // clearControls();
         return;
       }
 
@@ -1082,7 +1088,8 @@ export const useAccTransaction = (
       userSession,
       clientSession,
       applicationSettings,
-      hasRight
+      undefined,
+      hasBlockedRight 
     );
     if (!validateTransactionDateRes.valid) {
       ERPAlert.show({
@@ -1106,7 +1113,7 @@ export const useAccTransaction = (
         Urls.get_and_set_transaction_edit_mode,
         {
           transactionType: "A",
-          transactionMasterId: formState.transaction.master.accTransMasterID??0,
+          transactionMasterId: formState.transaction.master.accTransactionMasterID??0,
         }
       );
 
@@ -1163,11 +1170,11 @@ export const useAccTransaction = (
       confirmButtonText: "Yes, delete it!",
       onConfirm: async () => {
         try {
-          if (formState.transaction?.master?.accTransMasterID > 0) {
+          if (formState.transaction?.master?.accTransactionMasterID > 0) {
             const res = await appDispatch(
               deleteAccVoucher({
                 accTransactionMasterID:
-                  formState.transaction?.master?.accTransMasterID,
+                  formState.transaction?.master?.accTransactionMasterID,
                 transactionType: transactionType,
               })
             ).unwrap();
@@ -1181,7 +1188,7 @@ export const useAccTransaction = (
               });
             }
           }
-          clearControls();
+          clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
         } catch (error) {
           console.error("Error deleting voucher:", error);
         }
@@ -1253,7 +1260,7 @@ export const useAccTransaction = (
           fields: {
             voucherPrefix: selectVoucherData.lastPrefix,
             voucherNumber: getVoucherNumber,
-            accTransMasterID: 0,
+            accTransactionMasterID: 0,
             transactionDate: clientSession.softwareDate,
           },
         })
@@ -1266,7 +1273,7 @@ export const useAccTransaction = (
   const unlockVoucher = async () => {
     try {
        await appDispatch(unlockAccTransactionMaster(
-        formState.transaction.master.accTransMasterID
+        formState.transaction.master.accTransactionMasterID
       ))
     } catch (error) {
       console.error("Error creating new voucher:", error);

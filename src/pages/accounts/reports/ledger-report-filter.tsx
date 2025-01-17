@@ -221,7 +221,7 @@ const LedgerReportFilter = ({
 export default LedgerReportFilter;
 export const LedgerReportFilterInitialState = {
   // dateFrom: new Date(-45), // Default empty string
-  dateFrom: moment().subtract(45, "days").toDate(),
+  dateFrom: moment().local().subtract(45, "days").toDate(),
   dateTo: new Date(), // Default empty string
   showAll: false, // Default to false
   ledgerCode: "", // Default empty string

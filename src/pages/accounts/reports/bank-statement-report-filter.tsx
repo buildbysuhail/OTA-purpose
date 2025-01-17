@@ -46,7 +46,7 @@ const BankStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) =>
 }
 export default BankStatementReportFilter;
 export const BankStatementReportFilterInitialState = {
-   dateFrom: moment().subtract(30, "days").toDate(),
+   dateFrom: moment().local().subtract(30, "days").toDate(),
   // dateFrom: new Date(),
   dateTo: new Date(),
   bankLedgerID: 0,

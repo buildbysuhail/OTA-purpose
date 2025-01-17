@@ -715,11 +715,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
         // Explicit handling for ISO 8601
         if (format == "Unknown format") {
-          date = moment(dateStr);
+          date = moment(dateStr).local();
         } else if (format === "ISO 8601") {
-          date = moment(dateStr); // ISO 8601 is natively supported
+          date = moment(dateStr).local(); // ISO 8601 is natively supported
         } else {
-          date = moment(dateStr, format);
+          date = moment(dateStr, format).local();
         }
 
         const str = date.format("DD/MM/YYYY");
@@ -1610,7 +1610,7 @@ const _DrillDownCellTemplate = ({
         }}
       >
         {data.column.dataType === "date"
-          ? moment(data.data[field], inputFormat).format("DD/MMM/YYYY") // Change this format as needed
+          ? moment(data.data[field], inputFormat).local().format("DD/MMM/YYYY") // Change this format as needed
           : data.value.toString()}
       </a>
     );

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import moment from "moment";
 
 export interface ClientSessionModel {
   isDemoVersion: boolean;
@@ -9,21 +10,25 @@ export interface ClientSessionModel {
 export const initialState: ClientSessionModel = {
   isDemoVersion: true,
   demoExpiryDate: "",
-  softwareDate: ""
+  softwareDate: "",
 };
 const clientSessionSlice = createSlice({
-  name: "userSession",
+  name: "clientSession",
   initialState,
   reducers: {
     setClientSession: (state, action: PayloadAction<ClientSessionModel>) => {
       return {
         ...action.payload,
-        softwareDate: new Date().toISOString()
+        softwareDate: moment().local().format("DD/MM/YYYY"),
       };
+    },
+
+    setSoftwareDate: (state, action: PayloadAction<string>) => {
+      state.softwareDate = action.payload;
     },
   },
 });
 
-export const { setClientSession } = clientSessionSlice.actions;
+export const { setClientSession, setSoftwareDate } = clientSessionSlice.actions;
 
 export default clientSessionSlice.reducer;

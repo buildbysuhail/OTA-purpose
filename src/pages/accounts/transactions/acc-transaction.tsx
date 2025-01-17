@@ -1101,7 +1101,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        clearControls();
+                        clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
                       }}
                     >
                       <Delete className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />

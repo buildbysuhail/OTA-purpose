@@ -48,6 +48,47 @@ export const useUserRights = () => {
 
     return result;
   };
+  const hasBlockedRight = (formCode: string): boolean => {
+    let result = false;
+  
+    const userTypeCode = userSession.userTypeCode;
+    const branchId = userSession.currentBranchId;
+    const userId = userSession.userId;
+  
+    // Return false for "BA" or "CA" user types
+    if (userTypeCode === "BA" || userTypeCode === "CA") {
+      return false;
+    }
+  
+    try {
+      // Check if userRights data exists
+      let dtUserRights: UserTypeRights[] = userRights;
+  
+      if (dtUserRights.length > 0) {
+        // Filter user rights for the given FormCode
+        const filteredRows = dtUserRights.filter(
+          (row: any) => row.formCode === formCode
+        );
+  
+        if (
+          filteredRows.length > 0 &&
+          filteredRows[0]?.userRights?.includes("B")
+        ) {
+          result = true;
+        } else {
+          result = false;
+        }
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error("Error checking blocked rights:", error);
+      result = false;
+    }
+  
+    return result;
+  };
+  
   const getAllowedFormCodes = (
     formCodes: string[],
     action: UserAction
@@ -77,5 +118,5 @@ export const useUserRights = () => {
       return [];
     }
   };
-  return { hasRight, getAllowedFormCodes };
+  return { hasRight, getAllowedFormCodes, hasBlockedRight };
 };

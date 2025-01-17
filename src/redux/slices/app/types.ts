@@ -153,7 +153,7 @@ export interface inputBox {
   defaultBgColor?: string;
 }
 export interface AppInitialState {
-  mode: string;
+  // mode: string;
   syncing: boolean;
   appState: AppState;
 }

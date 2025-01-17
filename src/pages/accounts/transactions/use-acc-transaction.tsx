@@ -600,6 +600,7 @@ export const useAccTransaction = (
         if (formState.isRowEdit != true) {
           if (formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
+              debugger;
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
@@ -615,6 +616,7 @@ export const useAccTransaction = (
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
+            debugger;
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -891,6 +893,7 @@ export const useAccTransaction = (
       handleLedgerIdKeyDown(key);
     } else if (field === "bankDate") {
       if (isEnterKey(key)) {
+        debugger;
         dispatch(
           accFormStateHandleFieldChange({ fields: { showbillwise: true } })
         );
@@ -1002,6 +1005,7 @@ export const useAccTransaction = (
         formState.formElements.btnBillWise.visible == true
       ) {
         if (!isPaymentReceipt || !isChequeVoucher) {
+          debugger;
           // Handle billwise click
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: true } })
@@ -1336,6 +1340,7 @@ export const useAccTransaction = (
           case "JV":
             drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
         }
+        debugger;
         if (
           formState.showbillwise === true &&
           formState.row.ledgerId &&
@@ -1368,16 +1373,7 @@ export const useAccTransaction = (
         }
         else
         {
-          if(applicationSettings.accountsSettings?.billwiseMandatory && formState.row.billwiseDetails != "") {
-            dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
-          }
-          if(formState.formElements.costCentreId.visible == false) {
-            addOrEditRow();
-            focusLedgerCode();
-            
-          } else {
-            focusCostCenterRef();
-          }
+          
         }
       };
   
@@ -1413,5 +1409,7 @@ export const useAccTransaction = (
     createNewVoucher,
     unlockVoucher,
     billwiseChanged,
+    focusCostCenterRef,
+    focusLedgerCode
   };
 };

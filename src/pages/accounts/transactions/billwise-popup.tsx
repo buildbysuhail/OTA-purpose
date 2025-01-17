@@ -31,6 +31,7 @@ import {
 } from "./reducer";
 import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
+import { APIClient } from "../../../helpers/api-client";
 
 interface BillwiseProps {
   onSave?: (
@@ -48,7 +49,7 @@ interface BillwiseProps {
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
 }
-
+const api = new APIClient();
 const BillwiseComponent = ({
   onSave,
   onClose,
@@ -191,49 +192,47 @@ const BillwiseComponent = ({
     });
     setStore(formattedData);
   }, [showAllTransactions]);
-  useEffect(() => {
-    const loadBillwiseTransactions = async () => {
-      debugger;
-      try {
-        // Replace with your actual API call
-        const response = await fetch(
-          `/api/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`
-        );
-        const data = await response.json();
+  // useEffect(() => {
+  //   const loadBillwiseTransactions = async () => {
+  //     debugger;
+  //     try {
+  //       // Replace with your actual API call
+  //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
+  //       const data = response;
 
-        let lastIndex = 0;
-        const formattedData = data?.map((row: any, index: number) => {
-          if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
-            const _it = {
-              ...row,
-              slNo: lastIndex + 1,
-              isSelected: false,
-              billwiseAmount: 0,
-            };
-            lastIndex = lastIndex + 1;
-            return _it;
-          } else {
-            return {
-              ...row,
-              slNo: undefined,
-              isSelected: false,
-              billwiseAmount: 0,
-            };
-          }
-        });
+  //       let lastIndex = 0;
+  //       const formattedData = data?.map((row: any, index: number) => {
+  //         if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
+  //           const _it = {
+  //             ...row,
+  //             slNo: lastIndex + 1,
+  //             isSelected: false,
+  //             billwiseAmount: 0,
+  //           };
+  //           lastIndex = lastIndex + 1;
+  //           return _it;
+  //         } else {
+  //           return {
+  //             ...row,
+  //             slNo: undefined,
+  //             isSelected: false,
+  //             billwiseAmount: 0,
+  //           };
+  //         }
+  //       });
 
-        setStore(formattedData);
+  //       setStore(formattedData);
 
-        if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-          generateGridFromBillwiseString(formState.row.billwiseDetails);
-        }
-      } catch (error) {
-        console.error("Error loading billwise transactions:", error);
-      }
-    };
+  //       if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+  //         generateGridFromBillwiseString(formState.row.billwiseDetails);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error loading billwise transactions:", error);
+  //     }
+  //   };
 
-    loadBillwiseTransactions();
-  }, []);
+  //   loadBillwiseTransactions();
+  // }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
     const rows = billwiseStr.split("|");
@@ -311,9 +310,9 @@ const BillwiseComponent = ({
     return true;
   };
   const closeBillwise = () => {
-    dispatch(
-      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
-    );
+    // dispatch(
+    //   accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+    // );
 
     onClose && onClose();
   };

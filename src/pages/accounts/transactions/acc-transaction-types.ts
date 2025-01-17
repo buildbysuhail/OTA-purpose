@@ -85,6 +85,8 @@ export interface FormElementState {
   disabled: boolean;
   label: string;
   reload?: boolean;
+  accLedgerType?: number;
+  [key: string]: any; 
 }
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
@@ -263,6 +265,7 @@ export interface AccTransactionRow {
   projectSiteId: number;
   narration: string;
   currencyId: number;
+  exchangeRate: number;
   adjAmount?: number;
   bankDate: string;
   chqDate: string;
@@ -330,6 +333,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   billwiseDetails: "",
   chqDate: "",
   groupName: "",
+  exchangeRate: 0
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
@@ -471,7 +475,7 @@ export interface AccTransactionFormState {
   userConfig: AccUserConfig;
   formElements: FormElementsState
 }
-export const initialFormElements = {
+export const initialFormElements:{ [key: string]: FormElementState } = {
   foreignCurrency: {
     visible: true,
     disabled: false,

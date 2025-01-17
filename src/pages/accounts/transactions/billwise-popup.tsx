@@ -32,6 +32,7 @@ import {
 import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { APIClient } from "../../../helpers/api-client";
+import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 
 interface BillwiseProps {
   onSave?: (
@@ -65,6 +66,9 @@ const BillwiseComponent = ({
   const [gridHeight, setGridHeight] = useState<number>(500);
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
+  );
+  const ledgerData = useAppSelector(
+    (state: RootState) => state.AccTransaction.ledgerData
   );
 
   const [isFromCashTender, setIsFromCashTender] = useState<boolean | undefined>(
@@ -410,6 +414,50 @@ const BillwiseComponent = ({
       }
     }
   };
+  const handleAutoPost = () => {
+    let remainingAmount = formState.row.amount??0;
+    let i = 0;
+    const updatedBills = [JSON.parse(JSON.stringify(formState.transaction.details))];
+    
+    // First pass: Handle DR/CR transactions
+    updatedBills.forEach((bill) => {
+      if (bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase()) {
+        remainingAmount += (2 * parseFloat(bill.balance));
+      }
+    });
+
+    // Second pass: Allocate amounts
+    while (remainingAmount > 0 && i < updatedBills.length) {
+      const bill = updatedBills[i];
+      const billBalance = parseFloat(bill.balance);
+
+      if (billBalance <= remainingAmount) {
+        // Full payment
+        bill.amountToSet = billBalance;
+        bill.balanceAfter = 0;
+        remainingAmount -= billBalance;
+      } else {
+        // Partial payment
+        bill.amountToSet = remainingAmount;
+        bill.balanceAfter = billBalance - remainingAmount;
+        remainingAmount = 0;
+      }
+      i++;
+    }
+
+    // setBills(updatedBills);
+    
+    // // Calculate totals
+    // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.amountToSet || 0), 0);
+    
+    // if (Math.round(totalAdjusted * 100) / 100 > Math.round(amount * 100) / 100) {
+    //   alert('Excess adjustment');
+    //   return;
+    // }
+
+    // setShowConfirmDialog(true);
+  };
+
   useEffect(() => {
     setNetAdjustment(calculateNetAdjustment());
   }, [store]);
@@ -419,15 +467,14 @@ const BillwiseComponent = ({
       className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
       elevation={0}
     >
-      <CardHeader></CardHeader>
       <CardContent>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
-                {formState.ledgerData?.imageUrl ? (
+                {formState.ledgerData?.partyPhoto ? (
                   <img
-                    src={formState.ledgerData?.partyPhoto}
+                    src={ledgerData?.partyPhoto || profile}
                     alt="Ledger"
                     className="w-8 h-8 object-cover rounded"
                   />
@@ -442,12 +489,8 @@ const BillwiseComponent = ({
                   {formState.row.ledgerName}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-sm text-gray-600">
-                    {formState.ledgerData?.code || "-"}
-                  </span>
-                  {formState.ledgerData?.isVerified && (
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  )}
+                <span className="font-medium">{ledgerData?.partyCategory}</span>
+                  <CheckCircle2 className="w-4 h-4 text-white " color="green" />
                 </div>
               </div>
             </div>
@@ -469,11 +512,7 @@ const BillwiseComponent = ({
             </p>
           </Item>
         </Toolbar>
-        safvan : {showAllTransactions.toString()}
-        {
-          store?.filter((row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr)
-            .length
-        }
+       
         <DataGrid
           key={"slNo"}
           keyExpr={"slNo"}

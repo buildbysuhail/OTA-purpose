@@ -289,6 +289,7 @@ export const useAccTransaction = (
       });
       return false;
     }
+    debugger
     const validateTransDate = validateTransactionDate(
       new Date(formState.transaction.master.transactionDate),
       false,
@@ -320,6 +321,26 @@ export const useAccTransaction = (
       });
       return false;
     }
+
+    if (formState.transaction.master.voucherType == "MJV") {
+      for (let i = 0; i < formState.transaction.details.length; i++) {
+        const row = formState.transaction.details[i];
+        
+        // Check if debit amount is greater than 0
+        if (Number(row.debit) > 0) {
+            if (formState.firstDebitLedgerID === 0) {
+              formState.firstDebitLedgerID = Number(row.ledgerId || 0);
+            }
+        } else {
+            if (formState.firstCreditLedgerID === 0) {
+              formState.firstCreditLedgerID = Number(row.ledgerId || 0);
+            }
+        }
+        
+        // Break if we found both
+        if (formState.firstCreditLedgerID > 0 && formState.firstDebitLedgerID > 0) break;
+    }
+    }
     if (
       formState.transaction.master.voucherType == "JV" &&
       (formState.transaction.master.drCr == "" ||
@@ -340,12 +361,14 @@ export const useAccTransaction = (
         formState.transaction?.details?.find(
           (x) => x.ledgerId == formState.masterAccountID
         ) != undefined;
+        if(isExist) {
       ERPAlert.show({
         icon: "warning",
         title: "Duplicate Ledger",
         text: "Master Ledger Exists in Row",
       });
-      return isExist ? false : true;
+      return false;
+    }
     }
 
     if (formState.transaction.master.voucherType == "MJV") {
@@ -367,6 +390,85 @@ export const useAccTransaction = (
     return true;
   };
 
+  const attachDetails = (): AccTransactionRow[] => {
+    const details = JSON.parse(
+      JSON.stringify([...formState.transaction.details])
+    );
+    let updatedDetails = [];
+    let debtorID = 0,
+      arra = 0,
+      detailID = 0;
+
+    for (let index = 0; index < details.length; index++) {
+      const element: AccTransactionRow = details[index];
+      if (isNullOrUndefinedOrZero(element.ledgerId)) {
+        break;
+      }
+      element.adjAmount = 0;
+      element.checkBouncedDate = element.bankDate;
+      element.currencyId = 1;
+      element.exchangeRate = 1;
+      element.isDisplay = true;
+      element.isDr = true;
+      switch (formState.transaction.master.voucherType) {
+        case "CP":
+        case "BP":
+        case "CN":
+        case "SV":
+        case "CQP":
+          element.ledgerId = element.ledgerId;  // Preserve original ledgerId
+          element.relatedLedgerID = formState.masterAccountID;
+          break;
+      
+        case "CR":
+        case "BR":
+        case "DN":
+        case "PV":
+        case "CQR":
+          element.relatedLedgerID = element.ledgerId;
+          element.ledgerId = formState.masterAccountID;
+          break;
+      
+        case "JV":
+          if (formState.row.drCr === "Dr") {
+            element.relatedLedgerID = element.ledgerId;
+            element.ledgerId = formState.masterAccountID;
+          } else {
+            element.ledgerId = element.ledgerId;  // Preserve original ledgerId
+            element.relatedLedgerID = formState.masterAccountID;
+          }
+          break;
+      
+        case "OB":
+          if (formState.row.drCr === "Dr") {
+            element.relatedLedgerID = applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
+            element.ledgerId = element.ledgerId;  // Keep original ledger ID
+          } else {
+            element.ledgerId = applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
+            element.relatedLedgerID = element.ledgerId;
+          }
+          break;
+      
+        case "MJV":
+          if (formState.row.drCr === "Dr") {
+            element.ledgerId = element.ledgerId;  // Keep original ledger ID
+            element.relatedLedgerID = formState.firstCreditLedgerID;
+            element.debit = Number(formState.row.amount);
+            element.credit = 0;
+          } else {
+            element.ledgerId = element.ledgerId;  // Keep original ledger ID
+            element.relatedLedgerID = formState.firstCreditLedgerID;
+            element.credit = Number(formState.row.amount);
+            element.debit = 0;
+          }
+          break;
+      }
+      element.particularsLedgerId = element.relatedLedgerID;
+      element.voucherType = formState.transaction.master.voucherType;
+      updatedDetails.push(element);
+    }
+    return updatedDetails;
+  };
   const attachMaster = (): AccTransactionMaster => {
     const master = { ...formState.transaction.master };
 
@@ -474,7 +576,7 @@ export const useAccTransaction = (
     if (validate() == true) {
       const params: AccTransactionData = {
         master: attachMaster(),
-        details: [...formState.transaction.details],
+        details: attachDetails(),
         attachments: [...formState.transaction.attachments],
       };
       const saveRes = await api.postAsync(
@@ -518,6 +620,10 @@ export const useAccTransaction = (
           // Dispatch the update action with all the required fields
           dispatch(updateFormElement({ fields: fieldsToUpdate }));
         }
+        ERPAlert.show({
+          icon: "info",
+          title: saveRes.message,
+        });
       } else {
         ERPAlert.show({
           icon: "warning",
@@ -620,7 +726,7 @@ export const useAccTransaction = (
                 })
               );
               return false;
-            } 
+            }
           }
           dispatch(
             accFormStateHandleFieldChange({
@@ -720,11 +826,15 @@ export const useAccTransaction = (
           return false;
         }
         formState.formElements.btnAdd;
-debugger;
+        debugger;
         dispatch(
           accFormStateTransactionDetailsRowAdd({
-            row: {...formState.row,
-              billwiseDetails: billwiseDetails != undefined ? billwiseDetails : formState.row.billwiseDetails
+            row: {
+              ...formState.row,
+              billwiseDetails:
+                billwiseDetails != undefined
+                  ? billwiseDetails
+                  : formState.row.billwiseDetails,
             },
             applicationSettings: applicationSettings,
             exchangeRate: formState.transaction.master.currencyRate ?? 1,
@@ -741,6 +851,7 @@ debugger;
           transactionDate: { disabled: true },
           btnEdit: { visible: true },
           amount: { disabled: false },
+          linkEdit: {visible: true}
         };
 
         // Conditionally update costCentreId if needed
@@ -975,12 +1086,10 @@ debugger;
             })
           );
           focusAmount();
-          e.preventDefault();
         } else {
           focusLedgerCombo();
         }
       } catch (error) {
-        e.preventDefault();
         console.error("Error fetching ledger:", error);
       }
     }
@@ -1083,7 +1192,7 @@ debugger;
           masterAccount: { disabled: false },
           referenceDate: { disabled: false },
           transactionDate: { disabled: false },
-          linkEdit: { visible: true },
+          linkEdit: { visible: false },
         },
       })
     );
@@ -1097,7 +1206,7 @@ debugger;
           masterAccount: { disabled: true },
           referenceDate: { disabled: true },
           transactionDate: { disabled: true },
-          linkEdit: { visible: false },
+          linkEdit: { visible: true },
         },
       })
     );
@@ -1288,7 +1397,10 @@ debugger;
             voucherPrefix: selectVoucherData.lastPrefix,
             voucherNumber: getVoucherNumber,
             accTransactionMasterID: 0,
-            transactionDate: moment(clientSession.softwareDate,"DD/MM/YYYY").local(),
+            transactionDate: moment(
+              clientSession.softwareDate,
+              "DD/MM/YYYY"
+            ).local(),
           },
         })
       );

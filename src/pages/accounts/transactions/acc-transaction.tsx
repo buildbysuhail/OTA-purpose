@@ -6,7 +6,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { AccTransactionProps } from "./acc-transaction-types";
+import { AccTransactionProps, initialFormElements } from "./acc-transaction-types";
 import {
   useAppDispatch,
   useAppSelector,
@@ -59,6 +59,7 @@ import {
   Eraser,
   X,
 } from "lucide-react";
+import { LedgerType } from "../../../enums/ledger-types";
 interface BilledItem {
   id?: number;
   name: string;
@@ -537,83 +538,257 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
-      const fieldsToUpdate: Record<string, any> = {
-        masterAccount: {},
-        employee: {},
-        discount: {},
-        costCentreId: {},
-        chequeNumber: {},
-        bankDate: {},
-        drCr: {},
-        keepNarration: {},
-      };
-
+      let fieldsToUpdate = initialFormElements;
       switch (voucherType) {
         case "CR":
-        case "CP":
-          fieldsToUpdate.masterAccount = { label: "Cash Account" };
-          fieldsToUpdate.employee = {
-            label: voucherType === "CR" ? "Collected By" : "Paid By",
+        case "CP": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Cash Account",
+              accLedgerType: LedgerType.CashInHand
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: voucherType === "CR" ? "Collected By" : "Paid By",
+            },
+            narration: {
+              ...initialFormElements.narration,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: true
+            },
+            costCentreId: {
+              ...initialFormElements.costCentreId,
+              visible: applicationSettings?.accountsSettings?.maintainCostCenter === true
+            },
+            chequeNumber: {
+              ...initialFormElements.chequeNumber,
+              visible: false
+            },
+            bankDate: {
+              ...initialFormElements.bankDate,
+              visible: false
+            }
           };
-          fieldsToUpdate.discount = { visible: true };
-          fieldsToUpdate.costCentreId = {
-            visible:
-              applicationSettings.accountsSettings?.maintainCostCenter === true,
-          };
-          fieldsToUpdate.chequeNumber = { visible: false };
-          fieldsToUpdate.bankDate = { visible: false };
           break;
-
+        }
+    
         case "PV":
-        case "SV":
-          fieldsToUpdate.masterAccount = {
-            label: voucherType === "PV" ? "Purchase Account" : "Sales Account",
+        case "SV": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: voucherType === "PV" ? "Purchase Account" : "Sales Account",
+              accLedgerType: voucherType === "PV" ? LedgerType.Purchase_Account : LedgerType.Sales_Account
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Done By",
+            },
+            narration: {
+              ...initialFormElements.narration,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: true
+            }
           };
-          fieldsToUpdate.employee = { label: "Done By" };
-          fieldsToUpdate.discount = { visible: true };
           break;
-
+        }
+    
         case "BR":
-        case "CQR":
+        case "CQR": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Bank Account",
+              accLedgerType: LedgerType.BankAccount
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Collected By",
+            },
+            narration: {
+              ...initialFormElements.narration,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: true
+            },
+            chequeNumber: {
+              ...initialFormElements.chequeNumber,
+              visible: true
+            },
+            bankDate: {
+              ...initialFormElements.bankDate,
+              visible: true
+            },
+            gridColumns: {
+              ...initialFormElements.gridColumns,
+              showChqNo: true,
+              showChqDate: true
+            }
+          };
+          
+          if (voucherType === "CQR") {
+            fieldsToUpdate.ledger = {
+              ...initialFormElements.ledger,
+              selectedIndex: -1
+            };
+          }
+          break;
+        }
+    
         case "BP":
-        case "CQP":
-          fieldsToUpdate.masterAccount = { label: "Bank Account" };
-          fieldsToUpdate.employee = {
-            label:
-              voucherType === "BR" || voucherType === "CQR"
-                ? "Collected By"
-                : "Paid By",
+        case "CQP": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Bank Account",
+              accLedgerType: LedgerType.BankAccount
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Paid By",
+            },
+            narration: {
+              ...initialFormElements.narration,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: true
+            },
+            chequeNumber: {
+              ...initialFormElements.chequeNumber,
+              visible: true
+            },
+            bankDate: {
+              ...initialFormElements.bankDate,
+              visible: true
+            },
+            gridColumns: {
+              ...initialFormElements.gridColumns,
+              showChqNo: true,
+              showChqDate: true
+            }
           };
-          fieldsToUpdate.discount = { visible: true };
-          fieldsToUpdate.chequeNumber = { visible: true };
-          fieldsToUpdate.bankDate = { visible: true };
+    
+          if (voucherType === "CQP") {
+            fieldsToUpdate.ledger = {
+              ...initialFormElements.ledger,
+            };
+          }
           break;
-
+        }
+    
         case "CN":
-        case "DN":
-          fieldsToUpdate.masterAccount = { label: "Party Account" };
-          fieldsToUpdate.employee = {
-            label: voucherType === "CN" ? "Collected By" : "Paid By",
+        case "DN": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Party Account",
+              accLedgerType: LedgerType.CustomerAndSupplier
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: voucherType === "CN" ? "Collected By" : "Paid By",
+            },
+            narration: {
+              ...initialFormElements.narration,
+            }
           };
           break;
-
-        case "JV":
-        case "MJV":
-          fieldsToUpdate.masterAccount = { label: "Master Account" };
-          fieldsToUpdate.employee = { label: "Done By" };
-          fieldsToUpdate.drCr = { visible: true };
-          fieldsToUpdate.keepNarration = { visible: true };
-          fieldsToUpdate.discount = { visible: false };
-          break;
-
-        case "OB":
-          fieldsToUpdate.masterAccount = {
-            label: "Master Account",
-            visible: false,
+        }
+    
+        case "JV": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Master Account",
+              accLedgerType: LedgerType.All
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Done By"
+            },
+            narration: {
+              ...initialFormElements.narration,
+            },
+            drCr: {
+              ...initialFormElements.drCr,
+              visible: true,
+            },
+            jvDrCr: {
+              ...initialFormElements.jvDrCr,
+              visible: true,
+            }
           };
-          fieldsToUpdate.employee = { label: "Employee" };
-          fieldsToUpdate.drCr = { visible: true };
           break;
+        }
+    
+        case "MJV": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Master Account",
+              visible: false,
+              accLedgerType: LedgerType.All
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Employee",
+            },
+            gridColumns: {
+              ...initialFormElements.gridColumns,
+              showDrCr: false,
+              showDebitColumn: true,
+              showCreditColumn: true,
+              showAmountColumn: false,
+              debitIndex: initialFormElements.gridColumns?.amountIndex,
+              creditIndex: initialFormElements.gridColumns?.amountIndex + 1
+            },
+            drCr: {
+              ...initialFormElements.drCr,
+              visible: true
+            }
+          };
+          break;
+        }
+    
+        case "OB": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...initialFormElements.masterAccount,
+              label: "Master Account",
+              visible: false,
+              accLedgerType: LedgerType.All
+            },
+            employee: {
+              ...initialFormElements.employee,
+              label: "Employee",
+              left: initialFormElements.masterAccount.left
+            },
+            gridColumns: {
+              ...initialFormElements.gridColumns,
+              showDrCr: true
+            },
+            drCr: {
+              ...initialFormElements.drCr,
+              visible: true
+            }
+          };
+          break;
+        }
       }
 
       // Dispatch the update action with all the required fields
@@ -887,7 +1062,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
     console.log("Form submitted:", formData);
     // Here you would typically send the data to a server or perform other actions
   };
@@ -1145,8 +1319,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             <li>
                               <button
                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                                onClick={(e) => {
-                                  e.preventDefault(); // Prevent default link behavior
+                                onClick={(e) => { // Prevent default link behavior
                                   printPaymentReceiptAdvice(formState);
                                 }}
                               >
@@ -1161,8 +1334,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               <li>
                                 <button
                                   className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                  onClick={(e) => {
-                                    e.preventDefault(); // Prevent default link behavior
+                                  onClick={(e) => { // Prevent default link behavior
                                     debugger;
                                     unlockVoucher();
                                   }}

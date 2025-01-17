@@ -157,6 +157,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     handleRefresh,
     createNewVoucher,
     billwiseChanged,
+    focusCostCenterRef,
+    focusLedgerCode
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -1914,6 +1916,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
                     onClick={() => {
+                      debugger;
                       dispatch(
                         accFormStateHandleFieldChange({
                           fields: { showbillwise: true },
@@ -2457,18 +2460,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
+      {(formState.showbillwise??false) &&
       <ERPModal
         isFullHeight={true}
-        isOpen={formState.showbillwise ?? false}
+        isOpen={(formState.showbillwise??false)}
         title={t("billwise")}
         closeModal={() => {
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: false } })
           );
         }}
+        onSubmit={() => {
+          
+        }}
         width="!w-[80rem] !max-w-[60rem]"
-        content={<BillWisePopup />}
+        content={<BillWisePopup onSave={( billwiseDetails: string,
+          totalAmount: number,
+          vrNumbers: string) => {
+            if(applicationSettings.accountsSettings?.billwiseMandatory && formState.row.billwiseDetails != "") {
+              dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
+            }
+            if(formState.formElements.costCentreId.visible == false) {
+              addOrEditRow(billwiseDetails);
+              focusLedgerCode();
+              
+            } else {
+              focusCostCenterRef();
+            dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
+            }
+          }} />}
       />
+}
       <div>
         {/* The ERPModal component */}
         <ERPModal

@@ -118,7 +118,7 @@ export interface AccTransactionMaster {
   debitNoteTransId: number;
   creditNoteTransId: number;
   currencyId: number;
-  // accTransDetailId: number;
+  // accTransactionDetailID: number;
   adjustedTransDetailId: number;
   currencyRate?: number;
   currencyName?: number;
@@ -168,7 +168,7 @@ export interface AccTransactionMasterValidations {
   debitNoteTransId: string;
   creditNoteTransId: string;
   currencyId: string;
-  accTransDetailId: string;
+  accTransactionDetailID: string;
   adjustedTransDetailId: string;
   currencyRate: string;
   isPosted: string;
@@ -217,7 +217,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
     debitNoteTransId: "",
     creditNoteTransId: "",
     currencyId: "",
-    accTransDetailId: "",
+    accTransactionDetailID: "",
     adjustedTransDetailId: "",
     currencyRate: "",
     isPosted: "",
@@ -362,7 +362,7 @@ export const accTransactionInitialData: AccTransactionData = {
     debitNoteTransId: 0,
     creditNoteTransId: 0,
     currencyId: 0,
-    // accTransDetailId: 0,
+    // accTransactionDetailID: 0,
     adjustedTransDetailId: 0,
     currencyRate: undefined,
     isPosted: false,
@@ -396,7 +396,7 @@ export interface BillwiseData {
   BalanceAfter: number;
   PartyName: string;
   RefDate: string;
-  AccTransDetailID: string;
+  accTransactionDetailID: string;
   RafNo: string;
   FormType: string;
   FinancilaYearID: string;

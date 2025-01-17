@@ -174,7 +174,7 @@ const TestPopup: FC = () => {
                     width={130}
                   />
                   <Column
-                    dataField="AccTransDetailID"
+                    dataField="accTransactionDetailID"
                     caption="Account Transaction ID"
                     dataType="string"
                     allowFiltering={true}

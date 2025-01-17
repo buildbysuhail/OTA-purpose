@@ -959,8 +959,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
        <div
-       className={`dark:!bg-dark-bg bg-transparent space-y-6 p-4`}
-       style={{ backgroundColor:`rgb(${formState.userConfig?.outerPageBg})`}}
+       className={`dark:!bg-dark-bg  space-y-6 p-4`}
+       style={{ backgroundColor:formState.userConfig?.outerPageBg? `rgb(${formState.userConfig?.outerPageBg})`:`transparent`}}
         >
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">

@@ -64,7 +64,7 @@ export const appInitialState: AppState = {
 export const initialState: AppInitialState = {
   syncing: false,
   appState: appInitialState,
-  mode: "dark"
+  // mode: "dark"
 };
 
 const appStateSlice = createSlice({

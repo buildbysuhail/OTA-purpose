@@ -398,7 +398,7 @@ const Header: FC<HeaderProps> = () => {
               <div className="header-element">
                 <div className="horizontal-logo">
                   <a
-                    href={`${import.meta.env.BASE_URL}dashboards/crm/`}
+                    href={`${import.meta.env.BASE_URL}`}
                     className="header-logo"
                   >
                     <img

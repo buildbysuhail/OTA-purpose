@@ -39,21 +39,17 @@ const IncomExpenseStatement = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) + " Cr"
+                ? getFormattedValue(-1 * balance) + " Cr" 
                 : getFormattedValue(balance) + " Dr";
           return exportCell != undefined ? {
-            ...exportCell,
+            ...exportCell, 
             text:cellInfo.value,
             bold: true,
-            // alignment: "right",
-            alignment : {
-              horizontal: "right",
-              indent: 2,
-            },
-            textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+             alignment: "right",
+            textColor: cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
             font: {
               ...exportCell.font,
-              color: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+              color: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
               size: 15,
             }
           } : undefined;
@@ -119,7 +115,7 @@ const IncomExpenseStatement = () => {
             textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
             font: {
               ...exportCell.font,
-              color: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+              color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
               size: 15,
             }
           } : undefined;
@@ -156,11 +152,34 @@ const IncomExpenseStatement = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
-      {`${cellElement.data?.debit == null||cellElement.data?.debit==0 ? '' : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return( <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
+            {`${cellElement.data?.debit == null||cellElement.data?.debit==0 ? '' : getFormattedValue(cellElement.data.debit)}`}
+              </span>)
+        }}
     },
     {
       dataField: "credit",
@@ -170,12 +189,35 @@ const IncomExpenseStatement = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
-        {`${cellElement.data?.credit == null ||cellElement.data?.credit == 0? '' :cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*cellElement.data.credit):
-          getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*balance):getFormattedValue(balance)
+                :cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*balance):getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
+            {`${cellElement.data?.credit == null ||cellElement.data?.credit == 0? '' :cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*cellElement.data.credit):
+              getFormattedValue(cellElement.data.credit)}`}
+            </span>)
+        }}
     },
     {
       dataField: "balance",
@@ -185,19 +227,41 @@ const IncomExpenseStatement = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span
-        className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}
-        >
-          {`${cellElement.data?.balance == null
-            ? ''
-            : cellElement.data.balance < 0
-              ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(cellElement.data.balance) + ' Cr':getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(balance)+'Cr' :getFormattedValue(-1*balance)+'Cr'
+                : getFormattedValue(balance)+'Dr';
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span
+            className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}
+            >
+              {`${cellElement.data?.balance == null
+                ? ''
+                : cellElement.data.balance < 0
+                  ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(cellElement.data.balance) + ' Cr':getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+                  : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+            </span>)
+              }}
     },
-
   ];
   return (
     <Fragment>

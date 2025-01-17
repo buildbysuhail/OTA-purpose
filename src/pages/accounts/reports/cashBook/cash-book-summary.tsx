@@ -32,7 +32,6 @@ const CashBookSummary = () => {
         filter: any,
         exportCell: any
       ) => {
-        debugger;
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
@@ -52,7 +51,7 @@ const CashBookSummary = () => {
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
                color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
             }
             
           } : undefined;
@@ -104,7 +103,7 @@ const CashBookSummary = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              size: 10,
             },
           };
         }
@@ -144,7 +143,7 @@ const CashBookSummary = () => {
             font: {
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
             },
           };
         }
@@ -173,7 +172,6 @@ const CashBookSummary = () => {
               : balance < 0
                 ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
-
           return {
             ...exportCell,
             text: value,
@@ -183,7 +181,7 @@ const CashBookSummary = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              size: 10,
             },
           };
         }

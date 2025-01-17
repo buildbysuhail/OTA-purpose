@@ -11,8 +11,6 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
 import CashBookDayWise from "../cashBook/cash-book-daywise";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
-
-
 interface CashFlowBankFlowDetailedProps {
   postData?: any;
   groupName?: string;
@@ -22,17 +20,13 @@ interface CashFlowBankFlowDetailedProps {
   isMaximized?: boolean; 
   modalHeight?:any
 }
-
 const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postData, contentProps,rowData,origin,isMaximized,modalHeight  }) => {
-
 // const CashBankFlowDetailedReport = () => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   // const [filter, setFilter] = useState<IncomeRepor>({ from: new Date() });
   const rootState = useRootState();
-
-  
       const [gridHeight, setGridHeight] = useState<{
         mobile: number;
         windows: number;
@@ -45,8 +39,6 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       }, [isMaximized,modalHeight]);
   
   const columns: DevGridColumn[] = [
-
-
     {
       dataField: "transactionDate",
       caption: t('transaction_date'),
@@ -82,11 +74,39 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-        {`${cellElement.data?.particulars }`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.month;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.particulars }`}
+            </span>)
+        }}
     },
     {
       dataField: "debit",
@@ -96,11 +116,39 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-        {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
+            </span>)
+        }}
     },
     {
       dataField: "credit",
@@ -110,11 +158,39 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return (  <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
+         </span>)
+        }}
     },
     {
       dataField: "balance",
@@ -124,11 +200,37 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              :getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellInfo.value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
+          </span>)
+        }}
     },
     {
       dataField: "remarks",

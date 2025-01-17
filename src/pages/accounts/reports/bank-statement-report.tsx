@@ -76,11 +76,43 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        debugger;
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold:cellElement.data.particulars === "TOTAL" ? true:'',
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.particulars}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "debit",
@@ -90,15 +122,42 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null||balance==''
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * parseFloat(balance) )
+                : getFormattedValue(parseFloat(balance));
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
             ? ''
             : cellElement.data.particulars === "TOTAL"
               ? getFormattedValue(parseFloat(cellElement.data.debit))
               : cellElement.data.debit}`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "credit",
@@ -108,15 +167,43 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
-            ? ''
-            : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(parseFloat(cellElement.data.credit) )
-              : cellElement.data.credit}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null||balance==""
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * parseFloat(balance))
+                : getFormattedValue(parseFloat(balance) );
+          return {
+            ...exportCell,
+            
+            text: value,
+
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              ...exportCell.font,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
+              ? ''
+              : cellElement.data.particulars === "TOTAL"
+                ? getFormattedValue(parseFloat(cellElement.data.credit) )
+                : cellElement.data.credit}`}
+          </span>)
+            }
+          }
     },
     {
       dataField: "balance",
@@ -126,15 +213,41 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${"font-bold text-[#DC143C]"}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)+' Cr'
+                : getFormattedValue(balance)+' Dr';
+          return {
+            ...exportCell,
+            text: value,
+            bold:cellElement.data.particulars === "TOTAL" ? true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: '#FF0000',
+            font: {
+              ...exportCell.font,
+              color:{ argb: 'FFFF0000' },
+              size: 10,
+              style:'bold',
+              bold: true,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${"font-bold text-[#DC143C]"}`}>
           {`${cellElement.data?.balance == null
             ? '0'
             : cellElement.data.balance < 0
               ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
               : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "narration",
@@ -199,8 +312,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-    },
-            
+    },        
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
@@ -209,9 +321,6 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 150,
     },
-            
-   
-   
   ];
   return (
     <Fragment>

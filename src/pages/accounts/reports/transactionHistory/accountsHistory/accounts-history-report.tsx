@@ -12,18 +12,12 @@ import TransactrionHistoryReportFilter, {
   TransactrionHistoryReportFilterInitialState,
 } from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
-// interface AccountsHistoryReport {
 
-//   from: Date
-// }
 const AccountsHistoryReport = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
+    const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation("accountsReport");
   // const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
   const rootState = useRootState();
@@ -117,6 +111,40 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == null 
+              ? '':getFormattedValue(cellElement.data.debit,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -126,6 +154,40 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == null 
+              ? '':getFormattedValue(cellElement.data.credit,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "narration",

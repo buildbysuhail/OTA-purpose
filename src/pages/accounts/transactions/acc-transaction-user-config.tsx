@@ -221,7 +221,7 @@ export const AccTransactionUserConfig = () => {
                       <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                       <input
                         type="color"
-                        value={formState.userConfig?.outerPageBg}
+                        value={formState.userConfig?.outerPageBg }
                         onChange={(e) => {
                           const rgb = hexToRgb(e.target?.value);
                           if (rgb) {

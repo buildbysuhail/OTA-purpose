@@ -209,7 +209,7 @@ export const DummyVoucherData ={
     "debitNoteTransID": 0,
     "creditNoteTransID": 0,
     "currencyID": 63,
-    "accTransDetailID": 0,
+    "accTransactionDetailID": 0,
     "adjustedTransDetailID": 0,
     "currencyRate": 1,
     "isPosted": false,

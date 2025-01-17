@@ -14,6 +14,9 @@ import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateBackgroundImageFooter, setTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+import ERPSlider from "../../../components/ERPComponents/erp-slider";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../redux/store";
 
 interface TempImageProps {
 }
@@ -31,7 +34,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     const inputFooterFile = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
     const [currentTab, setTab] = useState<"header" | "footer" | "">("header");
-
+    const userSession = useSelector((state: RootState) => state?.UserSession);
+    let userBranches = useAppSelector((state: RootState) => state.UserBranches);
     const templateGroup = searchParams?.get("template_group");
     const [maxHeight, setMaxHeight] = useState<number>(500);
 
@@ -41,7 +45,6 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     }, []);
 
     /* ######################################################################################### */
-
     const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
     const dispatch = useDispatch();
@@ -57,13 +60,68 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     return (
          <ERPScrollArea 
             className={`overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1`}>
-            {/* <div
-                className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
-                onClick={() => setTab(currentTab === "header" ? "" : "header")}
-            >
-                Header 
-                <ChevronDownIcon className={`h-5   -rotate-90 transition-all`} />
-            </div> */}
+
+      <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
+      <h6 className="bg-[#80808012] p-[2px]">Organization Details</h6>
+        <ERPCheckbox
+          id="showLogo"
+          label="Show Organization Logo"
+          checked={headerState?.showLogo}
+          onChange={(e) => handleChange("header", "showLogo", e.target.checked)}
+        />
+      
+        {headerState?.showLogo && (
+          <div className="flex flex-col gap-2">
+            <img src={userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
+            <ERPSlider
+              id="logoSize"
+              label="Logo Size"
+              defaultValue={headerState?.logoSize}
+              onChange={(e) => handleChange("header", "logoSize", e.target?.value)}
+            />
+          </div>
+        )}
+        {/* */}
+
+
+        {!["qty_adjustment", "value_adjustment"].includes(templateGroup!) &&
+          <>
+            <ERPCheckbox
+              id="showOrgName"
+              checked={headerState?.showOrgName}
+              label="Show Organization Name"
+              onChange={(e) => handleChange("header", "showOrgName", e.target.checked)}
+            />
+              <ERPCheckbox
+            id="showOrgAddress"
+            checked={headerState?.showOrgAddress}
+            label="Show Organization Address"
+            onChange={(e) => handleChange("header", "showOrgAddress", e.target.checked)}
+            />
+            <ERPInput
+              value={headerState?.OrganizationFontColor}
+              onChange={(e) => handleChange("header", "OrganizationFontColor", e.target?.value)}
+              label="Font Color"
+              id="bg_color"
+              type="color"
+              placeholder=""
+            />
+            <ERPStepInput
+              value={headerState?.OrganizationFontSize ?? 12}
+              onChange={(value) => handleChange("header", "OrganizationFontSize", value)}
+              label="Font Size (pts)"
+              id="font_size"
+              placeholder=" "
+              min={8}
+              max={28}
+              step={1}
+            />
+          </>
+        }
+       {/* */}
+
+      </div>
+      {/* */}
 
             <div className="transition-all  flex flex-col gap-5 bg-white p-4">
                 {/* */}

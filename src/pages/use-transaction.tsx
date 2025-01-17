@@ -19,7 +19,7 @@ export const useTransaction = (transactionType: string) => {
 const {hasRight} = useUserRights();
   
   const printVoucher = async (
-    accTransMasterID: number,
+    accTransactionMasterID: number,
     voucherType: string,
     formType: string,
     vrPrefix: string,

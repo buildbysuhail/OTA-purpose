@@ -88,7 +88,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
   ) => {
     const formatDate = (date: string | undefined) => {
       if (!date) return undefined;
-      return moment(date).utc().format("YYYY-MM-DD");
+      return moment(date).local().format("YYYY-MM-DD");
     };
 
     const appState = useAppSelector((state: RootState) => state?.AppState?.appState);
@@ -329,7 +329,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
         return;
       }
 
-      const formattedDate = newValue.utc().format();
+      const formattedDate = newValue.local().format();
 
       if (onChange) {
         const event = {
@@ -348,7 +348,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       let newValue: string | null = null;
 
       if (inputValue !== "") {
-        const parsedDate = moment(inputValue).utc();
+        const parsedDate = moment(inputValue).local();
         newValue = parsedDate.isValid() ? parsedDate.format() : null;
       }
 
@@ -374,20 +374,20 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             <DatePicker
               label={label}
               disabled={disabled || readonly}
-              value={value ? moment(value).utc() : null}
+              value={value ? moment(value).local() : null}
               onChange={handleChange}
               minDate={
                 minDate
-                  ? moment(minDate).utc()
+                  ? moment(minDate).local()
                   : minDateKey
-                  ? moment(data?.[minDateKey]).utc()
+                  ? moment(data?.[minDateKey]).local()
                   : undefined
               }
               maxDate={
                 maxDate
-                  ? moment(maxDate).utc()
+                  ? moment(maxDate).local()
                   : maxDateKey
-                  ? moment(data?.[maxDateKey]).utc()
+                  ? moment(data?.[maxDateKey]).local()
                   : undefined
               }
               closeOnSelect={true}

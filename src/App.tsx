@@ -57,6 +57,8 @@ import { setApplicationSettings } from "./redux/slices/app/application-settings-
 import ERPAttachment from "./components/ERPComponents/erp-attachment";
 import { ApplicationSettingsType } from "./pages/settings/system/application-settings-types/application-settings-types";
 import AutoClicker from "./Nodevwatermark";
+import { setSoftwareDate } from "./redux/slices/client-session/reducer";
+import moment from "moment";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -70,7 +72,10 @@ export const LoadingAnimation = () => {
 function App() {
 
   useEffect(() => {
-    
+    debugger;
+    const sd = moment().local(); // Ensure local time is used
+const asd = sd.format("DD/MM/YYYY");
+    dispatch(setSoftwareDate(asd))
     load();
   }, []);
   const _dispatch = useAppDispatch();

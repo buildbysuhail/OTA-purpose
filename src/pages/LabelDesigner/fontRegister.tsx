@@ -14,6 +14,9 @@ import RobotMonoRegular from '../../assets/font/RobotMono/RobotoMono-Regular.ttf
 import RobotMonoBold from '../../assets/font/RobotMono/RobotoMono-Bold.ttf'
 import RobotMonoItalic from '../../assets/font/RobotMono/RobotoMono-Italic.ttf'
 
+import AmiriBold from "../../assets/font/Amiri/Amiri-Bold.ttf"
+import AmiriItalic from "../../assets/font/Amiri/Amiri-Italic.ttf"
+import AmiriRegular from "../../assets/font/Amiri/Amiri-Regular.ttf"
 // Import Poppins font files
 import PoppinsRegular from '../../assets/font/Poppins/Poppins-Regular.ttf';
 import PoppinsBold from '../../assets/font/Poppins/Poppins-Bold.ttf';
@@ -58,6 +61,16 @@ export default function FontRegistration() {
         { src: PoppinsRegular, fontWeight: 400, fontStyle: 'normal' },
         { src: PoppinsBold, fontWeight: 700, fontStyle: 'bold' },
         { src: PoppinsItalic, fontWeight: 400, fontStyle: 'italic' },
+      ],
+    });
+
+    //Register Arabic
+    Font.register({
+      family: 'Amiri',
+      fonts: [
+        { src: AmiriRegular, fontWeight: 400, fontStyle: 'normal' },
+        { src: AmiriBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: AmiriItalic, fontWeight: 400, fontStyle: 'italic' },
       ],
     });
   }, []);

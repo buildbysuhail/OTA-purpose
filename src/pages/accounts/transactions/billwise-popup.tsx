@@ -31,6 +31,7 @@ import {
 } from "./reducer";
 import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
+import { APIClient } from "../../../helpers/api-client";
 
 interface BillwiseProps {
   onSave?: (
@@ -48,7 +49,7 @@ interface BillwiseProps {
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
 }
-
+const api = new APIClient();
 const BillwiseComponent = ({
   onSave,
   onClose,
@@ -119,13 +120,15 @@ const BillwiseComponent = ({
       closeBillwise();
     }
   }, [isMaximized, modalHeight]);
+  const [loadCount, setLoadCount] = useState<number>(0);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
+    debugger;
     setStore(clonedData);
-  }, [formState.billwiseData]);
+  }, []);
 
   const handleSelectionChange = (e: any) => {
-    debugger;
+    
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
       ? e.currentSelectedRowKeys.map((key: number) => ({
           key,
@@ -156,12 +159,14 @@ const BillwiseComponent = ({
             : storeItem
         );
       });
+      debugger;
       setStore(updatedStore);
     }
   };
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
+    debugger;
     setStore((prevStore: any) =>
       prevStore.map((item: any) =>
         item.slNo === updatedRow.slNo ? updatedRow : item
@@ -174,7 +179,7 @@ const BillwiseComponent = ({
   useEffect(() => {
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
-      debugger;
+      
       if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
         const _it = {
           ...row,
@@ -189,51 +194,56 @@ const BillwiseComponent = ({
         };
       }
     });
+    debugger;
     setStore(formattedData);
   }, [showAllTransactions]);
   useEffect(() => {
-    const loadBillwiseTransactions = async () => {
-      debugger;
-      try {
-        // Replace with your actual API call
-        const response = await fetch(
-          `/api/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`
-        );
-        const data = await response.json();
+    debugger;
+    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+              generateGridFromBillwiseString(formState.row.billwiseDetails);
+            }
+   }, []);
+  // useEffect(() => {
+  //   const loadBillwiseTransactions = async () => {
+  //     
+  //     try {
+  //       // Replace with your actual API call
+  //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
+  //       const data = response;
 
-        let lastIndex = 0;
-        const formattedData = data?.map((row: any, index: number) => {
-          if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
-            const _it = {
-              ...row,
-              slNo: lastIndex + 1,
-              isSelected: false,
-              billwiseAmount: 0,
-            };
-            lastIndex = lastIndex + 1;
-            return _it;
-          } else {
-            return {
-              ...row,
-              slNo: undefined,
-              isSelected: false,
-              billwiseAmount: 0,
-            };
-          }
-        });
+  //       let lastIndex = 0;
+  //       const formattedData = data?.map((row: any, index: number) => {
+  //         if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
+  //           const _it = {
+  //             ...row,
+  //             slNo: lastIndex + 1,
+  //             isSelected: false,
+  //             billwiseAmount: 0,
+  //           };
+  //           lastIndex = lastIndex + 1;
+  //           return _it;
+  //         } else {
+  //           return {
+  //             ...row,
+  //             slNo: undefined,
+  //             isSelected: false,
+  //             billwiseAmount: 0,
+  //           };
+  //         }
+  //       });
 
-        setStore(formattedData);
+  //       setStore(formattedData);
 
-        if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-          generateGridFromBillwiseString(formState.row.billwiseDetails);
-        }
-      } catch (error) {
-        console.error("Error loading billwise transactions:", error);
-      }
-    };
+  //       if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+  //         generateGridFromBillwiseString(formState.row.billwiseDetails);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error loading billwise transactions:", error);
+  //     }
+  //   };
 
-    loadBillwiseTransactions();
-  }, []);
+  //   loadBillwiseTransactions();
+  // }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
     const rows = billwiseStr.split("|");
@@ -251,7 +261,7 @@ const BillwiseComponent = ({
         updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
       }
     });
-
+    debugger;
     setStore(updatedData);
   };
 
@@ -260,10 +270,11 @@ const BillwiseComponent = ({
     const billwiseString = store
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
+        
         if (row.billwiseAmount > 0) {
-          vrNumbers += `${row.TransactionDate},`;
+          vrNumbers += `${row.voucherNumber},`;
         }
-        return `${row.accTransDetailId}^${row.billwiseAmount}`;
+        return `${row.accTransactionDetailID}^${row.billwiseAmount}`;
       })
       .join("|");
 
@@ -288,7 +299,7 @@ const BillwiseComponent = ({
     );
   };
   const validate = () => {
-    debugger;
+    
     const totalAmount = getTotalAmountToSet();
 
     if (totalAmount < 0) {
@@ -311,15 +322,15 @@ const BillwiseComponent = ({
     return true;
   };
   const closeBillwise = () => {
-    dispatch(
-      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
-    );
+    // dispatch(
+    //   accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+    // );
 
     onClose && onClose();
   };
   const handleSave = () => {
     try {
-      debugger;
+      
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -360,7 +371,7 @@ const BillwiseComponent = ({
             },
           })
         );
-        debugger;
+        
         onSave &&
           onSave(
             billwiseString.billwiseString,

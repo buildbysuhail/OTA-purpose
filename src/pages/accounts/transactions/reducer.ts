@@ -51,7 +51,7 @@ const accTransactionSlice = createSlice({
         allowSalesCounter,
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
-      (state.transaction.master.accTransMasterID = 0),
+      (state.transaction.master.accTransactionMasterID = 0),
         (state.row.ledgerCode = "");
       state.transaction.attachments = [];
       state.row.ledgerId = 0;
@@ -247,8 +247,9 @@ const accTransactionSlice = createSlice({
         state,
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
-
+      debugger;
       localStorage.setItem(
+        
         `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
         JSON.stringify(state.transaction.details)
       );
@@ -445,7 +446,7 @@ const accTransactionSlice = createSlice({
           state.formElements.lnkUnlockVoucher.visible = true;
         }
   
-        let BillwiseAccTransDetailID = 0;
+        let BillwiseaccTransactionDetailID = 0;
         state.transaction.details = payload.details.map((detail, index) => {
           const baseDetail = {
             ...detail,
@@ -483,7 +484,7 @@ const accTransactionSlice = createSlice({
             case 'CQR':
             case 'PV':
             case 'PBR':
-              BillwiseAccTransDetailID++;
+              BillwiseaccTransactionDetailID++;
               return {
                 ...baseDetail,
                 ledgerCode: detail.relatedLedgerCode,
@@ -492,7 +493,7 @@ const accTransactionSlice = createSlice({
               };
   
             case 'JV':
-              BillwiseAccTransDetailID++;
+              BillwiseaccTransactionDetailID++;
               if (payload.master.drCr === 'Dr') {
                 return {
                   ...baseDetail,

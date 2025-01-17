@@ -88,7 +88,7 @@ export interface FormElementState {
 }
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
-  accTransMasterID: number;
+  accTransactionMasterID: number;
   departmentId: number;
   costCentreId: number;
   billwiseMasterId: number;
@@ -118,7 +118,7 @@ export interface AccTransactionMaster {
   debitNoteTransId: number;
   creditNoteTransId: number;
   currencyId: number;
-  // accTransDetailId: number;
+  // accTransactionDetailID: number;
   adjustedTransDetailId: number;
   currencyRate?: number;
   currencyName?: number;
@@ -139,7 +139,7 @@ export interface AccTransactionMaster {
 
 // AccTransactionMasterInput interface
 export interface AccTransactionMasterValidations {
-  accTransMasterID: string;
+  accTransactionMasterID: string;
   departmentId: string;
   costCentreId: string;
   billwiseMasterId: string;
@@ -168,7 +168,7 @@ export interface AccTransactionMasterValidations {
   debitNoteTransId: string;
   creditNoteTransId: string;
   currencyId: string;
-  accTransDetailId: string;
+  accTransactionDetailID: string;
   adjustedTransDetailId: string;
   currencyRate: string;
   isPosted: string;
@@ -188,7 +188,7 @@ export interface AccTransactionMasterValidations {
 
 // Initial object with default values
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
-    accTransMasterID: "",
+    accTransactionMasterID: "",
     departmentId: "",
     costCentreId: "",
     billwiseMasterId: "",
@@ -217,7 +217,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
     debitNoteTransId: "",
     creditNoteTransId: "",
     currencyId: "",
-    accTransDetailId: "",
+    accTransactionDetailID: "",
     adjustedTransDetailId: "",
     currencyRate: "",
     isPosted: "",
@@ -242,7 +242,7 @@ export interface AccTransactionRowForOutPut extends AccTransactionRow {
 }
 export interface AccTransactionRow {
   slNo?: number;
-  accTransMasterID: number;
+  accTransactionMasterID: number;
   accTransactionDetailId: number;
   ledgerId: number;
   ledgerCode: string;
@@ -288,7 +288,7 @@ export interface AccTransactionRow {
   firstDebitLedgerId?: number;
 }
 export const AccTransactionRowInitialData: AccTransactionRow = {
-  accTransMasterID: 0,
+  accTransactionMasterID: 0,
   accTransactionDetailId: 0,
   ledgerId: 0,
   relatedLedgerID: 0,
@@ -333,7 +333,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
-    accTransMasterID: 0,
+    accTransactionMasterID: 0,
     departmentId: 0,
     costCentreId: 0,
     billwiseMasterId: 0,
@@ -362,7 +362,7 @@ export const accTransactionInitialData: AccTransactionData = {
     debitNoteTransId: 0,
     creditNoteTransId: 0,
     currencyId: 0,
-    // accTransDetailId: 0,
+    // accTransactionDetailID: 0,
     adjustedTransDetailId: 0,
     currencyRate: undefined,
     isPosted: false,
@@ -396,7 +396,7 @@ export interface BillwiseData {
   BalanceAfter: number;
   PartyName: string;
   RefDate: string;
-  AccTransDetailID: string;
+  accTransactionDetailID: string;
   RafNo: string;
   FormType: string;
   FinancilaYearID: string;
@@ -577,8 +577,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
     maxWidth:" ",
-    outerPageBg:"0, 0, 0",
-    innerPageBg:"0, 0, 0",
+    outerPageBg:"",
+    innerPageBg:"",
     inputBoxStyle:{
         inputStyle: "normal",
         inputSize: "md",

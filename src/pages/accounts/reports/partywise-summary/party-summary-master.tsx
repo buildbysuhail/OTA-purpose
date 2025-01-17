@@ -39,7 +39,7 @@ const PartySummaryMaster = ({
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PartySummaryFilter>({
     filter: {
-      dateFrom: moment().utc().toISOString(),
+      dateFrom: moment().local().toISOString(),
       dateTo: new Date(),
       ledgerID: -1,
     },

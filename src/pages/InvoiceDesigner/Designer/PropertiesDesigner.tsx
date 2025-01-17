@@ -302,7 +302,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             max={28}
             step={1}
           />
-            <div className="flex items-center space-x-3">
+            {/* <div className="flex items-center space-x-3">
               <div className="basis-2/3 ">
                 <ERPSlider
                   id="font_weight"
@@ -333,7 +333,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 />
 
               </div>
-            </div>
+            </div> */}
         </div>
         <div className="flex flex-col gap-2 mt-1">
         

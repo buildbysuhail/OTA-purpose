@@ -52,8 +52,11 @@ import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
 import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_voucher";
 import BalanceSheetVerticalTemplate from "./DownloadPreview/balance-sheet/balance-sheet-vertical";
+import NoDataMessage from "./utils/visible-non-component";
+import { RootState } from "../../redux/store";
+import * as pdfjsLib from 'pdfjs-dist'
 
-
+import 'pdfjs-dist/build/pdf.worker';
 interface DesignSectionType {
   id: number;
   name: string;
@@ -128,7 +131,7 @@ const InvoiceDesigner = () => {
   const appDispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const currentBranch = useCurrentBranch();
-
+  const userSession =  useSelector((state: RootState) => (state.UserSession));  
   const [loading, setLoading] = useState(false);
   const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
     signature_image: null,
@@ -293,38 +296,101 @@ const InvoiceDesigner = () => {
 
 
 
-  const manageSaveAccTemplate = async () => {
+  // const manageSaveAccTemplate = async () => {
+  //   if (!templateData?.activeTemplate?.propertiesState?.templateName) {
+  //     ERPToast.show("Template name is required", "error");
+  //   } else {
+  //     const imageData = await capturePDFAsImage();
+  //     if (imageData) {
+  //       try {
+  //         if (templateData?.activeTemplate && id === "new")
+  //           await handleSave(imageData);
+  //       } catch (error) {
+  //         console.error("Error capturing canvas acc master:", error);
+  //       }
+  //     }
+  //   }
+  // };
+
+  
+  const manageSaveAccTemplate = async (Component: React.ReactElement) => {
     if (!templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
-    } else {
-      const imageData = await capturePDFAsImage();
-      if (imageData) {
-        try {
-          if (templateData?.activeTemplate && id === "new")
-            await handleSave(imageData);
-        } catch (error) {
-          console.error("Error capturing canvas acc master:", error);
-        }
-      }
+      return;
     }
-  };
-
-  const capturePDFAsImage = async () => {
-    const pdfViewer = document.querySelector(".pdf-viewer") as HTMLElement;
-    if (pdfViewer) {
-      // Ensure the PDF viewer is visible
-      pdfViewer.style.visibility = 'visible';
-      pdfViewer.style.display = 'block';
   
-      // Introduce a delay to ensure the PDF is fully rendered
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
-      
-      const canvas = await html2canvas(pdfViewer);
-      const image = canvas.toDataURL("image/png");
-      return image;
+    try {
+      const pdfBlob = await generatePdfBlob(Component);
+      const imageDataUrl = await convertPdfBlobToImage(pdfBlob);
+      await handleSave(imageDataUrl);
+    } catch (error) {
+      console.error("Error saving component:", error);
+      ERPToast.show("Failed to save template", "error");
     }
-    return null;
   };
+  const convertPdfBlobToImage = async (pdfBlob: Blob) => {
+    try {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const loadingTask = pdfjsLib.getDocument(pdfUrl);
+      const pdfDocument = await loadingTask.promise;
+      const page = await pdfDocument.getPage(1);
+  
+      // Get the viewport with the default scale
+      const defaultViewport = page.getViewport({ scale: 1.5 });
+  
+      // Calculate the scale to fit the height to 200px
+      const maxHeight = 400; // Maximum height in pixels
+      const scale = maxHeight / defaultViewport.height;
+  
+      // Get the viewport with the adjusted scale
+      const viewport = page.getViewport({ scale });
+  
+      // Create a canvas and set its dimensions
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) {
+        throw new Error('Failed to get canvas context');
+      }
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+  
+      // Render the PDF page into the canvas
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+  
+      await page.render(renderContext).promise;
+      const imageDataUrl = canvas.toDataURL('image/png');
+      URL.revokeObjectURL(pdfUrl); // Clean up the object URL
+      return imageDataUrl;
+    } catch (error) {
+      console.error('Error converting PDF blob to image:', error);
+      throw error;
+    }
+  };
+  
+  const generatePdfBlob = async (Component: React.ReactElement) => {
+    const blob = await pdf(Component).toBlob();
+    return blob;
+  };
+  // const capturePDFAsImage = async () => {
+  //   const pdfViewer = document.querySelector(".pdf-viewer") as HTMLElement;
+  //   if (pdfViewer) {
+  //     // Ensure the PDF viewer is visible
+  //     pdfViewer.style.visibility = 'visible';
+  //     pdfViewer.style.display = 'block';
+  
+  //     // Introduce a delay to ensure the PDF is fully rendered
+  //     await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
+      
+  //     const canvas = await html2canvas(pdfViewer);
+  //     const image = canvas.toDataURL("image/png");
+  //     return image;
+  //   }
+  //   return null;
+  // };
+
 
 
   return (
@@ -383,7 +449,13 @@ const InvoiceDesigner = () => {
             <div>
               <button
                 title="Save Template"
-                onClick={manageSaveAccTemplate}
+                onClick={()=>manageSaveAccTemplate(
+                  <AccountTransactionsTemplate
+                  template={templateData.activeTemplate}
+                  data={DummyVoucherData}
+                  currentBranch={currentBranch}
+                />
+                )}
                 className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
               >
                 <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
@@ -393,7 +465,7 @@ const InvoiceDesigner = () => {
                 )}
               </button>
             </div>
-          ) : (
+          ) :["SI", "SR"].includes(templateGroup) ? (
             <div>
               <button
                 title="Save Template"
@@ -407,6 +479,20 @@ const InvoiceDesigner = () => {
                 )}
               </button>
             </div>
+          ):(
+            <div>
+            <button
+              title="Save Template "
+              // onClick={}
+              className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+            >
+              <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
+              <span className="text-sm">Save</span>
+              {loading && (
+                <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>
+              )}
+            </button>
+          </div>
           )}
         </div>
         {/* */}
@@ -430,57 +516,72 @@ const InvoiceDesigner = () => {
             // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
           />
         )}
-
-        {currentSection.type == "transactions" && (
-          <TransactionDetailsDesigner
-            template={templateData?.activeTemplate}
-            headerState={templateData?.activeTemplate?.headerState}
-            onChange={(headerState) =>
-              dispatch(setTemplateHeaderState(headerState))
-            }
-          />
-        )}
-
-       {currentSection.type == "table" &&
-          (["SI", "SR"].includes(templateGroup) ? (
-            <ItemTableDesigner
-              template={templateData?.activeTemplate}
-              itemTableState={templateData?.activeTemplate?.itemTableState}
-              onChange={(itemTableState) =>
-                dispatch(setTemplateItemTableState(itemTableState))
-              }
-            />
-          ) : ["CP", "CR"].includes(templateGroup) ? (
-            <AccTableDesigner
-              template={templateData?.activeTemplate}
-              accTableState={templateData?.activeTemplate?.accTableState}
-              onChange={(accTableState) =>
-                dispatch(setTemplateAccTableState(accTableState))
-              }
-            />
+        
+       {
+        currentSection.type === "transactions" &&
+          (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+            <NoDataMessage message="Oops, there is no property!!!" />
           ) : (
-            <></>
-          ))}
-            
+            <TransactionDetailsDesigner
+              template={templateData?.activeTemplate}
+              headerState={templateData?.activeTemplate?.headerState}
+              onChange={(headerState) =>
+                dispatch(setTemplateHeaderState(headerState))
+              }
+            />
+          ))
+        }
 
-        {currentSection.type == "total" && (
-          <TotalDesigner
-            totalState={templateData?.activeTemplate?.totalState}
-            onChange={(totalState) =>
-              dispatch(setTemplateTotalState(totalState))
-            }
-          />
-        )}
 
-        {currentSection.type == "others" && (
-          <FooterDesigner
-            tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData?.activeTemplate?.footerState}
-            onChange={(footerState) =>
-              dispatch(setTemplateFooterState(footerState))
-            }
-          />
-        )}
+        {
+          currentSection.type === "table" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no table property!!!" />
+            ) : ["SI", "SR"].includes(templateGroup) ? (
+              <ItemTableDesigner
+                template={templateData?.activeTemplate}
+                itemTableState={templateData?.activeTemplate?.itemTableState}
+                onChange={(itemTableState) =>
+                  dispatch(setTemplateItemTableState(itemTableState))
+                }
+              />
+            ) : ["CP", "CR"].includes(templateGroup) ? (
+              <AccTableDesigner
+                template={templateData?.activeTemplate}
+                accTableState={templateData?.activeTemplate?.accTableState}
+                onChange={(accTableState) =>
+                  dispatch(setTemplateAccTableState(accTableState))
+                }
+              />
+            ) : null) // Return null for unsupported cases
+        }
+
+        {
+          currentSection.type === "total" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no total property!!!" />
+            ) : (
+              <TotalDesigner
+                totalState={templateData?.activeTemplate?.totalState}
+                onChange={(totalState) => dispatch(setTemplateTotalState(totalState))}
+              />
+            ))
+        }
+
+        {
+          currentSection.type === "others" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no property!!!" />
+            ) : (
+              <FooterDesigner
+                tempImages={{ templateImages, setTemplateImages }}
+                footerState={templateData?.activeTemplate?.footerState}
+                onChange={(footerState) =>
+                  dispatch(setTemplateFooterState(footerState))
+                }
+              />
+            ))
+        }
       </div>
 
       {/* Preview  */}
@@ -489,10 +590,12 @@ const InvoiceDesigner = () => {
         className="pdf-viewer"
         width="100%"
         height="auto"
-        style={{ maxHeight: `${maxHeight}px`, margin: "20px" }}
+        style={{ maxHeight: `${maxHeight}px`, margin: "20px", padding:"10px"}}
        >
       <BalanceSheetVerticalTemplate
       template={templateData.activeTemplate}
+      currentBranch={currentBranch}
+      userSession={userSession}
       />
       </PDFViewer>
       )}

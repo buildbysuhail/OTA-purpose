@@ -54,6 +54,9 @@ import {
   RefreshCw,
   Replace,
   Trash2,
+  ChevronUp,
+  BadgePlusIcon,
+  Eraser,
   X,
 } from "lucide-react";
 interface BilledItem {
@@ -157,6 +160,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     handleRefresh,
     createNewVoucher,
     billwiseChanged,
+    focusCostCenterRef,
+    focusLedgerCode
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -957,8 +962,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
        <div
-       className={`dark:!bg-dark-bg bg-transparent space-y-6 p-4`}
-       style={{ backgroundColor:`rgb(${formState.userConfig?.outerPageBg})`}}
+       className={`dark:!bg-dark-bg  space-y-6 p-4`}
+       style={{ backgroundColor:formState.userConfig?.outerPageBg? `rgb(${formState.userConfig?.outerPageBg})`:`transparent`}}
         >
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
@@ -1011,7 +1016,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("change")}
+                    title={t("load_details")}
                   >
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
@@ -1019,7 +1024,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         loadTemporaryRows();
                       }}
                     >
-                      <Replace className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <ChevronUp className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1059,7 +1064,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={createNewVoucher}
                     >
-                      <Replace className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <BadgePlusIcon className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1101,10 +1106,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        clearControls();
+                        clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
                       }}
                     >
-                      <Delete className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Eraser className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1914,6 +1919,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
                     onClick={() => {
+                      debugger;
                       dispatch(
                         accFormStateHandleFieldChange({
                           fields: { showbillwise: true },
@@ -1933,7 +1939,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     variant="primary"
                     loading={formState.rowProcessing}
                     type="button"
-                    onClick={addOrEditRow}
+                    onClick={() => addOrEditRow()}
                     disabled={
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||
@@ -2457,18 +2463,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
+      {(formState.showbillwise == true && formState.billwiseData !=undefined && formState.billwiseData !=null && formState.billwiseData.length > 0) &&
       <ERPModal
         isFullHeight={true}
-        isOpen={formState.showbillwise ?? false}
+        isOpen={(formState.showbillwise??false)}
         title={t("billwise")}
         closeModal={() => {
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: false } })
           );
         }}
+        onSubmit={() => {
+          
+        }}
         width="!w-[80rem] !max-w-[60rem]"
-        content={<BillWisePopup />}
+        content={<BillWisePopup onSave={( billwiseDetails: string,
+          totalAmount: number,
+          vrNumbers: string) => {
+            if(applicationSettings.accountsSettings?.billwiseMandatory && formState.row.billwiseDetails != "") {
+              dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
+            }
+            if(formState.formElements.costCentreId.visible == false) {
+              addOrEditRow(billwiseDetails);
+              focusLedgerCode();
+              
+            } else {
+              focusCostCenterRef();
+            dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
+            }
+          }} />}
       />
+}
       <div>
         {/* The ERPModal component */}
         <ERPModal

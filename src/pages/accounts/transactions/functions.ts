@@ -55,7 +55,8 @@ export const validateTransactionDate = (
   userSession: UserModel,
   clientSession: ClientSessionModel,
   applicationSettings: ApplicationSettingsType,
-  hasRight: (formCode: string, action: UserAction) => boolean
+  hasRight?: (formCode: string, action: UserAction) => boolean,
+  hasBlockedRight?: (formCode: string) => boolean
 ): { valid: boolean; message: string } => {
   // Normalize the transaction date to remove the time
   transDate = new Date(transDate.setHours(0, 0, 0, 0));
@@ -68,7 +69,7 @@ export const validateTransactionDate = (
     return { valid: false, message: "Invalid Financial year." };
   }
 
-  if ((moment(transDate) < moment(userSession.finFrom)) || (moment(transDate) > moment(userSession.finTo))) {
+  if ((moment(transDate).local() < moment(userSession.finFrom).local()) || (moment(transDate).local() > moment(userSession.finTo).local())) {
     return {
       valid: false,
       message: "Transaction date is outside the financial period.",
@@ -77,14 +78,14 @@ export const validateTransactionDate = (
 debugger;
   // Skip post-dated and pre-dated checks if specified
   if (!skipPostDatedAndPredated) {
-    const softwareDate = new Date(clientSession.softwareDate);
+    const softwareDate = moment(clientSession.softwareDate,"DD/MM/YYYY").local();
 // Post-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPostdatedTrans &&
-      moment(transDate).format('YYYY-MM-DD') !== moment(softwareDate).format('YYYY-MM-DD')
+      moment(transDate).local().format('YYYY-MM-DD') !== moment(softwareDate,"DD/MM/YYYY", ).local().format('YYYY-MM-DD')
     ) {
-      if (!hasRight("PRE_POST", UserAction.Blocked)) {
-        const maxPostDate = moment().add(
+      if (hasBlockedRight == undefined || (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)) {
+        const maxPostDate = moment().local().add(
           applicationSettings.mainSettings?.postDatedTransInNumbers,
           "days"
         ).toDate();
@@ -106,10 +107,10 @@ debugger;
     // Pre-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPredatedTrans &&
-      moment(transDate).format('YYYY-MM-DD') !== moment(softwareDate).format('YYYY-MM-DD')
+      moment(transDate).local().format('YYYY-MM-DD') !== moment(softwareDate,"DD/MM/YYYY").local().format('YYYY-MM-DD')
     ) {
-      if (!hasRight("PRE_POST", UserAction.Blocked)) {
-        const minPreDate = moment().subtract(
+      if (hasBlockedRight == undefined || (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)) {
+        const minPreDate = moment().local().subtract(
           applicationSettings.mainSettings?.preDatedTransInNumbers,
           "days"
         ).toDate();

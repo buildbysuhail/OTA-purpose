@@ -259,10 +259,11 @@ const BillwiseComponent = ({
     const billwiseString = store
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
+        debugger;
         if (row.billwiseAmount > 0) {
-          vrNumbers += `${row.TransactionDate},`;
+          vrNumbers += `${row.voucherNumber},`;
         }
-        return `${row.accTransDetailId}^${row.billwiseAmount}`;
+        return `${row.accTransactionDetailID}^${row.billwiseAmount}`;
       })
       .join("|");
 

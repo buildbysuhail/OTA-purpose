@@ -122,7 +122,7 @@ export const AccountMasterFields = [
     "debitNoteTransID",
     "creditNoteTransID",
     "currencyID",
-    "accTransDetailID",
+    "accTransactionDetailID",
     "adjustedTransDetailID",
     "currencyRate",
     "isPosted",

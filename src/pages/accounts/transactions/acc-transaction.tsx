@@ -2481,11 +2481,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               dispatch(updateFormElement({fields:{amount: {disabled: true}}}))
             }
             if(formState.formElements.costCentreId.visible == false) {
-              addOrEditRow();
+              addOrEditRow(billwiseDetails);
               focusLedgerCode();
               
             } else {
               focusCostCenterRef();
+            dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}))
             }
           }} />}
       />

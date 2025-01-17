@@ -12,7 +12,7 @@ export interface TestDataItem {
     BalanceAfter: number;
     PartyName: string;
     RefDate: string;
-    AccTransDetailID: string;
+    accTransactionDetailID: string;
     RafNo: string;
     FormType: string;
     FinancilaYearID: string;
@@ -34,7 +34,7 @@ export interface TestDataItem {
       BalanceAfter: 0.00,
       PartyName: 'Lulu Ltd.',
       RefDate: '30/04/2024',
-      AccTransDetailID: '80A',
+      accTransactionDetailID: '80A',
       RafNo: '445-69',
       FormType: 'normal',
       FinancilaYearID: '1',
@@ -53,7 +53,7 @@ export interface TestDataItem {
       BalanceAfter: 0.00,
       PartyName: 'Acme Corp',
       RefDate: '01/05/2024',
-      AccTransDetailID: '80B',
+      accTransactionDetailID: '80B',
       RafNo: '445-70',
       FormType: 'normal',
       FinancilaYearID: '1',
@@ -72,7 +72,7 @@ export interface TestDataItem {
       BalanceAfter: 0.00,
       PartyName: 'Beta Enterprises',
       RefDate: '02/05/2024',
-      AccTransDetailID: '80C',
+      accTransactionDetailID: '80C',
       RafNo: '445-71',
       FormType: 'normal',
       FinancilaYearID: '2',
@@ -91,7 +91,7 @@ export interface TestDataItem {
       BalanceAfter: 0.00,
       PartyName: 'Delta Ltd.',
       RefDate: '03/05/2024',
-      AccTransDetailID: '80D',
+      accTransactionDetailID: '80D',
       RafNo: '445-72',
       FormType: 'premium',
       FinancilaYearID: '2',
@@ -110,7 +110,7 @@ export interface TestDataItem {
       BalanceAfter: 0.00,
       PartyName: 'Gamma Solutions',
       RefDate: '04/05/2024',
-      AccTransDetailID: '80E',
+      accTransactionDetailID: '80E',
       RafNo: '445-73',
       FormType: 'basic',
       FinancilaYearID: '3',

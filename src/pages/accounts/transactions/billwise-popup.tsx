@@ -120,13 +120,15 @@ const BillwiseComponent = ({
       closeBillwise();
     }
   }, [isMaximized, modalHeight]);
+  const [loadCount, setLoadCount] = useState<number>(0);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
+    debugger;
     setStore(clonedData);
-  }, [formState.billwiseData]);
+  }, []);
 
   const handleSelectionChange = (e: any) => {
-    debugger;
+    
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
       ? e.currentSelectedRowKeys.map((key: number) => ({
           key,
@@ -157,12 +159,14 @@ const BillwiseComponent = ({
             : storeItem
         );
       });
+      debugger;
       setStore(updatedStore);
     }
   };
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
+    debugger;
     setStore((prevStore: any) =>
       prevStore.map((item: any) =>
         item.slNo === updatedRow.slNo ? updatedRow : item
@@ -175,7 +179,7 @@ const BillwiseComponent = ({
   useEffect(() => {
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
-      debugger;
+      
       if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
         const _it = {
           ...row,
@@ -190,11 +194,18 @@ const BillwiseComponent = ({
         };
       }
     });
+    debugger;
     setStore(formattedData);
   }, [showAllTransactions]);
+  useEffect(() => {
+    debugger;
+    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+              generateGridFromBillwiseString(formState.row.billwiseDetails);
+            }
+   }, []);
   // useEffect(() => {
   //   const loadBillwiseTransactions = async () => {
-  //     debugger;
+  //     
   //     try {
   //       // Replace with your actual API call
   //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
@@ -250,7 +261,7 @@ const BillwiseComponent = ({
         updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
       }
     });
-
+    debugger;
     setStore(updatedData);
   };
 
@@ -259,7 +270,7 @@ const BillwiseComponent = ({
     const billwiseString = store
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
-        debugger;
+        
         if (row.billwiseAmount > 0) {
           vrNumbers += `${row.voucherNumber},`;
         }
@@ -288,7 +299,7 @@ const BillwiseComponent = ({
     );
   };
   const validate = () => {
-    debugger;
+    
     const totalAmount = getTotalAmountToSet();
 
     if (totalAmount < 0) {
@@ -319,7 +330,7 @@ const BillwiseComponent = ({
   };
   const handleSave = () => {
     try {
-      debugger;
+      
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -360,7 +371,7 @@ const BillwiseComponent = ({
             },
           })
         );
-        debugger;
+        
         onSave &&
           onSave(
             billwiseString.billwiseString,

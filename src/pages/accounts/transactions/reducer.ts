@@ -247,8 +247,9 @@ const accTransactionSlice = createSlice({
         state,
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
-
+      debugger;
       localStorage.setItem(
+        
         `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
         JSON.stringify(state.transaction.details)
       );

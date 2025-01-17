@@ -73,7 +73,7 @@ function App() {
 
   useEffect(() => {
     debugger;
-    const sd = moment().local().local(); // Ensure local time is used
+    const sd = moment().local(); // Ensure local time is used
 const asd = sd.format("DD/MM/YYYY");
     dispatch(setSoftwareDate(asd))
     load();

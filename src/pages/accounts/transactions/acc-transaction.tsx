@@ -54,6 +54,9 @@ import {
   RefreshCw,
   Replace,
   Trash2,
+  ChevronUp,
+  BadgePlusIcon,
+  Eraser,
   X,
 } from "lucide-react";
 interface BilledItem {
@@ -1013,7 +1016,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("change")}
+                    title={t("load_details")}
                   >
                     <button
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
@@ -1021,7 +1024,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         loadTemporaryRows();
                       }}
                     >
-                      <Replace className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <ChevronUp className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1061,7 +1064,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={createNewVoucher}
                     >
-                      <Replace className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <BadgePlusIcon className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1106,7 +1109,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         clearControls(formState.isEdit, formState.transaction.master.accTransactionMasterID);
                       }}
                     >
-                      <Delete className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Eraser className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1936,7 +1939,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     variant="primary"
                     loading={formState.rowProcessing}
                     type="button"
-                    onClick={addOrEditRow}
+                    onClick={() => addOrEditRow()}
                     disabled={
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||
@@ -2460,7 +2463,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
-      {(formState.showbillwise??false) &&
+      {(formState.showbillwise == true && formState.billwiseData !=undefined && formState.billwiseData !=null && formState.billwiseData.length > 0) &&
       <ERPModal
         isFullHeight={true}
         isOpen={(formState.showbillwise??false)}

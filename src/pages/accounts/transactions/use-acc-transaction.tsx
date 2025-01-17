@@ -51,6 +51,7 @@ import { ApplicationSettingsType } from "../../settings/system/application-setti
 import { validateTransactionDate } from "./functions";
 import { printCheque_AccTransaction } from "./acc-print-trans-service";
 import { useAccPrint } from "./use-print";
+import moment from "moment";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -607,6 +608,7 @@ export const useAccTransaction = (
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
+          debugger;
           if (billwiseDetails == null && formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
               debugger;
@@ -718,10 +720,12 @@ export const useAccTransaction = (
           return false;
         }
         formState.formElements.btnAdd;
-
+debugger;
         dispatch(
           accFormStateTransactionDetailsRowAdd({
-            row: formState.row,
+            row: {...formState.row,
+              billwiseDetails: billwiseDetails != undefined ? billwiseDetails : formState.row.billwiseDetails
+            },
             applicationSettings: applicationSettings,
             exchangeRate: formState.transaction.master.currencyRate ?? 1,
             isForeignCurrencyEnabled: formState.foreignCurrency,
@@ -1284,7 +1288,7 @@ export const useAccTransaction = (
             voucherPrefix: selectVoucherData.lastPrefix,
             voucherNumber: getVoucherNumber,
             accTransactionMasterID: 0,
-            transactionDate: clientSession.softwareDate,
+            transactionDate: moment(clientSession.softwareDate,"DD/MM/YYYY").local(),
           },
         })
       );

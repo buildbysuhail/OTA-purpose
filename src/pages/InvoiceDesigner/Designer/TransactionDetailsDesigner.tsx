@@ -20,92 +20,15 @@ interface HeaderDesignerProps {
 }
 
 const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps) => {
-
   const [searchParams] = useSearchParams();
   const [currentTab, setTab] = useState<"org_detail" | "cust_detail" | "document_detail" | "">("org_detail");
   const templateGroup = searchParams?.get("template_group");
 
   const headerState = template?.headerState;
-
-  const userSession = useSelector((state: RootState) => state?.UserSession);
-    let userBranches = useAppSelector((state: RootState) => state.UserBranches);
-
   const isCustomer = !["purchase_order", "vendor", "payment_made"]?.includes(templateGroup!)
 
   return (
     <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
-
-      <div className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
-        onClick={() => setTab(currentTab === "org_detail" ? "" : "org_detail")}
-      >
-        Organization Details<ChevronDownIcon className={`h-5  ${currentTab === "org_detail" ? "" : "-rotate-90"} transition-all`} />
-      </div>
-
-      {currentTab === "org_detail" && <div className={"transition-all  flex flex-col gap-5 bg-white p-4"}>
-        <ERPCheckbox
-          id="showLogo"
-          label="Show Organization Logo"
-          checked={headerState?.showLogo}
-          onChange={(e) => onChange({ ...headerState, showLogo: e.target.checked })}
-        />
-        {headerState?.showLogo && (
-          <div className="flex flex-col gap-2">
-            <img src={userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
-            <ERPSlider
-              id="logoSize"
-              label="Logo Size"
-              defaultValue={headerState?.logoSize}
-              onChange={(e) => {
-                onChange({ ...headerState, logoSize: e.target?.valueAsNumber });
-              }}
-            />
-          </div>
-        )}
-        {/* */}
-        {!["qty_adjustment", "value_adjustment"].includes(templateGroup!) &&
-          <>
-            <ERPCheckbox
-              id="showOrgName"
-              checked={headerState?.showOrgName}
-              label="Show Organization Name"
-              onChange={(e) => onChange({ ...headerState, showOrgName: e.target.checked })}
-            />
-            <ERPInput
-              value={headerState?.OrganizationFontColor}
-              onChange={(e) => onChange?.({ ...headerState, OrganizationFontColor: e.target?.value })}
-              label="Font Color"
-              id="bg_color"
-              type="color"
-              placeholder=""
-            />
-            <ERPStepInput
-              value={headerState?.OrganizationFontSize ?? 12}
-              onChange={(font_size) => onChange?.({ ...headerState, OrganizationFontSize: font_size })}
-              label="Font Size (pts)"
-              id="font_size"
-              placeholder=" "
-              min={8}
-              max={28}
-              step={1}
-            />
-          </>
-        }
-
-        {!["qty_adjustment", "value_adjustment"].includes(templateGroup!) &&
-          <ERPCheckbox
-            id="showOrgAddress"
-            checked={headerState?.showOrgAddress}
-            label="Show Organization Address"
-            onChange={(e) => onChange({ ...headerState, showOrgAddress: e.target.checked })}
-          />
-        }
-
-
-        {/* */}
-
-      </div>}
-      {/* */}
-
 
       {!["qty_adjustment", "value_adjustment"]?.includes(templateGroup!) &&
         <div

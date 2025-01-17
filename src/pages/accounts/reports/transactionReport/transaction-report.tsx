@@ -9,13 +9,14 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { FastForward } from "lucide-react";
 
 interface TransactionReport {
   from: Date
 }
 const TransactionReport = () => {
   const dispatch = useAppDispatch();
-    const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
   const [filter, setFilter] = useState<TransactionReport>({ from: new Date() });
   const rootState = useRootState();
@@ -27,7 +28,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -36,7 +37,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 140,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -45,7 +46,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accountName",
@@ -54,7 +55,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -62,12 +63,44 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.particulars}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.particulars}
+          </span>)
+        }
+      }
     },
     {
       dataField: "referenceNumber",
@@ -102,16 +135,44 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
-            ? ''
-            : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(cellElement.data.debit)
-              : cellElement.data.debit}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ?cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance,false,2 ):getFormattedValue(-1 * balance,false,4) 
+              :cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance,false,2 ):getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == null 
+              ? ''
+              : cellElement.data.particulars === "TOTAL"
+                ? getFormattedValue(cellElement.data.debit,false,2 )
+                :getFormattedValue(cellElement.data.debit,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -120,16 +181,44 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
-            ? ''
-            : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(cellElement.data.credit)
-              : cellElement.data.credit}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ?cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance,false,2 ):getFormattedValue(-1 * balance,false,4) 
+              :cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance,false,2 ):getFormattedValue(balance,false,4) ;
+          return {
+            ...exportCell,
+
+            text: value,
+
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              ...exportCell.font,
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == null 
+              ? ''
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(cellElement.data.credit,false,2 )
+                :getFormattedValue(cellElement.data.credit,false,4) }`}
+          </span>)
+        }
+      }
     },
   ];
   return (
@@ -140,8 +229,8 @@ const TransactionReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                // focusedRowEnabled={true}
-                remoteOperations={{filtering:false,paging:false,sorting:false}} 
+                  // focusedRowEnabled={true}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText=" from {dateFrom} to {dateTo} {salesRouteID > 0 && ,Sales Route : [salesRouteName]}"
                   gridHeader={t("transaction_report")}
@@ -157,7 +246,7 @@ const TransactionReport = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactionReportFilter />}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   filterInitialData={TransactionReportFilterInitialState}
                 ></ErpDevGrid>
               </div>

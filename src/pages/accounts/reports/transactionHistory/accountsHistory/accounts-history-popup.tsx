@@ -7,6 +7,7 @@ import ErpDevGrid, {
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface AccountsHistoryPopupProps {
   contentProps?: any;
@@ -20,6 +21,7 @@ const AccountsHistoryPopup = ({
   modalHeight,
 }: AccountsHistoryPopupProps) => {
   const { t } = useTranslation("accountsReport");
+    const { getFormattedValue } = useNumberFormat()
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -39,6 +41,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -47,6 +50,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -54,6 +58,7 @@ const AccountsHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -61,6 +66,7 @@ const AccountsHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => {
         
@@ -77,6 +83,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -85,6 +92,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "debit",
@@ -93,6 +101,41 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == null 
+              ? '':getFormattedValue(cellElement.data.debit,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -101,6 +144,41 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == null 
+              ? '':getFormattedValue(cellElement.data.credit,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "narration",
@@ -109,6 +187,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "oldAccTransactionMasterID",

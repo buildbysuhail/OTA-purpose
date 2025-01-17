@@ -45,17 +45,17 @@ export const useNumberFormat = () => {
     return parseFloat(val.toFixed(decimalPlaces));
   }
   
-  function getFormattedValue(val: number, ignoreNullOrZero: boolean = false): string {
+  function getFormattedValue(val: number, ignoreNullOrZero: boolean = false, decimalPoint: number|undefined = undefined): string {
     
     
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))
     {
       return '';
     }
-    const decimalPoint = applicationSettings.mainSettings?.decimalPoints;
+    const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
     let formattedText: string = val.toLocaleString(undefined, {
-      minimumFractionDigits: decimalPoint,
-      maximumFractionDigits: decimalPoint,
+      minimumFractionDigits: _decimalPoint,
+      maximumFractionDigits: _decimalPoint,
     });
   
     return formattedText;

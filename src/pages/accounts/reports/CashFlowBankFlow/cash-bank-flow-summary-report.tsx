@@ -21,7 +21,7 @@ interface CashFlowBankFlowDetailedSummaryProps {
   modalHeight?:any
 }
 
-const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps> = ({ postData, contentProps,rowData,origin,isMaximized,modalHeight }) => {
+const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps> = ({ postData, contentProps,rowData,origin,isMaximized,modalHeight }) => {
 
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
@@ -40,16 +40,6 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
     }, [isMaximized,modalHeight]);
 
   const columns: DevGridColumn[] = [
-
-    // {
-    //   dataField: "accGroupIDIN",
-    //   caption: t("accGroupIDIN"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 300,
-    //   showInPdf:true,
-    // },
     {
       dataField: "ledgerNameIN",
       caption: t("particulars_in_flow"),
@@ -58,11 +48,43 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       allowFiltering: true,
       minWidth: 200,
       showInPdf:true,
-    cellRender: (cellElement: any, cellInfo: any) => (
-      <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': 'font-bold text-[#2E8B57]'}`}>
-              {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameIN"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
-      </span>
-    ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:( cellElement.data.isGroupCashIN == false?"   ":cellElement.data.ledgerNameIN == "NET FLOW"?"                ":"")+(cellInfo.value??""),
+            bold: cellElement.data?.ledgerNameIN== "TOTAL"||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameIN== "TOTAL"?'#DC143C':cellElement.data.ledgerNameIN == "NET FLOW"? '#0000FF': cellElement.data.isGroupCashIN?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameIN == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameIN == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroupCashIN 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.isGroupCashIN == false? 'pl-4' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 font-bold text-blue': 'font-bold text-[#2E8B57]'}`}>
+            {cellElement.data.isGroupCashIN == true && cellElement.data.ledgerNameIN !== "TOTAL" && cellElement.data.ledgerNameIN !== "NET FLOW" ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameIN"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameIN}</>)}
+    </span>)}}
   },
     {
       dataField: "cashFlowIN",
@@ -72,11 +94,45 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       allowFiltering: true,
       minWidth: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroupCashIN == false ? 'pr-8 ' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':'font-bold text-[#2E8B57]'}`}>
-          {`${cellElement.data?.cashFlowIN == 0 || cellElement.data?.cashFlowIN == null ? '' : cellElement.data.cashFlowIN < 0 ? getFormattedValue(-1 * cellElement.data.cashFlowIN) : getFormattedValue(cellElement.data.cashFlowIN)}`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowIN;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellElement.data.isGroupCashIN == false? value+"       ":value,
+            bold: cellElement.data?.ledgerNameIN== "TOTAL"||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true? true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data?.ledgerNameIN== "TOTAL"?'#DC143C':cellElement.data.ledgerNameIN == "NET FLOW"? '#0000FF': cellElement.data.isGroupCashIN?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameIN == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameIN == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroupCashIN 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+      return (  <span className={`${cellElement.data.isGroupCashIN == false ? 'pr-8 ' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':'font-bold text-[#2E8B57]'}`}>
+        {`${cellElement.data?.cashFlowIN == 0 || cellElement.data?.cashFlowIN == null ? '' : cellElement.data.cashFlowIN < 0 ? getFormattedValue(-1 * cellElement.data.cashFlowIN) : getFormattedValue(cellElement.data.cashFlowIN)}`}
+      </span>)
+        }}
     },
     {
       dataField: "ledgerNameOut",
@@ -86,21 +142,45 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       allowFiltering: true,
       minWidth: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-[#DC143C]' : 'font-bold text-[#2E8B57]'}`}>
-        {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameOut"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowIN;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:( cellElement.data.isGroupCashOut == false?"   ":cellElement.data.ledgerNameOut == "NET FLOW"?"                ":"")+(cellInfo.value??""),
+            bold: cellElement.data?.ledgerNameOut== "TOTAL"||cellElement.data.ledgerNameOut == "NET FLOW"||cellElement.data.isGroupCashOut? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameOut== "TOTAL"?'#DC143C':cellElement.data.ledgerNameOut == "NET FLOW"? '#0000FF': cellElement.data.isGroupCashOut?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameOut == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameOut == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroupCashOut 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return (  <span className={`${cellElement.data.isGroupCashOut == false? 'pl-4' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-[#DC143C]' : 'font-bold text-[#2E8B57]'}`}>
+            {cellElement.data.isGroupCashOut == true && cellElement.data.ledgerNameOut !== "TOTAL"  ? (<DrillDownCellTemplate data={cellElement} field="ledgerNameOut"></DrillDownCellTemplate>) :(<>{cellElement.data.ledgerNameOut}</>)}
+            </span>)
+        }}
     },
-    // {
-    //   dataField: "accGroupNameOut",
-    //   caption: t("accGroupNameOut"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   minWidth: 200,
-    //   showInPdf:true,
-    // },
     {
       dataField: "cashFlowOut",
       caption: t("out_amount"),
@@ -109,13 +189,46 @@ const CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProps
       allowFiltering: true,
       minWidth: 200,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroupCashOut == false ? 'pr-8 ' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :'font-bold text-[#2E8B57]'}`}>
-          {`${cellElement.data?.cashFlowOut == 0 || cellElement.data?.cashFlowOut == null ? '' : cellElement.data.cashFlowOut < 0 ? getFormattedValue(-1 * cellElement.data.cashFlowOut) : getFormattedValue(cellElement.data.cashFlowOut)}`}
-        </span>
-      ),
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowOut;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellElement.data.isGroupCashOut == false? value+"       ":value,
+            bold: cellElement.data?.ledgerNameOut== "TOTAL"||cellElement.data.isGroupCashOut==true? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameOut== "TOTAL"?'#DC143C': cellElement.data.isGroupCashOut?'#2E8B57' :'',
+            alignmentExcel:{ horizontal: 'right' },
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameOut == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameOut == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroupCashOut 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.isGroupCashOut == false ? 'pr-8 ' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :'font-bold text-[#2E8B57]'}`}>
+            {`${cellElement.data?.cashFlowOut == 0 || cellElement.data?.cashFlowOut == null ? '' : cellElement.data.cashFlowOut < 0 ? getFormattedValue(-1 * cellElement.data.cashFlowOut) : getFormattedValue(cellElement.data.cashFlowOut)}`}
+          </span>)
+        }}
     },
-   
   ];
 
   return (

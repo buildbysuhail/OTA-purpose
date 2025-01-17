@@ -49,12 +49,45 @@ const CashFlowReport = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.month;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:( cellElement.data.isSubGroup?"   ":"")+(cellInfo.value??""),
+            bold: true,
+            // alignment: "right",
+            alignment : {
+              horizontal: "right",
+              indent: 2,
+            },
+            textColor: cellElement.data?.month==="TOTAL"?'#DC143C': '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data?.month==="TOTAL"?{ argb: 'FFFF0000' }: '',
+              size: 15,
+            }
+          } : undefined;
+        }
+        else {
         return cellElement.data.month === "TOTAL" ? (<span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {cellElement.data.month}
         </span>) :
           <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
       }
+    }
     },
     {
       dataField: "debit",
@@ -64,11 +97,35 @@ const CashFlowReport = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-        {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : getFormattedValue(cellElement.data.debit)}`}
+            </span>)
+        }}
     },
     {
       dataField: "credit",
@@ -78,11 +135,35 @@ const CashFlowReport = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-         {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              ...exportCell.font,
+              size: 15,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : getFormattedValue(cellElement.data.credit)}`}
+           </span>)
+        }}
     },
     {
       dataField: "monthBal",
@@ -92,11 +173,33 @@ const CashFlowReport = () => {
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : getFormattedValue(cellElement.data.monthBal)}`}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.monthBal;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
+            font: {
+              color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              ...exportCell.font,
+              size: 15,
+            },
+          };
+        }
+        else {
+     return (  <span className={`${cellElement.data.month === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : getFormattedValue(cellElement.data.monthBal)}`}
+    </span>)
+        }}
     },
     {
       dataField: "showSummary",
@@ -133,26 +236,6 @@ const CashFlowReport = () => {
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   reload={true}
                   hideGridAddButton={true}
-                  // childPopupProps={{
-                  //   content: <CashBankFlowDetailedSummaryReport postData={{...filter,
-                  //     reportType:"Cash",
-                  //   }} />,
-                  //   title: t("cash_flow_report_detailed"),
-                  //   isForm: false,
-                  //   width: "mw-100",
-                  //   drillDownCells: "month",
-                  //   bodyProps: "year,monthNum,month",
-                  //   origin:"cash_flow", 
-                  //   enableFn: (data: any) => data?.month != "TOTAL"
-                  // }}
-                  // childPopupProps={{
-                  //   content: <CashBankFlowDetailedReport />,
-                  //   title: t("cash_flow_detailed"),
-                  //   isForm: false,
-                  //   width: "mw-100",
-                  //   drillDownCells: "month",
-                  //   bodyProps: "year,monthNum,reportType,asonDate",
-                  // }}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:dataField == "showSummary"? t("cash_flow_report_summary"):t("cash_flow_report_detailed"),
                     width: "700px",

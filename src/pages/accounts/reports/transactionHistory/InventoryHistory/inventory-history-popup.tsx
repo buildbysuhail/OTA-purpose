@@ -10,6 +10,7 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import InventoryHistoryDetails from "./inventory-history-details";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface InventoryHistoryPopupProps {
   contentProps?: any;
@@ -29,6 +30,7 @@ const InventoryHistoryPopup = ({
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
+    const { getFormattedValue } = useNumberFormat()
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -93,7 +95,40 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.grandTotal;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.grandTotal == null 
+              ? '':getFormattedValue(cellElement.data.grandTotal,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "cashReceived",
@@ -102,7 +137,40 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashReceived;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.cashReceived == null 
+              ? '':getFormattedValue(cellElement.data.cashReceived,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "remarks",

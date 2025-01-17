@@ -55,11 +55,44 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:( cellElement.data.isGroup == false?"   ":cellElement.data.ledgerNameIN == "NET FLOW"?"                ":"")+(cellInfo.value??""),
+            bold: cellElement.data?.ledgerNameIN== "TOTAL"||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameIN== "TOTAL"?'#DC143C':cellElement.data.ledgerNameIN == "NET FLOW"? '#0000FF': cellElement.data.isGroup?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameIN == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameIN == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroup 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return (  <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameIN == "TOTAL" ? 'font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'pl-20 text-lg font-bold text-blue': ''}`}>
           {cellElement.data.ledgerNameIN}
-        </span>
-      ),
+        </span>)
+        }}
     },
     // {
     //   dataField: "accGroupNameIN",
@@ -78,11 +111,45 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowIN;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellElement.data.isGroup == false? value+"       ":value,
+            bold: cellElement.data?.ledgerNameIN== "TOTAL"||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true? true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data?.ledgerNameIN== "TOTAL"?'#DC143C':cellElement.data.ledgerNameIN == "NET FLOW"? '#0000FF': cellElement.data.isGroup?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameIN == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameIN == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroup 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return(  <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameIN == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :cellElement.data.ledgerNameIN == "NET FLOW"? 'text-lg font-bold text-blue':''}`}>
           {`${ cellElement.data?.cashFlowIN == null ? '' : getFormattedValue(cellElement.data.cashFlowIN)}`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "ledgerNameOut",
@@ -92,11 +159,45 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-[#DC143C]': ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowIN;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:( cellElement.data.isGroup == false?"   ":cellElement.data.ledgerNameOut == "NET FLOW"?"                ":"")+(cellInfo.value??""),
+            bold: cellElement.data?.ledgerNameOut== "TOTAL"||cellElement.data.ledgerNameOut == "NET FLOW"||cellElement.data.isGroup? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameOut== "TOTAL"?'#DC143C':cellElement.data.ledgerNameOut == "NET FLOW"?
+             '#0000FF': cellElement.data.isGroup?'#2E8B57' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameOut == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameOut == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroup 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.isGroup == true? 'font-bold text-[#2E8B57]' :cellElement.data.ledgerNameOut == "TOTAL" ? 'font-bold text-[#DC143C]': ''}`}>
           {cellElement.data.ledgerNameOut}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "cashFlowOut",
@@ -106,11 +207,45 @@ const CashFlowBankFlowSummaryDetailedOutReport: FC<CashFlowBankFlowSummaryDetail
       allowFiltering: true,
       width: 300,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashFlowOut;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance) ;
+          return exportCell != undefined ? {
+            ...exportCell,
+            text:cellElement.data.isGroup == false? value+"       ":value,
+            bold: cellElement.data?.ledgerNameOut== "TOTAL"||cellElement.data.isGroup==true? true:false,
+            alignment: "right",
+            textColor: cellElement.data?.ledgerNameOut== "TOTAL"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :'',
+            alignmentExcel:{ horizontal: 'right' },
+            font: {
+              ...exportCell.font,
+              color: cellElement.data?.ledgerNameOut == "TOTAL" 
+              ? { argb: 'FFFF0000' } // Red
+              : cellElement.data.ledgerNameOut == "NET FLOW"
+              ? { argb: 'FF0000FF' } // Blue
+              : cellElement.data.isGroup 
+              ? { argb: 'FF2E8B57' } // Sea Green
+              : '',     size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerNameOut == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' :''}`}>
           {`${ cellElement.data?.cashFlowOut == null ? '' :  getFormattedValue(cellElement.data.cashFlowOut)}`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "branchName",

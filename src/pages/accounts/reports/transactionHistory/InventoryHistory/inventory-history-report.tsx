@@ -13,6 +13,7 @@ import TransactrionHistoryReportFilter, {
 } from "../transaction-history-report-filter";
 import InventoryHistoryDetails from "./inventory-history-details";
 import InventoryHistoryPopup from "./inventory-history-popup";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 const InventoryHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -22,6 +23,7 @@ const InventoryHistoryReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
+  const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -31,6 +33,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -39,6 +42,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "modifiedDate",
@@ -47,6 +51,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "timeStamp",
@@ -55,6 +60,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -63,6 +69,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.oldInvTransactionID > 0 ? (
           <DrillDownCellTemplate
@@ -81,6 +88,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      showInPdf: true,
     },
     {
       dataField: "grandTotal",
@@ -89,6 +97,41 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.grandTotal;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.grandTotal == null 
+              ? '':getFormattedValue(cellElement.data.grandTotal,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "actionStatus",
@@ -97,6 +140,7 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
     },
     {
       dataField: "cashReceived",
@@ -105,6 +149,41 @@ const InventoryHistoryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.cashReceived;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null 
+              ? ""
+              : balance < 0
+              ? getFormattedValue(-1 * balance,false,4) 
+              : getFormattedValue(balance,false,4) ;
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.cashReceived == null 
+              ? '':getFormattedValue(cellElement.data.cashReceived,false,4) }`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "remarks",

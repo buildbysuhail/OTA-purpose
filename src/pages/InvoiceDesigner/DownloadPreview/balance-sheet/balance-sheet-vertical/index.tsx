@@ -1,189 +1,155 @@
-import { Document, Page, View, Text, StyleSheet, PDFViewer } from "@react-pdf/renderer";
+import { Document, Page, View, Text, StyleSheet, Image } from "@react-pdf/renderer";
 import { TemplateState } from "../../../Designer/interfaces";
 import FontRegistration from "../../../../LabelDesigner/fontRegister";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import Table from "./Table";
+
 
 export interface BalanceSheetVerticalProps {
+  data?: any;
   template?: TemplateState;
+  currentBranch?: any;
+  userSession?:any;
 }
 
 const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'column',
-    padding: 10,
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-  table: {
+
+  companyInfo: {
     display: "flex",
+    flexDirection: "column",
+    gap:4,
+    flexWrap: "wrap",
     width: "100%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
+    zIndex: 10,
   },
-  tableRow: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
+  logo: {
+    marginVertical: 4,
   },
-  tableCol: {
-    width: "25%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-    padding: 5,
+  orgName: {
+    textTransform: "capitalize",
+    fontWeight: "semibold",
   },
-  tableCell: {
-    fontSize: 10,
+  orgAddress: {
+    display: "flex",
+    flexDirection: "column",
+    alignContent:"center",
+    gap:2
   },
+
 });
 
-const BalanceSheetVerticalTemplate = ({ template }: BalanceSheetVerticalProps) => {
+const BalanceSheetVerticalTemplate = ({ template,currentBranch,userSession,data }: BalanceSheetVerticalProps) => {
+  const headerState = template?.headerState;
+  const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const paddingLeft = template?.propertiesState?.padding?.left || 10;
   const paddingRight = template?.propertiesState?.padding?.right || 10;
   const paddingTop = template?.propertiesState?.padding?.top || 10;
   const paddingBottom = template?.propertiesState?.padding?.bottom || 10;
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
 
+  const fontFamily = template?.propertiesState?.font_family || "Roboto";
+  const fontSize = template?.propertiesState?.font_size || 12;
+  const color = template?.propertiesState?.font_color || "#000";
+  const fontWeight = template?.propertiesState?.font_weight || 400;
+  const fontStyle = template?.propertiesState?.fontStyle || "normal";
+
+  const labelFontSize = template?.propertiesState?.label_font_size || 12;
+  const labelColor = template?.propertiesState?.label_font_color || "#000";
+  const labelFontWeight = template?.propertiesState?.label_font_weight || 400;
+  const labelFontStyle = template?.propertiesState?.label_font_style || "normal";
+
+  const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
+  const orgNameFontSize = headerState?.OrganizationFontSize || 12;
+
+  const labelStyles = {
+    color: labelColor,
+    fontSize: labelFontSize,
+    fontWeight: labelFontWeight,
+    fontStyle: labelFontStyle,
+    fontFamily,
+  };
+
+  const fontStyles = {
+    color,
+    fontSize,
+    fontWeight,
+    fontStyle,
+    fontFamily,
+  };
+  const arabicFontStyles = {
+    ...fontStyles,
+    fontFamily: 'Amiri',
+
+  };
   return (
     <Document>
       <FontRegistration />
-      <Page size={"A4"} orientation={pageOrientation} style={styles.page}>
-        <View style={styles.section}>
-          <Text>As of January 15, 2024</Text>
-          <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Liabilities</Text>
+      <Page size={"A4"} orientation={pageOrientation} wrap>
+      <View style={{ flex: 1, flexDirection: 'column', width: '100%', height: '100%' }}>
+         {/* Header */}
+         <View style={{
+          backgroundColor: template?.headerState?.bgColor ,
+          height: `auto`, 
+          width: '100%',
+        }}>
+            <View style={{ display: "flex", flexDirection: "column",alignContent:"center" ,
+              justifyContent:"center" ,
+              padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,}}>
+              {headerState?.showLogo && (
+                <Image
+                  src={currentBranch?.logo}
+                  style={[styles.logo, { width: 80 * logoWidthRatio }]}
+                />
+              )}
+              {headerState?.showOrgName && (
+                <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold",fontFamily:fontFamily,}}>
+                  {/* {currentBranch?.name} */}
+                  {userSession.headerFooter?.heading7}
+                </Text>
+              )}
+                {headerState?.showOrgAddress && (
+              <View >
+                <Text style={arabicFontStyles}>{userSession.headerFooter.heading8}</Text>
+                <Text style={fontStyles}>{userSession.headerFooter.heading9}</Text>
+                  <Text style={fontStyles}>Balance Sheet as of  15, 2024</Text>
               </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Amount</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Assets</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Amount</Text>
-              </View>
+            )}
             </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Capital Accounts</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>125,414,443,455</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Current Asset</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>204,975,016,438</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Reserves & Surplus</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>125,414,443,455</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Closing Stock</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>68,298,982,378</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Current Liabilities</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>153,955,018,733</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Cash in hand</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>59,696,256,665</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Duties & Taxes</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>16,179,554,096</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Account Receivable</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>77,009,777,395</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Account Payable</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>137,775,434,635</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Profit & Loss A/c (Net Loss)</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>74,394,438,829</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}></Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}></Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Current Period</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>1,664,793,265</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}></Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}></Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Previous Period</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>72,720,645,964</Text>
-              </View>
-            </View>
-            <View style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Total</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>279,369,455,267</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Total</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>279,369,455,267</Text>
-              </View>
-            </View>
+        </View>
+    
+          {/* Main Content */}
+          <View style={{
+          flex: 1, 
+          position: 'relative',
+          backgroundColor: template?.propertiesState?.bg_color || "#fff",
+          
+        }}>
+          {/* Background Image */}
+          {template?.background_image && (
+            <Image
+              src={template.background_image}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: -20,
+              }}
+            />
+          )}
+
+          {/* Content */}
+          <View style={{zIndex: 50 ,
+            padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
+          }}>
+             <Table template={template} />
           </View>
         </View>
+      
+     
+       </View>
       </Page>
     </Document>
   );

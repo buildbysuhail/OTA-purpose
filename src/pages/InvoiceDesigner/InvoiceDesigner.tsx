@@ -52,7 +52,8 @@ import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
 import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_voucher";
 import BalanceSheetVerticalTemplate from "./DownloadPreview/balance-sheet/balance-sheet-vertical";
-
+import NoDataMessage from "./utils/visible-non-component";
+import { RootState } from "../../redux/store";
 
 interface DesignSectionType {
   id: number;
@@ -128,7 +129,7 @@ const InvoiceDesigner = () => {
   const appDispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const currentBranch = useCurrentBranch();
-
+  const userSession =  useSelector((state: RootState) => (state.UserSession));  
   const [loading, setLoading] = useState(false);
   const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
     signature_image: null,
@@ -393,7 +394,7 @@ const InvoiceDesigner = () => {
                 )}
               </button>
             </div>
-          ) : (
+          ) :["SI", "SR"].includes(templateGroup) ? (
             <div>
               <button
                 title="Save Template"
@@ -407,6 +408,20 @@ const InvoiceDesigner = () => {
                 )}
               </button>
             </div>
+          ):(
+            <div>
+            <button
+              title="Save Template "
+              // onClick={}
+              className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+            >
+              <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
+              <span className="text-sm">Save</span>
+              {loading && (
+                <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>
+              )}
+            </button>
+          </div>
           )}
         </div>
         {/* */}
@@ -430,57 +445,72 @@ const InvoiceDesigner = () => {
             // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
           />
         )}
-
-        {currentSection.type == "transactions" && (
-          <TransactionDetailsDesigner
-            template={templateData?.activeTemplate}
-            headerState={templateData?.activeTemplate?.headerState}
-            onChange={(headerState) =>
-              dispatch(setTemplateHeaderState(headerState))
-            }
-          />
-        )}
-
-       {currentSection.type == "table" &&
-          (["SI", "SR"].includes(templateGroup) ? (
-            <ItemTableDesigner
-              template={templateData?.activeTemplate}
-              itemTableState={templateData?.activeTemplate?.itemTableState}
-              onChange={(itemTableState) =>
-                dispatch(setTemplateItemTableState(itemTableState))
-              }
-            />
-          ) : ["CP", "CR"].includes(templateGroup) ? (
-            <AccTableDesigner
-              template={templateData?.activeTemplate}
-              accTableState={templateData?.activeTemplate?.accTableState}
-              onChange={(accTableState) =>
-                dispatch(setTemplateAccTableState(accTableState))
-              }
-            />
+        
+       {
+        currentSection.type === "transactions" &&
+          (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+            <NoDataMessage message="Oops, there is no property!!!" />
           ) : (
-            <></>
-          ))}
-            
+            <TransactionDetailsDesigner
+              template={templateData?.activeTemplate}
+              headerState={templateData?.activeTemplate?.headerState}
+              onChange={(headerState) =>
+                dispatch(setTemplateHeaderState(headerState))
+              }
+            />
+          ))
+        }
 
-        {currentSection.type == "total" && (
-          <TotalDesigner
-            totalState={templateData?.activeTemplate?.totalState}
-            onChange={(totalState) =>
-              dispatch(setTemplateTotalState(totalState))
-            }
-          />
-        )}
 
-        {currentSection.type == "others" && (
-          <FooterDesigner
-            tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData?.activeTemplate?.footerState}
-            onChange={(footerState) =>
-              dispatch(setTemplateFooterState(footerState))
-            }
-          />
-        )}
+        {
+          currentSection.type === "table" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no table property!!!" />
+            ) : ["SI", "SR"].includes(templateGroup) ? (
+              <ItemTableDesigner
+                template={templateData?.activeTemplate}
+                itemTableState={templateData?.activeTemplate?.itemTableState}
+                onChange={(itemTableState) =>
+                  dispatch(setTemplateItemTableState(itemTableState))
+                }
+              />
+            ) : ["CP", "CR"].includes(templateGroup) ? (
+              <AccTableDesigner
+                template={templateData?.activeTemplate}
+                accTableState={templateData?.activeTemplate?.accTableState}
+                onChange={(accTableState) =>
+                  dispatch(setTemplateAccTableState(accTableState))
+                }
+              />
+            ) : null) // Return null for unsupported cases
+        }
+
+        {
+          currentSection.type === "total" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no total property!!!" />
+            ) : (
+              <TotalDesigner
+                totalState={templateData?.activeTemplate?.totalState}
+                onChange={(totalState) => dispatch(setTemplateTotalState(totalState))}
+              />
+            ))
+        }
+
+        {
+          currentSection.type === "others" &&
+            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+              <NoDataMessage message="Oops, there is no property!!!" />
+            ) : (
+              <FooterDesigner
+                tempImages={{ templateImages, setTemplateImages }}
+                footerState={templateData?.activeTemplate?.footerState}
+                onChange={(footerState) =>
+                  dispatch(setTemplateFooterState(footerState))
+                }
+              />
+            ))
+        }
       </div>
 
       {/* Preview  */}
@@ -489,10 +519,12 @@ const InvoiceDesigner = () => {
         className="pdf-viewer"
         width="100%"
         height="auto"
-        style={{ maxHeight: `${maxHeight}px`, margin: "20px" }}
+        style={{ maxHeight: `${maxHeight}px`, margin: "20px", padding:"10px"}}
        >
       <BalanceSheetVerticalTemplate
       template={templateData.activeTemplate}
+      currentBranch={currentBranch}
+      userSession={userSession}
       />
       </PDFViewer>
       )}

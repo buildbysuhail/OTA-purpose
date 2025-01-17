@@ -1,288 +1,177 @@
-// import { View, Text,StyleSheet } from "@react-pdf/renderer";
-// import { AccountTransactionProps } from ".";
-// import { TemplateState } from "../../../Designer/interfaces";
+import { View, Text, StyleSheet } from "@react-pdf/renderer";
+import { TemplateState } from "../../../Designer/interfaces";
 
-// // const Table = ({ data, template }: AccountTransactionProps) => {
-// //   const accTableState = template?.accTableState;
+const Table = ({ data, template }: { data?: any; template?: TemplateState }) => {
+  const propertiesState = template?.propertiesState;
+  const fontFamily = propertiesState?.font_family || "Roboto";
 
-// //   /// Header
-// //   const headerFontSize = accTableState?.headerFontSize || "#fff";
-// //   const headerFontColor = accTableState?.headerFontColor || "#000";
-// //   const headerBgColor = accTableState?.tableHeaderBgColor || "#fff";
+  const labelStyles = {
+    color: propertiesState?.label_font_color || "#000",
+    fontSize: propertiesState?.label_font_size || 12,
+    fontWeight: propertiesState?.label_font_weight || 400,
+    fontStyle: propertiesState?.label_font_style || "normal",
+    fontFamily,
+  };
 
-// //   /// Items
-// //   const ItemsfontSize = accTableState?.itemRowFontSize;
-// //   const ItemsborderColor = accTableState?.tableBorderColor;
-// //   const Itemscolor = accTableState?.itemRowFontColor || "#000";
-// //   const ItemsBackgroundColor = accTableState?.itemRowBgColor || "#fff";
-// //   return (
-// //     <View>
-// //       <View
-// //         style={{
-// //           backgroundColor: headerBgColor,
-// //           color: headerFontColor,
-// //           fontSize: headerFontSize,
-// //           display: "flex",
-// //           flexDirection: "row",
-// //         }}
-// //       >
-// //         <View
-// //           style={{
-// //             flex: "1",
-// //             height: "30px",
-// //             display: "flex",
-// //             flexDirection: "column",
-// //             justifyContent: "center",
-// //             alignItems: "center",
-// //             alignContent: "center",
-// //             padding: "5pt",
-// //           }}
-// //         >
-// //           <Text>#</Text>
-// //         </View>
-// //         <View
-// //           style={{
-// //             flex: "5",
-// //             height: "30px",
-// //             display: "flex",
-// //             flexDirection: "column",
-// //             justifyContent: "center",
-// //             alignItems: "flex-start",
-// //             alignContent: "flex-start",
-// //             padding: "5pt",
-// //           }}
-// //         >
-// //           <Text>
-// //             {/* {preference?.item || "Item"} & {preference?.description || "Description"} */}
-// //           </Text>
-// //         </View>
-// //         <View
-// //           style={{
-// //             flex: "3",
-// //             height: "30px",
-// //             display: "flex",
-// //             flexDirection: "column",
-// //             justifyContent: "center",
-// //             alignItems: "flex-end",
-// //             alignContent: "flex-end",
-// //             padding: "5pt",
-// //           }}
-// //         >
-// //           {/* <Text>{preference?.quantity || "Qty"}</Text> */}
-// //         </View>
-// //       </View>
-// //       <View>
-// //         {data?.items?.map((val: any, index: number) => (
-// //           <View key={index} style={{ display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-around" }} wrap={false}>
-// //             <View
-// //               style={{
-// //                 flex: "1",
-// //                 height: "auto",
-// //                 padding: "5pt",
-// //                 display: "flex",
-// //                 color: Itemscolor,
-// //                 flexDirection: "row",
-// //                 fontSize: ItemsfontSize,
-// //                 justifyContent: "center",
-// //                 borderColor: ItemsborderColor,
-// //                 backgroundColor: ItemsBackgroundColor,
-// //                 borderBottomWidth: accTableState?.showTableBorder ? "2px" : "0px",
-// //               }}
-// //             >
-// //               <Text>{index + 1}</Text>
-// //             </View>
-// //             <View
-// //               style={{
-// //                 flex: "5",
-// //                 padding: "5pt",
-// //                 display: "flex",
-// //                 color: Itemscolor,
-// //                 flexDirection: "row",
-// //                 fontSize: ItemsfontSize,
-// //                 justifyContent: "flex-start",
-// //                 borderColor: ItemsborderColor,
-// //                 backgroundColor: ItemsBackgroundColor,
-// //                 borderBottomWidth: accTableState?.showTableBorder ? "2px" : "0px",
-// //               }}
-// //             >
-// //               <Text>{val?.item_name}</Text>
-// //               <View />
-// //               <Text style={{ color: "gray" }}>{val?.description}</Text>
-// //             </View>
-// //             <View
-// //               style={{
-// //                 flex: "3",
-// //                 padding: "5pt",
-// //                 display: "flex",
-// //                 color: Itemscolor,
-// //                 flexDirection: "row",
-// //                 fontSize: ItemsfontSize,
-// //                 justifyContent: "flex-end",
-// //                 borderColor: ItemsborderColor,
-// //                 backgroundColor: ItemsBackgroundColor,
-// //                 borderBottomWidth: accTableState?.showTableBorder ? "2px" : "0px",
-// //               }}
-// //             >
-// //               <Text> {val?.qty}</Text>
-// //             </View>
-// //           </View>
-// //         ))}
-// //       </View>
-// //     </View>
-// //   );
-// // };
+  const fontStyles = {
+    color: propertiesState?.font_color || "#000",
+    fontSize: propertiesState?.font_size || 12,
+    fontWeight: propertiesState?.font_weight || 400,
+    fontStyle: propertiesState?.fontStyle || "normal",
+    fontFamily,
+  };
 
-// // export default Table;
+  // Styles
+  const styles = StyleSheet.create({
+    table: {
+      display: "flex",
+      width: "100%",
+      border: "1px solid #262626", // Outer border for the entire table
+    },
+    tableRow: {
+      flexDirection: "row",
+    },
+    tableCol: {
+      width: "25%",
+      padding: 5,
+      borderRight: "1px solid #262626", // Right border for each column
+      borderBottom: "1px solid #262626", // Bottom border for each row
+    },
+    tableCell: {
+      // Additional cell styles if needed
+    },
+  });
 
+  return (
+    <View style={[styles.table,{borderBottom:"none"}]}>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={labelStyles}>Liabilities</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={labelStyles}>Amount</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={labelStyles}>Assets</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={labelStyles}>Amount</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Capital AccountsCapital AccountsCapital AccountsCapital Accounts</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>125,414,443,455</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Current Asset</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>204,975,016,438</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Reserves & Surplus</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>125,414,443,455</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Closing Stock</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>68,298,982,378</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Current Liabilities</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>153,955,018,733</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Cash in hand</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>59,696,256,665</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Duties & Taxes</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>16,179,554,096</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Account Receivable</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>77,009,777,395</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Account Payable</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>137,775,434,635</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Profit & Loss A/c (Net Loss)</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>74,394,438,829</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}></Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}></Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Current Period</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>1,664,793,265</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}></Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}></Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Previous Period</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>72,720,645,964</Text>
+        </View>
+      </View>
+      <View style={styles.tableRow}>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Total</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>279,369,455,267</Text>
+        </View>
+        <View style={styles.tableCol}>
+          <Text style={fontStyles}>Total</Text>
+        </View>
+        <View style={[styles.tableCol, { borderRight: "none" }]}>
+          <Text style={fontStyles}>279,369,455,267</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
 
-
-// const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
-//   const accTableState = template?.accTableState;
-//   const propertiesState = template?.propertiesState;
-
-//   const labelStyles = {
-//     fontWeight: propertiesState?.label_font_weight,
-//     fontStyle: propertiesState?.label_font_style,
-//     fontFamily:propertiesState?.font_family,
-//   };
-  
-
-//   // Styles
-//   const styles = StyleSheet.create({
-//     table: {
-//       width: "100%",
-//       marginBottom: 10,
-//     },
-//     thead: {
-//       backgroundColor: accTableState?.showTableHeaderBg ? accTableState?.tableHeaderBgColor : "#fff",
-//       color: accTableState?.headerFontColor || "#000",
-//       fontSize: accTableState?.headerFontSize || 12,
-//       flexDirection: "row",
-//       borderBottom: `0.5px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor  :"#DFDFDF"}`,
-//     },
-//     th: {
-//       padding: 4,
-//       flex: 1,
-//       textAlign: "center",
-//     },
-//     tbody: {
-//       flexDirection: "column",
-//     },
-//     tr: {
-//       flexDirection: "row",
-//       borderBottom: `0.5px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor  :""}`,
-//       backgroundColor: accTableState?.showRowBg ? accTableState?.itemRowBgColor : "#fff",
-//     },
-//     td: {
-//       padding: 4,
-//       flex: 1,
-//       textAlign: "center",
-//       color: accTableState?.itemRowFontColor || "#000",
-//       fontSize: accTableState?.itemRowFontSize || 12,
-//       fontWeight:propertiesState?.font_weight,
-//       // fontStyle:propertiesState?.label_font_color,
-//       // fontFamily:propertiesState?.label_font_color,
-//     },
-   
-//   });
-
-//   return (
-//     <View>
-//       <View style={[styles.table,labelStyles]}>
-//         {/* Table Header */}
-//         <View style={styles.thead}>
-//           {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
-//           {/* Invoice Number */}
-//         {accTableState?.showInvoiceNumber && (
-//           <Text style={[styles.th, { width: accTableState?.InvoiceNumberWidth }]}>
-//             {accTableState?.InvoiceNumberLabel || "Invoice Number"}
-//           </Text>
-//         )}
-
-//         {/* Invoice Date */}
-//         {accTableState?.showInvoiceDate && (
-//           <Text style={[styles.th, { width: accTableState?.InvoiceDateWidth }]}>
-//             {accTableState?.InvoiceDateLabel || "Invoice Date"}
-//           </Text>
-//         )}
-
-//         {/* Invoice Amount */}
-//         {accTableState?.showInvoiceAmount && (
-//           <Text style={[styles.th, { width: accTableState?.InvoiceAmountWidth }]}>
-//             {accTableState?.InvoiceAmountLabel || "Invoice Amount"}
-//           </Text>
-//         )}
-
-//         {/* Withholding Tax */}
-//         {accTableState?.showWithholdingTax && (
-//           <Text style={[styles.th, { width: accTableState?.WithholdingTaxWidth }]}>
-//             {accTableState?.WithholdingTaxLabel || "Withholding Tax"}
-//           </Text>
-//         )}
-
-//         {/* TCS Amount */}
-//         {accTableState?.showTCSAmount && (
-//           <Text style={[styles.th, { width: accTableState?.TCSAmountWidth }]}>
-//             {accTableState?.TCSAmountLabel || "TCS Amount"}
-//           </Text>
-//         )}
-
-//         {/* Payment Amount */}
-//         {accTableState?.showPaymentAmount && (
-//           <Text style={[styles.th, { width: accTableState?.PaymentAmountWidth }]}>
-//             {accTableState?.PaymentAmountLabel || "Payment Amount"}
-//           </Text>
-//         )}
-//         </View>
-
-//         {/* Table Body */}
-//         <View style={styles.tbody}>
-//           {data?.details
-//            ?.slice(0,2) 
-//            ?.map((val: any, index: number) => (
-//               <View key={`tbr${index}`} style={styles.tr}>
-//                 {accTableState?.showLineItemNumber && (
-//                   <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
-//                     {index + 1}
-//                   </Text>
-//                 )}
-//                 {(accTableState?.showInvoiceNumber) && (
-//                   <Text style={{ ...styles.td, width: accTableState?.InvoiceNumberWidth }}>
-//                     INV-00{index + 1} 
-//                   </Text>
-//                 )}
-//                 {accTableState?.showInvoiceDate && (
-//                   <Text style={{ ...styles.td, width: accTableState?.InvoiceDateWidth }}>
-//                     2024-01-{10 + index}
-//                   </Text>
-//                 )}
-//                 {accTableState?.showInvoiceAmount && (
-//                   <Text style={{ ...styles.td, width: accTableState?.InvoiceAmountWidth }}>
-//                     {1000 + index * 500}.00 {/* Demo Invoice Amount */}
-//                   </Text>
-//                 )}
-//                 {accTableState?.showWithholdingTax && (
-//                   <Text style={{ ...styles.td, width: accTableState?.WithholdingTaxWidth }}>
-//                      {50 + index * 10}.00 {/* Demo Withholding Tax */} 
-//                   </Text>
-//                 )}
-//                 {accTableState?.showTCSAmount && (
-//                   <Text style={{ ...styles.td, width: accTableState?.TCSAmountWidth }}>
-//                     {20 + index * 5}.00 {/* Demo TCS Amount */}
-//                   </Text>
-//                 )}
-//                 {accTableState?.showPaymentAmount && (
-//                   <Text style={{ ...styles.td, width: accTableState?.PaymentAmountWidth }}>
-//                   {800 + index * 200}.00 {/* Demo Payment Amount */}
-//                   </Text>
-//                 )}    
-//               </View>
-//             ))}
-//         </View>
-
-//       </View>
-//     </View>
-//   );
-// };
-
-// export default Table;
+export default Table;

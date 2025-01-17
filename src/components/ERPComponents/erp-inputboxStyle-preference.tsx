@@ -95,7 +95,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBox"
             className="ti-form-radio"
             id="input-normal"
-            checked={inputBox.inputStyle === "normal"}
+            checked={inputBox?.inputStyle === "normal"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputStyle", "normal");
@@ -112,7 +112,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBox"
             className="ti-form-radio"
             id="input-standard"
-            checked={inputBox.inputStyle === "standard"}
+            checked={inputBox?.inputStyle === "standard"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputStyle", "standard");
@@ -129,7 +129,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBox"
             className="ti-form-radio"
             id="input-outlined"
-            checked={inputBox.inputStyle === "outlined"}
+            checked={inputBox?.inputStyle === "outlined"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputStyle", "outlined");
@@ -146,7 +146,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBox"
             className="ti-form-radio"
             id="input-filled"
-            checked={inputBox.inputStyle === "filled"}
+            checked={inputBox?.inputStyle === "filled"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputStyle", "filled");
@@ -167,7 +167,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBoxSize"
             className="ti-form-radio"
             id="input-sm"
-            checked={inputBox.inputSize === "sm"}
+            checked={inputBox?.inputSize === "sm"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputSize", "sm");
@@ -184,7 +184,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBoxSize"
             className="ti-form-radio"
             id="input-md"
-            checked={inputBox.inputSize === "md"}
+            checked={inputBox?.inputSize === "md"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputSize", "md");
@@ -201,7 +201,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBoxSize"
             className="ti-form-radio"
             id="input-lg"
-            checked={inputBox.inputSize === "lg"}
+            checked={inputBox?.inputSize === "lg"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputSize", "lg");
@@ -218,7 +218,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             name="inputBoxSize"
             className="ti-form-radio"
             id="input-customize"
-            checked={inputBox.inputSize === "customize"}
+            checked={inputBox?.inputSize === "customize"}
             onChange={(e) => {
               if (e.target.checked) {
                 onInputBoxChange("inputSize", "customize");
@@ -239,7 +239,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               id="borderRadius"
               label="Border Radius"
               className="bg-slate-300"
-              value={inputBox.borderRadius}
+              value={inputBox?.borderRadius}
               onChange={(e) => {
                 const newValue = parseInt(e.target?.value, 10);
                 onInputBoxChange("borderRadius", newValue);
@@ -253,7 +253,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               id="borderRadius"
               noLabel={true}
               type="number"
-              value={inputBox.borderRadius}
+              value={inputBox?.borderRadius}
               data={inputBox}
               onChange={(e) => {
                 const newValue = parseInt(e.target?.value, 10);
@@ -269,9 +269,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="marginBottom"
-                label={`Margin Bottom (${inputBox.marginBottom ?? 0})`}
+                label={`Margin Bottom (${inputBox?.marginBottom ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.marginBottom}
+                value={inputBox?.marginBottom}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("marginBottom", newValue);
@@ -283,9 +283,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="marginTop"
-                label={`Margin Top (${inputBox.marginTop ?? 0})`}
+                label={`Margin Top (${inputBox?.marginTop ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.marginTop}
+                value={inputBox?.marginTop}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("marginTop", newValue);
@@ -302,7 +302,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
       </div>
 
       {/* Font Size, Label Font Size, and Font Weight Customization */}
-      {inputBox.inputSize === "customize" && (
+      {inputBox?.inputSize === "customize" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style mb-1">
           <div className="flex items-center space-x-3">
             <div className="basis-2/3">
@@ -310,7 +310,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="fontSize"
                 label="Font Size"
                 className="bg-slate-300"
-                value={inputBox.fontSize}
+                value={inputBox?.fontSize}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
                   onInputBoxChange("fontSize", newValue);
@@ -324,7 +324,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="fontSize"
                 type="number"
                 noLabel={true}
-                value={inputBox.fontSize}
+                value={inputBox?.fontSize}
                 data={inputBox}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
@@ -342,7 +342,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="labelFontSize"
                 label="Label Font Size"
                 className="bg-slate-300"
-                value={inputBox.labelFontSize}
+                value={inputBox?.labelFontSize}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
                   onInputBoxChange("labelFontSize", newValue);
@@ -356,7 +356,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="labelFontSize"
                 type="number"
                 noLabel={true}
-                value={inputBox.labelFontSize}
+                value={inputBox?.labelFontSize}
                 data={inputBox}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
@@ -374,7 +374,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="fontWeight"
                 label="Font Weight"
                 className="bg-slate-300"
-                value={inputBox.fontWeight}
+                value={inputBox?.fontWeight}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
                   onInputBoxChange("fontWeight", newValue);
@@ -389,7 +389,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="fontWeight"
                 type="number"
                 noLabel={true}
-                value={inputBox.fontWeight}
+                value={inputBox?.fontWeight}
                 data={inputBox}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value, 10);
@@ -408,7 +408,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="inputHeight"
                 label="Height"
                 className="bg-slate-300"
-                value={inputBox.inputHeight}
+                value={inputBox?.inputHeight}
                 onChange={(e) => {
                   const newValue = parseFloat(e.target?.value);
                   onInputBoxChange("inputHeight", newValue);
@@ -423,7 +423,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
                 id="inputHeight"
                 type="number"
                 noLabel={true}
-                value={inputBox.inputHeight}
+                value={inputBox?.inputHeight}
                 data={inputBox}
                 onChange={(e) => {
                   const newValue = parseFloat(e.target?.value);
@@ -441,9 +441,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="adjustA"
-                label={`AdjustA (${inputBox.adjustA ?? 0})`}
+                label={`AdjustA (${inputBox?.adjustA ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.adjustA}
+                value={inputBox?.adjustA}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("adjustA", newValue);
@@ -455,9 +455,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="adjustB"
-                label={`AdjustB (${inputBox.adjustB ?? 0})`}
+                label={`AdjustB (${inputBox?.adjustB ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.adjustB}
+                value={inputBox?.adjustB}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("adjustB", newValue);
@@ -472,9 +472,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="adjustC"
-                label={`AdjustC (${inputBox.adjustC ?? 0})`}
+                label={`AdjustC (${inputBox?.adjustC ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.adjustC}
+                value={inputBox?.adjustC}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("adjustC", newValue);
@@ -486,9 +486,9 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div className="basis-1/2">
               <ERPSlider
                 id="adjustD"
-                label={`AdjustD (${inputBox.adjustD ?? 0})`}
+                label={`AdjustD (${inputBox?.adjustD ?? 0})`}
                 className="bg-slate-300"
-                value={inputBox.adjustD}
+                value={inputBox?.adjustD}
                 onChange={(e) => {
                   const newValue = parseInt(e.target?.value);
                   onInputBoxChange("adjustD", newValue);
@@ -517,13 +517,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               <div
                 className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                 style={{
-                  backgroundColor: `rgb(${inputBox.inputBgColor ?? "128, 128, 128"})`,
+                  backgroundColor: `rgb(${inputBox?.inputBgColor ?? "128, 128, 128"})`,
                 }}
               >
                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                 <input
                   type="color"
-                  value={inputBox.inputBgColor}
+                  value={inputBox?.inputBgColor}
                   onChange={(e) => {
                     const rgb = hexToRgb(e.target?.value);
                     if (rgb) {
@@ -545,13 +545,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.borderColor ?? "128, 128, 128"})`,
+                backgroundColor: `rgb(${inputBox?.borderColor ?? "128, 128, 128"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.borderColor}
+                value={inputBox?.borderColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -572,13 +572,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.fontColor ?? "128, 128, 128"})`,
+                backgroundColor: `rgb(${inputBox?.fontColor ?? "128, 128, 128"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.fontColor}
+                value={inputBox?.fontColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -599,13 +599,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.labelColor ?? "128, 128, 128"})`,
+                backgroundColor: `rgb(${inputBox?.labelColor ?? "128, 128, 128"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.labelColor}
+                value={inputBox?.labelColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -626,13 +626,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.borderFocus ?? "128, 128, 128"})`,
+                backgroundColor: `rgb(${inputBox?.borderFocus ?? "128, 128, 128"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.borderFocus}
+                value={inputBox?.borderFocus}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -653,13 +653,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.selectColor ?? "128, 128, 128"})`,
+                backgroundColor: `rgb(${inputBox?.selectColor ?? "128, 128, 128"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.selectColor}
+                value={inputBox?.selectColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -680,13 +680,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.focusBgColor ?? "255, 204, 88"})`,
+                backgroundColor: `rgb(${inputBox?.focusBgColor ?? "255, 204, 88"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.focusBgColor}
+                value={inputBox?.focusBgColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -707,13 +707,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
               style={{
-                backgroundColor: `rgb(${inputBox.focusForeColor ?? "black"})`,
+                backgroundColor: `rgb(${inputBox?.focusForeColor ?? "black"})`,
               }}
             >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
-                value={inputBox.focusForeColor}
+                value={inputBox?.focusForeColor}
                 onChange={(e) => {
                   const rgb = hexToRgb(e.target?.value);
                   if (rgb) {
@@ -767,7 +767,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               name="inputCheckBoxSize"
               className="ti-form-radio"
               id="inputCheck-sm"
-              checked={inputBox.checkButtonInputSize === "sm"}
+              checked={inputBox?.checkButtonInputSize === "sm"}
               onChange={(e) => {
                 if (e.target.checked) {
                   onInputBoxChange("checkButtonInputSize", "sm");
@@ -784,7 +784,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               name="inputCheckBoxSize"
               className="ti-form-radio"
               id="inputCheck-md"
-              checked={inputBox.checkButtonInputSize === "md"}
+              checked={inputBox?.checkButtonInputSize === "md"}
               onChange={(e) => {
                 if (e.target.checked) {
                   onInputBoxChange("checkButtonInputSize", "md");
@@ -801,7 +801,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               name="inputCheckBoxSize"
               className="ti-form-radio"
               id="inputCheck-lg"
-              checked={inputBox.checkButtonInputSize === "lg"}
+              checked={inputBox?.checkButtonInputSize === "lg"}
               onChange={(e) => {
                 if (e.target.checked) {
                   onInputBoxChange("checkButtonInputSize", "lg");

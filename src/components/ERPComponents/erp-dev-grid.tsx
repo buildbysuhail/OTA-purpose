@@ -1399,7 +1399,7 @@ debugger
                     <button
                       type="button"
                       onClick={() => scrollTo(isAtBottom ? 0 : 100)}
-                      className="flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
+                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
                     >
                       {isAtBottom ? "↑" : "↓"}
                     </button>
@@ -1537,7 +1537,7 @@ debugger
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
           {showTotalCount == true && (
-            <div className="p-3 bg-gray border border-gray">
+            <div className="p-3 bg-gray border dark:border-dark-border border-gray">
               <span className="text-gray font-semibold">Total Records: </span>
               <span className="text-gray">{totalRowCount}</span>
             </div>

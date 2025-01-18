@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import React, { useState, useCallback, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface FileUpload {
   id: string;
@@ -95,7 +96,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setIsOpen]);
-
+  const { t } = useTranslation("transaction");
   return (
     <div ref={sidebarRef}  className=" w-full  p-2  self-end max-h-[100%] overflow-auto  pb-[64px]">
       <button
@@ -139,7 +140,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               onClick={() => document.getElementById("file-input")?.click()}
               className="px-4 py-2 font-semibold text-sm bg-[#3b82f6] text-white rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
             >
-              Browse Files
+              {t("browse_files")}
             </button>
             <input
               id="file-input"
@@ -149,7 +150,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               onChange={handleFileSelect}
             />
           </div>
-          <p className="text-sm text-gray-500">Or drop files here</p>
+          <p className="text-sm text-gray-500">{t("or_drop")}</p>
         </div>
       </div>
 
@@ -228,7 +229,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               </div>
               <p className="text-xs font-medium text-gray-500 w-8 text-right">
                 {file.uploaded ? (
-                  <span className="text-green-600">Done</span>
+                  <span className="text-green-600">{t("done")}</span>
                 ) : (
                   `${Math.round(file.progress)}%`
                 )}

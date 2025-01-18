@@ -16,10 +16,13 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { inputBox } from "../../../redux/slices/app/types";
 import InputBoxStyling from "../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../components/common/switcher/switcherdata/switcherdata";
+import { useTranslation } from "react-i18next";
+
 const api = new APIClient();
-interface pageBgColor{
-  pageBgColor:string
+interface pageBgColor {
+  pageBgColor: string;
 }
+
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,10 +30,10 @@ export const AccTransactionUserConfig = () => {
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
-      inputBoxStyle:{
+      inputBoxStyle: {
         ...formState.userConfig.inputBoxStyle,
         [field]: value,
-      }
+      },
     };
     dispatch(
       accFormStateHandleFieldChange({
@@ -50,8 +53,6 @@ export const AccTransactionUserConfig = () => {
         const _userConfig = atob(response);
         const userConfig: AccUserConfig = customJsonParse(_userConfig);
 
-
-
         dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
       } catch (error) {
         console.error("Error fetching user config:", error);
@@ -62,7 +63,6 @@ export const AccTransactionUserConfig = () => {
   }, []);
 
   const postUserConfig = async () => {
-
     try {
       const response = await api.post(
         `${Urls.post_acc_user_config}`,
@@ -87,6 +87,8 @@ export const AccTransactionUserConfig = () => {
       })
     );
   };
+
+  const { t } = useTranslation("transaction");
 
   return (
     <>
@@ -113,7 +115,7 @@ export const AccTransactionUserConfig = () => {
             <div className="grid gird-col-3 gap-6 p-4">
               <ERPCheckbox
                 id="keepNarrationForJV"
-                label="Keep Narration For JV"
+                label={t("keep_narration_for_jv")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.keepNarrationForJV}
                 onChangeData={(e) =>
@@ -123,7 +125,7 @@ export const AccTransactionUserConfig = () => {
 
               <ERPCheckbox
                 id="clearDetailsAfterSaveAccounts"
-                label="Clear Details After Save Accounts"
+                label={t("clear_details_after_save_accounts")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.clearDetailsAfterSaveAccounts}
                 onChangeData={(e) =>
@@ -136,7 +138,7 @@ export const AccTransactionUserConfig = () => {
 
               <ERPCheckbox
                 id="mnuShowConfirmationForEditOnAccounts"
-                label="Show Confirmation For Edit On Accounts"
+                label={t("show_confirmation_for_edit_on_accounts")}
                 data={formState.userConfig}
                 checked={
                   formState?.userConfig?.mnuShowConfirmationForEditOnAccounts
@@ -151,7 +153,7 @@ export const AccTransactionUserConfig = () => {
 
               <ERPCheckbox
                 id="maximizeBillwiseScreenInitially"
-                label="Maximize Billwise Screen Initially"
+                label={t("maximize_billwise_screen_initially")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.maximizeBillwiseScreenInitially}
                 onChangeData={(e) =>
@@ -164,8 +166,8 @@ export const AccTransactionUserConfig = () => {
 
               <ERPInput
                 id="maxWidth"
-                label="Max Width"
-                placeholder="Max Width (e.g., 1200px)"
+                label={t("max_width")}
+                placeholder={t("max_width_eg")}
                 type="text"
                 data={formState.userConfig}
                 value={formState?.userConfig?.maxWidth}
@@ -176,7 +178,7 @@ export const AccTransactionUserConfig = () => {
 
               <div>
                 <ERPButton
-                  title="Left"
+                  title={t("left")}
                   variant={
                     formState?.userConfig?.alignment === "left"
                       ? "primary"
@@ -186,7 +188,7 @@ export const AccTransactionUserConfig = () => {
                   className="mr-2"
                 />
                 <ERPButton
-                  title="Center"
+                  title={t("center")}
                   variant={
                     formState?.userConfig?.alignment === "center"
                       ? "primary"
@@ -196,7 +198,7 @@ export const AccTransactionUserConfig = () => {
                   className="mr-2"
                 />
                 <ERPButton
-                  title="Right"
+                  title={t("right")}
                   variant={
                     formState?.userConfig?.alignment === "right"
                       ? "primary"
@@ -207,78 +209,89 @@ export const AccTransactionUserConfig = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-6 p-4 my-2">
-            <div className="flex items-center ">
-                  <label htmlFor="outerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-                    Page Background Color
-                  </label>
-                  <div className="ti-form-radio">
-                    <div
-                      className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                      style={{
-                        backgroundColor: `rgb(${formState.userConfig?.outerPageBg})`,
+              <div className="flex items-center ">
+                <label
+                  htmlFor="outerPageBg"
+                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
+                >
+                  {t("page_background_color")}
+                </label>
+                <div className="ti-form-radio">
+                  <div
+                    className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                    style={{
+                      backgroundColor: `rgb(${formState.userConfig?.outerPageBg})`,
+                    }}
+                  >
+                    <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.outerPageBg}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          handleFieldChange(
+                            "outerPageBg",
+                            `${rgb?.r},${rgb?.g},${rgb?.b}`
+                          );
+                        }
                       }}
-                    >
-                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
-                      <input
-                        type="color"
-                        value={formState.userConfig?.outerPageBg }
-                        onChange={(e) => {
-                          const rgb = hexToRgb(e.target?.value);
-                          if (rgb) {
-                            handleFieldChange("outerPageBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
-                          }
-                        }}
-                        className="opacity-0 w-full h-full cursor-pointer"
-                      />
-                    </div>
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center">
-                  <label htmlFor="innerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-                    Form Background Color
-                  </label>
-                  <div className="ti-form-radio">
-                    <div
-                      className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                      style={{
-                        backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
+              <div className="flex items-center">
+                <label
+                  htmlFor="innerPageBg"
+                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
+                >
+                  {t("form_background_color")}
+                </label>
+                <div className="ti-form-radio">
+                  <div
+                    className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                    style={{
+                      backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
+                    }}
+                  >
+                    <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                    <input
+                      type="color"
+                      value={formState.userConfig?.innerPageBg}
+                      onChange={(e) => {
+                        const rgb = hexToRgb(e.target?.value);
+                        if (rgb) {
+                          handleFieldChange(
+                            "innerPageBg",
+                            `${rgb?.r},${rgb?.g},${rgb?.b}`
+                          );
+                        }
                       }}
-                    >
-                      <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
-                      <input
-                        type="color"
-                        value={formState.userConfig?.innerPageBg}
-                        onChange={(e) => {
-                          const rgb = hexToRgb(e.target?.value);
-                          if (rgb) {
-                            handleFieldChange("innerPageBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
-                          }
-                        }}
-                        className="opacity-0 w-full h-full cursor-pointer"
-                      />
-                    </div>
+                      className="opacity-0 w-full h-full cursor-pointer"
+                    />
                   </div>
                 </div>
+              </div>
             </div>
             <div className="flex flex-col">
-              
-            <p className="switcher-style-head ">Input Box Style:</p>
-            <InputBoxStyling
-            isInputBgColor
-            inputBox={formState.userConfig?.inputBoxStyle}
-            onInputBoxChange={handleInputBoxChange}
-          />
+              <p className="switcher-style-head ">{t("input_box_style")}:</p>
+              <InputBoxStyling
+                isInputBgColor
+                inputBox={formState.userConfig?.inputBoxStyle}
+                onInputBoxChange={handleInputBoxChange}
+              />
             </div>
-          
+
             <div className="w-full p-2 flex justify-end space-x-2">
               <ERPButton
-                title="Cancel"
+                title={t("cancel")}
                 onClick={() => setIsOpen(false)}
                 type="reset"
               ></ERPButton>
               <ERPButton
-                title="Save Changes"
+                title={t("save_changes")}
                 onClick={postUserConfig}
                 variant="primary"
               ></ERPButton>

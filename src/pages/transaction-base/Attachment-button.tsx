@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import ERPResizableSidebar from "../../components/ERPComponents/erp-resizable-sidebar";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPAttachment from "../../components/ERPComponents/erp-attachment";
+import { useTranslation } from "react-i18next";
 
 interface AttachmentSidebarProps {
   displayType?: "button" | "link"; // Optional prop with default value
 }
 
-const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({ displayType = "button" }) => {
+const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({
+  displayType = "button",
+}) => {
   const [sidebarWidth, setSidebarWidth] = useState(400);
   const [isOpen, setIsOpen] = useState(false);
 
   const appState = useAppState();
-
+  const { t } = useTranslation("transaction");
   return (
     <>
       <ERPResizableSidebar
@@ -26,7 +29,7 @@ const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({ displayType = "bu
           className=" p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
           onClick={() => setIsOpen((prev: boolean) => !prev)}
         >
-        Attachment
+          {t("attachment")}
         </button>
       ) : (
         <span
@@ -37,7 +40,7 @@ const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({ displayType = "bu
             setIsOpen((prev: boolean) => !prev);
           }}
         >
-        Attachment
+          {t("attachment")}
         </span>
       )}
     </>

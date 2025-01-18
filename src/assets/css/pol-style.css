@@ -288,3 +288,27 @@
 .dx-checkbox-indeterminate .dx-checkbox-icon::before {
   background-color: transparent !important;
 }
+
+/* .bg-report {
+  position: relative;
+  width: 100%;
+}
+
+.bg-report::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../../assets/images/reports-bg.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.2; 
+}
+
+.bg-report .flex {
+  position: relative;
+  z-index: 1;
+} */

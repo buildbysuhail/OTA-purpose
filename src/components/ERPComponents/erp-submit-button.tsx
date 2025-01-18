@@ -71,7 +71,7 @@ const ERPSubmitButton = ({
       value={value}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`w-full flex leading-4 gap-3 h-9 justify-center items-center py-2 px-4 border  shadow-sm text-[13px] rounded-md  ${variantType}   focus:outline-none focus:ring-2 focus:ring-offset-2  ${className}`}
+      className={` dark:border-dark-border w-full flex leading-4 gap-3 h-9 justify-center items-center py-2 px-4 border  shadow-sm text-[13px] rounded-md  ${variantType}   focus:outline-none focus:ring-2 focus:ring-offset-2  ${className}`}
     >
       {iconLeft}
       {loading ? <div className="top-0 left-0 right-0 bottom-0 true h-4 w-4 bg-white rounded-full animate-ping"></div> : textBody}

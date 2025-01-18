@@ -123,7 +123,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px]">
+      <button onClick={() => setIsOpen(true)} className="ti-btn rounded-[2px] dark:bg-dark-bg-header dark:text-dark-text ">
         <i className="ri-filter-line"></i>
       </button>
       <ERPModal

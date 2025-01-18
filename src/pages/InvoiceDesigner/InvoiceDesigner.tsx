@@ -19,6 +19,7 @@ import ItemTableDesigner from "./Designer/ItemTableDesigner";
 import PropertiesDesigner from "./Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
 import TransactionDetailsDesigner from "./Designer/TransactionDetailsDesigner";
+import accDetailsDesigner from "./Designer/accDetailsDesigner";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../utilities/HandleResponse";
@@ -57,6 +58,8 @@ import { RootState } from "../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
 
 import 'pdfjs-dist/build/pdf.worker';
+import AccDetailsDesigner from "./Designer/accDetailsDesigner";
+import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
 interface DesignSectionType {
   id: number;
   name: string;
@@ -285,33 +288,18 @@ const InvoiceDesigner = () => {
         try {
           const canvas = await html2canvas(node);
           const dataUrl = canvas.toDataURL("image/png");
-          if (templateData?.activeTemplate && id === "new")
+          if (templateData?.activeTemplate && id === "new"){
             await handleSave(dataUrl);
+          }else{
+
+          }
+            
         } catch (error) {
           console.error("Error capturing canvas:", error);
         }
       }
     }
   };
-
-
-
-  // const manageSaveAccTemplate = async () => {
-  //   if (!templateData?.activeTemplate?.propertiesState?.templateName) {
-  //     ERPToast.show("Template name is required", "error");
-  //   } else {
-  //     const imageData = await capturePDFAsImage();
-  //     if (imageData) {
-  //       try {
-  //         if (templateData?.activeTemplate && id === "new")
-  //           await handleSave(imageData);
-  //       } catch (error) {
-  //         console.error("Error capturing canvas acc master:", error);
-  //       }
-  //     }
-  //   }
-  // };
-
   
   const manageSaveAccTemplate = async (Component: React.ReactElement) => {
     if (!templateData?.activeTemplate?.propertiesState?.templateName) {
@@ -328,38 +316,38 @@ const InvoiceDesigner = () => {
       ERPToast.show("Failed to save template", "error");
     }
   };
+
   const convertPdfBlobToImage = async (pdfBlob: Blob) => {
     try {
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const loadingTask = pdfjsLib.getDocument(pdfUrl);
       const pdfDocument = await loadingTask.promise;
       const page = await pdfDocument.getPage(1);
-  
-      // Get the viewport with the default scale
+
       const defaultViewport = page.getViewport({ scale: 1.5 });
-  
-      // Calculate the scale to fit the height to 200px
       const maxHeight = 400; // Maximum height in pixels
       const scale = maxHeight / defaultViewport.height;
-  
+
       // Get the viewport with the adjusted scale
       const viewport = page.getViewport({ scale });
   
       // Create a canvas and set its dimensions
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
+
       if (!context) {
         throw new Error('Failed to get canvas context');
       }
+
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-  
+      
       // Render the PDF page into the canvas
       const renderContext = {
         canvasContext: context,
         viewport: viewport,
       };
-  
+
       await page.render(renderContext).promise;
       const imageDataUrl = canvas.toDataURL('image/png');
       URL.revokeObjectURL(pdfUrl); // Clean up the object URL
@@ -374,24 +362,6 @@ const InvoiceDesigner = () => {
     const blob = await pdf(Component).toBlob();
     return blob;
   };
-  // const capturePDFAsImage = async () => {
-  //   const pdfViewer = document.querySelector(".pdf-viewer") as HTMLElement;
-  //   if (pdfViewer) {
-  //     // Ensure the PDF viewer is visible
-  //     pdfViewer.style.visibility = 'visible';
-  //     pdfViewer.style.display = 'block';
-  
-  //     // Introduce a delay to ensure the PDF is fully rendered
-  //     await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
-      
-  //     const canvas = await html2canvas(pdfViewer);
-  //     const image = canvas.toDataURL("image/png");
-  //     return image;
-  //   }
-  //   return null;
-  // };
-
-
 
   return (
     <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark ">
@@ -521,7 +491,7 @@ const InvoiceDesigner = () => {
         currentSection.type === "transactions" &&
           (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
             <NoDataMessage message="Oops, there is no property!!!" />
-          ) : (
+          ) :["SI", "SR"].includes(templateGroup) ?(
             <TransactionDetailsDesigner
               template={templateData?.activeTemplate}
               headerState={templateData?.activeTemplate?.headerState}
@@ -529,6 +499,13 @@ const InvoiceDesigner = () => {
                 dispatch(setTemplateHeaderState(headerState))
               }
             />
+          ):(
+           <AccountTransactionDetailsDesigner
+             template={templateData?.activeTemplate}
+              onChange={(headerState) =>
+                dispatch(setTemplateHeaderState(headerState))
+              }
+           />
           ))
         }
 

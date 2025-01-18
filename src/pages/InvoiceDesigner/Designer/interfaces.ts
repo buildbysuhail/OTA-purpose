@@ -363,8 +363,27 @@ export interface HeaderState {
     showBalanceDue?: boolean;
     balanceDueLabel?: string;
   };
+  accountTransactionInfo?:accountTransactionInfo;
 }
+export interface accountTransactionInfo {
 
+  showPaymentMode?: boolean;
+  paymentMode?: string;
+
+  showDateField?: boolean;
+  dateField?: string;
+
+  showReferenceField?: boolean;
+  referenceField?: string;
+
+  showOverPayment?: boolean;
+  overPayment?: string;
+
+  showPaymentRefund?: boolean;
+  paymentRefund?: string;
+
+  showAmountInWords?: boolean;
+}
 export interface ItemTableMasterState {
   showTableBorder?: boolean;
   tableBorderColor?: string;
@@ -742,6 +761,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
         showBalanceDue: false,
         balanceDueLabel: "",
       },
+  
     },
     itemTableState: {
       showTableBorder: true,

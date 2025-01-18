@@ -20,6 +20,7 @@ import {
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import profile from "../../assets/images/faces/profile-circle.512x512.png";
+import { useTranslation } from "react-i18next";
 
 interface Activity {
   id: string;
@@ -168,6 +169,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
     user: "polosys",
   };
 
+  const { t } = useTranslation("transaction");
+
   return (
     <div
       className="max-w-2xl mx-auto p-4 overflow-auto "
@@ -211,7 +214,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           }`}
           onClick={() => setActiveTab("details")}
         >
-          Details
+          {t("details")}
         </button>
         <button
           className={`px-1 py-2 text-sm ${
@@ -221,7 +224,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           }`}
           onClick={() => setActiveTab("activity")}
         >
-          Activity Log
+          {t("activity_log")}
         </button>
       </div>
 
@@ -235,7 +238,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div className="flex flex-col justify-center items-center gap-2 text-amber-500 mb-1">
                     <AlertTriangle className="h-3 w-3" />
                     <span className="text-[12px] text-gray-600">
-                      Receivables
+                      {t("receivables")}
                     </span>
                     <p className="text-[16px] text-black font-semibold">
                       {getFormattedValue(ledgerData?.outstandingReceivables)}
@@ -246,7 +249,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
                     <span className="text-[12px] text-gray-600">
-                      Total Sales Amount
+                      {t("total_sales_amount")}
                     </span>
                     <p className="text-[16px] text-black font-semibold">
                       {getFormattedValue(ledgerData?.totalSalesAmount)}
@@ -257,7 +260,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
                     <span className="text-[12px] text-gray-600">
-                      Total Purchase Amount
+                      {t("total_purchase_amount")}
                     </span>
                     <p className="text-[16px] text-black font-semibold">
                       {getFormattedValue(ledgerData?.totalPurchaseAmount)}
@@ -268,7 +271,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
                     <span className="text-[12px] text-gray-600">
-                      Total Sales Count
+                      {t("total_sales_count")}
                     </span>
                     <p className="text-[16px] text-black font-semibold">
                       {ledgerData?.totalSalesCount}
@@ -279,7 +282,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
                     <span className="text-[12px] text-gray-600">
-                      Total Purchase Count
+                      {t("total_purchase_count")}
                     </span>
                     <p className="text-[16px] text-black font-semibold">
                       {ledgerData?.totalPurchaseCount}
@@ -297,7 +300,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Party Type</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("party_type")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.partyType}
                       </div>
@@ -306,7 +311,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c] text-[12px]">
-                        Party Category
+                        {t("party_category")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.partyCategory}
@@ -316,7 +321,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c] text-[12px]">
-                        Price Category
+                        {t("price_category")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.priceCategory}
@@ -325,7 +330,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Tax Number</p>
+                      <p className="text-[#8c8c8c] text-[12px]">{t("tax_number")}</p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.taxNumber}
                       </div>
@@ -334,7 +339,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c] text-[12px]">
-                        Credit Amount
+                        {t("credit_amount")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {getFormattedValue(ledgerData?.creditAmount)}
@@ -343,7 +348,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Credit Days</p>
+                      <p className="text-[#8c8c8c] text-[12px]">{t("credit_days")}</p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.creditDays}
                       </div>
@@ -352,7 +357,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
                       <p className="text-[#8c8c8c] text-[12px]">
-                        Billwise Applicable
+                        {t("billwise_applicable")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.billwiseApplicable}
@@ -361,7 +366,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Route Name</p>
+                      <p className="text-[#8c8c8c] text-[12px]">{t("route_name")}</p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.routeName}
                       </div>
@@ -369,7 +374,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Created Date</p>
+                      <p className="text-[#8c8c8c] text-[12px]">{t("created_date")}</p>
                       <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.createdDate).toLocaleDateString()}
                       </div>
@@ -377,7 +382,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">Expiry Date</p>
+                      <p className="text-[#8c8c8c] text-[12px]">{t("expiry_date")}</p>
                       <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.expiryDate).toLocaleDateString()}
                       </div>
@@ -392,7 +397,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
               <h2 className="text-lg text-black font-semibold text-start">
-                Billing Address
+                {t("billing_address")}
               </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
@@ -404,7 +409,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                         )
                       )
                     ) : (
-                      <div>No Billing Address Provided</div>
+                      <div>{t("no_billing")}</div>
                     )}
                   </div>
                 </div>
@@ -416,7 +421,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           <div className="p-4 shadow rounded-lg">
             <div className="space-y-6">
               <h2 className="text-lg text-black font-semibold text-start">
-                Shipping Address
+                {t("shipping_address")}
               </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
@@ -428,7 +433,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                         )
                       )
                     ) : (
-                      <div>No Shipping Address Provided</div>
+                      <div>{t("no_shipping")}</div>
                     )}
                   </div>
                 </div>

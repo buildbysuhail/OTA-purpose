@@ -30,163 +30,438 @@ const OutstandingAccountPayableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
-      dataField: "ledgername",
-      caption: t("ledger_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.ledgername}`}
-        </span>) :
-          <DrillDownCellTemplate data={cellElement} field="ledgername"></DrillDownCellTemplate>
-      }
-    },
-    //     cellRender: (cellElement: any, cellInfo: any) => (
-    //       <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-    // {cellElement.data.ledgername}
-    // </span>
-    //     ),
-    //   },
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={'font-bold text-[#DC143C]'}>
-          {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period1",
-      captionDynamic: (filter: any) => `<${filter.p1?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p1 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '0' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period2",
-      captionDynamic: (filter: any) => `${filter.p1?.toString()}-${filter.p2?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p2 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period2 == 0 || cellElement.data?.period2 == null ? '0' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period3",
-      captionDynamic: (filter: any) => `${filter.p2?.toString()}-${filter.p3?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p3 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period3 == 0 || cellElement.data?.period3 == null ? '0' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period4",
-      captionDynamic: (filter: any) => `${filter.p3?.toString()}-${filter.p4?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p4 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period4 == 0 || cellElement.data?.period4 == null ? '0' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period5",
-      captionDynamic: (filter: any) => `${filter.p4?.toString()}-${filter.p5?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p5 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '0' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period6",
-      captionDynamic: (filter: any) => `${filter.p5?.toString()}-${filter.p6?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      visibleDynamic: (filter: any) => filter.p6 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '0' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
-        </span>
-      ),
-    },
-    {
-      dataField: "period7",
-      captionDynamic: (filter: any) => `>${Math.max(...[filter.p1,filter.p2,filter.p3,filter.p4,filter.p5,filter.p6])?.toString()} ${t("days")}`,
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      showInPdf:true,
-      // visibleDynamic: (filter: any) => filter.p6 > 0,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
-        </span>
-      ),
-    },
+         dataField: "ledgername",
+         caption: t("ledger_name"),
+         dataType: "string",
+         allowSearch: true,
+         allowFiltering: true,
+         showInPdf: true,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.balance;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance) + " Cr"
+                   : getFormattedValue(balance) + " Dr";
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: cellInfo.value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return cellElement.data.ledgername === "TOTAL" ? (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+               {`${cellElement.data?.ledgername}`}
+             </span>) :
+               <DrillDownCellTemplate data={cellElement} field="ledgername"></DrillDownCellTemplate>
+           }
+         }
+       },
+       {
+         dataField: "debit",
+         caption: t('debit'),
+         dataType: "string",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+       },
+       {
+         dataField: "credit",
+         caption: t("credit"),
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+       },
+       {
+         dataField: "balance",
+         caption: t("balance"),
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.debit;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : getFormattedValue(balance);
+   
+             return {
+               ...exportCell,
+               text: value,
+               bold: true,
+               alignment: "right",
+               alignmentExcel: { horizontal: 'right' },
+               textColor: '#FF0000',
+               font: {
+                 ...exportCell.font,
+                 color: { argb: 'FFFF0000' },
+                 size: 10,
+                 style: 'bold',
+                 bold: true,
+               },
+             };
+           }
+           else {
+             return (<span className={'font-bold text-[#DC143C]'}>
+               {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period1",
+         captionDynamic: (filter: any) => `<${filter.p1?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p1 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period1;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period2",
+         captionDynamic: (filter: any) => `${filter.p1?.toString()}-${filter.p2?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p2 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period2;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period2 == 0 || cellElement.data?.period2 == null ? '' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period3",
+         captionDynamic: (filter: any) => `${filter.p2?.toString()}-${filter.p3?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p3 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period3;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period3 == 0 || cellElement.data?.period3 == null ? '' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period4",
+         captionDynamic: (filter: any) => `${filter.p3?.toString()}-${filter.p4?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p4 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period4;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period4 == 0 || cellElement.data?.period4 == null ? '' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period5",
+         captionDynamic: (filter: any) => `${filter.p4?.toString()}-${filter.p5?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p5 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period5;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period6",
+         captionDynamic: (filter: any) => `${filter.p5?.toString()}-${filter.p6?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         visibleDynamic: (filter: any) => filter.p6 > 0,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period6;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+               {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
+             </span>)
+           }
+         }
+       },
+       {
+         dataField: "period7",
+         captionDynamic: (filter: any) => `>${Math.max(...[filter.p1, filter.p2, filter.p3, filter.p4, filter.p5, filter.p6])?.toString()} ${t("days")}`,
+         dataType: "number",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 150,
+         showInPdf: true,
+         cellRender: (
+           cellElement: any,
+           cellInfo: any,
+           filter: any,
+           exportCell: any
+         ) => {
+           if (exportCell != undefined) {
+             const balance = cellElement.data?.period7;
+             const isDebit = balance >= 0;
+             const value =
+               balance == null
+                 ? ""
+                 : balance < 0
+                   ? getFormattedValue(-1 * balance)
+                   : getFormattedValue(balance);
+             return exportCell != undefined ? {
+               ...exportCell,
+               text: value,
+               bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+               alignment: "right",
+               textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+               font: {
+                 ...exportCell.font,
+                 // color: isDebit ? "#129151" : "#DC143C",
+                 color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+                 size: 10,
+                 style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+                 bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+               }
+             } : undefined;
+           }
+           else {
+             return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+               {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
+             </span>)
+           }
+         }
+       },
   ];
   return (
     <Fragment>
@@ -212,9 +487,9 @@ const OutstandingAccountPayableAgingReport = () => {
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterContent={<OutstandingAgingReportFilter />}
                   filterInitialData={OutstandingAgingReportFilterInitialState}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   childPopupProps={{
-                    content: <OutstandingAccountAgingAnalysis  />,
+                    content: <OutstandingAccountAgingAnalysis />,
                     title: t("account_aging_analysis"),
                     isForm: true,
                     width: "mw-100",

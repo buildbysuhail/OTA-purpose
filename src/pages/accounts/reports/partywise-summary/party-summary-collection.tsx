@@ -10,7 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 
 const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
-  
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
@@ -22,7 +22,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -31,7 +31,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -40,7 +40,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accountGroup",
@@ -49,7 +49,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -58,7 +58,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "amount",
@@ -67,7 +67,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "discount",
@@ -76,7 +76,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "narration",
@@ -93,7 +93,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "financialYearID",
@@ -134,7 +134,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "contactPhone",
@@ -169,7 +169,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                    remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   gridHeader={t("party_summary_collection_report")}
                   dataUrl={Urls.acc_reports_party_summary_collections}

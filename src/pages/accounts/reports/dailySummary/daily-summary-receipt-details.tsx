@@ -71,13 +71,39 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.discount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.ledgerName
-           
               }`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "amount",
@@ -86,14 +112,39 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.amount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return (  <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.amount == null 
             ? '0'
               : getFormattedValue(cellElement.data.amount)
               }`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "balanceAmount",
@@ -102,7 +153,6 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-
     },
     {
       dataField: "balance",
@@ -111,16 +161,40 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.amount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              :cellElement.data.ledgerName === "TOTAL"? getFormattedValue(parseFloat(balance)):getFormattedValue(parseFloat(balance),false,4);
+
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
         return (
           <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data.ledgerName === "TOTAL"?  
-                 getFormattedValue(parseFloat(cellElement.data?.balance)):cellElement.data?.balance
+                 getFormattedValue(parseFloat(cellElement.data?.balance)):getFormattedValue(parseFloat(cellElement.data?.balance),false,4) 
                 }`}
           </span>
         )
-      }
+      }}
     },
     {
       dataField: "ledger_Balance",

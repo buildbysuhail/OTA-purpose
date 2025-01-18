@@ -71,11 +71,38 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.discount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) 
+                : getFormattedValue(balance);
+
+          return {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return (  <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.partyName }`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "total",
@@ -84,14 +111,38 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.total;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? "0"
+              : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text:value,
+            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return (  <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.total == null 
             ? '0'
               : getFormattedValue(cellElement.data.total)
               }`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "receivedAmount",
@@ -100,14 +151,38 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.receivedAmount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? "0"
+              : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text:value,
+            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.receivedAmount == null 
             ? '0'
               : getFormattedValue(cellElement.data.receivedAmount)
               }`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "balance",
@@ -116,14 +191,38 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? "0"
+              : getFormattedValue(balance);
+          return {
+            ...exportCell,
+            text:value,
+            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
+            textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              size: 10,
+              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.balance == null 
             ? '0'
               : getFormattedValue(cellElement.data.balance)
               }`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "ledgerBalance",

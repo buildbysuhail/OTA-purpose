@@ -478,7 +478,8 @@ export const useAccTransaction = (
     // master.bankDate = new Date().toISOString();
     master.checkBouncedDate = new Date().toISOString();
     master.dueDate = master.transactionDate;
-    const totalAmount = formState.total || 0;
+    const totalAmount = master.totalAmount || 0;
+    debugger;
     if (master.drCr === "Cr") {
       master.totalCredit = totalAmount;
       master.totalDebit = 0;
@@ -625,6 +626,7 @@ export const useAccTransaction = (
           title: saveRes.message,
         });
       } else {
+        // dispatch(acc)
         ERPAlert.show({
           icon: "warning",
           title: saveRes.message,

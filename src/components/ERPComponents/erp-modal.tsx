@@ -215,7 +215,7 @@ const ERPModal = React.memo(
                       style={{ flex: "0 0 auto" }} // Prevent header from shrinking
                     >
                   
-                      <div className="flex items-center">{title}</div>
+                      <div className="flex items-center dark:text-dark-text">{title}</div>
                       {closeButton === "Button" && (
                         <div className="max-w-[200px] inline-block">
                           <ERPButton

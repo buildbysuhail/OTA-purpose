@@ -117,7 +117,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
             }}
             tabIndex={0}
             className={`${
-              item?.isActive ? "bg-gray-50 cursor-default relative" : "bg-white cursor-pointer hover:bg-gray-50 relative"
+              item?.isActive ? "bg-gray-50 cursor-default relative" : "dark:bg-dark-bg-card bg-white cursor-pointer hover:bg-gray-50 relative"
             } px-4 py-3  rounded-lg flex justify-start border border-gray-200`}
           >
            {(selectionLoading.loading && selectionLoading.clientId == item?.clientId && selectionLoading.branchId == item?.id) &&  <div className="absolute w-full h-full bg-gray-50/80 z-[1] top-0 left-0 flex items-center justify-center">

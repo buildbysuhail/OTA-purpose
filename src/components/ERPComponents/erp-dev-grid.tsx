@@ -1127,7 +1127,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 let isDefined = renderResult !== undefined;
                 let isObject = typeof renderResult === "object";
                 let isValidReactElement = React.isValidElement(renderResult);
-debugger
+
                 if (isDefined && isObject && !isValidReactElement) {
                   options.excelCell.style = {
                     ...renderResult,

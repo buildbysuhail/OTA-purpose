@@ -324,7 +324,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
       string,
       { userTypeCode: string; userRights: string; treeNodeIndex: number }
     >();
-    debugger ; 
+     
 
     immediateParentsOfEndNodes.forEach((parent) => {
       const childNodes = userRights.filter(
@@ -343,7 +343,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
           }
         });
       }
-      debugger ; 
+       
 
       if (hasSelectedRights) {
         const formCode = parent.formCode;

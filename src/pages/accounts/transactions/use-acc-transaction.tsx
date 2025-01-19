@@ -289,7 +289,7 @@ export const useAccTransaction = (
       });
       return false;
     }
-    debugger
+    
     const validateTransDate = validateTransactionDate(
       new Date(formState.transaction.master.transactionDate),
       false,

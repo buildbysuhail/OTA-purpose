@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import ERPResizableSidebar from "../../components/ERPComponents/erp-resizable-sidebar";
 import CustomerDetails from "../../components/ERPComponents/customerdetails";
 import { useAppState } from "../../utilities/hooks/useAppState";
+import { useTranslation } from "react-i18next";
 
 interface customerDetailsSidebarProps {
   displayType?: "button" | "link"; // Optional prop with default value
 }
-const CustomerDetailsSidebar: React.FC<customerDetailsSidebarProps> = ({displayType = "button"}) => {
+const CustomerDetailsSidebar: React.FC<customerDetailsSidebarProps> = ({
+  displayType = "button",
+}) => {
   const [sidebarWidth, setSidebarWidth] = useState(400);
   const [isOpen, setIsOpen] = useState(false);
 
   const appState = useAppState();
+  const { t } = useTranslation("transaction");
   return (
     <>
       <ERPResizableSidebar
@@ -28,7 +32,7 @@ const CustomerDetailsSidebar: React.FC<customerDetailsSidebarProps> = ({displayT
             });
           }}
         >
-        C Details
+          {t("details")}
         </button>
       ) : (
         <span
@@ -40,7 +44,7 @@ const CustomerDetailsSidebar: React.FC<customerDetailsSidebarProps> = ({displayT
             });
           }}
         >
-        C Details
+          {t("details")}
         </span>
       )}
     </>

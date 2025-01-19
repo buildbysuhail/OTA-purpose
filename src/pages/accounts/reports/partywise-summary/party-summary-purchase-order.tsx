@@ -8,21 +8,23 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
-const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) => {
+const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
+  const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<PartySummaryPurchaseOrder>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "vNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vPrefix",
@@ -31,7 +33,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -40,7 +42,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledgerName",
@@ -48,12 +50,44 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.ledgerName}`}
-        </span>
-      ),
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.particulars;
+          const isDebit = balance >= 0;
+          // const value =
+          //   balance == null
+          //     ? ""
+          //     : balance < 0
+          //       ? getFormattedValue(-1 * balance)
+          //       : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.ledgerName}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "partyName",
@@ -63,7 +97,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowFiltering: true,
       width: 150,
     },
-     {
+    {
       dataField: "address1",
       caption: t('address1'),
       dataType: "string",
@@ -77,10 +111,10 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width:100
+      width: 100
     },
-   
-   
+
+
     {
       dataField: "productName",
       caption: t("product_name"),
@@ -88,7 +122,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "quantity",
@@ -97,7 +131,43 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.quantity;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(cellElement.data.quantity, false, 2) : getFormattedValue(cellElement.data.quantity, false, 4)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "unitName",
@@ -114,7 +184,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "grossValue",
@@ -139,7 +209,43 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.netValue;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(cellElement.data.netValue, false, 2) : getFormattedValue(cellElement.data.netValue, false, 4)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "totalVatAmount",
@@ -156,7 +262,43 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.netAmount;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(cellElement.data.netAmount, false, 2) : getFormattedValue(cellElement.data.netAmount, false, 4)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "productCode",
@@ -175,10 +317,10 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   gridHeader={t("party_summary_purchase_order")}
-                  dataUrl= {Urls.acc_reports_party_summary_purchase_order}
+                  dataUrl={Urls.acc_reports_party_summary_purchase_order}
                   method={ActionType.POST}
                   gridId="grd_party_summary_purchase_order"
                   popupAction={toggleCostCentrePopup}
@@ -191,7 +333,7 @@ const PartySummaryPurchaseOrder  : React.FC<PartySummaryFilter> = ({ filter}) =>
           </div>
         </div>
       </div>
-      
+
     </Fragment>
   );
 };

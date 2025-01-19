@@ -23,13 +23,13 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
   transactionType,
 }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation("accountsReport");
+  const { t } = useTranslation('transaction');
 
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
         dataField: "accTransactionMasterID",
-        caption: t("accTransactionMasterID"),
+        caption: t("acc_transaction_master_id"),
         dataType: "number",
         allowSorting: true,
         allowFiltering: true,
@@ -65,7 +65,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       },
       {
         dataField: "voucherType",
-        caption: t("voucherType"),
+        caption: t("voucher_type"),
         dataType: "string",
         allowSorting: true,
         allowFiltering: true,
@@ -85,7 +85,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       },
       {
         dataField: "voucherPrefix",
-        caption: t("voucherPrefix"),
+        caption: t("voucher_prefix"),
         dataType: "string",
         allowSorting: true,
         allowFiltering: true,
@@ -95,7 +95,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       },
       {
         dataField: "voucherNumber",
-        caption: t("voucherNumber"),
+        caption: t("voucher_number"),
         dataType: "number",
         allowSorting: true,
         allowFiltering: true,
@@ -262,7 +262,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
                 dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}
                 // postData={{voucherType: voucherType, transactionType: transactionType}} 
-                gridHeader={t("Transactions")}
+                gridHeader={t("transactions")}
                 gridId="transaction-grid"
                 gridAddButtonType="popup"
                 gridAddButtonIcon="ri-add-line"

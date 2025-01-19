@@ -66,7 +66,7 @@ const OrgSelect = ({ initialHeight = 100 }) => {
 
     {/* Main content - centers content vertically and horizontally */}
     <main className="flex-1 flex items-center justify-center p-4">
-      <div className="w-full max-w-md flex flex-col bg-white rounded-lg shadow-lg max-h-[calc(90vh-3.5rem)]">
+      <div className="w-full max-w-md flex flex-col dark:bg-dark-bg-card bg-white rounded-lg shadow-lg max-h-[calc(90vh-3.5rem)]">
         <div className="flex-1 overflow-y-auto p-0 space-y-6"  style={{scrollbarWidth: 'thin'}}>
           <div className="p-6 space-y-6">
             {/* Profile Section */}

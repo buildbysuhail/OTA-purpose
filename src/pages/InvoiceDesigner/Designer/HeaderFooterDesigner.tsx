@@ -116,6 +116,22 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
               max={28}
               step={1}
             />
+            
+          {/*  */}
+
+          <ERPInput
+            id="phone"
+            label="Phone"
+            value={headerState?.phoneLabel}
+            onChange={(e) => handleChange("header","phoneLabel", e.target?.value )}
+          />
+
+          <ERPInput
+            id="fax"
+            label="Fax Number"
+            value={headerState?.faxLabel}
+            onChange={(e) => handleChange("header","faxLabel", e.target?.value )}
+          />
           </>
         }
        {/* */}

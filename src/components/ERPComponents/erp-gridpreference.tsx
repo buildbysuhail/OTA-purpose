@@ -180,7 +180,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
           <div className="grid-preference-form">
-            <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-5 gap-2 items-center">
+            <div className="header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-5 gap-2 items-center">
               <span className="col-span-2">Column</span>
               <span>Width</span>
               <span>Read Only</span>
@@ -201,12 +201,12 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                     onDragEnd={handleDropping}
                   >
 
-                    <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4`}>
-                      <label className="col-span-2 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                    <div className={` dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB]  w-full px-1 rounded grid grid-cols-5 !items-center pl-4`}>
+                      <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                         ⋮⋮
                         {column?.isLocked ? (
-                          <div className="bg-[#F9F9FB] w-full px-2 rounded cursor-move">
-                            <div className="flex gap-2 py-1 text-sm capitalize text-slate-800 items-center ">
+                          <div className="dark:bg-[#383a3b]  bg-[#F9F9FB] w-full px-2 rounded cursor-move">
+                            <div className="flex gap-2 py-1 text-sm capitalize dark:text-dark-text text-slate-800 items-center ">
                               <LockClosedIcon className=" h-3 w-3" />
                               <span className="cursor-pointer">{column?.caption}</span>
                             </div>
@@ -216,7 +216,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                           <>
                             <input
                               type="checkbox"
-                              className="cursor-pointer  ml-[.6rem]"
+                              className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer  ml-[.6rem]"
                               disabled={column?.isLocked}
                               onChange={(e) => { handleColumnPreferenceChange(column.dataField, 'visible', e.target.checked) }}
                               checked={column?.visible}
@@ -231,16 +231,16 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                         value={column.width || ''}
                         onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target?.value) || undefined)}
                         disabled={column.isLocked}
-                        className="border rounded p-1 w-16 mh-[27px]"
+                        className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                       />
                       <input
                         type="checkbox"
-                        className="cursor-pointer mh-[27px]"
+                        className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer mh-[27px]"
                         disabled={column.isLocked}
                         checked={column.readOnly}
                         onChange={(e) => handleColumnPreferenceChange(column.dataField, 'readOnly', e.target.checked)}
                       />
-                      <input className="mh-[27px]"
+                      <input className="dark:bg-dark-bg-card border dark:border-dark-border mh-[27px]"
                         type="checkbox"
                         checked={column.showInPdf}
                         onChange={(e) => handleColumnPreferenceChange(column.dataField, 'showInPdf', e.target.checked)}
@@ -260,13 +260,13 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         </div>
         )}
         footer={(
-          <div className="flex gap-10 justify-between py-3 border-t">
+          <div className="flex gap-10 justify-between py-3 border-t dark:border-dark-border">
             <ERPSubmitButton type="button" className=""
               variant="primary"
               onClick={handleApplyPreferences}>
               Save
             </ERPSubmitButton>
-            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28 bg-[#e5e7eb] text-[#404040]" >
+            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#e5e7eb] text-[#404040]" >
               Cancel
             </ERPSubmitButton>
           </div>

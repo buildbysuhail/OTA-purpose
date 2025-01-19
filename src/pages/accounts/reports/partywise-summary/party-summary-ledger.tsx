@@ -72,11 +72,42 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.particulars;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: cellInfo.value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {cellElement.data.particulars}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "debit",
@@ -86,11 +117,42 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 170,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.particulars;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
           {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-        </span>
-      ),
+        </span>)
+        }}
     },
     {
       dataField: "credit",
@@ -100,11 +162,42 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 170,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.particulars === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (   <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
           {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "balance",
@@ -114,15 +207,46 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 170,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${"font-bold text-[#DC143C]"}`}>
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)+ ' Cr'
+                : getFormattedValue(balance)+' Dr';
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold:  true,
+            alignment: "right",
+            textColor:  '#FF0000' ,
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: { argb: 'FFFF0000' },
+              size: 10,
+              style:  'bold',
+              bold:  true ,
+            }
+          } : undefined;
+        }
+        else {
+          return (  <span className={`${"font-bold text-[#DC143C]"}`}>
           {`${cellElement.data?.balance == null
             ? '0'
             : cellElement.data.balance < 0
               ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
               : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>
-      ),
+        </span>)
+}}
     },
     {
       dataField: "ledger",

@@ -46,10 +46,10 @@ export const AccTransactionUserConfig = () => {
   useEffect(() => {
     const fetchUserConfig = async () => {
       try {
-        debugger;
+        
         // Fetch user config from the server
         const response = await api.get(Urls.get_acc_user_config);
-        debugger;
+        
         const _userConfig = atob(response);
         const userConfig: AccUserConfig = customJsonParse(_userConfig);
 

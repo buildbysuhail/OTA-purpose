@@ -72,7 +72,7 @@ export const LoadingAnimation = () => {
 function App() {
 
   useEffect(() => {
-    debugger;
+    
     const sd = moment().local(); // Ensure local time is used
 const asd = sd.format("DD/MM/YYYY");
     dispatch(setSoftwareDate(asd))

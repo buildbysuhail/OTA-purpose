@@ -346,7 +346,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
     let cc: TemplateState = customJsonParse(res.content)
-    debugger;
+    
     const propertiesState = {
       ...cc.propertiesState,
       templateName: "Untitled Template " + (length + 1)

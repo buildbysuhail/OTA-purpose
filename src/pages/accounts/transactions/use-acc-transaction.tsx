@@ -172,7 +172,7 @@ export const useAccTransaction = (
     if (tmpVoucherNumber <= 0) {
       return false;
     }
-    debugger;
+    
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -479,7 +479,7 @@ export const useAccTransaction = (
     master.checkBouncedDate = new Date().toISOString();
     master.dueDate = master.transactionDate;
     const totalAmount = master.totalAmount || 0;
-    debugger;
+    
     if (master.drCr === "Cr") {
       master.totalCredit = totalAmount;
       master.totalDebit = 0;
@@ -566,7 +566,7 @@ export const useAccTransaction = (
     );
   };
   const save = async () => {
-    debugger;
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -646,9 +646,9 @@ export const useAccTransaction = (
     isEdit: boolean,
     accTransactionMasterID: number
   ) => {
-    debugger;
+    
     await undoEditMode(isEdit, accTransactionMasterID);
-    debugger;
+    
     dispatch(
       clearState({
         userSession,
@@ -717,10 +717,10 @@ export const useAccTransaction = (
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
-          debugger;
+          
           if (billwiseDetails == null && formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
-              debugger;
+              
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
@@ -741,7 +741,7 @@ export const useAccTransaction = (
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
-            debugger;
+            
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -829,7 +829,7 @@ export const useAccTransaction = (
           return false;
         }
         formState.formElements.btnAdd;
-        debugger;
+        
         dispatch(
           accFormStateTransactionDetailsRowAdd({
             row: {
@@ -1008,7 +1008,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    debugger;
+    
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {
@@ -1029,7 +1029,7 @@ export const useAccTransaction = (
       handleLedgerIdKeyDown(key);
     } else if (field === "bankDate") {
       if (isEnterKey(key)) {
-        debugger;
+        
         dispatch(
           accFormStateHandleFieldChange({ fields: { showbillwise: true } })
         );
@@ -1106,7 +1106,7 @@ export const useAccTransaction = (
 
   // Amount keydown handler
   const handleAmountKeyDown = (e: any) => {
-    debugger;
+    
     if (e === "Enter") {
       const voucherType = formState.transaction.master.voucherType;
       if (voucherType !== "OB" && voucherType !== "MJV") {
@@ -1121,7 +1121,7 @@ export const useAccTransaction = (
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
-    debugger;
+    
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =
@@ -1136,7 +1136,7 @@ export const useAccTransaction = (
         formState.formElements.btnBillWise.visible == true
       ) {
         if (!isPaymentReceipt || !isChequeVoucher) {
-          debugger;
+          
           // Handle billwise click
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: true } })
@@ -1342,7 +1342,7 @@ export const useAccTransaction = (
 
   const handleRefresh = async () => {
     try {
-      debugger;
+      
       const currentLedgerId = formState.row.ledgerId;
       const currentMasterAccountId = formState.masterAccountID;
 
@@ -1480,7 +1480,7 @@ export const useAccTransaction = (
           case "JV":
             drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
         }
-        debugger;
+        
         if (
           formState.showbillwise === true &&
           formState.row.ledgerId &&

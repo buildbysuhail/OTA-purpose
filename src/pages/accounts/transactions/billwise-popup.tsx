@@ -131,7 +131,7 @@ const BillwiseComponent = ({
   const [loadCount, setLoadCount] = useState<number>(0);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
-    debugger;
+    
     setStore(clonedData);
   }, []);
 
@@ -167,14 +167,14 @@ const BillwiseComponent = ({
             : storeItem
         );
       });
-      debugger;
+      
       setStore(updatedStore);
     }
   };
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
-    debugger;
+    
     setStore((prevStore: any) =>
       prevStore.map((item: any) =>
         item.slNo === updatedRow.slNo ? updatedRow : item
@@ -202,11 +202,11 @@ const BillwiseComponent = ({
         };
       }
     });
-    debugger;
+    
     setStore(formattedData);
   }, [showAllTransactions]);
   useEffect(() => {
-    debugger;
+    
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
               generateGridFromBillwiseString(formState.row.billwiseDetails);
             }
@@ -269,7 +269,7 @@ const BillwiseComponent = ({
         updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
       }
     });
-    debugger;
+    
     setStore(updatedData);
   };
 
@@ -447,7 +447,7 @@ const BillwiseComponent = ({
     }
   };
   const handleAutoPost = () => {
-    debugger;
+    
     let remainingAmount: number = parseFloat((formState.row.amount??0).toString());
     let i = 0;
     const updatedBills: BillwiseData[] = JSON.parse(JSON.stringify(store));

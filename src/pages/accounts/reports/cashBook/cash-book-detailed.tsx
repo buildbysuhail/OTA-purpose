@@ -81,7 +81,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
         filter: any,
         exportCell: any
       ) => {
-        debugger;
+        
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;

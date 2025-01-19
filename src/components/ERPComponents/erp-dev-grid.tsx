@@ -1105,11 +1105,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               horizontal: "left",
             };
             currentRow += 2;
-            debugger;
+            
             // Customize the export to Excel to use rendered values
             
             const customizeCell = (options: any) => {
-              debugger;
+              
               if (options.gridCell.rowType != "data") return;
               // const column = e.component.columnOption(options.gridCell.column.dataField);
               const column = gridCols.find(
@@ -1197,7 +1197,7 @@ debugger
                 updatedBodyProps[trimmedProp] = event.data[trimmedProp];
               })
             : {};
-          debugger;
+          
           const pdata =
             postDataDynamic != undefined
               ? postDataDynamic(_drillDownCell)

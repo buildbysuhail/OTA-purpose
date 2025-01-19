@@ -21,7 +21,7 @@ interface BalancesheetDetailsProps {
   origin?:string,
 }
 const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName, rowData, contentProps,isMaximized,modalHeight, origin}) => {
-  debugger;
+  
   const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<any>(postData);
   const { t } = useTranslation('accountsReport');

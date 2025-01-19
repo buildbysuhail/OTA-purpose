@@ -1352,7 +1352,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                   className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                                   onClick={(e) => {
                                     // Prevent default link behavior
-                                    debugger;
+                                    
                                     unlockVoucher();
                                   }}
                                 >
@@ -1640,7 +1640,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         }
                         disableEnterNavigation
                         onKeyDown={(e) => {
-                          debugger;
+                          
                           handleKeyDown(e, "bankDate");
                         }}
                       />
@@ -1712,7 +1712,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           id="UnlockVoucher_Click"
                           title="UnlockVoucher_Click"
                           onClick={() => {
-                            debugger;
+                            
                             unlockVoucher();
                           }}
                         ></ERPButton>
@@ -1837,7 +1837,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                       disableEnterNavigation={true}
                       onKeyDown={(e) => {
-                        debugger;
+                        
                         handleKeyDown(e, "commonNarration");
                       }}
                       disabled={
@@ -1908,7 +1908,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ref={ledgerCodeRef}
                   disableEnterNavigation={true}
                   onKeyDown={(e) => {
-                    debugger;
+                    
                     handleKeyDown(e, "ledgerCode");
                   }}
                   onChange={(e) =>
@@ -2137,7 +2137,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
                     onClick={() => {
-                      debugger;
+                      
                       dispatch(
                         accFormStateHandleFieldChange({
                           fields: { showbillwise: true },
@@ -2237,7 +2237,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                   value={formState.row.costCentreId}
                   onSelectItem={(e) => {
-                    debugger;
+                    
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: {
@@ -2250,7 +2250,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }}
                   disableEnterNavigation
                   onKeyDown={(e: any) => {
-                    debugger;
+                    
                     handleKeyDown(e, "costCentre");
                   }}
                 />

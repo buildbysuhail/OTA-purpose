@@ -165,7 +165,7 @@ const InvoiceDesigner = () => {
   const getPDFTemplateData = async () => {
 
       const res  = await api.getAsync(`${Urls.templates}${id||""}`)
-      debugger;
+      
       let cc: TemplateState = customJsonParse(res.content);
       const template = {
         ...cc,

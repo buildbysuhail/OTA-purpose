@@ -75,7 +75,7 @@ export const validateTransactionDate = (
       message: "Transaction date is outside the financial period.",
     };
   }
-debugger;
+
   // Skip post-dated and pre-dated checks if specified
   if (!skipPostDatedAndPredated) {
     const softwareDate = moment(clientSession.softwareDate,"DD/MM/YYYY").local();

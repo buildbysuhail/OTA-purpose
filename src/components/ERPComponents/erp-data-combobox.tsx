@@ -580,7 +580,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
-      debugger;
+      
       console.log(`freezeDataLoad${field?.freezeDataLoad}`);
       console.log(`disabledApiCall${disabledApiCall}`);
       if (_reload !== undefined && _reload !== true) {

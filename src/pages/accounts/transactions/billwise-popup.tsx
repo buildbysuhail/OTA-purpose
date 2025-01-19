@@ -169,6 +169,7 @@ const BillwiseComponent = ({
       });
       
       setStore(updatedStore);
+      setNetAdjustment(getTotalAmountToSet(updatedStore));
     }
   };
 
@@ -202,7 +203,7 @@ const BillwiseComponent = ({
         };
       }
     });
-    
+    setNetAdjustment(getTotalAmountToSet(formattedData));
     setStore(formattedData);
   }, [showAllTransactions]);
   useEffect(() => {
@@ -211,6 +212,10 @@ const BillwiseComponent = ({
               generateGridFromBillwiseString(formState.row.billwiseDetails);
             }
    }, []);
+  useEffect(() => {
+    
+    setNetAdjustment(getTotalAmountToSet(store));
+   }, [store]);
   // useEffect(() => {
   //   const loadBillwiseTransactions = async () => {
   //     
@@ -307,6 +312,7 @@ const BillwiseComponent = ({
     );
   };
   function getTotalAmountToSet(list: BillwiseData[]) {
+    debugger;
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
@@ -508,7 +514,7 @@ const BillwiseComponent = ({
   
 
   useEffect(() => {
-    setNetAdjustment(calculateNetAdjustment());
+    setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
 
   return (
@@ -827,11 +833,7 @@ const BillwiseComponent = ({
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
             <strong className="mr-3">Net Adjustment</strong>
             <span className="">
-              {store.reduce(
-                (total: number, item: any) =>
-                  total + (item.billwiseAmount || 0),
-                0
-              )}
+              {netAdjustment}
             </span>
           </div>
           <div>

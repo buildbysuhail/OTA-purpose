@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { DataGrid, Toolbar } from "devextreme-react";
+import { FC, Fragment, useEffect, useState } from "react";
+import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
 import {
   Column,
   Paging,
   Scrolling,
+  DataGridTypes,
   ColumnFixing,
   FilterRow,
   SearchPanel,
@@ -20,9 +21,11 @@ import _cloneDeep from "lodash/cloneDeep";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { Card, CardContent } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import {
+  accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
   accFormStateTransactionMasterHandleFieldChange,
 } from "./reducer";
@@ -30,7 +33,6 @@ import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { APIClient } from "../../../helpers/api-client";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
-import { useTranslation } from "react-i18next";
 import { BillwiseData } from "./acc-transaction-types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
@@ -79,8 +81,6 @@ const BillwiseComponent = ({
   const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(
     undefined
   );
-
-  const { t } = useTranslation("transaction");
 
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
@@ -136,6 +136,7 @@ const BillwiseComponent = ({
   }, []);
 
   const handleSelectionChange = (e: any) => {
+    
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
       ? e.currentSelectedRowKeys.map((key: number) => ({
           key,
@@ -186,10 +187,8 @@ const BillwiseComponent = ({
   useEffect(() => {
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
-      if (
-        showAllTransactions ||
-        row.drCr !== formState.transaction.master.drCr
-      ) {
+      
+      if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -209,12 +208,12 @@ const BillwiseComponent = ({
   useEffect(() => {
     debugger;
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-      generateGridFromBillwiseString(formState.row.billwiseDetails);
-    }
-  }, []);
+              generateGridFromBillwiseString(formState.row.billwiseDetails);
+            }
+   }, []);
   // useEffect(() => {
   //   const loadBillwiseTransactions = async () => {
-  //
+  //     
   //     try {
   //       // Replace with your actual API call
   //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
@@ -279,6 +278,7 @@ const BillwiseComponent = ({
     const billwiseString = store
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
+        
         if (row.billwiseAmount > 0) {
           vrNumbers += `${row.voucherNumber},`;
         }
@@ -336,7 +336,7 @@ const BillwiseComponent = ({
   }
   const validate = () => {
     
-    const totalAmount = getTotalAmountToSet();
+    const totalAmount = getTotalAmountToSet(store);
 
     if (totalAmount < 0) {
       ERPAlert.show({
@@ -351,8 +351,8 @@ const BillwiseComponent = ({
         title: "failed",
         text: "Total adjustment amount exceeds the available amount.",
       });
-
-      return false;
+      
+    return false;
     }
 
     return true;
@@ -366,6 +366,7 @@ const BillwiseComponent = ({
   };
   const handleSave = () => {
     try {
+      
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -406,13 +407,13 @@ const BillwiseComponent = ({
             },
           })
         );
-
+        
         onSave &&
           onSave(
             billwiseString.billwiseString,
             (formState.row.amount ?? 0) < amtAdjusted
               ? amtAdjusted
-              : formState.row.amount ?? 0,
+              : (formState.row.amount ?? 0),
             billwiseString.vrNumbers
           );
         closeBillwise();
@@ -431,9 +432,7 @@ const BillwiseComponent = ({
   const calculateNetAdjustment = () => {
     return store.reduce((total: any, row: any) => {
       const amt = parseFloat(row.billwiseAmount) || 0;
-      return (
-        total + (row.drCr === formState.transaction.master.drCr ? -amt : amt)
-      );
+      return total + (row.drCr === formState.transaction.master.drCr ? -amt : amt);
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
@@ -539,9 +538,7 @@ const BillwiseComponent = ({
                   {formState.row.ledgerName}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="font-medium">
-                    {ledgerData?.partyCategory}
-                  </span>
+                <span className="font-medium">{ledgerData?.partyCategory}</span>
                   <CheckCircle2 className="w-4 h-4 text-white " color="green" />
                 </div>
               </div>
@@ -560,20 +557,18 @@ const BillwiseComponent = ({
           </Item>
           <Item location="after">
             <p className="text-[12px] font-medium p-3 mx-2">
-              {t("amount_to_adjust")} : {formState.row.amount}
+              Amount to adjust : {formState.row.amount}
             </p>
           </Item>
         </Toolbar>
-
+       
         <DataGrid
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"
           // height={gridHeight}
           dataSource={store?.filter(
-            (row: any) =>
-              showAllTransactions ||
-              row.drCr !== formState.transaction.master.drCr
+            (row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr
           )}
           height={gridHeight}
           className="custom-data-grid"
@@ -627,7 +622,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="slNo"
-            caption={t("si_no")}
+            caption="slNo"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -655,7 +650,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="voucherType"
-            caption={t("voucher_type")}
+            caption="VoucherType"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -665,7 +660,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="voucherNumber"
-            caption={t("voucher_number")}
+            caption="TransactionDate"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -675,7 +670,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="transactionDate"
-            caption={t("transaction_date")}
+            caption="TransactionDate"
             dataType="date"
             allowFiltering={true}
             allowSearch={true}
@@ -685,7 +680,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="amount"
-            caption={t("amount")}
+            caption="Amount"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -695,7 +690,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="adjustedAmount"
-            caption={t("adjusted_amount")}
+            caption="Adjusted Amount"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -705,7 +700,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="billwiseAmount"
-            caption={t("amount_to_set")}
+            caption="Amount To Set"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -715,7 +710,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="referenceNumber"
-            caption={t("reference_number")}
+            caption="ReferenceNumber"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -725,7 +720,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="financialYearID"
-            caption={t("financial_year_id")}
+            caption="FinancialYearID"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -735,7 +730,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="formType"
-            caption={t("form_type")}
+            caption="FormType"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -744,7 +739,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="voucherPrefix"
-            caption={t("voucher_prefix")}
+            caption="VoucherPrefix"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -754,7 +749,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="partyName"
-            caption={t("party_name")}
+            caption="PartyName"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -765,7 +760,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="referenceDate"
-            caption={t("reference_date")}
+            caption="Reference Date"
             dataType="date"
             allowFiltering={true}
             allowSearch={true}
@@ -776,7 +771,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="FormType"
-            caption={t("form_type")}
+            caption="Form Type"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -787,7 +782,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="balance"
-            caption={t("balance_after")}
+            caption="Balance After"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -798,7 +793,7 @@ const BillwiseComponent = ({
 
           <Column
             dataField="drCr"
-            caption={t("drcr")}
+            caption="DrCr"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -830,7 +825,7 @@ const BillwiseComponent = ({
         </DataGrid>
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
-            <strong className="mr-3">{t("net_adjustment")}</strong>
+            <strong className="mr-3">Net Adjustment</strong>
             <span className="">
               {store.reduce(
                 (total: number, item: any) =>
@@ -840,9 +835,9 @@ const BillwiseComponent = ({
             </span>
           </div>
           <div>
-            <ERPButton title={t("auto_save")} className="mr-2" />
-            <ERPButton title={t("save")} onClick={handleSave} className="mr-2" />
-            <ERPButton title={t("cancel")} />
+            <ERPButton title="Auto Post" onClick={handleAutoPost}  className="mr-2" />
+            <ERPButton title="Save" onClick={handleSave} className="mr-2" />
+            <ERPButton title="Cancel" />
           </div>
         </div>
       </CardContent>

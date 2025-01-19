@@ -16,6 +16,11 @@ export interface AccTransactionData {
   details: AccTransactionRow[];
   attachments: any[];
 }
+export interface AccTransactionValidationsData {
+  master: AccTransactionMasterValidations;
+  details: AccTransactionRow[];
+  attachments: any[];
+}
 
 // const initialFormElements = {
 //   foreignCurrency: {
@@ -388,23 +393,24 @@ export const accTransactionInitialData: AccTransactionData = {
   attachments: []
 };
 export interface BillwiseData {
-  SiNo: number;
-  Select: boolean;
-  VrType: string;
-  BillNo: number;
-  Date: string;
-  Amount: number;
-  AdjAmount: number;
-  Balance: number;
-  AmountToAssign: number;
-  BalanceAfter: number;
-  PartyName: string;
-  RefDate: string;
-  accTransactionDetailID: string;
-  RafNo: string;
-  FormType: string;
-  FinancilaYearID: string;
-  VoucherPrefix: string;
+  accTransactionDetailID: number;
+  adjustedAmount: number;
+  amount: number;
+  balance: number;
+  billWiseMasterID: number;
+  billwiseAmount: number;
+  drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit
+  financialYearID: number;
+  formType: string;
+  ledgerID: number;
+  partyName: string;
+  referenceDate: string; // ISO date string
+  referenceNumber: string;
+  slNo: number;
+  transactionDate: string; // ISO date string
+  voucherNumber: number;
+  voucherPrefix: string;
+  voucherType: string;
 }
 export interface AccUserConfig {
   maxWidth: any;

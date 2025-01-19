@@ -10,7 +10,7 @@ export const useNumberFormat = () => {
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const softwareDate = useAppSelector(
-    (state: RootState) => state.AppState.softwareDate
+    (state: RootState) => state.ClientSession.softwareDate
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -129,10 +129,13 @@ export const useNumberFormat = () => {
 
     return `${result} Only`;
   }
+  function round(value: number, decimalPoints: number | undefined = undefined): number {
+    return parseFloat(value.toFixed(decimalPoints != undefined ? decimalPoints : applicationSettings.mainSettings?.decimalPoints));
+  }
   function getAmountInWords(amount: number): string {
     
     return convertAmountToWords(amount.toString());
   }
   
-  return { getNumericFormat, getFormattedValue, getAmountInWords }
+  return { getNumericFormat, getFormattedValue, getAmountInWords, round }
 };

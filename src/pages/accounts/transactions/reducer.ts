@@ -20,6 +20,7 @@ import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { calculateTotal, clearEntryControl } from "./functions";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
+import moment from "moment";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -64,7 +65,7 @@ const accTransactionSlice = createSlice({
       state.transaction.master.referenceNumber = "";
       state.row.chqDate = new Date().toISOString();
       state.row.bankDate = new Date().toISOString();
-      state.transaction.master.transactionDate = softwareDate;
+      state.transaction.master.transactionDate = moment(softwareDate,"DD/MM/YYYY").local().toISOString();
       state.row.narration = "";
       state.row.amount = 0.0;
       state.row.discount = 0.0;

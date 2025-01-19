@@ -33,6 +33,8 @@ import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { APIClient } from "../../../helpers/api-client";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+import { BillwiseData } from "./acc-transaction-types";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface BillwiseProps {
   onSave?: (
@@ -53,12 +55,14 @@ interface BillwiseProps {
 const api = new APIClient();
 const BillwiseComponent = ({
   onSave,
+  onAutoPost,
   onClose,
   isMaximized,
   modalHeight,
   onMaximizeChange,
 }: BillwiseProps) => {
   const dispatch = useDispatch();
+  const {round} = useNumberFormat();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -296,15 +300,43 @@ const BillwiseComponent = ({
 
   //   onSave(billwiseString, totalAdjusted, vrNumbers);
   // };
-  const getTotalAmountToSet = () => {
+  const getTotalAmountAdjusted = () => {
     return store.reduce(
       (sum: number, item: any) => sum + (item.billwiseAmount || 0),
       0
     );
   };
+  function getTotalAmountToSet(list: BillwiseData[]) {
+    let total = 0;
+    let totalDr = 0;
+    let totalCr = 0;
+  
+    try {
+      list.forEach((bill) => {
+        const drCrCol = bill.drCr?.toUpperCase();
+        const amountToSet = bill.billwiseAmount;
+  
+        if (drCrCol === "DR") {
+          totalDr += amountToSet;
+        } else {
+          totalCr += amountToSet;
+        }
+      });
+  
+      if (formState.transaction.master.drCr.toUpperCase() === "CR") {
+        total = totalDr - totalCr;
+      } else {
+        total = totalCr - totalDr;
+      }
+    } catch (error) {
+      console.error("Error calculating total amount to set:", error);
+    }
+  
+    return total;
+  }
   const validate = () => {
     
-    const totalAmount = getTotalAmountToSet();
+    const totalAmount = getTotalAmountToSet(store);
 
     if (totalAmount < 0) {
       ERPAlert.show({
@@ -338,7 +370,7 @@ const BillwiseComponent = ({
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
-        const amtAdjusted = getTotalAmountToSet();
+        const amtAdjusted = getTotalAmountAdjusted();
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {
@@ -415,48 +447,65 @@ const BillwiseComponent = ({
     }
   };
   const handleAutoPost = () => {
-    let remainingAmount = formState.row.amount??0;
+    debugger;
+    let remainingAmount: number = parseFloat((formState.row.amount??0).toString());
     let i = 0;
-    const updatedBills = [JSON.parse(JSON.stringify(formState.transaction.details))];
+    const updatedBills: BillwiseData[] = JSON.parse(JSON.stringify(store));
     
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {
-      if (bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase()) {
-        remainingAmount += (2 * parseFloat(bill.balance));
-      }
+      
     });
 
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       const bill = updatedBills[i];
-      const billBalance = parseFloat(bill.balance);
+      if (bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase()) {
+        const tyu = 2 * bill.balance;
+        remainingAmount += tyu;
+        setShowAllTransactions(true)
+      }
+
+      const billBalance = bill.balance;
 
       if (billBalance <= remainingAmount) {
         // Full payment
-        bill.amountToSet = billBalance;
-        bill.balanceAfter = 0;
+        bill.billwiseAmount = billBalance;
+        bill.balance = 0;
         remainingAmount -= billBalance;
       } else {
         // Partial payment
-        bill.amountToSet = remainingAmount;
-        bill.balanceAfter = billBalance - remainingAmount;
+        bill.billwiseAmount = remainingAmount;
+        bill.balance = billBalance - remainingAmount;
         remainingAmount = 0;
       }
       i++;
     }
+    setStore(updatedBills);
+    // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.billwiseAmount || 0), 0);
+    const amtAdjusted = getTotalAmountToSet(updatedBills);
 
-    // setBills(updatedBills);
-    
-    // // Calculate totals
-    // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.amountToSet || 0), 0);
-    
-    // if (Math.round(totalAdjusted * 100) / 100 > Math.round(amount * 100) / 100) {
-    //   alert('Excess adjustment');
-    //   return;
-    // }
-
-    // setShowConfirmDialog(true);
+    // Check if the adjusted amount exceeds the original amount
+    if (round(amtAdjusted) > round(remainingAmount)) {
+      ERPAlert.show({
+        title:"Auto Post",
+        text:"Excess adjustment.",
+        icon:"warning",
+      });
+      return false;
+    }
+    ERPAlert.show({
+      title:"Auto Post",
+      text:"Do you want to save",
+      icon:"info",
+      onConfirm: (result: boolean) => {
+        if(result) {
+          handleSave();
+        }
+      }
+    })
   };
+  
 
   useEffect(() => {
     setNetAdjustment(calculateNetAdjustment());
@@ -786,7 +835,7 @@ const BillwiseComponent = ({
             </span>
           </div>
           <div>
-            <ERPButton title="Auto save" className="mr-2" />
+            <ERPButton title="Auto Post" onClick={handleAutoPost}  className="mr-2" />
             <ERPButton title="Save" onClick={handleSave} className="mr-2" />
             <ERPButton title="Cancel" />
           </div>

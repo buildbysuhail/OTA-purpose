@@ -251,7 +251,7 @@ export const useAccTransaction = (
       const transactionDate = new Date(
         formState.transaction.master.transactionDate
       ); // Assuming `dtpTransDate` is a Date object
-      const softwareDate = new Date(clientSession.softwareDate);
+      const softwareDate = moment(clientSession.softwareDate,"DD/MM/YYYY").local().toDate();
 
       const daysUntilExpiry = Math.floor(
         (demoExpiryDate.getTime() - transactionDate.getTime()) /
@@ -648,6 +648,7 @@ export const useAccTransaction = (
   ) => {
     debugger;
     await undoEditMode(isEdit, accTransactionMasterID);
+    debugger;
     dispatch(
       clearState({
         userSession,
@@ -1076,7 +1077,7 @@ export const useAccTransaction = (
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode}`
+          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode??0}`
         );
 
         if (response && response > 0) {

@@ -806,6 +806,7 @@ debugger;
 
       // Dispatch the update action with all the required fields
       dispatch(updateFormElement({ fields: fieldsToUpdate }));
+      focusLedgerCode();
     };
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);

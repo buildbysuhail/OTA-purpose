@@ -25,7 +25,7 @@ export const clearEntryControl = (
 
 ): AccTransactionFormState => {
   state.row.ledgerCode = "";
-  state.row.groupName = "";
+  state.row.accGroupName = "";
   state.row.ledgerId = 0;
   state.row.amount = 0;
   state.row.discount = 0;

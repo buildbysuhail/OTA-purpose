@@ -54,7 +54,7 @@ const AccExcelImport = () => {
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
-          link.download = "Parties.xlsx";
+          link.download = "mjv.xlsx";
     
           // Trigger download
           document.body.appendChild(link);

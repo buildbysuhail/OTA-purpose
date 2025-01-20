@@ -62,9 +62,11 @@ import {
   Eraser,
   X,
   FileUp,
+  History
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
+import HistorySidebar from "./historySidebar";
 interface BilledItem {
   id?: number;
   name: string;
@@ -998,6 +1000,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
   const [showPopup, setShowPopup] = React.useState(false);
+  const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
+  const [historyData, setHistoryData] = useState<any>(null);
+
+  const handleHistoryClick = async () => {
+    try {
+      const response = await api.getAsync(
+        `${Urls.acc_transaction_base}${transactionType}/List/`
+      );
+      if (response.data && response.data.length > 0) {
+        setHistoryData(response.data[0]);
+        setIsHistorySidebarOpen(true);
+      }
+    } catch (error) {
+      console.error("Error fetching transaction history:", error);
+    }
+  };
 
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
@@ -1289,6 +1307,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <Eraser className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
+                  <div
+                    className="group relative inline-flex flex-col items-center"
+                    title={t("history")}
+                  >
+                    <button
+                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      onClick={handleHistoryClick}
+                    >
+                      <History className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                    </button>
+                  </div>
+
+                  <HistorySidebar
+                    isOpen={isHistorySidebarOpen}
+                    onClose={() => setIsHistorySidebarOpen(false)}
+                    data={historyData}
+                  />
 
                   {/* Settings  Button */}
                   <div>

@@ -1451,7 +1451,7 @@ debugger;
                     </>
                   )}
                 </div>
-                {formState.formElements.masterAccount.visible && (
+                {formState.formElements.masterAccount.visible && formState.formElements?.masterAccount?.accLedgerType != undefined && (
                   <div className="flex items-center">
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig.inputBoxStyle}
@@ -1479,6 +1479,7 @@ debugger;
                         valueKey: "id",
                         labelKey: "name",
                         getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerType=${formState.formElements?.masterAccount?.accLedgerType}`
                       }}
                       disabled={
                         formState.formElements.masterAccount?.disabled ||

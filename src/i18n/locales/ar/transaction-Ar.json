@@ -152,15 +152,15 @@
   "shipping_address": "عنوان الشحن",
   "no_shipping": "لم يتم تقديم عنوان شحن",
 
-   "browse_files": "تصفح الملفات",
+  "browse_files": "تصفح الملفات",
   "or_drop": "أو اسحب الملفات هنا",
   "done": "تم",
   "attachment": "المرفق",
-  
+
   "print_payment": "طباعة الدفع",
   "bal": "الرصيد",
   "unlock": "فتح",
-  
+
   "cash_receipt": "إيصال نقدي",
   "cash_payment_estimate": "تقدير الدفع النقدي",
   "cash_receipt_estimate": "تقدير الإيصال النقدي",
@@ -177,10 +177,38 @@
   "tax_on_expense_payment": "الضريبة على دفع المصروفات",
   "bank_reconciliation": "تسوية البنك",
   "post_dated_cheques": "الشيكات المؤجلة",
-  
+
   "acc_transaction_master_id": "معرف رئيس المعاملة المحاسبية",
   "transaction_date": "تاريخ المعاملة",
   "particulars": "التفاصيل",
   "form": "النموذج",
-  "transactions": "المعاملات"
+  "transactions": "المعاملات",
+
+  "acc_transaction_detail_id": "معرف تفاصيل المعاملة المحاسبية",
+  "ledger_name": "اسم دفتر الأستاذ",
+  "related_ledger": "دفتر الأستاذ المرتبط",
+  "cheque_bounce_date": "تاريخ رجوع الشيك",
+  "is_cleared": "تم التسوية",
+  "ledger_id": "معرف دفتر الأستاذ",
+  "related_ledger_id": "معرف دفتر الأستاذ المرتبط",
+  "bank_charge": "رسوم البنك",
+  "post_dated_cheques": "الشيكات المؤجلة",
+  "payment": "الدفع",
+  "receipt": "الإيصال",
+  "set_all_date": "تعيين كل التواريخ",
+  "to_excel": "تصدير إلى Excel",
+  "cheque_from_date": "الشيك من التاريخ",
+  "to_date": "إلى التاريخ",
+  "bank": "البنك",
+  "set_as_bank_date": "تعيين كتاريخ للبنك",
+  "today's_date": "تاريخ اليوم",
+  "cheque_date": "تاريخ الشيك",
+  "show": "عرض",
+  "save": "حفظ",
+  "close": "إغلاق",
+  "bank_change": "تغيير البنك",
+  "bank_commission": "عمولة البنك",
+  "total": "الإجمالي",
+
+  "show_reconciled": "عرض التسويات"
 }

@@ -1396,7 +1396,18 @@ debugger;
                               data={formState.userConfig}
                               checked={formState?.userConfig?.keepNarrationForJV}
                               onChangeData={(e) =>
-                                handleFieldChange("keepNarrationForJV", e.keepNarrationForJV)
+                              {
+                                debugger;
+                                const updatedUserConfig = {
+                                  ...formState.userConfig,
+                                  keepNarrationForJV: e.keepNarrationForJV,
+                                };
+                                dispatch(
+                                  accFormStateHandleFieldChange({
+                                    fields: { userConfig: updatedUserConfig },
+                                  })
+                                );
+                              }
                               }
                             />
                             </div>

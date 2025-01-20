@@ -166,6 +166,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
+    showBillwise
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -2145,14 +2146,7 @@ debugger;
                   <ERPButton
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
-                    onClick={() => {
-                      
-                      dispatch(
-                        accFormStateHandleFieldChange({
-                          fields: { showbillwise: true },
-                        })
-                      );
-                    }}
+                    onClick={showBillwise}
                     disabled={
                       formState.ledgerBillWiseLoading ||
                       formState.formElements.btnBillWise.disabled == true

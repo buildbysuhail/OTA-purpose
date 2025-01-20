@@ -92,7 +92,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
               label="Show Organization Name"
               onChange={(e) => handleChange("header", "showOrgName", e.target.checked)}
             />
-              <ERPCheckbox
+            <ERPCheckbox
             id="showOrgAddress"
             checked={headerState?.showOrgAddress}
             label="Show Organization Address"
@@ -118,20 +118,40 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
             />
             
           {/*  */}
-
-          <ERPInput
-            id="phone"
-            label="Phone"
-            value={headerState?.phoneLabel}
-            onChange={(e) => handleChange("header","phoneLabel", e.target?.value )}
-          />
-
-          <ERPInput
-            id="fax"
-            label="Fax Number"
-            value={headerState?.faxLabel}
-            onChange={(e) => handleChange("header","faxLabel", e.target?.value )}
-          />
+           <div className="flex flex-col gap-2">
+              <ERPCheckbox
+                id="hasPhoneField"
+                label="Phone"
+                checked={headerState?.hasPhoneField}
+                onChange={(e) => handleChange("header","hasPhoneField", e.target?.checked )}
+              />
+              {headerState?.hasPhoneField && (
+              <ERPInput
+              id="phone"
+              noLabel
+              value={headerState?.phoneLabel}
+              onChange={(e) => handleChange("header","phoneLabel", e.target?.value )}
+              />
+              )}
+            </div>
+         
+            <div className="flex flex-col gap-2">
+              <ERPCheckbox
+                id="hasfaxField"
+                label="Fax Number"
+                checked={headerState?.hasfaxField}
+                onChange={(e) => handleChange("header","hasfaxField", e.target?.checked )}
+              />
+              {headerState?.hasfaxField && (
+               <ERPInput
+               id="fax"
+               noLabel
+               value={headerState?.faxLabel}
+               onChange={(e) => handleChange("header","faxLabel", e.target?.value )}
+             />
+              )}
+            </div>
+        
           </>
         }
        {/* */}

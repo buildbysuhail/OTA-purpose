@@ -708,12 +708,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
               {showCustomNumberChanger && (
                 <div
-                  className="absolute right-0 top-0 h-[86%] flex flex-col border-l border-gray-300 m-[2px]"
+                  className="absolute right-0 top-0 h-[91%] flex flex-col border-l dark:!border-dark-border  border-gray-300 m-[2px]"
                   style={{
-                    background:
-                      initial?.value !== undefined && initial?.value !== null && initial?.value !== ""
-                        ? `rgb(${inputBoxState?.selectColor})`
-                        : "#f9f9f9",
+                    // background:
+                    //   initial?.value !== undefined && initial?.value !== null && initial?.value !== ""
+                    //     ? `rgb(${inputBoxState?.selectColor})`
+                    //     : "#f9f9f9",
                     ...(document.documentElement.dir === "rtl"
                       ? {
                           borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5}px`,
@@ -727,7 +727,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 >
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-6 dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue = currentValue + (step ? parseFloat(step.toString()) : 1);
@@ -749,11 +749,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           }),
                     }}
                   >
-                    <ChevronUp className="h-3 w-3 text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                    <ChevronUp className="h-4 w-4 text-gray-400 hover:text-gray-500 transition-transform duration-200" />
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center h-1/2 w-6 hover:bg-gray-100 border-t border-gray-300 focus:outline-none"
+                    className="flex items-center justify-center h-1/2 w-6 dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 border-t dark:!border-dark-border border-gray-300 focus:outline-none"
                     onClick={() => {
                       const currentValue = parseFloat(value as string) || 0;
                       const newValue = currentValue - (step ? parseFloat(step.toString()) : 1);
@@ -775,7 +775,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           }),
                     }}
                   >
-                    <ChevronDown className="h-3 w-3 text-gray-400 hover:text-gray-500 transition-transform duration-200" />
+                    <ChevronDown className="h-4 w-4  text-gray-400 hover:text-gray-500 transition-transform duration-200" />
                   </button>
                 </div>
               )}

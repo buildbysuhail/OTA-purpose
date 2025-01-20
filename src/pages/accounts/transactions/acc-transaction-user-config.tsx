@@ -98,10 +98,11 @@ export const AccTransactionUserConfig = () => {
         title="Settings"
       >
         <button
-          className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+          // className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+          className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
           onClick={() => setIsOpen(true)}
         >
-          <Settings className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+          <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>
       <ERPModal

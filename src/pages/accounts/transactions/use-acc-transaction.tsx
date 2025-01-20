@@ -24,6 +24,7 @@ import {
   setUserRight,
   updateFormElement,
   accFormStateClearBillWiseInDetails,
+  accFormStateClearDetails,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import {
@@ -188,6 +189,27 @@ export const useAccTransaction = (
       formState.isEdit,
       formState.transaction.master.accTransactionMasterID
     );
+    dispatch(accFormStateTransactionMasterHandleFieldChange({fields: {
+      remarks: "",
+      commonNarration: "",
+      employeeId: userSession.dbIdValue == "543140180640" && userSession.employeeId > 0 ? userSession.employeeId : formState.transaction.master.employeeId
+    }}));
+    dispatch(accFormStateClearDetails());
+    dispatch(accFormStateHandleFieldChange({fields: {
+      masterAccountID: 0
+    }}))
+    dispatch(accFormStateRowHandleFieldChange({fields: {
+      narration:  "",
+      amount: 0,
+      discount: 0,
+
+    }}));
+    dispatch(updateFormElement({fields: {
+      btnAdd:  {text: "Add"},
+      amount:{disabled: false}
+    }}))
+    
+
     try {
       const params = {
         VoucherNumber: tmpVoucherNumber,
@@ -664,7 +686,12 @@ export const useAccTransaction = (
     accTransactionMasterID: number
   ) => {
     await undoEditMode(isEdit, accTransactionMasterID);
-
+    const vNo = await getNextVoucherNumber(
+      formState.transaction.master.formType,
+      formState.transaction.master.voucherType,
+      formState.transaction.master.voucherPrefix,
+      false
+    );
     dispatch(
       clearState({
         userSession,
@@ -673,6 +700,7 @@ export const useAccTransaction = (
           applicationSettings.accountsSettings?.defaultCostCenterID,
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
+        voucherNo:vNo
       })
     );
     dispatch(
@@ -713,12 +741,8 @@ export const useAccTransaction = (
         },
       })
     );
-    getNextVoucherNumber(
-      formState.transaction.master.formType,
-      formState.transaction.master.voucherType,
-      formState.transaction.master.voucherPrefix,
-      false
-    );
+    
+
     focusLedgerCode();
   };
   const handleRemoveItem = async (index: number) => {

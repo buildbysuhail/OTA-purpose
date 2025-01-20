@@ -254,7 +254,7 @@ export interface AccTransactionRow {
   ledgerId: number;
   ledgerCode: string;
   ledgerName: string;
-  groupName: string;
+  accGroupName: string;
   ledger: string;
   drCr: string;
   relatedLedgerID: number;
@@ -301,7 +301,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   ledgerId: 0,
   relatedLedgerID: 0,
   amount: undefined,
-  discount: undefined,
+  discount: 0,
   debit: undefined,
   credit: undefined,
   randomKey: 0,
@@ -337,7 +337,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   costCentreName: 0,
   billwiseDetails: "",
   chqDate: "",
-  groupName: "",
+  accGroupName: "",
   exchangeRate: 0
 }
 export const accTransactionInitialData: AccTransactionData = {

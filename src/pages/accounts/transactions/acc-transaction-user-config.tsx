@@ -11,6 +11,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { AccUserConfig } from "./acc-transaction-types";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { Settings } from "lucide-react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { inputBox } from "../../../redux/slices/app/types";
@@ -163,7 +164,23 @@ export const AccTransactionUserConfig = () => {
                   )
                 }
               />
-
+              <ERPDataCombobox
+                id="presetCostenterId"
+                data={formState.userConfig}
+                label={t("presetCostCenter")}
+                field={{
+                  id: "presetCostenterId",
+                  getListUrl: Urls.data_costcentres,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(e) =>
+                  handleFieldChange(
+                    "presetCostenterId",
+                    e.presetCostenterId
+                  )
+                }
+              />
               <ERPInput
                 id="maxWidth"
                 label={t("max_width")}

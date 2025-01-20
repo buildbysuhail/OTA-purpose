@@ -2,10 +2,17 @@
   position: fixed !important;
   z-index: 55 !important;
   background: white !important;
-  cursor: ew-resize;
   height: 100% !important;
   top: 0;
   right: 0px;
+}
+
+.custom-handle {
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  cursor: ew-resize;
+  background: transparent;
 }
 
 .ltr-handle {

@@ -1,26 +1,12 @@
 "use client";
 
-import {
-  Dispatch,
-  Key,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  X,
-  CheckCircle2,
-  AlertTriangle,
-  CircleDot,
-  CreditCard,
-  Receipt,
-  UserPlus,
-} from "lucide-react";
+import { Dispatch,Key,SetStateAction,useEffect,useRef,useState } from "react";
+import { X,CheckCircle2,AlertTriangle,CircleDot,CreditCard,Receipt,UserPlus } from "lucide-react";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import profile from "../../assets/images/faces/profile-circle.512x512.png";
 import { useTranslation } from "react-i18next";
+import { useNumberFormat } from "../../utilities/hooks/use-number-format";
 
 interface Activity {
   id: string;
@@ -42,6 +28,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
   );
+   const { getFormattedValue } = useNumberFormat()
 
   // const getIcon = (type: Activity['type']) => {
   //   switch (type) {
@@ -56,37 +43,17 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   //   }
   // }
 
-  const customerDetailsRef = useRef<HTMLDivElement>(null);
-
   // Handle clicks outside the component
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        customerDetailsRef.current &&
-        !customerDetailsRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
 
-    // Attach the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Cleanup the event listener on unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setIsOpen]);
-
-  function getFormattedValue(value: number | string): string {
-    if (typeof value === "number") {
-      return value.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
-    }
-    return String(value);
-  }
+  // function getFormattedValue(value: number | string): string {
+  //   if (typeof value === "number") {
+  //     return value.toLocaleString("ar", {
+  //       style: "currency",
+  //       currency: "sar",
+  //     });
+  //   }
+  //   return String(value);
+  // }
 
   const getActivityConfig = (type: Activity["type"]) => {
     switch (type) {
@@ -172,10 +139,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const { t } = useTranslation("transaction");
 
   return (
-    <div
-      className="max-w-2xl mx-auto p-4 overflow-auto "
-      ref={customerDetailsRef}
-    >
+    <div className="max-w-2xl mx-auto p-4 overflow-auto ">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -330,7 +294,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">{t("tax_number")}</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("tax_number")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.taxNumber}
                       </div>
@@ -348,7 +314,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">{t("credit_days")}</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("credit_days")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.creditDays}
                       </div>
@@ -366,7 +334,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">{t("route_name")}</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("route_name")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {ledgerData?.routeName}
                       </div>
@@ -374,7 +344,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">{t("created_date")}</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("created_date")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.createdDate).toLocaleDateString()}
                       </div>
@@ -382,7 +354,9 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                   </div>
                   <div>
                     <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">{t("expiry_date")}</p>
+                      <p className="text-[#8c8c8c] text-[12px]">
+                        {t("expiry_date")}
+                      </p>
                       <div className="w-1/2 text-[12px] text-left">
                         {new Date(ledgerData?.expiryDate).toLocaleDateString()}
                       </div>

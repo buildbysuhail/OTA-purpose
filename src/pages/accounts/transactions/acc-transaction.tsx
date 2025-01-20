@@ -96,7 +96,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 }) => {
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${voucherType}`
+    `grd_acc_transaction_${voucherType+formType}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -166,6 +166,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
+    showBillwise
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -806,6 +807,7 @@ debugger;
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
+    debugger;
     const nextVoucherNumber = await getNextVoucherNumber(
       formType,
       voucherType,
@@ -1426,6 +1428,7 @@ debugger;
                         onKeyUp={(e) => {
                           handleKeyDown(e, "voucherNumber");
                         }}
+                        min={1}
                         label={t(formState.formElements.voucherNumber.label)}
                         value={formState.transaction.master.voucherNumber}
                         type="number"
@@ -1449,7 +1452,7 @@ debugger;
                     </>
                   )}
                 </div>
-                {formState.formElements.masterAccount.visible && (
+                {formState.formElements.masterAccount.visible && formState.formElements?.masterAccount?.accLedgerType != undefined && (
                   <div className="flex items-center">
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig.inputBoxStyle}
@@ -1477,6 +1480,7 @@ debugger;
                         valueKey: "id",
                         labelKey: "name",
                         getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerType=${formState.formElements?.masterAccount?.accLedgerType}`
                       }}
                       disabled={
                         formState.formElements.masterAccount?.disabled ||
@@ -2044,6 +2048,8 @@ debugger;
                 <ERPInput
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="discount"
+                  type="number"
+                  min={0}
                   label={t(formState.formElements.discount.label)}
                   value={formState.row.discount}
                   onChange={(e) =>
@@ -2064,7 +2070,7 @@ debugger;
 
             <div className="flex flex-wrap gap-4">
               <span className="text-blue-600 font-bold self-center">
-                {t("group_name")}: {formState.row.groupName}
+                {t("group_name")}: {formState.ledgerData?.accGroupName}
               </span>
             </div>
           </div>
@@ -2144,14 +2150,7 @@ debugger;
                   <ERPButton
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
-                    onClick={() => {
-                      
-                      dispatch(
-                        accFormStateHandleFieldChange({
-                          fields: { showbillwise: true },
-                        })
-                      );
-                    }}
+                    onClick={showBillwise}
                     disabled={
                       formState.ledgerBillWiseLoading ||
                       formState.formElements.btnBillWise.disabled == true

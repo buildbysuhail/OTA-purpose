@@ -20,6 +20,9 @@ import { customJsonParse } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
 import { UserTypeRights } from "../../redux/slices/user-rights/reducer";
+import { Button } from "../../dark/Button";
+import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
+import { Sun, Moon } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -93,7 +96,7 @@ const Login = () => {
 
   return (
 
-    <div className="bg-white dark:bg-gray-900">
+    <div className="bg-white dark:bg-dark-bg">
       <div className="flex justify-center h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3"
@@ -113,13 +116,32 @@ const Login = () => {
         </div>
 
         <div className="flex relative items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
+                <div className="!absolute top-[7px] right-[26px]">
+                  {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
+                  <Button
+                    onClick={() => {
+                      appState.mode === "light"
+                        ? switcherdata.Dark(updateAppState, appState)
+                        : switcherdata.Light(updateAppState, appState);
+                    }}
+                    variant="ghost"
+                    size="icon"
+                  >
+                    {appState.mode === "dark" ? (
+                      <Sun className="h-[1.2rem] w-[1.2rem]" />
+                    ) : (
+                      <Moon className="h-[1.2rem] w-[1.2rem]" />
+                    )}
+                    <span className="sr-only">Toggle dark mode</span>
+                  </Button>
+                </div>
           <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
           <div className="flex-1">
             <div className="text-center">
-              <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">
+              <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-dark-text">
                 Polosys
               </h2>
-              <p className="mt-3 text-gray-500 dark:text-gray-300">
+              <p className="mt-3 text-gray-500 dark:text-dark-text">
                 Sign in to access your account
               </p>
             </div>
@@ -150,7 +172,7 @@ const Login = () => {
                   />
                 </div>
                 <div className="col-span-full ">
-                  <label className=" capitalize mb-1 block text-[12px] text-black">{t("password") || "password"}*</label>
+                  <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">{t("password") || "password"}*</label>
                   <div className="flex">
                     <div className="w-full">
                       <input
@@ -162,14 +184,14 @@ const Login = () => {
                         onChange={(e) => setData({ ...data, password: e.target?.value })}
                         type={showPassword ? "text" : "password"}
                         id="password"
-                        className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
+                        className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
                       />
                     </div>
                     <div
                       onClick={() => setShowPassword(!showPassword)}
-                      className="border border-gray-300 rounded-r flex justify-center items-center px-3 cursor-pointer rtl:border rtl:rounded-none rtl:rounded-l "
+                      className="border dark:border-dark-border border-gray-300 rounded-r flex justify-center items-center px-3 cursor-pointer rtl:border rtl:rounded-none rtl:rounded-l "
                     >
-                      {showPassword ? <EyeSlashIcon className="text-black h-4 w-4" /> : <EyeIcon className="text-black h-4 w-4" />}
+                      {showPassword ? <EyeSlashIcon className="dark:text-dark-text text-black h-4 w-4" /> : <EyeIcon className="dark:text-dark-text text-black h-4 w-4" />}
                     </div>
                   </div>
                 </div>
@@ -191,7 +213,7 @@ const Login = () => {
                   </button>
                 </div>
               </form>
-              <p className="mt-6 text-sm text-center text-gray-400">
+              <p className="mt-6 text-sm text-center dark:text-dark-text text-gray-400">
                 Don&#x27;t have an account yet?{" "}
                 <a
                   href="#"

@@ -61,8 +61,10 @@ import {
   BadgePlusIcon,
   Eraser,
   X,
+  FileUp,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
+import AccExcelImport from "./acc-Excel-Import";
 interface BilledItem {
   id?: number;
   name: string;
@@ -96,7 +98,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 }) => {
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${voucherType}`
+    `grd_acc_transaction_${voucherType + formType}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -116,6 +118,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const erpGridRef = useRef<any>(null); // Reference to ERPDevGrid
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
 
+  const [showValidation, setShowValidation] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const onSelectionChanged = (e: any) => {
     setSelectedRows(e.selectedRows); // Contains full row data
@@ -166,7 +169,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
-    showBillwise
+    showBillwise,
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -438,7 +441,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       const isProjectIdVisible =
         applicationSettings.accountsSettings?.maintainProjectSite ||
         userSession.dbIdValue == "543140180640";
-debugger;
+      debugger;
       // Prepare the fields to update based on conditions
       const fieldsToUpdate = {
         btnSave: { disabled: true },
@@ -803,6 +806,7 @@ debugger;
 
       // Dispatch the update action with all the required fields
       dispatch(updateFormElement({ fields: fieldsToUpdate }));
+      focusLedgerCode();
     };
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
@@ -1157,24 +1161,6 @@ debugger;
           <div className="flex justify-between items-center mb-0">
             <div className="flex items-center gap-2">
               {/* <AccTransactionUserConfig /> */}
-              {/* {formState.formElements.foreignCurrency.visible && (
-                <ERPCheckbox
-                  id="foreignCurrency"
-                  label={formState.formElements.foreignCurrency.label}
-                  checked={formState.foreignCurrency}
-                  onChange={(e) =>
-                    dispatch(
-                      accFormStateHandleFieldChange({
-                        fields: { foreignCurrency: e.target.checked },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.foreignCurrency?.disabled ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                />
-              )} */}
             </div>
             {/* <h2 className="text-4xl font-bold text-center text-blue">
               {formState.title}
@@ -1354,7 +1340,7 @@ debugger;
                                   className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                                   onClick={(e) => {
                                     // Prevent default link behavior
-                                    
+
                                     unlockVoucher();
                                   }}
                                 >
@@ -1364,9 +1350,65 @@ debugger;
                                 </button>
                               </li>
                             )}
+
+                            {formState.transaction.master.voucherType ===
+                              "MJV" &&
+                              userSession.dbIdValue === "ABCO" && (
+                                <li>
+                                  <button
+                                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                    onClick={() => setShowValidation(true)}
+                                  >
+                                    <FileUp className="h-4 w-4" />
+                                    <span>MJV Excel import </span>
+                                  </button>
+                                </li>
+                              )}
+
+                            {formState.formElements.foreignCurrency.visible && (
+                              <li>
+                                <ERPCheckbox
+                                  id="foreignCurrency"
+                                  label={
+                                    formState.formElements.foreignCurrency.label
+                                  }
+                                  className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                  checked={formState.foreignCurrency}
+                                  onChange={(e) =>
+                                    dispatch(
+                                      accFormStateHandleFieldChange({
+                                        fields: {
+                                          foreignCurrency: e.target.checked,
+                                        },
+                                      })
+                                    )
+                                  }
+                                  disabled={
+                                    formState.formElements.foreignCurrency
+                                      ?.disabled ||
+                                    formState.formElements.pnlMasters?.disabled
+                                  }
+                                />
+                              </li>
+                            )}
+                            
                           </ul>
                         </nav>
                       </div>
+                    )}
+                    {showValidation && (
+                      <ERPModal
+                        isForm={true}
+                        isOpen={showValidation}
+                        closeButton="LeftArrow"
+                        hasSubmit={false}
+                        closeTitle="Close"
+                        title="MJV Excel export"
+                        width="w-full"
+                        isFullHeight={true}
+                        closeModal={() => setShowValidation(false)}
+                        content={<AccExcelImport />}
+                      ></ERPModal>
                     )}
                   </div>
 
@@ -1428,6 +1470,7 @@ debugger;
                         onKeyUp={(e) => {
                           handleKeyDown(e, "voucherNumber");
                         }}
+                        min={1}
                         label={t(formState.formElements.voucherNumber.label)}
                         value={formState.transaction.master.voucherNumber}
                         type="number"
@@ -1451,55 +1494,57 @@ debugger;
                     </>
                   )}
                 </div>
-                {formState.formElements.masterAccount.visible && formState.formElements?.masterAccount?.accLedgerType != undefined && (
-                  <div className="flex items-center">
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig.inputBoxStyle}
-                      isInModal={false}
-                      className="w-full"
-                      id="masterAccount"
-                      label={t(formState.formElements.masterAccount.label)}
-                      value={formState.masterAccountID}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateHandleFieldChange({
-                            fields: { masterAccountID: e.value },
-                          })
-                        )
-                      }
-                      reload={formState.formElements.masterAccount.reload}
-                      changeReload={(reload: boolean) =>
-                        dispatch(
-                          updateFormElement({
-                            fields: { masterAccount: { reload: reload } },
-                          })
-                        )
-                      }
-                      field={{
-                        valueKey: "id",
-                        labelKey: "name",
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerType=${formState.formElements?.masterAccount?.accLedgerType}`
-                      }}
-                      disabled={
-                        formState.formElements.masterAccount?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      labelInfo={
-                        <div className="">
-                          <span className="text-xx text-primary">
-                            <button className="pe-3">
-                              {/* <CustomerDetailsSidebar displayType="link" /> */}
-                            </button>
-                            {t("bal")}:{" "}
-                            {`${formState.masterBalance || "0.00"} ${
-                              formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
-                            }`}
-                          </span>
-                        </div>
-                      }
-                    />
-                    {/* <div className="flex justify-between items-center mt-1">
+                {formState.formElements.masterAccount.visible &&
+                  formState.formElements?.masterAccount?.accLedgerType !=
+                    undefined && (
+                    <div className="flex items-center">
+                      <ERPDataCombobox
+                        localInputBox={formState?.userConfig.inputBoxStyle}
+                        isInModal={false}
+                        className="w-full"
+                        id="masterAccount"
+                        label={t(formState.formElements.masterAccount.label)}
+                        value={formState.masterAccountID}
+                        onChange={(e) =>
+                          dispatch(
+                            accFormStateHandleFieldChange({
+                              fields: { masterAccountID: e.value },
+                            })
+                          )
+                        }
+                        reload={formState.formElements.masterAccount.reload}
+                        changeReload={(reload: boolean) =>
+                          dispatch(
+                            updateFormElement({
+                              fields: { masterAccount: { reload: reload } },
+                            })
+                          )
+                        }
+                        field={{
+                          valueKey: "id",
+                          labelKey: "name",
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerType=${formState.formElements?.masterAccount?.accLedgerType}`,
+                        }}
+                        disabled={
+                          formState.formElements.masterAccount?.disabled ||
+                          formState.formElements.pnlMasters?.disabled
+                        }
+                        labelInfo={
+                          <div className="">
+                            <span className="text-xx text-primary">
+                              <button className="pe-3">
+                                {/* <CustomerDetailsSidebar displayType="link" /> */}
+                              </button>
+                              {t("bal")}:{" "}
+                              {`${formState.masterBalance || "0.00"} ${
+                                formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
+                              }`}
+                            </span>
+                          </div>
+                        }
+                      />
+                      {/* <div className="flex justify-between items-center mt-1">
                       <span className="text-xs text-gray-500">
                         Bal:{" "}
                         {`${formState.masterBalance || "0.00"} ${
@@ -1507,43 +1552,41 @@ debugger;
                         }`}
                       </span>
                     </div> */}
-                    <div className="flex flex-wrap gap-4">
-                      {formState.formElements.jvDrCr.visible && (
-                        <ERPDataCombobox
-                          localInputBox={formState?.userConfig.inputBoxStyle}
-                          enableClearOption={false}
-                          id="drCr"
-                          className="min-w-[70px] max-w-[170px] ml-4"
-                          label={t(formState.formElements.jvDrCr.label)}
-                          value={formState.transaction.master.drCr}
-                          data={formState.transaction.master}
-                          onChange={(e) =>
-                          {
-                            debugger;
-                            dispatch(
-                              accFormStateTransactionMasterHandleFieldChange({
-                                fields: { drCr: e.value },
-                              })
-                            )
-                          }
-                          }
-                          field={{
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: "Dr", label: "Debit" },
-                            { value: "Cr", label: "Credit" },
-                          ]}
-                          disabled={
-                            formState.formElements.jvDrCr?.disabled ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
-                        />
-                      )}
+                      <div className="flex flex-wrap gap-4">
+                        {formState.formElements.jvDrCr.visible && (
+                          <ERPDataCombobox
+                            localInputBox={formState?.userConfig.inputBoxStyle}
+                            enableClearOption={false}
+                            id="drCr"
+                            className="min-w-[70px] max-w-[170px] ml-4"
+                            label={t(formState.formElements.jvDrCr.label)}
+                            value={formState.transaction.master.drCr}
+                            data={formState.transaction.master}
+                            onChange={(e) => {
+                              debugger;
+                              dispatch(
+                                accFormStateTransactionMasterHandleFieldChange({
+                                  fields: { drCr: e.value },
+                                })
+                              );
+                            }}
+                            field={{
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: "Dr", label: "Debit" },
+                              { value: "Cr", label: "Credit" },
+                            ]}
+                            disabled={
+                              formState.formElements.jvDrCr?.disabled ||
+                              formState.formElements.pnlMasters?.disabled
+                            }
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 <div className="grid grid-cols-2 gap-2">
                   {formState.formElements.foreignCurrency.visible == true && (
@@ -1647,7 +1690,6 @@ debugger;
                         }
                         disableEnterNavigation
                         onKeyDown={(e) => {
-                          
                           handleKeyDown(e, "bankDate");
                         }}
                       />
@@ -1784,16 +1826,14 @@ debugger;
                       label={t(formState.formElements.employee.label)}
                       value={formState.transaction.master.employeeId}
                       className="lg:max-w-[300px]"
-                      onChange={(e) =>
-                       {
+                      onChange={(e) => {
                         debugger;
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
                             fields: { employeeId: e.value },
                           })
-                        )
-                       }
-                      }
+                        );
+                      }}
                       onSelectItem={(e) => {
                         handleKeyDown("ledgerCode", e);
                       }}
@@ -1847,7 +1887,6 @@ debugger;
                       }
                       disableEnterNavigation={true}
                       onKeyDown={(e) => {
-                        
                         handleKeyDown(e, "commonNarration");
                       }}
                       disabled={
@@ -1918,7 +1957,6 @@ debugger;
                   ref={ledgerCodeRef}
                   disableEnterNavigation={true}
                   onKeyDown={(e) => {
-                    
                     handleKeyDown(e, "ledgerCode");
                   }}
                   onChange={(e) =>
@@ -2047,6 +2085,8 @@ debugger;
                 <ERPInput
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="discount"
+                  type="number"
+                  min={0}
                   label={t(formState.formElements.discount.label)}
                   value={formState.row.discount}
                   onChange={(e) =>
@@ -2067,7 +2107,7 @@ debugger;
 
             <div className="flex flex-wrap gap-4">
               <span className="text-blue-600 font-bold self-center">
-                {t("group_name")}: {formState.row.groupName}
+                {t("group_name")}: {formState.ledgerData?.accGroupName}
               </span>
             </div>
           </div>
@@ -2241,7 +2281,6 @@ debugger;
                   }
                   value={formState.row.costCentreId}
                   onSelectItem={(e) => {
-                    
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: {
@@ -2254,7 +2293,6 @@ debugger;
                   }}
                   disableEnterNavigation
                   onKeyDown={(e: any) => {
-                    
                     handleKeyDown(e, "costCentre");
                   }}
                 />
@@ -2698,7 +2736,6 @@ debugger;
                     focusLedgerCode();
                   } else {
                     focusCostCenterRef();
-                   
                   }
                   dispatch(
                     accFormStateHandleFieldChange({
@@ -2936,6 +2973,27 @@ debugger;
                 formState.formElements.printPreview?.disabled ||
                 formState.formElements.pnlMasters?.disabled
               }
+            />
+          )}
+          {formState.formElements.keepNarration.visible && (
+            <ERPCheckbox
+              id="keepNarrationForJV"
+              label={t("keep_narration_for_jv")}
+              className=""
+              data={formState.userConfig}
+              checked={formState?.userConfig?.keepNarrationForJV}
+              onChangeData={(e) => {
+                debugger;
+                const updatedUserConfig = {
+                  ...formState.userConfig,
+                  keepNarrationForJV: e.keepNarrationForJV,
+                };
+                dispatch(
+                  accFormStateHandleFieldChange({
+                    fields: { userConfig: updatedUserConfig },
+                  })
+                );
+              }}
             />
           )}
           {(voucherType == "BP" || voucherType == "CQP") &&

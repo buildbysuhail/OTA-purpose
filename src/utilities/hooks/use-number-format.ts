@@ -53,7 +53,7 @@ export const useNumberFormat = () => {
       return '';
     }
     const _decimalPoint = decimalPoint != undefined ? decimalPoint: applicationSettings.mainSettings?.decimalPoints;
-    let formattedText: string = val.toLocaleString(undefined, {
+    let formattedText: string = val?.toLocaleString(undefined, {
       minimumFractionDigits: _decimalPoint,
       maximumFractionDigits: _decimalPoint,
     });

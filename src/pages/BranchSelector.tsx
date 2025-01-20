@@ -117,10 +117,10 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
             }}
             tabIndex={0}
             className={`${
-              item?.isActive ? "bg-gray-50 cursor-default relative" : "dark:bg-dark-bg-card bg-white cursor-pointer hover:bg-gray-50 relative"
-            } px-4 py-3  rounded-lg flex justify-start border border-gray-200`}
+              item?.isActive ? "dark:bg-dark-hover-bg bg-gray-50 cursor-default relative" : "dark:bg-dark-bg-card bg-white cursor-pointer hover:bg-gray-50 relative"
+            } px-4 py-3  rounded-lg flex justify-start border dark:border-dark-border border-gray-200`}
           >
-           {(selectionLoading.loading && selectionLoading.clientId == item?.clientId && selectionLoading.branchId == item?.id) &&  <div className="absolute w-full h-full bg-gray-50/80 z-[1] top-0 left-0 flex items-center justify-center">
+           {(selectionLoading.loading && selectionLoading.clientId == item?.clientId && selectionLoading.branchId == item?.id) &&  <div className="absolute w-full h-full  rounded-lg dark:bg-dark-bg-header/80 bg-gray-50/80 z-[1] top-0 left-0 flex items-center justify-center">
             <CircularProgress className="" color="inherit" size={25} />
           </div>}
       <span className="avatar avatar-md avatar-badge pr-4">
@@ -133,7 +133,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
                               sx={avatarStyle}
                             />
                           </span>
-      <div className="text-xs text-gray-700 flex flex-col pl-4">
+      <div className="text-xs dark:text-dark-text text-gray-700 flex flex-col pl-4">
         <a className="text-left">
           {item?.clientName}
         </a>

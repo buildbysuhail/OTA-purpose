@@ -166,6 +166,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
+    showBillwise
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -806,6 +807,7 @@ debugger;
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
+    debugger;
     const nextVoucherNumber = await getNextVoucherNumber(
       formType,
       voucherType,
@@ -1449,7 +1451,7 @@ debugger;
                     </>
                   )}
                 </div>
-                {formState.formElements.masterAccount.visible && (
+                {formState.formElements.masterAccount.visible && formState.formElements?.masterAccount?.accLedgerType != undefined && (
                   <div className="flex items-center">
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig.inputBoxStyle}
@@ -1477,6 +1479,7 @@ debugger;
                         valueKey: "id",
                         labelKey: "name",
                         getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerType=${formState.formElements?.masterAccount?.accLedgerType}`
                       }}
                       disabled={
                         formState.formElements.masterAccount?.disabled ||
@@ -2144,14 +2147,7 @@ debugger;
                   <ERPButton
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
-                    onClick={() => {
-                      
-                      dispatch(
-                        accFormStateHandleFieldChange({
-                          fields: { showbillwise: true },
-                        })
-                      );
-                    }}
+                    onClick={showBillwise}
                     disabled={
                       formState.ledgerBillWiseLoading ||
                       formState.formElements.btnBillWise.disabled == true

@@ -487,7 +487,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
     disabled: false,
     label: "Foreign Currency",
   },
-  voucherPrefix: { visible: true, disabled: false, label: "prefix" },
+  voucherPrefix: { visible: true, disabled: true, label: "prefix" },
   voucherNumber: { visible: true, disabled: false, label: "voucher_number" },
   btnDown: { visible: true, disabled: false, label: "" },
   transactionDate: {

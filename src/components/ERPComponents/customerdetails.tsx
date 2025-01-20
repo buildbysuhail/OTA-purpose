@@ -6,6 +6,7 @@ import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import profile from "../../assets/images/faces/profile-circle.512x512.png";
 import { useTranslation } from "react-i18next";
+import { useNumberFormat } from "../../utilities/hooks/use-number-format";
 
 interface Activity {
   id: string;
@@ -27,6 +28,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
   );
+   const { getFormattedValue } = useNumberFormat()
 
   // const getIcon = (type: Activity['type']) => {
   //   switch (type) {
@@ -43,15 +45,15 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
 
   // Handle clicks outside the component
 
-  function getFormattedValue(value: number | string): string {
-    if (typeof value === "number") {
-      return value.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
-    }
-    return String(value);
-  }
+  // function getFormattedValue(value: number | string): string {
+  //   if (typeof value === "number") {
+  //     return value.toLocaleString("ar", {
+  //       style: "currency",
+  //       currency: "sar",
+  //     });
+  //   }
+  //   return String(value);
+  // }
 
   const getActivityConfig = (type: Activity["type"]) => {
     switch (type) {

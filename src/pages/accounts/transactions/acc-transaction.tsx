@@ -96,7 +96,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 }) => {
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${voucherType}`
+    `grd_acc_transaction_${voucherType+formType}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -2048,6 +2048,8 @@ debugger;
                 <ERPInput
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="discount"
+                  type="number"
+                  min={0}
                   label={t(formState.formElements.discount.label)}
                   value={formState.row.discount}
                   onChange={(e) =>
@@ -2068,7 +2070,7 @@ debugger;
 
             <div className="flex flex-wrap gap-4">
               <span className="text-blue-600 font-bold self-center">
-                {t("group_name")}: {formState.row.groupName}
+                {t("group_name")}: {formState.ledgerData?.accGroupName}
               </span>
             </div>
           </div>

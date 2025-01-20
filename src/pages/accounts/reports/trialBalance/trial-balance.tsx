@@ -18,7 +18,7 @@ const TrialBalance = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
-    const [showValidation, setShowValidation] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
   const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
@@ -37,12 +37,12 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span style={{color: cellElement.data.isGroup == true ? 'rgb(25, 84, 166)' : cellElement.data.particulars == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
+        <span style={{ color: cellElement.data.isGroup == true ? 'rgb(25, 84, 166)' : cellElement.data.particulars == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
           {
-            cellElement.data.isGroup !== true &&cellElement.data.particulars!=="TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) :(<>{cellElement.data.particulars}</>)
-          }   
+            cellElement.data.isGroup !== true && cellElement.data.particulars !== "TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) : (<>{cellElement.data.particulars}</>)
+          }
         </span>
       ),
     },
@@ -59,27 +59,28 @@ const TrialBalance = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
           return {
-            ...exportCell, 
-            text:( cellElement.data.isGroup?"   ":"")+(cellInfo.value??""),
+            ...exportCell,
+            text: (cellElement.data.isGroup ? "   " : "") + (cellInfo.value ?? ""),
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.isGroup ==true?'#2E8B57':  '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.isGroup ==true? { argb: 'FF2E8B57' }:'',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : '',
               size: 10,
-              style:cellElement.data.isGroup == true ?'bold':'normal',
-              bold: cellElement.data.isGroup == true  ?true:false,
+              style: cellElement.data.isGroup == true ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
-          {cellElement.data.groupNameInArabic}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
+            {cellElement.data.groupNameInArabic}
+          </span>)
+        }
+      }
     },
     {
       dataField: "ledgerNameInArabic",
@@ -87,7 +88,7 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -95,28 +96,29 @@ const TrialBalance = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(balance) 
+              : getFormattedValue(balance)
           return {
-            ...exportCell, 
-            text:( cellElement.data.isGroup?"   ":"")+(cellInfo.value??""),
-            bold: cellElement.data.isGroup == true?true:false,
+            ...exportCell,
+            text: (cellElement.data.isGroup ? "   " : "") + (cellInfo.value ?? ""),
+            bold: cellElement.data.isGroup == true ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.isGroup ==true?'#2E8B57':  '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.isGroup ==true? { argb: 'FF2E8B57' }:'',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : '',
               size: 10,
-              style:cellElement.data.isGroup == true ?'bold':'normal',
-              bold: cellElement.data.isGroup == true  ?true:false,
+              style: cellElement.data.isGroup == true ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
-          {cellElement.data.ledgerNameInArabic}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
+            {cellElement.data.ledgerNameInArabic}
+          </span>)
+        }
+      }
     },
     {
       dataField: "debit",
@@ -125,7 +127,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
@@ -133,28 +135,29 @@ const TrialBalance = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue(parseFloat(balance) ) 
+              : getFormattedValue(parseFloat(balance))
           return {
-            ...exportCell, 
+            ...exportCell,
             text: value,
-            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?true:false,
+            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.isGroup ==true?'#2E8B57': cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.isGroup ==true? { argb: 'FF2E8B57' }: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?true:false,
+              style: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.debit) ) : getFormattedValue(parseFloat(cellElement.data.debit) )}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.debit)) : getFormattedValue(parseFloat(cellElement.data.debit))}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -163,7 +166,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
@@ -171,28 +174,29 @@ const TrialBalance = () => {
           const value =
             balance == null
               ? ""
-              : getFormattedValue( parseFloat(balance) ) 
+              : getFormattedValue(parseFloat(balance))
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?true:false,
+            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
-             textColor: cellElement.data.isGroup ==true?'#2E8B57': cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-               color:cellElement.data.isGroup ==true? { argb: 'FF2E8B57' }: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ?true:false,
+              style: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.credit) ) : getFormattedValue( parseFloat(cellElement.data.credit) )}`}
-        </span>)
-}}
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.credit)) : getFormattedValue(parseFloat(cellElement.data.credit))}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "isGroup",
@@ -239,17 +243,17 @@ const TrialBalance = () => {
                   showFilterInitially={true}
                   filterContent={<TrialBalanceReportFilter />}
                   filterInitialData={TrialBalanceReportFilterInitialState}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   childPopupProps={{
-                    content: <CashBookMonthWise 
+                    content: <CashBookMonthWise
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
                     drillDownCells: "particulars",
                     bodyProps: "ledgerID",
-                    origin:"trialBalance",
-                    enableFn: (data: any) => data.isGroup == true ||data.particulars=="TOTAL" ? false  : true
+                    origin: "trialBalance",
+                    enableFn: (data: any) => data.isGroup == true || data.particulars == "TOTAL" ? false : true
                   }}
                   postData={filter}
                 ></ErpDevGrid>

@@ -91,7 +91,7 @@ const OrgSelect = ({ initialHeight = 100 }) => {
                   sx={{ width: 75, height: 75 }}
                 />
       <div className="flex flex-col">
-        <span className="text-lg font-semibold">{userSession?.displayName}</span>
+        <span className="text-lg dark:text-dark-text font-semibold">{userSession?.displayName}</span>
         <span className="text-sm text-gray-500">{userSession?.email}</span>
       </div>
     </div>
@@ -99,7 +99,7 @@ const OrgSelect = ({ initialHeight = 100 }) => {
 
             {/* Organizations Section */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">My Organization</h3>
+              <h3 className=" dark:text-dark-text text-lg font-semibold mb-4">My Organization</h3>
               <div className="space-y-3">
               <BranchSelector onLoadingChange={handleLoadingChange} />
 
@@ -121,7 +121,7 @@ const OrgSelect = ({ initialHeight = 100 }) => {
         </div>
 
         {/* Action Buttons - Fixed at the bottom */}
-        <div className="p-6 border-t">
+        <div className="p-6 dark:border-dark-border border-t">
           <div className="flex gap-4">
           <ERPButton
                 type="button"

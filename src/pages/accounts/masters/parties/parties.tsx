@@ -595,7 +595,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                     location: 'after', item: (
                       <button
                         onClick={() => setShowValidation(true)}
-                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center hover:bg-gray-100 text-lg">
+                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center dark:bg-dark-bg-header dark:text-dark-text hover:bg-gray-100 text-lg">
                         <i className="ri-upload-line text-sm"></i>
                       </button>)
                   }]}
@@ -640,17 +640,17 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
         closeModal={() => setShowValidation(false)}
         content={
           <>
-            <div className="flex items-center justify-between gap-4 py-4 px-6 bg-gray-50 rounded-t-lg w-full mb-4">
+            <div className="flex items-center justify-between gap-4 py-4 px-6 dark:bg-dark-bg bg-gray-50 rounded-t-lg w-full mb-4">
               <div className="flex items-center gap-4">
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-blue">{totalCount}</div>
                   <span className="text-sm font-medium text-gray">Total Count</span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-green">{succeededCount}</div>
                   <span className="text-sm font-medium text-gray">Succeed</span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-red">{failedCount}</div>
                   <span className="text-sm font-medium text-gray">Failure</span>
                 </div>
@@ -669,6 +669,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                   variant="secondary"
                   onClick={onChooseTemplate}
                   title="Choose Template"
+                  className="me-3"
                 />
                 <ERPFileUploadButton
                   buttonText="Select Excel"

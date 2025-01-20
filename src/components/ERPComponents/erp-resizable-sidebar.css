@@ -7,6 +7,14 @@
   right: 0px;
 }
 
+.custom-handle {
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  cursor: ew-resize;
+  background: transparent;
+}
+
 .ltr-handle {
   left: 0;
 }

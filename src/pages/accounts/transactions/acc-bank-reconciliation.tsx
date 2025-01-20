@@ -1,288 +1,372 @@
-import React, { useMemo } from "react";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import { useMemo, useState } from "react";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { useTranslation } from "react-i18next";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ErpInput from "../../../components/ERPComponents/erp-input";
+import { useTranslation } from "react-i18next";
+
+interface FormState {
+  showReconciled: boolean;
+  selectedBankId: string | null;
+  bankDateType: "today" | "cheque";
+  reload: boolean;
+}
+
+interface LoadingState {
+  setAllDate: boolean;
+  exportToExcel: boolean;
+  show: boolean;
+  save: boolean;
+  print: boolean;
+}
 
 const BankReconciliation = () => {
-    const dispatch = useAppDispatch();
-    const rootState = useRootState();
-    const columns: DevGridColumn[] = useMemo(() => [
+  const dispatch = useAppDispatch();
+  const rootState = useRootState();
+
+  const [formState, setFormState] = useState<FormState>({
+    showReconciled: false,
+    selectedBankId: null,
+    bankDateType: "today",
+    reload: false,
+  });
+
+  const [loading, setLoading] = useState<LoadingState>({
+    setAllDate: false,
+    exportToExcel: false,
+    show: false,
+    save: false,
+    print: false,
+  });
+
+  const { t } = useTranslation("transaction");
+
+  const handleReconciledChange = (checked: boolean) => {
+    setFormState((prev) => ({ ...prev, showReconciled: checked }));
+  };
+
+  const handleBankSelection = (value: string | null) => {
+    setFormState((prev) => ({ ...prev, selectedBankId: value }));
+  };
+
+  const handleBankDateTypeChange = (type: "today" | "cheque") => {
+    setFormState((prev) => ({ ...prev, bankDateType: type }));
+  };
+
+  const handleSetAllDate = async () => {
+    setLoading((prev) => ({ ...prev, setAllDate: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Setting all dates");
+    } finally {
+      setLoading((prev) => ({ ...prev, setAllDate: false }));
+    }
+  };
+
+  const handleExportToExcel = async () => {
+    setLoading((prev) => ({ ...prev, exportToExcel: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Exporting to Excel");
+    } finally {
+      setLoading((prev) => ({ ...prev, exportToExcel: false }));
+    }
+  };
+
+  const handleShow = async () => {
+    setLoading((prev) => ({ ...prev, show: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setFormState((prev) => ({ ...prev, reload: !prev.reload }));
+    } finally {
+      setLoading((prev) => ({ ...prev, show: false }));
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading((prev) => ({ ...prev, save: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Saving changes");
+    } finally {
+      setLoading((prev) => ({ ...prev, save: false }));
+    }
+  };
+
+  const handlePrint = async () => {
+    setLoading((prev) => ({ ...prev, print: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Printing document");
+    } finally {
+      setLoading((prev) => ({ ...prev, print: false }));
+    }
+  };
+
+  const columns: DevGridColumn[] = useMemo(
+    () => [
       {
-        dataField:"pCname",
-        caption:"PC Name",
-        dataType:"string",
-        allowSorting:true,
-        allowSearch:true,
-        allowFiltering:true,
-        minWidth:200,
-       
+        dataField: "TransactionDate",
+        caption: t("transaction_date"),
+        dataType: "date",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
       },
       {
-        dataField:"systemCode",
-        caption:"System Code",
-        dataType:"string",
-        allowSorting:true,
-        allowSearch:true,
-        allowFiltering:true,
-        minWidth:200,
-        allowEditing:true,
+        dataField: "VoucherType",
+        caption: t("voucher_type"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+        allowEditing: true,
       },
       {
-        dataField:"counterName",
-        caption:"Counter",
-        dataType:"string",
-        allowSorting:true,
-        allowSearch:true,
-        allowFiltering:true,
-        minWidth:200,
-        allowEditing:true,
+        dataField: "VoucherNumber",
+        caption: t("voucher_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+        allowEditing: true,
       },
       {
-        dataField:"lastLoggedDate",
-        caption:"Last Logged Date",
-        dataType:"date",
-        allowSorting:true,
-        allowSearch:true,
-        allowFiltering:true,
-        width:150,
-        allowEditing:true,
-        visible:false
+        dataField: "Particulars",
+        caption: t("particulars"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
       },
-    
-    ], []);
+      {
+        dataField: "Debit",
+        caption: t("debit"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "Credit",
+        caption: t("credit"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "Narration",
+        caption: t("narration"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "VoucherPrefix",
+        caption: t("voucher_prefix"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "ReferenceNumber",
+        caption: t("reference_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "ReferenceDate",
+        caption: t("reference_date"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "AccTransactionDetailID",
+        caption: t("acc_transaction_detail_id"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "BankDate",
+        caption: t("bank_date"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "ChequeNumber",
+        caption: t("cheque_number"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "CheckStatus",
+        caption: t("check_status"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "ChequeDate",
+        caption: t("cheque_date"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+      {
+        dataField: "LedgerID",
+        caption: t("ledger_id"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        allowEditing: true,
+      },
+    ],
+    []
+  );
+
   return (
     <div className="space-y-6 p-4">
-      <h1 className="box-title !text-xl !font-medium">Post Dated Cheques</h1>
-      <div className="bg-[#fafafa] p-4 ">
-        <div className="flex flex-col justify-start lg:flex-row lg:justify-around gap-5 items-center">
-          <div className="border rounded-sm shadow-sm p-4 my-3 basis-1/2">
-            <div className="grid grid-cols-2 gap-5">
-              <div className="flex items-center justify-evenly">
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Payment"
-                />
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Receipt"
-                />
-              </div>
-              <div className="flex space-x-4">
-                <ERPButton
-                  title="Set All Date"
-                  // onClick={resetThemeChange}
-                  type="reset"
-                ></ERPButton>
-                <ERPButton
-                  title="To Excel"
-                  // onClick={saveThemeChange}
-                  startIcon="ri-file-excel-2-line"
-                  variant="primary"
-                ></ERPButton>
-              </div>
-              <ERPDateInput
-                id="dateBox"
-                label="ChequeFormDate"
-                // onChange={(e) => {
-                //   setDemo((prevTheme) => ({
-                //     ...prevTheme,
-                //     dateBox: e.target?.value,
-                //   }));
-                // }}
-                // value={demo.dateBox}
+      <h1 className="box-title !text-xl !font-medium">
+        {t("bank_reconciliation")}
+      </h1>
+      <div className="bg-[#fafafa] p-4">
+        <div className="border rounded-sm shadow-sm p-4">
+          <div className="w-1/3">
+            <div className="flex items-center justify-between">
+              <ERPRadio
+                id="todayDate"
+                name="bankDateType"
+                checked={formState.bankDateType === "today"}
+                onChange={() => handleBankDateTypeChange("today")}
+                label={t("today's_date")}
               />
-              <ERPDateInput
-                id="dateBox"
-                label="To Date"
-                // onChange={(e) => {
-                //   setDemo((prevTheme) => ({
-                //     ...prevTheme,
-                //     dateBox: e.target?.value,
-                //   }));
-                // }}
-                // value={demo.dateBox}
+              <ERPRadio
+                id="chequeDate"
+                name="bankDateType"
+                checked={formState.bankDateType === "cheque"}
+                onChange={() => handleBankDateTypeChange("cheque")}
+                label={t("cheque_date")}
+              />
+              <ERPButton
+                title={t("set_all_date")}
+                onClick={handleSetAllDate}
+                type="reset"
+                loading={loading.setAllDate}
               />
             </div>
-         
-            <div className="flex items-center justify-start space-x-4 my-2">
+
+            <div className="flex items-center justify-between space-x-4 my-2">
               <ERPCheckbox
-                id="radioButton"
-                name="radioButton"
-             
-                // data={demo}
-                // checked={demo.checkBox}
-                // onChange={(e) => {
-                //   setDemo((prevTheme) => ({
-                //     ...prevTheme,
-                //     checkBox: !demo.checkBox,
-                //   }));
-                // }}
-                label="Bank"
+                id="showReconciled"
+                name="showReconciled"
+                checked={formState.showReconciled}
+                onChange={(e) => handleReconciledChange(e.target.checked)}
+                label={t("show_reconciled")}
               />
-                <ERPDataCombobox
-                className="w-full"
-                  id="counterID"
-                //   data={counterData}
-                 noLabel
-                //   field={{
-                //     id: "counterID",
-                //     getListUrl: Urls.data_counters,
-                //     valueKey: "id",
-                //     labelKey: "name",
-                //   }}
-                //   onChange={(e) => {
-                //     setCounterData((prevTheme) => ({
-                //       ...prevTheme,
-                //       counterID: e?.value ?? null,
-                //     }));
-                //   }}
-                
-                />
-            </div>
-        
-           
-          </div>
-
-          {/* <div className="my-3"></div> */}
-          <div className="border rounded-sm shadow-sm p-4  my-3 basis-1/2 py-11" >
-          <h1 className=" box-title  !text-xl !font-medium  text-center">Set as Bank Date</h1>
-            <div className="grid grid-cols-1  gap-5 my-3">
-            <div className="flex items-center justify-center space-x-10 ">
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Today's Date"
-                />
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Cheque Date"
-                />
-              </div>
-
-              <div className="flex items-center justify-center space-x-5">
-               <ERPButton
-                  title="Show"
-                  // onClick={resetThemeChange}
-                  startIcon="ri-slideshow-2-line"
-                  variant="secondary"
-                ></ERPButton>
-                <ERPButton
-                  title="Save"
-                  // onClick={saveThemeChange}
-                  startIcon="ri-save-line"
-                  variant="primary"
-                ></ERPButton>
-                  <ERPButton
-                  title="Close"
-                  // onClick={saveThemeChange}
-                  startIcon="ri-file-close-line"
-                  variant="secondary"
-                ></ERPButton>
-            </div>
+              <ERPButton
+                title={t("show")}
+                onClick={handleShow}
+                startIcon="ri-slideshow-2-line"
+                variant="secondary"
+                loading={loading.show}
+              />
+              <ERPDataCombobox
+                id="BankAC"
+                noLabel
+                value={formState.selectedBankId}
+                onChange={(e) => handleBankSelection(e?.value ?? null)}
+              />
             </div>
 
-       
+            <div className="flex items-center gap-4">
+              <ERPButton
+                title={t("save")}
+                onClick={handleSave}
+                startIcon="ri-save-line"
+                variant="primary"
+                loading={loading.save}
+              />
+              <ERPButton
+                title={t("print")}
+                onClick={handlePrint}
+                startIcon="ri-printer-line"
+                variant="secondary"
+                loading={loading.print}
+              />
+              <ERPButton
+                title={t("to_excel")}
+                onClick={handleExportToExcel}
+                startIcon="ri-file-excel-2-line"
+                variant="primary"
+                loading={loading.exportToExcel}
+              />
+            </div>
           </div>
         </div>
 
-         <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
-                columns={columns}
-                // dataUrl={Urls.counter_settings}
-                gridId="grid_post-dated_cheques"
-                hideGridAddButton={true}
-                hideDefaultExportButton={true}
-                heightToAdjustOnWindows = {500}
-                // reload={reload}    
-                pageSize={40}
-              ></ErpDevGrid>
-        </div>
-        <div className="flex justify-between items-center ">
-        <div className="flex items-center space-x-10 border border-dotted border-gray-400 rounded-sm py-4 px-2">
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Bank Change"
-                />
-                <ERPRadio
-                  id="radioButton"
-                  name="radioButton"
-                  // data={demo}
-                  // checked={demo.radioButton}
-                  // onChange={(e) => {
-                  //     setDemo((prevTheme) => ({
-                  //     ...prevTheme,
-                  //     radioButton: !demo.radioButton
-                  //     }));
-                  // }}
-                  label="Bank Commission"
-                />
-        </div>
-
-        <ErpInput
-        id="inputBox"
-        label="TOTAL"
-        labelDirection="horizontal"
-        // onChange={(e) => {
-        // setDemo((prevTheme) => ({
-        //     ...prevTheme,             
-        //     inputBox: e.target?.value  
-        // }));
-        // }}
-        // value={demo.inputBox}
-        />
-        
+        <div className="grid grid-cols-1 gap-3">
+          <ErpDevGrid
+            columns={columns}
+            gridId="grid_bank_reconciliation"
+            hideGridAddButton={true}
+            hideDefaultExportButton={true}
+            heightToAdjustOnWindows={500}
+            reload={formState.reload}
+            pageSize={40}
+          />
         </div>
       </div>
     </div>

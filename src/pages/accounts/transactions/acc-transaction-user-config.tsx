@@ -11,6 +11,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { AccUserConfig } from "./acc-transaction-types";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { Settings } from "lucide-react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { inputBox } from "../../../redux/slices/app/types";
@@ -97,10 +98,11 @@ export const AccTransactionUserConfig = () => {
         title="Settings"
       >
         <button
-          className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+          // className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+          className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
           onClick={() => setIsOpen(true)}
         >
-          <Settings className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+          <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>
       <ERPModal
@@ -163,7 +165,23 @@ export const AccTransactionUserConfig = () => {
                   )
                 }
               />
-
+              <ERPDataCombobox
+                id="presetCostenterId"
+                data={formState.userConfig}
+                label={t("presetCostCenter")}
+                field={{
+                  id: "presetCostenterId",
+                  getListUrl: Urls.data_costcentres,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(e) =>
+                  handleFieldChange(
+                    "presetCostenterId",
+                    e.presetCostenterId
+                  )
+                }
+              />
               <ERPInput
                 id="maxWidth"
                 label={t("max_width")}

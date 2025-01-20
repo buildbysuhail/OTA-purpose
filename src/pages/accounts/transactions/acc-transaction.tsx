@@ -1386,6 +1386,20 @@ debugger;
                                 </button>
                               </li>
                             {/* )} */}
+
+                            <div className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm">
+
+                            <ERPCheckbox
+                              id="keepNarrationForJV"
+                              label={t("keep_narration_for_jv")}
+                              className=""
+                              data={formState.userConfig}
+                              checked={formState?.userConfig?.keepNarrationForJV}
+                              onChangeData={(e) =>
+                                handleFieldChange("keepNarrationForJV", e.keepNarrationForJV)
+                              }
+                            />
+                            </div>
                           </ul>
                         </nav>
                       </div>

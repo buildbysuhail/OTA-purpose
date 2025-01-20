@@ -7,7 +7,7 @@ import Templates from "../../../pages/InvoiceDesigner/Templates";
 import Settings from "../../../pages/settings/AllSettings/Settings";
 import UserActionReport from "../../../pages/settings/system/user-action-report";
 import ReportList from "../../ERPComponents/reports/reports-list";
-import TemplateDesignerLayout from "../layout/template-designer-layout"; 
+import TemplateDesignerLayout from "../layout/template-designer-layout";
 
 import LedgerReport from "../../../pages/accounts/reports/ledger-report";
 import CashBookSummary from "../../../pages/accounts/reports/cashBook/cash-book-summary";
@@ -159,7 +159,9 @@ const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
-const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
+const AccTransactionGrid = lazy(
+  () => import("../../../pages/accounts/transactions/acc-transacton-grid")
+);
 
 // Inventory Masters
 const ProductGroup = lazy(
@@ -238,7 +240,7 @@ import ProfitAndLossDetailedReport from "../../../pages/accounts/reports/profitA
 import BalancesheetVertical from "../../../pages/accounts/reports/balanceSheet/balancesheet-vertical";
 import RouteGuard from "../../../utilities/route-guard";
 import { UserAction } from "../../../helpers/user-right-helper";
-import { transactionRoutes } from "./transaction-routes";
+import { TransactionBase, transactionRoutes } from "./transaction-routes";
 import AccTransactionFormContainer from "../../../pages/accounts/transactions/acc-transaction-container";
 import PartySummaryMaster from "../../../pages/accounts/reports/partywise-summary/party-summary-master";
 import DailySummaryMaster from "../../../pages/accounts/reports/dailySummary/daily-summary-master";
@@ -251,17 +253,13 @@ import BankFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/ban
 import CashFlowReport from "../../../pages/accounts/reports/CashFlowBankFlow/rpt-cash-flow-report";
 import IncomExpenseStatement from "../../../pages/accounts/reports/incomeexpense/income-expense-statement";
 import BankStatementReport from "../../../pages/accounts/reports/bank-statement-report";
+import BankReconciliation from "../../../pages/accounts/transactions/acc-bank-reconciliation";
 const PriceList = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/reports/price-list/price-list-report"
-    )
+  () => import("../../../pages/inventory/reports/price-list/price-list-report")
 );
 const StockLedger = lazy(
   () =>
-    import(
-      "../../../pages/inventory/reports/stock-ledger/stock-ledger-report"
-    )
+    import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report")
 );
 const DailyBalanceAmount = lazy(
   () =>
@@ -276,10 +274,7 @@ const OpeningStock = lazy(
     )
 );
 const StockFlow = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/reports/stock-flow/stock-flow-report"
-    )
+  () => import("../../../pages/inventory/reports/stock-flow/stock-flow-report")
 );
 const TransactionAnalysisReport = lazy(
   () =>
@@ -288,7 +283,7 @@ const TransactionAnalysisReport = lazy(
     )
 );
 
-interface ContentProps { }
+interface ContentProps {}
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
@@ -380,7 +375,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/test" element={<Test />} />
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
-        <Route path="/integration/test-input-button" element={<TestInputButton />} />
+        <Route
+          path="/integration/test-input-button"
+          element={<TestInputButton />}
+        />
         {/* Integration End */}
 
         {/* Templates starts */}
@@ -459,59 +457,75 @@ const Content: FC<ContentProps> = () => {
           /> */}
         {transactionRoutes.map((route, index) => (
           <>
-            <Route
-              key={index}
-              path={`/accounts/transactions/${route.transactionType}`}
-              element={
-                <RouteGuard formCode={route.formCode} action={route.action}>
-                  <AccTransactionFormContainer
-                    voucherType={route.voucherType}
-                    transactionType={route.transactionType}
-                    formCode={route.formCode}
-                    voucherPrefix={""}
-                    formType={route.formType}
-                    title={route.title}
-                    drCr={route.drCr}
-                    voucherNo={0}
-                  />
-                </RouteGuard>
-              }
-            />
-            <Route
-              key={index}
-              path={`/accounts/transactions/${route.transactionType}List`}
-              element={
-                <RouteGuard formCode={route.formCode} action={route.action}>
-                  <AccTransactionGrid
-                    voucherType={route.voucherType}
-                    transactionType={route.transactionType}
-                  />
-                </RouteGuard>
-              }
-            />
-            <Route
-              key={index}
-              path={`/accounts/transactions/${route.transactionType}/:voucherNo`}
-              element={
-                <RouteGuard formCode={route.formCode} action={route.action}>
-                  <AccTransactionFormContainer
-                    voucherType={route.voucherType}
-                    transactionType={route.transactionType}
-                    formCode={route.formCode}
-                    voucherPrefix={""}
-                    formType={route.formType}
-                    title={route.title}
-                    drCr={route.drCr}
-                    voucherNo={0}
-                  />
-                </RouteGuard>
-              }
-            />
+            {route.transactionBase == TransactionBase.Accounts && (
+              <>
+                <Route
+                  key={index}
+                  path={`/accounts/transactions/${route.transactionType}`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`/accounts/transactions/${route.transactionType}List`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionGrid
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`/accounts/transactions/${route.transactionType}/:voucherNo`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+              </>
+            )}
           </>
         ))}
         <Route
-          path="accounts/transactions/post-dated-cheques"
-          element={<PostDatedCheques />}
+          path={`/accounts/transactions/BankReconciliation`}
+          element={
+            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+              <BankReconciliation />
+            </RouteGuard>
+          }
+        />
+        <Route
+          path="accounts/transactions/PostDatedCheques"
+          element={
+            <RouteGuard formCode="BankReconciliation" action={UserAction.Show}>
+              <PostDatedCheques />
+            </RouteGuard>
+          }
         />
 
         {/* Accounts Masters End */}
@@ -536,18 +550,12 @@ const Content: FC<ContentProps> = () => {
           path="/accounts/cash_summary_ledgerwise"
           element={<CashSummaryLedgerwise />}
         />
-        <Route
-          path="/accounts/income_report"
-          element={<IncomeReport/>}
-        />
+        <Route path="/accounts/income_report" element={<IncomeReport />} />
         <Route
           path="/accounts/income_report_detailed"
           element={<IncomeReportDetailed />}
         />
-        <Route
-          path="/accounts/expense_report"
-          element={<ExpenseReport />}
-        />
+        <Route path="/accounts/expense_report" element={<ExpenseReport />} />
         <Route
           path="/accounts/expense_report_detailed"
           element={<ExpenseReportDetailed />}
@@ -556,15 +564,9 @@ const Content: FC<ContentProps> = () => {
           path="/accounts/income_expense_statement"
           element={<IncomExpenseStatement />}
         />
-          <Route
-          path="/accounts/cash_flow"
-          element={<CashFlowReport/>}
-        />
-          <Route
-          path="/accounts/bank_flow"
-          element={<BankFlowReport />}
-        />
-          <Route
+        <Route path="/accounts/cash_flow" element={<CashFlowReport />} />
+        <Route path="/accounts/bank_flow" element={<BankFlowReport />} />
+        <Route
           path="/accounts/bank_statement"
           element={<BankStatementReport />}
         />

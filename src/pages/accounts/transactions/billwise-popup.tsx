@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
 import {
   Column,
@@ -62,7 +62,7 @@ const BillwiseComponent = ({
   onMaximizeChange,
 }: BillwiseProps) => {
   const dispatch = useDispatch();
-  const {round} = useNumberFormat();
+  const { round } = useNumberFormat();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -81,7 +81,7 @@ const BillwiseComponent = ({
   const [isFromAccTrans, setIsFromAccTrans] = useState<boolean | undefined>(
     undefined
   );
-
+  const dataGridRef = useRef<any>(null);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     if (isMaximized && onMaximizeChange) {
@@ -131,12 +131,11 @@ const BillwiseComponent = ({
   const [loadCount, setLoadCount] = useState<number>(0);
   useEffect(() => {
     const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
-    
+
     setStore(clonedData);
   }, []);
 
   const handleSelectionChange = (e: any) => {
-    
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
       ? e.currentSelectedRowKeys.map((key: number) => ({
           key,
@@ -167,7 +166,7 @@ const BillwiseComponent = ({
             : storeItem
         );
       });
-      
+
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
     }
@@ -175,7 +174,7 @@ const BillwiseComponent = ({
 
   const onRowUpdating = (e: any) => {
     const updatedRow = { ...e.oldData, ...e.newData };
-    
+
     setStore((prevStore: any) =>
       prevStore.map((item: any) =>
         item.slNo === updatedRow.slNo ? updatedRow : item
@@ -188,8 +187,10 @@ const BillwiseComponent = ({
   useEffect(() => {
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
-      
-      if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
+      if (
+        showAllTransactions ||
+        row.drCr !== formState.transaction.master.drCr
+      ) {
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -207,18 +208,16 @@ const BillwiseComponent = ({
     setStore(formattedData);
   }, [showAllTransactions]);
   useEffect(() => {
-    
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-              generateGridFromBillwiseString(formState.row.billwiseDetails);
-            }
-   }, []);
+      generateGridFromBillwiseString(formState.row.billwiseDetails);
+    }
+  }, []);
   useEffect(() => {
-    
     setNetAdjustment(getTotalAmountToSet(store));
-   }, [store]);
+  }, [store]);
   // useEffect(() => {
   //   const loadBillwiseTransactions = async () => {
-  //     
+  //
   //     try {
   //       // Replace with your actual API call
   //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
@@ -274,7 +273,7 @@ const BillwiseComponent = ({
         updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
       }
     });
-    
+
     setStore(updatedData);
   };
 
@@ -283,7 +282,6 @@ const BillwiseComponent = ({
     const billwiseString = store
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
-        
         if (row.billwiseAmount > 0) {
           vrNumbers += `${row.voucherNumber},`;
         }
@@ -312,23 +310,23 @@ const BillwiseComponent = ({
     );
   };
   function getTotalAmountToSet(list: BillwiseData[]) {
-    debugger;
+    
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
-  
+
     try {
       list.forEach((bill) => {
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
-  
+
         if (drCrCol === "DR") {
           totalDr += amountToSet;
         } else {
           totalCr += amountToSet;
         }
       });
-  
+
       if (formState.transaction.master.drCr.toUpperCase() === "CR") {
         total = totalDr - totalCr;
       } else {
@@ -337,11 +335,10 @@ const BillwiseComponent = ({
     } catch (error) {
       console.error("Error calculating total amount to set:", error);
     }
-  
+
     return total;
   }
   const validate = () => {
-    
     const totalAmount = getTotalAmountToSet(store);
 
     if (totalAmount < 0) {
@@ -357,8 +354,8 @@ const BillwiseComponent = ({
         title: "failed",
         text: "Total adjustment amount exceeds the available amount.",
       });
-      
-    return false;
+
+      return false;
     }
 
     return true;
@@ -372,7 +369,11 @@ const BillwiseComponent = ({
   };
   const handleSave = () => {
     try {
-      
+      debugger;
+      // if (dataGridRef.current?.instance) {
+      //   dataGridRef.current.instance.saveEditData();
+      // }
+
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString();
@@ -413,14 +414,14 @@ const BillwiseComponent = ({
             },
           })
         );
-        
+
         onSave &&
           onSave(
             billwiseString.billwiseString,
             (formState.row.amount ?? 0) < amtAdjusted
               ? amtAdjusted
-              : (formState.row.amount ?? 0),
-            billwiseString.vrNumbers
+              : formState.row.amount ?? 0,
+            billwiseString.vrNumbers,
           );
         closeBillwise();
       } else if (isFromCashTender) {
@@ -434,11 +435,38 @@ const BillwiseComponent = ({
       });
     }
   };
+  const handleCustomSummary = (options: any) => {
+    if (options.summaryProcess === "start") {
+      console.log("Custom summary started for column:", options.name);
+      options.totalValue = 0; // Initialize the total value
+    }
 
+    if (options.summaryProcess === "calculate") {
+      console.log(
+        "Processing value:",
+        options.value,
+        "for column:",
+        options.name
+      );
+      options.totalValue += options.value || 0; // Aggregate values, fallback to 0 if undefined
+    }
+
+    if (options.summaryProcess === "finalize") {
+      console.log(
+        "Finalizing summary for column:",
+        options.name,
+        "with total value:",
+        options.totalValue
+      );
+      options.totalValue = round(options.totalValue); // Apply custom rounding at the end
+    }
+  };
   const calculateNetAdjustment = () => {
     return store.reduce((total: any, row: any) => {
       const amt = parseFloat(row.billwiseAmount) || 0;
-      return total + (row.drCr === formState.transaction.master.drCr ? -amt : amt);
+      return (
+        total + (row.drCr === formState.transaction.master.drCr ? -amt : amt)
+      );
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
@@ -453,23 +481,25 @@ const BillwiseComponent = ({
     }
   };
   const handleAutoPost = () => {
-    
-    let remainingAmount: number = parseFloat((formState.row.amount??0).toString());
+    let remainingAmount: number = parseFloat(
+      (formState.row.amount ?? 0).toString()
+    );
     let i = 0;
     const updatedBills: BillwiseData[] = JSON.parse(JSON.stringify(store));
-    
+
     // First pass: Handle DR/CR transactions
-    updatedBills.forEach((bill) => {
-      
-    });
+    updatedBills.forEach((bill) => {});
 
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       const bill = updatedBills[i];
-      if (bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase()) {
+      if (
+        bill.drCr.toUpperCase() ===
+        formState.transaction.master.drCr.toUpperCase()
+      ) {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
-        setShowAllTransactions(true)
+        setShowAllTransactions(true);
       }
 
       const billBalance = bill.balance;
@@ -494,24 +524,23 @@ const BillwiseComponent = ({
     // Check if the adjusted amount exceeds the original amount
     if (round(amtAdjusted) > round(remainingAmount)) {
       ERPAlert.show({
-        title:"Auto Post",
-        text:"Excess adjustment.",
-        icon:"warning",
+        title: "Auto Post",
+        text: "Excess adjustment.",
+        icon: "warning",
       });
       return false;
     }
     ERPAlert.show({
-      title:"Auto Post",
-      text:"Do you want to save",
-      icon:"info",
+      title: "Auto Post",
+      text: "Do you want to save",
+      icon: "info",
       onConfirm: (result: boolean) => {
-        if(result) {
+        if (result) {
           handleSave();
         }
-      }
-    })
+      },
+    });
   };
-  
 
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
@@ -544,7 +573,9 @@ const BillwiseComponent = ({
                   {formState.row.ledgerName}
                 </div>
                 <div className="flex items-center gap-1">
-                <span className="font-medium">{ledgerData?.partyCategory}</span>
+                  <span className="font-medium">
+                    {ledgerData?.partyCategory}
+                  </span>
                   <CheckCircle2 className="w-4 h-4 text-white " color="green" />
                 </div>
               </div>
@@ -567,14 +598,17 @@ const BillwiseComponent = ({
             </p>
           </Item>
         </Toolbar>
-       
+
         <DataGrid
+          ref={dataGridRef}
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"
           // height={gridHeight}
           dataSource={store?.filter(
-            (row: any) => showAllTransactions || row.drCr !== formState.transaction.master.drCr
+            (row: any) =>
+              showAllTransactions ||
+              row.drCr !== formState.transaction.master.drCr
           )}
           height={gridHeight}
           className="custom-data-grid"
@@ -582,6 +616,34 @@ const BillwiseComponent = ({
           columnAutoWidth={true}
           showColumnLines={false}
           showRowLines={true}
+          onEditorPreparing={(e) => {
+            if (
+              e.dataField === "billwiseAmount" &&
+              e.parentType === "dataRow"
+            ) {
+              e.editorOptions.onValueChanged = (args: any) => {
+                // Calculate the new balance amount
+                if (e && e.row) {
+                  const updatedRow = {
+                    ...e.row.data,
+                    billwiseAmount: args.value,
+                  };
+                  updatedRow.balance =
+                    updatedRow.amount - updatedRow.billwiseAmount;
+
+                  // Update the dataSource with the new values
+                  const updatedStore = store.map((row: any) =>
+                    row.slNo === updatedRow.slNo ? updatedRow : row
+                  );
+                  setStore(updatedStore); // Update the state
+                }
+              };
+            }
+          }}
+          // onSaving={(e) => {
+          //   // Commit any pending edits before saving
+          //   e.component.saveEditData();
+          // }}
           scrolling={{
             mode: "virtual",
             columnRenderingMode: "virtual",
@@ -713,7 +775,15 @@ const BillwiseComponent = ({
             allowEditing={true}
             width={100}
           />
-
+          <Column
+            dataField="balance"
+            caption="Balance After"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
           <Column
             dataField="referenceNumber"
             caption="ReferenceNumber"
@@ -809,35 +879,52 @@ const BillwiseComponent = ({
           />
 
           {/* Add Summary for "Amount" column */}
-          <Summary>
-            <TotalItem column="amount" summaryType="sum" displayFormat="{0}" />
-
+          <Summary calculateCustomSummary={handleCustomSummary}>
+            <TotalItem
+              column="amount"
+              summaryType="custom"
+              displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              } // Handle undefined gracefully
+            />
             <TotalItem
               column="adjustedAmount"
-              summaryType="sum"
+              summaryType="custom"
               displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              }
             />
-
-            <TotalItem column="balance" summaryType="sum" displayFormat="{0}" />
-
             <TotalItem
               column="billwiseAmount"
-              summaryType="sum"
+              summaryType="custom"
               displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              }
             />
-
-            <TotalItem column="balance" summaryType="sum" displayFormat="{0}" />
+            <TotalItem
+              column="balance"
+              summaryType="custom"
+              displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              }
+            />
           </Summary>
         </DataGrid>
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
             <strong className="mr-3">Net Adjustment</strong>
-            <span className="">
-              {netAdjustment}
-            </span>
+            <span className="">{netAdjustment}</span>
           </div>
           <div>
-            <ERPButton title="Auto Post" onClick={handleAutoPost}  className="mr-2" />
+            <ERPButton
+              title="Auto Post"
+              onClick={handleAutoPost}
+              className="mr-2"
+            />
             <ERPButton title="Save" onClick={handleSave} className="mr-2" />
             <ERPButton title="Cancel" />
           </div>

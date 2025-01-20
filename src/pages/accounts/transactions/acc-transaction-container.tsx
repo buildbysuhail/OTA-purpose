@@ -42,6 +42,7 @@ import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 
+const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   voucherType,
   formType,
@@ -54,6 +55,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =
     useState<boolean>(false);
+  const [store, setStore] = useState<{ data: any; totalCount: number }>();
   const [data, setData] = useState<{
     voucherPrefix: string;
     formType: string;
@@ -61,16 +63,46 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }>({ voucherPrefix: "", formType: formType, voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   useEffect(() => {
-    
     if (isChooseVoucherEnabled(title, userSession)) {
-      setOpenVoucherSelector(true);
+      const fetchData = async () => {
+        try {
+          const res = await api.getAsync(
+            `${Urls.voucher_selector}${voucherType}`
+          );
+          debugger;
+          if (
+            res == undefined ||
+            res == null ||
+            (res != undefined &&
+              res != null &&
+              res.length <= 1)
+          ) {
+            if (res?.length == 1) {
+              setData((prev: any) => ({
+                ...prev,
+                formType: res[0].formType,
+                voucherNo: res[0].lastVNo,
+                voucherPrefix: res[0].lastPrefix,
+              }));
+              // setOpenVoucherSelector(true);
+
+              // setReadyToShowVoucher(true);
+            }
+          } else {
+            setStore(res);
+            setOpenVoucherSelector(true);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      fetchData();
     } else {
       setReadyToShowVoucher(true);
     }
   }, [voucherType]);
 
   const onRowDblClick = useCallback((event: any) => {
-    
     setData((prev: any) => ({
       ...prev,
       formType: event.data.formType,
@@ -82,25 +114,28 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, []);
   return (
     <>
-      {/* {openVoucherSelector == true ? (
+      {openVoucherSelector == true ? (
         <ERPModal
-        isForm
-        isFullHeight
-        isOpen={true}
-        hasSubmit={false}
-        width="w-[700px]"
-        closeTitle={t("close")}
-        title={t("voucher_selector")}
-        content={
-          <VoucherSelector voucherType={voucherType} onRowDblClick={onRowDblClick}></VoucherSelector>
-        }
-        closeModal={() => {
-          setOpenVoucherSelector(false);
-        }}
-        onSubmit={() => {
-          setOpenVoucherSelector(false);
-        }}
-      />
+          isForm
+          isFullHeight
+          isOpen={true}
+          hasSubmit={false}
+          width="w-[700px]"
+          closeTitle={t("close")}
+          title={t("voucher_selector")}
+          content={
+            <VoucherSelector
+              data={store}
+              onRowDblClick={onRowDblClick}
+            ></VoucherSelector>
+          }
+          closeModal={() => {
+            setOpenVoucherSelector(false);
+          }}
+          onSubmit={() => {
+            setOpenVoucherSelector(false);
+          }}
+        />
       ) : (
         <AccTransactionForm
           voucherType={voucherType}
@@ -111,17 +146,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           drCr={drCr}
           transactionType={transactionType}
         />
-        
-      )} */}
-      <AccTransactionForm
-          voucherType={voucherType}
-          voucherPrefix={data.voucherPrefix}
-          formType={data.formType}
-          formCode={formCode}
-          title={title}
-          drCr={drCr}
-          transactionType={transactionType}
-        />
+      )}
     </>
   );
 };

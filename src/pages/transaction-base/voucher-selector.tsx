@@ -11,25 +11,13 @@ import { toggleCostCentrePopup } from "../../redux/slices/popup-reducer";
 import { APIClient } from "../../helpers/api-client";
 
 interface VoucherSelectorProps {
-  voucherType: string;  
+  data: any;  
   onRowDblClick?: (e: any) => void;    
 }
 const api = new APIClient();
-const VoucherSelector: React.FC<VoucherSelectorProps> = ({ voucherType, onRowDblClick }) => {
+const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick }) => {
   const { t } = useTranslation();
-  const [data,setData] = useState<{data: any, totalCount: number}>();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await api.getAsync(`${Urls.voucher_selector}${voucherType}`);
-        setData(res);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [voucherType]);
+ 
   const columns: DevGridColumn[] = [
     {
       dataField: "formType",

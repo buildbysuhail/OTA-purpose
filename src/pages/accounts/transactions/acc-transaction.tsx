@@ -437,7 +437,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       const isProjectIdVisible =
         applicationSettings.accountsSettings?.maintainProjectSite ||
         userSession.dbIdValue == "543140180640";
-
+debugger;
       // Prepare the fields to update based on conditions
       const fieldsToUpdate = {
         btnSave: { disabled: true },
@@ -1508,17 +1508,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       {formState.formElements.jvDrCr.visible && (
                         <ERPDataCombobox
                           localInputBox={formState?.userConfig.inputBoxStyle}
+                          enableClearOption={false}
                           id="drCr"
                           className="min-w-[70px] max-w-[170px] ml-4"
                           label={t(formState.formElements.jvDrCr.label)}
                           value={formState.transaction.master.drCr}
                           data={formState.transaction.master}
                           onChange={(e) =>
+                          {
+                            debugger;
                             dispatch(
                               accFormStateTransactionMasterHandleFieldChange({
-                                fields: { drCr: e.target?.value },
+                                fields: { drCr: e.value },
                               })
                             )
+                          }
                           }
                           field={{
                             valueKey: "value",
@@ -1775,14 +1779,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       localInputBox={formState?.userConfig.inputBoxStyle}
                       id="employeeId"
                       label={t(formState.formElements.employee.label)}
-                      value={formState.masterAccountID}
+                      value={formState.transaction.master.employeeId}
                       className="lg:max-w-[300px]"
                       onChange={(e) =>
+                       {
+                        debugger;
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
-                            fields: { employeeId: e.target?.value },
+                            fields: { employeeId: e.value },
                           })
                         )
+                       }
                       }
                       onSelectItem={(e) => {
                         handleKeyDown("ledgerCode", e);
@@ -2103,6 +2110,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <ERPDataCombobox
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="drCr"
+                  enableClearOption={false}
                   className="min-w-[70px] max-w-[150px]"
                   label={t(formState.formElements.drCr.label)}
                   value={formState.row.drCr}
@@ -2694,12 +2702,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     focusLedgerCode();
                   } else {
                     focusCostCenterRef();
-                    dispatch(
-                      accFormStateHandleFieldChange({
-                        fields: { showbillwise: false },
-                      })
-                    );
+                   
                   }
+                  dispatch(
+                    accFormStateHandleFieldChange({
+                      fields: { showbillwise: false },
+                    })
+                  );
                 }}
               />
             }

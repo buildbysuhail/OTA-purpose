@@ -111,51 +111,61 @@ export const useAccTransaction = (
   };
   const focusAmount = () => {
     if (amountRef.current) {
+      amountRef.current.select();
       amountRef.current.focus();
     }
   };
   const focusMasterAccount = () => {
     if (masterAccountRef.current) {
+      masterAccountRef.current.select();
       masterAccountRef.current.focus();
     }
   };
   const focusCostCenterRef = () => {
     if (costCenterRef.current) {
+      costCenterRef.current.select();
       costCenterRef.current.focus();
     }
   };
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
+      ledgerCodeRef.current.select();
       ledgerCodeRef.current.focus();
     }
   };
   const focusLedgerCombo = () => {
     if (ledgerIdRef.current) {
+      ledgerIdRef.current.select();
       ledgerIdRef.current.focus();
     }
   };
   const focusNarration = () => {
     if (narrationRef.current) {
+      narrationRef.current.select();
       narrationRef.current.focus();
     }
   };
   const focusDrCr = () => {
     if (drCrRef.current) {
+      drCrRef.current.select();
       drCrRef.current.focus();
     }
   };
   const focusVoucherNumber = () => {
     if (voucherNumberRef.current) {
+      voucherNumberRef.current.select();
       voucherNumberRef.current.focus();
     }
   };
   const focusChequeNumber = () => {
     if (chequeNumberRef.current) {
+      chequeNumberRef.current.select();
       chequeNumberRef.current.focus();
     }
   };
   const focusRemarks = () => {
     if (remarksRef.current) {
+      remarksRef.current.select();
       remarksRef.current.focus();
     }
   };
@@ -1124,6 +1134,7 @@ export const useAccTransaction = (
     
     // Handle Enter key
     if (e === "Enter") {
+      debugger;
       const isChequeVoucher =
         formState.transaction.master.voucherType === "CQP" ||
         formState.transaction.master.voucherType === "CQR";
@@ -1435,6 +1446,13 @@ export const useAccTransaction = (
     }
   };
   const openBillwise = async () => {
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          ledgerBillWiseLoading: true,
+        },
+      })
+    );
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
         formState.row.ledgerId
@@ -1455,6 +1473,7 @@ export const useAccTransaction = (
     try {
       let drCr = "";
       const loadLedgerData = async () => {
+        debugger;
         switch (formState.transaction.master.voucherType) {
           case "CP":
           case "BP":
@@ -1464,6 +1483,7 @@ export const useAccTransaction = (
           case "SRV":
           case "PBP":
             drCr = "Dr";
+            break;
 
           case "CR":
           case "BR":
@@ -1472,13 +1492,16 @@ export const useAccTransaction = (
           case "PV":
           case "PBR":
             drCr = "Cr";
+            break;
 
           case "OB":
           case "MJV":
             drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
+            break;
 
           case "JV":
             drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
+            break;
         }
         
         if (
@@ -1486,13 +1509,7 @@ export const useAccTransaction = (
           formState.row.ledgerId &&
           formState.ledgerData != null
         ) {
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                ledgerBillWiseLoading: true,
-              },
-            })
-          );
+          
 
           try {
             if (
@@ -1500,17 +1517,25 @@ export const useAccTransaction = (
               formState.row.ledgerId &&
               formState.ledgerData != null
             ) {
-              // if () {
+              const isBillwiseApplicable = await isLedgerBillwiseApplicable(
+                formState.transaction.master.voucherType === "CN" ||
+                  formState.transaction.master.voucherType === "DN"
+                  ? formState.masterAccountID
+                  : formState.row.ledgerId
+              )
               if (
-                await isLedgerBillwiseApplicable(
-                  formState.transaction.master.voucherType === "CN" ||
-                    formState.transaction.master.voucherType === "DN"
-                    ? formState.masterAccountID
-                    : formState.row.ledgerId
-                )
+                isBillwiseApplicable == true
               ) {
                 openBillwise();
                 // }
+              }
+              else  {
+                if(formState.formElements?.costCentreId.visible == true) {
+                  addOrEditRow();
+                  focusLedgerCode()
+                } else {
+                  focusCostCenterRef();
+                }
               }
             }
           } catch (error) {}

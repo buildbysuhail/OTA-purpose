@@ -595,7 +595,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                     location: 'after', item: (
                       <button
                         onClick={() => setShowValidation(true)}
-                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center hover:bg-gray-100 text-lg">
+                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center dark:bg-dark-bg-header dark:text-dark-text hover:bg-gray-100 text-lg">
                         <i className="ri-upload-line text-sm"></i>
                       </button>)
                   }]}

@@ -61,8 +61,10 @@ import {
   BadgePlusIcon,
   Eraser,
   X,
+  FileUp,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
+import AccExcelImport from "./acc-Excel-Import";
 interface BilledItem {
   id?: number;
   name: string;
@@ -116,6 +118,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const erpGridRef = useRef<any>(null); // Reference to ERPDevGrid
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
 
+  const [showValidation, setShowValidation] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const onSelectionChanged = (e: any) => {
     setSelectedRows(e.selectedRows); // Contains full row data
@@ -1364,10 +1367,43 @@ debugger;
                                 </button>
                               </li>
                             )}
+
+                            {/* {(formState.transaction.master.voucherType  === "MJV" && userSession.dbIdValue === "ABCO" ) && ( */}
+                                <li>
+                                <button
+                                  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                  // onClick={(e) => {
+                                  //   // Prevent default link behavior
+                                    
+                                  //   unlockVoucher();
+                                  // }}
+                                  onClick={() => setShowValidation(true)}
+                                >
+                                  <FileUp  className="h-4 w-4" />
+                                  {/* <span>UnlockVoucher_Click</span> */}
+                                  {/* <span>{t("unlock_voucher")}</span> */}
+                                  <span>MJV Excel export </span>
+                                </button>
+                              </li>
+                            {/* )} */}
                           </ul>
                         </nav>
                       </div>
                     )}
+                    {showValidation &&
+                      <ERPModal
+                      isForm={true}
+                      isOpen={showValidation}
+                      closeButton="LeftArrow"
+                      hasSubmit={false}
+                      closeTitle="Close"
+                      title="MJV Excel export"
+                      width="w-full"
+                      isFullHeight={true}
+                      closeModal={() => setShowValidation(false)}
+                      content={<AccExcelImport />}
+                      ></ERPModal>
+                    }
                   </div>
 
                   {/* Previous Page Button */}
@@ -3033,6 +3069,10 @@ debugger;
           }
         ></ERPModal>
       )}
+
+      
+
+      
 
       <ERPResizableSidebar
         minWidth={350}

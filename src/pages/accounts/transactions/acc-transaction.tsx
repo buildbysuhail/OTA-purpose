@@ -1197,7 +1197,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 padding: 0,
               }}
             >
-              <div className="flex items-center p-0 border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5]">
+              <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
                     {t(formState.title)}
@@ -1211,12 +1211,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("load_details")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         loadTemporaryRows();
                       }}
                     >
-                      <ChevronUp className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1226,12 +1226,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("delete")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         deleteAccTransVoucher();
                       }}
                     >
-                      <Trash2 className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1241,10 +1241,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("load")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={handleRefresh}
                     >
-                      <RefreshCw className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
                   {/* createNewVoucher */}
@@ -1253,10 +1253,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("create_new")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={createNewVoucher}
                     >
-                      <BadgePlusIcon className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1266,12 +1266,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("edit")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         handleEdit();
                       }}
                     >
-                      <Pencil className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1281,12 +1281,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("print")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         printVoucher();
                       }}
                     >
-                      <Printer className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1296,7 +1296,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("clear")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         clearControls(
                           formState.isEdit,
@@ -1304,7 +1304,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         );
                       }}
                     >
-                      <Eraser className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
                   <div
@@ -1312,10 +1312,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("history")}
                   >
                     <button
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={handleHistoryClick}
                     >
-                      <History className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
 
@@ -1335,10 +1335,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       ref={buttonRef}
                       onClick={() => setIsPopupVisible(!isPopupVisible)}
                       // onClick={handleButtonClick}
-                      className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       title={t("previous_page")}
                     >
-                      <EllipsisVertical className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                      <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
 
                     {isPopupVisible && (
@@ -1450,10 +1450,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* Previous Page Button */}
                   <button
                     onClick={goToPreviousPage}
-                    className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                    className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                     title={t("previous_page")}
                   >
-                    <X className="w-4 h-4 text-gray-600 hover:text-gray-800 transition-colors" />
+                    <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>
                 </div>
               </div>

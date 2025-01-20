@@ -806,6 +806,7 @@ debugger;
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
+    debugger;
     const nextVoucherNumber = await getNextVoucherNumber(
       formType,
       voucherType,

@@ -86,7 +86,9 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
               }));
               // setOpenVoucherSelector(true);
 
-              // setReadyToShowVoucher(true);
+              console.log('setReadyToShowVoucher');
+              
+              setReadyToShowVoucher(true);
             }
           } else {
             setStore(res);
@@ -98,6 +100,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       };
       fetchData();
     } else {
+      console.log('setReadyToShowVoucher');
       setReadyToShowVoucher(true);
     }
   }, [voucherType]);
@@ -110,6 +113,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       voucherPrefix: event.data.lastPrefix,
     }));
     setOpenVoucherSelector(false);
+    console.log('setReadyToShowVoucher');
     setReadyToShowVoucher(true);
   }, []);
   return (
@@ -136,7 +140,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             setOpenVoucherSelector(false);
           }}
         />
-      ) : (
+      ) : readyToShowVoucher == true && (
         <AccTransactionForm
           voucherType={voucherType}
           voucherPrefix={data.voucherPrefix}

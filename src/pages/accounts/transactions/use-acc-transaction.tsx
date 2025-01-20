@@ -1398,6 +1398,7 @@ export const useAccTransaction = (
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
+      debugger;
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
@@ -1446,6 +1447,7 @@ export const useAccTransaction = (
     }
   };
   const openBillwise = async () => {
+    debugger;
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -1531,10 +1533,11 @@ export const useAccTransaction = (
               }
               else  {
                 if(formState.formElements?.costCentreId.visible == true) {
+                
+                  focusCostCenterRef();
+                } else {
                   addOrEditRow();
                   focusLedgerCode()
-                } else {
-                  focusCostCenterRef();
                 }
               }
             }

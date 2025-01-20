@@ -42,6 +42,7 @@ const accTransactionSlice = createSlice({
         defaultCostCenterID: number;
         counterwiseCashLedgerId: number;
         allowSalesCounter: number;
+        voucherNo: number | undefined;
       }>
     ) => {
       const {
@@ -50,6 +51,7 @@ const accTransactionSlice = createSlice({
         defaultCostCenterID,
         counterwiseCashLedgerId,
         allowSalesCounter,
+        voucherNo
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
       (state.transaction.master.accTransactionMasterID = 0),
@@ -63,6 +65,7 @@ const accTransactionSlice = createSlice({
       state.transaction.master.currencyRate = 1;
       state.row.currencyId = 0;
       state.transaction.master.referenceNumber = "";
+      state.transaction.master.voucherNumber = voucherNo??0;
       state.row.chqDate = new Date().toISOString();
       state.row.bankDate = new Date().toISOString();
       state.transaction.master.transactionDate = moment(softwareDate,"DD/MM/YYYY").local().toISOString();
@@ -278,6 +281,10 @@ const accTransactionSlice = createSlice({
       state.transaction.details?.forEach((row) => {
         row.billwiseDetails = "";
       });
+    },
+    accFormStateClearDetails: (state) => {
+      // Iterate over all rows in details
+      state.transaction.details = [];
     },
     // Remove a specific row from the transaction details by index
     accFormStateTransactionDetailsRowRemove: (
@@ -627,7 +634,8 @@ export const {
   updateFormElement,
   accFormStateTransactionDetailsSetSlNo,
   loadTempRows,
-  accFormStateClearBillWiseInDetails
+  accFormStateClearBillWiseInDetails,
+  accFormStateClearDetails
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

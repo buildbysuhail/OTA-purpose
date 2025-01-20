@@ -1428,6 +1428,7 @@ debugger;
                         onKeyUp={(e) => {
                           handleKeyDown(e, "voucherNumber");
                         }}
+                        min={1}
                         label={t(formState.formElements.voucherNumber.label)}
                         value={formState.transaction.master.voucherNumber}
                         type="number"

@@ -82,7 +82,9 @@ const DayBookDetailed = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 20,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             }
           } : undefined;
         }
@@ -91,7 +93,6 @@ const DayBookDetailed = () => {
             {cellElement.data.particulars}
           </span>)
         }}
-      
     },
     {
       dataField: "refNo",
@@ -135,7 +136,6 @@ const DayBookDetailed = () => {
               : balance < 0
               ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
               :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
-
           return {
             ...exportCell,
             text: value,
@@ -145,7 +145,9 @@ const DayBookDetailed = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -157,7 +159,6 @@ const DayBookDetailed = () => {
                 ? getFormattedValue(cellElement.data.debit)
                 : cellElement.data.debit}`}
           </span>)
-      
             }}
     },
     {
@@ -178,7 +179,6 @@ const DayBookDetailed = () => {
               : balance < 0
                 ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
                 :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
-
           return {
             ...exportCell,
             text: value,
@@ -188,7 +188,9 @@ const DayBookDetailed = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -199,8 +201,7 @@ const DayBookDetailed = () => {
               : cellElement.data.particulars === "TOTAL"
                 ? getFormattedValue(cellElement.data.credit)
                 : cellElement.data.credit}`}
-          </span>)
-       
+          </span>) 
             }}
     },
     {
@@ -231,7 +232,9 @@ const DayBookDetailed = () => {
             font: {
               ...exportCell.font,
               color:{ argb: 'FFFF0000' },
-              size: 15,
+              size: 10,
+              style:'bold',
+              bold:true,
             },
           };
         }

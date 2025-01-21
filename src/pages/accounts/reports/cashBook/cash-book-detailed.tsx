@@ -101,7 +101,9 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
                color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             }
           } : undefined;
         }
@@ -144,7 +146,9 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -183,7 +187,6 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
               : balance < 0
                 ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
-
           return {
             ...exportCell,
             text: value,
@@ -193,7 +196,9 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
             font: {
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -242,7 +247,9 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
             font: {
               // color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }

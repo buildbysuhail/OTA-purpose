@@ -120,18 +120,20 @@ const LedgerReport = () => {
               : balance < 0
                 ? getFormattedValue(-1 * balance) + " Cr"
                 : getFormattedValue(balance) + " Dr";
-          return exportCell != undefined ? {
+          return  {
             ...exportCell,
             text: cellInfo.value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF':'',
             font: {
               ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } :cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?{ argb: 'FF0000FF' }: "",
               size: 10,
-            }
-          } : undefined;
+              style:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?true:false,
+            },
+          };
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
@@ -243,18 +245,19 @@ const LedgerReport = () => {
             text: value,
             bold: true,
             alignment: "right",
-            textColor: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? '#129151' : '#FF0000',
+            textColor: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? '#129151' :cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF': '#FF0000',
             font: {
               ...exportCell.font,
-              color: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? { argb: 'FF129151' } : { argb: 'FFFF0000' },
-              size: 15,
-              Bold: true
+              color: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? { argb: 'FF129151' } :cellElement.data.particulars === "Total Pending Cheque Amt" ?{ argb: 'FF0000FF' }: { argb: 'FFFF0000' },
+              size: 10,
+              style:'bold',
+              bold:true,
             },
           };
         }
         else {
           return (<span
-            className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]" : 'text-[#DC143C]'} font-bold`}
+            className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]" :cellElement.data.particulars === "Total Pending Cheque Amt" ?'text-blue': 'text-[#DC143C]'} font-bold`}
           >
             {`${cellElement.data?.balance == null
               ? ''

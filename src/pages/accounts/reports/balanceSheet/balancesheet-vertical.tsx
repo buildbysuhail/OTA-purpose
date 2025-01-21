@@ -69,7 +69,7 @@ const BalancesheetVertical = () => {
           className={`${cellElement.data.isSubTotal == true
             ? "font-bold text-black"
             : cellElement.data.isTotal == true
-              ? "font-bold text-blue"
+              ? "font-bold text-[#34A4DC]"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
                 ? "font-bold text-[#2E8B57]"
@@ -184,7 +184,7 @@ const BalancesheetVertical = () => {
           className={`${cellElement.data.isSubTotal == true
             ? "font-bold text-black"
             : cellElement.data.isTotal == true
-              ? "font-bold text-blue"
+              ? "font-bold text-[#34A4DC]"
               : cellElement.data.isGroup == true &&
                 cellElement.data.isSubGroup == true
                 ? "font-bold text-[#2E8B57]"

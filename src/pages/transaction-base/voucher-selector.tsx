@@ -12,12 +12,23 @@ import { APIClient } from "../../helpers/api-client";
 
 interface VoucherSelectorProps {
   data: any;  
-  onRowDblClick?: (e: any) => void;    
+  onRowDblClick?: (e: any) => void; 
+  isMaximized?: boolean;
+  modalHeight?: any;   
 }
 const api = new APIClient();
-const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick }) => {
+const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, isMaximized, modalHeight, }) => {
   const { t } = useTranslation();
- 
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 200;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = [
     {
       dataField: "formType",
@@ -69,7 +80,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick }
                 <ErpDevGrid
                   columns={columns}
                   onRowDblClick={onRowDblClick}
-                  heightToAdjustOnWindows={300}
+                  heightToAdjustOnWindowsInModal={gridHeight.windows}
                   gridHeader={t("account_payable_aging_report")}
                   data={data}
                   gridId="grd_cost_centre"

@@ -35,6 +35,7 @@ type ERPModalProps = {
   isForm?: boolean;
   isButton?: boolean;
   isMaximize?: boolean;
+  initailMaximize?:boolean;
   closeTitle?: string;
   className?: string;
   isFullHeight?: boolean;
@@ -65,6 +66,7 @@ const ERPModal = React.memo(
     isForm = false,
     isButton = false,
     isMaximize = true,
+    initailMaximize=false,
     onSubmitModel,
     hasSubmit = true,
     closeButton = "LeftArrow",
@@ -79,7 +81,7 @@ const ERPModal = React.memo(
     customPosition = false,
     customStyle = {},
   }: ERPModalProps) => {
-    const [isMaximized, setIsMaximized] = useState(false);
+    const [isMaximized, setIsMaximized] = useState(initailMaximize);
     const [modalHeight, setModalHeight] = useState(0);
 
     useEffect(() => {
@@ -200,13 +202,12 @@ const ERPModal = React.memo(
                   leaveTo="opacity-0 scale-95"
                 >
                   <DialogPanel
-                    // className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
-                    // ${isRemoveSomething ? "px-0" : "px-5"}`}>
+                  
                     className={`erp-modal${
                       isOpen ? "-opened" : "closed"
                     } transform dark:bg-dark-bg bg-white text-left align-middle shadow-xl transition-all  ${
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
-                    } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    } ${isRemoveSomething ? "px-0" : "px-4"}`}
                     style={{
                       height: isMaximized ? `${modalHeight}px` : "auto",
                       maxHeight: `${modalHeight}px`,

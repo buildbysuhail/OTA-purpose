@@ -4,6 +4,8 @@ import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { TemplateState } from "../../Designer/interfaces";
 import { IndianRupee } from 'lucide-react';
+import { AccTransactionData } from "../../../accounts/transactions/acc-transaction-types";
+import VoucherType from "../../../../enums/voucher-types";
 
 const styles = StyleSheet.create({
   container: {
@@ -93,7 +95,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string;currency?: string;}) => {
+export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string;currency?: string;}) => {
+  
+  
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
   const totalState = template?.totalState;
@@ -153,7 +157,7 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width:"100%"}}>
               <Text style={labelStyles}>{headerState?.numberField || "Payment#"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {dateTrimmer(data.master?.number) || 1}
+                {data.master?.voucherNumber}
               </Text>
             </View>
           )}
@@ -162,7 +166,8 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width:"100%" }}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField  || "Payment Date"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {data.master?.date || "12/5/2024"}
+                {/* {data.master?.date || "12/5/2024"} */}
+                {dateTrimmer(data.master?.transactionDate)}
               </Text>
             </View>
           )}
@@ -171,7 +176,7 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" , width:"100%"}}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.referenceField || "Reference Number"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {data?.master.referenceNumber ?? "23"}
+                {data?.master.referenceNumber }
               </Text>
             </View>
           )}
@@ -180,7 +185,8 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width:"100%" }}>
               <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode || "Payment Mode"}</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {data?.master?.paymentMode || "Cash"}
+                {(data?.master?.voucherType == VoucherType.CashPayment || data?.master?.voucherType == VoucherType.CashReceipt || data?.master?.voucherType == VoucherType.CashPaymentEstimate|| data?.master?.voucherType == VoucherType.CashReceiptEstimate)?"Cash":
+                (data?.master?.voucherType == VoucherType.BankPayment || data?.master?.voucherType == VoucherType.BankReceipt || data?.master?.voucherType == VoucherType.BankReconciliation)?"Bank":"" }
                
               </Text>
             </View>
@@ -284,17 +290,18 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
         <View style={[styles.notes,]}>
           <Text style={labelStyles}>{template?.footerState?.notesLabel || "Notes"}</Text>
           <Text style={{ ...fontStyles, fontSize: template?.footerState?.noteFontSize }}>
-            {data?.master?.notes ?? "Payment has been received by cash"}
+            {/* {data?.master?.notes ?? "Payment has been received by cash"} */}
           </Text>
         </View>
       )}
+      {/* Refund */}
        <View style={{ width: "100%", borderTop: "0.5px solid #DFDFDF", marginVertical: 10 }} />
        <View style={styles.payment} >
        
           <View style={[styles.paymentCol]}>
           <Text style={labelStyles}>{template?.headerState?.accountTransactionInfo?.paymentRefund || "Payment Refund"}</Text>
           <Text style={fontStyles}>
-            {data?.master?.paymentRefund ?? "5.00$"}
+            {/* {data?.master?.paymentRefund ?? "5.00$"} */}
           </Text>
          </View>
    
@@ -303,7 +310,7 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
          <View style={[styles.paymentCol,{borderLeft:"0.5px solid #DFDFDF"}]}>
          <Text style={labelStyles}>{template?.headerState?.accountTransactionInfo?.overPayment || "Over Payment"}</Text>
          <Text style={fontStyles}>
-           {data?.master?.overPayment ?? "15.00$"}
+           {/* {data?.master?.overPayment ?? "15.00$"} */}
          </Text>
         </View>
        )}

@@ -106,8 +106,8 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
         {/* Table Body */}
         <View style={styles.tbody}>
           {data?.details
-           ?.slice(0,2) 
-           ?.map((val: any, index: number) => (
+            ?.slice(0,2) 
+          .map((val: any, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
                 {accTableState?.showLineItemNumber && (
                   <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>

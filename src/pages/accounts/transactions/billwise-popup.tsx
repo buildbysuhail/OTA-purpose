@@ -91,7 +91,7 @@ const BillwiseComponent = ({
 
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows = wh - 350;
+    let gridHeightWindows =isMaximized? wh - 300 : wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
   useEffect(() => {
@@ -550,8 +550,9 @@ const BillwiseComponent = ({
     <Card
       className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
       elevation={0}
+      sx={{ p: 0 ,m:0}}
     >
-      <CardContent>
+      <CardContent sx={{ p: 0 }}>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">

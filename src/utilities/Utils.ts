@@ -473,7 +473,7 @@ export const getAmountInWords = (amount: number, currency?: string) => {
       currencyOptions: currencyOptions,
     },
   });
-  const words = toWords.convert(amount);
+  const words = toWords.convert(isNaN(amount) ? 0 : amount);
   return words;
 };
 

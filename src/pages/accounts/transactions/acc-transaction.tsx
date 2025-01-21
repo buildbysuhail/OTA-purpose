@@ -7,6 +7,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import {
+  accTransactionInitialData,
   AccTransactionProps,
   initialFormElements,
 } from "./acc-transaction-types";
@@ -553,6 +554,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
+      dispatch(accFormStateHandleFieldChange({fields: {transaction: accTransactionInitialData}}))
       let fieldsToUpdate = initialFormElements;
       switch (voucherType) {
         case "CR":

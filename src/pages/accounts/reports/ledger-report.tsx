@@ -327,6 +327,15 @@ const LedgerReport = () => {
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   reload={true}
                   gridId="grd_ledger_report"
+                  childPopupProps={{
+                    content: <AccTransactionForm />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen:true,
+                    width: "mw-100",
+                    drillDownCells: "vchNo,",
+                    enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

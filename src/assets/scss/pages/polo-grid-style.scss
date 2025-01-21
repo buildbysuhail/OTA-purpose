@@ -23,6 +23,7 @@
     $dark-hover-bg: #343536;
     $dark-combo-dd: #373737;
     $dark-grid-hover: #000000;
+    $dark-grid-selection: #000000;
 
   .dark .custom-data-grid {
 
@@ -54,8 +55,8 @@
 // this selection 
 .dx-datagrid-rowsview .dx-row.dx-selection td,
 .dx-datagrid-rowsview .dx-row.dx-selection:hover td {
-  background-color: #000000 !important;
-  color: yellow !important; /* Text color for selected rows */
+  background-color: $dark-grid-selection !important;
+  color: $dark-text !important; /* Text color for selected rows */
 }
 
     // edit

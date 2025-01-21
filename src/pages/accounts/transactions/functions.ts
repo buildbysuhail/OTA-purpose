@@ -39,7 +39,7 @@ export const clearEntryControl = (
       : "";
   state.row.chequeNumber = "";
   state.isRowEdit = false;
-  state.row.costCentreId =
+  state.row.costCentreID =
     state.userConfig.presetCostenterId > 0
       ? state.userConfig.presetCostenterId
       : defaultCostCenterID;

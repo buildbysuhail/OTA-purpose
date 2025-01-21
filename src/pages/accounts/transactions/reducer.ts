@@ -73,7 +73,7 @@ const accTransactionSlice = createSlice({
       state.row.amount = 0.0;
       state.row.discount = 0.0;
       // state.masterAccountID = 0;
-      state.row.costCentreId = defaultCostCenterID;
+      state.row.costCentreID = defaultCostCenterID;
       state.transaction.details = [];
       state.isEdit = false;
       state.isRowEdit = false;
@@ -88,22 +88,22 @@ const accTransactionSlice = createSlice({
           state.masterAccountID = counterwiseCashLedgerId;
         }
       }
-      state.transaction.master.employeeId =
+      state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
-      state.transaction.master.costCentreId =
+      state.transaction.master.costCentreID =
         state.userConfig.presetCostenterId > 0
           ? state.userConfig.presetCostenterId
           : 0;
       {
         if (userSession.employeeId > 0)
-          state.transaction.master.employeeId = userSession.employeeId;
+          state.transaction.master.employeeID = userSession.employeeId;
       }
       if (state.userConfig.presetCostenterId > 0) {
-        state.row.costCentreId = state.userConfig.presetCostenterId;
-        state.formElements.costCentreId.disabled = true;
+        state.row.costCentreID = state.userConfig.presetCostenterId;
+        state.formElements.costCentreID.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS") {
-          state.row.costCentreId = 0;
+          state.row.costCentreID = 0;
         }
       }
     },

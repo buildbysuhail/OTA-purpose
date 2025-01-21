@@ -197,7 +197,7 @@ export const useAccTransaction = (
     dispatch(accFormStateTransactionMasterHandleFieldChange({fields: {
       remarks: "",
       commonNarration: "",
-      employeeId: userSession.dbIdValue == "543140180640" && userSession.employeeId > 0 ? userSession.employeeId : formState.transaction.master.employeeId
+      employeeID: userSession.dbIdValue == "543140180640" && userSession.employeeId > 0 ? userSession.employeeId : formState.transaction.master.employeeID
     }}));
     dispatch(accFormStateClearDetails());
     dispatch(accFormStateHandleFieldChange({fields: {
@@ -733,11 +733,11 @@ export const useAccTransaction = (
                 ? true
                 : undefined, // Keep existing value if condition is not met
           },
-          costCentreId: {
+          costCentreID: {
             disabled:
               formState.userConfig.presetCostenterId > 0
                 ? true
-                : formState.formElements.costCentreId.disabled,
+                : formState.formElements.costCentreID.disabled,
           },
           employee: { disabled: false },
           jvDrCr: { disabled: false },
@@ -862,8 +862,8 @@ export const useAccTransaction = (
           return false;
         }
         if (
-          isNullOrUndefinedOrZero(formState.row.costCentreId) &&
-          formState.formElements.costCentreId.visible == true
+          isNullOrUndefinedOrZero(formState.row.costCentreID) &&
+          formState.formElements.costCentreID.visible == true
         ) {
           ERPAlert.show({
             icon: "info",
@@ -901,9 +901,9 @@ export const useAccTransaction = (
           linkEdit: { visible: true },
         };
 
-        // Conditionally update costCentreId if needed
+        // Conditionally update costCentreID if needed
         if (formState.userConfig.presetCostenterId > 0) {
-          updatedFields.costCentreId = { disabled: true };
+          updatedFields.costCentreID = { disabled: true };
         }
 
         // Dispatch the updateFormElement action
@@ -999,7 +999,7 @@ export const useAccTransaction = (
             narration: row.narration || "",
             nameOnCheque: row.nameOnCheque || "",
             bankName: row.bankName || "",
-            costCentreId: row.costCentreId || 0,
+            costCentreID: row.costCentreID || 0,
             projectId: row.projectId || 0,
             billwiseDetails: row.billwiseDetails || "",
             chequeNumber: row.chequeNumber || "",
@@ -1189,7 +1189,7 @@ export const useAccTransaction = (
         }
       } else if (
         applicationSettings.accountsSettings?.maintainCostCenter &&
-        formState.formElements.costCentreId.visible == true
+        formState.formElements.costCentreID.visible == true
       ) {
         focusCostCenterRef();
       } else {
@@ -1514,7 +1514,7 @@ export const useAccTransaction = (
           })
         );
       } else {
-        if (formState.formElements?.costCentreId.visible == true) {
+        if (formState.formElements?.costCentreID.visible == true) {
           focusCostCenterRef();
         } else {
           addOrEditRow();

@@ -300,7 +300,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     dispatch(
       accFormStateRowHandleFieldChange({
         fields: {
-          costCentreId:
+          costCentreID:
             formState.userConfig.presetCostenterId > 0
               ? formState.userConfig.presetCostenterId
               : userSession.dbIdValue == "SAMAPLASTICS"
@@ -361,7 +361,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           dispatch(
             updateFormElement({
               fields: {
-                costCentreId: {
+                costCentreID: {
                   visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
                 },
               },
@@ -522,7 +522,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
-              employeeId: userSession.employeeId,
+              employeeID: userSession.employeeId,
             },
           })
         );
@@ -624,8 +624,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...initialFormElements.discount,
               visible: true,
             },
-            costCentreId: {
-              ...initialFormElements.costCentreId,
+            costCentreID: {
+              ...initialFormElements.costCentreID,
               visible:
                 applicationSettings?.accountsSettings?.maintainCostCenter ===
                 true,
@@ -969,9 +969,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         `${parseFloat(cellInfo.value).toFixed(2)}`,
     },
     {
-      dataField: "costCentreId",
+      dataField: "costCentreID",
       caption: t("cost_centre_id"),
       visible: false,
+    },
+    {
+      dataField: "costCenter",
+      caption: t("cost_center"),
+      visible: true,
     },
     {
       dataField: "checkStatus",
@@ -1911,15 +1916,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.employee.visible && (
                     <ERPDataCombobox
                       localInputBox={formState?.userConfig.inputBoxStyle}
-                      id="employeeId"
+                      id="employeeID"
                       label={t(formState.formElements.employee.label)}
-                      value={formState.transaction.master.employeeId}
+                      value={formState.transaction.master.employeeID}
                       className="lg:max-w-[300px]"
                       onChange={(e) => {
                         debugger;
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
-                            fields: { employeeId: e.value },
+                            fields: { employeeID: e.value },
                           })
                         );
                       }}
@@ -2353,12 +2358,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   )}
                 </>
               )}
-              {formState.formElements.costCentreId.visible && (
+              {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="costCentre"
                   className="min-w-[180px]"
-                  label={t(formState.formElements.costCentreId.label)}
+                  label={t(formState.formElements.costCentreID.label)}
                   field={{
                     valueKey: "id",
                     labelKey: "name",
@@ -2366,14 +2371,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }}
                   disabled={
                     formState.userConfig.presetCostenterId > 0 ||
-                    formState.formElements.costCentreId.disabled
+                    formState.formElements.costCentreID.disabled
                   }
-                  value={formState.row.costCentreId}
+                  value={formState.row.costCentreID}
                   onSelectItem={(e) => {
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: {
-                          costCentreId: e.value,
+                          costCentreID: e.value,
                           costCentreName: e.label,
                         },
                       })
@@ -2821,7 +2826,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     );
                   }
-                  if (formState.formElements.costCentreId.visible == false) {
+                  if (formState.formElements.costCentreID.visible == false) {
                     addOrEditRow(billwiseDetails);
                     focusLedgerCode();
                   } else {

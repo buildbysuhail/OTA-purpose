@@ -358,15 +358,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
             ),
           ]);
-          dispatch(
-            updateFormElement({
-              fields: {
-                costCentreID: {
-                  visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
-                },
-              },
-            })
-          );
+          // dispatch(
+          //   updateFormElement({
+          //     fields: {
+          //       costCentreID: {
+          //         visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
+          //       },
+          //     },
+          //   })
+          // );
 
           dispatch(
             accFormStateRowHandleFieldChange({
@@ -1631,7 +1631,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                 {/* <CustomerDetailsSidebar displayType="link" /> */}
                               </button>
                               {t("bal")}:{" "}
-                              {`${formState.masterBalance || "0.00"} ${
+                              {`${formState.masterBalance < 0 ? (-1*formState.masterBalance) : formState.masterBalance || "0.00"} ${
                                 formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
                               }`}
                             </span>
@@ -2109,7 +2109,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             <CustomerDetailsSidebar displayType="link" />
                           </button>
                           Bal:{" "}
-                          {`${formState.ledgerBalance || "0.00"} ${
+                          {`${formState.ledgerBalance < 0 ? (-1*formState.ledgerBalance) : formState.ledgerBalance || "0.00"} ${
                             formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
                           }`}
                         </span>

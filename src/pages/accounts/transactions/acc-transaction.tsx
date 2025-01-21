@@ -95,10 +95,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   drCr,
   voucherNo,
   transactionType,
+  transactionMasterID,
+  financialYearID
 }) => {
+  debugger;
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${voucherType + formType}`
+    `grd_acc_transaction_${(voucherType??"") + (formType??"")}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -197,6 +200,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
   useEffect(() => {
+    dispatch(updateFormElement({fields: { btnEdit:{visible: financialYearID == undefined || ( financialYearID != undefined && financialYearID == userSession.finId)}}}))
+  }, [financialYearID]);
+  useEffect(() => {
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
         fields: {
@@ -250,9 +256,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             voucherNo != undefined && voucherNo > 0
               ? voucherNo
               : getNextVoucherNumber(
-                  formType,
-                  voucherType,
-                  voucherPrefix,
+                  formType??"",
+                  voucherType??"",
+                  voucherPrefix??"",
                   false
                 ),
         },
@@ -537,10 +543,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
-      loadAccTransVoucher();
+      loadAccTransVoucher(false, voucherNo, voucherPrefix, voucherType, formType,undefined, transactionMasterID)
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
-  }, []);
+  }, [voucherNo]);
 
   useEffect(() => {
     if (!voucherType) return;
@@ -813,9 +819,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const fetchVoucherNumber = useCallback(async () => {
     debugger;
     const nextVoucherNumber = await getNextVoucherNumber(
-      formType,
-      voucherType,
-      voucherPrefix,
+      formType??"",
+      voucherType??"",
+      voucherPrefix??"",
       false
     );
 

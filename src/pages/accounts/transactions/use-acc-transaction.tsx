@@ -174,7 +174,12 @@ export const useAccTransaction = (
   const { hasRight, hasBlockedRight } = useUserRights();
   const loadAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
-    voucherNumber?: number
+    voucherNumber?: number,
+    voucherPrefix?: string,
+    voucherType?: string,
+    formType?: string,
+    manualInvoiceNumber?: number,
+    accTransactionMasterID?: number
   ) => {
     const tmpVoucherNumber =
       voucherNumber != undefined
@@ -187,7 +192,7 @@ export const useAccTransaction = (
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
-      formState.transaction.master.accTransactionMasterID
+      accTransactionMasterID??formState.transaction.master.accTransactionMasterID
     );
     dispatch(accFormStateTransactionMasterHandleFieldChange({fields: {
       remarks: "",
@@ -213,11 +218,11 @@ export const useAccTransaction = (
     try {
       const params = {
         VoucherNumber: tmpVoucherNumber,
-        VoucherPrefix: formState.transaction?.master?.voucherPrefix || "",
-        VoucherType: formState.transaction?.master?.voucherType || "",
-        FormType: formState.transaction?.master?.formType || "",
+        voucherPrefix: voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+        voucherType: voucherType ?? (formState.transaction?.master?.voucherType || ""),
+        formType:formType ?? (formState.transaction?.master?.formType || ""),
         MannualInvoiceNumber:
-          formState.transaction?.master?.referenceNumber || "",
+        manualInvoiceNumber??(formState.transaction?.master?.referenceNumber || ""),
         SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
       };
       await appDispatch(

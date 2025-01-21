@@ -2,14 +2,16 @@ import { inputBox } from "../../../redux/slices/app/types";
 
 // AccTransaction interface
 export interface AccTransactionProps {
-  voucherType: string;
-  transactionType: string;
-  formCode: string;
-  voucherPrefix: string;
-  formType: string;
-  title: string;
-  drCr: string;
+  voucherType?: string;
+  transactionType?: string;
+  formCode?: string;
+  voucherPrefix?: string;
+  formType?: string;
+  title?: string;
+  drCr?: string;
   voucherNo?: number;
+  transactionMasterID?: number,
+  financialYearID?: number
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;

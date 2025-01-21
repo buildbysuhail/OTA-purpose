@@ -158,6 +158,7 @@ const WhatsappIntegration = lazy(
 const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
+const ShortkeysSettings = lazy(() => import("../../../pages/settings/Integration/shortkeysSettings"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 const AccTransactionGrid = lazy(
   () => import("../../../pages/accounts/transactions/acc-transacton-grid")
@@ -375,6 +376,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/test" element={<Test />} />
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
+        <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings />} />
         <Route
           path="/integration/test-input-button"
           element={<TestInputButton />}

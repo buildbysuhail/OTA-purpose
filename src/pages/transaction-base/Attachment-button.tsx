@@ -26,7 +26,7 @@ const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({
 
       {displayType === "button" ? (
         <button
-          className=" p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
+          className="fixed !z-[100] top-[3.5rem] right-[0px] p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
           onClick={() => setIsOpen((prev: boolean) => !prev)}
         >
           {t("attachment")}
@@ -36,7 +36,7 @@ const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({
           // href="#"
           className="hover:underline text-[#0ea5e9] capitalize ml-1"
           onClick={(e) => {
-            e.preventDefault(); // Prevent default link behavior
+            e.preventDefault();
             setIsOpen((prev: boolean) => !prev);
           }}
         >

@@ -77,19 +77,19 @@ const OptionsColumn = ({ data }: { data: any }) => {
     <div ref={menuRef} className="absolute">
       {(data.isAddable || data.isEditable || data.isDeletable ) && (
       <button
-        className="hover:bg-gray-100 p-1 rounded transition-colors"
+        className="dark:hover:bg-dark-hover-bg hover:bg-gray-100 p-1 rounded transition-colors"
         onClick={toggleMenu}
       >
-        <MoreVertical size={18} className="text-gray-500" />
+        <MoreVertical size={18} className="dark:text-dark-text dark:hover:text-dark-hover-text text-gray-500" />
       </button>
       )}
 
       {menuVisible && (
-        <div className="absolute top-0 right-0 mt-[1.6rem] w-40 bg-white border border-gray-300 rounded shadow-md z-50 transition-all duration-300 ease-in-out ">
+        <div className="absolute top-0 right-0 mt-[1.6rem] w-40 dark:bg-dark-bg dark:border-dark-border dark:text-dark-text bg-white border border-gray-300 rounded shadow-md z-50 transition-all duration-300 ease-in-out ">
           {data.isAddable && (
             <>
               <button
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
                 onClick={(e) => {
                   dispatch(
                     toggleAccountGroupPopup({ isOpen: true, key: null, data:{groupId: data.id} })
@@ -101,7 +101,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
               </button>
 
               <button
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
                 onClick={(e) => {
                   dispatch(
                     toggleAccountLedgerPopup({ isOpen: true, key: null, data:{groupId: data.id} })
@@ -115,7 +115,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
           )}
           {data.isEditable && (
             <button
-              className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
               onClick={() =>
                 data.isGroup
                   ? dispatch(

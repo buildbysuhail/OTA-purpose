@@ -759,6 +759,7 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async (billwiseDetails?: string) => {
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
         if (formState.isRowEdit != true) {
@@ -800,6 +801,7 @@ export const useAccTransaction = (
           );
         }
 
+      }
         if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
           ERPAlert.show({
             icon: "warning",
@@ -912,7 +914,6 @@ export const useAccTransaction = (
         );
         focusLedgerCombo();
       }
-    }
   };
   const validatePDC = async (
     accTransactionDetailsId: number

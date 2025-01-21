@@ -7,7 +7,9 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import {
+  accTransactionInitialData,
   AccTransactionProps,
+  AccTransactionRowInitialData,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -62,7 +64,7 @@ import {
   Eraser,
   X,
   FileUp,
-  History
+  History,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
@@ -98,12 +100,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherNo,
   transactionType,
   transactionMasterID,
-  financialYearID
+  financialYearID,
 }) => {
   debugger;
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${(voucherType??"") + (formType??"")}`
+    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
   );
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -202,7 +204,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
   useEffect(() => {
-    dispatch(updateFormElement({fields: { btnEdit:{visible: financialYearID == undefined || ( financialYearID != undefined && financialYearID == userSession.finId)}}}))
+    dispatch(
+      updateFormElement({
+        fields: {
+          btnEdit: {
+            visible:
+              financialYearID == undefined ||
+              (financialYearID != undefined &&
+                financialYearID == userSession.finId),
+          },
+        },
+      })
+    );
   }, [financialYearID]);
   useEffect(() => {
     dispatch(
@@ -240,7 +253,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     dispatch(
       accFormStateHandleFieldChange({
-        fields: { isInvoker: voucherNo && voucherNo > 0 },
+        fields: { isInvoker: voucherNo && voucherNo > 0 , foreignCurrency: applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions},
       })
     );
   }, []);
@@ -258,9 +271,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             voucherNo != undefined && voucherNo > 0
               ? voucherNo
               : getNextVoucherNumber(
-                  formType??"",
-                  voucherType??"",
-                  voucherPrefix??"",
+                  formType ?? "",
+                  voucherType ?? "",
+                  voucherPrefix ?? "",
                   false
                 ),
         },
@@ -545,7 +558,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
-      loadAccTransVoucher(false, voucherNo, voucherPrefix, voucherType, formType,undefined, transactionMasterID)
+      loadAccTransVoucher(
+        false,
+        voucherNo,
+        voucherPrefix,
+        voucherType,
+        formType,
+        undefined,
+        transactionMasterID
+      );
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
   }, [voucherNo]);
@@ -553,6 +574,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
+      debugger;
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            transaction: {
+              ...accTransactionInitialData,
+              master: {
+                ...accTransactionInitialData.master,
+                voucherType: voucherType,
+                voucherPrefix: voucherPrefix,
+                formType: formType,
+                drCr: drCr,
+              },
+            },
+            formCode: formCode,
+          title:
+            formType == undefined || formType.trim() == ""
+              ? title
+              : title + "[" + formType + "]",
+           row: AccTransactionRowInitialData 
+          },
+          
+        })
+      );
       let fieldsToUpdate = initialFormElements;
       switch (voucherType) {
         case "CR":
@@ -821,9 +866,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const fetchVoucherNumber = useCallback(async () => {
     debugger;
     const nextVoucherNumber = await getNextVoucherNumber(
-      formType??"",
-      voucherType??"",
-      voucherPrefix??"",
+      formType ?? "",
+      voucherType ?? "",
+      voucherPrefix ?? "",
       false
     );
 
@@ -1432,7 +1477,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                 />
                               </li>
                             )}
-                            
                           </ul>
                         </nav>
                       </div>
@@ -1630,7 +1674,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   )}
 
                 <div className="grid grid-cols-2 gap-2">
-                  {formState.formElements.foreignCurrency.visible == true && (
+                  {formState.formElements.foreignCurrency.visible == true && formState.foreignCurrency == true && (
                     <>
                       {formState.formElements.currencyID.visible && (
                         <ERPDataCombobox

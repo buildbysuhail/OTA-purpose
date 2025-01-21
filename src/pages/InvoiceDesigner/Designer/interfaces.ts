@@ -383,6 +383,15 @@ export interface accountTransactionInfo {
   paymentRefund?: string;
 
   showAmountInWords?: boolean;
+
+   //
+   amtReceivedLabel?: string;
+   currencySymbolPosition?: "after" | "before";
+
+   amtReceivedFontSize?: number;
+   amtReceivedFontColor?: string;
+   amtReceivedBgColor?: string;
+   
 }
 export interface ItemTableMasterState {
   showTableBorder?: boolean;

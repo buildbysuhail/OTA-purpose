@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 import { Header } from "./Header";
+import { Content } from "./Content";
 
 export interface AccountTransactionProps {
   data: any;
@@ -62,14 +63,7 @@ return (
       {/* Main Container */}
       <View style={{ flex: 1, flexDirection: 'column', width: '100%', height: '100%' }}>
         {/* Header */}
-        <View style={{
-          backgroundColor: template?.headerState?.bgColor ,
-          height: `${paddingTop}pt`, // Fixed height for the header
-          width: '100%',
-        }}>
-          {/* Add header content here if needed */}
-        </View>
-
+        <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Main Content */}
         <View style={{
           flex: 1, // Takes up remaining space
@@ -91,25 +85,19 @@ return (
               }}
             />
           )}
-
+     
           {/* Content */}
           <View style={{ position: 'relative', zIndex: 50 ,
             padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
           }}>
-            <Header data={data} template={template} currentBranch={currentBranch} />
+            <Content data={data} template={template} currentBranch={currentBranch} />
             <Table data={data} template={template} />
             {/* Add other components like Table, Header, Footer here */}
           </View>
         </View>
 
         {/* Footer */}
-        <View style={{
-          backgroundColor: template?.footerState?.bg_color ,
-          height: `${paddingBottom}pt`, // Fixed height for the footer
-          width: '100%',
-        }}>
-          {/* Add footer content here if needed */}
-        </View>
+        <Footer data={data} template={template}/>
       </View>
     </Page>
   </Document>

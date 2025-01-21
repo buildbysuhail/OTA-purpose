@@ -69,6 +69,9 @@ import {
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
 import HistorySidebar from "./historySidebar";
+import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn";
+import { PDFViewer } from "@react-pdf/renderer";
+import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 interface BilledItem {
   id?: number;
   name: string;
@@ -110,6 +113,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const currentBranch = useCurrentBranch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
@@ -135,7 +139,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     console.log("Selected Rows:", selectedIndexes);
     if (selectedIndexes.length > 0) {
       handleRowClick({
-        row: formState.transaction.details[selectedIndexes[0]],
+        row: formState?.transaction?.details[selectedIndexes[0]],
       });
     }
   };
@@ -2790,6 +2794,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             isFullHeight={true}
             isOpen={formState.showbillwise ?? false}
             title={t("billwise")}
+            initailMaximize={formState?.userConfig?.maximizeBillwiseScreenInitially}
             closeModal={() => {
               dispatch(
                 accFormStateHandleFieldChange({
@@ -3166,13 +3171,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             );
           }}
           content={
-            <DownloadPreview
+            <PDFViewer
+            className="pdf-viewer"
+            width="100%"
+            height={700}
+            style={{ margin: "20px", padding:"10px"}}
+           >
+         
+            <AccountTransactionsTemplate
               template={formState?.template}
-              data={DummyVoucherData}
+              data={formState?.transaction}
+              currentBranch={currentBranch}
             />
+          </PDFViewer>
           }
         ></ERPModal>
       )}
+    
 
       <ERPResizableSidebar
         minWidth={350}

@@ -1166,39 +1166,44 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       },
       [onExporting, gridId, preferences, gridCols, header]
     );
-    const handleInvoke = (row: any) => {
-      // Extracting data from row
-      const transactionMasterID = parseInt(row.id || "0", 10);
-      const c = row.form || "";
-      const vchr = c.split(" ");
-      const vchtype = vchr[0];
-      const voucherform = c.substring(c.indexOf(" ") + 1);
-
-      const vchNoRaw = row.vchNo || "";
-      const vno = vchNoRaw.split(" ");
-      const prefix = vno[0];
-      const vchno = vno[1] || "0";
-      const financialYearID = parseInt(row.financialYearID || "0", 10);
-      const tr = transactionRoutes.find((x) => x.voucherType == vchtype);
-      // Validate and invoke logic
-      if (parseInt(vchno, 10) > 0) {
-        const transactionData = {
-          transactionMasterID,
-          formType: voucherform,
-          voucherPrefix:prefix,
-          voucherType: vchtype,
-          financialYearID,
-          voucherNo: parseInt(vchno, 10),
-          formCode: tr?.formCode,
-          transactionType: tr?.transactionType,
-          title: tr?.title,
-          drCr: tr?.drCr,
-        };
-        return transactionData;
-      } else {
-        return null;
-      }
-    };
+    const handleInvoke = useCallback(
+      (row: any) => {
+        // Extracting data from row
+        const transactionMasterID = parseInt(row.id || "0", 10);
+        const c = row.form || "";
+        const vchr = c.split(" ");
+        const vchtype = vchr[0];
+        const voucherform = c.substring(c.indexOf(" ") + 1);
+    
+        const vchNoRaw = row.vchNo || "";
+        const vno = vchNoRaw.split(" ");
+        const prefix = vno[0];
+        const vchno = vno[1] || "0";
+        const financialYearID = parseInt(row.financialYearID || "0", 10);
+    
+        const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+    
+        // Validate and invoke logic
+        if (parseInt(vchno, 10) > 0) {
+          const transactionData = {
+            transactionMasterID,
+            formType: voucherform,
+            voucherPrefix: prefix,
+            voucherType: vchtype,
+            financialYearID,
+            voucherNo: parseInt(vchno, 10),
+            formCode: tr?.formCode,
+            transactionType: tr?.transactionType,
+            title: tr?.title,
+            drCr: tr?.drCr,
+          };
+          return transactionData;
+        } else {
+          return null;
+        }
+      },
+      [transactionRoutes] // Dependencies
+    );
     const handleCellClick = useCallback(
       (event: any) => {
         const dynamicProps = childPopupPropsDynamic

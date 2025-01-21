@@ -9,6 +9,7 @@ import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import {
   accTransactionInitialData,
   AccTransactionProps,
+  AccTransactionRowInitialData,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -252,7 +253,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     dispatch(
       accFormStateHandleFieldChange({
-        fields: { isInvoker: voucherNo && voucherNo > 0 },
+        fields: { isInvoker: voucherNo && voucherNo > 0 , foreignCurrency: applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions},
       })
     );
   }, []);
@@ -573,6 +574,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
+      debugger;
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -591,8 +593,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             formType == undefined || formType.trim() == ""
               ? title
               : title + "[" + formType + "]",
-            
+           row: AccTransactionRowInitialData 
           },
+          
         })
       );
       let fieldsToUpdate = initialFormElements;
@@ -1671,7 +1674,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   )}
 
                 <div className="grid grid-cols-2 gap-2">
-                  {formState.formElements.foreignCurrency.visible == true && (
+                  {formState.formElements.foreignCurrency.visible == true && formState.foreignCurrency == true && (
                     <>
                       {formState.formElements.currencyID.visible && (
                         <ERPDataCombobox

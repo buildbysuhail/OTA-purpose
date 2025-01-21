@@ -54,6 +54,7 @@ export interface UserModel {
   branches: BranchSelectDto[];
   finFrom?: Date | null;
   finTo?: Date | null;
+  finId?: number | null;
   financialYearStatus:string;
   employeeId: number | 0;
   productVersion: string | "";

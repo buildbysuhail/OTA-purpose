@@ -101,7 +101,9 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 20,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             }
           } : undefined;
         }
@@ -136,7 +138,6 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
               : balance < 0
               ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
               :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
-
           return {
             ...exportCell,
             text: value,
@@ -146,7 +147,9 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -175,7 +178,6 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
               : balance < 0
                 ?cellElement.data.particulars === "TOTAL" ?  getFormattedValue(-1 * balance):(-1*balance)
                 :cellElement.data.particulars === "TOTAL" ?  getFormattedValue(balance):balance;
-
           return {
             ...exportCell,
             text: value,
@@ -185,7 +187,9 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }
@@ -225,7 +229,9 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.particulars === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL"?true:false,
             },
           };
         }

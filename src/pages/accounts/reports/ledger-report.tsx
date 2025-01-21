@@ -2,23 +2,28 @@ import { Fragment, useCallback, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  DrillDownCellTemplate,
+} from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
+import LedgerReportFilter, {
+  LedgerReportFilterInitialState,
+} from "./ledger-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
 import { Bold } from "lucide-react";
+import AccTransactionForm from "../transactions/acc-transaction";
 
 interface LedgerReport {
-  from: Date
+  from: Date;
 }
 const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
   const [data, setData] = useState<any[]>([]);
-  const { t } = useTranslation('accountsReport');
+  const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
@@ -33,7 +38,7 @@ const LedgerReport = () => {
     setData(res?.data || []);
     setLoading(false);
   };
-  const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat();
   const onApplyFilter = useCallback((_filter: any) => {
     setFilter({ ..._filter });
     LoadAsync(_filter);
@@ -49,7 +54,7 @@ const LedgerReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -120,18 +125,20 @@ const LedgerReport = () => {
               : balance < 0
                 ? getFormattedValue(-1 * balance) + " Cr"
                 : getFormattedValue(balance) + " Dr";
-          return exportCell != undefined ? {
+          return  {
             ...exportCell,
             text: cellInfo.value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF':'',
             font: {
               ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } :cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?{ argb: 'FF0000FF' }: "",
               size: 10,
-            }
-          } : undefined;
+              style:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'bold':'normal',
+              bold: cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?true:false,
+            },
+          };
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
@@ -142,7 +149,7 @@ const LedgerReport = () => {
     },
     {
       dataField: "debit",
-      caption: t('debit'),
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -156,8 +163,8 @@ const LedgerReport = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
+              ? getFormattedValue(-1 * balance)
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
@@ -196,8 +203,8 @@ const LedgerReport = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
+              ? getFormattedValue(-1 * balance)
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
@@ -228,7 +235,12 @@ const LedgerReport = () => {
       allowFiltering: true,
       showInPdf: true,
       width: 170,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
@@ -243,18 +255,19 @@ const LedgerReport = () => {
             text: value,
             bold: true,
             alignment: "right",
-            textColor: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? '#129151' : '#FF0000',
+            textColor: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? '#129151' :cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF': '#FF0000',
             font: {
               ...exportCell.font,
-              color: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? { argb: 'FF129151' } : { argb: 'FFFF0000' },
-              size: 15,
-              Bold: true
+              color: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? { argb: 'FF129151' } :cellElement.data.particulars === "Total Pending Cheque Amt" ?{ argb: 'FF0000FF' }: { argb: 'FFFF0000' },
+              size: 10,
+              style:'bold',
+              bold:true,
             },
           };
         }
         else {
           return (<span
-            className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]" : 'text-[#DC143C]'} font-bold`}
+            className={`${filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? "text-[#129151]" :cellElement.data.particulars === "Total Pending Cheque Amt" ?'text-blue': 'text-[#DC143C]'} font-bold`}
           >
             {`${cellElement.data?.balance == null
               ? ''
@@ -297,8 +310,7 @@ const LedgerReport = () => {
           <div className="">
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
-                <button className="flex items-center bg-gray-100 p-0 rounded-md">
-                </button>
+                <button className="flex items-center bg-gray-100 p-0 rounded-md"></button>
                 <ErpDevGrid
                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
@@ -315,6 +327,15 @@ const LedgerReport = () => {
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   reload={true}
                   gridId="grd_ledger_report"
+                  childPopupProps={{
+                    content: <AccTransactionForm />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen:true,
+                    width: "mw-100",
+                    drillDownCells: "vchNo,",
+                    enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

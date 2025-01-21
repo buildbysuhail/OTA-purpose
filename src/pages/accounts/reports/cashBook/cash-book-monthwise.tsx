@@ -22,12 +22,12 @@ interface CashBookMonthWiseProps {
   contentProps?: any;
   rowData?: any;
   origin?: any;
-  isMaximized?: boolean; 
-  modalHeight?:any
-  originTo?:any
+  isMaximized?: boolean;
+  modalHeight?: any
+  originTo?: any
 }
 
-const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin,isMaximized,modalHeight,originTo}) => {
+const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps, rowData, origin, isMaximized, modalHeight, originTo }) => {
   // interface CashBookMonthWiseFilters {
   //   from: Date
   // }
@@ -41,10 +41,10 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
   }>({ mobile: 500, windows: 500 });
 
   useEffect(() => {
-    let gridHeightMobile = modalHeight - 50; 
-    let gridHeightWindows = modalHeight - 180; 
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized,modalHeight]);
+  }, [isMaximized, modalHeight]);
 
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -62,7 +62,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledgerID",
@@ -86,7 +86,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="month"></DrillDownCellTemplate>
     },
     {
@@ -96,7 +96,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
@@ -116,17 +116,18 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
             },
           };
         }
         else {
-          return( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
           </span>)
-       
-          }}
+
+        }
+      }
     },
     {
       dataField: "credit",
@@ -135,7 +136,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
@@ -154,18 +155,19 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
             alignment: "right",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               ...exportCell.font,
-              size: 15,
+              size: 10,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
           </span>)
-       
-          }}
+
+        }
+      }
     },
     {
       dataField: "monthBal",
@@ -174,56 +176,17 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
-        cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-              if (exportCell != undefined) {
-                const balance = cellElement.data?.monthBal;
-                const isDebit = balance >= 0;
-                const value =
-                  balance == null
-                    ? ""
-                    : balance < 0
-                    ? getFormattedValue(-1 * balance) + " Cr"
-                    : getFormattedValue(balance) + " Dr";
-                return {
-                  ...exportCell,
-                  text: value,
-                  bold: true,
-                  alignment: "right",
-                  // textColor:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?'#129151': '#FF0000',
-                  font: {
-                    ...exportCell.font,
-                    // color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
-                    size: 15,
-                    Bold:true
-                  },
-                };
-              }
-              else {
-                return (  <span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C] text-lg' : ''}`}>
-                  {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
-                </span>)
-      
-                }}
-    },
-    {
-      dataField: "closingBalance",
-      caption: t("closing_balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 250,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.closingBalance;
+          const balance = cellElement.data?.monthBal;
           const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
           return {
             ...exportCell,
             text: value,
@@ -233,17 +196,57 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
             font: {
               ...exportCell.font,
               // color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
-              size: 15,
-              Bold:true
+              size: 10,
+              Bold: true
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C] text-lg' : ''}`}>
+            {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
+          </span>)
+
+        }
+      }
+    },
+    {
+      dataField: "closingBalance",
+      caption: t("closing_balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 250,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.closingBalance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            // textColor:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?'#129151': '#FF0000',
+            font: {
+              ...exportCell.font,
+              // color:filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ?{argb:'FF129151'}:{ argb: 'FFFF0000' },
+              size: 10,
+              Bold: true
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1 * cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
-          }
         }
+      }
     }
   ];
   return (
@@ -257,7 +260,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
                   showSerialNo={true}
                   columns={columns}
-                  filterText={`for {${origin == "trialBalance" ? '___(particulars)': origin== "PandL" ? '___(groupName)' : '___(ledgerName)'}}, {**** as of (asonDate)}`}
+                  filterText={`for {${origin == "trialBalance" ? '___(particulars)' : origin == "PandL" ? '___(groupName)' : '___(ledgerName)'}}, {**** as of (asonDate)}`}
                   gridHeader={t("ledger_report_monthwise")}
                   dataUrl={Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
@@ -273,7 +276,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                   childPopupProps={{
                     // content: <CashBookMonthWise postData={
                     //   { ...filter }} />,
-                     content : <CashBookDayWise postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
+                    content: <CashBookDayWise postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
                     title: t("acc_group_dayview"),
                     isForm: false,
                     width: "mw-100",

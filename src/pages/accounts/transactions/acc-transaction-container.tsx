@@ -60,10 +60,10 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     voucherPrefix: string;
     formType: string;
     voucherNo: number;
-  }>({ voucherPrefix: "", formType: formType, voucherNo: 1 });
+  }>({ voucherPrefix: "", formType: formType??"", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   useEffect(() => {
-    if (isChooseVoucherEnabled(title, userSession)) {
+    if (isChooseVoucherEnabled(title??"", userSession)) {
       const fetchData = async () => {
         try {
           const res = await api.getAsync(

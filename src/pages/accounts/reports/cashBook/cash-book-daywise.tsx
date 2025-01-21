@@ -87,7 +87,9 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
                color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
             }
           } : undefined;
         }
@@ -125,7 +127,9 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             font: {
               ...exportCell.font,
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
             },
           };
         }
@@ -163,7 +167,9 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             font: {
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
             },
           };
         }
@@ -201,7 +207,9 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             font: {
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
             },
           };
         }
@@ -249,7 +257,9 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
             font: {
               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style:cellElement.data.ledgerName === "TOTAL"?'bold':'normal',
+              bold: cellElement.data.ledgerName === "TOTAL"?true:false,
             },
           };
         }

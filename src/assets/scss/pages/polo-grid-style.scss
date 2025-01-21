@@ -11,15 +11,6 @@
   //   @apply pt-4;
   // }
 
-  .dark .custom-data-grid {
-
-    // $dark-label: #e1e0e0;
-    // $dark-text: #e1e0e0;
-    // $dark-bg: #313334;
-    // $dark-bg-header: #404344bf;
-    // $dark-hover-text: #000000;
-    // $dark-border: #f2f4f538;
-
     $dark-label: #e1e0e0;
     // $dark-text: #e1e0e0;
     $dark-text: #E0E0E0;
@@ -32,148 +23,41 @@
     $dark-hover-bg: #343536;
     $dark-combo-dd: #373737;
     $dark-grid-hover: #000000;
+    $dark-grid-selection: #000000;
+
+  .dark .custom-data-grid {
+
+    // $dark-label: #e1e0e0;
+    // $dark-text: #e1e0e0;
+    // $dark-bg: #313334;
+    // $dark-bg-header: #404344bf;
+    // $dark-hover-text: #000000;
+    // $dark-border: #f2f4f538;
+
+    // $dark-label: #e1e0e0;
+    // // $dark-text: #e1e0e0;
+    // $dark-text: #E0E0E0;
+    // $dark-bg: #1e1e1f;
+    // // $dark-bg-header: #404344bf;
+    // $dark-bg-header: #383a3b;
+    // $dark-hover-text: #000000;
+    // $dark-border: #f2f4f538;
+    // $dark-bg-card: #202223;
+    // $dark-hover-bg: #343536;
+    // $dark-combo-dd: #373737;
+    // $dark-grid-hover: #000000;
 
       /* Variables */
   --dark-border: #f2f4f538;
   --header-border-color: red;
   
-    // Table Header Styling
-
-    
-
-//     /* Single class to change all border colors */
-// .dx-datagrid,
-// .dx-datagrid-headers,
-// .dx-datagrid-headers .dx-datagrid-table .dx-header-row > td,
-// .dx-datagrid-rowsview .dx-row > td,
-// .dx-datagrid-rowsview .dx-selection > td,
-// .dx-datagrid-group-panel,
-// .dx-datagrid-filter-row > td,
-// .dx-datagrid-total-footer,
-// .dx-datagrid-pager,
-// .dx-datagrid-rowsview,
-// .dx-datagrid-header-panel {
-//     border-color: #ff0000 !important;  /* Change this color to your desired color */
-// }
-
-// /* Ensure borders are visible */
-// .dx-datagrid {
-//     border-width: 1px !important;
-//     border-style: solid !important;
-// }
-// .dx-datagrid-rowsview .dx-row > td {
-//     border-width: 1px !important;
-//     border-style: solid !important;
-// }
-
-// #my-id {
-//   .dx-datagrid-headers{
-//     border:1px solid rgba(247, 0, 0, ) !important ;
-//   }
-// }
-
-// .dx-datagrid-headers{
-//   border:1px solid rgba(247, 0, 0, ) !important ;
-// }
-// .dx-datagrid-headers{
-//   border:1px solid rgba(247, 0, 0, ) !important ;
-// }
-// .dx-datagrid-headers{
-//   border:1px solid red !important ;
-// }
-
-/* Increase specificity and ensure !important is applied correctly */
-// .dx-datagrid-headers {
-//   border: 1px solid var(--header-border-color) !important;
-// }
-
-// /* Additional fixes to ensure border visibility */
-//  .dx-datagrid-headers.dx-widget {
-//   border: 1px solid var(--header-border-color) !important;
-// }
-
-// /* Override any potential conflicting styles */
-//  .dx-datagrid-headers:not(.dx-state-focused) {
-//   border: 1px solid var(--header-border-color) !important;
-// }
-
-// /* Ensure border shows on all sides */
-//  .dx-datagrid-headers {
-//   border-width: 1px !important;
-//   border-style: solid !important;
-//   border-color: var(--header-border-color) !important;
-// }
-
-// /* Additional styling for header cells if needed */
-//  .dx-datagrid-headers .dx-header-row > td {
-//   border: 1px solid var(--header-border-color) !important;
-// }
-
-// header top
-
-// /* Target all borders in the grid */
-// .dx-datagrid {
-//   border: 1px solid red !important;
-// }
-
-// /* Headers */
-// .dx-datagrid-headers {
-//   border: 1px solid red !important;
-// }
-
-// /* Header cells */
-// .dx-datagrid-headers .dx-header-row > td {
-//   border: 1px solid red !important;
-// }
-
-// /* Row cells */
-// .dx-datagrid-rowsview .dx-row > td {
-//   border: 1px solid red !important;
-// }
-
-// /* Row bottom borders */
-// .dx-datagrid-rowsview .dx-row {
-//   border-bottom: 1px solid red !important;
-// }
-
-// /* Content area borders */
-// .dx-datagrid-content {
-//   border: 1px solid red !important;
-// }
-
-// /* Row view borders */
-// .dx-datagrid-rowsview {
-//   border: 1px test solid red !important;
-// }
-
-// /* Selected row borders */
-// .dx-datagrid-rowsview .dx-selection > td {
-//   border: 1px solid red !important;
-// }
-
-// /* Column lines */
-// .dx-datagrid-borders > .dx-datagrid-headers,
-// .dx-datagrid-borders > .dx-datagrid-rowsview,
-// .dx-datagrid-borders > .dx-datagrid-total-footer {
-//   border-left: 1px solid red !important;
-//   border-right: 1px solid red !important;
-// }
-
-// /* Footer borders if present */
-// .dx-datagrid-total-footer {
-//   border: 1px solid red !important;
-// }
-
-// /* Ensure cell borders are visible */
-// .dx-datagrid-rowsview .dx-row > td {
-//   border-bottom: 1px solid red !important;
-//   border-right: 1px solid red !important;
-// }
-
-// /* Ensure first column border */
-// .dx-datagrid-rowsview .dx-row > td:first-child {
-//   border-left: 1px solid red !important;
-// }
+    // Table Header Stylin
+// this selection 
+.dx-datagrid-rowsview .dx-row.dx-selection td,
+.dx-datagrid-rowsview .dx-row.dx-selection:hover td {
+  background-color: $dark-grid-selection !important;
+  color: $dark-text !important; /* Text color for selected rows */
+}
 
     // edit
     .dx-datagrid-headers {
@@ -490,6 +374,89 @@
     }
 
    
+  }
+
+  .dark {
+
+    // $dark-label: #e1e0e0;
+    // // $dark-text: #e1e0e0;
+    // $dark-text: #E0E0E0;
+    // $dark-bg: #1e1e1f;
+    // // $dark-bg-header: #404344bf;
+    // $dark-bg-header: #383a3b;
+    // $dark-hover-text: #000000;
+    // $dark-border: #f2f4f538;
+    // $dark-bg-card: #202223;
+    // $dark-hover-bg: #343536;
+    // $dark-combo-dd: #373737;
+    // $dark-grid-hover: #000000;
+
+     .dx-treelist-container {
+      background-color: $dark-bg !important; /* Light blue background */
+    }
+    
+    /* Optional: Change the header background color */
+     .dx-treelist-headers {
+      background-color: $dark-bg-header !important;
+      color: $dark-text !important;
+    }
+    
+    /* Optional: Change the row background color on hover */
+     .dx-treelist-rowsview .dx-row {
+      background-color: $dark-bg-card !important;
+      color: $dark-text !important;
+    }
+    /* Optional: Change the row background color on hover */
+     .dx-treelist-rowsview .dx-row:hover {
+      background-color: $dark-hover-bg !important;
+      color: $dark-hover-text !important;
+    }
+    
+    
+    /* Selection Background Color */
+     .dx-treelist-rowsview .dx-selection,
+     .dx-treelist-rowsview .dx-selection.dx-row:hover {
+      /* background-color: #000000 !important; Light blue for selected rows */
+    }
+    
+    /* Change the selection background color */
+     .dx-treelist-rowsview .dx-selection,
+     .dx-treelist-rowsview .dx-selection.dx-row:hover {
+      /* background-color: #000000 !important; Light blue for selected rows */
+    }
+    
+    /* Change the selection background color */
+     .dx-treelist-rowsview .dx-row.dx-selection,
+     .dx-treelist-rowsview .dx-row.dx-selection:hover {
+      /* background-color: #000000 !important; */
+    }
+    
+    /* Target individual cells in the selected row */
+     .dx-treelist-rowsview .dx-row.dx-selection td,
+     .dx-treelist-rowsview .dx-row.dx-selection:hover td {
+      background-color: $dark-bg-header !important;
+      color: $dark-hover-text !important; /* Text color for selected rows */
+    }
+    // test
+    
+    .dx-treelist-headers .dx-treelist-table .dx-header-row {
+      border: 1px solid $dark-border !important;
+    }
+    .dx-treelist-headers .dx-treelist-table .dx-row > td {
+      border: 1px solid $dark-border !important ;
+    }
+    
+    
+    .dx-treelist .dx-column-lines>td {
+      /* border-left: 1px solid #e80000 !important; */
+      border-right: 1px solid $dark-border !important;
+    }
+    
+    .dx-treelist .dx-row-lines>td {
+      border-bottom: 1px solid $dark-border !important;
+    }
+    
+    
   }
   
   .custom-data-grid {

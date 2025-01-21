@@ -32,19 +32,158 @@ const TrialBalance = () => {
       // cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
-      dataField: "particulars",
-      caption: t("particulars"),
+      dataField: "accGroupName",
+      caption: t("acc_group_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text:cellInfo.value,
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : '',
+              size: 10,
+              style: cellElement.data.isGroup == true ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : ''}`}>
+            {cellElement.data.accGroupName}
+          </span>)
+        }
+      }
+    },
+    {
+      dataField: "ledgerName",
+      caption: t("account_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span style={{ color: cellElement.data.isGroup == true ? 'rgb(25, 84, 166)' : cellElement.data.particulars == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.particulars == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
-          {
-            cellElement.data.isGroup !== true && cellElement.data.particulars !== "TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="particulars"></DrillDownCellTemplate>) : (<>{cellElement.data.particulars}</>)
-          }
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: (cellElement.data.isGroup==false ? "   " : "") + (cellInfo.value ?? ""),
+            bold: cellElement.data.isGroup == true ? true : false,
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' :cellElement.data.ledgerName == "TOTAL" ?'#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } :cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }: '',
+              size: 10,
+              style: cellElement.data.isGroup == true ||cellElement.data.ledgerName === "TOTAL"? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true||cellElement.data.ledgerName === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span style={{ color: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : 'pl-4'}`}>
+            {
+              cellElement.data.isGroup !== true && cellElement.data.ledgerName !== "TOTAL" ? (<DrillDownCellTemplate data={cellElement} field="ledgerName"></DrillDownCellTemplate>) : (<>{cellElement.data.ledgerName}</>)
+            }
+          </span>)
+        }
+      }
+    },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 250,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null||balance==""
+              ? ""
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+        }
+      }
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 250,
+      showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null||balance==""
+              ? ""
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
+              size: 10,
+              style: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true || cellElement.data.ledgerName === "TOTAL" ? true : false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "groupNameInArabic",
@@ -62,9 +201,9 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: (cellElement.data.isGroup ? "   " : "") + (cellInfo.value ?? ""),
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
+            text: cellInfo.value,
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
             font: {
               ...exportCell.font,
@@ -76,7 +215,7 @@ const TrialBalance = () => {
           };
         }
         else {
-          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : ''}`}>
             {cellElement.data.groupNameInArabic}
           </span>)
         }
@@ -99,10 +238,10 @@ const TrialBalance = () => {
               : getFormattedValue(balance)
           return {
             ...exportCell,
-            text: (cellElement.data.isGroup ? "   " : "") + (cellInfo.value ?? ""),
+            text: (cellElement.data.isGroup==false ? "   " : "") + (cellInfo.value ?? ""),
             bold: cellElement.data.isGroup == true ? true : false,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.isGroup == true ? '#2E8B57' : '',
             font: {
               ...exportCell.font,
@@ -114,86 +253,8 @@ const TrialBalance = () => {
           };
         }
         else {
-          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : ''}`}>
+          return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : 'pl-4'}`}>
             {cellElement.data.ledgerNameInArabic}
-          </span>)
-        }
-      }
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 250,
-      showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.debit;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : getFormattedValue(parseFloat(balance))
-          return {
-            ...exportCell,
-            text: value,
-            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
-              size: 10,
-              style: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
-            },
-          };
-        }
-        else {
-          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.debit)) : getFormattedValue(parseFloat(cellElement.data.debit))}`}
-          </span>)
-        }
-      }
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 250,
-      showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.credit;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : getFormattedValue(parseFloat(balance))
-          return {
-            ...exportCell,
-            text: value,
-            bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } : cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
-              size: 10,
-              style: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.isGroup == true || cellElement.data.particulars === "TOTAL" ? true : false,
-            },
-          };
-        }
-        else {
-          return (<span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.credit)) : getFormattedValue(parseFloat(cellElement.data.credit))}`}
           </span>)
         }
       }
@@ -201,16 +262,43 @@ const TrialBalance = () => {
     {
       dataField: "isGroup",
       caption: t("is_group"),
-      dataType: "boolean",
+      dataType: "string",
       allowSearch: true,
       visible: false,
       allowFiltering: true,
       width: 150,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-[#2E8B57]' : cellElement.data.particulars == "TOTAL" ? 'pl-4 font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.isGroup}
-        </span>
-      ),
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: cellInfo.value ==true?'Y':'N',
+            bold: cellElement.data.isGroup == true ? true : false,
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.isGroup == true ? '#2E8B57' :cellElement.data.ledgerName == "TOTAL" ?'#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.isGroup == true ? { argb: 'FF2E8B57' } :cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }: '',
+              size: 10,
+              style: cellElement.data.isGroup == true ||cellElement.data.ledgerName === "TOTAL"? 'bold' : 'normal',
+              bold: cellElement.data.isGroup == true||cellElement.data.ledgerName === "TOTAL" ? true : false,
+            },
+          };   
+        }
+        else {
+          return (<span style={{ color: cellElement.data.isGroup == true ? '#2E8B57' : cellElement.data.ledgerName == "TOTAL" ? 'rgb(220,20,60)' : '' }} className={`${cellElement.data.isGroup == true ? 'font-bold' : cellElement.data.ledgerName == "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {
+              cellElement.data.isGroup?'Y':'N'
+            }
+          </span>)
+        }
+      }
     },
   ];
   return (
@@ -250,10 +338,10 @@ const TrialBalance = () => {
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "mw-100",
-                    drillDownCells: "particulars",
+                    drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     origin: "trialBalance",
-                    enableFn: (data: any) => data.isGroup == true || data.particulars == "TOTAL" ? false : true
+                    enableFn: (data: any) => data.isGroup == true || data.ledgerName == "TOTAL" ? false : true
                   }}
                   postData={filter}
                 ></ErpDevGrid>

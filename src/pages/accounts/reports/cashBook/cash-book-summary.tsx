@@ -50,18 +50,20 @@ const CashBookSummary = () => {
             font: {
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
-               color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             }
-            
+
           } : undefined;
         }
         else {
           return cellElement.data.ledgerName === "TOTAL" ? (
             <span
               className={`${cellElement.data.ledgerName === "TOTAL"
-                  ? "font-bold text-[#DC143C]"
-                  : ""
+                ? "font-bold text-[#DC143C]"
+                : ""
                 }`}
             >
               {cellElement.data.ledgerName}
@@ -102,8 +104,10 @@ const CashBookSummary = () => {
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
@@ -141,9 +145,11 @@ const CashBookSummary = () => {
             alignment: "right",
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               ...exportCell.font,
               size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
@@ -180,8 +186,10 @@ const CashBookSummary = () => {
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }

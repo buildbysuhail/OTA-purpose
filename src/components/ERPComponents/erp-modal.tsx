@@ -23,6 +23,7 @@ type ERPModalProps = {
   closeModal: (reload: boolean) => void;
   content?: any;
   rowData?: any;
+  isTransactionScreen?: boolean;
   postData?: any;
   contentProps?: any;
   origin?: string;
@@ -54,6 +55,7 @@ const ERPModal = React.memo(
     content,
     rowData,
     postData,
+    isTransactionScreen,
     contentProps,
     footer,
     origin,
@@ -71,7 +73,7 @@ const ERPModal = React.memo(
     isFullHeight = false,
     isRemoveSomething = false,
     width = "w-full",
-    minHeight=300,
+    minHeight = 300,
     closeOnSubmit = true,
     disableOutsideClickClose = true,
     customPosition = false,
@@ -80,13 +82,11 @@ const ERPModal = React.memo(
     const [isMaximized, setIsMaximized] = useState(false);
     const [modalHeight, setModalHeight] = useState(0);
 
-
     useEffect(() => {
       const updateModalHeight = () => {
-        
         const headerHeight = 60;
-        const footerHeight = (!isForm && isButton) ? 70 : 0; 
-        const padding = 40; 
+        const footerHeight = !isForm && isButton ? 70 : 0;
+        const padding = 40;
         // ? heightToAdjustOnWindowsInModal
         // : wh - heightToAdjustOnWindows < 300
         // ? 300
@@ -94,7 +94,11 @@ const ERPModal = React.memo(
 
         const height = isMaximized
           ? window.innerHeight - 50
-          : window.innerHeight < minHeight ? window.innerHeight: window.innerHeight - 200 < minHeight ? minHeight : window.innerHeight -200;
+          : window.innerHeight < minHeight
+          ? window.innerHeight
+          : window.innerHeight - 200 < minHeight
+          ? minHeight
+          : window.innerHeight - 200;
 
         setModalHeight(height);
       };
@@ -159,7 +163,9 @@ const ERPModal = React.memo(
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             as="div"
-            className={`relative erp-modal ${customPosition ? "" : "fixed inset-0"}`}
+            className={`relative erp-modal ${
+              customPosition ? "" : "fixed inset-0"
+            }`}
             onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
@@ -202,7 +208,7 @@ const ERPModal = React.memo(
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
                     } ${isRemoveSomething ? "px-0" : "px-5"}`}
                     style={{
-                      height: isMaximized ? `${modalHeight}px` : 'auto',
+                      height: isMaximized ? `${modalHeight}px` : "auto",
                       maxHeight: `${modalHeight}px`,
                       // minHeight: minHeight ? `${minHeight}px` : '',
                       display: "flex",
@@ -214,8 +220,9 @@ const ERPModal = React.memo(
                       className="place-items-center sticky min-w-full top-0 z-10 flex justify-between text-lg dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 bg-white"
                       style={{ flex: "0 0 auto" }} // Prevent header from shrinking
                     >
-                  
-                      <div className="flex items-center dark:text-dark-text">{title}</div>
+                      <div className="flex items-center dark:text-dark-text">
+                        {title}
+                      </div>
                       {closeButton === "Button" && (
                         <div className="max-w-[200px] inline-block">
                           <ERPButton
@@ -251,36 +258,51 @@ const ERPModal = React.memo(
                       </div>
                     </DialogTitle>
 
-                    <div className="flex flex-col justify-between flex-grow "
-                    >
-      
-                     <ERPScrollArea
+                    <div className="flex flex-col justify-between flex-grow ">
+                      <ERPScrollArea
                         maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
                         className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto "
-                      
                       >
+                        
                         {content &&
-                          cloneElement(content, {
-                            contentProps: contentProps ? contentProps : {},
-                            isMaximized: isMaximized,
-                            modalHeight: modalHeight, // Pass isMaximized to the content
-                            rowData: rowData,
-                            origin: origin,
-                            postData: mergeObjectsRemovingIdenticalKeys(content.postData, postData),
-                          })}
+                          cloneElement(
+                            content,
+                            isTransactionScreen
+                              ? {
+                                  ...contentProps,
+                                  isMaximized: isMaximized,
+                                  modalHeight: modalHeight, // Pass isMaximized to the content
+                                  rowData: rowData,
+                                  origin: origin,
+                                  postData: mergeObjectsRemovingIdenticalKeys(
+                                    content.postData,
+                                    postData
+                                  ),
+                                }
+                              : {
+                                  contentProps: contentProps
+                                    ? contentProps
+                                    : {},
+                                  isMaximized: isMaximized,
+                                  modalHeight: modalHeight, // Pass isMaximized to the content
+                                  rowData: rowData,
+                                  origin: origin,
+                                  postData: mergeObjectsRemovingIdenticalKeys(
+                                    content.postData,
+                                    postData
+                                  ),
+                                }
+                          )}
                       </ERPScrollArea>
 
-                      {footer && (
-                      <div className="">
-                        {footer}
-                      </div> 
-                   
-                      )}
+                      {footer && <div className="">{footer}</div>}
                     </div>
 
                     {!isForm && isButton && (
-                      <div className="border-t py-2 flex gap-2 justify-end"
-                      style={{ flex: "0 0 auto" }}>
+                      <div
+                        className="border-t py-2 flex gap-2 justify-end"
+                        style={{ flex: "0 0 auto" }}
+                      >
                         <div className="max-w-[200px]">
                           <ERPButton
                             className="w-full"

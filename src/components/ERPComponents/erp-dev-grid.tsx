@@ -68,6 +68,7 @@ import type { Column as ColumnType } from "devextreme/ui/data_grid";
 import { RootState } from "../../redux/store";
 import { UserModel } from "../../redux/slices/user-session/reducer";
 import { arabicFontBase64 } from "./arabicFont";
+import { transactionRoutes } from "../common/content/transaction-routes";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -216,6 +217,7 @@ interface ERPDevGridProps {
     drillDownDisplayCells?: string;
     bodyProps?: string;
     isMaximized?: boolean;
+    isTransactionScreen?: boolean;
     enableFilter?: boolean;
     origin?: string;
     enableFn?: (data: any) => boolean;
@@ -229,6 +231,7 @@ interface ERPDevGridProps {
     drillDownDisplayCells?: string;
     bodyProps?: string;
     enableFilter?: boolean;
+    isTransactionScreen?: boolean;
     origin?: string;
     enableFn?: (data: any) => boolean;
   };
@@ -480,6 +483,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         content: null,
         drillDownCells: "",
         bodyProps: "",
+        isTransactionScreen: false,
       },
       childPopupPropsDynamic,
       originDynamic,
@@ -985,16 +989,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
               });
             }
-           
+
             // Customize the export to PDF to use rendered values
             const customizeCell = (options: any) => {
-              
               if (options.gridCell.rowType != "data") return;
               // const column = e.component.columnOption(options.gridCell.column.dataField);
               const column = gridCols.find(
                 (x) => x.dataField == options.gridCell.column.dataField
               );
-             
+
               if (column && column.cellRender) {
                 const renderResult = column.cellRender(
                   { data: options.gridCell.data },
@@ -1107,24 +1110,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               horizontal: "left",
             };
             currentRow += 2;
-            
+
             // Customize the export to Excel to use rendered values
-            
+
             const customizeCell = (options: any) => {
-              
               if (options.gridCell.rowType != "data") return;
               // const column = e.component.columnOption(options.gridCell.column.dataField);
               const column = gridCols.find(
                 (x) => x.dataField == options.gridCell.column.dataField
               );
-             
-              if (column ) {
-                const renderResult = column.cellRender ? column.cellRender(
-                  { data: options.gridCell.data },
-                  options.gridCell,
-                  filter,
-                  options.excelCell.style
-                ): undefined;
+
+              if (column) {
+                const renderResult = column.cellRender
+                  ? column.cellRender(
+                      { data: options.gridCell.data },
+                      options.gridCell,
+                      filter,
+                      options.excelCell.style
+                    )
+                  : undefined;
 
                 let isDefined = renderResult !== undefined;
                 let isObject = typeof renderResult === "object";
@@ -1133,17 +1137,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 if (isDefined && isObject && !isValidReactElement) {
                   options.excelCell.style = {
                     ...renderResult,
-                    alignment:renderResult.alignmentExcel
+                    alignment: renderResult.alignmentExcel,
                   };
                   options.excelCell.value = renderResult.text;
-                
                 } else {
                   options.excelCell = options.excelCell; // Retain the original value
                 }
                 // options.excelCell.font = { color: { argb: 'FF0000FF' }, underline: true };
               }
             };
-
 
             exportDataGridToExcel({
               component: e.component,
@@ -1164,6 +1166,39 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       },
       [onExporting, gridId, preferences, gridCols, header]
     );
+    const handleInvoke = (row: any) => {
+      // Extracting data from row
+      const transactionMasterID = parseInt(row.id || "0", 10);
+      const c = row.form || "";
+      const vchr = c.split(" ");
+      const vchtype = vchr[0];
+      const voucherform = c.substring(c.indexOf(" ") + 1);
+
+      const vchNoRaw = row.vchNo || "";
+      const vno = vchNoRaw.split(" ");
+      const prefix = vno[0];
+      const vchno = vno[1] || "0";
+      const financialYearID = parseInt(row.financialYearID || "0", 10);
+      const tr = transactionRoutes.find((x) => x.voucherType == vchtype);
+      // Validate and invoke logic
+      if (parseInt(vchno, 10) > 0) {
+        const transactionData = {
+          transactionMasterID,
+          formType: voucherform,
+          voucherPrefix:prefix,
+          voucherType: vchtype,
+          financialYearID,
+          voucherNo: parseInt(vchno, 10),
+          formCode: tr?.formCode,
+          transactionType: tr?.transactionType,
+          title: tr?.title,
+          drCr: tr?.drCr,
+        };
+        return transactionData;
+      } else {
+        return null;
+      }
+    };
     const handleCellClick = useCallback(
       (event: any) => {
         const dynamicProps = childPopupPropsDynamic
@@ -1190,16 +1225,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn != undefined &&
               dynamicProps?.enableFn(event.data)))
         ) {
-          const updatedBodyProps: { [key: string]: any } = {};
-
+          let updatedBodyProps: any = {};
+debugger;
           // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-          dynamicProps?.bodyProps != undefined
-            ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-                const trimmedProp = prop.trim();
-                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-              })
-            : {};
-          
+          if (!dynamicProps.isTransactionScreen) {
+            dynamicProps?.bodyProps != undefined
+              ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
+                  const trimmedProp = prop.trim();
+                  updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+                })
+              : {};
+          } else {
+            updatedBodyProps = handleInvoke(event.data);
+          }
           const pdata =
             postDataDynamic != undefined
               ? postDataDynamic(_drillDownCell)
@@ -1208,8 +1246,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             pdata,
             updatedBodyProps
           );
-          // Update bodyProps state
-
           onCellClick && onCellClick(event);
           setBodyProps(updatedBodyProps);
           setIsChildOpen({
@@ -1432,13 +1468,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 </Item>
               )}
               {GridPreferenceChoosertrue && (
-              <Item>
-                <GridPreferenceChooser
-                  columns={columns}
-                  gridId={gridId}
-                  onApplyPreferences={onApplyPreferences}
-                />
-              </Item>
+                <Item>
+                  <GridPreferenceChooser
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                  />
+                </Item>
               )}
 
               {!hideGridAddButton && (
@@ -1511,7 +1547,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                           );
                         }
                         if (column.cellRender) {
-                          return column.cellRender(cellElement, cellInfo, filter);
+                          return column.cellRender(
+                            cellElement,
+                            cellInfo,
+                            filter
+                          );
                         }
                       }
                 }
@@ -1580,6 +1620,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 : childPopupProps?.content
             }
             rowData={isChildOpen.data}
+            isTransactionScreen={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).isTransactionScreen
+                : childPopupProps?.isTransactionScreen
+            }
             contentProps={isChildOpen.props}
           />
         )}

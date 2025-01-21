@@ -10,8 +10,8 @@ const useFormComponent = () => {
  const dispatch = useDispatch();
     
   const bankAccountParams = useMemo(() => ({
-    ledgerID: formState.row.ledgerId || 0,
-  }), [formState.row.ledgerId]);
+    ledgerID: formState.row.ledgerID || 0,
+  }), [formState.row.ledgerID]);
 
   const bankAccountField = useMemo(() => ({
     valueKey: "id",
@@ -29,7 +29,7 @@ const useFormComponent = () => {
   const handleLedgerChange = useCallback((e: any) => {
     dispatch(accFormStateRowHandleFieldChange({
       fields: { 
-        ledgerId: e.value, 
+        ledgerID: e.value, 
         ledgerName: e.label,
       },
     }));

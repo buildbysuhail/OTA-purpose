@@ -57,7 +57,7 @@ const accTransactionSlice = createSlice({
       (state.transaction.master.accTransactionMasterID = 0),
         (state.row.ledgerCode = "");
       state.transaction.attachments = [];
-      state.row.ledgerId = 0;
+      state.row.ledgerID = 0;
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailId = 0;
       state.previousNarration = "";
@@ -483,7 +483,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
-                ledgerId: detail.ledgerId,
+                ledgerID: detail.ledgerID,
               };
   
             case 'CR':
@@ -497,7 +497,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.relatedLedgerCode,
                 ledgerName: detail.particulars,
-                ledgerId: detail.relatedLedgerID,
+                ledgerID: detail.relatedLedgerID,
               };
   
             case 'JV':
@@ -507,14 +507,14 @@ const accTransactionSlice = createSlice({
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
                   ledgerName: detail.particulars,
-                  ledgerId: detail.relatedLedgerID,
+                  ledgerID: detail.relatedLedgerID,
                 };
               } else {
                 return {
                   ...baseDetail,
                   ledgerCode: detail.ledgerCode,
                   ledgerName: detail.ledgerName,
-                  ledgerId: detail.ledgerId,
+                  ledgerID: detail.ledgerID,
                 };
               }
   
@@ -524,7 +524,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
-                ledgerId: detail.ledgerId,
+                ledgerID: detail.ledgerID,
                 drCr: Number(detail.debit) > 0 ? 'Debit' : 'Credit',
               };
   
@@ -565,7 +565,7 @@ const accTransactionSlice = createSlice({
             case 'CQR':
             case 'PV':
             case 'PBR':
-              state.masterAccountID = firstDetail.ledgerId;
+              state.masterAccountID = firstDetail.ledgerID;
               break;
   
             case 'JV':
@@ -573,7 +573,7 @@ const accTransactionSlice = createSlice({
                 payload.master.drCr === 'Dr' ? 'Debit' : 'Credit';
               state.masterAccountID =
                 payload.master.drCr === 'Dr'
-                  ? firstDetail.ledgerId
+                  ? firstDetail.ledgerID
                   : firstDetail.relatedLedgerID;
               break;
           }

@@ -328,19 +328,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       );
 
       try {
-        const ledgerId = formState.row.ledgerId;
+        const ledgerID = formState.row.ledgerID;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
 
-        if (!isNullOrUndefinedOrZero(ledgerId)) {
+        if (!isNullOrUndefinedOrZero(ledgerID)) {
           if (
             billwiseMandatory &&
             ((!isRowEdit && !formState.row.billwiseDetails) ||
               (isRowEdit && !formState.formElements.amount.disabled))
           ) {
             const IsBillwiseTransAdjustmentExists = await api.getAsync(
-              `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerId}&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=0`
+              `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=0`
             );
             dispatch(
               accFormStateHandleFieldChange({
@@ -353,9 +353,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
-            api.getAsync(`${Urls.get_ledger_balance}${ledgerId ?? 0}`),
+            api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`),
             api.getAsync(
-              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerId}&DrCr=${formState.transaction.master.drCr}`
+              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
             ),
           ]);
           dispatch(
@@ -421,7 +421,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
 
     loadLedgerData();
-  }, [formState.row.ledgerId]);
+  }, [formState.row.ledgerID]);
   useEffect(() => {
     if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
       dispatch(
@@ -910,7 +910,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       cellRender: (cellElement: any) => <div>{cellElement.value}</div>,
     },
     {
-      dataField: "ledgerId",
+      dataField: "ledgerID",
       caption: t("ledger_ID"),
       width: 100,
     },
@@ -1991,8 +1991,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       id="project"
                       label={t(formState.formElements.projectId.label)}
                       options={
-                        formState.row.ledgerId != undefined &&
-                        formState.row.ledgerId != 0
+                        formState.row.ledgerID != undefined &&
+                        formState.row.ledgerID != 0
                           ? undefined
                           : []
                       }
@@ -2001,7 +2001,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
                         labelKey: "name",
                         getListUrl: Urls.data_projects_by_ledgerid,
-                        params: `LedgerID=${formState.row.ledgerId}`,
+                        params: `LedgerID=${formState.row.ledgerID}`,
                       }}
                       onSelectItem={(e) =>
                         dispatch(
@@ -2061,40 +2061,40 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              {/* {formState?.row.ledgerId?.toString()} */}
-              {formState.formElements.ledgerId.visible && (
+              {/* {formState?.row.ledgerID?.toString()} */}
+              {formState.formElements.ledgerID.visible && (
                 <>
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig.inputBoxStyle}
                     ref={ledgerIdRef}
-                    id="ledgerId"
+                    id="ledgerID"
                     className="w-full"
-                    label={t(formState.formElements.ledgerId.label)}
+                    label={t(formState.formElements.ledgerID.label)}
                     data={formState.row}
-                    reload={formState.formElements.ledgerId.reload}
+                    reload={formState.formElements.ledgerID.reload}
                     changeReload={(reload: boolean) =>
                       dispatch(
                         updateFormElement({
-                          fields: { ledgerId: { reload: false } },
+                          fields: { ledgerID: { reload: false } },
                         })
                       )
                     }
                     onSelectItem={(e) => {
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { ledgerId: e.value, ledgerName: e.label },
+                          fields: { ledgerID: e.value, ledgerName: e.label },
                         })
                       );
-                      handleFieldKeyDown("ledgerId", e.value);
+                      handleFieldKeyDown("ledgerID", e.value);
                     }}
                     field={{
-                      id: "ledgerId",
+                      id: "ledgerID",
                       valueKey: "id",
                       labelKey: "name",
                       getListUrl: Urls.data_acc_ledgers,
                     }}
                     disabled={
-                      formState.formElements.ledgerId?.disabled ||
+                      formState.formElements.ledgerID?.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
                     labelInfo={
@@ -2342,7 +2342,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       className="min-w-[180px] max-w-[200px]"
                       label={t(formState.formElements.bankName.label)}
                       value={formState.row.bankName}
-                      options={formState.row.ledgerId ? undefined : []}
+                      options={formState.row.ledgerID ? undefined : []}
                       field={bankAccountField}
                       onChange={handleBankNameChange}
                       disabled={

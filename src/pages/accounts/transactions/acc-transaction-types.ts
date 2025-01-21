@@ -52,7 +52,7 @@ export interface AccTransactionValidationsData {
 //   remarks: { visible: true, disabled: false, label: "Remarks" },
 //   commonNarration: { visible: true, disabled: false, label: "Notes" },
 //   ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
-//   ledgerId: { visible: true, disabled: false, label: "Ledger" },
+//   ledgerID: { visible: true, disabled: false, label: "Ledger" },
 //   amount: { visible: true, disabled: false, label: "Amount" },
 //   drCr: { visible: false, disabled: false, label: "Amount" },
 //   narration: { visible: true, disabled: false, label: "Narration" },
@@ -253,7 +253,7 @@ export interface AccTransactionRow {
   slNo?: number;
   accTransactionMasterID: number;
   accTransactionDetailId: number;
-  ledgerId: number;
+  ledgerID: number;
   ledgerCode: string;
   ledgerName: string;
   accGroupName: string;
@@ -300,7 +300,7 @@ export interface AccTransactionRow {
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
   accTransactionDetailId: 0,
-  ledgerId: 0,
+  ledgerID: 0,
   relatedLedgerID: 0,
   amount: undefined,
   discount: 0,
@@ -511,7 +511,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   remarks: { visible: true, disabled: false, label: "employee" },
   commonNarration: { visible: true, disabled: false, label: "notes" },
   ledgerCode: { visible: true, disabled: false, label: "ledger_code" },
-  ledgerId: { visible: true, disabled: false, label: "ledger" },
+  ledgerID: { visible: true, disabled: false, label: "ledger" },
   amount: { visible: true, disabled: false, label: "amount" },
   drCr: { visible: false, disabled: false, label: "dr/cr" },
   narration: { visible: true, disabled: false, label: "narration" },

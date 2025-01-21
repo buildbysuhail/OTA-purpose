@@ -368,11 +368,11 @@ export const useAccTransaction = (
         // Check if debit amount is greater than 0
         if (Number(row.debit) > 0) {
           if (formState.firstDebitLedgerID === 0) {
-            formState.firstDebitLedgerID = Number(row.ledgerId || 0);
+            formState.firstDebitLedgerID = Number(row.ledgerID || 0);
           }
         } else {
           if (formState.firstCreditLedgerID === 0) {
-            formState.firstCreditLedgerID = Number(row.ledgerId || 0);
+            formState.firstCreditLedgerID = Number(row.ledgerID || 0);
           }
         }
 
@@ -402,7 +402,7 @@ export const useAccTransaction = (
     ) {
       const isExist =
         formState.transaction?.details?.find(
-          (x) => x.ledgerId == formState.masterAccountID
+          (x) => x.ledgerID == formState.masterAccountID
         ) != undefined;
       if (isExist) {
         ERPAlert.show({
@@ -444,7 +444,7 @@ export const useAccTransaction = (
 
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
-      if (isNullOrUndefinedOrZero(element.ledgerId)) {
+      if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
       element.adjAmount = 0;
@@ -459,7 +459,7 @@ export const useAccTransaction = (
         case "CN":
         case "SV":
         case "CQP":
-          element.ledgerId = element.ledgerId; // Preserve original ledgerId
+          element.ledgerID = element.ledgerID; // Preserve original ledgerID
           element.relatedLedgerID = formState.masterAccountID;
           break;
 
@@ -468,16 +468,16 @@ export const useAccTransaction = (
         case "DN":
         case "PV":
         case "CQR":
-          element.relatedLedgerID = element.ledgerId;
-          element.ledgerId = formState.masterAccountID;
+          element.relatedLedgerID = element.ledgerID;
+          element.ledgerID = formState.masterAccountID;
           break;
 
         case "JV":
           if (formState.row.drCr === "Dr") {
-            element.relatedLedgerID = element.ledgerId;
-            element.ledgerId = formState.masterAccountID;
+            element.relatedLedgerID = element.ledgerID;
+            element.ledgerID = formState.masterAccountID;
           } else {
-            element.ledgerId = element.ledgerId; // Preserve original ledgerId
+            element.ledgerID = element.ledgerID; // Preserve original ledgerID
             element.relatedLedgerID = formState.masterAccountID;
           }
           break;
@@ -486,22 +486,22 @@ export const useAccTransaction = (
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
-            element.ledgerId = element.ledgerId; // Keep original ledger ID
+            element.ledgerID = element.ledgerID; // Keep original ledger ID
           } else {
-            element.ledgerId =
+            element.ledgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
-            element.relatedLedgerID = element.ledgerId;
+            element.relatedLedgerID = element.ledgerID;
           }
           break;
 
         case "MJV":
           if (formState.row.drCr === "Dr") {
-            element.ledgerId = element.ledgerId; // Keep original ledger ID
+            element.ledgerID = element.ledgerID; // Keep original ledger ID
             element.relatedLedgerID = formState.firstCreditLedgerID;
             element.debit = Number(formState.row.amount);
             element.credit = 0;
           } else {
-            element.ledgerId = element.ledgerId; // Keep original ledger ID
+            element.ledgerID = element.ledgerID; // Keep original ledger ID
             element.relatedLedgerID = formState.firstCreditLedgerID;
             element.credit = Number(formState.row.amount);
             element.debit = 0;
@@ -547,7 +547,7 @@ export const useAccTransaction = (
     let row = { ...formState.row };
     dispatch(
       accFormStateRowHandleFieldChange({
-        fields: { ledgerCode: "2768", ledgerId: 3107 },
+        fields: { ledgerCode: "2768", ledgerID: 3107 },
       })
     );
 
@@ -596,7 +596,7 @@ export const useAccTransaction = (
           ledgerCode: { disabled: true },
           remarks: { disabled: true },
           commonNarration: { disabled: true },
-          ledgerId: { disabled: true },
+          ledgerID: { disabled: true },
           btnBillWise: { disabled: true },
           referenceDate: { disabled: true },
           masterAccount: { disabled: true },
@@ -761,7 +761,7 @@ export const useAccTransaction = (
   const addOrEditRow = async (billwiseDetails?: string) => {
     debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
-      if (!isNullOrUndefinedOrZero(formState.row.ledgerId)) {
+      if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         if (formState.isRowEdit != true) {
           if (billwiseDetails == null && formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
@@ -802,7 +802,7 @@ export const useAccTransaction = (
         }
 
       }
-        if (isNullOrUndefinedOrZero(formState.row.ledgerId)) {
+        if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
           ERPAlert.show({
             icon: "warning",
             title: "Please select Ledger..!",
@@ -995,7 +995,7 @@ export const useAccTransaction = (
             amount: row.amountFC?.toString() || row.amount?.toString() || "0",
             discount: row.discount?.toString() || "0",
             ledgerCode: row.ledgerCode || "",
-            ledgerId: row.ledgerId || 0,
+            ledgerID: row.ledgerID || 0,
             narration: row.narration || "",
             nameOnCheque: row.nameOnCheque || "",
             bankName: row.bankName || "",
@@ -1067,7 +1067,7 @@ export const useAccTransaction = (
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);
-    } else if (field === "ledgerId") {
+    } else if (field === "ledgerID") {
       handleLedgerIdKeyDown(key);
     } else if (field === "bankDate") {
       if (isEnterKey(key)) {
@@ -1125,7 +1125,7 @@ export const useAccTransaction = (
           dispatch(
             accFormStateRowHandleFieldChange({
               fields: {
-                ledgerId: response,
+                ledgerID: response,
               },
             })
           );
@@ -1381,13 +1381,13 @@ export const useAccTransaction = (
 
   const handleRefresh = async () => {
     try {
-      const currentLedgerId = formState.row.ledgerId;
+      const currentLedgerId = formState.row.ledgerID;
       const currentMasterAccountId = formState.masterAccountID;
 
       dispatch(
         updateFormElement({
           fields: {
-            ledgerId: { reload: true },
+            ledgerID: { reload: true },
             masterAccount: { reload: true },
           },
         })
@@ -1463,10 +1463,10 @@ export const useAccTransaction = (
       // Handle error appropriately
     }
   };
-  const isLedgerBillwiseApplicable = async (ledgerId: number) => {
+  const isLedgerBillwiseApplicable = async (ledgerID: number) => {
     try {
       return await api.getAsync(
-        `${Urls.is_ledger_billwise_applicable}${ledgerId}`
+        `${Urls.is_ledger_billwise_applicable}${ledgerID}`
       );
     } catch (error) {
       return false;
@@ -1484,7 +1484,7 @@ export const useAccTransaction = (
     );
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-        formState.row.ledgerId
+        formState.row.ledgerID
       }&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${
         formState.row.accTransactionDetailId ?? 0
       }`
@@ -1500,12 +1500,12 @@ export const useAccTransaction = (
   };
   const showBillwise = async () => {
     debugger;
-    if (formState.row.ledgerId && formState.ledgerData != null) {
+    if (formState.row.ledgerID && formState.ledgerData != null) {
       const isBillwiseApplicable = await isLedgerBillwiseApplicable(
         formState.transaction.master.voucherType === "CN" ||
           formState.transaction.master.voucherType === "DN"
           ? formState.masterAccountID
-          : formState.row.ledgerId
+          : formState.row.ledgerID
       );
       if (isBillwiseApplicable == true) {
         dispatch(
@@ -1560,7 +1560,7 @@ export const useAccTransaction = (
 
         if (
           formState.showbillwise === true &&
-          formState.row.ledgerId &&
+          formState.row.ledgerID &&
           formState.ledgerData != null
         ) {
           openBillwise();

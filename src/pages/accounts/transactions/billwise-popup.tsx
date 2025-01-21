@@ -220,7 +220,7 @@ const BillwiseComponent = ({
   //
   //     try {
   //       // Replace with your actual API call
-  //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
+  //       const response = await api.getAsync(`/billwise/transactions?ledgerID=${formState.row.ledgerID}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
   //       const data = response;
 
   //       let lastIndex = 0;

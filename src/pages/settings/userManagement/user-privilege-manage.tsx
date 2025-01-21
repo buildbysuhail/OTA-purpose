@@ -464,7 +464,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
 
   return (
     <div className="w-full flex justify-start ">
-      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 ">
+      <div className="basis-[45%] dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-r  border-slate-400 ">
         <TreeList
           height={treeHeight.windows}
           ref={gridRef}

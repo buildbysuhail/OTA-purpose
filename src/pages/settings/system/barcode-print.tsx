@@ -355,15 +355,15 @@ const BarcodePrint: React.FC = () => {
   }, []);
   return (
     <Fragment>
-      <div className="p-0 bg-gray-100 min-h-screen">
+      <div className="p-0 dark:!bg-dark-bg bg-gray-100 min-h-screen">
         {/* BarcodePrint Form */}
-        <div className="p-2 bg-white border border-gray-300 rounded-md shadow-md mx-auto my-0">
+        <div className="p-2 dark:!bg-dark-bg bg-white border dark:!border-dark-border border-gray-300 rounded-md shadow-md mx-auto my-0">
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
             {/* Top Section */}
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-3 gap-4">
               {/* First div - Barcode Inputs */}
-              <div className="flex-1 border p-4 rounded-lg">
+              <div className="flex-1 border p-4 dark:!border-dark-border rounded-lg">
                 <div className="space-y-2">
                   <div className="flex space-x-2">
                     <ERPInput
@@ -447,7 +447,7 @@ const BarcodePrint: React.FC = () => {
               </div>
 
               {/* Parent div containing Radio Options and VPrefix/Dates */}
-              <div className="flex-1 border p-4 rounded-lg">
+              <div className="flex-1 border p-4 dark:!border-dark-border rounded-lg">
                 <div className="xxl:flex-row xl:flex-col lg:flex-col md:flex-col sm:flex-col gap-4">
                   <div className="space-y-4">
                     <div className="grid grid-cols-3 xxl:grid-cols-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-2">
@@ -559,7 +559,7 @@ const BarcodePrint: React.FC = () => {
                 </div>
               </div>
               {/* Fourth div - Notes Grid */}
-              <div className="flex-1 border p-4 rounded-lg">
+              <div className="flex-1 border p-4 dark:!border-dark-border rounded-lg">
                 <div className="grid xxl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-2">
                   <ERPDateInput
                     customSize="sm"
@@ -619,7 +619,7 @@ const BarcodePrint: React.FC = () => {
               </div>
               {/* Label Design and Row Inputs */}
               {/* Left side */}
-              <div className="border p-4 rounded-lg ">
+              <div className="border p-4 dark:!border-dark-border rounded-lg ">
                 <div className="grid xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
                   <ERPDataCombobox
                     id="labelDesign"

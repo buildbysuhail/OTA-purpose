@@ -210,10 +210,15 @@ const ResetDbManage: React.FC = React.memo(() => {
           {/* deme text area */}
 
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
+            <label className="block text-sm font-medium dark:!text-dark-text text-gray-700 p-3 sticky top-0 dark:!bg-dark-bg-header bg-white z-10">
              {t("transaction_forms")}
             </label>
-            <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[550px] h-auto max-h-[260px]">
+            <div className="overflow-x-auto border dark:!border-dark-border border-gray-400  rounded w-auto max-w-[550px] h-auto max-h-[260px] dark-scrollbar"
+            // style={{
+            //   scrollbarWidth: 'thin', // For Firefox
+            //   scrollbarColor: '#888 #f1f1f1', // For Firefox
+            // }}
+            >
               <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
                 {allTransactions && allTransactions.length > 0 && (
                   <TransactionFormsCheckboxes
@@ -228,7 +233,7 @@ const ResetDbManage: React.FC = React.memo(() => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
             <div className="flex flex-col gap-6">
               {/* Account Master */}
-              <div className="border border-gray-200 rounded p-2">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("acc_masters")}
                 </label>
@@ -308,7 +313,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               </div>
 
               {/* HR Master */}
-              <div className="border border-gray-200 rounded p-2">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("hr_master")}
                 </label>
@@ -362,7 +367,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
               </div>
             </div>
-            <div className="border border-gray-200 rounded p-2">
+            <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("inventory_master")}
               </label>

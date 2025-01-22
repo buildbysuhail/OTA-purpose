@@ -1,7 +1,7 @@
 import html2canvas from "html2canvas";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   TableCellsIcon,
   BarsArrowUpIcon,
@@ -133,6 +133,7 @@ const InvoiceDesigner = () => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const currentBranch = useCurrentBranch();
   const userSession =  useSelector((state: RootState) => (state.UserSession));  
   const [loading, setLoading] = useState(false);
@@ -145,10 +146,12 @@ const InvoiceDesigner = () => {
 
   const [designTabs, setDesignTabs] = useState(designSections);
   const [currentSection, setSection] = useState(designSections[0]);
+
   const templateData = useSelector(
     (state: any) => state?.Template
   ) as TemplateReducerState;
 
+  const { templateKind } = location.state || {}; 
   const templateGroup = searchParams?.get("template_group")! as
     | VoucherType
     | string;
@@ -236,9 +239,7 @@ const InvoiceDesigner = () => {
     if (id !== "new") getPDFTemplateData();
   }, []);
 
-  const templateWrap = useSelector(
-    (state: any) => state?.Template
-  ) as TemplateReducerState;
+
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
@@ -578,27 +579,32 @@ const InvoiceDesigner = () => {
       )}
       {["CP", "CR"].includes(templateGroup) && (
         <>
-        {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}
+          {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}
           <PDFViewer
             className="pdf-viewer"
             width="100%"
             height="auto"
-            style={{ maxHeight: `${maxHeight}px`, margin: "20px" }}
+            style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}
           >
-            <AccountTransactionsTemplate
-              template={templateData.activeTemplate}
-              data={DummyVoucherData}
-              currentBranch={currentBranch}
-            />
-            {/* <AccountTransactionsVoucher
-              template={templateData.activeTemplate}
-              data={DummyVoucherData}
-              currentBranch={currentBranch}
-            /> */}
-            
+            {templateKind == "premium" ? (
+              <AccountTransactionsTemplate
+                template={templateData.activeTemplate}
+                data={DummyVoucherData}
+                currentBranch={currentBranch}
+              />
+            ) : templateKind== "standard" ? (
+              <AccountTransactionsVoucher
+                template={templateData.activeTemplate}
+                data={DummyVoucherData}
+                currentBranch={currentBranch}
+              />
+            ) : (
+              <div>No template selected</div> // Fallback message
+            )}
           </PDFViewer>
         </>
       )}
+
       {["SI", "SR"].includes(templateGroup) && (
         <InvoicePreview
           templateGroupId={templateGroup}

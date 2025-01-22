@@ -38,6 +38,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{
         userSession: UserModel;
+        applicationSettings: ApplicationSettingsType;
         softwareDate: string;
         defaultCostCenterID: number;
         counterwiseCashLedgerId: number;
@@ -47,6 +48,7 @@ const accTransactionSlice = createSlice({
     ) => {
       const {
         userSession,
+        applicationSettings,
         softwareDate,
         defaultCostCenterID,
         counterwiseCashLedgerId,
@@ -57,7 +59,7 @@ const accTransactionSlice = createSlice({
       (state.transaction.master.accTransactionMasterID = 0),
         (state.row.ledgerCode = "");
       state.transaction.attachments = [];
-      state.row.ledgerId = 0;
+      state.row.ledgerID = 0;
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailId = 0;
       state.previousNarration = "";
@@ -73,7 +75,7 @@ const accTransactionSlice = createSlice({
       state.row.amount = 0.0;
       state.row.discount = 0.0;
       // state.masterAccountID = 0;
-      state.row.costCentreId = defaultCostCenterID;
+      state.row.costCentreID = defaultCostCenterID;
       state.transaction.details = [];
       state.isEdit = false;
       state.isRowEdit = false;
@@ -88,22 +90,25 @@ const accTransactionSlice = createSlice({
           state.masterAccountID = counterwiseCashLedgerId;
         }
       }
-      state.transaction.master.employeeId =
+      state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
-      state.transaction.master.costCentreId =
+      state.transaction.master.costCentreID =
         state.userConfig.presetCostenterId > 0
           ? state.userConfig.presetCostenterId
           : 0;
       {
         if (userSession.employeeId > 0)
-          state.transaction.master.employeeId = userSession.employeeId;
+          state.transaction.master.employeeID = userSession.employeeId;
       }
       if (state.userConfig.presetCostenterId > 0) {
-        state.row.costCentreId = state.userConfig.presetCostenterId;
-        state.formElements.costCentreId.disabled = true;
+        state.row.costCentreID = state.userConfig.presetCostenterId;
+        state.formElements.costCentreID.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS") {
-          state.row.costCentreId = 0;
+          state.row.costCentreID = 0;
+        }
+        else {
+          state.row.costCentreID = applicationSettings?.accountsSettings?.defaultCostCenterID
         }
       }
     },
@@ -483,7 +488,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
-                ledgerId: detail.ledgerId,
+                ledgerID: detail.ledgerID,
               };
   
             case 'CR':
@@ -497,7 +502,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.relatedLedgerCode,
                 ledgerName: detail.particulars,
-                ledgerId: detail.relatedLedgerID,
+                ledgerID: detail.relatedLedgerID,
               };
   
             case 'JV':
@@ -507,14 +512,14 @@ const accTransactionSlice = createSlice({
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
                   ledgerName: detail.particulars,
-                  ledgerId: detail.relatedLedgerID,
+                  ledgerID: detail.relatedLedgerID,
                 };
               } else {
                 return {
                   ...baseDetail,
                   ledgerCode: detail.ledgerCode,
                   ledgerName: detail.ledgerName,
-                  ledgerId: detail.ledgerId,
+                  ledgerID: detail.ledgerID,
                 };
               }
   
@@ -524,7 +529,7 @@ const accTransactionSlice = createSlice({
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
-                ledgerId: detail.ledgerId,
+                ledgerID: detail.ledgerID,
                 drCr: Number(detail.debit) > 0 ? 'Debit' : 'Credit',
               };
   
@@ -565,7 +570,7 @@ const accTransactionSlice = createSlice({
             case 'CQR':
             case 'PV':
             case 'PBR':
-              state.masterAccountID = firstDetail.ledgerId;
+              state.masterAccountID = firstDetail.ledgerID;
               break;
   
             case 'JV':
@@ -573,7 +578,7 @@ const accTransactionSlice = createSlice({
                 payload.master.drCr === 'Dr' ? 'Debit' : 'Credit';
               state.masterAccountID =
                 payload.master.drCr === 'Dr'
-                  ? firstDetail.ledgerId
+                  ? firstDetail.ledgerID
                   : firstDetail.relatedLedgerID;
               break;
           }

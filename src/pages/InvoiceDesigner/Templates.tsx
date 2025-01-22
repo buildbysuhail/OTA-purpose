@@ -135,7 +135,7 @@ const Templates = ({ }) => {
   return (
     <>
       {showTemplateListing ? (
-        <div className="flex h-full overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
+        <div className="flex h-full overflow-hidden text-black dark:text-white dark:!bg-dark-bg bg-white dark:bg-body_dark ">
           <ERPScrollArea className={`overflow-y-auto overflow-x-hidden md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-full `}
           maxHeight={`${maxSidePage-60}px`}>
             <h1 className=" font-medium text-xl p-5 mb-5">{t("templates")}</h1>
@@ -150,7 +150,7 @@ const Templates = ({ }) => {
                     setSearchParams({ template_group: template?.template_group_id });
                     setTemplateGroup(template?.template_group_id);
                   }}
-                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? " bg-gray-100" : "hover:bg-gray-50"
+                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? "dark:bg-dark-text dark:text-dark-hover-text  bg-gray-100" : "hover:bg-gray-50 dark:hover:bg-dark-hover-bg"
                     }`}
                 >
                   <div>
@@ -227,7 +227,7 @@ const Templates = ({ }) => {
                                 className="w-3 text-accent cursor-pointer"
                                 // onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
                                 // onClick={() => navigate(`/label-designer/${temp?.id}`)}
-                                onClick={() => templateGroup == "barcode" ?  navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`)}
+                                onClick={() => templateGroup == "barcode" ?  navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`,{ state: { templateKind: temp?.templateKind }})}
                               />
                             </div>
                             <div>
@@ -240,7 +240,7 @@ const Templates = ({ }) => {
                   );
                 })}
 
-                <div className=" relative hover:ring-0 hover:shadow-xl cursor-pointer  md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded">
+                <div className=" relative hover:ring-0 hover:shadow-xl cursor-pointer  md:w-[140px] lg:w-[200px] aspect-[2.3/3] border dark:!border-dark-border border-accent/30 rounded">
                   <div className="px-2 py-3 flex flex-col justify-center h-full">
                     <h1 className="font-medium text-xs capitalize break-words truncate ">{t("new_template")}</h1>
                     <h2 className="text-[11px] capitalize break-words py-2">
@@ -325,12 +325,6 @@ interface ChooseTemplateProps {
   tempData: any;
 }
 
-// interface ChooseTemplateProps {
-//   templateGroup: TemplateGroupTypes;
-//   setShowTemplateListing: any;
-//   tempData: any;
-// }
-
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -357,12 +351,12 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       templateName: "",
       propertiesState: propertiesState
     }
-    dispatch(
-      setTemplate(
-        _template
-      ));
-       templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
-    //  navigate(`/label-designer/new?template_group=${templateGroup}`) 
+    dispatch(  setTemplate( _template ));
+      // Create the state object with templateKind (if it exists)
+      const state = template?.templateKind ? { templateKind: template.templateKind } : {};
+       templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : 
+       navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
+   
   };
 
   return (
@@ -373,8 +367,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           X
         </div>
       </div>
-      <div className="my-3 text-sm border-b">
-        <div className="border-b-2 border-accent max-w-min">{t("all")}</div>
+      <div className="my-3 text-sm ">
+        <div className="border-accent max-w-min">{t("all")}</div>
       </div>
       <div>
         <div className="py-2">{t("standard")}</div>
@@ -400,7 +394,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
                   </div>
                   <div className="flex flex-col justify-center items-center text-center py-3">
-                    <h1 className="font-medium text-xs capitalize break-words">{template?.propertiesState?.templateName}</h1>
+                    <h1 className="font-medium text-xs capitalize break-words">{template?.templateKind}</h1>
                     <div
                       className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
                       onClick={() => handleChooseTemplate(template)}

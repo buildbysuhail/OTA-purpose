@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { accFormStateHandleFieldChange } from './reducer';
 import { handleResponse } from '../../../utilities/HandleResponse';
 import { TemplateState } from '../../InvoiceDesigner/Designer/interfaces';
+import { customJsonParse } from '../../../utilities/jsonConverter';
 
 interface TemplatesProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>; 
@@ -21,12 +22,25 @@ export default function TemplatesView ({ setIsOpen}: TemplatesProps) {
 const { t } = useTranslation("system");
 const navigate = useNavigate();
 const dispatch = useDispatch();
-const templates = useAppSelector((x:RootState) =>x.AccTransaction?.templates)
+const templates = useAppSelector((x:RootState) =>x?.AccTransaction?.templates)
 
 const loadTemplateId = useCallback(async(template: TemplateState) => {
     try {
-    const response = await api.getAsync(`${Urls.templates}${template.id}`);
-        dispatch(accFormStateHandleFieldChange({fields:{template:response}}));
+    const res = await api.getAsync(`${Urls.templates}${template.id}`);
+    let cc: TemplateState = customJsonParse(res.content)
+    
+    const propertiesState = {
+      ...cc.propertiesState,
+      templateName: "Untitled Template " + (length + 1)
+    };
+    const _template = {
+      ...cc,
+      id: null,
+      templateName: "",
+      propertiesState: propertiesState
+    }
+
+        dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
         setIsOpen(false)
     }
     catch (error) {

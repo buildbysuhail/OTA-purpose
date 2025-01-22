@@ -49,6 +49,12 @@ export interface TemplateState {
   footerState?: FooterState;
   barcodeState?: BarcodeState;
   isCurrent?: boolean;
+  templateType?: string;
+  templateKind?: string;
+  templateGroup?: string;
+  templateName?: string;
+  templateDescription?: string;
+      
 }
 export interface HistoryComponent {
   id: number;

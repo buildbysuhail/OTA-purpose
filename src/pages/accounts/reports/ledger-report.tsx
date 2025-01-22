@@ -78,6 +78,14 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return  (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        ) 
+      },
     },
     {
       dataField: "refNo",
@@ -334,7 +342,7 @@ const LedgerReport = () => {
                     isTransactionScreen:true,
                     width: "mw-100",
                     drillDownCells: "vchNo,",
-                    enableFn: (data: any) => data?.ledgerID != 0
+                    // enableFn: (data: any) => data?.ledgerID != 0
                   }}
                 ></ErpDevGrid>
               </div>

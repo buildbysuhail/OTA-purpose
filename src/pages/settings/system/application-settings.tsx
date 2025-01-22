@@ -85,7 +85,7 @@ const ApplicationSettings: React.FC = () => {
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
       {/* Sidebar */}
-      <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 bg-[#fafafa]">
+      <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 dark:!bg-dark-bg bg-[#fafafa]">
         <h1 className="font-medium text-xl p-5 mb-5">{t("application_settings")}</h1>
         {/* <div className="w-full relative px-4">
           <div className="flex h-10">
@@ -135,7 +135,7 @@ const ApplicationSettings: React.FC = () => {
 
       {/* Main content */}
       <div className="flex-1 ms-[200px] lg:ms-[300px]">
-        <div className="bg-[#fafafa] shadow-md overflow-hidden">
+        <div className="dark:!bg-dark-bg bg-[#fafafa] shadow-md overflow-hidden">
           {renderSettingsForm()}
         </div>
       </div>

@@ -41,7 +41,7 @@ const CustomOrderStatus = () => {
   };
 
   return (
-    <div className="h-auto mx-auto bg-[#ffffff] rounded-lg border shadow-sm">
+    <div className="h-auto mx-auto dark:bg-dark-bg bg-[#ffffff] rounded-lg border shadow-sm">
       {/* Header Section */}
       <div className="p-6 border-b">
         <div className="bg-[#eff6ff] border border-[#bfdbfe] rounded-lg p-6">

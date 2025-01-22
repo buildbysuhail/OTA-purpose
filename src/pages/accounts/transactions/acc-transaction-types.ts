@@ -52,7 +52,7 @@ export interface AccTransactionValidationsData {
 //   remarks: { visible: true, disabled: false, label: "Remarks" },
 //   commonNarration: { visible: true, disabled: false, label: "Notes" },
 //   ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
-//   ledgerId: { visible: true, disabled: false, label: "Ledger" },
+//   ledgerID: { visible: true, disabled: false, label: "Ledger" },
 //   amount: { visible: true, disabled: false, label: "Amount" },
 //   drCr: { visible: false, disabled: false, label: "Amount" },
 //   narration: { visible: true, disabled: false, label: "Narration" },
@@ -65,7 +65,7 @@ export interface AccTransactionValidationsData {
 //   nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
 //   bankName: { visible: true, disabled: false, label: "Bank Name" },
 //   projectId: { visible: false, disabled: false, label: "Project" },
-//   costCentreId: { visible: false, disabled: false, label: "Cost Centre" },
+//   costCentreID: { visible: false, disabled: false, label: "Cost Centre" },
 //   lblGroupName: { visible: true, disabled: false, label: "Group Name" },
 //   printOnSave: { visible: true, disabled: false, label: "Print on Save" },
 //   printPreview: { visible: true, disabled: false, label: "Print Preview" },
@@ -99,9 +99,9 @@ export interface FormElementState {
 export interface AccTransactionMaster {
   accTransactionMasterID: number;
   departmentId: number;
-  costCentreId: number;
+  costCentreID: number;
   billwiseMasterId: number;
-  employeeId: number;
+  employeeID: number;
   invTransactionId: number;
   transactionDate: string;
   totalAmount?: number;
@@ -150,9 +150,9 @@ export interface AccTransactionMaster {
 export interface AccTransactionMasterValidations {
   accTransactionMasterID: string;
   departmentId: string;
-  costCentreId: string;
+  costCentreID: string;
   billwiseMasterId: string;
-  employeeId: string;
+  employeeID: string;
   invTransactionId: string;
   transactionDate: string;
 
@@ -199,9 +199,9 @@ export interface AccTransactionMasterValidations {
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
     accTransactionMasterID: "",
     departmentId: "",
-    costCentreId: "",
+    costCentreID: "",
     billwiseMasterId: "",
-    employeeId: "",
+    employeeID: "",
     invTransactionId: "",
     transactionDate: "",
 
@@ -253,7 +253,7 @@ export interface AccTransactionRow {
   slNo?: number;
   accTransactionMasterID: number;
   accTransactionDetailId: number;
-  ledgerId: number;
+  ledgerID: number;
   ledgerCode: string;
   ledgerName: string;
   accGroupName: string;
@@ -286,7 +286,7 @@ export interface AccTransactionRow {
   billwiseData: BillwiseData[];
   billwiseDetails: string;
   branchId: number;
-  costCentreId: number;
+  costCentreID: number;
   costCentreName: number;
   projectId: number;
   projectName: string;
@@ -300,7 +300,7 @@ export interface AccTransactionRow {
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
   accTransactionDetailId: 0,
-  ledgerId: 0,
+  ledgerID: 0,
   relatedLedgerID: 0,
   amount: undefined,
   discount: 0,
@@ -323,7 +323,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   checkBouncedDate: new Date(2000, 0, 1).toISOString(), // January 1, 2000
   billwiseData: [],
   branchId: 0,
-  costCentreId: 0,
+  costCentreID: 0,
   projectId: 0,
 
   bankName: "",
@@ -346,9 +346,9 @@ export const accTransactionInitialData: AccTransactionData = {
   master: {
     accTransactionMasterID: 0,
     departmentId: 0,
-    costCentreId: 0,
+    costCentreID: 0,
     billwiseMasterId: 0,
-    employeeId: 0,
+    employeeID: 0,
     invTransactionId: 0,
     transactionDate: new Date().toISOString(),
     totalAmount: 0.00,
@@ -511,7 +511,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   remarks: { visible: true, disabled: false, label: "employee" },
   commonNarration: { visible: true, disabled: false, label: "notes" },
   ledgerCode: { visible: true, disabled: false, label: "ledger_code" },
-  ledgerId: { visible: true, disabled: false, label: "ledger" },
+  ledgerID: { visible: true, disabled: false, label: "ledger" },
   amount: { visible: true, disabled: false, label: "amount" },
   drCr: { visible: false, disabled: false, label: "dr/cr" },
   narration: { visible: true, disabled: false, label: "narration" },
@@ -524,7 +524,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
   bankName: { visible: true, disabled: false, label: "bank_name" },
   projectId: { visible: false, disabled: false, label: "project" },
-  costCentreId: { visible: false, disabled: false, label: "cost_centre" },
+  costCentreID: { visible: false, disabled: false, label: "cost_centre" },
   lblGroupName: { visible: true, disabled: false, label: "group_name" },
   printOnSave: { visible: true, disabled: false, label: "print_on_save" },
   printPreview: { visible: true, disabled: false, label: "print_preview" },

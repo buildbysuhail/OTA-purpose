@@ -40,7 +40,8 @@ interface BillwiseProps {
   onSave?: (
     billwiseDetails: string,
     totalAmount: number,
-    vrNumbers: string
+    vrNumbers: string,
+    fromAutoPost: boolean
   ) => void;
   onAutoPost?: (
     billwiseDetails: string,
@@ -91,7 +92,7 @@ const BillwiseComponent = ({
 
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows = wh - 350;
+    let gridHeightWindows =isMaximized? wh - 300 : wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
   useEffect(() => {
@@ -220,7 +221,7 @@ const BillwiseComponent = ({
   //
   //     try {
   //       // Replace with your actual API call
-  //       const response = await api.getAsync(`/billwise/transactions?ledgerId=${formState.row.ledgerId}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
+  //       const response = await api.getAsync(`/billwise/transactions?ledgerID=${formState.row.ledgerID}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
   //       const data = response;
 
   //       let lastIndex = 0;
@@ -277,9 +278,9 @@ const BillwiseComponent = ({
     setStore(updatedData);
   };
 
-  const getBillwiseString = () => {
+  const getBillwiseString = (updatedBills?: BillwiseData[] | undefined) => {
     let vrNumbers = "";
-    const billwiseString = store
+    const billwiseString = (updatedBills??store)
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
         if (row.billwiseAmount > 0) {
@@ -303,8 +304,8 @@ const BillwiseComponent = ({
 
   //   onSave(billwiseString, totalAdjusted, vrNumbers);
   // };
-  const getTotalAmountAdjusted = () => {
-    return store.reduce(
+  const getTotalAmountAdjusted = (updatedBills?: BillwiseData[] | undefined) => {
+    return (updatedBills??store).reduce(
       (sum: number, item: any) => sum + (item.billwiseAmount || 0),
       0
     );
@@ -367,7 +368,7 @@ const BillwiseComponent = ({
 
     onClose && onClose();
   };
-  const handleSave = () => {
+  const handleSave = (updatedBills?: BillwiseData[] | undefined, fromAutoPost?: boolean | false) => {
     try {
       debugger;
       // if (dataGridRef.current?.instance) {
@@ -376,8 +377,8 @@ const BillwiseComponent = ({
 
       if (isFromAccTrans) {
         if (!validate()) return;
-        const billwiseString = getBillwiseString();
-        const amtAdjusted = getTotalAmountAdjusted();
+        const billwiseString = getBillwiseString(updatedBills);
+        const amtAdjusted = getTotalAmountAdjusted(updatedBills);
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {
@@ -422,6 +423,7 @@ const BillwiseComponent = ({
               ? amtAdjusted
               : formState.row.amount ?? 0,
             billwiseString.vrNumbers,
+            fromAutoPost??false
           );
         closeBillwise();
       } else if (isFromCashTender) {
@@ -534,10 +536,8 @@ const BillwiseComponent = ({
       title: "Auto Post",
       text: "Do you want to save",
       icon: "info",
-      onConfirm: (result: boolean) => {
-        if (result) {
-          handleSave();
-        }
+      onConfirm: () => {
+        handleSave(updatedBills, true);
       },
     });
   };
@@ -550,8 +550,9 @@ const BillwiseComponent = ({
     <Card
       className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
       elevation={0}
+      sx={{ p: 0 ,m:0}}
     >
-      <CardContent>
+      <CardContent sx={{ p: 0 }}>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
@@ -925,7 +926,7 @@ const BillwiseComponent = ({
               onClick={handleAutoPost}
               className="mr-2"
             />
-            <ERPButton title="Save" onClick={handleSave} className="mr-2" />
+            <ERPButton title="Save" onClick={() => handleSave()} className="mr-2" />
             <ERPButton title="Cancel" />
           </div>
         </div>

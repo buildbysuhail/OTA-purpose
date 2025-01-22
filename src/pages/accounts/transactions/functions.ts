@@ -26,7 +26,7 @@ export const clearEntryControl = (
 ): AccTransactionFormState => {
   state.row.ledgerCode = "";
   state.row.accGroupName = "";
-  state.row.ledgerId = 0;
+  state.row.ledgerID = 0;
   state.row.amount = 0;
   state.row.discount = 0;
   state.row.bankName = "";
@@ -39,7 +39,8 @@ export const clearEntryControl = (
       : "";
   state.row.chequeNumber = "";
   state.isRowEdit = false;
-  state.row.costCentreId =
+  state.formElements.costCentreID.disabled = state.userConfig.presetCostenterId > 0;
+  state.row.costCentreID =
     state.userConfig.presetCostenterId > 0
       ? state.userConfig.presetCostenterId
       : defaultCostCenterID;

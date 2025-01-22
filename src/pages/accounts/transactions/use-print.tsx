@@ -31,7 +31,7 @@ const {hasRight} = useUserRights();
       try {
         voucher = voucher == undefined ? formState : voucher
         for (const detail of formState.transaction.details) {
-          if (isNullOrUndefinedOrEmpty(detail.ledgerId)) break;
+          if (isNullOrUndefinedOrEmpty(detail.ledgerID)) break;
   
           const nameOnCheque = detail.nameOnCheque || detail.ledgerName;
           

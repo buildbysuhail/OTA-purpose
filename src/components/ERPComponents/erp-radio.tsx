@@ -165,7 +165,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
               _customSize == "sm" ? "-translate-y-[2.5px]" : "-translate-y-[1px]"
             } 
               capitalize rtl:text-right select-none
-              ${disabled ? "text-gray-400" : "text-gray-900"}`}
+              ${disabled ? "text-gray-400" : "dark:!text-dark-text text-gray-900"}`}
           >
             {iLabel}
             {required && <span className="text-red-500">*</span>}

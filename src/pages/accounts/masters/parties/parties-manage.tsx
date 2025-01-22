@@ -167,7 +167,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     return (
       <div className="w-full bordered-tab relative">
         <div className="mt-[1.5rem]">
-          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
+          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center ps-1">
             <ERPInput
               {...getFieldProps("partyCode")}
               label={t("code")}
@@ -492,16 +492,16 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         </div>
 
         <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label="Address" value="address" />
-          <Tab label="Bank" value="bank" />
-          <Tab label="Details" value="details" />
-          <Tab label="More" value="more" />
+          <Tab label="Address" value="address" className="dark:text-dark-text" />
+          <Tab label="Bank" value="bank" className="dark:text-dark-text"  />
+          <Tab label="Details" value="details" className="dark:text-dark-text" />
+          <Tab label="More" value="more" className="dark:text-dark-text" />
           {/* <Tab label="Project/Job" value="project_job" /> */}
           {userSession.countryId != Countries.India &&
             applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
-            true && <Tab label="Other" value="other_details" />}
+            true && <Tab label="Other" value="other_details" className="dark:text-dark-text" />}
         </Tabs>
-        <div className="pt-4">
+        <div className="pt-4 mb-[71px]">
           {activeTab === "address" && (
             <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
               <ERPInput
@@ -614,8 +614,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           {activeTab === "bank" && (
             <>
               <div className="flex align-center gap-3">
-                <div className="w-1/2 border rounded-lg p-4">
-                  <h6 className="border-b pb-2 mb-2 text-sm font-bold">
+                <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
+                  <h6 className=" dark:!border-dark-border border-b pb-2 mb-2 text-sm font-bold">
                     Bank 1
                   </h6>
                   <div className="flex flex-col gap-3">
@@ -649,8 +649,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </div>
                 </div>
 
-                <div className="w-1/2 border rounded-lg p-4">
-                  <h6 className="border-b pb-2 mb-2 text-sm font-bold">
+                <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
+                  <h6 className="dark:!border-dark-border  border-b pb-2 mb-2 text-sm font-bold">
                     Bank 2
                   </h6>
                   <div className="flex flex-col gap-3">
@@ -688,7 +688,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           )}
           {activeTab === "details" && (
             <div className="grid grid-cols-2 gap-6 mt-5">
-              <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
+              <div className="grid grid-cols-2 gap-6 p-5 dark:!border-dark-border border rounded-lg">
                 <ERPDateInput
                   {...getFieldProps("startDate")}
                   label={t("start_date")}
@@ -706,11 +706,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }
                 />
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="fileInput" className="text-sm text-gray-700">
+                  <label htmlFor="fileInput" className="text-sm  dark:text-dark-text  text-gray-700">
                     {t("document_1")}
                   </label>
 
-                  <div className="flex gap-2 ">
+                  <div className="flex flex-col gap-2 ">
                     <input
                       type="file"
                       id="document1Key"
@@ -739,7 +739,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
 
                   {formState?.data?.document1Key && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700">
+                      <span className="text-sm dark:text-dark-text  text-gray-700">
                         Uploaded file:
                       </span>
                       <a
@@ -757,7 +757,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="fileInput" className="text-sm text-gray-700">
+                  <label htmlFor="fileInput" className="text-sm dark:text-dark-text  text-gray-700">
                     {t("document_2")}
                   </label>
                   <input
@@ -776,7 +776,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   />
                  {formState?.data?.document2Key && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700">
+                      <span className="text-sm dark:text-dark-text  text-gray-700">
                         Uploaded file:
                       </span>
                       <a
@@ -910,7 +910,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         />
       </div>
     </div> */}
-              <div className="border p-4 rounded-lg mt-5">
+              <div className="border dark:!border-dark-border p-4 rounded-lg mt-5">
                 <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
                   <ERPDataCombobox
                     {...getFieldProps("priceCategoryID")}

@@ -1385,7 +1385,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   backgroundColor: bgColor,
                 }}
                 className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
-                displayValue={() => inputValue || initial?.label || ""}
+                displayValue={() => initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -1417,7 +1417,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 autoFocus={autoFocus}
                 title={initial?.label || ""}
                 value={
-                  isOpen ? inputValue : truncateValue(initial?.label || "")
+                   truncateValue(initial?.label || "")
                 }
                 readOnly={disabled}
                 disabled={disabled}
@@ -1451,7 +1451,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
               >
                 {enableClearOption &&
-                  (initial || inputValue) &&
+                  (initial) &&
                   !noXMarkIcon && (
                     <button
                       type="button"

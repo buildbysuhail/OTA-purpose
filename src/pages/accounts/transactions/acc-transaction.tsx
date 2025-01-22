@@ -1691,7 +1691,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       )}
                     </>
                   )}
-                  <div className="grid grid-cols-1 gap-2">
                     {formState.formElements.chequeNumber.visible && (
                       <ERPInput
                         localInputBox={formState?.userConfig.inputBoxStyle}
@@ -1735,7 +1734,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         }}
                       />
                     )}
-                  </div>
                   {formState.formElements.linkEdit.visible == true && (
                     <button className="">
                       <span
@@ -2105,7 +2103,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPCheckbox
                     localInputBox={formState?.userConfig.inputBoxStyle}
                     id="hasDiscount"
-                    className="pt-[10px] pr-[10px]"
                     label={t(formState.formElements.hasDiscount.label)}
                     checked={formState.row.hasDiscount}
                     onChange={(e) =>
@@ -2121,14 +2118,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     }
                   />
                 )}
-              </div>
+              
               {formState.formElements.discount.visible && (
                 <ERPInput
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="discount"
                   type="number"
                   min={0}
-                  label={t(formState.formElements.discount.label)}
+                  className="!mb-[13px]"
+                  label=" "
                   value={formState.row.discount}
                   onChange={(e) =>
                     dispatch(
@@ -2144,6 +2142,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-4">

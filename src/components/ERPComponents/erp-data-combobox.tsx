@@ -1519,11 +1519,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   }}
                 >
                   {loading ? (
-                    <div className="relative cursor-default select-none py-2 px-4 text-gray-700 text-center animate-pulse">
+                    <div className="relative cursor-default select-none py-2 px-4 dark:!text-dark-text text-gray-700 text-center animate-pulse">
                       Loading...
                     </div>
                   ) : filteredItems?.length === 0 ? (
-                    <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                    <div className="relative cursor-default select-none py-2 px-4 dark:!text-dark-text text-gray-700">
                       No data found
                     </div>
                   ) : (

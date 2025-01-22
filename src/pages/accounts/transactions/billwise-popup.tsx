@@ -378,7 +378,7 @@ const BillwiseComponent = ({
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString(updatedBills);
-        const amtAdjusted = getTotalAmountAdjusted(updatedBills);
+        const amtAdjusted = getTotalAmountToSet(updatedBills??[]);
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {

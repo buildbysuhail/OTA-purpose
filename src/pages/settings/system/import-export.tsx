@@ -73,14 +73,14 @@ const ImportExportManage: React.FC = React.memo(() => {
         <div>
           <label
             htmlFor="fileInput"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium dark:!text-dark-text text-gray-700"
           >
             {t("file_path")}
           </label>
           <input
             type="file"
             id="fileInput"
-            className="mt-1 w-full border border-gray-300 p-2 rounded-md"
+            className="mt-1 w-full border dark:!border-dark-border border-gray-300 p-2 rounded-md"
             onChange={handleFileChange}
           />
         </div>

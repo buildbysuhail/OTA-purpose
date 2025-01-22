@@ -312,3 +312,8 @@
   position: relative;
   z-index: 1;
 } */
+
+  .dark .dark-scrollbar {
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #888 #333; /* For Firefox */
+  }

@@ -1428,7 +1428,7 @@ debugger;
                 <Item location="before">
                   <div className="flex  flex-col">
                     <div className={`box-title !text-xs !font-medium`}>
-                      <span className="text-sm">{gridHeader}</span>&nbsp;{""}
+                      <span className="text-sm dark:!text-dark-text">{gridHeader}</span>&nbsp;{""}
                       {header}
                     </div>
                   </div>

@@ -193,7 +193,7 @@ const BackupSettingsForm: React.FC = () => {
           </div>
         </div>
       </form>
-      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
         <ERPButton
           title={t("save_settings")}
           variant="primary"

@@ -375,15 +375,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
             ),
           ]);
-          // dispatch(
-          //   updateFormElement({
-          //     fields: {
-          //       costCentreID: {
-          //         visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
-          //       },
-          //     },
-          //   })
-          // );
+          dispatch(
+            updateFormElement({
+              fields: {
+                costCentreID: {
+                  visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
+                },
+              },
+            })
+          );
 
           dispatch(
             accFormStateRowHandleFieldChange({

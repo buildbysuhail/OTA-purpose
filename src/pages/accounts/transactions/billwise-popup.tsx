@@ -72,6 +72,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
+  const { getFormattedValue } = useNumberFormat()
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
   );
@@ -918,7 +919,7 @@ const BillwiseComponent = ({
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
             <strong className="mr-3">Net Adjustment</strong>
-            <span className="">{netAdjustment}</span>
+            <span className="">{getFormattedValue(netAdjustment)}</span>
           </div>
           <div>
             <ERPButton

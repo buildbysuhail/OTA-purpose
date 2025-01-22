@@ -89,7 +89,7 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
           prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
         />
         <div className="grid-preference-form">
-          <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-3 gap-2 items-center">
+          <div className="header-row dark:!bg-dark-bg-header bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-3 gap-2 items-center">
             <span>{t("group_name")}  </span>
             <span>{t("group_head")} </span>
             <span>{t("arabic_name")} </span>
@@ -109,22 +109,22 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
                   onDragEnd={handleDropping}
                 >
                   <div
-                    className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-3 !items-center pl-4`}
+                    className={`dark:!bg-dark-bg-header bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-3 !items-center pl-4`}
                   >
-                    <label className="items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
                       ⋮⋮
                       <span className="cursor-pointer pl-2">
                         {column?.groupName}
                       </span>
                     </label>
 
-                    <label className="items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
                       <span className="cursor-pointer pl-2">
                         {column?.groupHead}
                       </span>
                     </label>
 
-                    <label className="items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
                       <span className="cursor-pointer pl-2">
                         {column?.arabicName}
                       </span>
@@ -148,7 +148,7 @@ export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = R
   }, [dispatch]);
 
   return (
-    <div className="flex gap-10 justify-between py-3 border-t mt-5">
+    <div className="flex gap-10 justify-between py-3 border-t dark:!border-dark-border mt-0">
       <ERPSubmitButton type="button" variant="primary"  onClick={onSubmit}>
         {t("save")}
       </ERPSubmitButton>

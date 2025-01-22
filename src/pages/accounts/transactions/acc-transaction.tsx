@@ -2376,6 +2376,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
               {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
+                ref={costCenterRef}
                   localInputBox={formState?.userConfig.inputBoxStyle}
                   id="costCentreID"
                   className="min-w-[180px]"
@@ -2847,6 +2848,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     addOrEditRow(billwiseDetails);
                     focusLedgerCode();
                   } else {
+                    console.log('focusCostCenterRef');
+                    
                     focusCostCenterRef();
                   }
                   dispatch(

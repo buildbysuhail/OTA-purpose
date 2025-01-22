@@ -20,11 +20,49 @@ const DailySummaryGlobal = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'font-bold text-[#2E8B57]' : ''}`}>
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.balance;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance
+          return {
+            ...exportCell,
+            text: (cellElement.data.isGroup==true&&cellElement.data.isSubGroup!==true? "   ":"") + (cellInfo.value ?? ""),
+            bold: cellElement.data.isGroup == true ? true : false,
+            // alignment: "right",
+            // alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.date === "TOTAL"
+            ? "#DC143C"
+            : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods"
+            ? "#000000"
+            : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense"
+            ? "#2E8B57"
+            : "",
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.date === "TOTAL"
+  ? { argb: 'FFDC143C' } // Crimson
+  : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods"
+  ? { argb: 'FF000000' } // Black
+  : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense"
+  ? { argb: 'FF2E8B57' } // Green
+  : '',
+              size: 10,
+              style: cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods"|| cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense"? 'bold' : 'normal',
+              bold: cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods"|| cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense"? true : false,
+            },
+          };
+        }
+        else {
+          return ( <span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'font-bold text-[#2E8B57]' : ''}`}>
           {cellElement.data.date}
         </span>
-      ),
+      )
+    }}
+       
     },
     {
       dataField: "party",
@@ -34,6 +72,7 @@ const DailySummaryGlobal = () => {
       allowFiltering: true,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
+
         <span className={`${cellElement.data.party === "Product Name" ? 'font-bold text-[#2E8B57]' : cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" || cellElement.data.party === "INCOME" || cellElement.data.party === "EXPENSE" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : ''}`}>
           {cellElement.data.party}
         </span>

@@ -199,7 +199,7 @@ export const AccountLedgerManage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-2 gap-4 mt-4 ps-1">
         <ERPCheckbox
           {...getFieldProps("isBillwiseApplicable")}
           label={t("bill_wise_applicable")}

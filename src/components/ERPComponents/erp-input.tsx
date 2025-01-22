@@ -627,7 +627,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {prefix && (
               <div
                 onClick={onClickPrefix}
-                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
+                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100`}
                 style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor }}
               >
                 {prefix}

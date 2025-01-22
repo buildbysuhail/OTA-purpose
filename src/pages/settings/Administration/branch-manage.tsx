@@ -261,7 +261,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
           }
         />
       </div>
-      <div className="flex flex-col justify-start items-start p-6 border rounded border-gray-400  border-dotted gap-5 my-5">
+      <div className="flex flex-col justify-start items-start p-6 border rounded dark:!border-dark-border border-gray-400  border-dotted gap-5 my-5 mb-[71px]">
         <div className="flex gap-5">
           <ERPDateInput
             {...getFieldProps("dateFrom")}

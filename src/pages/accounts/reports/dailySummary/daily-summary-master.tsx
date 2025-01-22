@@ -158,9 +158,9 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
               />
               <div className="grid grid-cols-1 gap-3">
                 <Tabs value={activeTab} onChange={handleTabChange}>
-                  <Tab label="Sales Report Summary" value="salesReportSummary" />
-                  <Tab label="Credit Details" value="creditDetails" />
-                  <Tab label="Receipt Details" value="receiptDetails" />
+                  <Tab label="Sales Report Summary" value="salesReportSummary" className="dark:text-dark-text" />
+                  <Tab label="Credit Details" value="creditDetails" className="dark:text-dark-text" />
+                  <Tab label="Receipt Details" value="receiptDetails" className="dark:text-dark-text" />
                 </Tabs>
                 <div className="pt-4">
                   {activeTab === "salesReportSummary" && (

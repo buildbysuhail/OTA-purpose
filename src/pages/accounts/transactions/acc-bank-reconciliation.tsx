@@ -363,7 +363,7 @@ const BankReconciliation = () => {
             gridId="grid_bank_reconciliation"
             hideGridAddButton={true}
             hideDefaultExportButton={true}
-            heightToAdjustOnWindows={500}
+            heightToAdjustOnWindows={1000}
             reload={formState.reload}
             pageSize={40}
           />

@@ -216,7 +216,7 @@ const Templates = ({ }) => {
                           {temp?.isCurrent ? (
                             <div className="ti-btn bg-primary text-white !text-[10px] !px-2 !py-1 rounded ">{t("default")}</div>
                           ) : (
-                            <div className="ti-btn hover:bg-primary bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
+                            <div className="ti-btn hover:bg-primary dark:!border-dark-border dark:!bg-dark-bg bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
                               {t("set_as_default")}
                             </div>
                           )}

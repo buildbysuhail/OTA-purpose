@@ -38,6 +38,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{
         userSession: UserModel;
+        applicationSettings: ApplicationSettingsType;
         softwareDate: string;
         defaultCostCenterID: number;
         counterwiseCashLedgerId: number;
@@ -47,6 +48,7 @@ const accTransactionSlice = createSlice({
     ) => {
       const {
         userSession,
+        applicationSettings,
         softwareDate,
         defaultCostCenterID,
         counterwiseCashLedgerId,
@@ -104,6 +106,9 @@ const accTransactionSlice = createSlice({
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS") {
           state.row.costCentreID = 0;
+        }
+        else {
+          state.row.costCentreID = applicationSettings?.accountsSettings?.defaultCostCenterID
         }
       }
     },

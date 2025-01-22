@@ -390,7 +390,7 @@ const AccountPreview = ({
     <ERPScrollArea 
     className={`overflow-y-auto  h-full max-h-[${maxHeight - 100}px] `}>
       {!templatesInfo?.loading ? (
-        <div className=" relative flex flex-col items-center bg-[#f9f9fb] overflow-auto p-7 print:p-0 h-full w-full">
+        <div className=" relative flex flex-col items-center dark:!bg-dark-bg bg-[#f9f9fb] overflow-auto p-7 print:p-0 h-full w-full">
           <div
             id="accountPreview"
             style={{

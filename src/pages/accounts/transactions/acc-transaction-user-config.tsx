@@ -45,22 +45,7 @@ export const AccTransactionUserConfig = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchUserConfig = async () => {
-      try {
-        
-        // Fetch user config from the server
-        const response = await api.get(Urls.get_acc_user_config);
-        
-        const _userConfig = atob(response);
-        const userConfig: AccUserConfig = customJsonParse(_userConfig);
-
-        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
-      } catch (error) {
-        console.error("Error fetching user config:", error);
-      }
-    };
-
-    fetchUserConfig();
+    
   }, []);
 
   const postUserConfig = async () => {

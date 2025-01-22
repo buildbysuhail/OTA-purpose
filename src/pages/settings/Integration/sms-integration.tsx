@@ -177,17 +177,17 @@ const SMSIntegration: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-8xl  mx-auto bg-white">
+    <div className="p-6 max-w-8xl  mx-auto dark:bg-dark-bg bg-white dark:text-dark-text">
       <div className="xxl:h-[61.8rem]">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">
+        <h1 className="text-2xl font-bold mb-4 dark:text-dark-text text-gray-800">
           {t("SMS_integrations")}
         </h1>
 
-        <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg">
           <div className="flex items-center">
             <div>
-              <h2 className="text-xl font-semibold text-gray-700">{t("twilio")}</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">{t("twilio")}</h2>
+              <p className="text-sm dark:text-dark-text text-gray-600">
                 {t("set_up_twilio")}
               </p>
             </div>
@@ -201,8 +201,8 @@ const SMSIntegration: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-700">{t("benefits")}</h3>
-          <ul className="list-disc pl-5 text-gray-600">
+          <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">{t("benefits")}</h3>
+          <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
             <li className="pb-3">
               {t("notify_customers")}
             </li>
@@ -213,10 +213,10 @@ const SMSIntegration: React.FC = () => {
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-gray-700">
+          <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
            {t("before_you_can")}
           </h3>
-          <ul className="list-disc pl-5 text-gray-600">
+          <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
             <li className="pb-3">
               {t("create_a_twilio_account")}{" "}
               <a

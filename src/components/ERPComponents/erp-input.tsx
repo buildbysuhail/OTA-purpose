@@ -599,7 +599,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 }}
               >
                 {`${iLabel} ${labelDirection === "horizontal" ? ":" : ""}`}
+                <span className="dark:text-red text-red">
                 {required && !noLabel && "*"}
+                </span>
               </label>
               <label
                 className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""}`}
@@ -627,7 +629,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {prefix && (
               <div
                 onClick={onClickPrefix}
-                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
+                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100`}
                 style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor }}
               >
                 {prefix}
@@ -685,7 +687,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 //     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                 //   }),
                 // }}
-                className={`form-control ${inputClassName} ${appState.mode == "dark" ? "!bg-[#313334]" : ""} placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();

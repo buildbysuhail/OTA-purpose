@@ -405,7 +405,7 @@ export default function SettingsPage() {
         )}
       </button>
       <aside
-        className={`fixed z-20 dark:!bg-dark-bg dark:border-dark-border  bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
+        className={`fixed z-20 dark:!bg-dark-bg dark:border-dark-border  dark:!bg-dark-bg bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 ltr:border-r rtl:border-l `}
       >
@@ -914,7 +914,7 @@ export default function SettingsPage() {
         </div>
       </main>
 
-      <div className={`border-t border-solid dark:border-dark-border flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg  bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
+      <div className={`border-t border-solid dark:border-dark-border flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 dark:!bg-dark-bg  dark:!bg-dark-bg bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]`}>
         <ERPButton
           title={t("save_settings")}
           variant="primary"

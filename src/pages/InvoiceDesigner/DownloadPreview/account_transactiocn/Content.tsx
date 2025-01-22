@@ -261,10 +261,8 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <>
                 <Text style={labelStyles}>{headerState?.billTo ?? "BillTo"}</Text>
                 <Text style={fontStyles}>Ho No:1223</Text>
-            </>
-          
+            </>      
             )}
-           
           </View>
         )}
         </View>

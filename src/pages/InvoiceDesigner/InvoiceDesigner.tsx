@@ -363,7 +363,11 @@ const InvoiceDesigner = () => {
     const blob = await pdf(Component).toBlob();
     return blob;
   };
-
+  const templateKindComponentMap = {
+    premium: AccountTransactionsTemplate,
+    standard: AccountTransactionsVoucher,
+    // Add more template kinds here as needed
+  };
   return (
     <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark ">
       {/* Mini Tab Icons */}
@@ -420,13 +424,20 @@ const InvoiceDesigner = () => {
             <div>
               <button
                 title="Save Template"
-                onClick={()=>manageSaveAccTemplate(
-                  <AccountTransactionsTemplate
-                  template={templateData.activeTemplate}
-                  data={DummyVoucherData}
-                  currentBranch={currentBranch}
-                />
-                )}
+                onClick={() => {
+                  const Component =  templateKindComponentMap[templateKind as keyof typeof templateKindComponentMap];
+                  if (Component) {
+                    manageSaveAccTemplate(
+                      <Component
+                        template={templateData.activeTemplate}
+                        data={DummyVoucherData}
+                        currentBranch={currentBranch}
+                      />
+                    );
+                  } else {
+                    ERPToast.show("Invalid template kind", "error");
+                  }
+                }}
                 className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
               >
                 <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}

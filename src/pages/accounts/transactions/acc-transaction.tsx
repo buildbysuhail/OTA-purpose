@@ -10,6 +10,7 @@ import {
   accTransactionInitialData,
   AccTransactionProps,
   AccTransactionRowInitialData,
+  AccUserConfig,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -72,6 +73,7 @@ import HistorySidebar from "./historySidebar";
 import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
+import { customJsonParse } from "../../../utilities/jsonConverter";
 interface BilledItem {
   id?: number;
   name: string;
@@ -297,18 +299,33 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   //   );
   // }, [formState.transaction.details]);
   useEffect(() => {
-    dispatch(
-      accFormStateRowHandleFieldChange({
-        fields: {
-          costCentreID:
-            formState.userConfig.presetCostenterId > 0
-              ? formState.userConfig.presetCostenterId
-              : userSession.dbIdValue == "SAMAPLASTICS"
-              ? 0
-              : null,
-        },
-      })
-    );
+    debugger;
+    const fetchUserConfig = async () => {
+      try {        
+        const response = await api.get(Urls.get_acc_user_config);        
+        const _userConfig = atob(response);
+        const userConfig: AccUserConfig = customJsonParse(_userConfig);
+        
+        dispatch(
+          accFormStateRowHandleFieldChange({
+            fields: {
+              costCentreID:
+              userConfig.presetCostenterId > 0
+                  ? userConfig.presetCostenterId
+                  : userSession.dbIdValue == "SAMAPLASTICS"
+                  ? 0
+                  : applicationSettings?.accountsSettings?.defaultCostCenterID,
+            },
+          })
+        );
+        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+      } catch (error) {
+        console.error("Error fetching user config:", error);
+      }
+    };
+
+    fetchUserConfig();
+    
   }, []);
 
   useEffect(() => {
@@ -1027,7 +1044,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     {
       dataField: "action",
       caption: t("action"),
-      visible: false,
+      visible: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <button
           onClick={() => {
@@ -2361,7 +2378,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
                   localInputBox={formState?.userConfig.inputBoxStyle}
-                  id="costCentre"
+                  id="costCentreID"
                   className="min-w-[180px]"
                   label={t(formState.formElements.costCentreID.label)}
                   field={{
@@ -2814,7 +2831,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onSave={(
                   billwiseDetails: string,
                   totalAmount: number,
-                  vrNumbers: string
+                  vrNumbers: string,
+                  fromAutoPost: boolean
                 ) => {
                   if (
                     applicationSettings.accountsSettings?.billwiseMandatory &&
@@ -2826,7 +2844,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     );
                   }
-                  if (formState.formElements.costCentreID.visible == false) {
+                  if (formState.formElements.costCentreID.visible == false || fromAutoPost)  {
                     addOrEditRow(billwiseDetails);
                     focusLedgerCode();
                   } else {

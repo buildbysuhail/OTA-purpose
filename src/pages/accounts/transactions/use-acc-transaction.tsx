@@ -700,6 +700,7 @@ export const useAccTransaction = (
     dispatch(
       clearState({
         userSession,
+        applicationSettings,
         softwareDate,
         defaultCostCenterID:
           applicationSettings.accountsSettings?.defaultCostCenterID,

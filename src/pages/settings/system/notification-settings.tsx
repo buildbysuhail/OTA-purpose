@@ -107,7 +107,7 @@ const NotificationSettings = () => {
   };
   return (
     <>
-      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa] h-full">
+      <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa] h-full">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             {/* <div className="flex justify-start m-3"> */}
@@ -136,7 +136,7 @@ const NotificationSettings = () => {
                   // <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
                   <div className={`table-responsive overflow-auto shadow-sm`} style={{ maxHeight: `${gridHeight.windows}px` }}>
                     <table className="min-w-full relative table table-bordered rounded-t-sm dark:border-defaultborder/10 ">
-                      <thead className="bg-[#f3f4f6] sticky top-[-1px] z-40">
+                      <thead className="dark:bg-dark-bg-header bg-[#f3f4f6] sticky top-[-1px] z-40">
                         <tr>
                           {T_Head.map((item, index) => (
                             <th key={index} scope="col" className="text-start">
@@ -147,12 +147,12 @@ const NotificationSettings = () => {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className=" bg-[#fafafa]">
+                      <tbody className=" dark:!bg-dark-bg bg-[#fafafa]">
                         {TableBody.length > 0 ? (
                           TableBody?.filter((item) =>
                             item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())
                           )?.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-100">
+                            <tr key={index} className="dark:hover:bg-dark-hover-black hover:bg-gray-100">
                               <td>
                                 <span className="font-light text-[.875rem]">
                                   {item.transactionName}

@@ -76,7 +76,7 @@ const TransactionReportFilter = ({
       {/* <div className="relative"> */}
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
             </label> */}
-      <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[1000px] h-auto max-h-[260px]">
+      <div className="overflow-x-auto border dark:!border-dark-border border-gray-400 rounded w-auto max-w-[1000px] h-auto max-h-[260px] dark-scrollbar ">
         <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
           {allTransactions && allTransactions.length > 0 && (
             <TransactionReportfilterCheckboxes

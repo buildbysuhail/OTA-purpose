@@ -274,7 +274,7 @@ const PostDatedCheques = () => {
   return (
     <div className="space-y-6 p-4">
       <h1 className="box-title !text-xl !font-medium">{t("post_dated_cheques")}</h1>
-      <div className="bg-[#fafafa] p-4">
+      <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
         <div className="grid grid-cols-2 gap-2">
           <div className="border rounded-sm shadow-sm p-4 my-3 basis-1/2">
             <div className="flex flex-col gap-4">

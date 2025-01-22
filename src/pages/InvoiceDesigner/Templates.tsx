@@ -135,7 +135,7 @@ const Templates = ({ }) => {
   return (
     <>
       {showTemplateListing ? (
-        <div className="flex h-full overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
+        <div className="flex h-full overflow-hidden text-black dark:text-white dark:!bg-dark-bg bg-white dark:bg-body_dark ">
           <ERPScrollArea className={`overflow-y-auto overflow-x-hidden md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-full `}
           maxHeight={`${maxSidePage-60}px`}>
             <h1 className=" font-medium text-xl p-5 mb-5">{t("templates")}</h1>
@@ -150,7 +150,7 @@ const Templates = ({ }) => {
                     setSearchParams({ template_group: template?.template_group_id });
                     setTemplateGroup(template?.template_group_id);
                   }}
-                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? " bg-gray-100" : "hover:bg-gray-50"
+                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? "dark:bg-dark-text dark:text-dark-hover-text  bg-gray-100" : "hover:bg-gray-50 dark:hover:bg-dark-hover-bg"
                     }`}
                 >
                   <div>
@@ -216,7 +216,7 @@ const Templates = ({ }) => {
                           {temp?.isCurrent ? (
                             <div className="ti-btn bg-primary text-white !text-[10px] !px-2 !py-1 rounded ">{t("default")}</div>
                           ) : (
-                            <div className="ti-btn hover:bg-primary bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
+                            <div className="ti-btn hover:bg-primary dark:!border-dark-border dark:!bg-dark-bg bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
                               {t("set_as_default")}
                             </div>
                           )}
@@ -240,7 +240,7 @@ const Templates = ({ }) => {
                   );
                 })}
 
-                <div className=" relative hover:ring-0 hover:shadow-xl cursor-pointer  md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded">
+                <div className=" relative hover:ring-0 hover:shadow-xl cursor-pointer  md:w-[140px] lg:w-[200px] aspect-[2.3/3] border dark:!border-dark-border border-accent/30 rounded">
                   <div className="px-2 py-3 flex flex-col justify-center h-full">
                     <h1 className="font-medium text-xs capitalize break-words truncate ">{t("new_template")}</h1>
                     <h2 className="text-[11px] capitalize break-words py-2">
@@ -367,8 +367,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
           X
         </div>
       </div>
-      <div className="my-3 text-sm border-b">
-        <div className="border-b-2 border-accent max-w-min">{t("all")}</div>
+      <div className="my-3 text-sm ">
+        <div className="border-accent max-w-min">{t("all")}</div>
       </div>
       <div>
         <div className="py-2">{t("standard")}</div>

@@ -124,14 +124,18 @@ export const useAccTransaction = (
   };
   const focusCostCenterRef = () => {
     if (costCenterRef.current) {
-      costCenterRef.current.select();
-      costCenterRef.current.focus();
+      setTimeout(() => {
+        costCenterRef.current.select();
+        costCenterRef.current.focus();
+      }, 0);
     }
   };
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
-      ledgerCodeRef.current.select();
-      ledgerCodeRef.current.focus();
+      setTimeout(() => {
+        ledgerCodeRef.current.select();
+        ledgerCodeRef.current.focus();
+      }, 0);
     }
   };
   const focusLedgerCombo = () => {
@@ -700,6 +704,7 @@ export const useAccTransaction = (
     dispatch(
       clearState({
         userSession,
+        applicationSettings,
         softwareDate,
         defaultCostCenterID:
           applicationSettings.accountsSettings?.defaultCostCenterID,
@@ -1118,7 +1123,7 @@ export const useAccTransaction = (
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode ?? 0}`
+          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode == undefined || formState.row.ledgerCode === "" ? 0 : formState.row.ledgerCode}`
         );
 
         if (response && response > 0) {
@@ -1141,7 +1146,9 @@ export const useAccTransaction = (
 
   const handleLedgerIdKeyDown = async (id: any) => {
     if (id > 0) {
-      focusAmount();
+      setTimeout(() => {
+        focusAmount();
+      }, 0);
     }
   };
 

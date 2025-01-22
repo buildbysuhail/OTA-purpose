@@ -282,7 +282,7 @@ const BankReconciliation = () => {
       <h1 className="box-title !text-xl !font-medium">
         {t("bank_reconciliation")}
       </h1>
-      <div className="bg-[#fafafa] p-4">
+      <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
         <div className="border rounded-sm shadow-sm p-4">
           <div className="w-1/3">
             <div className="flex items-center justify-between">
@@ -363,7 +363,7 @@ const BankReconciliation = () => {
             gridId="grid_bank_reconciliation"
             hideGridAddButton={true}
             hideDefaultExportButton={true}
-            heightToAdjustOnWindows={500}
+            heightToAdjustOnWindows={1000}
             reload={formState.reload}
             pageSize={40}
           />

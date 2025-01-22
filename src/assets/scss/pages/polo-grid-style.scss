@@ -59,6 +59,10 @@
   color: $dark-text !important; /* Text color for selected rows */
 }
 
+span.dx-datagrid-nodata {
+  color: $dark-text;
+}
+
     // edit
     .dx-datagrid-headers {
       border: 1px solid $dark-border;

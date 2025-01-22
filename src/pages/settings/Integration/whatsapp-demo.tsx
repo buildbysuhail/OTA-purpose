@@ -64,18 +64,18 @@ export default function Component() {
           </div>
         </div>
 
-        <div className="bg-[#dcebdc] p-2 sm:p-4 overflow-y-auto flex flex-col justify-end min-h-[150px] sm:min-h-[200px]">
-          <div className="bg-white rounded-lg p-2 max-w-[85%] sm:max-w-[80%] ml-auto mb-2 shadow">
+        <div className="dark:!bg-dark-bg bg-[#dcebdc] p-2 sm:p-4 overflow-y-auto flex flex-col justify-end min-h-[150px] sm:min-h-[200px]">
+          <div className="dark:!bg-dark-bg-card bg-white rounded-lg p-2 max-w-[85%] sm:max-w-[80%] ml-auto mb-2 shadow">
             <p className="text-xs sm:text-sm">{message || "No message available"}</p>
             <p className="text-right text-[10px] sm:text-xs text-gray mt-1">{currentTime}</p>
           </div>
         </div>
 
-        <div className="bg-gray px-2 sm:px-4 py-1 sm:py-2 flex items-center">
+        <div className=" dark:!bg-dark-bg bg-gray border border-t dark:!border-dark-border  px-2 sm:px-4 py-1 sm:py-2 flex items-center">
           <input
             type="text"
             placeholder="Type a message"
-            className="bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
+            className="dark:!bg-dark-bg-card bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
             readOnly
           />
           <button className="bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full">
@@ -124,10 +124,10 @@ export default function Component() {
   };
 
   return (
-    <div className="border p-4 rounded-lg">
+    <div className="dark:!border-dark-border border p-4 rounded-lg">
       <div className="flex gap-3 md:flex-row h-[389px] bg-gray relative">
         <button
-          className="md:hidden absolute top-2 right-2 p-1 rounded-lg bg-white shadow"
+          className="md:hidden absolute top-2 right-2 p-1 rounded-lg dark:!bg-dark-bg bg-white shadow"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
           <i className="ti ti-menu-2 text-base"></i>
@@ -136,10 +136,10 @@ export default function Component() {
         {/* Sidebar */}
         <aside
           className={`${isSidebarOpen ? "block" : "hidden"
-            } md:block w-full md:w-56 h-full md:h-[389px] bg-white border rounded-lg absolute md:relative top-0 left-0 z-10 md:z-0`}
+            } md:block w-full md:w-56 h-full md:h-[389px] dark:!bg-dark-bg bg-white  dark:!border-dark-border border rounded-lg absolute md:relative top-0 left-0 z-10 md:z-0`}
         >
-          <div className="h-full overflow-y-auto">
-            <nav className="py-4">
+          <div className="h-full !rounded-lg overflow-y-auto">
+            <nav className="py-4 dark:!bg-dark-bg dark:!border-dark-border !rounded-lg ">
               {menuItems.length > 0 ? (
                 menuItems.map((item) => (
                   <button
@@ -161,7 +161,7 @@ export default function Component() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto border rounded-lg bg-white">
+        <main className="flex-1 overflow-y-auto border dark:!border-dark-border rounded-lg dark:!bg-dark-bg bg-white">
           <MainContent />
         </main>
 

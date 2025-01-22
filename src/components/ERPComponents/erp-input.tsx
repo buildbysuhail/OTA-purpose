@@ -599,7 +599,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 }}
               >
                 {`${iLabel} ${labelDirection === "horizontal" ? ":" : ""}`}
+                <span className="dark:text-red text-red">
                 {required && !noLabel && "*"}
+                </span>
               </label>
               <label
                 className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""}`}

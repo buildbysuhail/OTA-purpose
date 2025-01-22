@@ -362,11 +362,11 @@ const BillwiseComponent = ({
     return true;
   };
   const closeBillwise = () => {
-    // dispatch(
-    //   accFormStateHandleFieldChange({ fields: { showbillwise: false } })
-    // );
+    dispatch(
+      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+    );
 
-    onClose && onClose();
+    // onClose && onClose();
   };
   const handleSave = (updatedBills?: BillwiseData[] | undefined, fromAutoPost?: boolean | false) => {
     try {
@@ -927,7 +927,7 @@ const BillwiseComponent = ({
               className="mr-2"
             />
             <ERPButton title="Save" onClick={() => handleSave()} className="mr-2" />
-            <ERPButton title="Cancel" />
+            <ERPButton title="Cancel" onClick={() => closeBillwise()} />
           </div>
         </div>
       </CardContent>

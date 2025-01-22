@@ -379,7 +379,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             updateFormElement({
               fields: {
                 costCentreID: {
-                  visible: ledgerData?.isCostCentreApplicable ?? false, // Update visibility based on ledgerData
+                  visible: applicationSettings?.accountsSettings?.maintainCostCenter || ledgerData?.isCostCentreApplicable, // Update visibility based on ledgerData
                 },
               },
             })

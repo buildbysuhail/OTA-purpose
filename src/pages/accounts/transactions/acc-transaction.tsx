@@ -643,9 +643,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             costCentreID: {
               ...initialFormElements.costCentreID,
-              visible:
-                applicationSettings?.accountsSettings?.maintainCostCenter ===
-                true,
+              visible:true
+                // applicationSettings?.accountsSettings?.maintainCostCenter ===
+                // true,
             },
             chequeNumber: {
               ...initialFormElements.chequeNumber,

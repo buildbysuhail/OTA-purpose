@@ -155,7 +155,7 @@ export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = R
       <ERPSubmitButton
         type="reset"
         onClick={onClose}
-        className="w-28 bg-[#e5e7eb] text-[#404040]"
+        className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
       >
        {t("cancel")} 
       </ERPSubmitButton>

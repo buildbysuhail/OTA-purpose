@@ -685,7 +685,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 //     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                 //   }),
                 // }}
-                className={`form-control ${inputClassName} ${appState.mode == "dark" ? "!bg-[#313334]" : ""} placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();

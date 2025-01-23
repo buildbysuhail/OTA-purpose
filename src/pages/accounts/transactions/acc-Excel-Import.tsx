@@ -457,7 +457,7 @@ const AccExcelImport = () => {
                   // columnChooser={{ enabled: false }} // Removes the column chooser button
                   export={{ enabled: false }}       // Removes the export button
                   enableScrollButton={false}
-                  GridPreferenceChoosertrue={false}
+                  ShowGridPreferenceChooser={false}
                   toolbar={{ visible: false }}
                   // showColumnHeaders={false} // Removes the entire header
                   // enablefilter={true}

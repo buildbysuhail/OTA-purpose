@@ -145,7 +145,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
             <img
-              className="text-lg font-medium"
+              className="text-lg font-medium dark:bg-[#f2f2f28a]"
               src={ledgerData?.partyPhoto || profile}
             ></img>
           </div>

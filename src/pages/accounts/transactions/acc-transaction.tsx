@@ -269,23 +269,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formCode]);
 
   useEffect(() => {
-    dispatch(
-      accFormStateTransactionMasterHandleFieldChange({
-        fields: {
-          voucherPrefix: voucherPrefix,
-          voucherNumber:
-            voucherNo != undefined && voucherNo > 0
-              ? voucherNo
-              : getNextVoucherNumber(
-                  formType ?? "",
-                  voucherType ?? "",
-                  voucherPrefix ?? "",
-                  false
-                ),
-        },
-      })
-    );
-  }, []);
+    const updateFields = async () => {
+      const nextVoucherNumber =
+        voucherNo !== undefined && voucherNo > 0
+          ? voucherNo
+          : await getNextVoucherNumber(
+              formType ?? "",
+              voucherType ?? "",
+              voucherPrefix ?? "",
+              false
+            );
+  
+      dispatch(
+        accFormStateTransactionMasterHandleFieldChange({
+          fields: {
+            voucherPrefix: voucherPrefix,
+            voucherNumber: nextVoucherNumber,
+          },
+        })
+      );
+    };
+  
+    updateFields(); // Call the async function
+  }, [dispatch, formType, voucherNo, voucherPrefix, voucherType]);
 
   useEffect(() => {
     dispatch(

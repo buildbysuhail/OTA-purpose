@@ -80,7 +80,7 @@ const OutstandingPayableReportFilter = ({
         )}
       </div>
       {/* Report Options */}
-      <div className="space-y-2">
+      <div className="space-y-2 ps-1">
         <ERPCheckbox
           {...getFieldProps("showZeroBalance")}
           label={t("show/include_zero_balance_report")}

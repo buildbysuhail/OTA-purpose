@@ -43,7 +43,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
   });
 
   
-  const [activeTab, setActiveTab] = useState("address");
+  const [activeTab, setActiveTab] = useState("salesReportSummary");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };

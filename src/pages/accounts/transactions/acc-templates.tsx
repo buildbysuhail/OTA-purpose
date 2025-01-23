@@ -28,17 +28,22 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
     try {
     const res = await api.getAsync(`${Urls.templates}${template.id}`);
     let cc: TemplateState = customJsonParse(res.content)
-    
-    const propertiesState = {
-      ...cc.propertiesState,
-      templateName: "Untitled Template " + (length + 1)
-    };
     const _template = {
       ...cc,
-      id: null,
-      templateName: "",
-      propertiesState: propertiesState
-    }
+      id: res.id,
+      background_image: res?.payload?.data?.background_image as string | undefined,
+      background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+      background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+      signature_image: res?.payload?.data?.signature_image as string | undefined,
+      branchId: res.branchId,
+      content: res.content,
+      isCurrent: res.isCurrent,
+      templateGroup: res.templateGroup,
+      templateKind: res.templateKind,
+      templateName: res.templateName,
+      templateType: res.templateType,
+      thumbImage: res.thumbImage as string | undefined,
+  };
 
         dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
         setIsOpen(false)

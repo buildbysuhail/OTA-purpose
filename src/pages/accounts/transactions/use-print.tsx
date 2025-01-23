@@ -7,9 +7,12 @@ import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { printCheque_AccTransaction } from "./acc-print-trans-service";
 import { AccTransactionData, AccTransactionFormState } from "./acc-transaction-types";
 import { logUserAction } from "../../../redux/slices/user-action/thunk";
+import { useDispatch } from "react-redux";
+import { accFormStateHandleFieldChange } from "./reducer";
 
 const api = new APIClient();
 export const useAccPrint = () => {
+   const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -18,10 +21,15 @@ export const useAccPrint = () => {
   );
 const {hasRight} = useUserRights();
   
-  const printVoucher = async (voucher?: AccTransactionFormState
-  ) => {
+  const printVoucher = async (setIsPrintModalOpen?:any,voucher?: AccTransactionFormState) => {
    voucher = voucher == undefined ? formState : voucher
 
+   if (formState.printPreview) {
+    // If printPreview is true, open the modal for preview
+    setIsPrintModalOpen(true); 
+  } else {
+
+  }
   };
    const printPaymentReceiptAdvice = (voucher?: AccTransactionFormState) => {
     voucher = voucher == undefined ? formState : voucher

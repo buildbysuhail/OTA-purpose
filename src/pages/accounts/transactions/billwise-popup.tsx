@@ -91,9 +91,17 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, onMaximizeChange]);
   useEffect(() => {
-    setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
+   
   }, [formState.billwiseData, formState.showbillwise]);
-
+  useEffect(() => {
+    debugger;
+    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+      generateGridFromBillwiseString(formState.row.billwiseDetails);
+    } else
+    {
+      setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
+    }
+  }, [formState.billwiseData, formState.showbillwise]);
   useEffect(() => {
     let wh = modalHeight;
     let gridHeightWindows = isMaximized ? wh - 300 : wh - 350;
@@ -134,11 +142,6 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, modalHeight]);
   const [loadCount, setLoadCount] = useState<number>(0);
-  useEffect(() => {
-    const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
-
-    setStore(clonedData);
-  }, []);
 
   const handleSelectionChange = (e: any) => {
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
@@ -212,11 +215,7 @@ const BillwiseComponent = ({
     setNetAdjustment(getTotalAmountToSet(formattedData));
     setStore(formattedData);
   }, [showAllTransactions]);
-  useEffect(() => {
-    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-      generateGridFromBillwiseString(formState.row.billwiseDetails);
-    }
-  }, []);
+  
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
@@ -263,6 +262,7 @@ const BillwiseComponent = ({
   // }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
+    
     const rows = billwiseStr.split("|");
     const updatedData = [...store];
 
@@ -392,7 +392,7 @@ const BillwiseComponent = ({
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
       // }
-
+      updatedBills = updatedBills??store;
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString(updatedBills);
@@ -433,7 +433,7 @@ const BillwiseComponent = ({
             },
           })
         );
-
+debugger;
         onSave &&
           onSave(
             billwiseString.billwiseString,

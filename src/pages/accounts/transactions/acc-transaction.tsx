@@ -2173,6 +2173,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPCheckbox
                     localInputBox={formState?.userConfig.inputBoxStyle}
                     id="hasDiscount"
+                    className="text-left"
                     label={t(formState.formElements.hasDiscount.label)}
                     checked={formState.row.hasDiscount}
                     onChange={(e) =>
@@ -2195,7 +2196,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   id="discount"
                   type="number"
                   min={0}
-                  className="!mb-[13px]"
+                  className="!mb-[4px]"
                   label=" "
                   value={formState.row.discount}
                   onChange={(e) =>

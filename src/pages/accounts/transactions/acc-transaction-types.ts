@@ -399,6 +399,7 @@ export interface BillwiseData {
   adjustedAmount: number;
   amount: number;
   balance: number;
+  balanceAfter: number;
   billWiseMasterID: number;
   billwiseAmount: number;
   drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit

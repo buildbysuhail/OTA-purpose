@@ -196,37 +196,59 @@ export const useAccTransaction = (
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
-      accTransactionMasterID??formState.transaction.master.accTransactionMasterID
+      accTransactionMasterID ??
+        formState.transaction.master.accTransactionMasterID
     );
-    dispatch(accFormStateTransactionMasterHandleFieldChange({fields: {
-      remarks: "",
-      commonNarration: "",
-      employeeID: userSession.dbIdValue == "543140180640" && userSession.employeeId > 0 ? userSession.employeeId : formState.transaction.master.employeeID
-    }}));
+    dispatch(
+      accFormStateTransactionMasterHandleFieldChange({
+        fields: {
+          remarks: "",
+          commonNarration: "",
+          employeeID:
+            userSession.dbIdValue == "543140180640" &&
+            userSession.employeeId > 0
+              ? userSession.employeeId
+              : formState.transaction.master.employeeID,
+        },
+      })
+    );
     dispatch(accFormStateClearDetails());
-    dispatch(accFormStateHandleFieldChange({fields: {
-      masterAccountID: 0
-    }}))
-    dispatch(accFormStateRowHandleFieldChange({fields: {
-      narration:  "",
-      amount: 0,
-      discount: 0,
-
-    }}));
-    dispatch(updateFormElement({fields: {
-      btnAdd:  {text: "Add"},
-      amount:{disabled: false}
-    }}))
-    
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          masterAccountID: 0,
+        },
+      })
+    );
+    dispatch(
+      accFormStateRowHandleFieldChange({
+        fields: {
+          narration: "",
+          amount: 0,
+          discount: 0,
+        },
+      })
+    );
+    dispatch(
+      updateFormElement({
+        fields: {
+          btnAdd: { text: "Add" },
+          amount: { disabled: false },
+        },
+      })
+    );
 
     try {
       const params = {
         VoucherNumber: tmpVoucherNumber,
-        voucherPrefix: voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
-        voucherType: voucherType ?? (formState.transaction?.master?.voucherType || ""),
-        formType:formType ?? (formState.transaction?.master?.formType || ""),
+        voucherPrefix:
+          voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+        voucherType:
+          voucherType ?? (formState.transaction?.master?.voucherType || ""),
+        formType: formType ?? (formState.transaction?.master?.formType || ""),
         MannualInvoiceNumber:
-        manualInvoiceNumber??(formState.transaction?.master?.referenceNumber || ""),
+          manualInvoiceNumber ??
+          (formState.transaction?.master?.referenceNumber || ""),
         SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
       };
       await appDispatch(
@@ -710,7 +732,7 @@ export const useAccTransaction = (
           applicationSettings.accountsSettings?.defaultCostCenterID,
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
-        voucherNo:vNo
+        voucherNo: vNo,
       })
     );
     dispatch(
@@ -751,7 +773,6 @@ export const useAccTransaction = (
         },
       })
     );
-    
 
     focusLedgerCode();
   };
@@ -805,120 +826,119 @@ export const useAccTransaction = (
             })
           );
         }
-
       }
-        if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
-          ERPAlert.show({
-            icon: "warning",
-            title: "Please select Ledger..!",
-          });
-          return false;
-        }
-        const fdd = isNullOrUndefinedOrZero(formState.row.amount);
-        const fdsdd = isNullOrUndefinedOrZero(
-          formState.transaction.master.totalAmount
-        );
-        if (
-          isNullOrUndefinedOrZero(formState.row.amount) &&
-          !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
-        ) {
-          if (hasRight(formState.formCode, UserAction.Add)) {
-            dispatch(
-              updateFormElement({
-                fields: {
-                  btnSave: {
-                    disabled: false,
-                    label: "Add",
-                  },
+      if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Please select Ledger..!",
+        });
+        return false;
+      }
+      const fdd = isNullOrUndefinedOrZero(formState.row.amount);
+      const fdsdd = isNullOrUndefinedOrZero(
+        formState.transaction.master.totalAmount
+      );
+      if (
+        isNullOrUndefinedOrZero(formState.row.amount) &&
+        !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
+      ) {
+        if (hasRight(formState.formCode, UserAction.Add)) {
+          dispatch(
+            updateFormElement({
+              fields: {
+                btnSave: {
+                  disabled: false,
+                  label: "Add",
                 },
-              })
-            );
-          }
-          ERPAlert.show({
-            title: "Are you sure save now?",
-            icon: "warning",
-            confirmButtonText: "Yes, Save now!",
-            cancelButtonText: "Cancel",
-            onConfirm: (result: any) => {
-              if (result.isConfirmed) {
-                save();
-                return false;
-              }
-            },
-          });
-          focusLedgerCode();
-          return false;
+              },
+            })
+          );
         }
-
-        if (isNullOrUndefinedOrZero(formState.row.amount)) {
-          ERPAlert.show({
-            icon: "info",
-            title: "Please Enter the Amount..!",
-          });
-          focusAmount();
-          return false;
-        }
-        if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
-          ERPAlert.show({
-            icon: "info",
-            title: "Please select master account..!",
-          });
-          focusMasterAccount();
-          return false;
-        }
-        if (
-          isNullOrUndefinedOrZero(formState.row.costCentreID) &&
-          formState.formElements.costCentreID.visible == true
-        ) {
-          ERPAlert.show({
-            icon: "info",
-            title: "Please select a cost center..!",
-          });
-          focusCostCenterRef();
-          return false;
-        }
-        formState.formElements.btnAdd;
-
-        dispatch(
-          accFormStateTransactionDetailsRowAdd({
-            row: {
-              ...formState.row,
-              billwiseDetails:
-                billwiseDetails != undefined
-                  ? billwiseDetails
-                  : formState.row.billwiseDetails,
-            },
-            applicationSettings: applicationSettings,
-            exchangeRate: formState.transaction.master.currencyRate ?? 1,
-            isForeignCurrencyEnabled: formState.foreignCurrency,
-            userSession: userSession,
-          })
-        );
-        const updatedFields: Record<string, any> = {
-          employee: { disabled: true },
-          jvDrCr: { disabled: true },
-          masterAccount: { disabled: true },
-          referenceNumber: { disabled: true },
-          referenceDate: { disabled: true },
-          transactionDate: { disabled: true },
-          btnEdit: { visible: true },
-          amount: { disabled: false },
-          linkEdit: { visible: true },
-        };
-
-        // Conditionally update costCentreID if needed
-        if (formState.userConfig.presetCostenterId > 0) {
-          updatedFields.costCentreID = { disabled: true };
-        }
-
-        // Dispatch the updateFormElement action
-        dispatch(
-          updateFormElement({
-            fields: updatedFields,
-          })
-        );
-        focusLedgerCombo();
+        ERPAlert.show({
+          title: "Are you sure save now?",
+          icon: "warning",
+          confirmButtonText: "Yes, Save now!",
+          cancelButtonText: "Cancel",
+          onConfirm: (result: any) => {
+            if (result.isConfirmed) {
+              save();
+              return false;
+            }
+          },
+        });
+        focusLedgerCode();
+        return false;
       }
+
+      if (isNullOrUndefinedOrZero(formState.row.amount)) {
+        ERPAlert.show({
+          icon: "info",
+          title: "Please Enter the Amount..!",
+        });
+        focusAmount();
+        return false;
+      }
+      if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
+        ERPAlert.show({
+          icon: "info",
+          title: "Please select master account..!",
+        });
+        focusMasterAccount();
+        return false;
+      }
+      if (
+        isNullOrUndefinedOrZero(formState.row.costCentreID) &&
+        formState.formElements.costCentreID.visible == true
+      ) {
+        ERPAlert.show({
+          icon: "info",
+          title: "Please select a cost center..!",
+        });
+        focusCostCenterRef();
+        return false;
+      }
+      formState.formElements.btnAdd;
+
+      dispatch(
+        accFormStateTransactionDetailsRowAdd({
+          row: {
+            ...formState.row,
+            billwiseDetails:
+              billwiseDetails != undefined
+                ? billwiseDetails
+                : formState.row.billwiseDetails,
+          },
+          applicationSettings: applicationSettings,
+          exchangeRate: formState.transaction.master.currencyRate ?? 1,
+          isForeignCurrencyEnabled: formState.foreignCurrency,
+          userSession: userSession,
+        })
+      );
+      const updatedFields: Record<string, any> = {
+        employee: { disabled: true },
+        jvDrCr: { disabled: true },
+        masterAccount: { disabled: true },
+        referenceNumber: { disabled: true },
+        referenceDate: { disabled: true },
+        transactionDate: { disabled: true },
+        btnEdit: { visible: true },
+        amount: { disabled: false },
+        linkEdit: { visible: true },
+      };
+
+      // Conditionally update costCentreID if needed
+      if (formState.userConfig.presetCostenterId > 0) {
+        updatedFields.costCentreID = { disabled: true };
+      }
+
+      // Dispatch the updateFormElement action
+      dispatch(
+        updateFormElement({
+          fields: updatedFields,
+        })
+      );
+      focusLedgerCombo();
+    }
   };
   const validatePDC = async (
     accTransactionDetailsId: number
@@ -1065,7 +1085,9 @@ export const useAccTransaction = (
     } else if (field === "amount") {
       handleAmountKeyDown(key);
     } else if (field === "costCentre") {
-      focusBtnAdd();
+      if (key == "Enter") {
+        focusBtnAdd();
+      }
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
@@ -1123,7 +1145,12 @@ export const useAccTransaction = (
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode == undefined || formState.row.ledgerCode === "" ? 0 : formState.row.ledgerCode}`
+          `${Urls.get_ledgerId_by_code}${
+            formState.row.ledgerCode == undefined ||
+            formState.row.ledgerCode === ""
+              ? 0
+              : formState.row.ledgerCode
+          }`
         );
 
         if (response && response > 0) {
@@ -1497,15 +1524,15 @@ export const useAccTransaction = (
       }`
     );
     setTimeout(() => {
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          billwiseData: billwise,
-          ledgerBillWiseLoading: false,
-        },
-      })
-    );
-  },0);
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            billwiseData: billwise,
+            ledgerBillWiseLoading: false,
+          },
+        })
+      );
+    }, 0);
   };
   const showBillwise = async () => {
     debugger;
@@ -1611,6 +1638,6 @@ export const useAccTransaction = (
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
-    showBillwise
+    showBillwise,
   };
 };

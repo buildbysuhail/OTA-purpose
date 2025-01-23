@@ -527,12 +527,12 @@ debugger;
       if (billBalance <= remainingAmount) {
         // Full payment
         bill.billwiseAmount = billBalance;
-        bill.balance = 0;
+        bill.balanceAfter = 0;
         remainingAmount -= billBalance;
       } else {
         // Partial payment
         bill.billwiseAmount = remainingAmount;
-        bill.balance = billBalance - remainingAmount;
+        bill.balanceAfter = billBalance - remainingAmount;
         remainingAmount = 0;
       }
       i++;
@@ -647,8 +647,8 @@ debugger;
                     ...e.row.data,
                     billwiseAmount: args.value,
                   };
-                  updatedRow.balance =
-                    updatedRow.amount - updatedRow.billwiseAmount;
+                  updatedRow.balanceAfter =
+                    updatedRow.balance - updatedRow.billwiseAmount;
 
                   // Update the dataSource with the new values
                   const updatedStore = store.map((row: any) =>
@@ -796,7 +796,7 @@ debugger;
           />
           <Column
             dataField="balance"
-            caption="Balance After"
+            caption="Balance"
             dataType="number"
             allowFiltering={true}
             allowSearch={true}
@@ -876,7 +876,7 @@ debugger;
           />
 
           <Column
-            dataField="balance"
+            dataField="balanceAfter"
             caption="Balance After"
             dataType="string"
             allowFiltering={true}

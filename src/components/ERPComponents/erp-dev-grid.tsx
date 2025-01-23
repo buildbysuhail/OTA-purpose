@@ -114,7 +114,7 @@ interface ERPDevGridProps {
   className?: string;
   showBorders?: boolean;
   showColumnLines?: boolean;
-  GridPreferenceChoosertrue?: boolean;
+  ShowGridPreferenceChooser?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
   allowPaging?: boolean;
@@ -409,7 +409,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       className = "custom-data-grid",
       showBorders = true,
       showColumnLines = false,
-      GridPreferenceChoosertrue = true,
+      ShowGridPreferenceChooser = true,
       showRowLines = true,
       pageSize = 100,
       allowPaging = true,
@@ -1476,7 +1476,7 @@ debugger;
                   />
                 </Item>
               )}
-              {GridPreferenceChoosertrue && (
+              {ShowGridPreferenceChooser && (
                 <Item>
                   <GridPreferenceChooser
                     columns={columns}

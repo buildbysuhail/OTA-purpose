@@ -98,7 +98,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                 allowSearching={false}
                 hideGridAddButton={true}
                 hideGridHeader={true}
-                GridPreferenceChoosertrue={false}
+                ShowGridPreferenceChooser={false}
               />
           {/* Transaction Date */}
        

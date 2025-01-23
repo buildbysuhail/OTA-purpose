@@ -64,6 +64,7 @@ debugger;
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
+        localStorage.removeItem("_token")
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
@@ -79,6 +80,7 @@ debugger;
       }
       else { 
         if(login.item.hasToSetCounter) {
+          localStorage.setItem("_token", login.item.token);
           setCounterSettings({show: true, token:login.item.token});
         } else {
           setError(login.message)

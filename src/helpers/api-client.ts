@@ -34,6 +34,8 @@ axios.interceptors.response.use(
  */
 const setAuthorization = (token?: string) => {
   const _token = (token??localStorage.getItem("token"))??"";
+  const __token = (token??localStorage.getItem("_token"))??"";
+  if(__token)  axios.defaults.headers.common["Authorization"] = "Bearer " + __token;
   if (_token) axios.defaults.headers.common["Authorization"] = "Bearer " + _token;
 
   axios.defaults.headers.common["X-Software-Date"] = new Date().toDateString();

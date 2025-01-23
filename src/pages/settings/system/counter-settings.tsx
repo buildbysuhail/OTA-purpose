@@ -45,7 +45,7 @@ const navigate = useNavigate()
 
  const loadCounterData = async () => {
   try {
-    const response = await api.getAsync(Urls.counter_settings_current_data); 
+    const response = await api.getAsync(Urls.counter_settings_current_data,undefined, undefined,token); 
     setDefaultSystemCode(response.systemCode)
     setCounterData(response);
   } catch (error) {

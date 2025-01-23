@@ -53,9 +53,9 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  getAsync = async (url: string, queryString: string = "", config:any = undefined): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string): Promise<any> => {
     try {
-      setAuthorization();
+      setAuthorization(token);
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
       if (response?.status != undefined && response?.status != null) {

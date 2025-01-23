@@ -54,7 +54,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError('');
-
+debugger;
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
@@ -250,7 +250,7 @@ const Login = () => {
                           setCounterSettings({show: false, token:""});
                           
                         }}
-                        content={<CounterSettings token=""/>}
+                        content={<CounterSettings token={counterSettings.token}/>}
                       ></ERPModal>
     </div>
 

@@ -785,7 +785,7 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async (billwiseDetails?: string) => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         if (formState.isRowEdit != true) {
@@ -1197,7 +1197,7 @@ export const useAccTransaction = (
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
     if (e === "Enter") {
-      debugger;
+      
       const isChequeVoucher =
         formState.transaction.master.voucherType === "CQP" ||
         formState.transaction.master.voucherType === "CQR";
@@ -1459,7 +1459,7 @@ export const useAccTransaction = (
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-      debugger;
+      
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
@@ -1508,7 +1508,7 @@ export const useAccTransaction = (
     }
   };
   const openBillwise = async () => {
-    debugger;
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -1535,7 +1535,7 @@ export const useAccTransaction = (
     }, 0);
   };
   const showBillwise = async () => {
-    debugger;
+    
     if (formState.row.ledgerID && formState.ledgerData != null) {
       const isBillwiseApplicable = await isLedgerBillwiseApplicable(
         formState.transaction.master.voucherType === "CN" ||
@@ -1563,7 +1563,7 @@ export const useAccTransaction = (
     try {
       let drCr = "";
       const loadLedgerData = async () => {
-        debugger;
+        
         // switch (formState.transaction.master.voucherType) {
         //   case "CP":
         //   case "BP":

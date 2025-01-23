@@ -11,10 +11,11 @@ export interface AccountTransactionProps {
   data: any;
   template?: TemplateState;
   currentBranch?: any;
+  userSession?:any;
 }
 
 
-const AccountTransactionsTemplate = ({ data, template, currentBranch }: AccountTransactionProps) => {
+const AccountTransactionsTemplate = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
   let paperWidth=500, paperHeight=500;
   
   const paperSize = template?.propertiesState?.pageSize || "A4";

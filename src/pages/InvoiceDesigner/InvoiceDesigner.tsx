@@ -45,13 +45,13 @@ import {
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
 import { TemplateDto, TemplateState } from "./Designer/interfaces";
-import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn";
+import AccountTransactionsTemplate from "./DownloadPreview/account_transactiocn-premium";
 import { PDFViewer,pdf} from "@react-pdf/renderer";
 import useCurrentBranch from "../../utilities/hooks/use-current-branch";
 import AccTableDesigner from "./Designer/accTableDesigner";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
-import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_voucher";
+import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_standard";
 import BalanceSheetVerticalTemplate from "./DownloadPreview/balance-sheet/balance-sheet-vertical";
 import NoDataMessage from "./utils/visible-non-component";
 import { RootState } from "../../redux/store";
@@ -60,6 +60,7 @@ import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
 import AccDetailsDesigner from "./Designer/accDetailsDesigner";
 import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
+import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-universal";
 interface DesignSectionType {
   id: number;
   name: string;
@@ -152,6 +153,8 @@ const InvoiceDesigner = () => {
   ) as TemplateReducerState;
 
   const { templateKind } = location.state || {}; 
+  console.log(templateKind);
+  
   const templateGroup = searchParams?.get("template_group")! as
     | VoucherType
     | string;
@@ -166,28 +169,26 @@ const InvoiceDesigner = () => {
   /* ####################################################################### */
 
   const getPDFTemplateData = async () => {
-
       const res  = await api.getAsync(`${Urls.templates}${id||""}`)
       
       let cc: TemplateState = customJsonParse(res.content);
       const template = {
         ...cc,
-        background_image: res?.payload?.data?.background_image as
-          | string
-          | undefined,
-        background_image_header: res?.payload?.data?.background_image_header as
-          | string
-          | undefined,
-        background_image_footer: res?.payload?.data?.background_image_footer as
-          | string
-          | undefined,
-        signature_image: res?.payload?.data?.signature_image as
-          | string
-          | undefined,
-      };
-
+        id: res.id,
+        background_image: res?.payload?.data?.background_image as string | undefined,
+        background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+        background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+        signature_image: res?.payload?.data?.signature_image as string | undefined,
+        branchId: res.branchId,
+        content: res.content,
+        isCurrent: res.isCurrent,
+        templateGroup: res.templateGroup,
+        templateKind: res.templateKind,
+        templateName: res.templateName,
+        templateType: res.templateType,
+        thumbImage: res.thumbImage as string | undefined,
+    };
       dispatch(setTemplate(template));
-   
   };
 
   /* ########################################################################################### */
@@ -243,11 +244,14 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
+    debugger;
     const tmpTemplate = {
       ...templateData.activeTemplate,
       propertiesState: {
         ...templateData.activeTemplate.propertiesState,
         template_group: templateGroup,
+        template_kind:templateKind,
+     
       },
     };
     const activeTemplate: TemplateDto = {
@@ -264,37 +268,38 @@ const InvoiceDesigner = () => {
       backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
       signatureImage: tmpTemplate.signature_image ?? "",
       branchId: 0,
+      id:templateData.activeTemplate?.id
     };
     await dispatch(setTemplate(activeTemplate));
-    setLoading(true);
-    let res = await api.postAsync(Urls.templates, activeTemplate);
 
+    setLoading(true);
+    // let Url = id =="new"?  : `${Urls.templates}`
+    let res = await api.postAsync(Urls.templates, activeTemplate);
     setLoading(false);
     handleResponse(res, () => {
       // ERPToast.show("Template saved successfully", "success");
       navigate(`/templates?template_group=${templateGroup}`);
     });
-    setLoading(false);
+
   };
 
   /* ########################################################################################### */
   /* ########################################################################################### */
 
   const manageSaveTemplate = async () => {
-    if (!templateData?.activeTemplate?.propertiesState?.templateName) {
+    
+    if (id =="new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
-    } else {
+      return;
+    }
+    else {
       const node = document.getElementById("invoicePreview");
       if (node) {
         try {
           const canvas = await html2canvas(node);
           const dataUrl = canvas.toDataURL("image/png");
-          if (templateData?.activeTemplate && id === "new"){
             await handleSave(dataUrl);
-          }else{
-
-          }
-            
+  
         } catch (error) {
           console.error("Error capturing canvas:", error);
         }
@@ -303,19 +308,18 @@ const InvoiceDesigner = () => {
   };
   
   const manageSaveAccTemplate = async (Component: React.ReactElement) => {
-    if (!templateData?.activeTemplate?.propertiesState?.templateName) {
+     if (id =="new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
       return;
     }
-  
-    try {
-      const pdfBlob = await generatePdfBlob(Component);
-      const imageDataUrl = await convertPdfBlobToImage(pdfBlob);
-      await handleSave(imageDataUrl);
-    } catch (error) {
-      console.error("Error saving component:", error);
-      ERPToast.show("Failed to save template", "error");
-    }
+      try {
+        const pdfBlob = await generatePdfBlob(Component);
+        const imageDataUrl = await convertPdfBlobToImage(pdfBlob);
+        await handleSave(imageDataUrl);
+      } catch (error) {
+        console.error("Error saving component:", error);
+        ERPToast.show("Failed to save template", "error");
+      }
   };
 
   const convertPdfBlobToImage = async (pdfBlob: Blob) => {
@@ -366,6 +370,7 @@ const InvoiceDesigner = () => {
   const templateKindComponentMap = {
     premium: AccountTransactionsTemplate,
     standard: AccountTransactionsVoucher,
+    universal:AccountTransactionsUniversal
     // Add more template kinds here as needed
   };
   return (
@@ -432,6 +437,7 @@ const InvoiceDesigner = () => {
                         template={templateData.activeTemplate}
                         data={DummyVoucherData}
                         currentBranch={currentBranch}
+                        userSession={userSession}
                       />
                     );
                   } else {
@@ -610,7 +616,12 @@ const InvoiceDesigner = () => {
                 currentBranch={currentBranch}
               />
             ) : (
-              <div>No template selected</div> // Fallback message
+              <AccountTransactionsUniversal
+              template={templateData.activeTemplate}
+              data={DummyVoucherData}
+              currentBranch={currentBranch}
+              userSession={userSession}
+            />
             )}
           </PDFViewer>
         </>

@@ -615,14 +615,14 @@ const InvoiceDesigner = () => {
                 data={DummyVoucherData}
                 currentBranch={currentBranch}
               />
-            ) : (
+            ) :templateKind== "universal" ? (
               <AccountTransactionsUniversal
               template={templateData.activeTemplate}
               data={DummyVoucherData}
               currentBranch={currentBranch}
               userSession={userSession}
             />
-            )}
+            ):(<></>)}
           </PDFViewer>
         </>
       )}

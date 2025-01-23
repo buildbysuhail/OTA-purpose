@@ -32,9 +32,9 @@ axios.interceptors.response.use(
  * Sets the default authorization
  * @param {*} token
  */
-const setAuthorization = () => {
-  const token = localStorage.getItem("token");
-  if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+const setAuthorization = (token?: string) => {
+  const _token = (token??localStorage.getItem("token"))??"";
+  if (_token) axios.defaults.headers.common["Authorization"] = "Bearer " + _token;
 
   axios.defaults.headers.common["X-Software-Date"] = new Date().toDateString();
   axios.defaults.headers.common["X-Client-Date"] = new Date().toISOString();
@@ -151,8 +151,8 @@ class APIClient {
     return axios.patch(url, data);
   };
 
-  put = (url: string, data: any): Promise<AxiosResponse> => {
-    setAuthorization();
+  put = (url: string, data: any, token?: string): Promise<AxiosResponse> => {
+    setAuthorization(token);
     return axios.put(url, data);
   };
 

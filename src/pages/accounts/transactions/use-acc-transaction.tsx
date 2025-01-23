@@ -1496,6 +1496,7 @@ export const useAccTransaction = (
         formState.row.accTransactionDetailId ?? 0
       }`
     );
+    setTimeout(() => {
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -1504,6 +1505,7 @@ export const useAccTransaction = (
         },
       })
     );
+  },0);
   };
   const showBillwise = async () => {
     debugger;

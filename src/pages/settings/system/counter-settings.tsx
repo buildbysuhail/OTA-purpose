@@ -20,7 +20,11 @@ interface CounterData {
   counterId:number|null
 }
 const api = new APIClient();
-const CounterSettings = () => {
+interface CounterSettingsProps {
+  token?: string;
+}
+
+const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
   const initData:CounterData = {
     systemName:"",
     systemCode:"",
@@ -65,7 +69,7 @@ const handleSubmit = async () => {
   setReload(false)
   setIsSaving(true);
   try {
-    const response = await api.put(Urls.counter_settings,counterData);  
+    const response = await api.put(Urls.counter_settings,counterData,token);  
     handleResponse(response,()=>{setReload(true)},() => { })
   } catch (error) {
     console.error("Error loading settings:", error);
@@ -231,6 +235,7 @@ const handleClear = async ()=>{
                 heightToAdjustOnWindows = {500}
                 reload={reload}    
                 pageSize={40}
+                allowSearching
               ></ErpDevGrid>
             </div>
             <div className="flex justify-center items-center mt-2 space-x-2">

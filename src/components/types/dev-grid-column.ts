@@ -19,7 +19,7 @@ export interface DevGridColumn {
     caption?: string;
     dataType?: "string" | "number" | "date" | "boolean" | "object" | "datetime";
     allowSorting?: boolean;
-    allowSearch?: boolean;
+    allowSearch?: boolean |true;
     allowFiltering?: boolean;
     minWidth?: number;
     fixed?: boolean;

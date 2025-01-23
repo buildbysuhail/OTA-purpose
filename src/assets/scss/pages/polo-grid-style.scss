@@ -63,6 +63,82 @@ span.dx-datagrid-nodata {
   color: $dark-text;
 }
 
+// .dx-header-filter {
+//   background-color: #fd0505; /* Set your desired color */
+// }
+
+.dx-datagrid-filter-row > td {
+  // border-top: 1px solid rgb(252 1 1);
+  // border-right: 1px solid rgb(0 170 255);
+  background-color: black;
+  color: white;
+}
+// .dx-datagrid-filter-row  {
+//   // border-top: 1px solid rgb(252 1 1);
+//   // border-right: 1px solid rgb(0 170 255);
+//   background-color: black;
+//   color: white;
+// }
+
+.dx-editor-cell .dx-texteditor .dx-texteditor-input {  
+  background-color: rgb(8, 8, 8);  
+  color: white;
+}  
+.dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor, .dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor-container {  
+     background-color: rgb(73, 73, 73);  
+     color: white;
+} 
+
+.dx-datagrid-content .dx-datagrid-table .dx-row.dx-select-row-focusedstyle > td {
+  background-color: rgb(255, 0, 0) !important;
+  color: initial;
+}
+
+// .dx-menu-base.dx-overlay-content .dx-scrollable .dx-scrollable-content {
+//   min-height: auto;
+//   transform: none !important;
+//   background-color: black !important;
+// }
+
+// .dx-context-menu .dx-menu-items-container {
+//   // padding: 1px;
+//   background-color: black !important;
+//   /* color: white; */
+// }
+
+// .dx-menu-item.dx-state-hover {
+//   color: #f81515 !important ;
+//   background-color: rgb(197 0 0 ) !important;
+// }
+
+// .dx-menu-base .dx-menu-item-wrapper, .dx-menu-base .dx-menu-items-container {
+//     margin: 0;
+//     padding: 0;
+//     border: 0;
+//     outline: 0;
+//     height: 100%;
+//     background-color: black !important ;
+//     /* color: white; */
+// }
+
+// .dx-scrollable-wrapper {
+//   background-color: black !important;
+//   color: white !important ; 
+// }
+
+// .dx-datagrid-content .dx-datagrid-table .dx-row .dx-command-select.dx-selection, 
+// .dx-datagrid-content .dx-datagrid-table .dx-row.dx-selection > td:not(.dx-focused) {
+//   background-color: rgb(4, 255, 0);
+//   color: initial;
+// }
+
+
+// .dx-datagrid-filter-row,  
+// .dx-datagrid-filter-row .dx-editor-cell .dx-texteditor-input  
+// {  
+//     background-color: rgb(15, 170, 23);  
+// } 
+
     // edit
     .dx-datagrid-headers {
       border: 1px solid $dark-border;

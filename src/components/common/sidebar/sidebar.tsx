@@ -934,7 +934,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                       <li className="slide__category_Detail">
                         <div className="sm:flex items-start items-center">
                           <div>
-                            <span className="avatar avatar-md avatar-rounded ">
+                            <span className="avatar avatar-md avatar-rounded dark:bg-[#f2f2f28a] ">
                               <img
                                 alt={userSession?.displayName || profile}
                                 src={userSession?.userimage || profile}

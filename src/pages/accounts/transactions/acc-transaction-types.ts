@@ -399,6 +399,7 @@ export interface BillwiseData {
   adjustedAmount: number;
   amount: number;
   balance: number;
+  balanceAfter: number;
   billWiseMasterID: number;
   billwiseAmount: number;
   drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit
@@ -530,7 +531,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   printPreview: { visible: true, disabled: false, label: "print_preview" },
   printCheque: { visible: true, disabled: false, label: "print_cheque" },
   keepNarration: { visible: false, disabled: false, label: "keep_narration" },
-  btnBillWise: { visible: true, disabled: false, label: "billwise" },
+  btnBillWise: { visible: false, disabled: false, label: "billwise" },
   btnAdd: { visible: true, disabled: false, label: "Add" },
   btnEdit: { visible: true, disabled: false, label: "edit" },
   linkEdit: { visible: false, disabled: false, label: "linkEdit" },

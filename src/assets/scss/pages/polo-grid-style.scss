@@ -542,6 +542,34 @@ span.dx-datagrid-nodata {
     .dx-datagrid .dx-row-alt>td {
       background-color: unset !important;
   }
+
+  .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused)>td{
+    background-color: unset !important;
+  }
+
+  .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row):not(.dx-row-focused)>td:not(.dx-focused) {
+    background-color: unset !important;
+    // color: #333;
+  }
+
+  .dx-datagrid .dx-row-lines>td {
+    border-bottom: 1px solid #eaeaea !important;
+  }
+
+  .dx-datagrid>.dx-datagrid-headers{
+  display: contents  !important;
+  }
+  .dx-datagrid .dx-row>td {
+    padding: 0px !important;
+}
+
+// .dx-widget .dx-visibility-change-handler{
+//   height: 100vh !important;
+// }
+  
+
+
+
   }
   
   .custom-data-grid {

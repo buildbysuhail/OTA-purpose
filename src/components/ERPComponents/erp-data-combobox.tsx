@@ -683,8 +683,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           ? filteredItems.findIndex((item) => item.value === final.value)
           : -1
       );
-      debugger;
-      if(final == null ) { setInputValue("")}
     }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
     const clearSelection = (e?: React.MouseEvent) => {

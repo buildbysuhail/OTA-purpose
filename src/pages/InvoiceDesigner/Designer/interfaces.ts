@@ -20,7 +20,7 @@ type TemplateKindType =
   | "universal"
   | "retail";
   export interface TemplateDto {
-    id?: number;
+    id?: string | number | undefined;
     branchId?: number;
     templateType?: string;
     templateKind?: string;

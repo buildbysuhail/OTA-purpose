@@ -70,7 +70,7 @@ import {
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
 import HistorySidebar from "./historySidebar";
-import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn";
+import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn-premium";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { customJsonParse } from "../../../utilities/jsonConverter";

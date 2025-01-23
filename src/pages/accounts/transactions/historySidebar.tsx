@@ -1,17 +1,55 @@
-import React from "react";
+import React, { useMemo } from "react";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import urls from "../../../redux/urls";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../redux/store";
+import { ActionType } from "../../../redux/types";
+import { useTranslation } from "react-i18next";
 
 interface HistorySidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  data: any;
+  // data: any;
 }
 
 const HistorySidebar: React.FC<HistorySidebarProps> = ({
   isOpen,
   onClose,
-  data,
+  // data,
 }) => {
+  const { t } = useTranslation('transaction');
+  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const columns: DevGridColumn[] = useMemo(
+    () => [
+     
+      {
+        dataField: "actions",
+        caption: t("Actions"),
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        fixedPosition: "right",
+        width: 100,
+        cellRender: (cellElement: any) => {
+          return (
+            <div className="bg-white p-4 shadow-sm">
+            <label className="block text-sm font-medium text-gray-500 mb-1">
+              Transaction Datedsds
+            </label>
+            <p className="text-gray-800 font-semibold">
+            {cellElement.data?.particulars}
+            {cellElement.data?.amount}
+            {cellElement.data?.transactionDate}
+            </p>
+          </div>
+          );
+        },
+      },
+    ],
+    []
+  );
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
       <div className="py-6 bg-gray-50 h-screen">
@@ -43,15 +81,27 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
 
         {/* Content */}
         <div className="space-y-4">
+        <ERPDevGrid
+                columns={columns}
+                dataUrl={`${urls.acc_transaction_base}${formState.transactionType}/List/`}
+                method={ActionType.GET}
+                // postData={{voucherType: voucherType, transactionType: transactionType}} 
+                gridHeader={t("transactions")}
+                gridId="transaction-grid"
+                remoteOperations={{paging: true, filtering: true,sorting: true}}
+                gridAddButtonIcon="ri-add-line"
+                pageSize={40}
+                allowExport={true}
+                hideDefaultExportButton={true}
+                // showFilterRow ={false}
+                hideDefaultSearchPanel={true}
+                allowSearching={false}
+                hideGridAddButton={true}
+                hideGridHeader={true}
+                GridPreferenceChoosertrue={false}
+              />
           {/* Transaction Date */}
-          <div className="bg-white p-4 shadow-sm">
-            <label className="block text-sm font-medium text-gray-500 mb-1">
-              Transaction Date
-            </label>
-            <p className="text-gray-800 font-semibold">
-              {data?.transactionDate}
-            </p>
-          </div>
+       
         </div>
       </div>
     </ERPResizableSidebar>

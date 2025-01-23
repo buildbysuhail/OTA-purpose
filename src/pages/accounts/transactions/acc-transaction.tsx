@@ -237,6 +237,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
+          transactionType: transactionType,
           formCode: formCode,
           title:
             formType == undefined || formType.trim() == ""
@@ -1091,13 +1092,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const handleHistoryClick = async () => {
     try {
-      const response = await api.getAsync(
-        `${Urls.acc_transaction_base}${transactionType}/List/`
-      );
-      if (response.data && response.data.length > 0) {
-        setHistoryData(response.data[0]);
+      // const response = await api.getAsync(
+      //   `${Urls.acc_transaction_base}${transactionType}/List/`
+      // );
+      // if (response.data && response.data.length > 0) {
+      //   setHistoryData(response.data[0]);
         setIsHistorySidebarOpen(true);
-      }
+      // }
     } catch (error) {
       console.error("Error fetching transaction history:", error);
     }
@@ -1408,7 +1409,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <HistorySidebar
                     isOpen={isHistorySidebarOpen}
                     onClose={() => setIsHistorySidebarOpen(false)}
-                    data={historyData}
+                    // data={historyData}
                   />
 
                   {/* Settings  Button */}

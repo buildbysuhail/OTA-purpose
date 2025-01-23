@@ -53,7 +53,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                 <p className="text-gray-800 ">{cellElement.data?.transactionDate}</p>
               </div>
               <div className="w-1/2  flex justify-end ">
-                <p className="text-gray-950 font-semibold"> ₹ {cellElement.data?.amount}</p>
+                <p className="text-gray-950 font-semibold">  {cellElement.data?.amount}</p>
               </div>
             </div>
             <div className="pt-2">
@@ -68,7 +68,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   );
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
-      <div className="py-6 bg-gray-50 h-screen">
+      <div className="py-6 bg-gray-50 h-screen ">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 px-4">
           <h2 className="text-xl font-semibold text-gray-800">

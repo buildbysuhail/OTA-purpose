@@ -74,6 +74,8 @@ import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/a
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { customJsonParse } from "../../../utilities/jsonConverter";
+import AccountTransactionsVoucher from "../../InvoiceDesigner/DownloadPreview/account_transactiocn_standard";
+import AccountTransactionsUniversal from "../../InvoiceDesigner/DownloadPreview/account_transaction-universal";
 import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
 interface BilledItem {
   id?: number;
@@ -1116,7 +1118,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
-  const [showPopup, setShowPopup] = React.useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
 
@@ -1400,7 +1402,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        printVoucher();
+                        printVoucher(setIsPrintModalOpen);
                       }}
                     >
                       <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -2215,7 +2217,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              <div className="xl:w-[170px] lg:w-[250px] mb-[13px]">
+               <div className="xl:w-[170px] lg:w-[250px] mb-[13px]">
                 {formState.formElements.hasDiscount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig.inputBoxStyle}
@@ -2342,7 +2344,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   userSession.userTypeCode == "BA") && <>{t("unlock")}</>}
               <div className="flex items-center gap-2 mt-3">
 
-                {applicationSettings.accountsSettings?.maintainBillwiseAccount == true && (
+              {applicationSettings.accountsSettings?.maintainBillwiseAccount == true && (
                   <ERPButton
                     title={formState.formElements.btnBillWise.label}
                     variant="secondary"
@@ -2488,7 +2490,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
             // ]}
           />
-           <Summary calculateCustomSummary={handleCustomSummary}>
+              <Summary calculateCustomSummary={handleCustomSummary}>
             <TotalItem
               column="discount"
               summaryType="custom"
@@ -3257,15 +3259,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
       </div>
 
-      {formState.transaction && formState.template && (
+      {formState.transaction && formState.template && isPrintModalOpen && (
         <ERPModal
-          isOpen={formState.printPreview}
-          title={t("barcode_print")}
+          isOpen={isPrintModalOpen}
+          title={t("Template")}
           isForm={true}
           closeModal={() => {
-            dispatch(
-              accFormStateHandleFieldChange({ fields: { printPreview: false } })
-            );
+            setIsPrintModalOpen(false);
           }}
           content={
             <PDFViewer
@@ -3274,11 +3274,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               height={700}
               style={{ margin: "20px", padding: "10px" }}
             >
+            {formState.template?.templateKind == "premium" ? (
               <AccountTransactionsTemplate
                 template={formState?.template}
-                data={formState?.transaction}
+                data={formState.transaction}
                 currentBranch={currentBranch}
               />
+            ) : formState.template?.templateKind== "standard" ? (
+              <AccountTransactionsVoucher
+                template={formState?.template}
+                data={formState.transaction}
+                currentBranch={currentBranch}
+              />
+            ) :formState.template?.templateKind== "universal" ? (
+              <AccountTransactionsUniversal
+              template={formState?.template}
+              data={formState.transaction}
+              currentBranch={currentBranch}
+              userSession={userSession}
+            />
+            ):(
+            <>
+            </>
+          )}
             </PDFViewer>
           }
         ></ERPModal>

@@ -1064,7 +1064,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           disabled={
             formState.isRowEdit &&
             cellElement.data.accTransactionDetailId ==
-              formState.row.accTransactionDetailId
+              formState.row.accTransactionDetailId || formState.formElements.pnlMasters?.disabled
           }
           className="ti-btn-link"
           type="button"
@@ -2134,19 +2134,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       formState.formElements.pnlMasters?.disabled
                     }
                     labelInfo={
-                      <div className="">
-                        <span className="text-xs text-primary">
-                          <button className="pe-3">
-                            <CustomerDetailsSidebar displayType="link" />
-                          </button>
-                          Bal:{" "}
-                          {`${
-                            formState.ledgerBalance < 0
-                              ? -1 * formState.ledgerBalance
-                              : formState.ledgerBalance || "0.00"
-                          } ${formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"}`}
-                        </span>
-                      </div>
+                      formState.formElements.pnlMasters?.disabled ? null : (
+                        <div>
+                          <span className="text-xs text-primary">
+                            <button className="pe-3">
+                              <CustomerDetailsSidebar displayType="link" />
+                            </button>
+                            Bal:{" "}
+                            {`${Math.abs(formState.ledgerBalance || 0).toFixed(2)} ${
+                              formState.ledgerBalance < 0 ? "Cr" : "Dr"
+                            }`}
+                          </span>
+                        </div>
+                      )
                     }
                   />
                   {/* <div className="flex justify-between items-center mt-1">
@@ -2320,7 +2320,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onClick={showBillwise}
                     disabled={
                       formState.ledgerBillWiseLoading ||
-                      formState.formElements.btnBillWise.disabled == true
+                      formState.formElements.btnBillWise.disabled == true || formState.formElements.pnlMasters?.disabled
                     }
                   />
                 )}
@@ -2335,7 +2335,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     disabled={
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||
-                      formState.ledgerIsBillWiseAdjustExistLoading
+                      formState.ledgerIsBillWiseAdjustExistLoading || formState.formElements.pnlMasters?.disabled
                     }
                   />
                 )}
@@ -2420,7 +2420,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     }}
                     disabled={
                       formState.userConfig.presetCostenterId > 0 ||
-                    formState.formElements.costCentreID.disabled
+                    formState.formElements.costCentreID.disabled || formState.formElements.pnlMasters?.disabled
                     }
                     disableEnterNavigation
                   onKeyDown={(e: any) => {
@@ -3091,8 +3091,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )
               }
               disabled={
-                formState.formElements.printOnSave?.disabled ||
-                formState.formElements.pnlMasters?.disabled
+                formState.formElements.printOnSave?.disabled 
               }
             />
           )}
@@ -3110,8 +3109,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )
               }
               disabled={
-                formState.formElements.printPreview?.disabled ||
-                formState.formElements.pnlMasters?.disabled
+                formState.formElements.printPreview?.disabled 
               }
             />
           )}

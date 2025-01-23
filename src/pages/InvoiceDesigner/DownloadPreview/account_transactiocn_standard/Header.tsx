@@ -1,5 +1,4 @@
 import { View, Text, Image,StyleSheet } from "@react-pdf/renderer";
-import { AccountTransactionProps } from ".";
 import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { TemplateState } from "../../Designer/interfaces";

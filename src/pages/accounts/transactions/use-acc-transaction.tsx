@@ -691,10 +691,7 @@ export const useAccTransaction = (
           // Dispatch the update action with all the required fields
           dispatch(updateFormElement({ fields: fieldsToUpdate }));
         }
-        ERPAlert.show({
-          icon: "info",
-          title: saveRes.message,
-        });
+        ERPToast.show(saveRes.message,"success");
       } else {
         // dispatch(acc)
         ERPAlert.show({
@@ -748,7 +745,9 @@ export const useAccTransaction = (
           },
           btnDelete: { disabled: true },
           btnPrint: { disabled: true },
+          btnAdd: { label: "Add" },
           lnkUnlockVoucher: { visible: false },
+          linkEdit: { visible: false },
           pnlMasters: { disabled: false },
           masterAccount: {
             disabled:

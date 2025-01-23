@@ -80,7 +80,6 @@ const BalanceSheetVerticalTemplate = ({ template,currentBranch,userSession,data 
   const arabicFontStyles = {
     ...fontStyles,
     fontFamily: 'Amiri',
-
   };
   return (
     <Document>

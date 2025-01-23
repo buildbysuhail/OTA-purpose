@@ -3,7 +3,7 @@ import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { TransactionTitles } from "./transaction-titles";
 export enum TransactionBase {
-  Accounts = "Accounts",
+  Accounts = "/accounts/transactions",
 }
 export interface TransactionRoute {
   formCode: string;
@@ -14,6 +14,8 @@ export interface TransactionRoute {
   formType: string;
   title: string;
   drCr: string;
+  shortKey?: string;
+  shortKeyList?:string;
   visibleFn?: (userSession: UserModel) => boolean;
 }
 export const transactionRoutes: TransactionRoute[] = [
@@ -26,6 +28,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.CashPayment,
     drCr: "Dr",
+    shortKey:"ctrl+alt+c"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -36,6 +39,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.CashReceipt,
     drCr: "Cr",
+    shortKey: "ctrl+alt+r"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -46,6 +50,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.CashPaymentEstimate,
     drCr: "Dr",
+    shortKey: "ctrl+alt+shift+c",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
   {
@@ -57,6 +62,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.CashReceiptEstimate,
     drCr: "Cr",
+    shortKey: "ctrl+alt+shift+r",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
   {
@@ -68,6 +74,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.BankPayment,
     drCr: "Dr",
+    shortKey: "ctrl+alt+b"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -78,6 +85,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.BankReceipt,
     drCr: "Cr",
+    shortKey: "ctrl+alt+k"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -110,6 +118,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.OpeningBalance,
     drCr: "",
+    shortKey: "ctrl+alt+o"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -120,6 +129,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.JournalEntry,
     drCr: "",
+    shortKey: "ctrl+alt+j"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -130,6 +140,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.MultiJournalEntry,
     drCr: "",
+    shortKey: "ctrl+alt+m"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -151,6 +162,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.DebitNote,
     drCr: "Dr",
+    shortKey: "ctrl+alt+d"
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -161,6 +173,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "",
     title: TransactionTitles.CreditNote,
     drCr: "Cr",
+    shortKey: "ctrl+alt+n"
   },
   {
     transactionBase: TransactionBase.Accounts,

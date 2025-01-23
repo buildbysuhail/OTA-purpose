@@ -3,15 +3,9 @@ import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 import { Header } from "./Header";
 import { Content } from "./Content";
+import { AccountTransactionProps } from "../account_transactiocn-premium";
 
-export interface AccountTransactionProps {
-  data: any;
-  template?: TemplateState;
-  currentBranch?: any;
-}
-
-
-const AccountTransactionsVoucher = ({ data, template, currentBranch }: AccountTransactionProps) => {
+const AccountTransactionsVoucher = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;

@@ -365,14 +365,14 @@ const BillwiseComponent = ({
       return false;
     }
 
-    if ((formState.row.amount ?? 0) < totalAmount) {
-      ERPAlert.show({
-        title: "failed",
-        text: "Total adjustment amount exceeds the available amount.",
-      });
+    // if ((formState.row.amount ?? 0) < totalAmount) {
+    //   ERPAlert.show({
+    //     title: "failed",
+    //     text: "Total adjustment amount exceeds the available amount.",
+    //   });
 
-      return false;
-    }
+    //   return false;
+    // }
 
     return true;
   };
@@ -784,6 +784,15 @@ const BillwiseComponent = ({
             allowEditing={false}
             width={150}
           />
+          <Column
+            dataField="balance"
+            caption="Balance"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
 
           <Column
             dataField="billwiseAmount"
@@ -794,14 +803,16 @@ const BillwiseComponent = ({
             allowEditing={true}
             width={100}
           />
+          
           <Column
-            dataField="balance"
-            caption="Balance"
-            dataType="number"
+            dataField="balanceAfter"
+            caption="Balance After"
+            dataType="string"
             allowFiltering={true}
             allowSearch={true}
             allowEditing={false}
             width={150}
+            visible={true}
           />
           <Column
             dataField="referenceNumber"
@@ -875,16 +886,6 @@ const BillwiseComponent = ({
             visible={false}
           />
 
-          <Column
-            dataField="balanceAfter"
-            caption="Balance After"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={false}
-          />
 
           <Column
             dataField="drCr"

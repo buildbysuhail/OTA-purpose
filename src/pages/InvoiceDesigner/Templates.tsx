@@ -331,13 +331,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
 
   const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
-    const newTData = {
-      signature_image: null,
-      background_image: null,
-      background_image_header: null,
-      background_image_footer: null,
-    }
-
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
     let cc: TemplateState = customJsonParse(res.content)
     
@@ -352,11 +345,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       propertiesState: propertiesState
     }
     dispatch(  setTemplate( _template ));
-      // Create the state object with templateKind (if it exists)
       const state = template?.templateKind ? { templateKind: template.templateKind } : {};
        templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : 
        navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
-   
   };
 
   return (

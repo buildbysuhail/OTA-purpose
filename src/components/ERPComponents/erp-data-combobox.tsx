@@ -658,8 +658,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     useEffect(() => {
       filterItems(query);
     }, [query, filterItems]);
-
+const [prevValue, setPreValue] = useState<any>("");
     useEffect(() => {
+
+      
       const fieldKey = field?.id?.replaceAll("_id", "");
       const defaultValueKey = getNestedValue(
         defaultData?.[fieldKey ?? ""],
@@ -683,6 +685,22 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           ? filteredItems.findIndex((item) => item.value === final.value)
           : -1
       );
+      debugger;
+      const isDataEmpty = data?.[field?.id ?? ""] === undefined || 
+      data?.[field?.id ?? ""] === null || 
+      data?.[field?.id ?? ""] === 0 || 
+      data?.[field?.id ?? ""] === "";
+      
+      if(isDataEmpty) {
+        if(prevValue == inputValue) {
+          setPreValue("");
+          if(_selected == null ) { setInputValue("")}
+        } else {
+          
+          setPreValue(inputValue);
+        }
+      }
+      // if(_selected == null ) { setInputValue()}
     }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
     const clearSelection = (e?: React.MouseEvent) => {
@@ -694,6 +712,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setIsOpen(false);
       setQuery("");
       setInputValue(value.label);
+      // setPreValue(value.label);
       setDisplayValue("");
       setFilteredItems(items); // Reset filtered items to original list
       onChange?.(value);
@@ -706,6 +725,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setInputValue(value);
+      // setPreValue(value);
       setQuery(value);
       setIsOpen(true);
       if (!value.trim()) {

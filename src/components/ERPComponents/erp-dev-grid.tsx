@@ -115,6 +115,7 @@ interface ERPDevGridProps {
   showBorders?: boolean;
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
+  showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
   allowPaging?: boolean;
@@ -410,6 +411,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
+      showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
       allowPaging = true,
@@ -1233,7 +1235,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn(event.data)))
         ) {
           let updatedBodyProps: any = {};
-debugger;
           // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
           if (!dynamicProps.isTransactionScreen) {
             dynamicProps?.bodyProps != undefined
@@ -1371,6 +1372,7 @@ debugger;
             showColumnLines={showColumnLines}
             showRowLines={showRowLines}
             rowAlternationEnabled={true}
+            showColumnHeaders={showColumnHeaderscustom}
             onCellClick={handleCellClick}
             onRowDblClick={onRowDblClick}
             onCellPrepared={onCellPrepared}

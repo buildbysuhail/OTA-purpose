@@ -133,6 +133,7 @@ interface ERPDevGridProps {
   }>;
   allowSorting?: boolean;
   allowSearching?: boolean;
+  showFilterRow?: boolean;
   remoteOperations?:
     | boolean
     | {
@@ -423,6 +424,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       initialFilters = [],
       allowSorting = true,
       allowSearching = true,
+      showFilterRow = true,
       remoteOperations = true,
       condition,
       focusedRowEnabled = false,
@@ -1397,7 +1399,9 @@ debugger;
                 ))}
               </FilterRow>
             )}
-            {allowSearching && <SearchPanel visible={false} />}
+            {allowSearching && <SearchPanel visible={true} />}
+            <FilterRow
+          visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
             {allowSelection && <Selection mode={selectionMode} />}

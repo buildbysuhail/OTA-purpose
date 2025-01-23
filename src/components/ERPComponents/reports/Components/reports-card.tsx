@@ -27,6 +27,7 @@ const ReportsCard = ({ data }: any) => {
   const distributedItems = distributeItems();
   return (
     <div className="w-auto dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow shadow-lg">
+      {/* <div className="w-auto backdrop-blur-md bg-white/30 dark:bg-dark-bg-card/30 dark:border-dark-border border-white/20 rounded-lg p-5 border flex flex-grow shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"></div> */}
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
           {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}

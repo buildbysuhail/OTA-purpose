@@ -574,7 +574,7 @@ debugger;
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
+              <div className="w-10 h-10 dark:bg-[#f2f2f28a] bg-gray-100 rounded-md flex items-center justify-center">
                 {formState.ledgerData?.partyPhoto ? (
                   <img
                     src={ledgerData?.partyPhoto || profile}

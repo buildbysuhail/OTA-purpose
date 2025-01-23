@@ -1,10 +1,8 @@
 import { Document, Page, View, Text, StyleSheet,PDFViewer,Image  } from "@react-pdf/renderer";
-
-import Table from "./Table";
-import Footer from "./Footer";
 import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 import { Header } from "./Header";
+import { Content } from "./Content";
 
 export interface AccountTransactionProps {
   data: any;
@@ -14,35 +12,6 @@ export interface AccountTransactionProps {
 
 
 const AccountTransactionsVoucher = ({ data, template, currentBranch }: AccountTransactionProps) => {
-  // let paperWidth=500, paperHeight=500;
-  
-  // const paperSize = template?.propertiesState?.pageSize || "A4";
-
-  // switch (paperSize) {
-  //   case "A5":
-  //     paperWidth = 420; // 5.83in x 8.27in
-  //     paperHeight = 595;
-  //     break;
-  //   case "A4":
-  //     paperWidth = 589; // 8.27in x 11.69in
-  //     paperHeight = 842;
-  //     break;
-  //   case "LETTER":
-  //     paperWidth = 612; // 8.5in x 11in
-  //     paperHeight = 792;
-  //     break;
-  //   case "3Inch":
-  //     paperWidth = 216; // 3in x 6in
-  //     paperHeight = 432;
-  //     break;
-  //   case "4Inch":
-  //     paperWidth = 288; // 4in x 8in
-  //     paperHeight = 576;
-  //     break;
-  // }
-
-  // const topBackgroundColor = template?.headerState?.bgColor || "#275297";
-  // const bottomBackgroundColor = template?.footerState?.bg_color || "#275297";
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
@@ -60,43 +29,24 @@ return (
     wrap
   >
     {/* Main Container */}
-    <View style={{ flex: 1, flexDirection: 'column', width: '100%', height: '100%' }}>
-      {/* Header */}
-      <Header data={data} template={template} currentBranch={currentBranch} />
+    <View style={{ width: '100%', height: '100%' ,
+     padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
+   
+    }}>
+       
       {/* Main Content */}
       <View style={{
-        flex: 1, // Takes up remaining space
-        position: 'relative',
-        backgroundColor: template?.propertiesState?.bg_color || "#fff",
+        flex: 1,
+        flexDirection: 'column',
+        border:"1.5px solid rgb(104, 101, 101)"
         
       }}>
-        {/* Background Image */}
-        {template?.background_image && (
-          <Image
-            src={template.background_image}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: -20,
-            }}
-          />
-        )}
-   
+        {/* Header */}
+       <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Content */}
-        <View style={{ position: 'relative', zIndex: 50 ,
-          padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
-        }}>
-          {/* <Content data={data} template={template} currentBranch={currentBranch} /> */}
-          <Table data={data} template={template} />
-          {/* Add other components like Table, Header, Footer here */}
-        </View>
+          <Content data={data} template={template} currentBranch={currentBranch} />
       </View>
 
-      {/* Footer */}
-      <Footer data={data} template={template}/>
     </View>
   </Page>
 </Document>

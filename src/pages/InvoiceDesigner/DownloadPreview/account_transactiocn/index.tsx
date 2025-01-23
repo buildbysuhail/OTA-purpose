@@ -82,6 +82,7 @@ return (
                 width: '100%',
                 height: '100%',
                 zIndex: -20,
+                objectPosition: template?.propertiesState?.bg_image_position ??"center"
               }}
             />
           )}

@@ -74,6 +74,7 @@ import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/a
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { customJsonParse } from "../../../utilities/jsonConverter";
+import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
 interface BilledItem {
   id?: number;
   name: string;
@@ -262,9 +263,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       accFormStateHandleFieldChange({
         fields: {
           isInvoker: voucherNo && voucherNo > 0,
-          foreignCurrency:
-            applicationSettings.accountsSettings
-              ?.maintainMultiCurrencyTransactions,
+          // foreignCurrency:
+          //   applicationSettings.accountsSettings
+          //     ?.maintainMultiCurrencyTransactions,
         },
       })
     );
@@ -929,6 +930,33 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       setTemplateLoad(false);
     }
   }, []);
+  const { round } = useNumberFormat();
+  const handleCustomSummary = (options: any) => {
+    if (options.summaryProcess === "start") {
+      console.log("Custom summary started for column:", options.name);
+      options.totalValue = 0; // Initialize the total value
+    }
+
+    if (options.summaryProcess === "calculate") {
+      console.log(
+        "Processing value:",
+        options.value,
+        "for column:",
+        options.name
+      );
+      options.totalValue += options.value || 0; // Aggregate values, fallback to 0 if undefined
+    }
+
+    if (options.summaryProcess === "finalize") {
+      console.log(
+        "Finalizing summary for column:",
+        options.name,
+        "with total value:",
+        options.totalValue
+      );
+      options.totalValue = round(options.totalValue); // Apply custom rounding at the end
+    }
+  };
 
   const columns: DevGridColumn[] = [
     {
@@ -1057,6 +1085,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       caption: t("action"),
       visible: true,
       cellRender: (cellElement: any, cellInfo: any) => (
+        formState.formElements.pnlMasters?.disabled == true ? null :
         <button
           onClick={() => {
             handleRemoveItem(cellElement.rowIndex);
@@ -2134,7 +2163,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       formState.formElements.pnlMasters?.disabled
                     }
                     labelInfo={
-                      formState.formElements.pnlMasters?.disabled ? null : (
+                      formState.formElements.pnlMasters?.disabled == true ? null : (
                         <div>
                           <span className="text-xs text-primary">
                             <button className="pe-3">
@@ -2459,6 +2488,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
             // ]}
           />
+           <Summary calculateCustomSummary={handleCustomSummary}>
+            <TotalItem
+              column="discount"
+              summaryType="custom"
+              displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              } // Handle undefined gracefully
+            />
+            <TotalItem
+              column="amount"
+              summaryType="custom"
+              displayFormat="{0}"
+              customizeText={(e) =>
+                `${round(parseFloat((e.value || "0") as string))}`
+              }
+            />
+          </Summary>
           {formState.showSaveDialog && (
             <ERPAlert
               showAnimation="animate__fadeIn"
@@ -2860,11 +2907,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     applicationSettings.accountsSettings?.billwiseMandatory &&
                     formState.row.billwiseDetails != ""
                   ) {
-                    dispatch(
-                      updateFormElement({
-                        fields: { amount: { disabled: true } },
-                      })
-                    );
+                    setTimeout(() => {
+                      dispatch(
+                        updateFormElement({
+                          fields: { amount: { disabled: true } },
+                        })
+                      );
+                    }, 0);
                   }
                   if (
                     formState.formElements.costCentreID.visible == false ||

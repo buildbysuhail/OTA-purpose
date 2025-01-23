@@ -94,7 +94,7 @@ const BillwiseComponent = ({
    
   }, [formState.billwiseData, formState.showbillwise]);
   useEffect(() => {
-    debugger;
+    
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else
@@ -388,7 +388,7 @@ const BillwiseComponent = ({
     fromAutoPost?: boolean | false
   ) => {
     try {
-      debugger;
+      
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
       // }
@@ -433,7 +433,7 @@ const BillwiseComponent = ({
             },
           })
         );
-debugger;
+
         onSave &&
           onSave(
             billwiseString.billwiseString,

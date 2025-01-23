@@ -69,7 +69,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           const res = await api.getAsync(
             `${Urls.voucher_selector}${voucherType}`
           );
-          debugger;
+          
           if (
             res == undefined ||
             res == null ||

@@ -54,7 +54,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError('');
-
+debugger;
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
@@ -64,6 +64,7 @@ const Login = () => {
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
+        localStorage.removeItem("_token")
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
@@ -79,6 +80,7 @@ const Login = () => {
       }
       else { 
         if(login.item.hasToSetCounter) {
+          localStorage.setItem("_token", login.item.token);
           setCounterSettings({show: true, token:login.item.token});
         } else {
           setError(login.message)
@@ -250,7 +252,7 @@ const Login = () => {
                           setCounterSettings({show: false, token:""});
                           
                         }}
-                        content={<CounterSettings token=""/>}
+                        content={<CounterSettings token={counterSettings.token}/>}
                       ></ERPModal>
     </div>
 

@@ -107,7 +107,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionMasterID,
   financialYearID,
 }) => {
-  debugger;
+  
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
     `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
@@ -311,9 +311,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   //   );
   // }, [formState.transaction.details]);
   useEffect(() => {
-    debugger;
+    
     const fetchUserConfig = async () => {
       try {
+        debugger;
         const response = await api.get(Urls.get_acc_user_config);
         const _userConfig = atob(response);
         const userConfig: AccUserConfig = customJsonParse(_userConfig);
@@ -489,13 +490,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.masterAccountID]);
   useEffect(() => {
     const initializeFormElements = async () => {
-      debugger;
+      
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
         applicationSettings.accountsSettings?.maintainProjectSite ||
         userSession.dbIdValue == "543140180640";
-      debugger;
+      
       // Prepare the fields to update based on conditions
       const fieldsToUpdate = {
         btnSave: { disabled: true },
@@ -606,7 +607,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
-      debugger;
+      
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -895,7 +896,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
-    debugger;
+    
     const nextVoucherNumber = await getNextVoucherNumber(
       formType ?? "",
       voucherType ?? "",
@@ -1688,7 +1689,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             value={formState.transaction.master.drCr}
                             data={formState.transaction.master}
                             onChange={(e) => {
-                              debugger;
+                              
                               dispatch(
                                 accFormStateTransactionMasterHandleFieldChange({
                                   fields: { drCr: e.value },
@@ -1951,7 +1952,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       value={formState.transaction.master.employeeID}
                       className="lg:max-w-[300px]"
                       onChange={(e) => {
-                        debugger;
+                        
                         dispatch(
                           accFormStateTransactionMasterHandleFieldChange({
                             fields: { employeeID: e.value },
@@ -2395,37 +2396,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
               {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
-                  ref={costCenterRef}
-                  localInputBox={formState?.userConfig.inputBoxStyle}
-                  id="costCentreID"
+                    localInputBox={formState?.userConfig.inputBoxStyle}
+                    enableClearOption={false}
+                    ref={costCenterRef}
+                    id="costCentreID"
                   className="min-w-[180px]"
-                  label={t(formState.formElements.costCentreID.label)}
-                  field={{
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_costcentres,
-                  }}
-                  disabled={
-                    formState.userConfig.presetCostenterId > 0 ||
+                    label={t(formState.formElements.costCentreID.label)}
+                    data={formState.row}
+                    onSelectItem={(e) => {
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { costCentreID: e.value, costCentreName: e.label },
+                        })
+                      );
+                      handleFieldKeyDown("costCentreID", "Enter");
+                    }}
+                    value={formState.row.costCentreID}
+                    field={{
+                      id: "costCentreID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_costcentres,
+                    }}
+                    disabled={
+                      formState.userConfig.presetCostenterId > 0 ||
                     formState.formElements.costCentreID.disabled
-                  }
-                  value={formState.row.costCentreID}
-                  onSelectItem={(e) => {
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: {
-                          costCentreID: e.value,
-                          costCentreName: e.label,
-                        },
-                      })
-                    );
-                    handleFieldKeyDown("costCentre", "Enter");
-                  }}
-                  disableEnterNavigation
+                    }
+                    disableEnterNavigation
                   onKeyDown={(e: any) => {
                     handleKeyDown(e, "costCentre");
                   }}
-                />
+                  />
               )}
             </div>
             <div
@@ -3122,7 +3123,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               data={formState.userConfig}
               checked={formState?.userConfig?.keepNarrationForJV}
               onChangeData={(e) => {
-                debugger;
+                
                 const updatedUserConfig = {
                   ...formState.userConfig,
                   keepNarrationForJV: e.keepNarrationForJV,

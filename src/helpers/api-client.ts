@@ -34,6 +34,8 @@ axios.interceptors.response.use(
  */
 const setAuthorization = (token?: string) => {
   const _token = (token??localStorage.getItem("token"))??"";
+  const __token = (token??localStorage.getItem("_token"))??"";
+  if(__token)  axios.defaults.headers.common["Authorization"] = "Bearer " + __token;
   if (_token) axios.defaults.headers.common["Authorization"] = "Bearer " + _token;
 
   axios.defaults.headers.common["X-Software-Date"] = new Date().toDateString();
@@ -53,9 +55,9 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  getAsync = async (url: string, queryString: string = "", config:any = undefined): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string): Promise<any> => {
     try {
-      setAuthorization();
+      setAuthorization(token);
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
       if (response?.status != undefined && response?.status != null) {

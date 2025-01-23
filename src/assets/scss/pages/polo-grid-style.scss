@@ -538,6 +538,11 @@ span.dx-datagrid-nodata {
     
     
   }
+  .HistorySidebarcustom{
+    .dx-datagrid .dx-row-alt>td {
+      background-color: unset !important;
+  }
+  }
   
   .custom-data-grid {
   

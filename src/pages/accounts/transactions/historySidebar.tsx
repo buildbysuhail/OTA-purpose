@@ -27,22 +27,38 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
       {
         dataField: "actions",
         caption: t("Actions"),
-        allowSearch: false,
+        allowSearch: true,
         allowFiltering: false,
         fixed: true,
         fixedPosition: "right",
         width: 100,
         cellRender: (cellElement: any) => {
           return (
-            <div className="bg-white p-4 shadow-sm">
-            <label className="block text-sm font-medium text-gray-500 mb-1">
+            <div className="bg-white p-4 hover:bg-gray-200">
+            {/* <label className="block text-sm font-medium text-gray-500 mb-1">
               Transaction Datedsds
-            </label>
-            <p className="text-gray-800 font-semibold">
+            </label> */}
+            {/* <p className="text-gray-800 font-semibold">
             {cellElement.data?.particulars}
             {cellElement.data?.amount}
             {cellElement.data?.transactionDate}
-            </p>
+            </p> */}
+            {/* <p className="text-gray-800 font-semibold">{cellElement.data?.particulars}</p>
+            <p className="text-gray-800 font-semibold">{cellElement.data?.amount}</p>
+            <p className="text-gray-800 font-semibold">{cellElement.data?.transactionDate}</p> */}
+
+
+            <div className="w-full flex flex-row">
+              <div className="w-1/2 ">
+                <p className="text-gray-800 ">{cellElement.data?.transactionDate}</p>
+              </div>
+              <div className="w-1/2  flex justify-end ">
+                <p className="text-gray-950 font-semibold">  {cellElement.data?.amount}</p>
+              </div>
+            </div>
+            <div className="pt-2">
+              <p className="text-gray-800 font-semibold overflow-hidden text-ellipsis whitespace-nowrap ">{cellElement.data?.particulars}</p>  
+            </div>
           </div>
           );
         },
@@ -52,7 +68,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   );
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
-      <div className="py-6 bg-gray-50 h-screen">
+      <div className="py-6 bg-gray-50 h-screen ">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 px-4">
           <h2 className="text-xl font-semibold text-gray-800">
@@ -98,7 +114,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
                 allowSearching={false}
                 hideGridAddButton={true}
                 hideGridHeader={true}
-                GridPreferenceChoosertrue={false}
+                showColumnHeaderscustom={false}
+                className="HistorySidebarcustom "
+                ShowGridPreferenceChooser={false}
               />
           {/* Transaction Date */}
        

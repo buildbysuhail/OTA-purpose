@@ -2186,7 +2186,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              <div className="xl:w-[170px] lg:w-[250px]">
+              <div className="xl:w-[170px] lg:w-[250px] mb-[13px]">
                 {formState.formElements.hasDiscount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig.inputBoxStyle}

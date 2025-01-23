@@ -2395,37 +2395,36 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
               {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
-                  ref={costCenterRef}
-                  localInputBox={formState?.userConfig.inputBoxStyle}
-                  id="costCentreID"
+                    localInputBox={formState?.userConfig.inputBoxStyle}
+                    ref={costCenterRef}
+                    id="costCentreID"
                   className="min-w-[180px]"
-                  label={t(formState.formElements.costCentreID.label)}
-                  field={{
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_costcentres,
-                  }}
-                  disabled={
-                    formState.userConfig.presetCostenterId > 0 ||
+                    label={t(formState.formElements.costCentreID.label)}
+                    data={formState.row}
+                    onSelectItem={(e) => {
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { costCentreID: e.value, costCentreName: e.label },
+                        })
+                      );
+                      handleFieldKeyDown("costCentreID", "Enter");
+                    }}
+                    value={formState.row.costCentreID}
+                    field={{
+                      id: "costCentreID",
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_costcentres,
+                    }}
+                    disabled={
+                      formState.userConfig.presetCostenterId > 0 ||
                     formState.formElements.costCentreID.disabled
-                  }
-                  value={formState.row.costCentreID}
-                  onSelectItem={(e) => {
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: {
-                          costCentreID: e.value,
-                          costCentreName: e.label,
-                        },
-                      })
-                    );
-                    handleFieldKeyDown("costCentre", "Enter");
-                  }}
-                  disableEnterNavigation
+                    }
+                    disableEnterNavigation
                   onKeyDown={(e: any) => {
                     handleKeyDown(e, "costCentre");
                   }}
-                />
+                  />
               )}
             </div>
             <div

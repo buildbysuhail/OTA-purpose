@@ -756,6 +756,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<any>) => {
+      debugger;
       if (!isOpen) {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           setIsOpen(true);
@@ -769,7 +770,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           handleItemClick(filteredItems[activeIndex]);
         } else {
           if (disableEnterNavigation) {
-            if (onkeydown != undefined) {
+            
+            if (onKeyDown != undefined) {
               onKeyDown ? onKeyDown(event) : undefined;
             }
           } else {
@@ -1392,17 +1394,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   !disabled && setIsOpen(!isOpen);
                 }}
                 onKeyDown={(e) => {
-                  if (
-                    !isOpen &&
-                    (e.key === "ArrowDown" || e.key === "ArrowUp")
-                  ) {
-                    setIsOpen(true);
-                  }
-                  disableEnterNavigation == true
-                    ? onKeyDown != undefined
-                      ? onKeyDown(e)
-                      : undefined
-                    : handleKeyDown(e);
+                 debugger;
+                 handleKeyDown(e);
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={

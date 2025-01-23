@@ -953,7 +953,7 @@ const Header: FC<HeaderProps> = () => {
                   className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]"
                 >
                   <img
-                    className="inline-block rounded-full "
+                    className="inline-block rounded-full dark:bg-[#f2f2f28a] "
                     title={userSession?.userimage || profile}
                     src={userSession?.userimage || profile}
                     width="32"

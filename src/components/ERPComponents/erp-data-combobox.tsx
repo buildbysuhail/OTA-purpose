@@ -683,6 +683,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           ? filteredItems.findIndex((item) => item.value === final.value)
           : -1
       );
+      debugger;
+      if(final == null ) { setInputValue("")}
     }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
     const clearSelection = (e?: React.MouseEvent) => {
@@ -756,6 +758,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<any>) => {
+      
       if (!isOpen) {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           setIsOpen(true);
@@ -769,7 +772,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           handleItemClick(filteredItems[activeIndex]);
         } else {
           if (disableEnterNavigation) {
-            if (onkeydown != undefined) {
+            
+            if (onKeyDown != undefined) {
               onKeyDown ? onKeyDown(event) : undefined;
             }
           } else {
@@ -1385,24 +1389,15 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   backgroundColor: bgColor,
                 }}
                 className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
-                displayValue={() => initial?.label || ""}
+                displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {
                   e.stopPropagation();
                   !disabled && setIsOpen(!isOpen);
                 }}
                 onKeyDown={(e) => {
-                  if (
-                    !isOpen &&
-                    (e.key === "ArrowDown" || e.key === "ArrowUp")
-                  ) {
-                    setIsOpen(true);
-                  }
-                  disableEnterNavigation == true
-                    ? onKeyDown != undefined
-                      ? onKeyDown(e)
-                      : undefined
-                    : handleKeyDown(e);
+                 
+                 handleKeyDown(e);
                 }}
                 onKeyUp={onKeyUp}
                 placeholder={
@@ -1417,7 +1412,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 autoFocus={autoFocus}
                 title={initial?.label || ""}
                 value={
-                   truncateValue(initial?.label || "")
+                  isOpen ? inputValue : truncateValue(initial?.label || "")
                 }
                 readOnly={disabled}
                 disabled={disabled}
@@ -1451,7 +1446,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 }}
               >
                 {enableClearOption &&
-                  (initial) &&
+                  (initial || inputValue) &&
                   !noXMarkIcon && (
                     <button
                       type="button"

@@ -111,7 +111,7 @@ const HorizontalProfitAndLoss: React.FC<{
           {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-400">
+              <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("expense")}</th>
                 <th className="py-2 text-end pe-2">{t("amount")}</th>
               </tr>
@@ -153,7 +153,7 @@ const HorizontalProfitAndLoss: React.FC<{
           {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-400">
+              <tr className="dark:bg-dark-bg-header bg-gray-400">
                 <th className="py-2 ps-2">{t("income")}</th>
                 <th className="py-2 text-end pe-2">{t("amount")}</th>
               </tr>
@@ -173,7 +173,7 @@ const HorizontalProfitAndLoss: React.FC<{
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div className="grid grid-cols-2 bg-gray-50 p-2">
+        <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#f00]">Total</h6>
           <h6 className="text-sm font-bold text-[#f00] text-right">
             {getFormattedValue(
@@ -184,7 +184,7 @@ const HorizontalProfitAndLoss: React.FC<{
             )}
           </h6>
         </div>
-        <div className="grid grid-cols-2 bg-gray-50 p-2">
+        <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#f00]">Total</h6>
           <h6 className="text-sm font-bold text-[#f00] text-right">
             {getFormattedValue(
@@ -515,10 +515,10 @@ const handleExport = async () => {
     window.URL.revokeObjectURL(url);
   };
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6 dark:bg-dark-bg bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
-        <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
+        <div className="flex items-center p-1  border dark:!border-dark-border border-gray-300 rounded-md mb-4">
           {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
@@ -546,7 +546,7 @@ const handleExport = async () => {
             </div> */}
 
             <button
-              className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
+              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
               onClick={() => setIsVerticalView(!isVerticalView)}
             >
               <RectangleVertical className="mr-2" />
@@ -564,12 +564,12 @@ const handleExport = async () => {
                 />
                 <label
                   htmlFor="toggle"
-                  className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                  className="toggle-label block overflow-hidden h-6 rounded-full dark:bg-dark-bg bg-gray-300 cursor-pointer"
                 ></label>
               </div>
             </button>
 
-            <button className="flex items-center bg-gray-100 p-0 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
                 gridId="gridPandL_detailed"
@@ -583,7 +583,7 @@ const handleExport = async () => {
                 title={"Profit and Loss Detailed"}
               />
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt me-1"></i> */}
               <Forward className="pe-2" />
               <span>{t("share")}</span>
@@ -591,24 +591,24 @@ const handleExport = async () => {
                 0
               </span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-clock me-1"></i> */}
               <Clock1 className="pe-2" />
               <span>{t("schedule_report")}</span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-print me-1"></i> */}
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
-            <button className="flex items-center bg-gray-100 p-2 rounded-md"
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
               onClick={handleExport}
             >
               {/* <i className="fas fa-file-export me-1"></i> */}
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button onClick={goToPreviousPage} className="flex items-center bg-gray-100 p-2 rounded-md">
+            <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />
@@ -653,7 +653,7 @@ const handleExport = async () => {
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-400">
+                  <tr className="dark:bg-dark-bg-header bg-gray-400">
                     <th className="py-2 ps-2">{t("account")}</th>
                     <th className="py-2 text-end pe-2">{t("total")}</th>
                   </tr>

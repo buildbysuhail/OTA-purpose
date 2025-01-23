@@ -64,7 +64,7 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
       </div> */}
       <ERPScrollArea className="content main-index max-h-dvh overflow-y-auto">
       {/* <div className=""> */}
-        <div className="main-content" onClick={Bodyclickk}>
+        <div className="main-content px-4" onClick={Bodyclickk}>
           <Content />
         </div>
       {/* </div> */}

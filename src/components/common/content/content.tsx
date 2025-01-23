@@ -376,7 +376,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/test" element={<Test />} />
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
-        <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings />} />
+        <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings defaultShortcuts={[]} />} />
         <Route
           path="/integration/test-input-button"
           element={<TestInputButton />}
@@ -463,7 +463,7 @@ const Content: FC<ContentProps> = () => {
               <>
                 <Route
                   key={index}
-                  path={`/accounts/transactions/${route.transactionType}`}
+                  path={`${route.transactionBase}/${route.transactionType}`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <AccTransactionFormContainer
@@ -481,7 +481,7 @@ const Content: FC<ContentProps> = () => {
                 />
                 <Route
                   key={index}
-                  path={`/accounts/transactions/${route.transactionType}List`}
+                  path={`${route.transactionBase}/${route.transactionType}List`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <AccTransactionGrid
@@ -493,7 +493,7 @@ const Content: FC<ContentProps> = () => {
                 />
                 <Route
                   key={index}
-                  path={`/accounts/transactions/${route.transactionType}/:voucherNo`}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
                       <AccTransactionFormContainer

@@ -121,7 +121,7 @@ const PartySummaryMaster = ({
                       }))
                     }
                   />
-                  <div>
+                  <div className="mt-[21px]">
                     <ERPButton
                       type="button"
                       variant="primary"
@@ -162,16 +162,16 @@ const PartySummaryMaster = ({
                   variant="scrollable"
                   scrollButtons="auto"
                 >
-                  <Tab label="Basic Info" value="basicInfo" />
-                  <Tab label="Account Ledger" value="accountLedger" />
-                  <Tab label="Payments" value="payments" />
-                  <Tab label="Collections" value="collections" />
-                  <Tab label="Purchase" value="purchase" />
-                  <Tab label="Sales" value="sales" />
-                  <Tab label="Purchase Return" value="purchaseReturn" />
-                  <Tab label="Purchase Order" value="purchaseOrder" />
-                  <Tab label="Sales Return" value="salesReturn" />
-                  <Tab label="Sales Order" value="salesOrder" />
+                  <Tab className="dark:text-dark-text"  label="Basic Info" value="basicInfo" />
+                  <Tab className="dark:text-dark-text"  label="Account Ledger" value="accountLedger" />
+                  <Tab className="dark:text-dark-text"  label="Payments" value="payments" />
+                  <Tab className="dark:text-dark-text"  label="Collections" value="collections" />
+                  <Tab className="dark:text-dark-text"  label="Purchase" value="purchase" />
+                  <Tab className="dark:text-dark-text"  label="Sales" value="sales" />
+                  <Tab className="dark:text-dark-text"  label="Purchase Return" value="purchaseReturn" />
+                  <Tab className="dark:text-dark-text"  label="Purchase Order" value="purchaseOrder" />
+                  <Tab className="dark:text-dark-text"  label="Sales Return" value="salesReturn" />
+                  <Tab className="dark:text-dark-text"  label="Sales Order" value="salesOrder" />
                 </Tabs>
                 <div className="pt-4">
                   {activeTab === "basicInfo" && (

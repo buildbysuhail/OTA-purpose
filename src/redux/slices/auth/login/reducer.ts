@@ -26,9 +26,9 @@ const loginSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       if(action.payload.isOk) {
         // let userSession = jwtHelper.getUserDetailsFromToken(action.payload.item.token, action.payload.item.permissionToken);
-        state.token = action.payload.item.token;        
+        state.token = action.payload.item.token; 
+      }       
       state.loading = false;
-      }
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;

@@ -23,6 +23,8 @@ import { UserTypeRights } from "../../redux/slices/user-rights/reducer";
 import { Button } from "../../dark/Button";
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { Sun, Moon } from "lucide-react";
+import ERPModal from "../../components/ERPComponents/erp-modal";
+import CounterSettings from "../settings/system/counter-settings";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,6 +42,8 @@ const Login = () => {
 
   /* ########################################################################################### */
 
+  const [counterSettings, setCounterSettings] = useState<{show: boolean, token: string}>({show: false, token: ""})
+        
   const handleSubmit = async (event: any) => {
 
     event.preventDefault();
@@ -50,7 +54,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError('');
-
+debugger;
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
@@ -60,11 +64,11 @@ const Login = () => {
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
+        localStorage.removeItem("_token")
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
         localStorage.setItem("ur", login.item.useRights);
-        
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
         const _userRights = atob(login.item.userRights);
@@ -74,10 +78,18 @@ const Login = () => {
         let locale = (languagesData.find((l) => l.code == userProfileDetails.language)) ?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
         syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
       }
-      else { setError(login.message) }
+      else { 
+        if(login.item.hasToSetCounter) {
+          localStorage.setItem("_token", login.item.token);
+          setCounterSettings({show: true, token:login.item.token});
+        } else {
+          setError(login.message)
+        }
+       }
     } else {
       alert("Please fill all fields");
     }
+    
   };
 
   /* ########################################################################################### */
@@ -227,6 +239,22 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <ERPModal
+                        isForm={true}
+                        isOpen={counterSettings.show}
+                        closeButton="LeftArrow"
+                        hasSubmit={false}
+                        closeTitle="Close"
+                        title="Counter Settings"
+                        width="w-full"
+                        isFullHeight={true}
+                        closeModal={() => {
+                          setCounterSettings({show: false, token:""});
+                          
+                        }}
+                        content={<CounterSettings token={counterSettings.token}/>}
+                      ></ERPModal>
     </div>
 
 

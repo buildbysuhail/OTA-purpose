@@ -72,7 +72,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
-  const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat();
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
   );
@@ -90,10 +90,21 @@ const BillwiseComponent = ({
       onMaximizeChange(true);
     }
   }, [isMaximized, onMaximizeChange]);
-
+  useEffect(() => {
+   
+  }, [formState.billwiseData, formState.showbillwise]);
+  useEffect(() => {
+    
+    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
+      generateGridFromBillwiseString(formState.row.billwiseDetails);
+    } else
+    {
+      setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
+    }
+  }, [formState.billwiseData, formState.showbillwise]);
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows =isMaximized? wh - 300 : wh - 350;
+    let gridHeightWindows = isMaximized ? wh - 300 : wh - 350;
     setGridHeight(gridHeightWindows);
   }, [isMaximized, modalHeight]);
   useEffect(() => {
@@ -131,11 +142,6 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, modalHeight]);
   const [loadCount, setLoadCount] = useState<number>(0);
-  useEffect(() => {
-    const clonedData = JSON.parse(JSON.stringify(formState.billwiseData));
-
-    setStore(clonedData);
-  }, []);
 
   const handleSelectionChange = (e: any) => {
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
@@ -209,11 +215,7 @@ const BillwiseComponent = ({
     setNetAdjustment(getTotalAmountToSet(formattedData));
     setStore(formattedData);
   }, [showAllTransactions]);
-  useEffect(() => {
-    if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-      generateGridFromBillwiseString(formState.row.billwiseDetails);
-    }
-  }, []);
+  
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
@@ -260,6 +262,7 @@ const BillwiseComponent = ({
   // }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
+    
     const rows = billwiseStr.split("|");
     const updatedData = [...store];
 
@@ -281,7 +284,7 @@ const BillwiseComponent = ({
 
   const getBillwiseString = (updatedBills?: BillwiseData[] | undefined) => {
     let vrNumbers = "";
-    const billwiseString = (updatedBills??store)
+    const billwiseString = (updatedBills ?? store)
       .filter((row: any) => row.billwiseAmount > 0)
       .map((row: any) => {
         if (row.billwiseAmount > 0) {
@@ -305,14 +308,15 @@ const BillwiseComponent = ({
 
   //   onSave(billwiseString, totalAdjusted, vrNumbers);
   // };
-  const getTotalAmountAdjusted = (updatedBills?: BillwiseData[] | undefined) => {
-    return (updatedBills??store).reduce(
+  const getTotalAmountAdjusted = (
+    updatedBills?: BillwiseData[] | undefined
+  ) => {
+    return (updatedBills ?? store).reduce(
       (sum: number, item: any) => sum + (item.billwiseAmount || 0),
       0
     );
   };
   function getTotalAmountToSet(list: BillwiseData[]) {
-    
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
@@ -342,6 +346,16 @@ const BillwiseComponent = ({
   }
   const validate = () => {
     const totalAmount = getTotalAmountToSet(store);
+    for (let index = 0; index < store.length; index++) {
+      const element: BillwiseData = store[index];
+      if(element.balance < element.billwiseAmount) {
+        ERPAlert.show({
+          title: "Excess Value",
+          text: "Invalid Amount assinged in Row:" + (element.slNo).toString(),
+        });
+        return false;
+      }
+    }
 
     if (totalAmount < 0) {
       ERPAlert.show({
@@ -351,14 +365,14 @@ const BillwiseComponent = ({
       return false;
     }
 
-    if ((formState.row.amount ?? 0) < totalAmount) {
-      ERPAlert.show({
-        title: "failed",
-        text: "Total adjustment amount exceeds the available amount.",
-      });
+    // if ((formState.row.amount ?? 0) < totalAmount) {
+    //   ERPAlert.show({
+    //     title: "failed",
+    //     text: "Total adjustment amount exceeds the available amount.",
+    //   });
 
-      return false;
-    }
+    //   return false;
+    // }
 
     return true;
   };
@@ -369,17 +383,20 @@ const BillwiseComponent = ({
 
     // onClose && onClose();
   };
-  const handleSave = (updatedBills?: BillwiseData[] | undefined, fromAutoPost?: boolean | false) => {
+  const handleSave = (
+    updatedBills?: BillwiseData[] | undefined,
+    fromAutoPost?: boolean | false
+  ) => {
     try {
-      debugger;
+      
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
       // }
-
+      updatedBills = updatedBills??store;
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString(updatedBills);
-        const amtAdjusted = getTotalAmountToSet(updatedBills??[]);
+        const amtAdjusted = getTotalAmountToSet(updatedBills ?? []);
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {
@@ -424,7 +441,7 @@ const BillwiseComponent = ({
               ? amtAdjusted
               : formState.row.amount ?? 0,
             billwiseString.vrNumbers,
-            fromAutoPost??false
+            fromAutoPost ?? false
           );
         closeBillwise();
       } else if (isFromCashTender) {
@@ -510,12 +527,12 @@ const BillwiseComponent = ({
       if (billBalance <= remainingAmount) {
         // Full payment
         bill.billwiseAmount = billBalance;
-        bill.balance = 0;
+        bill.balanceAfter = 0;
         remainingAmount -= billBalance;
       } else {
         // Partial payment
         bill.billwiseAmount = remainingAmount;
-        bill.balance = billBalance - remainingAmount;
+        bill.balanceAfter = billBalance - remainingAmount;
         remainingAmount = 0;
       }
       i++;
@@ -551,13 +568,13 @@ const BillwiseComponent = ({
     <Card
       className={`w-full ${isMaximized ? "max-w-full" : "max-w-6xl"}`}
       elevation={0}
-      sx={{ p: 0 ,m:0}}
+      sx={{ p: 0, m: 0 }}
     >
       <CardContent sx={{ p: 0 }}>
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
+              <div className="w-10 h-10 dark:bg-[#f2f2f28a] bg-gray-100 rounded-md flex items-center justify-center">
                 {formState.ledgerData?.partyPhoto ? (
                   <img
                     src={ledgerData?.partyPhoto || profile}
@@ -630,8 +647,8 @@ const BillwiseComponent = ({
                     ...e.row.data,
                     billwiseAmount: args.value,
                   };
-                  updatedRow.balance =
-                    updatedRow.amount - updatedRow.billwiseAmount;
+                  updatedRow.balanceAfter =
+                    updatedRow.balance - updatedRow.billwiseAmount;
 
                   // Update the dataSource with the new values
                   const updatedStore = store.map((row: any) =>
@@ -767,6 +784,15 @@ const BillwiseComponent = ({
             allowEditing={false}
             width={150}
           />
+          <Column
+            dataField="balance"
+            caption="Balance"
+            dataType="number"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+          />
 
           <Column
             dataField="billwiseAmount"
@@ -777,14 +803,16 @@ const BillwiseComponent = ({
             allowEditing={true}
             width={100}
           />
+          
           <Column
-            dataField="balance"
+            dataField="balanceAfter"
             caption="Balance After"
-            dataType="number"
+            dataType="string"
             allowFiltering={true}
             allowSearch={true}
             allowEditing={false}
             width={150}
+            visible={true}
           />
           <Column
             dataField="referenceNumber"
@@ -858,16 +886,6 @@ const BillwiseComponent = ({
             visible={false}
           />
 
-          <Column
-            dataField="balance"
-            caption="Balance After"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={false}
-          />
 
           <Column
             dataField="drCr"
@@ -927,7 +945,11 @@ const BillwiseComponent = ({
               onClick={handleAutoPost}
               className="mr-2"
             />
-            <ERPButton title="Save" onClick={() => handleSave()} className="mr-2" />
+            <ERPButton
+              title="Save"
+              onClick={() => handleSave()}
+              className="mr-2"
+            />
             <ERPButton title="Cancel" onClick={() => closeBillwise()} />
           </div>
         </div>

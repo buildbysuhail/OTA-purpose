@@ -399,6 +399,7 @@ export interface BillwiseData {
   adjustedAmount: number;
   amount: number;
   balance: number;
+  balanceAfter: number;
   billWiseMasterID: number;
   billwiseAmount: number;
   drCr: "Dr" | "Cr"; // Enum-like string values for debit or credit
@@ -472,6 +473,7 @@ export interface AccTransactionFormState {
   transactionLoading: boolean;
   unlocking: boolean;
   transaction: AccTransactionData;
+  transactionType: string;
   total: number;
   printOnSave: boolean
   printPreview: boolean
@@ -530,7 +532,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   printPreview: { visible: true, disabled: false, label: "print_preview" },
   printCheque: { visible: true, disabled: false, label: "print_cheque" },
   keepNarration: { visible: false, disabled: false, label: "keep_narration" },
-  btnBillWise: { visible: true, disabled: false, label: "billwise" },
+  btnBillWise: { visible: false, disabled: false, label: "billwise" },
   btnAdd: { visible: true, disabled: false, label: "Add" },
   btnEdit: { visible: true, disabled: false, label: "edit" },
   linkEdit: { visible: false, disabled: false, label: "linkEdit" },
@@ -588,34 +590,34 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     alignment: "center",
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
-    maxWidth:" ",
-    outerPageBg:"",
-    innerPageBg:"",
-    inputBoxStyle:{
-        inputStyle: "normal",
-        inputSize: "md",
-        checkButtonInputSize: "md",
-        inputHeight: 0,
-        fontSize: 14,
-        fontWeight: 400,
-        labelFontSize: 14,
-        otherLabelFontSize: 14,
-        inputBgColor: "128, 128, 128",
-        borderColor: "128, 128, 128",
-        selectColor: "128, 128, 128",
-        fontColor: "0, 0, 0",
-        labelColor: "0, 0, 0",
-        borderFocus: "0, 0, 0",
-        borderRadius: 4,
-        adjustA: 0,
-        adjustB: 0,
-        adjustC: 0,
-        adjustD: 0,
-        marginTop: 0,
-        marginBottom: 0,
-        focusForeColor: "0, 0, 0",
-        focusBgColor: "255, 255, 255",
-      }
+    maxWidth: " ",
+    outerPageBg: "",
+    innerPageBg: "",
+    inputBoxStyle: {
+      inputStyle: "normal",
+      inputSize: "md",
+      checkButtonInputSize: "md",
+      inputHeight: 0,
+      fontSize: 14,
+      fontWeight: 400,
+      labelFontSize: 14,
+      otherLabelFontSize: 14,
+      inputBgColor: "128, 128, 128",
+      borderColor: "128, 128, 128",
+      selectColor: "128, 128, 128",
+      fontColor: "0, 0, 0",
+      labelColor: "0, 0, 0",
+      borderFocus: "0, 0, 0",
+      borderRadius: 4,
+      adjustA: 0,
+      adjustB: 0,
+      adjustC: 0,
+      adjustD: 0,
+      marginTop: 0,
+      marginBottom: 0,
+      focusForeColor: "0, 0, 0",
+      focusBgColor: "255, 255, 255",
+    }
   },
   isBahamdoonPOSReceipt: false,
   unlocking: false,
@@ -634,7 +636,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   groupName: undefined,
   formElements: initialFormElements,
   saving: false,
-  store: undefined
+  store: undefined,
+  transactionType: ""
 }
 export interface PrintTransProps {
   masterAccount: string;

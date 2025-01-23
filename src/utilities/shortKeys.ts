@@ -1,10 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
+import {
+  TransactionRoute,
+  transactionRoutes,
+} from "../components/common/content/transaction-routes";
+import { useNavigate } from "react-router-dom";
 
 interface ShortcutConfig {
   event: string;
   key: string;
   description: string;
-  action: () => void;
+  action: (navigate: (path: string) => void) => void;
 }
 export const popupStack: (() => void)[] = [];
 export const addPopupToStack = (closeFunction: () => void) => {
@@ -18,12 +23,12 @@ export const removePopupFromStack = (closeFunction: () => void) => {
 };
 
 enum ShortKeyEvents {
-  POPUP_CLOSE_EVENT = 'popup-close-event',
-  CLOSE_ONE_POPUP = 'close-one-popup',
-  GO_TO_PREVIOUS_PAGE = 'go-to-previos-page',
-  GO_TO_NEXT_PAGE = 'go-to-next-page',
-  GO_TO_HOME = 'go-to-home',
-  FOCUS_SEARCHBAR = "focus-searchbar"
+  POPUP_CLOSE_EVENT = "popup-close-event",
+  CLOSE_ONE_POPUP = "close-one-popup",
+  GO_TO_PREVIOUS_PAGE = "go-to-previos-page",
+  GO_TO_NEXT_PAGE = "go-to-next-page",
+  GO_TO_HOME = "go-to-home",
+  FOCUS_SEARCHBAR = "focus-searchbar",
 }
 
 const shortKeys: ShortcutConfig[] = [
@@ -32,8 +37,8 @@ const shortKeys: ShortcutConfig[] = [
     key: "ctrl+shift+b",
     description: "Close all popups",
     action: () => {
-      // const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
-      // document.dispatchEvent(event);
+      const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
+      document.dispatchEvent(event);
       while (popupStack.length > 0) {
         const closePopup = popupStack.pop();
         if (closePopup) closePopup();
@@ -45,8 +50,8 @@ const shortKeys: ShortcutConfig[] = [
     key: "ctrl+q",
     description: "Close the top popup",
     action: () => {
-      // const event = new CustomEvent(ShortKeyEvents.CLOSE_ONE_POPUP);
-      // document.dispatchEvent(event);
+      const event = new CustomEvent(ShortKeyEvents.CLOSE_ONE_POPUP);
+      document.dispatchEvent(event);
       if (popupStack.length > 0) {
         const closeTopPopup = popupStack.pop();
         if (closeTopPopup) closeTopPopup();
@@ -55,42 +60,46 @@ const shortKeys: ShortcutConfig[] = [
   },
   {
     event: ShortKeyEvents.GO_TO_PREVIOUS_PAGE,
-    key: 'shift+b',
-    description: 'Go to previous page',
+    key: "shift+b",
+    description: "Go to previous page",
     action: () => {
       window.history.back();
-    }
+    },
   },
   {
     event: ShortKeyEvents.GO_TO_NEXT_PAGE,
-    key: 'alt+f',
-    description: 'Go to next page',
+    key: "alt+f",
+    description: "Go to next page",
     action: () => {
       window.history.forward();
-    }
+    },
   },
   {
     event: ShortKeyEvents.GO_TO_HOME,
-    key: 'ctrl+x',
-    description: 'Go to Home',
+    key: "ctrl+x",
+    description: "Go to Home",
     action: () => {
-      window.location.assign('/');
-    }
+      window.location.assign("/");
+    },
   },
   {
     event: ShortKeyEvents.FOCUS_SEARCHBAR,
-    key: 'ctrl+shift+f',
-    description: 'focus the searchbar',
+    key: "ctrl+shift+f",
+    description: "focus the searchbar",
     action: () => {
       const strategies = [
-        () => document.getElementById('search-input'),
+        () => document.getElementById("search-input"),
         () => document.querySelector('input[type="search"]'),
         () => document.querySelector('input[placeholder="Search"]'),
-        () => Array.from(document.querySelectorAll('input'))
-          .find(input =>
-            input.getAttribute('aria-label')?.toLowerCase().includes('search') ||
-            input.name?.toLowerCase().includes('search')
-          )
+        () =>
+          Array.from(document.querySelectorAll("input")).find(
+            (input) =>
+              input
+                .getAttribute("aria-label")
+                ?.toLowerCase()
+                .includes("search") ||
+              input.name?.toLowerCase().includes("search")
+          ),
       ];
 
       for (const strategy of strategies) {
@@ -102,8 +111,73 @@ const shortKeys: ShortcutConfig[] = [
         }
       }
     },
-  }
+  },
+  ...transactionRoutes.map((route: TransactionRoute) => {
+    return {
+      event: `OPEN_${route.transactionType}`,
+      key: route.shortKey ?? "",
+      description: route.title,
+      action: (navigate: (arg0: string) => void) => {
+        const event = new CustomEvent(`OPEN_${route.transactionType}`);
+        document.dispatchEvent(event);
+        if (route.transactionType) {
+          navigate(`${route.transactionBase}/${route.transactionType}`);
+        }
+      },
+    };
+  }),
+  ...transactionRoutes.map((route: TransactionRoute) => {
+    return {
+      event: `OPEN_${route.transactionType}list`,
+      key: route.shortKeyList ?? "",
+      description: route.title,
+      action: (navigate: (arg0: string) => void) => {
+        const event = new CustomEvent(`OPEN_${route.transactionType}List`);
+        document.dispatchEvent(event);
+        if (route.transactionType) {
+          navigate(`${route.transactionBase}/${route.transactionType}List`);
+        }
+      },
+    };
+  }),
 ];
+
+const getStoredShortcuts = (): ShortcutConfig[] => {
+  const stored = localStorage.getItem("keyboard-shortcuts");
+
+  // If no stored shortcuts, return the current shortKeys
+  if (!stored) {
+    localStorage.setItem("keyboard-shortcuts", JSON.stringify(shortKeys));
+    return shortKeys;
+  }
+
+  const storedShortcuts = JSON.parse(stored);
+
+  // Filter out shortcuts that no longer exist in shortKeys
+  const filteredStoredShortcuts = storedShortcuts.filter(
+    (storedShortcut: ShortcutConfig) =>
+      shortKeys.some(
+        (defaultShortcut) => defaultShortcut.event === storedShortcut.event
+      )
+  );
+
+  // Merge and update shortcuts
+  const updatedShortcuts = shortKeys.map((defaultShortcut) => {
+    const storedShortcut = filteredStoredShortcuts.find(
+      (s: { event: string }) => s.event === defaultShortcut.event
+    );
+    return storedShortcut
+      ? { ...defaultShortcut, key: storedShortcut.key }
+      : defaultShortcut;
+  });
+
+  // Save the updated shortcuts back to localStorage
+  localStorage.setItem("keyboard-shortcuts", JSON.stringify(updatedShortcuts));
+
+  return updatedShortcuts;
+};
+
+let currentShortcuts = getStoredShortcuts();
 
 const handleKeyPress = (event: KeyboardEvent) => {
   if (
@@ -114,49 +188,56 @@ const handleKeyPress = (event: KeyboardEvent) => {
     return;
   }
 
-  const shortcut = shortKeys.find((s) => {
-    const modifiers = s.key.split('+');
+  const navigate = (path: string) => {
+    window.location.href = path;
+  };
+
+  const shortcut = currentShortcuts.find((s) => {
+    const modifiers = s.key.split("+");
     const matchedModifiers = modifiers.filter((modifier) => {
       switch (modifier) {
-        case 'ctrl':
+        case "ctrl":
           return event.ctrlKey;
-        case 'alt':
+        case "alt":
           return event.altKey;
-        case 'shift':
+        case "shift":
           return event.shiftKey;
         default:
           return event.key.toLowerCase() === modifier.toLowerCase();
       }
     });
-    return matchedModifiers.length === modifiers.length && event.key.toLowerCase() === modifiers[modifiers.length - 1].toLowerCase();
+    return (
+      matchedModifiers.length === modifiers.length &&
+      event.key.toLowerCase() === modifiers[modifiers.length - 1].toLowerCase()
+    );
   });
 
   if (shortcut) {
     event.preventDefault();
-    shortcut.action();
+    shortcut.action(navigate);
   }
 };
 
 let isInitialized = false;
 
 export const initializeShortKeys = () => {
-  // if (!isInitialized) {
-  //   document.addEventListener('keydown', handleKeyPress);
-  //   isInitialized = true;
-  // }
+  if (!isInitialized) {
+    document.addEventListener("keydown", handleKeyPress);
+    isInitialized = true;
+  }
 };
 
 export const cleanupShortKeys = () => {
-  // if (isInitialized) {
-  //   document.removeEventListener('keydown', handleKeyPress);
-  //   isInitialized = false;
-  // }
+  if (isInitialized) {
+    document.removeEventListener("keydown", handleKeyPress);
+    isInitialized = false;
+  }
 };
 
 export const getFocusableElements = () => {
   return Array.from(
     document.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
     )
   );
 };
@@ -168,10 +249,10 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
     const currentElement = e.target as HTMLElement;
     const currentIndex = focusableElements.indexOf(currentElement);
 
-    const jumpToAttr = currentElement.getAttribute('data-jump-to');
+    const jumpToAttr = currentElement.getAttribute("data-jump-to");
     if (jumpToAttr) {
       const jumpTargetElement = focusableElements.find(
-        (el) => el.getAttribute('data-jump-target') === jumpToAttr
+        (el) => el.getAttribute("data-jump-target") === jumpToAttr
       ) as HTMLElement;
       if (jumpTargetElement) {
         jumpTargetElement.focus();
@@ -183,8 +264,8 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
 
     while (nextIndex >= 0 && nextIndex < focusableElements.length) {
       const nextElement = focusableElements[nextIndex] as HTMLElement;
-      const skipAttr = nextElement.getAttribute('data-skip');
-      if (skipAttr !== 'true') {
+      const skipAttr = nextElement.getAttribute("data-skip");
+      if (skipAttr !== "true") {
         break;
       }
       nextIndex = isShiftKey ? nextIndex - 1 : nextIndex + 1;
@@ -201,16 +282,16 @@ export const useSearchInputFocus = () => {
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'f') {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "f") {
         event.preventDefault();
         searchInputRef.current?.focus();
         searchInputRef.current?.select();
       }
     };
 
-    document.addEventListener('keydown', handleShortcut);
+    document.addEventListener("keydown", handleShortcut);
     return () => {
-      document.removeEventListener('keydown', handleShortcut);
+      document.removeEventListener("keydown", handleShortcut);
     };
   }, []);
 

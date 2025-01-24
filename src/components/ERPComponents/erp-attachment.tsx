@@ -93,7 +93,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
 
   const { t } = useTranslation("transaction");
   return (
-    <div className=" w-full  p-2  self-end max-h-[100%] overflow-auto  pb-[64px]">
+    <div className="w-full p-2 self-end max-h-[100%] overflow-auto pb-[64px]">
       <button
         className="text-gray-500 hover:text-gray-700 right-0"
         onClick={() => {
@@ -103,7 +103,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         <X className="h-5 w-5" />
       </button>
       <div
-        className={`border-2 border-dashed rounded-lg p-3  text-center transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-3 text-center transition-colors ${
           isDragging
             ? "border-[#3b82f6] bg-[#eff6ff]"
             : "border-gray-300 hover:border-[#93c5fd]"
@@ -133,7 +133,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
           <div>
             <button
               onClick={() => document.getElementById("file-input")?.click()}
-              className="px-4 py-2 font-semibold text-sm bg-[#3b82f6] text-white rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+              className="px-4 py-2 font-semibold text-sm bg-[#3b82f6] text-white rounded-lg shadow-sm hover:bg-[#2563eb] focus:outline-none focus:ring-2 focus:ring-[#60a5fa] focus:ring-opacity-75"
             >
               {t("browse_files")}
             </button>
@@ -144,7 +144,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               className="hidden"
               onChange={handleFileSelect}
             />
-          </div>
+          </div> 
           <p className="text-sm text-gray-500">{t("or_drop")}</p>
         </div>
       </div>
@@ -179,7 +179,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
                 </p>
                 <button
                   onClick={() => removeFile(file.id)}
-                  className="h-6 w-6 flex items-center justify-center text-gray-500 hover:text-red-[#ef4444]"
+                  className="h-6 w-6 flex items-center justify-center text-gray-500 hover:text-[#ef4444]"
                 >
                   {file.uploaded ? (
                     <svg
@@ -224,7 +224,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               </div>
               <p className="text-xs font-medium text-gray-500 w-8 text-right">
                 {file.uploaded ? (
-                  <span className="text-green-600">{t("done")}</span>
+                  <span className="text-[#16a34a]">{t("done")}</span>
                 ) : (
                   `${Math.round(file.progress)}%`
                 )}

@@ -288,7 +288,7 @@ export interface AccTransactionRow {
   billwiseDetails: string;
   branchId: number;
   costCentreID: number;
-  costCentreName: number;
+  costCentreName: string;
   projectId: number;
   projectName: string;
 
@@ -337,7 +337,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   drCr: "",
   ledgerName: "",
   projectName: "",
-  costCentreName: 0,
+  costCentreName: "",
   billwiseDetails: "",
   chqDate: "",
   accGroupName: "",

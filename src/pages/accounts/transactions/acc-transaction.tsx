@@ -983,8 +983,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       width: 60,
       cellRender: (cellData) => (
         <div
-          className={cellData.data?.isValid == undefined  || cellData.data?.isValid != true ? 'grid-error-cell' : ''}
-          title={cellData.data?.isValid == undefined  || cellData.data?.isValid != true != true ? 'Validation failed for this row' : ''} // Add validation message as tooltip
+          className={cellData.data?.isValid != undefined  && cellData.data?.isValid != true ? 'grid-error-cell' : ''}
+          title={cellData.data?.isValid != undefined  && cellData.data?.isValid != true != true ? 'Validation failed for this row' : ''} // Add validation message as tooltip
         >
           {cellData.value}
         </div>

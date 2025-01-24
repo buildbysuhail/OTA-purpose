@@ -713,9 +713,9 @@ export const useAccTransaction = (
           icon: "warning",
           title: saveRes.message,
         });
-
-        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: saveRes.validations }))
-        
+        dispatch(accFormStateTransactionUpdate({key: "details", value: saveRes.item.details }));
+        dispatch(accFormStateTransactionUpdate({key: "attachments", value: saveRes.item.attachments }))
+        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: saveRes.validations }))        
       }
 
       dispatch(

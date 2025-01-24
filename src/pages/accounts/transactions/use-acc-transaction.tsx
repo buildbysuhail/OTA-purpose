@@ -192,7 +192,7 @@ export const useAccTransaction = (
     if (tmpVoucherNumber <= 0) {
       return false;
     }
-
+debugger;
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -1325,7 +1325,7 @@ export const useAccTransaction = (
         }
       );
 
-      if (!result?.isOk == true) {
+      if (result?.isOk == true) {
         dispatch(
           accFormStateHandleFieldChange({
             fields: {

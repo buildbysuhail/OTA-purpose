@@ -49,7 +49,7 @@
     "refresh_all_branches": "Refresh All Branches",
     "day_close": "Day Close",
     "reset_branch_data_for_sync": "Reset Branch Data For Sync",
-    "revert_bill_modifications": "Revert Bill Modifications",
+    "revert_bill_modifications": "Undo Edit Mode",
     "authorization_settings": "Authorization Settings",
     "notification_settings": "Notification Settings",
     "headers_&_footers": "Headers & Footers",

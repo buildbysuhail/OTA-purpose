@@ -37,6 +37,7 @@ export interface DevGridColumn {
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
     cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => React.ReactNode;
+    cellRenderDynamicRootState?: (cellElement: any, cellInfo: any, state?: any) => React.ReactNode;
   }
   const initialColumnPreference: ColumnPreference = {
     dataField: '',

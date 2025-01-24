@@ -2496,7 +2496,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             gridId={gridCode}
             onKeyDown={(e) => handleKeyDown("grid", e)}
             onSelectionChangedByRootState={(e: any, state: RootState) =>onSelectionChanged(e, state)}
-            className="pb-8"
+            className="pb-14"
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
@@ -3134,17 +3134,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] lg:px-8 py-2 md:px-2"
+        className="flex items-center justify-between h-[65px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
-        <div className="flex items-center space-x-2 md:space-x-4 overflow-x-auto">
+        <div className="flex flex-col xl:flex-row xl:items-center xl:space-x-4 xl:space-y-0 overflow-x-auto">
         {/* <div className="xl:hidden">
           <Menu onClick={toggleMenu} className="cursor-pointer" />
         </div>
         <div className={`${isMenuOpen ? 'block' : 'hidden'} xl:flex lg:items-center xl:space-x-2 md:space-x-4`}> */}
+          <div className="flex items-center justify-between space-x-2 md:space-x-4">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3158,9 +3159,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   })
                 )
               }
-              disabled={
-                formState.formElements.printOnSave?.disabled 
-              }
+              disabled={formState.formElements.printOnSave?.disabled}
             />
           )}
           {formState.formElements.printPreview.visible && (
@@ -3176,20 +3175,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   })
                 )
               }
-              disabled={
-                formState.formElements.printPreview?.disabled 
-              }
+              disabled={formState.formElements.printPreview?.disabled}
             />
           )}
+        </div>
+        <div className="flex space-x-2 md:space-x-4">
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
               id="keepNarrationForJV"
               label={t("keep_narration_for_jv")}
-              className=""
               data={formState.userConfig}
               checked={formState?.userConfig?.keepNarrationForJV}
               onChangeData={(e) => {
-                
                 const updatedUserConfig = {
                   ...formState.userConfig,
                   keepNarrationForJV: e.keepNarrationForJV,
@@ -3220,8 +3217,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   formState.formElements.printCheque?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
+                className="text-sm xl:text-base"
               />
             )}
+        </div>
+        <div className="flex space-x-2 md:space-x-4">
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3251,18 +3251,20 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             />
           )}
           <button className="text-blue-600 whitespace-nowrap">
-            {t("template_elite")}
             <span
-              className="hover:underline text-[#0ea5e9] capitalize ml-4"
+              className="hover:underline text-[#0ea5e9] capitalize"
               onClick={selectTemplates}
             >
-              {t("change")}
+              {/* {t("change")} */}
+              {t("template_elite")}
             </span>
           </button>
           <button className="text-blue-600">
             <AttachmentSidebar displayType="link" />
           </button>
         </div>
+        </div>
+        
         {/* </div> */}
         <div className="hidden md:block lg:ml-16 mx-4">
           <h6 className="text-sm font-semibold whitespace-nowrap">

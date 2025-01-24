@@ -720,6 +720,7 @@ debugger;
       formState.transaction.master.voucherPrefix,
       false
     );
+    
     dispatch(
       clearState({
         userSession,
@@ -732,48 +733,25 @@ debugger;
         voucherNo: vNo,
       })
     );
+  
+    // Reset combobox specific states
     dispatch(
-      updateFormElement({
-        fields: {
-          amount: { disabled: false },
-          btnSave: { disabled: true },
-          btnEdit: {
-            disabled: !(
-              userSession.financialYearStatus === "Closed" ||
-              hasRight(formState.formCode, UserAction.Edit)
-            ),
-          },
-          btnDelete: { disabled: true },
-          btnPrint: { disabled: true },
-          btnAdd: { label: "Add" },
-          lnkUnlockVoucher: { visible: false },
-          linkEdit: { visible: false },
-          pnlMasters: { disabled: false },
-          masterAccount: {
-            disabled:
-              userSession.counterwiseCashLedgerId > 0 &&
-              applicationSettings.accountsSettings?.allowSalesCounter &&
-              (formState.transaction.master.voucherType === "CP" ||
-                formState.transaction.master.voucherType === "CR") &&
-              userSession.counterAssignedCashLedgerId > 0
-                ? true
-                : undefined, // Keep existing value if condition is not met
-          },
-          costCentreID: {
-            disabled:
-              formState.userConfig.presetCostenterId > 0
-                ? true
-                : formState.formElements.costCentreID.disabled,
-          },
-          employee: { disabled: false },
-          jvDrCr: { disabled: false },
-          referenceDate: { disabled: false },
-          transactionDate: { disabled: false },
-        },
+      accFormStateRowHandleFieldChange({
+        fields: { 
+          ledgerID: null,
+          ledgerCode: '',
+          costCentreID: null
+        }
       })
     );
-
-    focusLedgerCode();
+    
+    // Force reload combobox data
+    dispatch(updateFormElement({
+      fields: {
+        ledgerID: { reload: true },
+        costCentreID: { reload: true }
+      }
+    }));
   };
   const handleRemoveItem = async (index: number) => {
     dispatch(

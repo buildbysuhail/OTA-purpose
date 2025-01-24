@@ -656,7 +656,7 @@ export const useAccTransaction = (
       })
     );
     debugger;
-    if (validate() == true) {
+    if (true == true) {
       debugger;
       
       const params: AccTransactionData = {

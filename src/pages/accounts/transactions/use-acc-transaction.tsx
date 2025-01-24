@@ -547,6 +547,7 @@ export const useAccTransaction = (
       }
       element.particularsLedgerId = element.relatedLedgerID;
       element.voucherType = formState.transaction.master.voucherType;
+      element.ledgerID = 0
       updatedDetails.push(element);
     }
     return updatedDetails;

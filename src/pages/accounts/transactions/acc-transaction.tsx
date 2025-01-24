@@ -964,17 +964,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
 
+  const renderCell = (cellData: any, validation: string) => {
+    return  (
+      <div
+        className={validation ? 'grid-error-cell' : ''}
+        title={validation ? validation : ''} // Add validation message as tooltip
+      >
+        {cellData.value}
+      </div>
+    );
+  };
+
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
       caption: t("si_no"),
       width: 60,
-      cellRender: (cellElement: any) => <div>{cellElement.value}</div>,
+      cellRender: (cellData) => (
+        <div
+          className={cellData.data?.isValid == undefined  || cellData.data?.isValid != true ? 'grid-error-cell' : ''}
+          title={cellData.data?.isValid == undefined  || cellData.data?.isValid != true != true ? 'Validation failed for this row' : ''} // Add validation message as tooltip
+        >
+          {cellData.value}
+        </div>
+      )
     },
     {
       dataField: "ledgerID",
       caption: t("ledger_ID"),
       width: 100,
+      cellRender:(cellData) => renderCell(cellData, cellData.data.ledgerID_Validation)
+   
     },
     {
       dataField: "ledgerCode",
@@ -1112,7 +1132,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       ),
     },
   ];
-
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([

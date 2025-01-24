@@ -2485,6 +2485,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             gridId={gridCode}
             onKeyDown={(e) => handleKeyDown("grid", e)}
             onSelectionChanged={onSelectionChanged}
+            className="pb-8"
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
@@ -3121,13 +3122,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
+        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
-        <div className=" flex items-center gap-4">
+        <div className="flex items-center space-x-2 md:space-x-4 overflow-x-auto">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3233,10 +3234,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }}
             />
           )}
-          <button className="text-blue-600">
+          <button className="text-blue-600 whitespace-nowrap">
             {t("template_elite")}
             <span
-              className="hover:underline text-[#0ea5e9] capitalize ml-1"
+              className="hover:underline text-[#0ea5e9] capitalize ml-4"
               onClick={selectTemplates}
             >
               {t("change")}
@@ -3246,8 +3247,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <AttachmentSidebar displayType="link" />
           </button>
         </div>
-        {t("total")}:{" "}
-        {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
+        <div className="hidden md:block lg:ml-16 mx-4">
+          <h6 className="text-sm font-semibold whitespace-nowrap">
+            {" "}
+            <span className="font-medium">{t("total")}:{" "}</span>
+            {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
+          </h6>
+        </div>
         <div>
           <ERPButton
             ref={btnSaveRef}
@@ -3255,6 +3261,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             jumpTarget="save"
             variant="primary"
             onClick={save}
+            className="w-24"
           />
         </div>
       </div>

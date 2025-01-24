@@ -3264,6 +3264,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             variant="primary"
             onClick={save}
             className="w-24"
+            disabled={formState.formElements.pnlMasters?.disabled}
           />
         </div>
       </div>

@@ -77,6 +77,7 @@ import { customJsonParse } from "../../../utilities/jsonConverter";
 import AccountTransactionsVoucher from "../../InvoiceDesigner/DownloadPreview/account_transactiocn_standard";
 import AccountTransactionsUniversal from "../../InvoiceDesigner/DownloadPreview/account_transaction-universal";
 import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
+import { renderSelectedTemplate } from "./acc-renderSelected-template";
 interface BilledItem {
   id?: number;
   name: string;
@@ -3272,31 +3273,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               className="pdf-viewer"
               width="100%"
               height={700}
-              style={{ margin: "20px", padding: "10px" }}
+              style={{padding: "10px" }}
             >
-            {formState.template?.templateKind == "premium" ? (
-              <AccountTransactionsTemplate
-                template={formState?.template}
-                data={formState.transaction}
-                currentBranch={currentBranch}
-              />
-            ) : formState.template?.templateKind== "standard" ? (
-              <AccountTransactionsVoucher
-                template={formState?.template}
-                data={formState.transaction}
-                currentBranch={currentBranch}
-              />
-            ) :formState.template?.templateKind== "universal" ? (
-              <AccountTransactionsUniversal
-              template={formState?.template}
-              data={formState.transaction}
-              currentBranch={currentBranch}
-              userSession={userSession}
-            />
-            ):(
-            <>
-            </>
-          )}
+           {renderSelectedTemplate({
+            template: formState.template,
+            data: formState.transaction,
+            currentBranch: currentBranch,
+            userSession: userSession,
+            })}
             </PDFViewer>
           }
         ></ERPModal>

@@ -9,10 +9,14 @@ import { AccTransactionData, AccTransactionFormState } from "./acc-transaction-t
 import { logUserAction } from "../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
 import { accFormStateHandleFieldChange } from "./reducer";
-
+import { pdf, BlobProvider } from "@react-pdf/renderer";
+import { renderSelectedTemplate } from "./acc-renderSelected-template";
+import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 const api = new APIClient();
 export const useAccPrint = () => {
-   const dispatch = useDispatch();
+  const currentBranch = useCurrentBranch();
+  const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -20,16 +24,74 @@ export const useAccPrint = () => {
     (state: RootState) => state.ClientSession
   );
 const {hasRight} = useUserRights();
-  
+
+
+const handleDirectPrint = async () => {
+  try {
+    // Generate the PDF for the selected template
+    const pdfDocument = renderSelectedTemplate({
+      template: formState.template,
+      data: formState.transaction,
+      currentBranch: currentBranch,
+      userSession: userSession,
+    });
+
+    // Create a PDF blob
+    const blob = await pdf(pdfDocument).toBlob();
+
+    // Create a URL for the blob
+    const pdfUrl = URL.createObjectURL(blob);
+
+    // Open the PDF in a new tab for printing
+    const printWindow = window.open(pdfUrl);
+    if (!printWindow) {
+      console.error("Failed to open print window. Please check your browser settings.");
+      alert("Failed to open print window. Please allow popups and try again.");
+      return;
+    }
+
+    // Wait for the PDF to load in the new tab
+    printWindow.onload = () => {
+      printWindow.print(); // Trigger print
+    };
+
+    // Log user action
+    logUserAction({
+      action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+      module: "Voucher Print",
+      voucherType: formState.transaction.master.voucherType,
+      voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+    });
+  } catch (error) {
+    console.error("Error printing voucher:", error);
+   ERPAlert.show({
+          title: "Warning",
+          text: "An error occurred while printing. Please try again.",
+          icon: "warning",
+        });
+  }
+};
+
+
   const printVoucher = async (setIsPrintModalOpen?:any,voucher?: AccTransactionFormState) => {
    voucher = voucher == undefined ? formState : voucher
-
-   if (formState.printPreview) {
-    // If printPreview is true, open the modal for preview
-    setIsPrintModalOpen(true); 
-  } else {
-
+  // Check if template is null, undefined, or an empty object
+  if (!formState?.template || Object.keys(formState.template).length === 0) {
+    ERPAlert.show({
+      title: "Warning",
+      text: "Please Select Your Template!!!",
+      icon: "warning",
+    });
+    return; // Exit the function early if no template is selected
   }
+
+  // If template is valid, proceed with printing
+  if (formState.printPreview) {
+    setIsPrintModalOpen(true);
+  } else {
+    await handleDirectPrint();
+  }
+ 
   };
    const printPaymentReceiptAdvice = (voucher?: AccTransactionFormState) => {
     voucher = voucher == undefined ? formState : voucher

@@ -129,9 +129,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const appState = useAppSelector((state: RootState) => state.AppState?.appState);
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
-
+    
+    const inputBoxState = React.useMemo(() => {
+      return localInputBox || appState?.inputBox 
+    }, [localInputBox, appState?.inputBox]);
     // Use localInputBox if provided, otherwise fall back to global inputBox state
-    const inputBoxState = localInputBox || appState?.inputBox;
+    // const inputBoxState = localInputBox || appState?.inputBox;
 
     const [_customSize, setCustomSize] = useState(customSize ? customSize : inputBoxState?.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);

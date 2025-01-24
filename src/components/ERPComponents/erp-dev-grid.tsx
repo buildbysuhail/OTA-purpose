@@ -540,6 +540,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
 
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    const rootState = useAppSelector(x => x)
     const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(
       () => filterInitialData || {},
@@ -1546,8 +1547,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
                 cellRender={
-                  column.cellRenderDynamic == undefined &&
-                  column.cellRender == undefined
+                  column.cellRenderDynamic === undefined &&
+                  column.cellRender === undefined &&
+                  column.cellRenderDynamicRootState === undefined
                     ? undefined
                     : (cellElement: any, cellInfo: any) => {
                         if (column.cellRenderDynamic) {
@@ -1555,6 +1557,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             cellElement,
                             cellInfo,
                             filter
+                          );
+                        }
+                        if (column.cellRenderDynamicRootState) {
+                          return column.cellRenderDynamicRootState(
+                            cellElement,
+                            cellInfo,
+                            rootState
                           );
                         }
                         if (column.cellRender) {

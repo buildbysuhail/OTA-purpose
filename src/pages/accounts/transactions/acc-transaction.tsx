@@ -1087,8 +1087,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       dataField: "action",
       caption: t("action"),
       visible: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        formState.formElements.pnlMasters?.disabled == true ? null :
+      cellRenderDynamicRootState: (cellElement: any, cellInfo: any, state: RootState) => (
+        state.AccTransaction.formElements.pnlMasters?.disabled == true ? null :
         <button
           onClick={() => {
             handleRemoveItem(cellElement.rowIndex);

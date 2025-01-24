@@ -120,32 +120,54 @@ const truncateText = (
   text: string,
   inputRef: React.RefObject<HTMLInputElement>
 ) => {
-  if (!inputRef.current || !text) return text;
+  if (!inputRef?.current || !text) return text;
+  
   const tempSpan = document.createElement("span");
   tempSpan.style.visibility = "hidden";
   tempSpan.style.position = "absolute";
   tempSpan.style.whiteSpace = "nowrap";
-  tempSpan.style.font = window.getComputedStyle(inputRef.current).font;
+  
+  // Copy all relevant font properties
+  const computedStyle = window.getComputedStyle(inputRef.current);
+  tempSpan.style.font = computedStyle.font;
+  tempSpan.style.fontFamily = computedStyle.fontFamily;
+  tempSpan.style.fontSize = computedStyle.fontSize;
+  tempSpan.style.fontWeight = computedStyle.fontWeight;
+  tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+  
   document.body.appendChild(tempSpan);
-  const availableWidth = inputRef.current.offsetWidth - 60;
-  tempSpan.textContent = text;
-  const textWidth = tempSpan.offsetWidth;
 
-  if (textWidth > availableWidth) {
-    let truncated = text;
-    while (truncated.length > 0) {
-      tempSpan.textContent = truncated + "...";
-      if (tempSpan.offsetWidth <= availableWidth) {
-        document.body.removeChild(tempSpan);
-        return truncated + "...";
+  // Calculate available width considering padding and buttons
+  const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
+  const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
+  const buttonArea = 80; // Space for clear/dropdown buttons
+  const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
+
+  let truncated = text;
+  tempSpan.textContent = truncated;
+  
+  // Linear truncation from end
+  if (tempSpan.offsetWidth > availableWidth) {
+    const ellipsis = "...";
+    let maxLength = text.length - 1;
+    
+    while (maxLength > 0) {
+      truncated = text.substring(0, maxLength) + ellipsis;
+      tempSpan.textContent = truncated;
+      
+      if (tempSpan.offsetWidth <= availableWidth || maxLength === 1) {
+        break;
       }
-      truncated = truncated.slice(0, -1);
+      maxLength--;
     }
-    document.body.removeChild(tempSpan);
-    return "...";
+    
+    if (maxLength === 0) {
+      truncated = ellipsis; // Edge case for very narrow inputs
+    }
   }
+
   document.body.removeChild(tempSpan);
-  return text;
+  return truncated;
 };
 
 const getSizeClasses = (
@@ -449,8 +471,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => {
+    const handleBlur = (e:any) => {
       setIsFocused(false);
+      setIsOpen(false);  
+      onBlur?.(e);
     };
     const [_reload, set_reload] = useState(reload);
     useEffect(() => {
@@ -1399,6 +1423,9 @@ useEffect(() => {
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
                   backgroundColor: bgColor,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
                 className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
                 displayValue={() => inputValue || initial?.label || ""}
@@ -1423,9 +1450,8 @@ useEffect(() => {
                 spellCheck={false}
                 autoFocus={autoFocus}
                 title={initial?.label || ""}
-                value={
-                  isOpen ? inputValue : truncateValue(initial?.label || "")
-                }
+                value={isOpen ? inputValue : truncateText(initial?.label || "", ref as React.RefObject<HTMLInputElement>)}
+
                 readOnly={disabled}
                 disabled={disabled}
               />

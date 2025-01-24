@@ -215,7 +215,7 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width:"100%" }}>
               <Text style={labelStyles}>Amount In Words</Text>
               <Text style={[fontStyles, { borderBottom: "0.5px solid #DFDFDF", width: "66.66%" }]}>
-                {getAmountInWords(Number(data.master?.totalDebit), currency)}
+                {getAmountInWords(Number(data.master?.totalAmount), currency)}
               </Text>
             </View>
           )}
@@ -231,7 +231,7 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
           <Text style={{fontSize:14}}>{headerState?.accountTransactionInfo?.amtReceivedLabel ||"Amount Received"}</Text>
 
           <Text style={{ fontSize: headerState?.accountTransactionInfo?.amtReceivedFontSize ?? 14 }}>
-            {headerState?.accountTransactionInfo?.currencySymbolPosition === 'before' ? "INR" : ""} {data.master?.totalDebit} {headerState?.accountTransactionInfo?.currencySymbolPosition === 'after' ? "INR" : ""}
+            {headerState?.accountTransactionInfo?.currencySymbolPosition === 'before' ? "INR" : ""} {data.master?.totalAmount} {headerState?.accountTransactionInfo?.currencySymbolPosition === 'after' ? "INR" : ""}
          </Text>
 
         </View>
@@ -297,9 +297,10 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
        <View style={styles.payment} >
        
           <View style={[styles.paymentCol]}>
-          <Text style={labelStyles}>{template?.headerState?.accountTransactionInfo?.paymentRefund || "Payment Refund"}</Text>
+          <Text style={labelStyles}>{template?.headerState?.accountTransactionInfo?.paymentRefund || "Total Discount"}</Text>
           <Text style={fontStyles}>
-            {/* {data?.master?.paymentRefund ?? "5.00$"} */}
+               {/* //demo */}
+            {data?.master?.totDiscount ?? "5.00$"}
           </Text>
          </View>
    
@@ -308,7 +309,9 @@ export  const Content = ({ data, template, currentBranch,docIDKey,currency}: { d
          <View style={[styles.paymentCol,{borderLeft:"0.5px solid #DFDFDF"}]}>
          <Text style={labelStyles}>{template?.headerState?.accountTransactionInfo?.overPayment || "Over Payment"}</Text>
          <Text style={fontStyles}>
-           {/* {data?.master?.overPayment ?? "15.00$"} */}
+             {/* //demo */}
+         {data?.master?.totDiscount ?? "5.00$"}   
+      
          </Text>
         </View>
        )}

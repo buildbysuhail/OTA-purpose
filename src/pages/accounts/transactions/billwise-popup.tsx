@@ -161,7 +161,7 @@ const BillwiseComponent = ({
             ? {
                 ...storeItem,
                 isSelected: item.isSelected,
-                billwiseAmount: item.isSelected == true ? storeItem.amount : 0,
+                billwiseAmount: item.isSelected == true ? storeItem.balance : 0,
               }
             : storeItem
         );
@@ -448,7 +448,7 @@ debugger;
 
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {});
-
+debugger;
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       const bill = updatedBills[i];

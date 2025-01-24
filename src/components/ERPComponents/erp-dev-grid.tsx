@@ -151,6 +151,7 @@ interface ERPDevGridProps {
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
+  onSelectionChangedByRootState?: (e: any, state: RootState) => void;
   onKeyDown?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
@@ -435,6 +436,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onCellClick,
       onRowDblClick,
       onSelectionChanged,
+      onSelectionChangedByRootState,
       onKeyDown,
       onExporting,
       onContentReady,
@@ -540,6 +542,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
 
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    const rootState = useAppSelector(x => x)
     const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(
       () => filterInitialData || {},
@@ -1365,7 +1368,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={onRowClick}
-            onSelectionChanged={onSelectionChanged}
+            onSelectionChanged={(e) => onSelectionChangedByRootState != undefined 
+              ? onSelectionChangedByRootState(e, rootState) :  onSelectionChanged && onSelectionChanged(e)}
             onKeyDown={onKeyDown}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
@@ -1546,8 +1550,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 fixed={column.fixed}
                 fixedPosition={column.fixedPosition}
                 cellRender={
-                  column.cellRenderDynamic == undefined &&
-                  column.cellRender == undefined
+                  column.cellRenderDynamic === undefined &&
+                  column.cellRender === undefined &&
+                  column.cellRenderDynamicRootState === undefined
                     ? undefined
                     : (cellElement: any, cellInfo: any) => {
                         if (column.cellRenderDynamic) {
@@ -1555,6 +1560,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             cellElement,
                             cellInfo,
                             filter
+                          );
+                        }
+                        if (column.cellRenderDynamicRootState) {
+                          return column.cellRenderDynamicRootState(
+                            cellElement,
+                            cellInfo,
+                            rootState
                           );
                         }
                         if (column.cellRender) {

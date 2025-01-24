@@ -20,7 +20,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   onClose,
   // data,
 }) => {
-  const { t } = useTranslation('transaction');
+  const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
 
   const columns: DevGridColumn[] = useMemo(
@@ -35,21 +35,31 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
         width: 100,
         cellRender: (cellElement: any) => {
           return (
-            <div className="bg-white p-4 hover:bg-[#dfe7f9]">
+            <div className="bg-white p-4 hover:bg-[#0f0f0f83] shadow-md transition-transform transform duration-300 ease-in-out hover:scale-105 hover:bg-gradient-to-r hover:from-[#dfe7f9] hover:to-[#f1f7ff] hover:ring-2 hover:ring-blue-300">
               <div className="w-full flex flex-row">
                 <div className="w-1/2  flex items-center ">
-                  <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold" />
-                  <p className="text-gray-800 font-semibold ">
-                    {new Date(cellElement.data?.transactionDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                  <CalendarDays className="mr-1 w-4 h-4 text-gray-500 font-semibold !text-[10px]" />
+                  <p className="text-gray-600 font-medium !text-[12px]">
+                    {/* <CalendarDays /> */}
+                    {new Date(
+                      cellElement.data?.transactionDate
+                    ).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
                 <div className="w-1/2  flex items-center justify-end ">
-                  <Banknote  className="mr-1 w-4 h-4 text-gray-500 font-semibold" />
-                  <p className="text-gray-950 font-bold ">  {cellElement.data?.amount}</p>
+                  <p className="text-gray-800 font-medium">
+                    {cellElement.data?.amount}
+                  </p>
                 </div>
               </div>
               <div className="pt-2">
-                <p className="text-gray-800 font-semibold  overflow-hidden text-ellipsis whitespace-nowrap ">{cellElement.data?.particulars}</p>  
+                <p className="text-gray-600 font-normal  overflow-hidden text-ellipsis whitespace-nowrap ">
+                  {cellElement.data?.particulars}
+                </p>
               </div>
             </div>
           );
@@ -64,9 +74,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
       <div className="py-3 bg-gray-50 h-[94vh] ">
         {/* Header */}
         <div className="flex justify-between items-center mb-1 px-4">
-          <h6 className=" font-semibold text-gray-800">
-            Transaction History
-          </h6>
+          <h6 className=" font-semibold text-gray-800">Transaction History</h6>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -80,15 +88,16 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
           <ERPDevGrid
             columns={columns}
             dataUrl={`${urls.acc_transaction_base}${formState.transactionType}/List/`}
-            // dataUrl={urls.account_group}
             method={ActionType.GET}
+            // postData={{voucherType: voucherType, transactionType: transactionType}}
             gridHeader={t("transactions")}
             gridId="transaction-grid"
-            remoteOperations={{paging: true, filtering: true,sorting: true}}
+            remoteOperations={{ paging: true, filtering: true, sorting: true }}
             gridAddButtonIcon="ri-add-line"
             pageSize={40}
             allowExport={true}
             hideDefaultExportButton={true}
+            // showFilterRow ={false}
             hideDefaultSearchPanel={false}
             allowSearching={false}
             hideGridAddButton={true}
@@ -97,6 +106,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             className="HistorySidebarcustom "
             ShowGridPreferenceChooser={false}
           />
+          {/* Transaction Date */}
         </div>
       </div>
     </ERPResizableSidebar>

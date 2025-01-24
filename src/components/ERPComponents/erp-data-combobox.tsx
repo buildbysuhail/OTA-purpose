@@ -120,32 +120,54 @@ const truncateText = (
   text: string,
   inputRef: React.RefObject<HTMLInputElement>
 ) => {
-  if (!inputRef.current || !text) return text;
+  if (!inputRef?.current || !text) return text;
+  
   const tempSpan = document.createElement("span");
   tempSpan.style.visibility = "hidden";
   tempSpan.style.position = "absolute";
   tempSpan.style.whiteSpace = "nowrap";
-  tempSpan.style.font = window.getComputedStyle(inputRef.current).font;
+  
+  // Copy all relevant font properties
+  const computedStyle = window.getComputedStyle(inputRef.current);
+  tempSpan.style.font = computedStyle.font;
+  tempSpan.style.fontFamily = computedStyle.fontFamily;
+  tempSpan.style.fontSize = computedStyle.fontSize;
+  tempSpan.style.fontWeight = computedStyle.fontWeight;
+  tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+  
   document.body.appendChild(tempSpan);
-  const availableWidth = inputRef.current.offsetWidth - 60;
-  tempSpan.textContent = text;
-  const textWidth = tempSpan.offsetWidth;
 
-  if (textWidth > availableWidth) {
-    let truncated = text;
-    while (truncated.length > 0) {
-      tempSpan.textContent = truncated + "...";
-      if (tempSpan.offsetWidth <= availableWidth) {
-        document.body.removeChild(tempSpan);
-        return truncated + "...";
+  // Calculate available width considering padding and buttons
+  const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
+  const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
+  const buttonArea = 80; // Space for clear/dropdown buttons
+  const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
+
+  let truncated = text;
+  tempSpan.textContent = truncated;
+  
+  // Linear truncation from end
+  if (tempSpan.offsetWidth > availableWidth) {
+    const ellipsis = "...";
+    let maxLength = text.length - 1;
+    
+    while (maxLength > 0) {
+      truncated = text.substring(0, maxLength) + ellipsis;
+      tempSpan.textContent = truncated;
+      
+      if (tempSpan.offsetWidth <= availableWidth || maxLength === 1) {
+        break;
       }
-      truncated = truncated.slice(0, -1);
+      maxLength--;
     }
-    document.body.removeChild(tempSpan);
-    return "...";
+    
+    if (maxLength === 0) {
+      truncated = ellipsis; // Edge case for very narrow inputs
+    }
   }
+
   document.body.removeChild(tempSpan);
-  return text;
+  return truncated;
 };
 
 const getSizeClasses = (
@@ -449,8 +471,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => {
+    const handleBlur = (e:any) => {
       setIsFocused(false);
+      setIsOpen(false);  
+      onBlur?.(e);
     };
     const [_reload, set_reload] = useState(reload);
     useEffect(() => {
@@ -659,31 +683,45 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       filterItems(query);
     }, [query, filterItems]);
 
-    useEffect(() => {
-      const fieldKey = field?.id?.replaceAll("_id", "");
-      const defaultValueKey = getNestedValue(
-        defaultData?.[fieldKey ?? ""],
-        field?.valueKey ?? ""
-      );
-      const _default = items?.find(
-        (option) => option.value === defaultValueKey
-      );
-      const _selected = items?.find(
-        (option) => option.value === (value ? value : data?.[field?.id ?? ""])
-      );
-      const _exceptional =
-        (defaultData && fieldKey === "payment_terms" && items[0]) ||
-        fieldKey === "currency";
-      const final =
-        _selected || _default || _exceptional || initialValue || null;
-      setInitial(final);
+   
+    // Add this useEffect in ERPDataCombobox
+useEffect(() => {
+  const fieldKey = field?.id?.replaceAll("_id", "");
+  const defaultValueKey = getNestedValue(
+    defaultData?.[fieldKey ?? ""],
+    field?.valueKey ?? ""
+  );
+  const _default = items?.find(
+    (option) => option.value === defaultValueKey
+  );
+  const _selected = items?.find(
+    (option) => option.value === (value ? value : data?.[field?.id ?? ""])
+  );
+  const _exceptional =
+    (defaultData && fieldKey === "payment_terms" && items[0]) ||
+    fieldKey === "currency";
+  const final =
+    _selected || _default || _exceptional || initialValue || null;
+  
+  // Reset internal state when external value changes to null/undefined
+ if (!value && !data?.[field?.id ?? ""]) {
+            setInitial(null);
+            // setInputValue("");
+            // if (filteredItems.length > 0 && inputValue === "") {
+            //   // Update inputValue if filteredItems has items and inputValue is empty
+            //   setInputValue(final?.label || ""); 
+            // } 
+            setDisplayValue(""); 
+        } else {
+            setInitial(final);
+        }
 
-      setActiveIndex(
-        final != null
-          ? filteredItems.findIndex((item) => item.value === final.value)
-          : -1
-      );
-    }, [items, data, defaultData, field, initialValue, filteredItems, value]);
+  setActiveIndex(
+    final != null
+      ? filteredItems.findIndex((item) => item.value === final.value)
+      : -1
+  );
+}, [items, data, defaultData, field, initialValue, filteredItems, value, data?.[field?.id ?? ""]]); // Add value and data dependency
 
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({ label: "", value: null, is_active: false, name: "" });
@@ -1385,6 +1423,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
                   backgroundColor: bgColor,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
                 className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
                 displayValue={() => inputValue || initial?.label || ""}
@@ -1409,9 +1450,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 spellCheck={false}
                 autoFocus={autoFocus}
                 title={initial?.label || ""}
-                value={
-                  isOpen ? inputValue : truncateValue(initial?.label || "")
-                }
+                value={isOpen ? inputValue : truncateText(initial?.label || "", ref as React.RefObject<HTMLInputElement>)}
+
                 readOnly={disabled}
                 disabled={disabled}
               />

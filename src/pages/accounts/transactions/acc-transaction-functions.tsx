@@ -10,15 +10,15 @@ export interface AccUserConfig {
 const api = new APIClient();
 export const updateTransactionEditMode = async (
   tType: string,
-  transactionMasterID: number,
+  transactionMasterId: number,
   editRemarks: string
 ) => {
   let res = 0;
   try {
     const params = {
-      TType: tType,
-      TransactionMasterID: transactionMasterID,
-      Remarks: editRemarks,
+      transactionType: tType,
+      isDelete: true,
+      TransactionMasterId: transactionMasterId,
     };
 
     return (res = await api.postAsync(

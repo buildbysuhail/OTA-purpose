@@ -164,7 +164,7 @@
    "recover_until_sync": "أوافق على أن البيانات لن يتم استرجاعها حتى يتم التزامن من الفرع",
    "reset": "إعادة تعيين",
 
-   "revert_bill_modifications": "إرجاع تعديلات الفاتورة",
+   "revert_bill_modifications":"التراجع عن وضع التحرير",
    "transaction_master_ID": "معرف المعاملة الرئيسية",
    "transaction_date": "تاريخ المعاملة",
    "voucher_number": "رقم القسيمة",

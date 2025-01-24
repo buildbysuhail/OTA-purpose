@@ -49,7 +49,7 @@
    "refresh_all_branches": "تحديث جميع الفروع",
    "day_close": "إغلاق اليوم",
    "reset_branch_data_for_sync": "إعادة تعيين بيانات الفرع للمزامنة",
-   "revert_bill_modifications": "إرجاع تعديلات الفواتير",
+   "revert_bill_modifications": "التراجع عن وضع التحرير",
    "authorization_settings": "إعدادات التفويض",
     "notification_settings": "إعدادات الإشعارات",
     "headers_&_footers": "الرؤوس والتذييلات",

@@ -129,14 +129,6 @@ const BillwiseComponent = ({
     ) {
       setIsFromAccTrans(true);
     }
-    // else if( voucherType == VoucherType.SalesReturn || voucherType == VoucherType.PurchaseReturn ||
-    //   voucherType == VoucherType.ServiceReturn || voucherType == VoucherType.SalesDiscount)
-    // {
-    //   setIsFromAccTrans(true);
-    // }
-    // // else if(CashCounterTender)
-    // // {
-    // // }
     else {
       closeBillwise();
     }
@@ -169,7 +161,7 @@ const BillwiseComponent = ({
             ? {
                 ...storeItem,
                 isSelected: item.isSelected,
-                billwiseAmount: item.isSelected == true ? storeItem.amount : 0,
+                billwiseAmount: item.isSelected == true ? storeItem.balance : 0,
               }
             : storeItem
         );
@@ -219,47 +211,6 @@ const BillwiseComponent = ({
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
-  // useEffect(() => {
-  //   const loadBillwiseTransactions = async () => {
-  //
-  //     try {
-  //       // Replace with your actual API call
-  //       const response = await api.getAsync(`/billwise/transactions?ledgerID=${formState.row.ledgerID}&drCr=${formState.transaction.master.drCr}&accTransactionDetailId=${formState.row.accTransactionDetailId}`);
-  //       const data = response;
-
-  //       let lastIndex = 0;
-  //       const formattedData = data?.map((row: any, index: number) => {
-  //         if (showAllTransactions || row.drCr !== formState.transaction.master.drCr) {
-  //           const _it = {
-  //             ...row,
-  //             slNo: lastIndex + 1,
-  //             isSelected: false,
-  //             billwiseAmount: 0,
-  //           };
-  //           lastIndex = lastIndex + 1;
-  //           return _it;
-  //         } else {
-  //           return {
-  //             ...row,
-  //             slNo: undefined,
-  //             isSelected: false,
-  //             billwiseAmount: 0,
-  //           };
-  //         }
-  //       });
-
-  //       setStore(formattedData);
-
-  //       if (isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
-  //         generateGridFromBillwiseString(formState.row.billwiseDetails);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error loading billwise transactions:", error);
-  //     }
-  //   };
-
-  //   loadBillwiseTransactions();
-  // }, []);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
     
@@ -297,17 +248,6 @@ const BillwiseComponent = ({
     return { billwiseString, vrNumbers };
   };
 
-  // const handleSave = () => {
-  //   const { billwiseString, vrNumbers } = getBillwiseString();
-  //   const totalAdjusted = calculateNetAdjustment();
-
-  //   if (totalAdjusted > amount) {
-  //     alert('Adjustment amount cannot exceed the transaction amount');
-  //     return;
-  //   }
-
-  //   onSave(billwiseString, totalAdjusted, vrNumbers);
-  // };
   const getTotalAmountAdjusted = (
     updatedBills?: BillwiseData[] | undefined
   ) => {
@@ -492,11 +432,10 @@ const BillwiseComponent = ({
   const handleRowPrepared = (e: any) => {
     const DRCR = "YourCondition"; // Replace with your DRCR condition
     const VisibleRow = true; // Replace with your visibility condition
-
+debugger;
     if (e.rowType === "data") {
-      if (e.data.DrCrCol === DRCR) {
+      if (e.data.drCr === formState.transaction.master.drCr) {
         e.rowElement.style.backgroundColor = "red"; // Apply red background
-        e.rowElement.style.display = VisibleRow ? "" : "none"; // Set row visibility
       }
     }
   };
@@ -509,7 +448,7 @@ const BillwiseComponent = ({
 
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {});
-
+debugger;
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       const bill = updatedBills[i];

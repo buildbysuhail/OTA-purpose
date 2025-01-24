@@ -104,7 +104,7 @@ const accTransactionSlice = createSlice({
         state.row.costCentreID = state.userConfig.presetCostenterId;
         state.formElements.costCentreID.disabled = true;
       } else {
-        if (userSession.dbIdValue == "SAMAPLASTICS") {
+        if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
           state.row.costCentreID = 0;
         }
         else {
@@ -245,8 +245,10 @@ const accTransactionSlice = createSlice({
           );
         }
       } else {
-        state.transaction.details.push(serializedRow);
+       for (let index = 0; index < 100; index++) {
+        state.transaction.details.push(serializedRow);      
       }
+    }
       state.transaction.details = state.transaction.details.map((x, index) => ({
         ...x,
         slNo: index + 1, // Reset slNo to start from 1
@@ -451,7 +453,7 @@ const accTransactionSlice = createSlice({
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
           currencyRate: payload.master.currencyRate,
-          prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
+          prevTransDate: new Date(payload.master.transactionDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
         };
   

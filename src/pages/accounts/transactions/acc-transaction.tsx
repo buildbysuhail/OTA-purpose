@@ -66,6 +66,7 @@ import {
   X,
   FileUp,
   History,
+  Menu,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
@@ -137,7 +138,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [showValidation, setShowValidation] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const onSelectionChanged = (e: any) => {
+  const onSelectionChanged = (e: any, state: RootState) => {
+    if(state.AccTransaction.formElements.pnlMasters?.disabled == true) {
+      return false;
+    }
     setSelectedRows(e.selectedRows); // Contains full row data
     const selectedIndexes = e.component
       .getSelectedRowKeys()
@@ -329,7 +333,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               costCentreID:
                 userConfig.presetCostenterId > 0
                   ? userConfig.presetCostenterId
-                  : userSession.dbIdValue == "SAMAPLASTICS"
+                  : userSession.dbIdValue == "SAMAPLASTICS12121212121"
                   ? 0
                   : applicationSettings?.accountsSettings?.defaultCostCenterID,
             },
@@ -961,17 +965,37 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
 
+  const renderCell = (cellData: any, validation: string) => {
+    return  (
+      <div
+        className={validation ? 'grid-error-cell' : ''}
+        title={validation ? validation : ''} // Add validation message as tooltip
+      >
+        {cellData.value}
+      </div>
+    );
+  };
+
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
       caption: t("si_no"),
       width: 60,
-      cellRender: (cellElement: any) => <div>{cellElement.value}</div>,
+      cellRender: (cellData) => (
+        <div
+          className={cellData.data?.isValid == undefined  || cellData.data?.isValid != true ? 'grid-error-cell' : ''}
+          title={cellData.data?.isValid == undefined  || cellData.data?.isValid != true != true ? 'Validation failed for this row' : ''} // Add validation message as tooltip
+        >
+          {cellData.value}
+        </div>
+      )
     },
     {
       dataField: "ledgerID",
       caption: t("ledger_ID"),
       width: 100,
+      cellRender:(cellData) => renderCell(cellData, cellData.data.ledgerID_Validation)
+   
     },
     {
       dataField: "ledgerCode",
@@ -1033,7 +1057,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       visible: false,
     },
     {
-      dataField: "costCenter",
+      dataField: "costCentreName",
       caption: t("cost_center"),
       visible: true,
     },
@@ -1087,8 +1111,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       dataField: "action",
       caption: t("action"),
       visible: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        formState.formElements.pnlMasters?.disabled == true ? null :
+      cellRenderDynamicRootState: (cellElement: any, cellInfo: any, state: RootState) => (
+        state.AccTransaction.formElements.pnlMasters?.disabled == true ? null :
         <button
           onClick={() => {
             handleRemoveItem(cellElement.rowIndex);
@@ -1109,7 +1133,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       ),
     },
   ];
-
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
@@ -1283,6 +1306,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // const toggleMenu = () => {
+  //   setIsMenuOpen(!isMenuOpen);
+  // };
 
   return (
     <div className="relative">
@@ -1950,6 +1979,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.transactionDate?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
+                      validation={formState.transaction.masterValidations?.transactionDate}
                     />
                   )}
                 </div>
@@ -2468,7 +2498,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {t("amount_in_words")}: {formState.amountInWords}
             </div>
           </div>
-
+          <div className="relative">
+          {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
           <ErpDevGrid
             ref={erpGridRef}
             key={"slNo"}
@@ -2485,7 +2516,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             data={formState.transaction.details}
             gridId={gridCode}
             onKeyDown={(e) => handleKeyDown("grid", e)}
-            onSelectionChanged={onSelectionChanged}
+            onSelectionChangedByRootState={(e: any, state: RootState) =>onSelectionChanged(e, state)}
+            className="pb-14"
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
@@ -2509,6 +2541,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }
             />
           </Summary>
+          </div>
           {formState.showSaveDialog && (
             <ERPAlert
               showAnimation="animate__fadeIn"
@@ -3122,13 +3155,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2"
+        className="flex items-center justify-between h-[65px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
-        <div className=" flex items-center gap-4">
+        <div className="flex flex-col xl:flex-row xl:items-center xl:space-x-4 xl:space-y-0 overflow-x-auto">
+        {/* <div className="xl:hidden">
+          <Menu onClick={toggleMenu} className="cursor-pointer" />
+        </div>
+        <div className={`${isMenuOpen ? 'block' : 'hidden'} xl:flex lg:items-center xl:space-x-2 md:space-x-4`}> */}
+          <div className="flex items-center justify-between space-x-2 md:space-x-4">
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3142,9 +3180,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   })
                 )
               }
-              disabled={
-                formState.formElements.printOnSave?.disabled 
-              }
+              disabled={formState.formElements.printOnSave?.disabled}
             />
           )}
           {formState.formElements.printPreview.visible && (
@@ -3160,20 +3196,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   })
                 )
               }
-              disabled={
-                formState.formElements.printPreview?.disabled 
-              }
+              disabled={formState.formElements.printPreview?.disabled}
             />
           )}
+        </div>
+        <div className="flex space-x-2 md:space-x-4">
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
               id="keepNarrationForJV"
               label={t("keep_narration_for_jv")}
-              className=""
               data={formState.userConfig}
               checked={formState?.userConfig?.keepNarrationForJV}
               onChangeData={(e) => {
-                
                 const updatedUserConfig = {
                   ...formState.userConfig,
                   keepNarrationForJV: e.keepNarrationForJV,
@@ -3204,8 +3238,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   formState.formElements.printCheque?.disabled ||
                   formState.formElements.pnlMasters?.disabled
                 }
+                className="text-sm xl:text-base"
               />
             )}
+        </div>
+        <div className="flex space-x-2 md:space-x-4">
           {formState.formElements.keepNarration.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3234,21 +3271,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }}
             />
           )}
-          <button className="text-blue-600">
-            {t("template_elite")}
+          <button className="text-blue-600 whitespace-nowrap">
             <span
-              className="hover:underline text-[#0ea5e9] capitalize ml-1"
+              className="hover:underline text-[#0ea5e9] capitalize"
               onClick={selectTemplates}
             >
-              {t("change")}
+              {/* {t("change")} */}
+              {t("template_elite")}
             </span>
           </button>
           <button className="text-blue-600">
             <AttachmentSidebar displayType="link" />
           </button>
         </div>
-        {t("total")}:{" "}
-        {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
+        </div>
+        
+        {/* </div> */}
+        <div className="hidden md:block lg:ml-16 mx-4">
+          <h6 className="text-sm font-semibold whitespace-nowrap">
+            {" "}
+            <span className="font-medium">{t("total")}:{" "}</span>
+            {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
+          </h6>
+        </div>
         <div>
           <ERPButton
             ref={btnSaveRef}
@@ -3256,6 +3301,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             jumpTarget="save"
             variant="primary"
             onClick={save}
+            className="w-24"
+            disabled={formState.formElements.pnlMasters?.disabled}
           />
         </div>
       </div>

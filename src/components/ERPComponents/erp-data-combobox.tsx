@@ -116,59 +116,59 @@ const mapItemsToOptions = (
   }));
 };
 
-const truncateText = (
-  text: string,
-  inputRef: React.RefObject<HTMLInputElement>
-) => {
-  if (!inputRef?.current || !text) return text;
+// const truncateText = (
+//   text: string,
+//   inputRef: React.RefObject<HTMLInputElement>
+// ) => {
+//   if (!inputRef?.current || !text) return text;
   
-  const tempSpan = document.createElement("span");
-  tempSpan.style.visibility = "hidden";
-  tempSpan.style.position = "absolute";
-  tempSpan.style.whiteSpace = "nowrap";
+//   const tempSpan = document.createElement("span");
+//   tempSpan.style.visibility = "hidden";
+//   tempSpan.style.position = "absolute";
+//   tempSpan.style.whiteSpace = "nowrap";
   
-  // Copy all relevant font properties
-  const computedStyle = window.getComputedStyle(inputRef.current);
-  tempSpan.style.font = computedStyle.font;
-  tempSpan.style.fontFamily = computedStyle.fontFamily;
-  tempSpan.style.fontSize = computedStyle.fontSize;
-  tempSpan.style.fontWeight = computedStyle.fontWeight;
-  tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+//   // Copy all relevant font properties
+//   const computedStyle = window.getComputedStyle(inputRef.current);
+//   tempSpan.style.font = computedStyle.font;
+//   tempSpan.style.fontFamily = computedStyle.fontFamily;
+//   tempSpan.style.fontSize = computedStyle.fontSize;
+//   tempSpan.style.fontWeight = computedStyle.fontWeight;
+//   tempSpan.style.letterSpacing = computedStyle.letterSpacing;
   
-  document.body.appendChild(tempSpan);
+//   document.body.appendChild(tempSpan);
 
-  // Calculate available width considering padding and buttons
-  const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
-  const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
-  const buttonArea = 80; // Space for clear/dropdown buttons
-  const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
+//   // Calculate available width considering padding and buttons
+//   const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
+//   const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
+//   const buttonArea = enableClearOption ? 60 : 30; // Space for clear/dropdown buttons
+//   const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
 
-  let truncated = text;
-  tempSpan.textContent = truncated;
+//   let truncated = text;
+//   tempSpan.textContent = truncated;
   
-  // Linear truncation from end
-  if (tempSpan.offsetWidth > availableWidth) {
-    const ellipsis = "...";
-    let maxLength = text.length - 1;
+//   // Linear truncation from end
+//   if (tempSpan.offsetWidth > availableWidth) {
+//     const ellipsis = "...";
+//     let maxLength = text.length - 1;
     
-    while (maxLength > 0) {
-      truncated = text.substring(0, maxLength) + ellipsis;
-      tempSpan.textContent = truncated;
+//     while (maxLength > 0) {
+//       truncated = text.substring(0, maxLength) + ellipsis;
+//       tempSpan.textContent = truncated;
       
-      if (tempSpan.offsetWidth <= availableWidth || maxLength === 1) {
-        break;
-      }
-      maxLength--;
-    }
+//       if (tempSpan.offsetWidth <= availableWidth || maxLength === 1) {
+//         break;
+//       }
+//       maxLength--;
+//     }
     
-    if (maxLength === 0) {
-      truncated = ellipsis; // Edge case for very narrow inputs
-    }
-  }
+//     if (maxLength === 0) {
+//       truncated = ellipsis; // Edge case for very narrow inputs
+//     }
+//   }
 
-  document.body.removeChild(tempSpan);
-  return truncated;
-};
+//   document.body.removeChild(tempSpan);
+//   return truncated;
+// };
 
 const getSizeClasses = (
   customSize?: "sm" | "md" | "lg" | "customize",
@@ -1321,6 +1321,60 @@ useEffect(() => {
     const truncateValue = (text: string, maxLength: number = 23) => {
       if (!text) return text;
       return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+    };
+
+    const truncateText = (
+      text: string,
+      inputRef: React.RefObject<HTMLInputElement>
+    ) => {
+      if (!inputRef?.current || !text) return text;
+      
+      const tempSpan = document.createElement("span");
+      tempSpan.style.visibility = "hidden";
+      tempSpan.style.position = "absolute";
+      tempSpan.style.whiteSpace = "nowrap";
+      
+      // Copy all relevant font properties
+      const computedStyle = window.getComputedStyle(inputRef.current);
+      tempSpan.style.font = computedStyle.font;
+      tempSpan.style.fontFamily = computedStyle.fontFamily;
+      tempSpan.style.fontSize = computedStyle.fontSize;
+      tempSpan.style.fontWeight = computedStyle.fontWeight;
+      tempSpan.style.letterSpacing = computedStyle.letterSpacing;
+      
+      document.body.appendChild(tempSpan);
+    
+      // Calculate available width considering padding and buttons
+      const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
+      const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
+      const buttonArea = enableClearOption ? 60 : 30; // Space for clear/dropdown buttons
+      const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
+    
+      let truncated = text;
+      tempSpan.textContent = truncated;
+      
+      // Linear truncation from end
+      if (tempSpan.offsetWidth > availableWidth) {
+        const ellipsis = "...";
+        let maxLength = text.length - 1;
+        
+        while (maxLength > 0) {
+          truncated = text.substring(0, maxLength) + ellipsis;
+          tempSpan.textContent = truncated;
+          
+          if (tempSpan.offsetWidth <= availableWidth || maxLength === 1) {
+            break;
+          }
+          maxLength--;
+        }
+        
+        if (maxLength === 0) {
+          truncated = ellipsis; // Edge case for very narrow inputs
+        }
+      }
+    
+      document.body.removeChild(tempSpan);
+      return truncated;
     };
 
     if (_useMUI == undefined || _useMUI == false) {

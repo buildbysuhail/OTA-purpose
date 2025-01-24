@@ -22,6 +22,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
 }) => {
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -65,8 +66,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
         },
       },
     ],
-    []
+    [t] // Dependency for columns
   );
+
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={400}>
       <div className="py-3 bg-gray-50 h-[94vh] ">
@@ -78,20 +80,6 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             className="text-gray-500 hover:text-gray-700 transition-colors"
           >
             <X className="w-[22px] h-[22px] p-1 rounded-full text-[12px] hover:shadow-lg transition-all duration-300 ease-in-out" />
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg> */}
           </button>
         </div>
 
@@ -125,4 +113,6 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
   );
 };
 
-export default HistorySidebar;
+export default React.memo(HistorySidebar, (prevProps, nextProps) => {
+  return prevProps.isOpen === nextProps.isOpen && prevProps.onClose === nextProps.onClose;
+});

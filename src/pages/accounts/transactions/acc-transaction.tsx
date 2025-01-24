@@ -66,6 +66,7 @@ import {
   X,
   FileUp,
   History,
+  Menu,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
@@ -1282,6 +1283,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // const toggleMenu = () => {
+  //   setIsMenuOpen(!isMenuOpen);
+  // };
 
   return (
     <div className="relative">
@@ -3129,6 +3136,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }}
       >
         <div className="flex items-center space-x-2 md:space-x-4 overflow-x-auto">
+        {/* <div className="xl:hidden">
+          <Menu onClick={toggleMenu} className="cursor-pointer" />
+        </div>
+        <div className={`${isMenuOpen ? 'block' : 'hidden'} xl:flex lg:items-center xl:space-x-2 md:space-x-4`}> */}
           {formState.formElements.printOnSave.visible && (
             <ERPCheckbox
               localInputBox={formState?.userConfig.inputBoxStyle}
@@ -3247,6 +3258,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <AttachmentSidebar displayType="link" />
           </button>
         </div>
+        {/* </div> */}
         <div className="hidden md:block lg:ml-16 mx-4">
           <h6 className="text-sm font-semibold whitespace-nowrap">
             {" "}

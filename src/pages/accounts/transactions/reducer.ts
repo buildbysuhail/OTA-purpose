@@ -104,7 +104,7 @@ const accTransactionSlice = createSlice({
         state.row.costCentreID = state.userConfig.presetCostenterId;
         state.formElements.costCentreID.disabled = true;
       } else {
-        if (userSession.dbIdValue == "SAMAPLASTICS") {
+        if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
           state.row.costCentreID = 0;
         }
         else {

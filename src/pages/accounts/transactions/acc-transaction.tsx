@@ -1959,6 +1959,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.transactionDate?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
+                      validation={formState.transaction.masterValidations?.transactionDate}
                     />
                   )}
                 </div>

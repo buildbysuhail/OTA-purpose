@@ -658,6 +658,7 @@ export const useAccTransaction = (
     debugger;
     if (validate() == true) {
       debugger;
+      
       const params: AccTransactionData = {
         master: attachMaster(),
         details: attachDetails(),
@@ -668,6 +669,7 @@ export const useAccTransaction = (
         params
       );
       if (saveRes.isOk == true) {
+        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: undefined }))
         if (formState.printOnSave == true) {
           if (
             userSession.dbIdValue.trim() == "BAHAMDOON" &&

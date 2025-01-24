@@ -1036,7 +1036,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       visible: false,
     },
     {
-      dataField: "costCenter",
+      dataField: "costCentreName",
       caption: t("cost_center"),
       visible: true,
     },

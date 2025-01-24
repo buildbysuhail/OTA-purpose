@@ -328,7 +328,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               costCentreID:
                 userConfig.presetCostenterId > 0
                   ? userConfig.presetCostenterId
-                  : userSession.dbIdValue == "SAMAPLASTICS"
+                  : userSession.dbIdValue == "SAMAPLASTICS12121212121"
                   ? 0
                   : applicationSettings?.accountsSettings?.defaultCostCenterID,
             },
@@ -2467,7 +2467,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {t("amount_in_words")}: {formState.amountInWords}
             </div>
           </div>
-
+          <div className="relative">
+          {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
           <ErpDevGrid
             ref={erpGridRef}
             key={"slNo"}
@@ -2509,6 +2510,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }
             />
           </Summary>
+          </div>
           {formState.showSaveDialog && (
             <ERPAlert
               showAnimation="animate__fadeIn"

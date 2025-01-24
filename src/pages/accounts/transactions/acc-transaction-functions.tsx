@@ -17,8 +17,8 @@ export const updateTransactionEditMode = async (
   try {
     const params = {
       transactionType: tType,
+      isDelete: true,
       TransactionMasterId: transactionMasterId,
-      Remarks: editRemarks,
     };
 
     return (res = await api.postAsync(

@@ -503,6 +503,21 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, [isOpen]);
 
     useEffect(() => {
+      if (isOpen && initial && listRef.current) {
+        const index = filteredItems.findIndex(
+          (item) => item.value === initial.value
+        );
+        if (index !== -1) {
+          // Scroll to the item after a slight delay to ensure list is rendered
+          setTimeout(() => {
+            listRef.current?.scrollToItem(index, "center");
+            setActiveIndex(index);
+          }, 10);
+        }
+      }
+    }, [isOpen, initial, filteredItems]);
+
+    useEffect(() => {
       if (customSize == undefined || customSize == null) {
         setCustomSize(inputBoxState?.inputSize);
       }

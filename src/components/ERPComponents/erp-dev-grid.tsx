@@ -1369,7 +1369,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             // columns={gridCols}
             onRowClick={onRowClick}
             onSelectionChanged={(e) => onSelectionChangedByRootState != undefined 
-              ? onSelectionChangedByRootState(e, rootState) :  onSelectionChanged(e)}
+              ? onSelectionChangedByRootState(e, rootState) :  onSelectionChanged && onSelectionChanged(e)}
             onKeyDown={onKeyDown}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}

@@ -659,31 +659,45 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       filterItems(query);
     }, [query, filterItems]);
 
-    useEffect(() => {
-      const fieldKey = field?.id?.replaceAll("_id", "");
-      const defaultValueKey = getNestedValue(
-        defaultData?.[fieldKey ?? ""],
-        field?.valueKey ?? ""
-      );
-      const _default = items?.find(
-        (option) => option.value === defaultValueKey
-      );
-      const _selected = items?.find(
-        (option) => option.value === (value ? value : data?.[field?.id ?? ""])
-      );
-      const _exceptional =
-        (defaultData && fieldKey === "payment_terms" && items[0]) ||
-        fieldKey === "currency";
-      const final =
-        _selected || _default || _exceptional || initialValue || null;
-      setInitial(final);
+   
+    // Add this useEffect in ERPDataCombobox
+useEffect(() => {
+  const fieldKey = field?.id?.replaceAll("_id", "");
+  const defaultValueKey = getNestedValue(
+    defaultData?.[fieldKey ?? ""],
+    field?.valueKey ?? ""
+  );
+  const _default = items?.find(
+    (option) => option.value === defaultValueKey
+  );
+  const _selected = items?.find(
+    (option) => option.value === (value ? value : data?.[field?.id ?? ""])
+  );
+  const _exceptional =
+    (defaultData && fieldKey === "payment_terms" && items[0]) ||
+    fieldKey === "currency";
+  const final =
+    _selected || _default || _exceptional || initialValue || null;
+  
+  // Reset internal state when external value changes to null/undefined
+ if (!value && !data?.[field?.id ?? ""]) {
+            setInitial(null);
+            // setInputValue("");
+            // if (filteredItems.length > 0 && inputValue === "") {
+            //   // Update inputValue if filteredItems has items and inputValue is empty
+            //   setInputValue(final?.label || ""); 
+            // } 
+            setDisplayValue(""); 
+        } else {
+            setInitial(final);
+        }
 
-      setActiveIndex(
-        final != null
-          ? filteredItems.findIndex((item) => item.value === final.value)
-          : -1
-      );
-    }, [items, data, defaultData, field, initialValue, filteredItems, value]);
+  setActiveIndex(
+    final != null
+      ? filteredItems.findIndex((item) => item.value === final.value)
+      : -1
+  );
+}, [items, data, defaultData, field, initialValue, filteredItems, value, data?.[field?.id ?? ""]]); // Add value and data dependency
 
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({ label: "", value: null, is_active: false, name: "" });

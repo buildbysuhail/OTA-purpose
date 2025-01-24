@@ -245,8 +245,10 @@ const accTransactionSlice = createSlice({
           );
         }
       } else {
-        state.transaction.details.push(serializedRow);
+       for (let index = 0; index < 100; index++) {
+        state.transaction.details.push(serializedRow);      
       }
+    }
       state.transaction.details = state.transaction.details.map((x, index) => ({
         ...x,
         slNo: index + 1, // Reset slNo to start from 1

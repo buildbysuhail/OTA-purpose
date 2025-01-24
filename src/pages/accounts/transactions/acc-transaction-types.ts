@@ -15,6 +15,7 @@ export interface AccTransactionProps {
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;
+  masterValidations?: AccTransactionMasterValidations;
   details: AccTransactionRow[];
   attachments: any[];
 }
@@ -392,7 +393,8 @@ export const accTransactionInitialData: AccTransactionData = {
     isLocked: false
   },
   details: [],
-  attachments: []
+  attachments: [],
+  masterValidations: initialAccTransactionMasterValidations
 };
 export interface BillwiseData {
   accTransactionDetailID: number;

@@ -192,7 +192,7 @@ export const useAccTransaction = (
     if (tmpVoucherNumber <= 0) {
       return false;
     }
-debugger;
+    debugger;
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -351,10 +351,22 @@ debugger;
       ERPAlert.show({
         icon: "info",
         title: "Are you sure to modify this transaction.",
+        onCancel() {
+          debugger;
+          return false;
+        },
+        onConfirm() {
+          debugger;
+          return finalSave();
+        },
       });
-      return false;
+    } else {
+      debugger;
+      return finalSave();
     }
-
+    return true;
+  };
+  const finalSave = () => {
     const validateTransDate = validateTransactionDate(
       new Date(formState.transaction.master.transactionDate),
       false,
@@ -458,7 +470,6 @@ debugger;
 
     return true;
   };
-
   const attachDetails = (): AccTransactionRow[] => {
     const details = JSON.parse(
       JSON.stringify([...formState.transaction.details])
@@ -644,7 +655,9 @@ debugger;
         },
       })
     );
+    debugger;
     if (validate() == true) {
+      debugger;
       const params: AccTransactionData = {
         master: attachMaster(),
         details: attachDetails(),
@@ -691,13 +704,16 @@ debugger;
           // Dispatch the update action with all the required fields
           dispatch(updateFormElement({ fields: fieldsToUpdate }));
         }
-        ERPToast.show(saveRes.message,"success");
+        ERPToast.show(saveRes.message, "success");
       } else {
         // dispatch(acc)
         ERPAlert.show({
           icon: "warning",
           title: saveRes.message,
         });
+
+        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: saveRes.validations }))
+        
       }
 
       dispatch(
@@ -720,7 +736,7 @@ debugger;
       formState.transaction.master.voucherPrefix,
       false
     );
-    
+
     dispatch(
       clearState({
         userSession,
@@ -733,25 +749,27 @@ debugger;
         voucherNo: vNo,
       })
     );
-  
+
     // Reset combobox specific states
     dispatch(
       accFormStateRowHandleFieldChange({
-        fields: { 
+        fields: {
           ledgerID: null,
-          ledgerCode: '',
-          costCentreID: null
-        }
+          ledgerCode: "",
+          costCentreID: null,
+        },
       })
     );
-    
+
     // Force reload combobox data
-    dispatch(updateFormElement({
-      fields: {
-        ledgerID: { reload: true },
-        costCentreID: { reload: true }
-      }
-    }));
+    dispatch(
+      updateFormElement({
+        fields: {
+          ledgerID: { reload: true },
+          costCentreID: { reload: true },
+        },
+      })
+    );
   };
   const handleRemoveItem = async (index: number) => {
     dispatch(
@@ -762,7 +780,6 @@ debugger;
     );
   };
   const addOrEditRow = async (billwiseDetails?: string) => {
-    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         if (formState.isRowEdit != true) {
@@ -1174,7 +1191,6 @@ debugger;
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
     if (e === "Enter") {
-      
       const isChequeVoucher =
         formState.transaction.master.voucherType === "CQP" ||
         formState.transaction.master.voucherType === "CQR";
@@ -1436,7 +1452,7 @@ debugger;
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-      
+
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
@@ -1485,7 +1501,6 @@ debugger;
     }
   };
   const openBillwise = async () => {
-    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -1512,7 +1527,6 @@ debugger;
     }, 0);
   };
   const showBillwise = async () => {
-    
     if (formState.row.ledgerID && formState.ledgerData != null) {
       const isBillwiseApplicable = await isLedgerBillwiseApplicable(
         formState.transaction.master.voucherType === "CN" ||
@@ -1540,7 +1554,6 @@ debugger;
     try {
       let drCr = "";
       const loadLedgerData = async () => {
-        
         // switch (formState.transaction.master.voucherType) {
         //   case "CP":
         //   case "BP":

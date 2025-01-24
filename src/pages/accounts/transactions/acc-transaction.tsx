@@ -137,7 +137,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [showValidation, setShowValidation] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const onSelectionChanged = (e: any) => {
+  const onSelectionChanged = (e: any, state: RootState) => {
+    if(state.AccTransaction.formElements.pnlMasters?.disabled == true) {
+      return false;
+    }
     setSelectedRows(e.selectedRows); // Contains full row data
     const selectedIndexes = e.component
       .getSelectedRowKeys()
@@ -2492,7 +2495,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             data={formState.transaction.details}
             gridId={gridCode}
             onKeyDown={(e) => handleKeyDown("grid", e)}
-            onSelectionChanged={onSelectionChanged}
+            onSelectionChangedByRootState={(e: any, state: RootState) =>onSelectionChanged(e, state)}
             className="pb-14"
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows

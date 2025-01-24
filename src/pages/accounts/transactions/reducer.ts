@@ -451,7 +451,7 @@ const accTransactionSlice = createSlice({
           ...payload.master,
           transactionDate: new Date(payload.master.transactionDate).toISOString(),
           currencyRate: payload.master.currencyRate,
-          prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
+          prevTransDate: new Date(payload.master.transactionDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
         };
   

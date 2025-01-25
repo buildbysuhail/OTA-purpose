@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -48,13 +48,19 @@ export const AccTransactionUserConfig = () => {
     
   }, []);
 
+  const postUserConfigOnOk = async (response: any) => { 
+ const base64 = modelToBase64(response);
+      localStorage.setItem('utc', base64);
+  }
   const postUserConfig = async () => {
     try {
       const response = await api.post(
         `${Urls.post_acc_user_config}`,
         formState.userConfig
       );
-      handleResponse(response);
+debugger;
+      handleResponse(response, ()=>{const base64 = modelToBase64(formState.userConfig);
+        localStorage.setItem('utc', base64);});
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {

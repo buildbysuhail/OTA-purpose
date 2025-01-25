@@ -127,7 +127,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     ref
   ) => {
     const appState = useAppSelector((state: RootState) => state.AppState?.appState);
-   
+    
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
     

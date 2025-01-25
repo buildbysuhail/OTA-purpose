@@ -41,7 +41,7 @@ import { isChooseVoucherEnabled } from "../../../components/common/content/trans
 import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -72,20 +72,62 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
 
   const fetchUserConfig = async () => {
     try {
-      const fdf = formState?.userConfig;
-      const response = await api.get(Urls.get_acc_user_config);
-      const _userConfig = atob(response);
+      const base64 = await api.get(Urls.get_acc_user_config);
+      localStorage.setItem('utc', base64);
+      // Decode the base64 back to JSON string
+      const _userConfig = atob(base64);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
-      
+  
+      dispatch(
+        accFormStateRowHandleFieldChange({
+          fields: {
+            costCentreID:
+              userConfig?.presetCostenterId ?? 0 > 0
+                ? userConfig?.presetCostenterId
+                : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+                ? 0
+                : applicationSettings?.accountsSettings?.defaultCostCenterID,
+          },
+        })
+      );
       dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
     } catch (error) {
       console.error("Error fetching user config:", error);
     }
   };
-
+  
   const initializeVoucher = async () => {
-    await fetchUserConfig();
-    setReadyToShowVoucher(true);
+    try {
+      debugger;
+      const Utc = localStorage.getItem("utc");
+  
+      if (Utc) {
+        // If userConfig is available in localStorage, use it
+        const _userConfig = atob(Utc);
+        const userConfig: AccUserConfig = customJsonParse(_userConfig);
+  
+        dispatch(
+          accFormStateRowHandleFieldChange({
+            fields: {
+              costCentreID:
+                userConfig?.presetCostenterId ?? 0 > 0
+                  ? userConfig?.presetCostenterId
+                  : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+                  ? 0
+                  : applicationSettings?.accountsSettings?.defaultCostCenterID,
+            },
+          })
+        );
+        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+      } else {
+        // If userConfig is not available in localStorage, fetch it from the API
+        await fetchUserConfig();
+      }
+  
+      setReadyToShowVoucher(true);
+    } catch (error) {
+      console.error("Error initializing voucher:", error);
+    }
   };
 
   useEffect(() => {

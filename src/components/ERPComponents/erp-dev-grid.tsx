@@ -1602,21 +1602,51 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-            {summaryItems.length > 0 && (
-              <Summary>
-                {summaryItems?.map((config: any, index: number) => (
-                  <GroupItem
-                    // key={`summaryItem_${index}`}
-                    column={config.column}
-                    summaryType={config.summaryType}
-                    valueFormat={config.valueFormat}
-                    customizeText={config.customizeText}
-                    showInGroupFooter={config.showInGroupFooter}
-                    alignByColumn={config.alignByColumn}
-                  />
-                ))}
-              </Summary>
-            )}
+<Summary>
+  {summaryItems?.map((config: SummaryConfig, index: number) => {
+    const columnConfig = columns.find((col:any) => col.dataField === config.column);
+
+    return (
+      <TotalItem
+        key={`summaryItem_${index}`}
+        column={config.column}
+        summaryType={config.summaryType}
+        valueFormat={config.valueFormat}
+        customizeText={(e) => {
+          if (columnConfig?.customizeText) {
+            return columnConfig.customizeText({ value: e.value });
+          }
+          if (config.valueFormat === "currency") {
+            let numericValue: number;
+
+            if (e.value instanceof Date) {
+              numericValue = e.value.getTime(); // Convert Date to timestamp
+            }
+            // Handle number type
+            else if (typeof e.value === "number") {
+              numericValue = e.value;
+            }
+            // Handle string type
+            else {
+              numericValue = parseFloat(e.value as string); // Explicitly cast to string
+            }
+
+            // Check if numericValue is a valid number
+            if (!isNaN(numericValue)) {
+              return `$${numericValue.toFixed(2)}`;
+            }
+            return `$0.00`; // Fallback for invalid numbers
+          }
+
+          // Default behavior for non-currency formats
+          return `${e.value}`;
+        }}
+      />
+    );
+  })}
+</Summary>
+      
+      
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
           {showTotalCount == true && (

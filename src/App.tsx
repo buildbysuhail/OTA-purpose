@@ -76,21 +76,7 @@ function App() {
     const sd = moment().local(); // Ensure local time is used
     const asd = sd.format("DD/MM/YYYY");
     dispatch(setSoftwareDate(asd));
-    let ass = localStorage.getItem("as");
-    let appSettings: ApplicationSettingsType;
-    try {
-      
-      if (ass != undefined && ass != null && ass != "") {
-        appSettings = customJsonParse(atob(ass));
-        dispatch(setApplicationSettings(
-          {
-            ...appSettings,
-            apiLoaded: false
-        }));
-      }else{
-        load();
-      }
-    } catch (error) { }
+    
  
   }, []);
   
@@ -166,15 +152,7 @@ function App() {
   }, []);
 
 
-  const load = async() => {
-    const settings = await api.getAsync(Urls.application_setting);
-    localStorage.setItem('as', modelToBase64(settings))
-    dispatch(setApplicationSettings(
-      {
-        ...settings,
-        apiLoaded: true
-    }));
-  }
+ 
   // useEffect(() => {
   //   if (locale && i18n && typeof i18n.changeLanguage === "function") {
   //     i18n.changeLanguage(language);

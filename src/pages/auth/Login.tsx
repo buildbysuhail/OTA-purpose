@@ -19,7 +19,7 @@ import { useAppState } from "../../utilities/hooks/useAppState";
 import { type AppState, languagesData } from "../../redux/slices/app/types";
 
 import type { RootState } from "../../redux/store";
-import { customJsonParse } from "../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
 import type { UserTypeRights } from "../../redux/slices/user-rights/reducer";
@@ -29,7 +29,12 @@ import { Sun, Moon } from "lucide-react";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import CounterSettings from "../settings/system/counter-settings";
 import ForgotPassword from "./ForgetPassword";
+import { ApplicationSettingsType } from "../settings/system/application-settings-types/application-settings-types";
+import { setApplicationSettings } from "../../redux/slices/app/application-settings-reducer";
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
 
+const api = new APIClient()
 const Login = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<LoginData>(new LoginData());
@@ -51,7 +56,15 @@ const Login = () => {
     show: boolean;
     token: string;
   }>({ show: false, token: "" });
-
+  const load = async() => {
+    const settings = await api.getAsync(Urls.application_setting);
+    localStorage.setItem('as', modelToBase64(settings))
+    dispatch(setApplicationSettings(
+      {
+        ...settings,
+        apiLoaded: true
+    }));
+  }
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (data?.userName && data?.password) {
@@ -62,10 +75,25 @@ const Login = () => {
       setError("");
       debugger;
       if (login.isOk == true) {
+        let ass = localStorage.getItem("as");
+    let appSettings: ApplicationSettingsType;
+    try {
+      
+      if (ass != undefined && ass != null && ass != "") {
+        appSettings = customJsonParse(atob(ass));
+        dispatch(setApplicationSettings(
+          {
+            ...appSettings,
+            apiLoaded: false
+        }));
+      }else{
+        await load();
+      }
+    } catch (error) { }
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
           setIsLoggedToBranch(false);
-        } else {
+        } else { 
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }

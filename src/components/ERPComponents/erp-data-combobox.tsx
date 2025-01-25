@@ -513,8 +513,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Calculate available width considering padding and buttons
       const paddingLeft = parseInt(computedStyle?.paddingLeft) || 0;
       const paddingRight = parseInt(computedStyle?.paddingRight) || 0;
-      const buttonArea = enableClearOption ? 60 : 30; // Space for clear/dropdown buttons
-      const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight - buttonArea;
+      // const buttonArea = enableClearOption ? 60 : 30; // Space for clear/dropdown buttons
+      const availableWidth = inputRef.current.offsetWidth - paddingLeft - paddingRight ;
     
       let truncated = text;
       tempSpan.textContent = truncated;
@@ -1443,11 +1443,12 @@ useEffect(() => {
                   transition: "border-color 0.2s ease-in-out",
                   borderRadius: `${inputBoxState?.borderRadius}px`,
                   backgroundColor: bgColor,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  // overflow: "hidden",
+                  // textOverflow: "ellipsis",
+                  // whiteSpace: "nowrap",
                 }}
-                className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card dark:!text-dark-text placeholder:capitalize`}
+                className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card overflow-hidden text-ellipsis whitespace-nowrap   
+                ${ enableClearOption && (initial || inputValue) && !noXMarkIcon && !disabled ? '!pr-[60px]' : '!pr-[30px]'} dark:!text-dark-text placeholder:capitalize`}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {

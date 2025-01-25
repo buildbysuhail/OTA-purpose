@@ -244,9 +244,7 @@ const accTransactionSlice = createSlice({
           );
         }
       } else {
-       for (let index = 0; index < 100; index++) {
-        state.transaction.details.push(serializedRow);      
-      }
+        state.transaction.details.push(serializedRow); 
     }
       state.transaction.details = state.transaction.details.map((x, index) => ({
         ...x,

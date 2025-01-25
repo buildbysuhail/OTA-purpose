@@ -78,7 +78,6 @@ const AuthorizationSettings = ({modalHeight,isMaximized}:AuthorizationSettingsPr
       });
   }
   const onSelectionChanged = useCallback((e: any) => {
-    console.log(e);
 
     const data = e.data;
     if (data != undefined && data != null) {

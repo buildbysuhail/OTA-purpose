@@ -36,7 +36,6 @@ const InventorySettingsForm = () => {
         `${Urls.application_settings}inventory`
       );
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {

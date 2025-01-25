@@ -252,7 +252,6 @@ const userTheme = () => {
                                 ...prevTheme,
                                 mode: 'dark',
                               }));}
-                              console.log(theme)
                             }}
                               // onClick={() => { handleThemeChange("mode", "dark")}}
                             />
@@ -305,7 +304,6 @@ const userTheme = () => {
                                   ...prevTheme,
                                   direction: 'rtl',
                                 }));}
-                                console.log(theme)
                               }}
                             />
                             <label

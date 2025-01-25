@@ -87,7 +87,6 @@ const CommandsManage = () => {
   };
 
   const handleSelect = () => {
-    console.log("Select button clicked");
   };
 
   const handleExecute = async () => {

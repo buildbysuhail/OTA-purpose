@@ -695,7 +695,6 @@ useEffect (() => {
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
-      console.log("handleMouseDown");
       
       setDraggingComponent(component);
       const offsetX = e.clientX - canvasRect.left - component.x;
@@ -839,7 +838,6 @@ useEffect (() => {
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
     ) {
-      console.log(component);
       
       const canvasElement = barcodeRefs.current[component.id];
       if (canvasElement) {
@@ -913,7 +911,6 @@ useEffect (() => {
         if (isUndoOrRedo == undefined || isUndoOrRedo == false)
           setHistoryData((prevHistory) => {
             
-            console.log("prevHistory");
             const isDuplicate = prevHistory.some((entry) => entry.id === id);
             const updHistory = prevHistory.slice(0, historyIndex + 1);
             setHistoryIndex(updHistory.length)

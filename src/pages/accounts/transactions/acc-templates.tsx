@@ -49,7 +49,6 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
         setIsOpen(false)
     }
     catch (error) {
-        console.log(error, "acc-transaction template select error");
     }
     }, [])
 

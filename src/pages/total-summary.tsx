@@ -106,7 +106,6 @@ const TotalSummary: React.FC = () => {
             column: 'OrderDate',
             summaryType: 'min',
             customizeText: (itemInfo) => {
-                console.log('Date Summary:', itemInfo);
                 if (itemInfo.value) {
                     const dateValue = new Date(itemInfo.value);
                     return `First Order: ${formatDate(dateValue, 'MMM dd, yyyy')}`;

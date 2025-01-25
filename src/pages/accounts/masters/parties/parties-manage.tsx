@@ -87,7 +87,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleFileChange = (e: { target: { files: any[] } }) => {
       const file = e.target.files[0];
       if (file) {
-        console.log("File selected:", file.name);
       }
     };
     useEffect(() => {

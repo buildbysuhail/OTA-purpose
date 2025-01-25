@@ -106,7 +106,6 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
           [field]: value,
         },
       }));
-      console.log(formState);
       
     };
 

@@ -112,7 +112,6 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const handleSubmit = useCallback(async () => {
     
     setIsSaving(true);
-    console.log("Saving settings initiated.");
     
 
     try {
@@ -144,9 +143,6 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
               const _paretnt: keyof ApplicationSettingsType =
                 parentKey as keyof ApplicationSettingsType;
 
-              console.log(
-                `Difference found: ${settingsName} = ${currentValue} = ${previousValue}`
-              );
               differences.push({
                 settingsName,
 
@@ -183,33 +179,25 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
             }
           }
         };
-
-        console.log("Comparing current settings with previous settings...");
         compareObjects({ ...current }, { ...previous });
-        console.log("Differences identified:", differences);
         return differences;
       };
 
-      console.log("Calling getDifferences to find modified settings...");
       const modifiedSettings = getDifferences(
         applicationSettings,
         settingsPrev ?? ApplicationSettingsInitialState
       );
 
       if (modifiedSettings.length > 0) {
-        console.log("Modified settings found:", modifiedSettings);
         const response = await api.put(Urls.application_settings, {
           type: "all",
           updateList: modifiedSettings,
         });
 
-        console.log("API response received:", response);
         
         handleResponse(
           response,
           () => {
-            
-            console.log("Settings updated successfully.");
             const strSet = JSON.stringify(applicationSettings);
             localStorage.setItem('as', modelToBase64(applicationSettings))
             setSettingsPrev(JSON.parse(strSet));
@@ -220,13 +208,11 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
           true
         );
       } else {
-        console.log("No modifications detected. Skipping API call.");
       }
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setIsSaving(false);
-      console.log("Saving process completed.");
     }
   }, [applicationSettings, settingsPrev]);
   const filterComponent = useMemo(

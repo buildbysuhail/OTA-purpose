@@ -30,8 +30,6 @@ export const useApplicationMainSettings = (settings?: any) => {
 
     const sendOtp = useCallback(async () => {
         
-        console.log(settings?.mainSettings);
-        
         
         try {
             setOtpSending(true);

@@ -39,7 +39,6 @@ const ApplicationSettingsAccounts = () => {
     try {
       const response = await api.getAsync(`${Urls.application_settings}accounts`)
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {
@@ -89,7 +88,6 @@ const ApplicationSettingsAccounts = () => {
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
-      console.log(modifiedSettings);
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings })) as any : null
       handleResponse(response, () => {setFormStatePrev(formState)}, () => { }, false);
     } catch (error) {

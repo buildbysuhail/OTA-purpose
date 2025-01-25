@@ -71,8 +71,6 @@ const CustomerSupplierLedger = () => {
 
   const handleSubmit = async () => {
     setIsSaving(true);
-    console.log("Current Store:", store);
-    console.log("Previous Store:", storePrev);
     // const changedData = store.filter((item: any, index: number) => {
     //   const prevItem = storePrev[index];
     //   return item.show !== prevItem.show;
@@ -83,7 +81,6 @@ const CustomerSupplierLedger = () => {
     showInSuppliers: gridType.customer,
      showInCustomers : gridType.supplier,
     }));
-    console.log("Payload to be submitted:", payload);
     try {
       const response: any = await api.post(
         `${Urls.cust_supp_ledger}`,
@@ -92,7 +89,6 @@ const CustomerSupplierLedger = () => {
           custSuppLedgerInputItems: payload}
       );
       handleResponse(response);
-      console.log("API Response:", response);
     } catch (error) {
       console.error("Error submitting data:", error);
     }

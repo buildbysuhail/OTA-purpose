@@ -142,11 +142,8 @@ const asd = sd.format("DD/MM/YYYY");
   
     let userThemes: AppState = appInitialState;
     try {
-    console.log("utt:", utt);
       if (utt != undefined && utt != null && utt != "") {
         userThemes = customJsonParse(atob(utt));
-    console.log("Base64 Encoded userThemes:", utt);
-    console.log("Decoded userThemes:", customJsonParse(atob(utt)));
       }
     } catch (error) { };
     let locale = languagesData.find(

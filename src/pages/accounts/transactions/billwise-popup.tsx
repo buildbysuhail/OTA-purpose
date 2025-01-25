@@ -397,27 +397,14 @@ const BillwiseComponent = ({
   };
   const handleCustomSummary = (options: any) => {
     if (options.summaryProcess === "start") {
-      console.log("Custom summary started for column:", options.name);
       options.totalValue = 0; // Initialize the total value
     }
 
     if (options.summaryProcess === "calculate") {
-      console.log(
-        "Processing value:",
-        options.value,
-        "for column:",
-        options.name
-      );
       options.totalValue += options.value || 0; // Aggregate values, fallback to 0 if undefined
     }
 
     if (options.summaryProcess === "finalize") {
-      console.log(
-        "Finalizing summary for column:",
-        options.name,
-        "with total value:",
-        options.totalValue
-      );
       options.totalValue = round(options.totalValue); // Apply custom rounding at the end
     }
   };

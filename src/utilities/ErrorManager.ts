@@ -7,7 +7,6 @@ const ErrorManager = {
   handle(error: any) {
     
     var msg = "";
-    console.log(`ErrorManager,  : error?.response `, error?.response);
     if (error.toJSON().message === "Network Error") {
       ERPToast.show("Network Error, No Internet Connection", "error");
       // const json=JSON.stringify(error.toJSON());
@@ -37,7 +36,6 @@ const ErrorManager = {
     if (error?.response) {
       // Request made and server responded
       const url = error?.config?.url;
-      console.log(`ErrorManager,  : url`, url);
       if (error?.response?.status >= 500) {
         const codeMsg = HttpCodeMessages[error?.response?.status] || "Servre Error";
         msg = error?.response?.data?.message || `${codeMsg}: Something went wrong, Please try again later`;
@@ -49,7 +47,6 @@ const ErrorManager = {
         const codeMsg = HttpCodeMessages[error?.response?.status] || "Bad Request";
          msg = error?.response?.data?.message || `${codeMsg}: Something went wrong, Please try again later`;
         const msgKeys = Object.keys(error?.response?.data);
-        console.log(`ErrorManager,  :  msgKeys `, msgKeys);
         if (msgKeys?.length > 0) {
           msgKeys.forEach((key) => {
             const msgData = error?.response?.data?.[key];
@@ -64,8 +61,6 @@ const ErrorManager = {
 
       if (error?.response?.status === 401) {
         msg = "You are not authorized to perform this action.\nPlease login again";
-        console.log(`ErrorManager,  : url `, url);
-        console.log(`ErrorManager,  : error?.response?.data `, error?.response?.data?.detail);
         if (url === "/token/") {
           msg = "Invalid Username or Password";
           msg = error?.response?.data?.detail || msg;

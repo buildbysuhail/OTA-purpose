@@ -45,8 +45,6 @@ const applicationSettingsSlice = createSlice({
   extraReducers: (builder) => {
     
     builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
-      console.log(action.payload);
-      
       return action.payload;
     });
   },

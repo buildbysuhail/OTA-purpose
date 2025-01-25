@@ -224,7 +224,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     });
     localStorage.setItem("ut", btoa(JSON.stringify(appState)));
     handleResponse(res, () => {
-      console.log(' localStorage.setItem("ut", btoa(JSON.stringify(appState)), { expires: 30 });');
       
       localStorage.setItem("ut", btoa(JSON.stringify(appState)));
     });
@@ -237,7 +236,6 @@ const resetInputBox = async ()=>{
     const _inputBox = atob(res);
     // dispatch(setInputBox(res.inputBox));
     const inputBox:AppState  = customJsonParse(_inputBox);
-    console.log("inputget",inputBox);
     dispatch(setInputBox(inputBox?.inputBox));
   }catch (error) {
     console.error("Error getInputBox data:", error);

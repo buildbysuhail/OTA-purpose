@@ -44,7 +44,6 @@ const TaxSettingsForm: React.FC = () => {
     try {
       const response = await api.getAsync(`${Urls.application_settings}taxes`);
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {
@@ -77,7 +76,6 @@ const TaxSettingsForm: React.FC = () => {
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
-      console.log(modifiedSettings);
 
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "taxes",

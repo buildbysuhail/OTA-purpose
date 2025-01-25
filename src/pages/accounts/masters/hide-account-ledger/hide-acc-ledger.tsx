@@ -107,7 +107,6 @@ const HideAccountLedger = () => {
         const response = await api.getAsync(`${Urls.hide_Ledger}${userTypeCode}`);
         setStore(response);
         handleResponse(response);
-        console.log("API Response:", response);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

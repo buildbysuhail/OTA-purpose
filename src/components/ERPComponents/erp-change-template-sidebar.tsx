@@ -114,7 +114,6 @@ const ERPChangeTemplateSidebar = ({
     else return tempData?.find((tmp: any) => tmp?.is_default)?.id;
   };
 
-  // console.log("chnage_template changesidebar");
 
   /* ########################################################################################### */
 

@@ -39,13 +39,6 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
       !isNullOrUndefinedOrEmpty(userSession?.userTypeCode) &&
       !isNullOrUndefinedOrEmpty(userSession?.countryId)
     ) {
-      console.log('useEffect');
-      console.log(userSession.userTypeCode);
-      console.log(userSession.countryId);
-      console.log(applicationSettings?.miscellaneousSettings
-        ?.maintainAllBranchWithCommonInventory
-      
-      );
     let st = items;
     if (userSession.userTypeCode === "BA") {
       st = st?.filter((x: any) => x.title !== "branches");

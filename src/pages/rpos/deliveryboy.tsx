@@ -131,7 +131,7 @@ const DeliveryBoy = () => {
                   <td className="py-2 px-4 flex items-center space-x-2">
                     <button
                       className="text-gray-500 hover:text-gray-700 p-1 rounded hover:bg-gray-100"
-                      onClick={() => console.log("Edit", item.id)}
+                      onClick={() => null}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

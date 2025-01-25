@@ -176,7 +176,6 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
       // NORMAL OBJECT CODE
       // onChangeData && onChangeData({ ...data, [id]: value || "" });
     } catch (error) {
-      console.log(`ERPForm,  Error: `, error);
     }
   };
 

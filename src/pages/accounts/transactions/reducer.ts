@@ -167,7 +167,6 @@ const accTransactionSlice = createSlice({
             key as keyof AccTransactionMaster
           ] as typeof fieldValue) instanceof Date;
         if (isDateField) {
-          console.log(`dateField: ${fieldValue}`);
         }
         // Convert Date fields to ISO strings
         (state.transaction.master[

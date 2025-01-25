@@ -92,6 +92,5 @@ export const taxListFinderInclusive = (data: any, tableSummary?: any, discountTy
     }
   });
 
-  console.log(`ERPUtils,  : tax_list_data`, taxList);
   return taxList;
 };

@@ -65,9 +65,6 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
                     value={password}
                     data={{password: password}}
                     onChangeData={(data: any) => {
-                      console.log('safvan');
-                      
-                      
                       setPassword(data.password)}
                     }
                   />

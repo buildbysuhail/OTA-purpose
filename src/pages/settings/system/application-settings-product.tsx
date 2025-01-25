@@ -49,7 +49,6 @@ const ApplicationSettingsProduct = () => {
         `${Urls.application_settings}products`
       );
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {

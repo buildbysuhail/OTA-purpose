@@ -351,10 +351,8 @@ export function useFormManager<T>({
   }, [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]);
 
   const handleClose = useCallback(() => {
-    console.log('handleClose');
     const currentState = useApiClient ? localFormState : reduxFormState;
     if (JSON.stringify(currentState?.data) !== JSON.stringify(prevLocalFormState?.data)) {
-      console.log('handleClose2');
       appDispatch(onCloseWithUnsavedChange({warn: true, succeeded: false, canceled: false}));
       
     } else {

@@ -590,15 +590,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
       const dss = { ..._filter };
-      console.log(`prev:${filter}`);
-      console.log(filter);
-      console.log(`latest:${_filter}`);
-      console.log(_filter);
-      console.log(dss);
-
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
-        console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
       }
 
       setFilter(dss);
@@ -636,12 +629,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } else {
           setShowFilter(false);
         }
-        console.log(`reload: ${_reload}`);
         if (_reload !== undefined && _reload !== true) {
           // Return the current store without reloading
           setStore(currentStore);
           return;
         }
+        debugger;
         try {
           const newStore = await createStore(
             keyExpr,
@@ -1670,8 +1663,6 @@ const _DrillDownCellTemplate = ({
     data.value !== "" &&
     data.value !== 0
   ) {
-    console.log(data.column.dataType);
-
     return (
       <a
         href="#"

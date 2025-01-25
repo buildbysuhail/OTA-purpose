@@ -62,7 +62,6 @@ const BankReconciliation = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Setting all dates");
     } finally {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
@@ -73,7 +72,6 @@ const BankReconciliation = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Exporting to Excel");
     } finally {
       setLoading((prev) => ({ ...prev, exportToExcel: false }));
     }
@@ -95,7 +93,6 @@ const BankReconciliation = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Saving changes");
     } finally {
       setLoading((prev) => ({ ...prev, save: false }));
     }
@@ -106,7 +103,6 @@ const BankReconciliation = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Printing document");
     } finally {
       setLoading((prev) => ({ ...prev, print: false }));
     }

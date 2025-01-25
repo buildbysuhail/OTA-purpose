@@ -41,8 +41,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   );
   const { getAllowedFormCodes } = useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
-    console.log(`type${type}`);
-    console.log(`type${SettingsMenuItems}`);
 
     switch (type) {
       case "erp":
@@ -152,7 +150,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         ),
         UserAction.Show
       );
-      console.log(allowedFormCodes);
 
       const sd = st.map((x: any) =>
         x.children?.map((item: any) => {
@@ -550,7 +547,6 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       setMenuAncestorsActive(parent);
     } else if (!hasParent) {
       if (theme.dataVerticalStyle == "doublemenu") {
-        // console.log("closee")
         // html.setAttribute('data-toggled', 'double-menu-close');
         updateAppState({ ...theme, toggled: "double-menu-close" });
       }

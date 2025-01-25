@@ -32,7 +32,6 @@ const BranchSettingsForm: React.FC = () => {
     try {
       const response = await api.getAsync(`${Urls.application_settings}branch`);
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {

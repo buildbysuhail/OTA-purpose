@@ -46,7 +46,6 @@ const PrintSettingForm: React.FC = () => {
     try {
       const response = await api.getAsync(`${Urls.application_settings}printer`);
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {

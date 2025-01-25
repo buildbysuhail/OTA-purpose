@@ -7,7 +7,6 @@ export const companyName = import.meta.env.VITE_COMPANY_NAME;
 export const cdnUrl = import.meta.env.VITE_CDN_URL;
 export const projectName = import.meta.env.VITE_PROJECT_NAME;
 
-console.log(`Urls,  : project_name_data`, projectName);
 
 const Urls = {
   domain,

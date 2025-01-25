@@ -146,7 +146,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
-    console.log("Selected Rows:", selectedIndexes);
     if (selectedIndexes.length > 0) {
       handleRowClick({
         row: formState?.transaction?.details[selectedIndexes[0]],
@@ -531,7 +530,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
         fetchVoucherNumber();
         if (voucherType == "CP" || voucherType == "CR") {
-          console.log("masterAccount.disabled5");
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -553,7 +551,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           },
         })
       );
-      console.log(`userSession.employeeId${userSession.employeeId}`);
 
       if (userSession.employeeId > 0) {
         dispatch(
@@ -582,7 +579,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           userCashLedgerID = await api.getAsync(
             `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
           );
-          console.log("masterAccount.disabled3");
 
           dispatch(
             accFormStateHandleFieldChange({
@@ -932,7 +928,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         accFormStateHandleFieldChange({ fields: { templates: response } })
       );
     } catch (error) {
-      console.log(error, "acc-transaction template select error");
     } finally {
       setTemplateLoad(false);
     }
@@ -940,27 +935,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const { round } = useNumberFormat();
   const handleCustomSummary = (options: any) => {
     if (options.summaryProcess === "start") {
-      console.log("Custom summary started for column:", options.name);
       options.totalValue = 0; // Initialize the total value
     }
 
     if (options.summaryProcess === "calculate") {
-      console.log(
-        "Processing value:",
-        options.value,
-        "for column:",
-        options.name
-      );
       options.totalValue += options.value || 0; // Aggregate values, fallback to 0 if undefined
     }
 
     if (options.summaryProcess === "finalize") {
-      console.log(
-        "Finalizing summary for column:",
-        options.name,
-        "with total value:",
-        options.totalValue
-      );
       options.totalValue = round(options.totalValue); // Apply custom rounding at the end
     }
   };
@@ -1238,7 +1220,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log("Form submitted:", formData);
     // Here you would typically send the data to a server or perform other actions
   };
 
@@ -1261,7 +1242,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     useFormComponent();
 
   const handleChange = (selectedOption: { value: string; label: string }) => {
-    console.log("Selected:", selectedOption);
   };
 
   const goToPreviousPage = () => {
@@ -1468,11 +1448,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </button>
                   </div>
 
-                  <HistorySidebar
+                  {/* <HistorySidebar
                     isOpen={isHistorySidebarOpen}
                     onClose={() => setIsHistorySidebarOpen(false)}
                     // data={historyData}
-                  />
+                  /> */}
 
                   {/* Settings  Button */}
                   <div>
@@ -2958,7 +2938,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     addOrEditRow(billwiseDetails);
                     focusLedgerCode();
                   } else {
-                    console.log("focusCostCenterRef");
 
                     focusCostCenterRef();
                   }

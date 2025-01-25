@@ -99,14 +99,11 @@ const Templates = ({ }) => {
     } else {
       const confirmDelete = window.confirm("Are you sure about deleting the template?");
       if (confirmDelete) {
-        console.log("Deleting template with ID:", temp?.id);
         var res = await api.delete(`${Urls.templates}${temp?.id}`);
-        console.log("Delete action response:", res);
         handleResponse(res, () => {
           getTemplates();
         });
       } else {
-        console.log("Deletion canceled");
       }
     }
   };

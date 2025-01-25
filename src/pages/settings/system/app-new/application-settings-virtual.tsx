@@ -170,7 +170,6 @@ export default function SettingsPage() {
         setActiveSection(targetKey);
       }
     } else {
-      console.log("sdsdsdsdsd");
       const first = settingGroups.find((x) => x.id == sectionId);
       const second =
         first && first.settings != null && first.settings.length > 0
@@ -350,8 +349,6 @@ export default function SettingsPage() {
                           scrollPosition >= subOffsetTop &&
                           scrollPosition < subOffsetTop + subOffsetHeight
                         ) {
-                          console.log(`subSettingCat.key:${subSettingCat.key}`);
-
                           setActiveSubCatItem(subSettingCat.key);
                           setBlinkSection(subSettingCat.key);
                           break;

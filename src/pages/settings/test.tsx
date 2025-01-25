@@ -69,7 +69,6 @@ export const SampleMange: React.FC = React.memo(() => {
         {...getFieldProps("dateTo")}
           name="flexRadioDefault"
           label="Default checked radio"
-          onChange={(e) => console.log(e.target?.value)}
           defaultChecked
         />
         <ERPDataCombobox

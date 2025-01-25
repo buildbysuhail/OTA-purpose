@@ -94,7 +94,6 @@ const OptionsColumn = ({ data }: { data: any }) => {
                   dispatch(
                     toggleAccountGroupPopup({ isOpen: true, key: null, data:{groupId: data.id} })
                   );
-                  console.log("popup open");
                 }}
               >
                 Add Group
@@ -106,7 +105,6 @@ const OptionsColumn = ({ data }: { data: any }) => {
                   dispatch(
                     toggleAccountLedgerPopup({ isOpen: true, key: null, data:{groupId: data.id} })
                   );
-                  console.log("popup open");
                 }}
               >
                 Add Ledger

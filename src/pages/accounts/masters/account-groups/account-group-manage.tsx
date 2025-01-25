@@ -42,7 +42,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       if (data[0]?.[0] != null) {
         handleFieldChange('arabicName', data[0]?.[0]?.[0]);
       }
-      console.log('Fetched Data:', data);
     } catch (error) {
       console.error('Fetch Error:', error);
     }

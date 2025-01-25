@@ -162,7 +162,6 @@ export const DataToFormArray = (data: any) => {
 
 // OPTION LISTER
 export const getOptions = (data: any, keyLabel: string) => {
-  console.log(`Utils,  : get_options_data`, data);
   let getter = keyLabel?.split(".");
   if (data?.length > 0) {
     let options;

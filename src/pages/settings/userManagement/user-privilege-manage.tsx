@@ -413,8 +413,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
     }
     generatePostData()
       .then(async (dataForPost) => {
-        console.log(dataForPost);
-        console.log(gridRef);
         if (dataForPost) {
           const response = await api.postAsync(
             `${Urls.user_rights}${postData.data.userType}`,

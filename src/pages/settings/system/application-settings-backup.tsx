@@ -35,7 +35,6 @@ const BackupSettingsForm: React.FC = () => {
     try {
       const response = await api.getAsync(`${Urls.application_settings}backup`);
 
-      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {

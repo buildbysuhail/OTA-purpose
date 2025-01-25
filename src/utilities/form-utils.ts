@@ -41,8 +41,6 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
     validation,
     checked,
   };
-  console.log(`ret`);
-  console.log(ret);
   
   
   return ret;
@@ -120,9 +118,6 @@ export const getFieldPropsAdvGlob = (
       ? (event: any) => options.onChangeData?.(event.target.value)
       : (eventData: any) => {
           const nestedValue = getNestedValue(eventData, fieldId);
-          console.log("fieldId:", fieldId);
-          console.log("eventData:", eventData);
-          console.log("nestedValue:", nestedValue);
           handleFieldChange(fieldId, nestedValue);
         },
     label: _label,

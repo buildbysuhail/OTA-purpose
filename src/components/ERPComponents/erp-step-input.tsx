@@ -83,7 +83,6 @@ const ERPStepInput = ({
         onChange?.((value || defaultValue) + addValue);
       }}
       onChange={(e) => {
-        console.log(`ERPStepInput,  : `);
         const nValue = parseInt(e.target?.value);
         onChange?.(nValue);
       }}

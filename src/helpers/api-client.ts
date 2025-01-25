@@ -127,7 +127,6 @@ class APIClient {
    */
   post = (url: string, data: any, headers?: any): Promise<any> => {
     setAuthorization();
-    console.log("create ", data);
     return headers ? axios.post(url, data, { headers: headers }) : axios.post(url, data);
   };
 

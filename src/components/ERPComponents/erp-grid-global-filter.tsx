@@ -48,13 +48,11 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   // Fetch props for fields dynamically
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
-      console.log("getFieldProps called");
       return getFieldPropsGlobal(fieldId, formState);
     },
     [formState]
   );
   const getFormState = useCallback(() => {
-      console.log("getFieldProps called");
       return  formState;
     },
     [formState]
@@ -119,7 +117,6 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
       validations: validations
     }))
   }, [validations]);
-  console.log("ErpGridGlobalFilter");
 
   return (
     <>

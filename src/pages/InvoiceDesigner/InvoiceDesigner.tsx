@@ -153,7 +153,6 @@ const InvoiceDesigner = () => {
   ) as TemplateReducerState;
 
   const { templateKind } = location.state || {}; 
-  console.log(templateKind);
   
   const templateGroup = searchParams?.get("template_group")! as
     | VoucherType

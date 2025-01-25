@@ -86,7 +86,6 @@ const PostDatedCheques = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Setting all dates");
     } finally {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
@@ -97,7 +96,6 @@ const PostDatedCheques = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Exporting to Excel");
     } finally {
       setLoading((prev) => ({ ...prev, exportToExcel: false }));
     }
@@ -119,7 +117,6 @@ const PostDatedCheques = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Saving data", formState);
     } finally {
       setLoading((prev) => ({ ...prev, save: false }));
     }
@@ -130,7 +127,6 @@ const PostDatedCheques = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Closing form");
     } finally {
       setLoading((prev) => ({ ...prev, close: false }));
     }

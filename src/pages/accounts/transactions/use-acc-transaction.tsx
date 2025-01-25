@@ -272,10 +272,8 @@ export const useAccTransaction = (
           transactionMasterId,
           ""
         );
-        console.log("Undo Edit Mode Result:", result);
         return result;
       } catch (error) {
-        console.error("Failed to undo edit mode:", error);
         throw error;
       }
     }
@@ -1131,7 +1129,6 @@ export const useAccTransaction = (
               index: focusedRowIndex,
             })
           );
-          console.log("Row Data:", focusedRowIndex);
         },
       });
     }

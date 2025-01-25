@@ -40,7 +40,6 @@ const jwtHelper = {
       return false;
     } else {
       const decodedToken = jwt_decode.jwtDecode(user);
-      console.log(decodedToken);
       
       return ((decodedToken as any)['CustomerId']) !== undefined && ((decodedToken as any)['CustomerId']) !== null && ((decodedToken as any)['CustomerId']) !== '0';
     }

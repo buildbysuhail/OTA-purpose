@@ -542,7 +542,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
 
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
-    const rootState = useAppSelector(x => x)
+    const rootState = useAppSelector((x) => x);
     const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(
       () => filterInitialData || {},
@@ -1174,15 +1174,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const vchr = c.split(" ");
         const vchtype = vchr[0];
         const voucherform = c.substring(c.indexOf(" ") + 1);
-    
+
         const vchNoRaw = row.vchNo || "";
         const vno = vchNoRaw.split(" ");
         const prefix = vno[0];
         const vchno = vno[1] || "0";
         const financialYearID = parseInt(row.financialYearID || "0", 10);
-    
+
         const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
-    
+
         // Validate and invoke logic
         if (parseInt(vchno, 10) > 0) {
           const transactionData = {
@@ -1251,14 +1251,25 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             updatedBodyProps
           );
           onCellClick && onCellClick(event);
-          setBodyProps(updatedBodyProps);
-          setIsChildOpen({
-            isOpen: true,
-            props: _updatedBodyProps,
-            key: _drillDownCell,
-            drillDownDisplayCells: _drillDownDisplayCells,
-            data: event.data,
-          });
+
+          if (dynamicProps?.isTransactionScreen) {
+            const url = new URL("https://example.com");
+            url.searchParams.append("param1", "value1");
+            url.searchParams.append("param2", "value2");
+
+            window.open(url.toString(), "_blank");
+          } else {
+            setBodyProps(updatedBodyProps);
+            setIsChildOpen({
+              isOpen: true,
+              props: _updatedBodyProps,
+              key: _drillDownCell,
+              drillDownDisplayCells: _drillDownDisplayCells,
+              data: event.data,
+            });
+          }
+
+          
           // const sd = 223;
         }
       },
@@ -1361,8 +1372,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={onRowClick}
-            onSelectionChanged={(e) => onSelectionChangedByRootState != undefined 
-              ? onSelectionChangedByRootState(e, rootState) :  onSelectionChanged && onSelectionChanged(e)}
+            onSelectionChanged={(e) =>
+              onSelectionChangedByRootState != undefined
+                ? onSelectionChangedByRootState(e, rootState)
+                : onSelectionChanged && onSelectionChanged(e)
+            }
             onKeyDown={onKeyDown}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
@@ -1399,8 +1413,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               </FilterRow>
             )}
             {allowSearching && <SearchPanel visible={true} />}
-            <FilterRow
-          visible={showFilterRow} />
+            <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
             {allowSelection && <Selection mode={selectionMode} />}
@@ -1431,7 +1444,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 <Item location="before">
                   <div className="flex  flex-col">
                     <div className={`box-title !text-xs !font-medium`}>
-                      <span className="text-sm dark:!text-dark-text">{gridHeader}</span>&nbsp;{""}
+                      <span className="text-sm dark:!text-dark-text">
+                        {gridHeader}
+                      </span>
+                      &nbsp;{""}
                       {header}
                     </div>
                   </div>

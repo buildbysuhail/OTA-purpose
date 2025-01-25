@@ -10,7 +10,7 @@ import { hexToRgb } from "../../components/common/switcher/switcherdata/switcher
 import { inputBox } from "../../redux/slices/app/types";
 
 interface InputBoxStylingProps {
-  inputBox: inputBox; // Pass the inputBox state
+  inputBox?: inputBox; // Pass the inputBox state
   onInputBoxChange: (field: keyof inputBox, value: any) => void; // Handler for state updates
 //   resetInputBox?: () => void; // Reset handler
  isInputBgColor?:boolean;

@@ -418,17 +418,17 @@ export interface BillwiseData {
   voucherType: string;
 }
 export interface AccUserConfig {
-  maxWidth: any;
-  keepNarrationForJV: boolean;
-  clearDetailsAfterSaveAccounts: boolean;
-  mnuShowConfirmationForEditOnAccounts: boolean;
-  maximizeBillwiseScreenInitially: boolean;
-  alignment: "left" | "center" | "right";
-  presetCostenterId: number
-  counterAssignedCashLedgerId: number
-  outerPageBg:string;
-  innerPageBg:string;
-  inputBoxStyle:inputBox
+  maxWidth?: any;
+  keepNarrationForJV?: boolean;
+  clearDetailsAfterSaveAccounts?: boolean;
+  mnuShowConfirmationForEditOnAccounts?: boolean;
+  maximizeBillwiseScreenInitially?: boolean;
+  alignment?: "left" | "center" | "right";
+  presetCostenterId?: number
+  counterAssignedCashLedgerId?: number
+  outerPageBg?:string;
+  innerPageBg?:string;
+  inputBoxStyle?:inputBox
 }
 export interface AccTransactionFormState {
   store: any;
@@ -584,7 +584,43 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   printCheque: false,
   keepNarration: false,
   amountInWords: 'Zero Only',
- 
+  userConfig: {
+    clearDetailsAfterSaveAccounts: true,
+    keepNarrationForJV: true,
+    mnuShowConfirmationForEditOnAccounts: true,
+    maximizeBillwiseScreenInitially: true,
+    alignment: "center",
+    presetCostenterId: 0,
+    counterAssignedCashLedgerId: 0,
+    maxWidth: " ",
+    outerPageBg: "",
+    innerPageBg: "",
+    inputBoxStyle: {
+      inputStyle: "normal",
+      inputSize: "md",
+      checkButtonInputSize: "md",
+      inputHeight: 0,
+      fontSize: 14,
+      fontWeight: 400,
+      labelFontSize: 14,
+      otherLabelFontSize: 14,
+      inputBgColor: "255, 255, 255",
+      borderColor: "128, 128, 128",
+      selectColor: "255, 255, 255",
+      fontColor: "128, 128, 128",
+      labelColor: "128, 128, 128",
+      borderFocus: "128, 128, 128",
+      borderRadius: 4,
+      adjustA: 0,
+      adjustB: 0,
+      adjustC: 0,
+      adjustD: 0,
+      marginTop: 0,
+      marginBottom: 0,
+      focusForeColor: "128, 128, 128",
+      focusBgColor: "255, 255, 255",
+    }
+  },
   isBahamdoonPOSReceipt: false,
   unlocking: false,
   total: 0,

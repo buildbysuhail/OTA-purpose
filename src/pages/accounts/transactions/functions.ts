@@ -39,11 +39,10 @@ export const clearEntryControl = (
       : "";
   state.row.chequeNumber = "";
   state.isRowEdit = false;
-  state.formElements.costCentreID.disabled = state.userConfig?.presetCostenterId > 0;
-  state.row.costCentreID =
-    state.userConfig?.presetCostenterId > 0
-      ? state.userConfig?.presetCostenterId
-      : defaultCostCenterID;
+  state.formElements.costCentreID.disabled = (state.userConfig?.presetCostenterId ?? 0) > 0;
+  state.row.costCentreID = (state.userConfig?.presetCostenterId ?? 0) > 0
+  ? state.userConfig?.presetCostenterId ?? 0
+  : defaultCostCenterID;
 
   state.transaction.master.totalAmount = calculateTotal(state);
   state.formElements.btnAdd.label = "Add";

@@ -81,7 +81,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
         accFormStateRowHandleFieldChange({
           fields: {
             costCentreID:
-              userConfig?.presetCostenterId > 0
+              userConfig?.presetCostenterId ??0> 0
                 ? userConfig?.presetCostenterId
                 : userSession.dbIdValue == "SAMAPLASTICS12121212121"
                 ? 0

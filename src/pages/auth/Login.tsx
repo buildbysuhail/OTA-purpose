@@ -186,17 +186,19 @@ const Login = () => {
                 className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2"
               >
                 <div className="col-span-full ">
-                  <ERPInput
-                    label={t("email-phone-username")}
-                    data={data}
-                    onChangeData={(_data: any) => {
-                      setData(_data);
-                    }}
+                  <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">
+                    {t("email-phone-username")}
+                  </label>
+                  <input
                     id="userName"
-                    autocomplete=""
-                    required
-                    value={data.userName}
                     type="text"
+                    value={data.userName}
+                    onChange={(e) =>
+                      setData({ ...data, userName: e.target.value })
+                    }
+                    required
+                    autoComplete=""
+                    className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
                   />
                 </div>
                 <div className="col-span-full ">

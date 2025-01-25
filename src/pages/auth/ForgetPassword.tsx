@@ -26,7 +26,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     setStep(2);
   };
 
-  const handleVerifyOTP = async () => {
+  const handleVerifyEmail = async () => {
     try {
       
 
@@ -68,7 +68,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     }
   };
 
-  const handleVerifyEmail = async () => {
+  const handleVerifyOTP = async () => {
     try {
       const response = await fetch(Urls.SendEmailToken, {
         method: "POST",

@@ -278,24 +278,24 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
 };
 
 export const useSearchInputFocus = () => {
-  // const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // useEffect(() => {
-  //   const handleShortcut = (event: KeyboardEvent) => {
-  //     if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "f") {
-  //       event.preventDefault();
-  //       searchInputRef.current?.focus();
-  //       searchInputRef.current?.select();
-  //     }
-  //   };
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "f") {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      }
+    };
 
   //   document.addEventListener("keydown", handleShortcut);
   //   return () => {
   //     document.removeEventListener("keydown", handleShortcut);
   //   };
-  // }, []);
+  }, []);
 
-  // return searchInputRef;
+  return searchInputRef;
 };
 
 // initializeShortKeys();

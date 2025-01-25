@@ -92,23 +92,23 @@ const accTransactionSlice = createSlice({
       }
       state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
-      state.transaction.master.costCentreID =
-        state.userConfig.presetCostenterId > 0
-          ? state.userConfig.presetCostenterId
+        state.transaction.master.costCentreID =
+        (state.userConfig?.presetCostenterId ?? 0) > 0
+          ? state.userConfig?.presetCostenterId ?? 0
           : 0;
       {
         if (userSession.employeeId > 0)
           state.transaction.master.employeeID = userSession.employeeId;
       }
-      if (state.userConfig.presetCostenterId > 0) {
-        state.row.costCentreID = state.userConfig.presetCostenterId;
+      if ((state.userConfig?.presetCostenterId??0) > 0) {
+        state.row.costCentreID = state.userConfig?.presetCostenterId ??0;
         state.formElements.costCentreID.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
           state.row.costCentreID = 0;
         }
         else {
-          state.row.costCentreID = applicationSettings?.accountsSettings?.defaultCostCenterID
+          state.row.costCentreID = applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0
         }
       }
     },

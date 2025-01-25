@@ -32,7 +32,7 @@ export const AccTransactionUserConfig = () => {
     const updatedUserConfig = {
       ...formState.userConfig,
       inputBoxStyle: {
-        ...formState.userConfig.inputBoxStyle,
+        ...formState.userConfig?.inputBoxStyle,
         [field]: value,
       },
     };

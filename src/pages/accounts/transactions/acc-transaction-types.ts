@@ -418,17 +418,17 @@ export interface BillwiseData {
   voucherType: string;
 }
 export interface AccUserConfig {
-  maxWidth: any;
-  keepNarrationForJV: boolean;
-  clearDetailsAfterSaveAccounts: boolean;
-  mnuShowConfirmationForEditOnAccounts: boolean;
-  maximizeBillwiseScreenInitially: boolean;
-  alignment: "left" | "center" | "right";
-  presetCostenterId: number
-  counterAssignedCashLedgerId: number
-  outerPageBg:string;
-  innerPageBg:string;
-  inputBoxStyle:inputBox
+  maxWidth?: any;
+  keepNarrationForJV?: boolean;
+  clearDetailsAfterSaveAccounts?: boolean;
+  mnuShowConfirmationForEditOnAccounts?: boolean;
+  maximizeBillwiseScreenInitially?: boolean;
+  alignment?: "left" | "center" | "right";
+  presetCostenterId?: number
+  counterAssignedCashLedgerId?: number
+  outerPageBg?:string;
+  innerPageBg?:string;
+  inputBoxStyle?:inputBox
 }
 export interface AccTransactionFormState {
   store: any;
@@ -484,7 +484,7 @@ export interface AccTransactionFormState {
   amountInWords: string,
   template?: any,
   templates?: [],
-  userConfig: AccUserConfig;
+  userConfig?: AccUserConfig;
   formElements: FormElementsState
 }
 export const initialFormElements:{ [key: string]: FormElementState } = {

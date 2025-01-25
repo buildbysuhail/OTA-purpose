@@ -344,7 +344,7 @@ export const useAccTransaction = (
     }
     if (
       formState.isEdit &&
-      formState.userConfig.mnuShowConfirmationForEditOnAccounts == true
+      formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
     ) {
       ERPAlert.show({
         icon: "info",
@@ -679,7 +679,7 @@ export const useAccTransaction = (
             printVoucher();
           }
         }
-        if (formState.userConfig.clearDetailsAfterSaveAccounts == true) {
+        if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
           clearControls(
             formState.isEdit,
             formState.transaction.master.accTransactionMasterID
@@ -922,7 +922,7 @@ export const useAccTransaction = (
       };
 
       // Conditionally update costCentreID if needed
-      if (formState.userConfig.presetCostenterId > 0) {
+      if (formState.userConfig?.presetCostenterId??0 > 0) {
         updatedFields.costCentreID = { disabled: true };
       }
 

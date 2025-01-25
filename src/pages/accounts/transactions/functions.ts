@@ -33,17 +33,16 @@ export const clearEntryControl = (
   state.previousNarration = state.row.narration;
   state.row.narration =
     state.transaction.master.voucherType == VoucherType.JournalVoucher
-      ? state.userConfig.keepNarrationForJV != true
+      ? state.userConfig?.keepNarrationForJV != true
         ? ""
         : state.row.narration
       : "";
   state.row.chequeNumber = "";
   state.isRowEdit = false;
-  state.formElements.costCentreID.disabled = state.userConfig.presetCostenterId > 0;
-  state.row.costCentreID =
-    state.userConfig.presetCostenterId > 0
-      ? state.userConfig.presetCostenterId
-      : defaultCostCenterID;
+  state.formElements.costCentreID.disabled = (state.userConfig?.presetCostenterId ?? 0) > 0;
+  state.row.costCentreID = (state.userConfig?.presetCostenterId ?? 0) > 0
+  ? state.userConfig?.presetCostenterId ?? 0
+  : defaultCostCenterID;
 
   state.transaction.master.totalAmount = calculateTotal(state);
   state.formElements.btnAdd.label = "Add";

@@ -127,12 +127,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     ref
   ) => {
     const appState = useAppSelector((state: RootState) => state.AppState?.appState);
+    debugger;
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
     
     const inputBoxState = React.useMemo(() => {
       return localInputBox || appState?.inputBox 
     }, [localInputBox, appState?.inputBox]);
+    // const [inputBoxState] = useState(localInputBox);
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     // const inputBoxState = localInputBox || appState?.inputBox;
 

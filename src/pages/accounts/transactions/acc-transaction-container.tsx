@@ -62,10 +62,10 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     voucherPrefix: string;
     formType: string;
     voucherNo: number;
-  }>({ voucherPrefix: "", formType: formType??"", voucherNo: 1 });
+  }>({ voucherPrefix: "", formType: formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
- const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const dispatch = useDispatch(); 
+  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -73,23 +73,12 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const fetchUserConfig = async () => {
     try {
       debugger;
-      const fdf= formState?.userConfig;
+      const fdf = formState?.userConfig;
       const response = await api.get(Urls.get_acc_user_config);
       const _userConfig = atob(response);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
-
-      dispatch(
-        accFormStateRowHandleFieldChange({
-          fields: {
-            costCentreID:
-              userConfig?.presetCostenterId ??0> 0
-                ? userConfig?.presetCostenterId
-                : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-                ? 0
-                : applicationSettings?.accountsSettings?.defaultCostCenterID,
-          },
-        })
-      );
+      debugger;
+      
       dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
     } catch (error) {
       console.error("Error fetching user config:", error);
@@ -102,19 +91,17 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   };
 
   useEffect(() => {
-    if (isChooseVoucherEnabled(title??"", userSession)) {
+    if (isChooseVoucherEnabled(title ?? "", userSession)) {
       const fetchData = async () => {
         try {
           const res = await api.getAsync(
             `${Urls.voucher_selector}${voucherType}`
           );
-          
+
           if (
             res == undefined ||
             res == null ||
-            (res != undefined &&
-              res != null &&
-              res.length <= 1)
+            (res != undefined && res != null && res.length <= 1)
           ) {
             if (res?.length == 1) {
               setData((prev: any) => ({
@@ -123,7 +110,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
                 voucherNo: res[0].lastVNo,
                 voucherPrefix: res[0].lastPrefix,
               }));
-              
+
               await initializeVoucher(); // Call initializeVoucher here
             }
           } else {
@@ -176,16 +163,19 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             setOpenVoucherSelector(false);
           }}
         />
-      ) : readyToShowVoucher == true && formState?.userConfig &&(
-        <AccTransactionForm
-          voucherType={voucherType}
-          voucherPrefix={data.voucherPrefix}
-          formType={data.formType}
-          formCode={formCode}
-          title={title}
-          drCr={drCr}
-          transactionType={transactionType}
-        />
+      ) : (
+        readyToShowVoucher == true &&
+        formState?.userConfig && (
+          <AccTransactionForm
+            voucherType={voucherType}
+            voucherPrefix={data.voucherPrefix}
+            formType={data.formType}
+            formCode={formCode}
+            title={title}
+            drCr={drCr}
+            transactionType={transactionType}
+          />
+        )
       )}
     </>
   );

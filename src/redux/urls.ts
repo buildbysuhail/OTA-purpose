@@ -89,7 +89,11 @@ const Urls = {
   set_branch: "/Subscription/Auth/SetBranch/",
   SendEmailToken: "/Subscription/Auth/SendEmailToken",
   ValidateToken: "/Subscription/Auth/ValidateToken",
-  SendSmsOtp: "/api/Subscription/Auth/SendSmsOtp",
+  SendSmsOtp: "/Subscription/Auth/SendSmsOtp",
+  get_login_credentials:"/Subscription/Auth/LoginCredentials/",
+  sent_token:"/Subscription/Auth/SendTokenAsync",
+  validate_token:"/Subscription/Auth/ValidateTokenAsync",
+
 
   // App
   application_setting: "/Core/ApplicationSettings/",

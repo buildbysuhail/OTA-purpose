@@ -120,17 +120,17 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "",
     shortKey: "ctrl+alt+o"
   },
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "JV",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.JournalVoucher,
-  //   transactionType: "JournalEntry",
-  //   formType: "",
-  //   title: TransactionTitles.JournalEntry,
-  //   drCr: "",
-  //   shortKey: "ctrl+alt+j"
-  // },
+  {
+    transactionBase: TransactionBase.Accounts,
+    formCode: "JV",
+    action: UserAction.Show,
+    voucherType: VoucherType.JournalVoucher,
+    transactionType: "JournalEntry",
+    formType: "",
+    title: TransactionTitles.JournalEntry,
+    drCr: "",
+    shortKey: "ctrl+alt+j"
+  },
   {
     transactionBase: TransactionBase.Accounts,
     formCode: "MJV",
@@ -142,17 +142,18 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "",
     shortKey: "ctrl+alt+m"
   },
-  {
-    transactionBase: TransactionBase.Accounts,
-    formCode: "JVSP",
-    action: UserAction.Show,
-    voucherType: VoucherType.JournalVoucherSpecial,
-    transactionType: "JournalEntrySpecial",
-    formType: "",
-    title: TransactionTitles.JournalEntrySpecial,
-    drCr: "",
-    visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-  },
+
+  // {
+  //   transactionBase: TransactionBase.Accounts,
+  //   formCode: "JVSP",
+  //   action: UserAction.Show,
+  //   voucherType: VoucherType.JournalVoucherSpecial,
+  //   transactionType: "JournalEntrySpecial",
+  //   formType: "",
+  //   title: TransactionTitles.JournalEntrySpecial,
+  //   drCr: "",
+  //   visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
+  // },
   {
     transactionBase: TransactionBase.Accounts,
     formCode: "DN",

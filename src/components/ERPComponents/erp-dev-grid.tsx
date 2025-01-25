@@ -408,7 +408,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       filterWidth = "w-full max-w-[1000px]",
       method = ActionType.GET,
       height,
-      className = "custom-data-grid",
+      className = "",
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
@@ -1362,7 +1362,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     return (
       <Fragment>
-        <div className={className}>
+        <div className={`custom-data-grid ${className}`}>
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             ref={gridRef}

@@ -52,6 +52,15 @@
   --header-border-color: red;
   
     // Table Header Stylin
+
+    .dx-datagrid-total-footer {
+      border: 1px solid $dark-border ;
+      background-color: $dark-bg-card;
+    }
+
+    .dx-datagrid-summary-item {
+      color: $dark-text;
+    }
 // this selection 
 .dx-datagrid-rowsview .dx-row.dx-selection td,
 .dx-datagrid-rowsview .dx-row.dx-selection:hover td {

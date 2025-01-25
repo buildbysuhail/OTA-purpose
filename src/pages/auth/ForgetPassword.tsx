@@ -45,7 +45,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch(API_URLS.ValidateToken, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
 
   const handleVerifyEmail = async () => {
     try {
-      const response = await fetch(API_URLS.ValidateToken, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     }
 
     try {
-      const response = await fetch(API_URLS.password_reset_confirm, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +171,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
               />
               <button
                 type="submit"
-                onClick={api}
+                onClick={handleVerifyEmail}
                 className="w-full bg-[#2563eb] text-white py-3 rounded-xl hover:bg-[#1d4ed8] focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl group"
               >
                 Submit

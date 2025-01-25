@@ -41,7 +41,7 @@ import { isChooseVoucherEnabled } from "../../../components/common/content/trans
 import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -74,6 +74,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       debugger;
       const fdf= formState?.userConfig;
       const response = await api.get(Urls.get_acc_user_config);
+      localStorage.setItem('utc', modelToBase64(response))
       const _userConfig = atob(response);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
 
@@ -96,8 +97,39 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   };
 
   const initializeVoucher = async () => {
-    await fetchUserConfig();
-    setReadyToShowVoucher(true);
+    let Utc = localStorage.getItem("utc");
+    let userConfig: AccUserConfig;
+  
+    try {
+      if (Utc != undefined && Utc != null && Utc != "") {
+        userConfig = customJsonParse(atob(Utc));
+  
+        // Dispatch the first action and wait for it to complete
+        dispatch(
+          accFormStateRowHandleFieldChange({
+            fields: {
+              costCentreID:
+                userConfig?.presetCostenterId ?? 0 > 0
+                  ? userConfig?.presetCostenterId
+                  : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+                  ? 0
+                  : applicationSettings?.accountsSettings?.defaultCostCenterID,
+            },
+          })
+        );
+  
+        // Dispatch the second action and wait for it to complete
+        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+      } else {
+        // If no userConfig in localStorage, fetch it from the API
+        await fetchUserConfig();
+      }
+  
+      // Set readyToShowVoucher to true after both cases are handled
+      setReadyToShowVoucher(true);
+    } catch (error) {
+      console.error("Error initializing voucher:", error);
+    }
   };
 
   useEffect(() => {

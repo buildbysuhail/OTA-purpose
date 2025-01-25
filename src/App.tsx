@@ -71,13 +71,29 @@ export const LoadingAnimation = () => {
 
 function App() {
 
+
   useEffect(() => {
-    
     const sd = moment().local(); // Ensure local time is used
-const asd = sd.format("DD/MM/YYYY");
-    dispatch(setSoftwareDate(asd))
-    load();
+    const asd = sd.format("DD/MM/YYYY");
+    dispatch(setSoftwareDate(asd));
+    let ass = localStorage.getItem("as");
+    let appSettings: ApplicationSettingsType;
+    try {
+      
+      if (ass != undefined && ass != null && ass != "") {
+        appSettings = customJsonParse(atob(ass));
+        dispatch(setApplicationSettings(
+          {
+            ...appSettings,
+            apiLoaded: false
+        }));
+      }else{
+        load();
+      }
+    } catch (error) { }
+ 
   }, []);
+  
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
     try {
@@ -102,27 +118,11 @@ const asd = sd.format("DD/MM/YYYY");
   
 
   useEffect(() => {
-    
     const token = localStorage.getItem("token");
-
-
     let upt = localStorage.getItem("up");
     let urr = localStorage.getItem("ur");
     let utt = localStorage.getItem("ut");
-    let ass = localStorage.getItem("as");
-  
-    let appSettings: ApplicationSettingsType;
-    try {
-      
-      if (ass != undefined && ass != null && ass != "") {
-        appSettings = customJsonParse(atob(ass));
-        dispatch(setApplicationSettings(
-          {
-            ...appSettings,
-            apiLoaded: false
-        }));
-      }
-    } catch (error) { }
+   
   
   
     let userRights: UserTypeRights[] = [];
@@ -164,8 +164,9 @@ const asd = sd.format("DD/MM/YYYY");
       console.error("i18n is not properly initialized:", i18n);
     }
   }, []);
+
+
   const load = async() => {
-    
     const settings = await api.getAsync(Urls.application_setting);
     localStorage.setItem('as', modelToBase64(settings))
     dispatch(setApplicationSettings(

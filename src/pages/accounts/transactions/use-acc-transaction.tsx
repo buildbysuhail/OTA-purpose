@@ -1109,6 +1109,7 @@ export const useAccTransaction = (
       handleAmountKeyDown(key);
     } else if (field === "costCentre") {
       if (key == "Enter") {
+        debugger;
         focusBtnAdd();
       }
     } else if (field === "voucherNumber") {
@@ -1245,10 +1246,11 @@ export const useAccTransaction = (
         }
       } else if (
         applicationSettings.accountsSettings?.maintainCostCenter &&
-        formState.formElements.costCentreID.visible == true
+        formState.formElements.costCentreID.visible == true && (formState.userConfig?.presetCostenterId??0) <= 0
       ) {
         focusCostCenterRef();
       } else {
+        debugger;
         focusBtnAdd();
       }
 

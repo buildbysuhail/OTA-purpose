@@ -220,19 +220,19 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 let isInitialized = false;
 
-export const initializeShortKeys = () => {
-  if (!isInitialized) {
-    document.addEventListener("keydown", handleKeyPress);
-    isInitialized = true;
-  }
-};
+// export const initializeShortKeys = () => {
+//   if (!isInitialized) {
+//     document.addEventListener("keydown", handleKeyPress);
+//     isInitialized = true;
+//   }
+// };
 
-export const cleanupShortKeys = () => {
-  if (isInitialized) {
-    document.removeEventListener("keydown", handleKeyPress);
-    isInitialized = false;
-  }
-};
+// export const cleanupShortKeys = () => {
+//   if (isInitialized) {
+//     document.removeEventListener("keydown", handleKeyPress);
+//     isInitialized = false;
+//   }
+// };
 
 export const getFocusableElements = () => {
   return Array.from(
@@ -278,27 +278,27 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
 };
 
 export const useSearchInputFocus = () => {
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  // const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const handleShortcut = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "f") {
-        event.preventDefault();
-        searchInputRef.current?.focus();
-        searchInputRef.current?.select();
-      }
-    };
+  // useEffect(() => {
+  //   const handleShortcut = (event: KeyboardEvent) => {
+  //     if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "f") {
+  //       event.preventDefault();
+  //       searchInputRef.current?.focus();
+  //       searchInputRef.current?.select();
+  //     }
+  //   };
 
-    document.addEventListener("keydown", handleShortcut);
-    return () => {
-      document.removeEventListener("keydown", handleShortcut);
-    };
-  }, []);
+  //   document.addEventListener("keydown", handleShortcut);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleShortcut);
+  //   };
+  // }, []);
 
-  return searchInputRef;
+  // return searchInputRef;
 };
 
-initializeShortKeys();
+// initializeShortKeys();
 
 export { ShortKeyEvents };
 export default shortKeys;

@@ -627,7 +627,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 : title + "[" + formType + "]",
             row: {
               ...AccTransactionRowInitialData,
-              costCentreID:(formState.userConfig?.presetCostenterId ?? 0) > 0 ? (formState.userConfig?.presetCostenterId ?? 0) : userSession.dbIdValue == "SAMAPLASTICS" ? 0 : applicationSettings.accountsSettings.defaultCostCenterID
+              costCentreID:(formState.userConfig?.presetCostenterId ?? 0) > 0 ? (formState.userConfig?.presetCostenterId ?? 0) : userSession.dbIdValue == "SAMAPLASTICS121212121" ? 0 : applicationSettings.accountsSettings.defaultCostCenterID
             }
           },
         })

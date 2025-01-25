@@ -1,162 +1,168 @@
 .box-title-desc {
-    @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
-  }
-  // .custom-before {
-  //   @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary/50 before:rounded-md;
-  // }
-  // .box-title {
-  //   @apply text-[.800rem];
-  // }
-  // .main-content {
-  //   @apply pt-4;
-  // }
+  @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
+}
+// .custom-before {
+//   @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary/50 before:rounded-md;
+// }
+// .box-title {
+//   @apply text-[.800rem];
+// }
+// .main-content {
+//   @apply pt-4;
+// }
 
-    $dark-label: #e1e0e0;
-    // $dark-text: #e1e0e0;
-    $dark-text: #E0E0E0;
-    $dark-bg: #1e1e1f;
-    // $dark-bg-header: #404344bf;
-    $dark-bg-header: #383a3b;
-    $dark-hover-text: #000000;
-    $dark-border: #f2f4f538;
-    $dark-bg-card: #202223;
-    $dark-hover-bg: #343536;
-    $dark-combo-dd: #373737;
-    $dark-grid-hover: #000000;
-    $dark-grid-selection: #000000;
+$dark-label: #e1e0e0;
+// $dark-text: #e1e0e0;
+$dark-text: #e0e0e0;
+$dark-bg: #1e1e1f;
+// $dark-bg-header: #404344bf;
+$dark-bg-header: #383a3b;
+$dark-hover-text: #000000;
+$dark-border: #f2f4f538;
+$dark-bg-card: #202223;
+$dark-hover-bg: #343536;
+$dark-combo-dd: #373737;
+$dark-grid-hover: #000000;
+$dark-grid-selection: #000000;
 
-  .dark .custom-data-grid {
+.dark .custom-data-grid {
+  // $dark-label: #e1e0e0;
+  // $dark-text: #e1e0e0;
+  // $dark-bg: #313334;
+  // $dark-bg-header: #404344bf;
+  // $dark-hover-text: #000000;
+  // $dark-border: #f2f4f538;
 
-    // $dark-label: #e1e0e0;
-    // $dark-text: #e1e0e0;
-    // $dark-bg: #313334;
-    // $dark-bg-header: #404344bf;
-    // $dark-hover-text: #000000;
-    // $dark-border: #f2f4f538;
+  // $dark-label: #e1e0e0;
+  // // $dark-text: #e1e0e0;
+  // $dark-text: #E0E0E0;
+  // $dark-bg: #1e1e1f;
+  // // $dark-bg-header: #404344bf;
+  // $dark-bg-header: #383a3b;
+  // $dark-hover-text: #000000;
+  // $dark-border: #f2f4f538;
+  // $dark-bg-card: #202223;
+  // $dark-hover-bg: #343536;
+  // $dark-combo-dd: #373737;
+  // $dark-grid-hover: #000000;
 
-    // $dark-label: #e1e0e0;
-    // // $dark-text: #e1e0e0;
-    // $dark-text: #E0E0E0;
-    // $dark-bg: #1e1e1f;
-    // // $dark-bg-header: #404344bf;
-    // $dark-bg-header: #383a3b;
-    // $dark-hover-text: #000000;
-    // $dark-border: #f2f4f538;
-    // $dark-bg-card: #202223;
-    // $dark-hover-bg: #343536;
-    // $dark-combo-dd: #373737;
-    // $dark-grid-hover: #000000;
-
-      /* Variables */
+  /* Variables */
   --dark-border: #f2f4f538;
   --header-border-color: red;
-  
-    // Table Header Stylin
 
-    .dx-datagrid-total-footer {
-      border: 1px solid $dark-border ;
-      background-color: $dark-bg-card;
-    }
+  // Table Header Stylin
 
-    .dx-datagrid-summary-item {
-      color: $dark-text;
-    }
-// this selection 
-.dx-datagrid-rowsview .dx-row.dx-selection td,
-.dx-datagrid-rowsview .dx-row.dx-selection:hover td {
-  background-color: $dark-grid-selection !important;
-  color: $dark-text !important; /* Text color for selected rows */
-}
+  .dx-datagrid-total-footer {
+    border: 1px solid $dark-border;
+    background-color: $dark-bg-card;
+  }
 
-span.dx-datagrid-nodata {
-  color: $dark-text;
-}
+  .dx-datagrid-summary-item {
+    color: $dark-text;
+  }
+  // this selection
+  .dx-datagrid-rowsview .dx-row.dx-selection td,
+  .dx-datagrid-rowsview .dx-row.dx-selection:hover td {
+    background-color: $dark-grid-selection !important;
+    color: $dark-text !important; /* Text color for selected rows */
+  }
 
-// .dx-header-filter {
-//   background-color: #fd0505; /* Set your desired color */
-// }
+  span.dx-datagrid-nodata {
+    color: $dark-text;
+  }
 
-.dx-datagrid-filter-row > td {
-  // border-top: 1px solid rgb(252 1 1);
-  // border-right: 1px solid rgb(0 170 255);
-  background-color: black;
-  color: white;
-}
-// .dx-datagrid-filter-row  {
-//   // border-top: 1px solid rgb(252 1 1);
-//   // border-right: 1px solid rgb(0 170 255);
-//   background-color: black;
-//   color: white;
-// }
+  // .dx-header-filter {
+  //   background-color: #fd0505; /* Set your desired color */
+  // }
 
-.dx-editor-cell .dx-texteditor .dx-texteditor-input {  
-  background-color: rgb(8, 8, 8);  
-  color: white;
-}  
-.dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor, .dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor-container {  
-     background-color: rgb(73, 73, 73);  
-     color: white;
-} 
+  .dx-datagrid-filter-row > td {
+    // border-top: 1px solid rgb(252 1 1);
+    // border-right: 1px solid rgb(0 170 255);
+    background-color: black;
+    color: white;
+  }
+  // .dx-datagrid-filter-row  {
+  //   // border-top: 1px solid rgb(252 1 1);
+  //   // border-right: 1px solid rgb(0 170 255);
+  //   background-color: black;
+  //   color: white;
+  // }
 
-// .dx-datagrid-content .dx-datagrid-table .dx-row.dx-select-row-focusedstyle > td {
-//   background-color: rgb(255, 0, 0) !important;
-//   color: initial;
-// }
+  .dx-editor-cell .dx-texteditor .dx-texteditor-input {
+    background-color: rgb(8, 8, 8);
+    color: white;
+  }
+  .dx-datagrid-content
+    .dx-datagrid-table
+    .dx-row
+    .dx-editor-cell
+    .dx-texteditor,
+  .dx-datagrid-content
+    .dx-datagrid-table
+    .dx-row
+    .dx-editor-cell
+    .dx-texteditor-container {
+    background-color: rgb(73, 73, 73);
+    color: white;
+  }
 
-// .dx-menu-base.dx-overlay-content .dx-scrollable .dx-scrollable-content {
-//   min-height: auto;
-//   transform: none !important;
-//   background-color: black !important;
-// }
+  // .dx-datagrid-content .dx-datagrid-table .dx-row.dx-select-row-focusedstyle > td {
+  //   background-color: rgb(255, 0, 0) !important;
+  //   color: initial;
+  // }
 
-// .dx-context-menu .dx-menu-items-container {
-//   // padding: 1px;
-//   background-color: black !important;
-//   /* color: white; */
-// }
+  // .dx-menu-base.dx-overlay-content .dx-scrollable .dx-scrollable-content {
+  //   min-height: auto;
+  //   transform: none !important;
+  //   background-color: black !important;
+  // }
 
-// .dx-menu-item.dx-state-hover {
-//   color: #f81515 !important ;
-//   background-color: rgb(197 0 0 ) !important;
-// }
+  // .dx-context-menu .dx-menu-items-container {
+  //   // padding: 1px;
+  //   background-color: black !important;
+  //   /* color: white; */
+  // }
 
-// .dx-menu-base .dx-menu-item-wrapper, .dx-menu-base .dx-menu-items-container {
-//     margin: 0;
-//     padding: 0;
-//     border: 0;
-//     outline: 0;
-//     height: 100%;
-//     background-color: black !important ;
-//     /* color: white; */
-// }
+  // .dx-menu-item.dx-state-hover {
+  //   color: #f81515 !important ;
+  //   background-color: rgb(197 0 0 ) !important;
+  // }
 
-// .dx-scrollable-wrapper {
-//   background-color: black !important;
-//   color: white !important ; 
-// }
+  // .dx-menu-base .dx-menu-item-wrapper, .dx-menu-base .dx-menu-items-container {
+  //     margin: 0;
+  //     padding: 0;
+  //     border: 0;
+  //     outline: 0;
+  //     height: 100%;
+  //     background-color: black !important ;
+  //     /* color: white; */
+  // }
 
-// .dx-datagrid-content .dx-datagrid-table .dx-row .dx-command-select.dx-selection, 
-// .dx-datagrid-content .dx-datagrid-table .dx-row.dx-selection > td:not(.dx-focused) {
-//   background-color: rgb(4, 255, 0);
-//   color: initial;
-// }
+  // .dx-scrollable-wrapper {
+  //   background-color: black !important;
+  //   color: white !important ;
+  // }
 
+  // .dx-datagrid-content .dx-datagrid-table .dx-row .dx-command-select.dx-selection,
+  // .dx-datagrid-content .dx-datagrid-table .dx-row.dx-selection > td:not(.dx-focused) {
+  //   background-color: rgb(4, 255, 0);
+  //   color: initial;
+  // }
 
-// .dx-datagrid-filter-row,  
-// .dx-datagrid-filter-row .dx-editor-cell .dx-texteditor-input  
-// {  
-//     background-color: rgb(15, 170, 23);  
-// } 
+  // .dx-datagrid-filter-row,
+  // .dx-datagrid-filter-row .dx-editor-cell .dx-texteditor-input
+  // {
+  //     background-color: rgb(15, 170, 23);
+  // }
 
-    // edit
-    .dx-datagrid-headers {
-      border: 1px solid $dark-border;
-    }
-
+  // edit
+  .dx-datagrid-headers {
+    border: 1px solid $dark-border;
+  }
 
   /* Optional: hover state for better interaction */
   .dx-datagrid-rowsview .dx-row:hover {
-      background-color: $dark-grid-hover !important;  /* Slightly darker on hover */
+    background-color: $dark-grid-hover !important; /* Slightly darker on hover */
   }
 
   .dx-datagrid-action {
@@ -167,430 +173,400 @@ span.dx-datagrid-nodata {
   // d2
   /* If you want to keep the original alternating feature but change colors */
   .dx-datagrid-rowsview .dx-row-alt > td {
-      background-color: $dark-bg-header !important;  /* Your desired color for alternate rows */
+    background-color: $dark-bg-header !important; /* Your desired color for alternate rows */
   }
   .dx-datagrid-rowsview .dx-row-alt:hover > td {
-      background-color: $dark-grid-hover !important;  /* Your desired color for alternate rows */
+    background-color: $dark-grid-hover !important; /* Your desired color for alternate rows */
   }
-
 
   // border
 
   /* Main grid borders */
-.dx-datagrid {
+  .dx-datagrid {
+    // border: 1px solid #e60b0b;
+    /* Outer border */
+  }
 
-  // border: 1px solid #e60b0b;  
-  /* Outer border */
-}
+  /* Header borders */
+  .dx-datagrid-headers {
+    border-bottom: 1px solid $dark-border;
+  }
 
-/* Header borders */
-.dx-datagrid-headers {
-  
-  border-bottom: 1px solid  $dark-border;
-}
+  /* Column headers border */
+  .dx-datagrid-headers .dx-datagrid-table .dx-header-row > td {
+    border-right: 1px solid $dark-border;
+  }
 
-/* Column headers border */
-.dx-datagrid-headers .dx-datagrid-table .dx-header-row > td {
-  border-right: 1px solid  $dark-border;
-}
+  /* Cell borders */
+  .dx-datagrid-rowsview .dx-row > td {
+    border-right: 1px solid $dark-border;
+    // border right color
+    border-bottom: 1px solid $dark-border;
+    // border bottom color
+  }
 
-/* Cell borders */
-.dx-datagrid-rowsview .dx-row > td {
-  border-right: 1px solid  $dark-border;
-  // border right color
-  border-bottom: 1px solid  $dark-border;
-  // border bottom color
-}
+  /* Selected row borders */
+  .dx-datagrid-rowsview .dx-selection > td {
+    border-right: 1px solid $dark-border;
 
-/* Selected row borders */
-.dx-datagrid-rowsview .dx-selection > td {
-  
-  border-right: 1px solid  $dark-border;
-  
-  border-bottom: 1px solid  $dark-border;
-}
+    border-bottom: 1px solid $dark-border;
+  }
 
-/* Group panel border */
-.dx-datagrid-group-panel {
-  border-bottom: 1px solid  $dark-border;
-}
+  /* Group panel border */
+  .dx-datagrid-group-panel {
+    border-bottom: 1px solid $dark-border;
+  }
 
-/* Filter row borders */
-.dx-datagrid-filter-row > td {
-  border-top: 1px solid  $dark-border;
-  border-right: 1px solid  $dark-border;
-}
+  /* Filter row borders */
+  .dx-datagrid-filter-row > td {
+    border-top: 1px solid $dark-border;
+    border-right: 1px solid $dark-border;
+  }
 
-/* Footer borders */
-.dx-datagrid-total-footer {
-  border-top: 1px solid  $dark-border;
-}
+  /* Footer borders */
+  .dx-datagrid-total-footer {
+    border-top: 1px solid $dark-border;
+  }
 
-/* Pager border */
-.dx-datagrid-pager {
-  border-top: 1px solid  $dark-border;
-}
+  /* Pager border */
+  .dx-datagrid-pager {
+    border-top: 1px solid $dark-border;
+  }
 
-// .dx-datagrid-headers .dx-datagrid-table .dx-header-row > td,
-// .dx-datagrid-rowsview .dx-row > td {
-//     border: 1px solid #e90505 !important;  /* Border for all cells including headers */
-// }
+  // .dx-datagrid-headers .dx-datagrid-table .dx-header-row > td,
+  // .dx-datagrid-rowsview .dx-row > td {
+  //     border: 1px solid #e90505 !important;  /* Border for all cells including headers */
+  // }
 
-/* Remove double borders */
-.dx-datagrid-headers,
-.dx-datagrid-rowsview {
-    border:  1px solid $dark-border !important;
+  /* Remove double borders */
+  .dx-datagrid-headers,
+  .dx-datagrid-rowsview {
+    border: 1px solid $dark-border !important;
     // $dark-borde
-}
-.dx-freespace-row{
-  background: $dark-bg;
-}
-.dx-scrollable-content{
-  background: $dark-bg-card;
-}
+  }
+  .dx-freespace-row {
+    background: $dark-bg;
+  }
+  .dx-scrollable-content {
+    background: $dark-bg-card;
+  }
 
-/* Loading panel background */
-.dx-loadpanel-content {
-  background-color: $dark-bg-card !important;  /* Black with opacity */
-  // loading bg  all background-color
-  border: none !important;
-}
+  /* Loading panel background */
+  .dx-loadpanel-content {
+    background-color: $dark-bg-card !important; /* Black with opacity */
+    // loading bg  all background-color
+    border: none !important;
+  }
 
-/* Loading indicator color */
-.dx-loadpanel-content .dx-loadindicator-icon {
-  // color: rgb(207, 14, 14) !important;  
-  /* Makes the loading spinner white */
-}
+  /* Loading indicator color */
+  .dx-loadpanel-content .dx-loadindicator-icon {
+    // color: rgb(207, 14, 14) !important;
+    /* Makes the loading spinner white */
+  }
 
-/* Loading message text color */
-.dx-loadpanel-message {
-  color: $dark-text !important;  
-  /* Makes the loading text white */
-}
+  /* Loading message text color */
+  .dx-loadpanel-message {
+    color: $dark-text !important;
+    /* Makes the loading text white */
+  }
 
-/* Optional: If you want to affect the whole loading area including outside the panel */
-.dx-loadpanel-wrapper {
-  background-color: $dark-bg , 0.7 !important;
-  // loading all background-color 
-}
+  /* Optional: If you want to affect the whole loading area including outside the panel */
+  .dx-loadpanel-wrapper {
+    background-color: $dark-bg, 0.7 !important;
+    // loading all background-color
+  }
 
-.dx-datagrid-action{
-  // border: 1px solid #ec1818 !important ;
-}
+  .dx-datagrid-action {
+    // border: 1px solid #ec1818 !important ;
+  }
 
-/* Target all cells within the hovered row */
-.dx-datagrid-rowsview .dx-row:hover > td {
-  color:$dark-text !important;
-}
+  /* Target all cells within the hovered row */
+  .dx-datagrid-rowsview .dx-row:hover > td {
+    color: $dark-text !important;
+  }
 
+  // Table Row Styling
 
-  
-    // Table Row Styling
-   
-    .dx-data-row {
+  .dx-data-row {
+    // color: $dark-text; // Text color for table rows
+    color: $dark-text; // Text color for table rows
 
-      // color: $dark-text; // Text color for table rows
-      color: $dark-text; // Text color for table rows
-      
-      font-size: 13px;
-      // line-height: 1rem;
-      &:nth-child(even) {
-
-        background-color: $dark-bg-card; // Light background for even rows
-      }
-
-  
-      &:nth-child(odd) {
-        background-color: $dark-bg; // White background for odd rows
-      }
-  
-      &:hover {
-
-
-        background-color: $dark-bg-card; // Hover effect with light blue shade
-      }
-      
+    font-size: 13px;
+    // line-height: 1rem;
+    &:nth-child(even) {
+      background-color: $dark-bg-card; // Light background for even rows
     }
 
-  
-  
-    // headz
-     .dx-datagrid-action {
-      
-      // color: rgb(71 85 105 ); // Primary blue color for actions
-      color: $dark-text; // Primary blue color for actions
-      // this header text
-      font-size: .875rem;
-      font-family: "Roboto," "Open Sans," "Nunito.";
-      // background-color: rgb(249 250 251 /1);
-      background-color: $dark-bg-card;
-      // this header bg
+    &:nth-child(odd) {
+      background-color: $dark-bg; // White background for odd rows
+    }
 
-      // border-right: rgb(249 250 251 /1) solid 0.1px;
-      border-right: rgb(249 250 251 /1) solid 0.1px;
-      // this header border rm line 
-      
-      line-height: 2rem;
-      position: relative; // Needed for positioning the pseudo-element
+    &:hover {
+      background-color: $dark-bg-card; // Hover effect with light blue shade
+    }
+  }
 
-      &::after {
-        content: "";
-        position: absolute;
-        right: 0; // Position the pseudo-element on the right side
-        top: 50%; // Vertically center the border
-        transform: translateY(-50%); // Adjust for exact centering
-        width: 0.5px; // Border thickness
-        height: 1.3rem; // Adjust height as needed
-        background-color: #d7dbdd; // Border color
+  // headz
+  .dx-datagrid-action {
+    // color: rgb(71 85 105 ); // Primary blue color for actions
+    color: $dark-text; // Primary blue color for actions
+    // this header text
+    font-size: 0.875rem;
+    font-family: "Roboto," "Open Sans," "Nunito.";
+    // background-color: rgb(249 250 251 /1);
+    background-color: $dark-bg-card;
+    // this header bg
+
+    // border-right: rgb(249 250 251 /1) solid 0.1px;
+    border-right: rgb(249 250 251 /1) solid 0.1px;
+    // this header border rm line
+
+    line-height: 2rem;
+    position: relative; // Needed for positioning the pseudo-element
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0; // Position the pseudo-element on the right side
+      top: 50%; // Vertically center the border
+      transform: translateY(-50%); // Adjust for exact centering
+      width: 0.5px; // Border thickness
+      height: 1.3rem; // Adjust height as needed
+      background-color: #d7dbdd; // Border color
       //  display: block;
-      }
-     }
-      // Remove border for last two columns (assuming they are actions column)
-    .dx-datagrid-action:last-child,
-    .dx-datagrid-action:nth-last-child(2) {
+    }
+  }
+  // Remove border for last two columns (assuming they are actions column)
+  .dx-datagrid-action:last-child,
+  .dx-datagrid-action:nth-last-child(2) {
     border-right: none;
     &::after {
-        display: none; 
+      display: none;
     }
-   
-    }
-  
-  
-    // Custom Checkbox Styling
-    // .dx-checkbox {
-    //   .dx-checkbox-icon {
-    //     border-color: #4a90e2;
-    //     background-color: #ffffff;
-    //   }
-  
-    //   &.dx-checkbox-checked .dx-checkbox-icon {
-    //     background-color: #4a90e2; // Checkbox fill color
-    //     border-color: #4a90e2;
-    //   }
-    // }
-  
-    // Badge Styling
-    // .badge {
-    //   &.bg-success {
-    //     background-color: #28a745; // Green for "Active"
-    //     color: white;
-    //     border-radius: 12px;
-    //     padding: 4px 12px;
-    //   }
-    // }
-  
-    // Toolbar Styling
-    .dx-toolbar {
-      background-color: #ffffff;
-      // border-bottom: 1px solid #e0e6f5;
-  
-      .dx-toolbar-before {
-        display: flex;
-        align-items: center;
-      }
-  
-      .dx-toolbar-after {
-        display: flex;
-        align-items: center;
-      }
-      .dx-toolbar-before {
-    justify-content: flex-start; /* Align to the left */
   }
-  
-  .dx-toolbar-after {
-    justify-content: flex-end; /* Align to the right */
-  }
-  
-  
-      // Buttons in the toolbar
-      .dx-button{
-        background-color: #dcdfe2; // Primary button color
-        color: #ffffff;
-        border-radius: 6px;
-        // padding: 4px 8px;
-  
-        &:hover {
-          background-color: #8ba1ad;
-        }
-      }
-    }
-     //action buttons 
-     .action-field {
+
+  // Custom Checkbox Styling
+  // .dx-checkbox {
+  //   .dx-checkbox-icon {
+  //     border-color: #4a90e2;
+  //     background-color: #ffffff;
+  //   }
+
+  //   &.dx-checkbox-checked .dx-checkbox-icon {
+  //     background-color: #4a90e2; // Checkbox fill color
+  //     border-color: #4a90e2;
+  //   }
+  // }
+
+  // Badge Styling
+  // .badge {
+  //   &.bg-success {
+  //     background-color: #28a745; // Green for "Active"
+  //     color: white;
+  //     border-radius: 12px;
+  //     padding: 4px 12px;
+  //   }
+  // }
+
+  // Toolbar Styling
+  .dx-toolbar {
+    background-color: #ffffff;
+    // border-bottom: 1px solid #e0e6f5;
+
+    .dx-toolbar-before {
       display: flex;
-      justify-content: space-evenly;
       align-items: center;
-      
-      
-    
-     // Adjust space between icons
-   
-      // Common icon styling
-       i  {
-        font-size: .875rem;
-        cursor: pointer;
-        
-        transition: color 0.3s ease, background-color 0.3s ease;
-        padding: 4px;
-        border-radius: 4px;
-      
-        &:hover {
-          color: #ffffff;
+    }
 
-        }
+    .dx-toolbar-after {
+      display: flex;
+      align-items: center;
+    }
+    .dx-toolbar-before {
+      justify-content: flex-start; /* Align to the left */
+    }
+
+    .dx-toolbar-after {
+      justify-content: flex-end; /* Align to the right */
+    }
+
+    // Buttons in the toolbar
+    .dx-button {
+      background-color: #dcdfe2; // Primary button color
+      color: #ffffff;
+      border-radius: 6px;
+      // padding: 4px 8px;
+
+      &:hover {
+        background-color: #8ba1ad;
       }
-  
-      // Specific styles for each action
-      .view-icon {
-        color: #00bfff; // Sky blue for view
-        &:hover {
-          background-color: #00bfff;
-        }
-      }
-  
-      .delete-icon {
-        color: #ff4d4f; // Red for delete
-        &:hover {
-          background-color: #ff4d4f;
-        }
-      }
-  
-      .edit-icon {
-        color: #28a745; // Green for edit 
-        &:hover {
-          background-color: #28a745;
-        }
+    }
+  }
+  //action buttons
+  .action-field {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    // Adjust space between icons
+
+    // Common icon styling
+    i {
+      font-size: 0.875rem;
+      cursor: pointer;
+
+      transition: color 0.3s ease, background-color 0.3s ease;
+      padding: 4px;
+      border-radius: 4px;
+
+      &:hover {
+        color: #ffffff;
       }
     }
 
-   
+    // Specific styles for each action
+    .view-icon {
+      color: #00bfff; // Sky blue for view
+      &:hover {
+        background-color: #00bfff;
+      }
+    }
+
+    .delete-icon {
+      color: #ff4d4f; // Red for delete
+      &:hover {
+        background-color: #ff4d4f;
+      }
+    }
+
+    .edit-icon {
+      color: #28a745; // Green for edit
+      &:hover {
+        background-color: #28a745;
+      }
+    }
+  }
+}
+
+.dark {
+  // $dark-label: #e1e0e0;
+  // // $dark-text: #e1e0e0;
+  // $dark-text: #E0E0E0;
+  // $dark-bg: #1e1e1f;
+  // // $dark-bg-header: #404344bf;
+  // $dark-bg-header: #383a3b;
+  // $dark-hover-text: #000000;
+  // $dark-border: #f2f4f538;
+  // $dark-bg-card: #202223;
+  // $dark-hover-bg: #343536;
+  // $dark-combo-dd: #373737;
+  // $dark-grid-hover: #000000;
+
+  .dx-treelist-container {
+    background-color: $dark-bg !important; /* Light blue background */
   }
 
-  .dark {
-
-    // $dark-label: #e1e0e0;
-    // // $dark-text: #e1e0e0;
-    // $dark-text: #E0E0E0;
-    // $dark-bg: #1e1e1f;
-    // // $dark-bg-header: #404344bf;
-    // $dark-bg-header: #383a3b;
-    // $dark-hover-text: #000000;
-    // $dark-border: #f2f4f538;
-    // $dark-bg-card: #202223;
-    // $dark-hover-bg: #343536;
-    // $dark-combo-dd: #373737;
-    // $dark-grid-hover: #000000;
-
-     .dx-treelist-container {
-      background-color: $dark-bg !important; /* Light blue background */
-    }
-    
-    /* Optional: Change the header background color */
-     .dx-treelist-headers {
-      background-color: $dark-bg-header !important;
-      color: $dark-text !important;
-    }
-    
-    /* Optional: Change the row background color on hover */
-     .dx-treelist-rowsview .dx-row {
-      background-color: $dark-bg-card !important;
-      color: $dark-text !important;
-    }
-    /* Optional: Change the row background color on hover */
-     .dx-treelist-rowsview .dx-row:hover {
-      background-color: $dark-hover-bg !important;
-      color: $dark-hover-text !important;
-    }
-    
-    
-    /* Selection Background Color */
-     .dx-treelist-rowsview .dx-selection,
-     .dx-treelist-rowsview .dx-selection.dx-row:hover {
-      /* background-color: #000000 !important; Light blue for selected rows */
-    }
-    
-    /* Change the selection background color */
-     .dx-treelist-rowsview .dx-selection,
-     .dx-treelist-rowsview .dx-selection.dx-row:hover {
-      /* background-color: #000000 !important; Light blue for selected rows */
-    }
-    
-    /* Change the selection background color */
-     .dx-treelist-rowsview .dx-row.dx-selection,
-     .dx-treelist-rowsview .dx-row.dx-selection:hover {
-      /* background-color: #000000 !important; */
-    }
-    
-    /* Target individual cells in the selected row */
-     .dx-treelist-rowsview .dx-row.dx-selection td,
-     .dx-treelist-rowsview .dx-row.dx-selection:hover td {
-      background-color: $dark-bg-header !important;
-      color: $dark-hover-text !important; /* Text color for selected rows */
-    }
-    // test
-    
-    .dx-treelist-headers .dx-treelist-table .dx-header-row {
-      border: 1px solid $dark-border !important;
-    }
-    .dx-treelist-headers .dx-treelist-table .dx-row > td {
-      border: 1px solid $dark-border !important ;
-    }
-    
-    
-    .dx-treelist .dx-column-lines>td {
-      /* border-left: 1px solid #e80000 !important; */
-      border-right: 1px solid $dark-border !important;
-    }
-    
-    .dx-treelist .dx-row-lines>td {
-      border-bottom: 1px solid $dark-border !important;
-    }
-    
-    
-  }
-  .HistorySidebarcustom{
-    .dx-datagrid .dx-row-alt>td {
-      background-color: unset !important;
+  /* Optional: Change the header background color */
+  .dx-treelist-headers {
+    background-color: $dark-bg-header !important;
+    color: $dark-text !important;
   }
 
-  .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused)>td{
+  /* Optional: Change the row background color on hover */
+  .dx-treelist-rowsview .dx-row {
+    background-color: $dark-bg-card !important;
+    color: $dark-text !important;
+  }
+  /* Optional: Change the row background color on hover */
+  .dx-treelist-rowsview .dx-row:hover {
+    background-color: $dark-hover-bg !important;
+    color: $dark-hover-text !important;
+  }
+
+  /* Selection Background Color */
+  .dx-treelist-rowsview .dx-selection,
+  .dx-treelist-rowsview .dx-selection.dx-row:hover {
+    /* background-color: #000000 !important; Light blue for selected rows */
+  }
+
+  /* Change the selection background color */
+  .dx-treelist-rowsview .dx-selection,
+  .dx-treelist-rowsview .dx-selection.dx-row:hover {
+    /* background-color: #000000 !important; Light blue for selected rows */
+  }
+
+  /* Change the selection background color */
+  .dx-treelist-rowsview .dx-row.dx-selection,
+  .dx-treelist-rowsview .dx-row.dx-selection:hover {
+    /* background-color: #000000 !important; */
+  }
+
+  /* Target individual cells in the selected row */
+  .dx-treelist-rowsview .dx-row.dx-selection td,
+  .dx-treelist-rowsview .dx-row.dx-selection:hover td {
+    background-color: $dark-bg-header !important;
+    color: $dark-hover-text !important; /* Text color for selected rows */
+  }
+  // test
+
+  .dx-treelist-headers .dx-treelist-table .dx-header-row {
+    border: 1px solid $dark-border !important;
+  }
+  .dx-treelist-headers .dx-treelist-table .dx-row > td {
+    border: 1px solid $dark-border !important ;
+  }
+
+  .dx-treelist .dx-column-lines > td {
+    /* border-left: 1px solid #e80000 !important; */
+    border-right: 1px solid $dark-border !important;
+  }
+
+  .dx-treelist .dx-row-lines > td {
+    border-bottom: 1px solid $dark-border !important;
+  }
+}
+.HistorySidebarcustom {
+  .dx-datagrid .dx-row-alt > td {
     background-color: unset !important;
   }
 
-  .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row):not(.dx-row-focused)>td:not(.dx-focused) {
+  .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td {
+    background-color: unset !important;
+  }
+
+  .dx-datagrid-table
+    .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(
+      .dx-row-removed
+    ):not(.dx-edit-row):not(.dx-row-focused)
+    > td:not(.dx-focused) {
     background-color: unset !important;
     // color: #333;
   }
 
-  .dx-datagrid .dx-row-lines>td {
+  .dx-datagrid .dx-row-lines > td {
     border-bottom: 1px solid #eaeaea !important;
   }
 
-  .dx-datagrid>.dx-datagrid-headers{
-  display: contents  !important;
+  .dx-datagrid > .dx-datagrid-headers {
+    display: contents !important;
   }
-  .dx-datagrid .dx-row>td {
+  .dx-datagrid .dx-row > td {
     padding: 0px !important;
+  }
+
+  // .dx-widget .dx-visibility-change-handler{
+  //   height: 100vh !important;
+  // }
 }
 
-// .dx-widget .dx-visibility-change-handler{
-//   height: 100vh !important;
-// }
-  
-
-
-
-  }
-  
-  .custom-data-grid {
-  
-  
-    // Table Header Styling
-    .dx-datagrid-headers {
-      overflow: hidden;
-      // border-radius: 10px;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-      border: 1px solid #e0e6f5;
+.custom-data-grid {
+  // Table Header Styling
+  .dx-datagrid-headers {
+    overflow: hidden;
+    // border-radius: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid #e0e6f5;
     .dx-header-row {
       background-color: #f4f7fe; // Light gray-blue header background
       font-weight: 600;
@@ -598,198 +574,185 @@ span.dx-datagrid-nodata {
       font-size: 16px;
       text-align: left;
       // border-bottom: 2px solid #e0e6f5; // Subtle bottom border
-      border-radius: inherit; 
-  
-     }
+      border-radius: inherit;
     }
-  
-    // Table Row Styling
-   
-    .dx-data-row {
-      color: #4a4a4a; // Text color for table rows
-      
-      font-size: 13px;
-      // line-height: 1rem;
-      &:nth-child(even) {
-        background-color: #f9fbff; // Light background for even rows
-      }
-  
-      &:nth-child(odd) {
-        background-color: #ffffff; // White background for odd rows
-      }
-  
-      &:hover {
-        background-color: #e6f0ff; // Hover effect with light blue shade
-      }
-      
+  }
+
+  // Table Row Styling
+
+  .dx-data-row {
+    color: #4a4a4a; // Text color for table rows
+
+    font-size: 13px;
+    // line-height: 1rem;
+    &:nth-child(even) {
+      background-color: #f9fbff; // Light background for even rows
     }
 
-  
-  
-    // headz
-     .dx-datagrid-action {
-      color: rgb(71 85 105 ); // Primary blue color for actions
-      font-size: .875rem;
-      font-family: "Roboto," "Open Sans," "Nunito.";
-      background-color: rgb(249 250 251 /1);
-      border-right: rgb(249 250 251 /1) solid 0.1px;
-      
-      line-height: 2rem;
-      position: relative; // Needed for positioning the pseudo-element
+    &:nth-child(odd) {
+      background-color: #ffffff; // White background for odd rows
+    }
 
-      &::after {
-        content: "";
-        position: absolute;
-        right: 0; // Position the pseudo-element on the right side
-        top: 50%; // Vertically center the border
-        transform: translateY(-50%); // Adjust for exact centering
-        width: 0.5px; // Border thickness
-        height: 1.3rem; // Adjust height as needed
-        background-color: #d7dbdd; // Border color
+    &:hover {
+      background-color: #e6f0ff; // Hover effect with light blue shade
+    }
+  }
+
+  // headz
+  .dx-datagrid-action {
+    color: rgb(71 85 105); // Primary blue color for actions
+    font-size: 0.875rem;
+    font-family: "Roboto," "Open Sans," "Nunito.";
+    background-color: rgb(249 250 251 /1);
+    border-right: rgb(249 250 251 /1) solid 0.1px;
+
+    line-height: 2rem;
+    position: relative; // Needed for positioning the pseudo-element
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0; // Position the pseudo-element on the right side
+      top: 50%; // Vertically center the border
+      transform: translateY(-50%); // Adjust for exact centering
+      width: 0.5px; // Border thickness
+      height: 1.3rem; // Adjust height as needed
+      background-color: #d7dbdd; // Border color
       //  display: block;
-      }
-     }
-      // Remove border for last two columns (assuming they are actions column)
-    .dx-datagrid-action:last-child,
-    .dx-datagrid-action:nth-last-child(2) {
+    }
+  }
+  // Remove border for last two columns (assuming they are actions column)
+  .dx-datagrid-action:last-child,
+  .dx-datagrid-action:nth-last-child(2) {
     border-right: none;
     &::after {
-        display: none; 
+      display: none;
     }
-   
-    }
-
-    // Mixin for conditional styling based on renderActionButton
-// @mixin actionButtonStyles($renderActionButton) {
-//   @if $renderActionButton == true {
-//     .dx-datagrid-action:last-child,
-//     .dx-datagrid-action:nth-last-child(1) {
-//       border-right: none;
-//       &::after {
-//         display: none;
-//       }
-//     }
-//   } @else {
-//     .dx-datagrid-action:nth-last-child(2) {
-//       border-right: none;
-//       &::after {
-//         display: none;
-//       }
-//     }
-//   }
-// }
-
-// // Use the mixin with a variable
-// $renderActionButton: true; // Change this to false to test different styles
-// @include actionButtonStyles($renderActionButton);
-
-  
-  
-    // Custom Checkbox Styling
-    // .dx-checkbox {
-    //   .dx-checkbox-icon {
-    //     border-color: #4a90e2;
-    //     background-color: #ffffff;
-    //   }
-  
-    //   &.dx-checkbox-checked .dx-checkbox-icon {
-    //     background-color: #4a90e2; // Checkbox fill color
-    //     border-color: #4a90e2;
-    //   }
-    // }
-  
-    // Badge Styling
-    // .badge {
-    //   &.bg-success {
-    //     background-color: #28a745; // Green for "Active"
-    //     color: white;
-    //     border-radius: 12px;
-    //     padding: 4px 12px;
-    //   }
-    // }
-  
-    // Toolbar Styling
-    .dx-toolbar {
-      background-color: #ffffff;
-      // border-bottom: 1px solid #e0e6f5;
-  
-      .dx-toolbar-before {
-        display: flex;
-        align-items: center;
-      }
-  
-      .dx-toolbar-after {
-        display: flex;
-        align-items: center;
-      }
-      .dx-toolbar-before {
-    justify-content: flex-start; /* Align to the left */
   }
-  
-  .dx-toolbar-after {
-    justify-content: flex-end; /* Align to the right */
-  }
-  
-  
-      // Buttons in the toolbar
-      .dx-button{
-        background-color: #dcdfe2; // Primary button color
-        color: #ffffff;
-        border-radius: 6px;
-        // padding: 4px 8px;
-  
-        &:hover {
-          background-color: #8ba1ad;
-        }
-      }
-    }
-     //action buttons 
-     .action-field {
+
+  // Mixin for conditional styling based on renderActionButton
+  // @mixin actionButtonStyles($renderActionButton) {
+  //   @if $renderActionButton == true {
+  //     .dx-datagrid-action:last-child,
+  //     .dx-datagrid-action:nth-last-child(1) {
+  //       border-right: none;
+  //       &::after {
+  //         display: none;
+  //       }
+  //     }
+  //   } @else {
+  //     .dx-datagrid-action:nth-last-child(2) {
+  //       border-right: none;
+  //       &::after {
+  //         display: none;
+  //       }
+  //     }
+  //   }
+  // }
+
+  // // Use the mixin with a variable
+  // $renderActionButton: true; // Change this to false to test different styles
+  // @include actionButtonStyles($renderActionButton);
+
+  // Custom Checkbox Styling
+  // .dx-checkbox {
+  //   .dx-checkbox-icon {
+  //     border-color: #4a90e2;
+  //     background-color: #ffffff;
+  //   }
+
+  //   &.dx-checkbox-checked .dx-checkbox-icon {
+  //     background-color: #4a90e2; // Checkbox fill color
+  //     border-color: #4a90e2;
+  //   }
+  // }
+
+  // Badge Styling
+  // .badge {
+  //   &.bg-success {
+  //     background-color: #28a745; // Green for "Active"
+  //     color: white;
+  //     border-radius: 12px;
+  //     padding: 4px 12px;
+  //   }
+  // }
+
+  // Toolbar Styling
+  .dx-toolbar {
+    background-color: #ffffff;
+    // border-bottom: 1px solid #e0e6f5;
+
+    .dx-toolbar-before {
       display: flex;
-      justify-content: space-evenly;
       align-items: center;
-      
-      
-    
-     // Adjust space between icons
-   
-      // Common icon styling
-       i  {
-        font-size: .875rem;
-        cursor: pointer;
-        
-        transition: color 0.3s ease, background-color 0.3s ease;
-        padding: 4px;
-        border-radius: 4px;
-      
-        &:hover {
-          color: #ffffff;
+    }
 
-        }
+    .dx-toolbar-after {
+      display: flex;
+      align-items: center;
+    }
+    .dx-toolbar-before {
+      justify-content: flex-start; /* Align to the left */
+    }
+
+    .dx-toolbar-after {
+      justify-content: flex-end; /* Align to the right */
+    }
+
+    // Buttons in the toolbar
+    .dx-button {
+      background-color: #dcdfe2; // Primary button color
+      color: #ffffff;
+      border-radius: 6px;
+      // padding: 4px 8px;
+
+      &:hover {
+        background-color: #8ba1ad;
       }
-  
-      // Specific styles for each action
-      .view-icon {
-        color: #00bfff; // Sky blue for view
-        &:hover {
-          background-color: #00bfff;
-        }
-      }
-  
-      .delete-icon {
-        color: #ff4d4f; // Red for delete
-        &:hover {
-          background-color: #ff4d4f;
-        }
-      }
-  
-      .edit-icon {
-        color: #28a745; // Green for edit 
-        &:hover {
-          background-color: #28a745;
-        }
+    }
+  }
+  //action buttons
+  .action-field {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    // Adjust space between icons
+
+    // Common icon styling
+    i {
+      font-size: 0.875rem;
+      cursor: pointer;
+
+      transition: color 0.3s ease, background-color 0.3s ease;
+      padding: 4px;
+      border-radius: 4px;
+
+      &:hover {
+        color: #ffffff;
       }
     }
 
-   
+    // Specific styles for each action
+    .view-icon {
+      color: #00bfff; // Sky blue for view
+      &:hover {
+        background-color: #00bfff;
+      }
+    }
+
+    .delete-icon {
+      color: #ff4d4f; // Red for delete
+      &:hover {
+        background-color: #ff4d4f;
+      }
+    }
+
+    .edit-icon {
+      color: #28a745; // Green for edit
+      &:hover {
+        background-color: #28a745;
+      }
+    }
   }
+}

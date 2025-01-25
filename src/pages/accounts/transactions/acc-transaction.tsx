@@ -161,6 +161,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   };
 
+
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
   const { getFormattedValue, getAmountInWords } = useNumberFormat();
   const {
@@ -964,8 +965,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       dataField: "amount",
       dataType: "number",
       caption: t("amount"),
-      customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`, // Format display
       width: 200,
     },
     {
@@ -2470,12 +2470,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             onKeyDown={(e) => handleKeyDown("grid", e)}
             onSelectionChangedByRootState={(e: any, state: RootState) =>onSelectionChanged(e, state)}
             className="pb-14"
+            summaryItems={[
+              { column: "amount", summaryType: "sum", valueFormat: "currency" } 
+            ]}
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
             // ]}
-          />
-              <Summary calculateCustomSummary={handleCustomSummary}>
+          >
+           {/* <Summary calculateCustomSummary={handleCustomSummary}>
             <TotalItem
               column="discount"
               summaryType="custom"
@@ -2484,15 +2487,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 `${round(parseFloat((e.value || "0") as string))}`
               } // Handle undefined gracefully
             />
-            <TotalItem
-              column="amount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-          </Summary>
+       
+           </Summary> */}
+          </ErpDevGrid>
           </div>
           {formState.showSaveDialog && (
             <ERPAlert

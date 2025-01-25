@@ -71,18 +71,17 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
 
   const fetchUserConfig = async () => {
     try {
-      debugger;
-      const fdf= formState?.userConfig;
-      const response = await api.get(Urls.get_acc_user_config);
-      localStorage.setItem('utc', modelToBase64(response))
-      const _userConfig = atob(response);
+      const base64 = await api.get(Urls.get_acc_user_config);
+      localStorage.setItem('utc', base64);
+      // Decode the base64 back to JSON string
+      const _userConfig = atob(base64);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
-
+  
       dispatch(
         accFormStateRowHandleFieldChange({
           fields: {
             costCentreID:
-              userConfig?.presetCostenterId ??0> 0
+              userConfig?.presetCostenterId ?? 0 > 0
                 ? userConfig?.presetCostenterId
                 : userSession.dbIdValue == "SAMAPLASTICS12121212121"
                 ? 0
@@ -95,16 +94,17 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       console.error("Error fetching user config:", error);
     }
   };
-
+  
   const initializeVoucher = async () => {
-    let Utc = localStorage.getItem("utc");
-    let userConfig: AccUserConfig;
-  
     try {
-      if (Utc != undefined && Utc != null && Utc != "") {
-        userConfig = customJsonParse(atob(Utc));
+      debugger;
+      const Utc = localStorage.getItem("utc");
   
-        // Dispatch the first action and wait for it to complete
+      if (Utc) {
+        // If userConfig is available in localStorage, use it
+        const _userConfig = atob(Utc);
+        const userConfig: AccUserConfig = customJsonParse(_userConfig);
+  
         dispatch(
           accFormStateRowHandleFieldChange({
             fields: {
@@ -117,15 +117,12 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             },
           })
         );
-  
-        // Dispatch the second action and wait for it to complete
         dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
       } else {
-        // If no userConfig in localStorage, fetch it from the API
+        // If userConfig is not available in localStorage, fetch it from the API
         await fetchUserConfig();
       }
   
-      // Set readyToShowVoucher to true after both cases are handled
       setReadyToShowVoucher(true);
     } catch (error) {
       console.error("Error initializing voucher:", error);

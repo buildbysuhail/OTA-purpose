@@ -7,24 +7,28 @@ import Cookies from "js-cookie";
 import usFlag from "../../assets/images/flags/us_flag.png";
 
 // import ERPToast from "../../components/ERPComponets/ERPToast";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
-import { StateBase } from "../../base/state-base";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
+import type { StateBase } from "../../base/state-base";
 import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
 import ERPInput from "../../components/ERPComponents/erp-input";
-import { UserModel } from "../../redux/slices/user-session/reducer";
+import type { UserModel } from "../../redux/slices/user-session/reducer";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { AppState, languagesData, Locale, Theme } from "../../redux/slices/app/types";
+import { type AppState, languagesData } from "../../redux/slices/app/types";
 
-import { RootState } from "../../redux/store";
+import type { RootState } from "../../redux/store";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
-import { UserTypeRights } from "../../redux/slices/user-rights/reducer";
+import type { UserTypeRights } from "../../redux/slices/user-rights/reducer";
 import { Button } from "../../dark/Button";
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { Sun, Moon } from "lucide-react";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import CounterSettings from "../settings/system/counter-settings";
+import ForgotPassword from "./ForgetPassword";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,77 +41,85 @@ const Login = () => {
   const [error, setError] = useState<any>();
   const loginData: StateBase = useSelector((state: any) => state.Login);
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
-  let userSessions = useAppSelector((state: RootState) => state.UserSession);
+  const userSessions = useAppSelector((state: RootState) => state.UserSession);
   const { appState, updateAppState } = useAppState();
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   /* ########################################################################################### */
 
-  const [counterSettings, setCounterSettings] = useState<{show: boolean, token: string}>({show: false, token: ""})
-        
-  const handleSubmit = async (event: any) => {
+  const [counterSettings, setCounterSettings] = useState<{
+    show: boolean;
+    token: string;
+  }>({ show: false, token: "" });
 
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (data?.userName && data?.password) {
       setError(null);
 
-
       const login = await dispatch(loginUser(data)).unwrap();
 
-      setError('');
-debugger;
+      setError("");
+      debugger;
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
           setIsLoggedToBranch(false);
-        }
-        else {
+        } else {
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
-        localStorage.removeItem("_token")
+        localStorage.removeItem("_token");
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
         localStorage.setItem("ur", login.item.useRights);
         const _userProfileDetails = atob(login.item.userProfileDetails);
-        const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
+        const userProfileDetails: UserModel =
+          customJsonParse(_userProfileDetails);
         const _userRights = atob(login.item.userRights);
         const userRights: UserTypeRights[] = customJsonParse(_userRights);
         const _userThemes = atob(login.item.userThemes);
         const userThemes: AppState = customJsonParse(_userThemes);
-        let locale = (languagesData.find((l) => l.code == userProfileDetails.language)) ?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
-        syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
-      }
-      else { 
-        if(login.item.hasToSetCounter) {
+        const locale = languagesData.find(
+          (l) => l.code == userProfileDetails.language
+        ) ?? {
+          code: "en",
+          name: "English",
+          flag: usFlag,
+          rtl: false,
+        };
+        syncAppStates(
+          dispatch,
+          userThemes,
+          userProfileDetails,
+          userRights,
+          locale
+        );
+      } else {
+        if (login.item.hasToSetCounter) {
           localStorage.setItem("_token", login.item.token);
-          setCounterSettings({show: true, token:login.item.token});
+          setCounterSettings({ show: true, token: login.item.token });
         } else {
-          setError(login.message)
+          setError(login.message);
         }
-       }
+      }
     } else {
       alert("Please fill all fields");
     }
-    
   };
 
   /* ########################################################################################### */
 
-
   useEffect(() => {
-
-    if (isLoggedToBranch
-    ) {
+    if (isLoggedToBranch) {
       navigate("/");
     } else if (hasToChooseBranch) {
-
       navigate("/select-organization");
     }
   }, [hasToChooseBranch, isLoggedToBranch]);
 
   return (
-
     <div className="bg-white dark:bg-dark-bg">
       <div className="flex justify-center h-screen">
         <div
@@ -120,33 +132,32 @@ debugger;
           <div className="flex items-center h-full px-20">
             <div>
               <h2 className="text-4xl font-bold text-white">
-                Elevate your business to
-                new heights</h2>
-
+                Elevate your business to new heights
+              </h2>
             </div>
           </div>
         </div>
 
         <div className="flex relative items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
-                <div className="!absolute top-[7px] right-[26px]">
-                  {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
-                  <Button
-                    onClick={() => {
-                      appState.mode === "light"
-                        ? switcherdata.Dark(updateAppState, appState)
-                        : switcherdata.Light(updateAppState, appState);
-                    }}
-                    variant="ghost"
-                    size="icon"
-                  >
-                    {appState.mode === "dark" ? (
-                      <Sun className="h-[1.2rem] w-[1.2rem]" />
-                    ) : (
-                      <Moon className="h-[1.2rem] w-[1.2rem]" />
-                    )}
-                    <span className="sr-only">Toggle dark mode</span>
-                  </Button>
-                </div>
+          <div className="!absolute top-[7px] right-[26px]">
+            {/* <span className="mr-2">{appState.mode === 'dark' ? 'Dark' : 'Light'} Mode</span> */}
+            <Button
+              onClick={() => {
+                appState.mode === "light"
+                  ? switcherdata.Dark(updateAppState, appState)
+                  : switcherdata.Light(updateAppState, appState);
+              }}
+              variant="ghost"
+              size="icon"
+            >
+              {appState.mode === "dark" ? (
+                <Sun className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <Moon className="h-[1.2rem] w-[1.2rem]" />
+              )}
+              <span className="sr-only">Toggle dark mode</span>
+            </Button>
+          </div>
           <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
           <div className="flex-1">
             <div className="text-center">
@@ -170,12 +181,17 @@ debugger;
                   />
                 </div>
               )}
-              <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2">
+              <form
+                onSubmit={handleSubmit}
+                className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2"
+              >
                 <div className="col-span-full ">
                   <ERPInput
                     label={t("email-phone-username")}
                     data={data}
-                    onChangeData={(_data: any) => { setData(_data) }}
+                    onChangeData={(_data: any) => {
+                      setData(_data);
+                    }}
                     id="userName"
                     autocomplete=""
                     required
@@ -184,7 +200,9 @@ debugger;
                   />
                 </div>
                 <div className="col-span-full ">
-                  <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">{t("password") || "password"}*</label>
+                  <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">
+                    {t("password") || "password"}*
+                  </label>
                   <div className="flex">
                     <div className="w-full">
                       <input
@@ -193,7 +211,9 @@ debugger;
                         required
                         pattern="^\S+$"
                         title="Password must not contain whitespace characters."
-                        onChange={(e) => setData({ ...data, password: e.target?.value })}
+                        onChange={(e) =>
+                          setData({ ...data, password: e.target?.value })
+                        }
                         type={showPassword ? "text" : "password"}
                         id="password"
                         className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
@@ -203,7 +223,11 @@ debugger;
                       onClick={() => setShowPassword(!showPassword)}
                       className="border dark:border-dark-border border-gray-300 rounded-r flex justify-center items-center px-3 cursor-pointer rtl:border rtl:rounded-none rtl:rounded-l "
                     >
-                      {showPassword ? <EyeSlashIcon className="dark:text-dark-text text-black h-4 w-4" /> : <EyeIcon className="dark:text-dark-text text-black h-4 w-4" />}
+                      {showPassword ? (
+                        <EyeSlashIcon className="dark:text-dark-text text-black h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="dark:text-dark-text text-black h-4 w-4" />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -225,13 +249,16 @@ debugger;
                   </button>
                 </div>
               </form>
-              <p className="mt-6 text-sm text-center dark:text-dark-text text-gray-400">
-                Don&#x27;t have an account yet?{" "}
+              <p className="mt-6 text-sm text-center dark:text-dark-text text-gray-600">
                 <a
                   href="#"
                   className="text-blue-500 focus:outline-none focus:underline hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowForgotPassword(true);
+                  }}
                 >
-                  Sign up
+                  Forgot Password?
                 </a>
                 .
               </p>
@@ -241,24 +268,23 @@ debugger;
       </div>
 
       <ERPModal
-                        isForm={true}
-                        isOpen={counterSettings.show}
-                        closeButton="LeftArrow"
-                        hasSubmit={false}
-                        closeTitle="Close"
-                        title="Counter Settings"
-                        width="w-full"
-                        isFullHeight={true}
-                        closeModal={() => {
-                          setCounterSettings({show: false, token:""});
-                          
-                        }}
-                        content={<CounterSettings token={counterSettings.token}/>}
-                      ></ERPModal>
+        isForm={true}
+        isOpen={counterSettings.show}
+        closeButton="LeftArrow"
+        hasSubmit={false}
+        closeTitle="Close"
+        title="Counter Settings"
+        width="w-full"
+        isFullHeight={true}
+        closeModal={() => {
+          setCounterSettings({ show: false, token: "" });
+        }}
+        content={<CounterSettings token={counterSettings.token} />}
+      ></ERPModal>
+      {showForgotPassword && (
+        <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
-
-
-
   );
 };
 

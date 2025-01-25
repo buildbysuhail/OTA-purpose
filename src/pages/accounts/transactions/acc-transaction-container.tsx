@@ -7,7 +7,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
-import { AccTransactionProps } from "./acc-transaction-types";
+import { AccTransactionProps, AccUserConfig } from "./acc-transaction-types";
 import {
   useAppDispatch,
   useAppSelector,
@@ -41,6 +41,7 @@ import { isChooseVoucherEnabled } from "../../../components/common/content/trans
 import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
+import { customJsonParse } from "../../../utilities/jsonConverter";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -62,6 +63,43 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     voucherNo: number;
   }>({ voucherPrefix: "", formType: formType??"", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
+ const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const dispatch = useDispatch(); 
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+
+  const fetchUserConfig = async () => {
+    try {
+      debugger;
+      const fdf= formState?.userConfig;
+      const response = await api.get(Urls.get_acc_user_config);
+      const _userConfig = atob(response);
+      const userConfig: AccUserConfig = customJsonParse(_userConfig);
+
+      dispatch(
+        accFormStateRowHandleFieldChange({
+          fields: {
+            costCentreID:
+              userConfig?.presetCostenterId > 0
+                ? userConfig?.presetCostenterId
+                : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+                ? 0
+                : applicationSettings?.accountsSettings?.defaultCostCenterID,
+          },
+        })
+      );
+      dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
+    } catch (error) {
+      console.error("Error fetching user config:", error);
+    }
+  };
+
+  const initializeVoucher = async () => {
+    await fetchUserConfig();
+    setReadyToShowVoucher(true);
+  };
+
   useEffect(() => {
     if (isChooseVoucherEnabled(title??"", userSession)) {
       const fetchData = async () => {
@@ -85,7 +123,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
                 voucherPrefix: res[0].lastPrefix,
               }));
               
-              setReadyToShowVoucher(true);
+              await initializeVoucher(); // Call initializeVoucher here
             }
           } else {
             setStore(res);
@@ -97,20 +135,21 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       };
       fetchData();
     } else {
-      setReadyToShowVoucher(true);
+      initializeVoucher(); // Call initializeVoucher here
     }
   }, [voucherType]);
 
-  const onRowDblClick = useCallback((event: any) => {
+  const onRowDblClick = useCallback(async (event: any) => {
     setData((prev: any) => ({
       ...prev,
       formType: event.data.formType,
       voucherNo: event.data.lastVNo,
       voucherPrefix: event.data.lastPrefix,
     }));
+    await initializeVoucher(); // Call initializeVoucher here
     setOpenVoucherSelector(false);
-    setReadyToShowVoucher(true);
   }, []);
+
   return (
     <>
       {openVoucherSelector == true ? (
@@ -136,7 +175,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             setOpenVoucherSelector(false);
           }}
         />
-      ) : readyToShowVoucher == true && (
+      ) : readyToShowVoucher == true && formState?.userConfig &&(
         <AccTransactionForm
           voucherType={voucherType}
           voucherPrefix={data.voucherPrefix}

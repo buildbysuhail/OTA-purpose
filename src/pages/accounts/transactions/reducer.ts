@@ -93,15 +93,15 @@ const accTransactionSlice = createSlice({
       state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
       state.transaction.master.costCentreID =
-        state.userConfig.presetCostenterId > 0
-          ? state.userConfig.presetCostenterId
+        state.userConfig?.presetCostenterId > 0
+          ? state.userConfig?.presetCostenterId
           : 0;
       {
         if (userSession.employeeId > 0)
           state.transaction.master.employeeID = userSession.employeeId;
       }
-      if (state.userConfig.presetCostenterId > 0) {
-        state.row.costCentreID = state.userConfig.presetCostenterId;
+      if (state.userConfig?.presetCostenterId > 0) {
+        state.row.costCentreID = state.userConfig?.presetCostenterId;
         state.formElements.costCentreID.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {

@@ -229,6 +229,7 @@ const accTransactionSlice = createSlice({
         drCr: state.row.drCr,
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,
         credit: state.row.drCr == "Cr" ? state.row.amount : 0,
+        ledgerCode: state.ledgerData.ledgerCode,
       };
       if (state.isRowEdit === true) {
         const index = state.transaction.details.findIndex(

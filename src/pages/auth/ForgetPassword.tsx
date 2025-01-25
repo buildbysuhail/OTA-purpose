@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import { X, ArrowLeft, Mail, Phone, Lock } from "lucide-react";
+import Urls from "../../redux/urls";
+import { APIClient } from "../../helpers/api-client";
 
 // API endpoints
-const API_URLS = {
-  SendEmailToken: "/Subscription/Auth/SendEmailToken",
-  SendSmsOtp: "/api/Subscription/Auth/SendSmsOtp",
-  ValidateToken: "/Subscription/Auth/ValidateToken",
-  password_reset: "/passwordReset/",
-  password_reset_confirm: "/resetPassword/",
-};
 
 interface ForgotPasswordProps {
   onClose: () => void;
 }
-
+const api = new APIClient();
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const [step, setStep] = useState(1);
+  const [emailData, setEmailData] = useState(1);
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [isOk, setIsOk] = useState(false);
   const [otpMethod, setOtpMethod] = useState<"email" | "phone" | null>(null);
@@ -30,43 +26,51 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     setStep(2);
   };
 
+  const handleVerifyEmail = async () => {
+    try {
+      
+
+      const response = await api.getAsync(`${Urls.SendEmailToken}${emailOrPhone}`);
+
+      if (!response.ok) {
+        setError("Failed to send OTP");
+      }
+      setEmailData(response.items);
+      setStep(2);
+    } catch (err) {
+      setError("Failed");
+      console.error(err);
+    }
+  };
+
   const handleSendOTP = async () => {
     try {
-      let endpoint = "";
-      if (otpMethod === "email") {
-        endpoint = API_URLS.SendEmailToken;
-      } else if (otpMethod === "phone") {
-        endpoint = API_URLS.SendSmsOtp;
-      } else {
-        throw new Error("Invalid OTP method");
-      }
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           emailOrPhone,
-          method: otpMethod,
+          token: otp,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send OTP");
+        throw new Error("Invalid OTP");
       }
 
-      console.log(`OTP sent to ${otpMethod}: ${emailOrPhone}`);
-      setStep(3);
+      console.log(`OTP verified: ${otp}`);
+      setStep(4);
     } catch (err) {
-      setError("Failed to send OTP. Please try again.");
+      setError("Invalid OTP. Please try again.");
       console.error(err);
     }
   };
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch(API_URLS.ValidateToken, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +100,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     }
 
     try {
-      const response = await fetch(API_URLS.password_reset_confirm, {
+      const response = await fetch(Urls.SendEmailToken, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,6 +171,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
               />
               <button
                 type="submit"
+                onClick={handleVerifyEmail}
                 className="w-full bg-[#2563eb] text-white py-3 rounded-xl hover:bg-[#1d4ed8] focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl group"
               >
                 Submit

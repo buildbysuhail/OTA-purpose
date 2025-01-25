@@ -38,7 +38,7 @@ export const deleteAccVoucher = createAsyncThunk<ResponseModel<string>, deleteAc
       );
 
       // Assuming response.data contains the expected number
-      return response.data as ResponseModel<string>;
+      return response as any;
     } catch (error: any) {
       // Use rejectWithValue for error handling
       if (error.response && error.response.data) {

@@ -3267,9 +3267,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         
         {/* </div> */}
         <div className="hidden md:block lg:ml-16 mx-4">
-          <h6 className="text-sm font-semibold whitespace-nowrap">
+          <h6 className="font-semibold whitespace-nowrap text-[20px] ">
             {" "}
-            <span className="font-medium">{t("total")}:{" "}</span>
+            <span className="!font-medium !text-gray-600">{t("total")}:{" "}</span>
             {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
           </h6>
         </div>

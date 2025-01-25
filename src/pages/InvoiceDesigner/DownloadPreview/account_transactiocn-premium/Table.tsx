@@ -111,7 +111,7 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
               <View key={`tbr${index}`} style={styles.tr}>
                 {accTableState?.showLineItemNumber && (
                   <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
-                    {index + 1}
+                    {val.slNo}
                   </Text>
                 )}
                 {(accTableState?.showInvoiceNumber) && (

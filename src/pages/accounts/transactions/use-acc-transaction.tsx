@@ -1411,6 +1411,7 @@ export const useAccTransaction = (
                 transactionType: transactionType,
               })
             ).unwrap();
+            debugger;
             if (res != undefined && res.isOk != true) {
               ERPAlert.show({
                 title: "failed",
@@ -1419,12 +1420,19 @@ export const useAccTransaction = (
                   return false;
                 },
               });
-            }
+            } else if (res?.isOk == true) {
+              ERPAlert.show({
+                icon: "success",
+                title:"Deleted",
+                text: res.message,
+            });
+            clearControls(
+              formState.isEdit,
+              formState.transaction.master.accTransactionMasterID
+            );
           }
-          clearControls(
-            formState.isEdit,
-            formState.transaction.master.accTransactionMasterID
-          );
+          
+        }
         } catch (error) {
           console.error("Error deleting voucher:", error);
         }

@@ -72,12 +72,10 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
 
   const fetchUserConfig = async () => {
     try {
-      debugger;
       const fdf = formState?.userConfig;
       const response = await api.get(Urls.get_acc_user_config);
       const _userConfig = atob(response);
       const userConfig: AccUserConfig = customJsonParse(_userConfig);
-      debugger;
       
       dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
     } catch (error) {

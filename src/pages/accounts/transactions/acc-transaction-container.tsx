@@ -6,7 +6,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
 import {
   useAppDispatch,
@@ -52,6 +52,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   transactionType,
 }) => {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =
     useState<boolean>(false);

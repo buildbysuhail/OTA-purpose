@@ -1194,6 +1194,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             voucherNo: parseInt(vchno, 10),
             formCode: tr?.formCode,
             transactionType: tr?.transactionType,
+            transactionBase: tr?.transactionBase,
             title: tr?.title,
             drCr: tr?.drCr,
           };
@@ -1230,36 +1231,43 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn != undefined &&
               dynamicProps?.enableFn(event.data)))
         ) {
-          let updatedBodyProps: any = {};
-          // Ensure dynamicProps.bodyProps is a string before splitting and iterating over it
-          if (!dynamicProps.isTransactionScreen) {
+          if (dynamicProps?.isTransactionScreen) {
+            const params = handleInvoke(event.data);
+            if (params) {
+              debugger;
+              const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
+
+              // Append all parameters from the `params` object
+              Object.entries(params).forEach(([key, value]) => {
+                url.searchParams.append(key, String(value));
+              });
+
+              // Open the URL in a new tab
+              window.open(url.toString(), "_blank");
+            } else {
+              console.error("Invalid data or parameters");
+            }
+          } else {
+            let updatedBodyProps: any = {};
+
             dynamicProps?.bodyProps != undefined
               ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
                   const trimmedProp = prop.trim();
                   updatedBodyProps[trimmedProp] = event.data[trimmedProp];
                 })
               : {};
-          } else {
-            updatedBodyProps = handleInvoke(event.data);
-          }
-          const pdata =
-            postDataDynamic != undefined
-              ? postDataDynamic(_drillDownCell)
-              : postData;
-          const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
-            pdata,
-            updatedBodyProps
-          );
-          onCellClick && onCellClick(event);
 
-          if (dynamicProps?.isTransactionScreen) {
-            const url = new URL("https://example.com");
-            url.searchParams.append("param1", "value1");
-            url.searchParams.append("param2", "value2");
-
-            window.open(url.toString(), "_blank");
-          } else {
+            const pdata =
+              postDataDynamic != undefined
+                ? postDataDynamic(_drillDownCell)
+                : postData;
+            const _updatedBodyProps = mergeObjectsRemovingIdenticalKeys(
+              pdata,
+              updatedBodyProps
+            );
             setBodyProps(updatedBodyProps);
+
+            onCellClick && onCellClick(event);
             setIsChildOpen({
               isOpen: true,
               props: _updatedBodyProps,
@@ -1269,7 +1277,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             });
           }
 
-          
           // const sd = 223;
         }
       },

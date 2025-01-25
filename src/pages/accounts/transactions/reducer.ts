@@ -53,7 +53,7 @@ const accTransactionSlice = createSlice({
         defaultCostCenterID,
         counterwiseCashLedgerId,
         allowSalesCounter,
-        voucherNo
+        voucherNo,
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
       (state.transaction.master.accTransactionMasterID = 0),
@@ -67,10 +67,15 @@ const accTransactionSlice = createSlice({
       state.transaction.master.currencyRate = 1;
       state.row.currencyId = 0;
       state.transaction.master.referenceNumber = "";
-      state.transaction.master.voucherNumber = voucherNo??0;
+      state.transaction.master.voucherNumber = voucherNo ?? 0;
       state.row.chqDate = new Date().toISOString();
       state.row.bankDate = new Date().toISOString();
-      state.transaction.master.transactionDate = moment(softwareDate,"DD/MM/YYYY").local().toISOString();
+      state.transaction.master.transactionDate = moment(
+        softwareDate,
+        "DD/MM/YYYY"
+      )
+        .local()
+        .toISOString();
       state.row.narration = "";
       state.row.amount = 0.0;
       state.row.discount = 0.0;
@@ -92,23 +97,17 @@ const accTransactionSlice = createSlice({
       }
       state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
-        state.transaction.master.costCentreID =
-        (state.userConfig?.presetCostenterId ?? 0) > 0
-          ? state.userConfig?.presetCostenterId ?? 0
-          : 0;
-      {
-        if (userSession.employeeId > 0)
-          state.transaction.master.employeeID = userSession.employeeId;
-      }
-      if ((state.userConfig?.presetCostenterId??0) > 0) {
-        state.row.costCentreID = state.userConfig?.presetCostenterId ??0;
+      
+      debugger;
+      if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
+        state.row.costCentreID = state.userConfig?.presetCostenterId ?? 0;
         state.formElements.costCentreID.disabled = true;
       } else {
         if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
           state.row.costCentreID = 0;
-        }
-        else {
-          state.row.costCentreID = applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0
+        } else {
+          state.row.costCentreID =
+            applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0;
         }
       }
     },
@@ -182,7 +181,6 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{}>
     ) => {
-      
       if (state.transaction.details) {
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
@@ -244,10 +242,8 @@ const accTransactionSlice = createSlice({
           );
         }
       } else {
-       for (let index = 0; index < 100; index++) {
-        state.transaction.details.push(serializedRow);      
+        state.transaction.details.push(serializedRow);
       }
-    }
       state.transaction.details = state.transaction.details.map((x, index) => ({
         ...x,
         slNo: index + 1, // Reset slNo to start from 1
@@ -257,9 +253,8 @@ const accTransactionSlice = createSlice({
         state,
         action.payload.applicationSettings.accountsSettings?.defaultCostCenterID
       );
-      
+
       localStorage.setItem(
-        
         `${state.transaction.master.voucherType}${state.transaction.master.formType}`,
         JSON.stringify(state.transaction.details)
       );
@@ -300,7 +295,6 @@ const accTransactionSlice = createSlice({
         applicationSettings?: ApplicationSettingsType;
       }>
     ) => {
-      
       const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
         state.transaction.master.totalAmount = calculateTotal(state);
@@ -378,7 +372,6 @@ const accTransactionSlice = createSlice({
         hasRight: (formCode: string, action: UserAction) => boolean;
       }>
     ) => {
-      
       const { userSession, hasRight } = action.payload;
 
       const isClosed = userSession.financialYearStatus === "Closed";
@@ -411,7 +404,6 @@ const accTransactionSlice = createSlice({
         >;
       }>
     ) => {
-      
       const { fields } = action.payload;
 
       // Iterate over the keys of fields and apply updates
@@ -443,23 +435,25 @@ const accTransactionSlice = createSlice({
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
       // const applicationSettings =  useAppSelector((state: RootState) => state.ApplicationSettings);
       const payload = action.payload;
-  
+
       if (payload) {
         state.row = { ...AccTransactionRowInitialData };
         // Handle master data
         state.transaction.master = {
           // ...state.transaction.master,
           ...payload.master,
-          transactionDate: new Date(payload.master.transactionDate).toISOString(),
+          transactionDate: new Date(
+            payload.master.transactionDate
+          ).toISOString(),
           currencyRate: payload.master.currencyRate,
           prevTransDate: new Date(payload.master.transactionDate).toISOString(),
           referenceDate: new Date(payload.master.referenceDate).toISOString(),
         };
-  
+
         if (payload.master.isLocked === true) {
           state.formElements.lnkUnlockVoucher.visible = true;
         }
-  
+
         let BillwiseaccTransactionDetailID = 0;
         state.transaction.details = payload.details.map((detail, index) => {
           const baseDetail = {
@@ -476,28 +470,28 @@ const accTransactionSlice = createSlice({
               ? new Date(detail.checkBouncedDate).toISOString()
               : new Date(2000, 0, 1).toISOString(),
           };
-  
+
           // Handle voucher type specific logic
           switch (payload.master.voucherType) {
-            case 'CP':
-            case 'BP':
-            case 'CN':
-            case 'CQP':
-            case 'SV':
-            case 'PBP':
+            case "CP":
+            case "BP":
+            case "CN":
+            case "CQP":
+            case "SV":
+            case "PBP":
               return {
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
                 ledgerID: detail.ledgerID,
               };
-  
-            case 'CR':
-            case 'BR':
-            case 'DN':
-            case 'CQR':
-            case 'PV':
-            case 'PBR':
+
+            case "CR":
+            case "BR":
+            case "DN":
+            case "CQR":
+            case "PV":
+            case "PBR":
               BillwiseaccTransactionDetailID++;
               return {
                 ...baseDetail,
@@ -505,10 +499,10 @@ const accTransactionSlice = createSlice({
                 ledgerName: detail.particulars,
                 ledgerID: detail.relatedLedgerID,
               };
-  
-            case 'JV':
+
+            case "JV":
               BillwiseaccTransactionDetailID++;
-              if (payload.master.drCr === 'Dr') {
+              if (payload.master.drCr === "Dr") {
                 return {
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
@@ -523,25 +517,25 @@ const accTransactionSlice = createSlice({
                   ledgerID: detail.ledgerID,
                 };
               }
-  
-            case 'OB':
-            case 'MJV':
+
+            case "OB":
+            case "MJV":
               return {
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
                 ledgerID: detail.ledgerID,
-                drCr: Number(detail.debit) > 0 ? 'Debit' : 'Credit',
+                drCr: Number(detail.debit) > 0 ? "Debit" : "Credit",
               };
-  
+
             default:
               return baseDetail;
           }
         });
-  
+
         // Handle attachments
         state.transaction.attachments = payload.attachments || [];
-  
+
         // Calculate total amount
         if (payload.details?.length > 0) {
           state.total = payload.details.reduce((total, detail) => {
@@ -551,44 +545,43 @@ const accTransactionSlice = createSlice({
                 : detail.debit;
             return total + (amount || 0);
           }, 0);
-  
+
           // Set master account ID based on voucher type
           const firstDetail = payload.details[0];
-          
+
           switch (payload.master.voucherType) {
-            case 'CP':
-            case 'BP':
-            case 'CN':
-            case 'CQP':
-            case 'SV':
-            case 'PBP':
+            case "CP":
+            case "BP":
+            case "CN":
+            case "CQP":
+            case "SV":
+            case "PBP":
               state.masterAccountID = firstDetail.relatedLedgerID;
               break;
-  
-            case 'CR':
-            case 'BR':
-            case 'DN':
-            case 'CQR':
-            case 'PV':
-            case 'PBR':
+
+            case "CR":
+            case "BR":
+            case "DN":
+            case "CQR":
+            case "PV":
+            case "PBR":
               state.masterAccountID = firstDetail.ledgerID;
               break;
-  
-            case 'JV':
+
+            case "JV":
               state.transaction.master.drCr =
-                payload.master.drCr === 'Dr' ? 'Debit' : 'Credit';
+                payload.master.drCr === "Dr" ? "Debit" : "Credit";
               state.masterAccountID =
-                payload.master.drCr === 'Dr'
+                payload.master.drCr === "Dr"
                   ? firstDetail.ledgerID
                   : firstDetail.relatedLedgerID;
               break;
           }
-  
+
           // Handle billwise transactions , Handled in Api
           // if (applicationSettings?.accountsSettings?.maintainBillwiseAccount) {
-           
         }
-  
+
         state.transactionLoading = false;
         state.formElements.pnlMasters.disabled = true;
         state.formElements.btnSave.disabled = true;
@@ -641,7 +634,7 @@ export const {
   accFormStateTransactionDetailsSetSlNo,
   loadTempRows,
   accFormStateClearBillWiseInDetails,
-  accFormStateClearDetails
+  accFormStateClearDetails,
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

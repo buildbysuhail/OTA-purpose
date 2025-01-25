@@ -336,13 +336,12 @@ const LedgerReport = () => {
                   reload={true}
                   gridId="grd_ledger_report"
                   childPopupProps={{
-                    content: <AccTransactionForm />,
-                    title: t(""),
+                    content: null,
+                    title: "",
                     isForm: false,
                     isTransactionScreen:true,
-                    width: "mw-100",
+                    width: "",
                     drillDownCells: "vchNo,",
-                    // enableFn: (data: any) => data?.ledgerID != 0
                   }}
                 ></ErpDevGrid>
               </div>

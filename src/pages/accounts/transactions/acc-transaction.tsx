@@ -312,7 +312,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       accFormStateTransactionMasterHandleFieldChange({ fields: { drCr: drCr } })
     );
   }, [drCr]);
+  // useEffect(() => {
+  //   debugger;
+  //   dispatch(
+  //     accFormStateRowHandleFieldChange({
+  //       fields: {
+  //         costCentreID:2,
+  //       },
+  //     })
+  //   );
+  // }, []);
 
+  // useEffect(() => {
+  //   console.log(`costChange${formState.row.costCentreID.toString()}`);
+    
+  // },[formState.row.costCentreID]);
   // useEffect(() => {
   //   dispatch(
   //     accFormStateTransactionDetailsSetSlNo({})
@@ -471,6 +485,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       
+      
+
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -584,7 +600,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     if (!voucherType) return;
     const updateFormElementsBasedOnVoucherType = () => {
-      
+      // dispatch(
+      //   accFormStateRowHandleFieldChange({
+      //     fields: {
+           
+      //     },
+      //   })
+      // );
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -597,13 +619,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 formType: formType,
                 drCr: drCr,
               },
+
             },
             formCode: formCode,
             title:
               formType == undefined || formType.trim() == ""
                 ? title
                 : title + "[" + formType + "]",
-            row: AccTransactionRowInitialData,
+            row: {
+              ...AccTransactionRowInitialData,
+              costCentreID:(formState.userConfig?.presetCostenterId ?? 0) > 0 ? (formState.userConfig?.presetCostenterId ?? 0) : userSession.dbIdValue == "SAMAPLASTICS" ? 0 : applicationSettings.accountsSettings.defaultCostCenterID
+            }
           },
         })
       );

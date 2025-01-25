@@ -495,6 +495,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (!event?.ctrlKey) {
         for (const item of MENUITEMS) {
           if (item === targetObject) {
+            debugger;
             item.active = true;
             item.selected = true;
             // setMenuAncestorsActive(MENUITEMS,item);
@@ -541,6 +542,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (hasParentLevel > 2) {
         hasParent = true;
       }
+      debugger;
       parent.active = true;
       parent.selected = true;
       hasParentLevel += 1;
@@ -578,7 +580,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     const setSubmenuRecursively = (items: any) => {
       items?.forEach((item: any) => {
         if (item.path == "") {
-        } else if (currentPath.includes(item.path)) {
+        } else if (currentPath.includes(item.path) || (`${currentPath}List`).includes(item.path)) {
           setSubmenu(null, item);
         }
         setSubmenuRecursively(item.children);
@@ -617,7 +619,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     let currentPath = location.pathname.endsWith("/")
       ? location.pathname.slice(0, -1)
       : location.pathname;
-
+debugger;
     if (currentPath !== previousUrl) {
       setMenuUsingUrl(currentPath);
       setPreviousUrl(currentPath);

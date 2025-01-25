@@ -752,15 +752,15 @@ export const useAccTransaction = (
     );
 
     // Reset combobox specific states
-    dispatch(
-      accFormStateRowHandleFieldChange({
-        fields: {
-          ledgerID: null,
-          ledgerCode: "",
-          costCentreID: null,
-        },
-      })
-    );
+    // dispatch(
+    //   accFormStateRowHandleFieldChange({
+    //     fields: {
+    //       ledgerID: null,
+    //       ledgerCode: "",
+    //       costCentreID: 2,
+    //     },
+    //   })
+    // );
 
     // Force reload combobox data
     dispatch(

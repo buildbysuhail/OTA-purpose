@@ -139,6 +139,7 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCombo = () => {
+    
     if (ledgerIdRef.current) {
       ledgerIdRef.current.select();
       ledgerIdRef.current.focus();
@@ -657,7 +658,7 @@ export const useAccTransaction = (
     debugger;
     if (true == true) {
       debugger;
-      
+
       const params: AccTransactionData = {
         master: attachMaster(),
         details: attachDetails(),
@@ -668,7 +669,12 @@ export const useAccTransaction = (
         params
       );
       if (saveRes.isOk == true) {
-        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: undefined }))
+        dispatch(
+          accFormStateTransactionUpdate({
+            key: "masterValidations",
+            value: undefined,
+          })
+        );
         if (formState.printOnSave == true) {
           if (
             userSession.dbIdValue.trim() == "BAHAMDOON" &&
@@ -712,9 +718,24 @@ export const useAccTransaction = (
           icon: "warning",
           title: saveRes.message,
         });
-        dispatch(accFormStateTransactionUpdate({key: "details", value: saveRes.item.details }));
-        dispatch(accFormStateTransactionUpdate({key: "attachments", value: saveRes.item.attachments }))
-        dispatch(accFormStateTransactionUpdate({key: "masterValidations", value: saveRes.validations }))        
+        dispatch(
+          accFormStateTransactionUpdate({
+            key: "details",
+            value: saveRes.item.details,
+          })
+        );
+        dispatch(
+          accFormStateTransactionUpdate({
+            key: "attachments",
+            value: saveRes.item.attachments,
+          })
+        );
+        dispatch(
+          accFormStateTransactionUpdate({
+            key: "masterValidations",
+            value: saveRes.validations,
+          })
+        );
       }
 
       dispatch(
@@ -826,8 +847,15 @@ export const useAccTransaction = (
         ERPAlert.show({
           icon: "warning",
           title: "Please select Ledger..!",
+          onConfirm() {
+            focusLedgerCombo();
+            return false;
+          },
+          onCancel() {
+            return false;
+          },
         });
-        return false;
+            return false;
       }
       const fdd = isNullOrUndefinedOrZero(formState.row.amount);
       const fdsdd = isNullOrUndefinedOrZero(
@@ -922,7 +950,7 @@ export const useAccTransaction = (
       };
 
       // Conditionally update costCentreID if needed
-      if (formState.userConfig?.presetCostenterId??0 > 0) {
+      if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
         updatedFields.costCentreID = { disabled: true };
       }
 
@@ -1086,6 +1114,7 @@ export const useAccTransaction = (
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
+      debugger
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);

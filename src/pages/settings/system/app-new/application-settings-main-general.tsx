@@ -309,7 +309,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             handleFieldChange(
               "accountsSettings",
               "defaultCostCenterID",
-              data.defaultCostCenterID
+              data?.defaultCostCenterID
             )
           }
         />

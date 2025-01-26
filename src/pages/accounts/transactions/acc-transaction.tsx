@@ -628,7 +628,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 : title + "[" + formType + "]",
             row: {
               ...AccTransactionRowInitialData,
-              costCentreID:(formState.userConfig?.presetCostenterId ?? 0) > 0 ? (formState.userConfig?.presetCostenterId ?? 0) : userSession.dbIdValue == "SAMAPLASTICS121212121" ? 0 : applicationSettings.accountsSettings.defaultCostCenterID
+              costCentreID:(formState.userConfig?.presetCostenterId ?? 0) > 0 ? (formState.userConfig?.presetCostenterId ?? 0) : userSession.dbIdValue == "SAMAPLASTICS121212121" ? 0 : applicationSettings.accountsSettings?.defaultCostCenterID
             }
           },
         })
@@ -2228,7 +2228,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-               <div className="xl:w-[170px] lg:w-[250px] mb-[13px]">
+               <div className="xl:w-[170px] lg:w-[250px] ">
                 {formState.formElements.hasDiscount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3271,6 +3271,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </h6>
         </div>
         <div>
+          <ERPButton
+            ref={btnSaveRef}
+            title={t("cancel")}
+            onClick={goToPreviousPage}
+            className="w-24"
+            // disabled={formState.formElements.pnlMasters?.disabled}
+          />
           <ERPButton
             ref={btnSaveRef}
             title={t("save")}

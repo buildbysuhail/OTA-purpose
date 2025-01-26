@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
@@ -65,8 +65,8 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                                 </div>
                                   {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
                                     <span className=" fixed ml-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
-                                      <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : ''}`}>
-                                      <Plus />
+                                      <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
+                                      <CirclePlus />
                                       </Link>
                                     </span>
                                   }

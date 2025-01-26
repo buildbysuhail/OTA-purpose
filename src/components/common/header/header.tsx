@@ -1016,7 +1016,6 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <img
                     className="inline-block rounded-full "
-                    title={userSession?.userimage || profile}
                     src={userSession?.userimage || profile}
                     width="20"
                     height="20"

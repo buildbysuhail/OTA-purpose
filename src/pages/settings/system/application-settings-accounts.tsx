@@ -124,7 +124,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
+                onChangeData={(data) => handleFieldChange('defaultCashAcc', data?.defaultCashAcc)}
               />
               <ERPDataCombobox
                 id="defaultSuspenseAcc"
@@ -137,7 +137,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data.defaultSuspenseAcc)}
+                onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data?.defaultSuspenseAcc)}
               />
               <ERPDataCombobox
                 id="blockOnCreditLimit"
@@ -155,7 +155,7 @@ const ApplicationSettingsAccounts = () => {
                   { value: 'Allow Cash Sales', label: 'Allow Cash Sales' },
                 ]}
                 onChangeData={(data) =>
-                  handleFieldChange("blockOnCreditLimit", data.blockOnCreditLimit)
+                  handleFieldChange("blockOnCreditLimit", data?.blockOnCreditLimit)
                 }
               />
               <ERPDataCombobox
@@ -168,7 +168,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultServiceAccount', data.defaultServiceAccount)}
+                onChangeData={(data) => handleFieldChange('defaultServiceAccount', data?.defaultServiceAccount)}
               />
               <ERPDataCombobox
                 id="defaultBankAcc"
@@ -180,7 +180,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultBankAcc', data.defaultBankAcc)}
+                onChangeData={(data) => handleFieldChange('defaultBankAcc', data?.defaultBankAcc)}
               />
               <ERPDataCombobox
                 id="defaultCreditCardAcc"
@@ -193,7 +193,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data.defaultCreditCardAcc)}
+                onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data?.defaultCreditCardAcc)}
               />
               <ERPDataCombobox
                 id="defaultCostCenterID"
@@ -206,7 +206,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultCostCenterID', data.defaultCostCenterID)}
+                onChangeData={(data) => handleFieldChange('defaultCostCenterID', data?.defaultCostCenterID)}
               />
               <ERPDataCombobox
                 id="defaultCustomerLedgerID"
@@ -220,7 +220,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data?.defaultCustomerLedgerID)}
               />
               <ERPDataCombobox
                 id="defaultOpeningStockValueAcc"
@@ -234,7 +234,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
+                onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data?.defaultOpeningStockValueAcc)}
               />
               {/* Second Column of Select Inputs */}
               <ERPDataCombobox
@@ -249,7 +249,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultLoanAcc', data.defaultLoanAcc)}
+                onChangeData={(data) => handleFieldChange('defaultLoanAcc', data?.defaultLoanAcc)}
               />
               <ERPDataCombobox
                 id="defaultIncentiveAcc1"
@@ -262,7 +262,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data.defaultIncentiveAcc1)}
+                onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data?.defaultIncentiveAcc1)}
               />
               <ERPDataCombobox
                 id="defaultIncentiveAcc2"
@@ -275,7 +275,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
+                onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data?.defaultIncentiveAcc2)}
               />
 
              
@@ -291,7 +291,7 @@ const ApplicationSettingsAccounts = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data.defaultBankChargeAccount)}
+                onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data?.defaultBankChargeAccount)}
               />
               {userSession.countryId == Countries.India &&
                 <>
@@ -305,7 +305,7 @@ const ApplicationSettingsAccounts = () => {
                     data={formState}
                     label={t("default_indirect_expense_account")}
                     onChangeData={(data) =>
-                      handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+                      handleFieldChange('defaultIndirectExpenseAccount', data?.defaultIndirectExpenseAccount)
                     }
                     options={[
                       { value: 'All', label: 'All' },
@@ -394,7 +394,7 @@ const ApplicationSettingsAccounts = () => {
                       { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
                       { value: 'Indirect_Income', label: 'Indirect Income' },
                     ]}
-                    onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
+                    onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data?.defaultPurchaseAssetsAccount)}
                   />
                 </>
 
@@ -405,21 +405,21 @@ const ApplicationSettingsAccounts = () => {
           value={formState?.defaultExcessAccount}
           data={formState}
           label="Default Excess Account"
-          onChangeData={(data) => handleFieldChange('defaultExcessAccount', data.)}
+          onChangeData={(data) => handleFieldChange('defaultExcessAccount', data?.)}
         />
         <ERPDataCombobox
           id="defaultShortageAccount"
           value={formState?.defaultShortageAccount}
           data={formState}
           label="Default Shortage Account"
-          onChangeData={(data) => handleFieldChange('defaultShortageAccount', data.)}
+          onChangeData={(data) => handleFieldChange('defaultShortageAccount', data?.)}
         />
         <ERPInput
           id="maxShortageAmount"
           value={formState?.maxShortageAmount}
           data={formState}
           label="Max Shortage Amount"
-          onChangeData={(data) => handleFieldChange('maxShortageAmount', data.)}
+          onChangeData={(data) => handleFieldChange('maxShortageAmount', data?.)}
         />
       
 
@@ -430,7 +430,7 @@ const ApplicationSettingsAccounts = () => {
                   checked={formState?.allowMinimumShiftDuration}
                   data={formState}
                   label={t("minimum_shift_duration")}
-                  onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
+                  onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data?.allowMinimumShiftDuration)}
                 />
                 <ERPInput
                   id="minimumShiftDuration"
@@ -439,7 +439,7 @@ const ApplicationSettingsAccounts = () => {
                   data={formState}
                   type="number"
                   disabled={!formState?.allowMinimumShiftDuration}
-                  onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
+                  onChangeData={(data) => handleFieldChange('minimumShiftDuration', data?.minimumShiftDuration)}
                 />
                 &nbsp;{t("hours")}
               </div>
@@ -452,7 +452,7 @@ const ApplicationSettingsAccounts = () => {
               value={formState?.supervisorPassword}
               data={formState}
               label={t("supervisor_password")}
-              onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
+              onChangeData={(data) => handleFieldChange('supervisorPassword', data?.supervisorPassword)}
             />
           </div>
 
@@ -464,7 +464,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.allowSalesCounter}
                 data={formState}
                 label={t("allow_sales_counter")}
-                onChangeData={(data) => handleFieldChange('allowSalesCounter', data.allowSalesCounter)}
+                onChangeData={(data) => handleFieldChange('allowSalesCounter', data?.allowSalesCounter)}
               />
 
               <ERPCheckbox
@@ -472,7 +472,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.maintainBillwiseAccount}
                 data={formState}
                 label={t("maintain_billwise_account")}
-                onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data.maintainBillwiseAccount)}
+                onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data?.maintainBillwiseAccount)}
               />
 
               <ERPCheckbox
@@ -480,7 +480,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.printAccAftersave}
                 data={formState}
                 label={t("print_after_save")}
-                onChangeData={(data) => handleFieldChange('printAccAftersave', data.printAccAftersave)}
+                onChangeData={(data) => handleFieldChange('printAccAftersave', data?.printAccAftersave)}
               />
 
               <ERPCheckbox
@@ -488,7 +488,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.showTenderDialogInSales}
                 data={formState}
                 label={t("show_tender_window_in_sales")}
-                onChangeData={(data) => handleFieldChange('showTenderDialogInSales', data.showTenderDialogInSales)}
+                onChangeData={(data) => handleFieldChange('showTenderDialogInSales', data?.showTenderDialogInSales)}
               />
 
               <ERPCheckbox
@@ -496,7 +496,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.allowMultiPayments}
                 data={formState}
                 label={t("allow_multipayment_mode")}
-                onChangeData={(data) => handleFieldChange('allowMultiPayments', data.allowMultiPayments)}
+                onChangeData={(data) => handleFieldChange('allowMultiPayments', data?.allowMultiPayments)}
               />
 
               <ERPCheckbox
@@ -504,7 +504,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.unPostSPDeductionstoAccount}
                 data={formState}
                 label={t("unpost_SP_deductions_to_account")}
-                onChangeData={(data) => handleFieldChange('unPostSPDeductionstoAccount', data.unPostSPDeductionstoAccount)}
+                onChangeData={(data) => handleFieldChange('unPostSPDeductionstoAccount', data?.unPostSPDeductionstoAccount)}
               />
 
               <ERPCheckbox
@@ -512,7 +512,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.doNotPostAccountsForEachCashSales}
                 data={formState}
                 label={t("do_not_post_accounts_for_each_cash_sales")}
-                onChangeData={(data) => handleFieldChange('doNotPostAccountsForEachCashSales', data.doNotPostAccountsForEachCashSales)}
+                onChangeData={(data) => handleFieldChange('doNotPostAccountsForEachCashSales', data?.doNotPostAccountsForEachCashSales)}
               />
 
               <ERPCheckbox
@@ -520,7 +520,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.loadCostcentrewiseEmployeesForSalaryProcess}
                 data={formState}
                 label={t("load_costcentre_wise_employees_for_salary_process")}
-                onChangeData={(data) => handleFieldChange('loadCostcentrewiseEmployeesForSalaryProcess', data.loadCostcentrewiseEmployeesForSalaryProcess)}
+                onChangeData={(data) => handleFieldChange('loadCostcentrewiseEmployeesForSalaryProcess', data?.loadCostcentrewiseEmployeesForSalaryProcess)}
               />
 
               <ERPCheckbox
@@ -529,7 +529,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.enableAuthorizationforShiftClose}
                 data={formState}
                 label={t("enable_authorization_for_shift_close")}
-                onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
+                onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data?.enableAuthorizationforShiftClose)}
               />
 
               <ERPCheckbox
@@ -537,7 +537,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.billwiseMandatory}
                 data={formState}
                 label={t("billwise_mandatory")}
-                onChangeData={(data) => handleFieldChange('billwiseMandatory', data.billwiseMandatory)}
+                onChangeData={(data) => handleFieldChange('billwiseMandatory', data?.billwiseMandatory)}
               />
 
               <ERPCheckbox
@@ -545,7 +545,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.maintainProjectSite}
                 data={formState}
                 label={t("maintain_projects/job")}
-                onChangeData={(data) => handleFieldChange('maintainProjectSite', data.maintainProjectSite)}
+                onChangeData={(data) => handleFieldChange('maintainProjectSite', data?.maintainProjectSite)}
               />
 
               <ERPCheckbox
@@ -553,7 +553,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.maintainCostCenter}
                 data={formState}
                 label={t("maintain_cost_center")}
-                onChangeData={(data) => handleFieldChange('maintainCostCenter', data.maintainCostCenter)}
+                onChangeData={(data) => handleFieldChange('maintainCostCenter', data?.maintainCostCenter)}
               />
 
               <ERPCheckbox
@@ -561,7 +561,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.maintainMultiCurrencyTransactions}
                 data={formState}
                 label={t("maintain_multi_currency_transactions")}
-                onChangeData={(data) => handleFieldChange('maintainMultiCurrencyTransactions', data.maintainMultiCurrencyTransactions)}
+                onChangeData={(data) => handleFieldChange('maintainMultiCurrencyTransactions', data?.maintainMultiCurrencyTransactions)}
               />
 
               {applicationSettings != undefined && (applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Hypermarket || applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Supermarket) &&
@@ -570,7 +570,7 @@ const ApplicationSettingsAccounts = () => {
                   checked={formState?.showPartyBalanceInSales}
                   data={formState}
                   label={t("show_party_balance_in_sales")}
-                  onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data.showPartyBalanceInSales)}
+                  onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data?.showPartyBalanceInSales)}
                 />
               }
               <ERPCheckbox
@@ -579,7 +579,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.allowUserwiseCounter}
                 data={formState}
                 label={t("allow_user_wise_counter")}
-                onChangeData={(data) => handleFieldChange('allowUserwiseCounter', data.allowUserwiseCounter)}
+                onChangeData={(data) => handleFieldChange('allowUserwiseCounter', data?.allowUserwiseCounter)}
               />
 
               <ERPCheckbox
@@ -587,7 +587,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.setDefaultCustomerInSales}
                 data={formState}
                 label={t("set_default_customer_in_sales")}
-                onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
+                onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data?.setDefaultCustomerInSales)}
               />
               {userSession.countryId == Countries.India &&
                 <ERPCheckbox
@@ -595,7 +595,7 @@ const ApplicationSettingsAccounts = () => {
                   checked={formState?.allowPostPDC}
                   data={formState}
                   label={t("allow_PDC_to_post")}
-                  onChangeData={(data) => handleFieldChange('allowPostPDC', data.allowPostPDC)}
+                  onChangeData={(data) => handleFieldChange('allowPostPDC', data?.allowPostPDC)}
                 />
               }
               <ERPCheckbox
@@ -603,7 +603,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.showEmployeesInSales}
                 data={formState}
                 label={t("show_employees_in_sales")}
-                onChangeData={(data) => handleFieldChange('showEmployeesInSales', data.showEmployeesInSales)}
+                onChangeData={(data) => handleFieldChange('showEmployeesInSales', data?.showEmployeesInSales)}
               />
 
               <ERPCheckbox
@@ -611,7 +611,7 @@ const ApplicationSettingsAccounts = () => {
                 checked={formState?.enable24Hours}
                 data={formState}
                 label={t("enable_24_hours_business")}
-                onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
+                onChangeData={(data) => handleFieldChange('enable24Hours', data?.enable24Hours)}
               />
               {userSession.countryId == Countries.India &&
                 <ERPCheckbox
@@ -620,7 +620,7 @@ const ApplicationSettingsAccounts = () => {
                   checked={formState?.enableCPEandCRE}
                   data={formState}
                   label={t("enable_estimate_for_payments_and_receipts")}
-                  onChangeData={(data) => handleFieldChange('enableCPEandCRE', data.enableCPEandCRE)}
+                  onChangeData={(data) => handleFieldChange('enableCPEandCRE', data?.enableCPEandCRE)}
                 />
               }
             </div>

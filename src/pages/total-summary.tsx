@@ -15,6 +15,7 @@ const TotalSummary: React.FC = () => {
             CustomerStoreState: 'California',
             CustomerStoreCity: 'Los Angeles',
             Employee: 'Harv Mudd',
+            
         },
         {
             ID: 4,
@@ -47,7 +48,7 @@ const TotalSummary: React.FC = () => {
             dataType: 'number',
             allowSorting: true,
             allowFiltering: true,
-
+            width: 150,
             alignment: 'left'
         },
         {
@@ -68,7 +69,8 @@ const TotalSummary: React.FC = () => {
             dataType: 'string',
             allowSorting: true,
             allowFiltering: true,
-            alignment: 'left'
+            alignment: 'left' ,
+            width: 150,
         },
         {
             dataField: 'CustomerStoreCity',
@@ -76,7 +78,15 @@ const TotalSummary: React.FC = () => {
             dataType: 'string',
             allowSorting: true,
             allowFiltering: true,
-            alignment: 'left'
+            alignment: 'left', width: 150,
+        },
+        {
+            dataField: 'TotalAmount',
+            caption: 'TotalAmount',
+            dataType: 'number',
+            allowSorting: true,
+            allowFiltering: true,
+             width: 150,
         },
         {
             dataField: 'CustomerStoreState',
@@ -84,8 +94,9 @@ const TotalSummary: React.FC = () => {
             dataType: 'string',
             allowSorting: true,
             allowFiltering: true,
-            alignment: 'left'
+            alignment: 'left', width: 150,
         },
+
         {
             dataField: 'SaleAmount',
             caption: 'Sale Amount',
@@ -93,38 +104,45 @@ const TotalSummary: React.FC = () => {
             allowSorting: true,
             allowFiltering: true,
             alignment: 'right',
+             width: 150,
             cellRender: (cellInfo) => `$${cellInfo.value.toLocaleString('en-UK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         }
     ];
-    const summaryItems: SummaryConfig[] = [
-        {
-            column: 'OrderNumber',
-            summaryType: 'count',
-            customizeText: (itemInfo) =>`Total Orders: ${itemInfo.value || 0}`,
-        },
-        {
-            column: 'OrderDate',
-            summaryType: 'min',
-            customizeText: (itemInfo) => {
-                if (itemInfo.value) {
-                    const dateValue = new Date(itemInfo.value);
-                    return `First Order: ${formatDate(dateValue, 'MMM dd, yyyy')}`;
-                }
-                return 'No orders found';
-            }
-        },
-        {
-            column: 'SaleAmount',
-            summaryType: 'sum',
-            customizeText: (itemInfo) => {
-                const totalSales = itemInfo.value || 0;
-                return `Total Sales: $${totalSales.toLocaleString('en-UK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            }
-        }
-    ];
+const summaryItems: SummaryConfig[] = [
+  {
+    column: 'TotalAmount',
+    summaryType: "sum",
+    valueFormat: "currency",
+    customizeText: (itemInfo) => `Total: $${itemInfo.value.toFixed(2)}`
+  },
+  {
+    column: 'SaleAmount',
+    summaryType: "sum",
+    valueFormat: "currency",
+    customizeText: (itemInfo) => `Sales Total: $${itemInfo.value.toFixed(2)}`
+  },
+  {
+    column: 'OrderDate',
+    summaryType: "min",
+    valueFormat: "longDate",
+    customizeText: (itemInfo) => `Earliest Order: ${formatDate(new Date(itemInfo.value), 'MMMM dd, yyyy')}`
+  },
+  {
+    column: 'OrderDate',
+    summaryType: "max",
+    valueFormat: "longDate",
+    customizeText: (itemInfo) => `Latest Order: ${formatDate(new Date(itemInfo.value), 'MMMM dd, yyyy')}`
+  },
+  {
+    column: 'CustomerStoreState',
+    summaryType: "count",
+    customizeText: (itemInfo) => `Total States: ${itemInfo.value}`
+  }
+];
 
     return (
-        <ERPDevGrid
+        <div className='p-10'>
+     <ERPDevGrid
             columns={columns}
             data={orders}
             gridId="order-summary-grid"
@@ -136,6 +154,8 @@ const TotalSummary: React.FC = () => {
             className="w-full"
             hideGridAddButton={true}
         />
+        </div>
+    
     );
 };
 

@@ -78,10 +78,11 @@ export interface SummaryConfig {
   column: string;
   summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
   valueFormat?: string;
-  showInGroupFooter?: true | false;
-  alignByColumn?: true | false;
+  showInGroupFooter?: boolean;
+  alignByColumn?: boolean;
   customizeText?: (itemInfo: { value: any }) => string;
 }
+
 type FilterOperation =
   | "="
   | "<>"
@@ -1604,7 +1605,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
 <Summary>
   {summaryItems?.map((config: SummaryConfig, index: number) => {
-    const columnConfig = columns.find((col:any) => col.dataField === config.column);
+    const columnConfig = columns.find((col: any) => col.dataField === config.column);
 
     return (
       <TotalItem
@@ -1613,33 +1614,62 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         summaryType={config.summaryType}
         valueFormat={config.valueFormat}
         customizeText={(e) => {
+          // Use column-specific customization if available
           if (columnConfig?.customizeText) {
             return columnConfig.customizeText({ value: e.value });
           }
-          if (config.valueFormat === "currency") {
-            let numericValue: number;
 
-            if (e.value instanceof Date) {
-              numericValue = e.value.getTime(); // Convert Date to timestamp
-            }
-            // Handle number type
-            else if (typeof e.value === "number") {
-              numericValue = e.value;
-            }
-            // Handle string type
-            else {
-              numericValue = parseFloat(e.value as string); // Explicitly cast to string
-            }
-
-            // Check if numericValue is a valid number
-            if (!isNaN(numericValue)) {
-              return `$${numericValue.toFixed(2)}`;
-            }
-            return `$0.00`; // Fallback for invalid numbers
+          // Use summary-specific customization if available
+          if (config.customizeText) {
+            return config.customizeText({ value: e.value });
           }
 
-          // Default behavior for non-currency formats
-          return `${e.value}`;
+          // Handle value formatting based on data type and valueFormat
+          const value = e.value;
+
+          // Handle null or undefined values
+          if (value === null || value === undefined) {
+            return "N/A"; // Default fallback for null/undefined values
+          }
+
+          // Handle number type
+          if (typeof value === "number") {
+            if (config.valueFormat === "currency") {
+              return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            } else if (config.valueFormat === "percent") {
+              return `${(value * 100).toFixed(2)}%`;
+            } else if (config.valueFormat === "decimal") {
+              return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else {
+              return value.toLocaleString("en-US"); // Default number formatting
+            }
+          }
+
+          // Handle date type
+          if (value instanceof Date || (typeof value === "string" && !isNaN(Date.parse(value)))) {
+            const date = value instanceof Date ? value : new Date(value);
+            if (config.valueFormat === "shortDate") {
+              return formatDate(date, "MM/dd/yyyy");
+            } else if (config.valueFormat === "longDate") {
+              return formatDate(date, "MMMM dd, yyyy");
+            } else {
+              return formatDate(date, "yyyy-MM-dd"); // Default date formatting
+            }
+          }
+
+          // Handle string type
+          if (typeof value === "string") {
+            if (config.valueFormat === "uppercase") {
+              return value.toUpperCase();
+            } else if (config.valueFormat === "lowercase") {
+              return value.toLowerCase();
+            } else {
+              return value; // Default string formatting
+            }
+          }
+
+          // Fallback for other types (e.g., boolean, object, etc.)
+          return `${value}`;
         }}
       />
     );

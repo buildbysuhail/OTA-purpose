@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
 import {
   AccTransactionData,
   AccTransactionFormState,
@@ -926,8 +926,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       dataField: "amount",
       dataType: "number",
       caption: t("amount"),
-      customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`, // Format display
       width: 200,
     },
     {
@@ -1054,6 +1052,20 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </button>
         ),
     },
+  ];
+
+  const customizeAmount= useMemo(() => {
+    return (itemInfo: { value: any }) => `Amount Total: ${getFormattedValue(itemInfo.value) }`
+  }, []) 
+  
+  const summaryItems:SummaryConfig[] = [
+     {
+      column: 'amount',
+      summaryType: "sum", 
+      valueFormat: "currency",
+      customizeText: customizeAmount
+    },
+  
   ];
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const [activeButton, setActiveButton] = useState("credit");
@@ -2171,7 +2183,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { amount: e.target?.value },
+                        fields: { amount: parseFloat(e.target?.value)},
                       })
                     )
                   }
@@ -2440,6 +2452,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="relative">
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
+              
+              summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}
               keyExpr="slNo"
@@ -2452,36 +2466,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               hideDefaultSearchPanel={true}
               hideGridHeader={true}
               enablefilter={false}
+              remoteOperations={false}
               data={formState.transaction.details}
-              gridId={gridCode}
+              gridId={`${gridCode}-grid`}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
                 onSelectionChanged(e, state)
               }
               className="pb-14"
-              // summaryItems={[
-              //   {
-              //     column: "amount",
-              //     summaryType: "sum",
-              //     valueFormat: "currency",
-              //   },
-              // ]}
-              // summary={[
-              //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
-              //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
-              // ]}
+            
             >
-              {/* <Summary calculateCustomSummary={handleCustomSummary}>
-            <TotalItem
-              column="discount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              } // Handle undefined gracefully
-            />
        
-           </Summary> */}
             </ErpDevGrid>
           </div>
           {formState.showSaveDialog && (

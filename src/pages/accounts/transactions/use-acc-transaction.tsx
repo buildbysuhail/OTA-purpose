@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 // import { handleResponse } from '../HandleResponse';
 import { customJsonParse } from "../../../utilities/jsonConverter";
@@ -38,8 +38,11 @@ import { useTransaction } from "../../use-transaction";
 import {
   AccTransactionData,
   AccTransactionFormState,
+  accTransactionFormStateInitialData,
   AccTransactionMaster,
   AccTransactionRow,
+  AccTransactionRowInitialData,
+  AccUserConfig,
   PrintTransProps,
 } from "./acc-transaction-types";
 import {
@@ -49,17 +52,18 @@ import {
 } from "../../../utilities/Utils";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
-import { validateTransactionDate } from "./functions";
+import { calculateTotal, validateTransactionDate } from "./functions";
 import { printCheque_AccTransaction } from "./acc-print-trans-service";
 import { useAccPrint } from "./use-print";
 import moment from "moment";
-export interface AccUserConfig {
-  keepNarrationForJV: boolean;
-  clearDetailsAfterSaveAccounts: boolean;
-  mnuShowConfirmationForEditOnAccounts: boolean;
-  maximizeBillwiseScreenInitially: boolean;
-  alignment: "left" | "center" | "right";
-}
+import VoucherType from "../../../enums/voucher-types";
+// export interface AccUserConfig {
+//   keepNarrationForJV: boolean;
+//   clearDetailsAfterSaveAccounts: boolean;
+//   mnuShowConfirmationForEditOnAccounts: boolean;
+//   maximizeBillwiseScreenInitially: boolean;
+//   alignment: "left" | "center" | "right";
+// }
 
 interface FormElementState {
   visible: boolean;
@@ -81,7 +85,9 @@ export const useAccTransaction = (
   narrationRef?: any,
   voucherNumberRef?: any,
   chequeNumberRef?: any,
-  remarksRef?: any
+  remarksRef?: any,  
+  setPrevState?: Dispatch<SetStateAction<any>>
+  
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -139,7 +145,6 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCombo = () => {
-    
     if (ledgerIdRef.current) {
       ledgerIdRef.current.select();
       ledgerIdRef.current.focus();
@@ -177,6 +182,67 @@ export const useAccTransaction = (
   };
 
   const { hasRight, hasBlockedRight } = useUserRights();
+  const fetchUserConfig = async () => {
+      try {
+        const base64 = await api.get(Urls.get_acc_user_config);
+        localStorage.setItem("utc", base64);
+        // Decode the base64 back to JSON string
+        const _userConfig = atob(base64);
+        const userConfig: AccUserConfig = customJsonParse(_userConfig);
+  
+        return userConfig;
+      } catch (error) {
+        console.error("Error fetching user config:", error);
+      }
+    };
+  const loadAndSetAccTransVoucher = async (
+    usingManualInvNumber: boolean = false,
+    voucherNumber?: number,
+    voucherPrefix?: string,
+    voucherType?: string,
+    formType?: string,
+    manualInvoiceNumber?: number,
+    accTransactionMasterID?: number
+  ) => {
+    let _formState = await loadAccTransVoucher(usingManualInvNumber, voucherNumber,
+      voucherPrefix,voucherType,formType,manualInvoiceNumber,accTransactionMasterID
+    );
+    setAccTransVoucher(_formState);
+
+  };
+  const setAccTransVoucher = async (_formState: AccTransactionFormState) => {
+    const Utc = localStorage.getItem("utc");
+      let userConfig: AccUserConfig | undefined;
+      if (Utc) {
+        const _userConfig = atob(Utc);
+        userConfig = customJsonParse(_userConfig);
+      } else {
+        userConfig = await fetchUserConfig();
+      }
+      if (userConfig) {
+        // If userConfig is available in localStorage, use it
+
+        _formState.row.costCentreID =
+          (userConfig?.presetCostenterId ?? 0 > 0
+            ? userConfig?.presetCostenterId
+            : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+            ? 0
+            : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
+        _formState.userConfig = userConfig;
+      }
+      setPrevState &&
+        setPrevState({
+          transaction: { ..._formState.transaction },
+          row: { ..._formState.row },
+        });
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            ..._formState,
+          },
+        })
+      );
+  };
   const loadAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
     voucherNumber?: number,
@@ -186,13 +252,28 @@ export const useAccTransaction = (
     manualInvoiceNumber?: number,
     accTransactionMasterID?: number
   ) => {
-    const tmpVoucherNumber =
-      voucherNumber != undefined
-        ? voucherNumber
-        : Number(formState.transaction.master.voucherNumber);
-    if (tmpVoucherNumber <= 0) {
-      return false;
+    let voucher: AccTransactionFormState = {
+      ...accTransactionFormStateInitialData
+}
+    if (voucherNumber == undefined || voucherNumber <= 0) {
+      return voucher;
     }
+    const params: Record<any, any> = {
+      VoucherNumber: String(voucherNumber ?? ""), // Ensuring it's always a string
+      voucherPrefix:
+        voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
+      voucherType:
+        voucherType ?? (formState.transaction?.master?.voucherType || ""),
+      formType: formType ?? (formState.transaction?.master?.formType || ""),
+      MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
+      SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
+    };
+    const vch = await api.getAsync(
+      `${Urls.acc_transaction_base}${transactionType}`,
+      new URLSearchParams(params).toString()
+    );
+    
+
     debugger;
     // clearControlForNew();
     await undoEditMode(
@@ -200,65 +281,163 @@ export const useAccTransaction = (
       accTransactionMasterID ??
         formState.transaction.master.accTransactionMasterID
     );
-    dispatch(
-      accFormStateTransactionMasterHandleFieldChange({
-        fields: {
-          remarks: "",
-          commonNarration: "",
-          employeeID:
-            userSession.dbIdValue == "543140180640" &&
-            userSession.employeeId > 0
-              ? userSession.employeeId
-              : formState.transaction.master.employeeID,
-        },
-      })
-    );
-    dispatch(accFormStateClearDetails());
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          masterAccountID: 0,
-        },
-      })
-    );
-    dispatch(
-      accFormStateRowHandleFieldChange({
-        fields: {
-          narration: "",
-          amount: 0,
-          discount: 0,
-        },
-      })
-    );
-    dispatch(
-      updateFormElement({
-        fields: {
-          btnAdd: { text: "Add" },
-          amount: { disabled: false },
-        },
-      })
-    );
+    
+    voucher.formElements.btnAdd = {
+      ...voucher.formElements.btnAdd,
+      text: "Add",
+    };
+    voucher.formElements.amount = {
+      ...voucher.formElements.amount,
+      disabled: false,
+    };
 
-    try {
-      const params = {
-        VoucherNumber: tmpVoucherNumber,
-        voucherPrefix:
-          voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
-        voucherType:
-          voucherType ?? (formState.transaction?.master?.voucherType || ""),
-        formType: formType ?? (formState.transaction?.master?.formType || ""),
-        MannualInvoiceNumber:
-          manualInvoiceNumber ??
-          (formState.transaction?.master?.referenceNumber || ""),
-        SearchUsingMannualInvNo: usingManualInvNumber?.toString() || "",
-      };
-      await appDispatch(
-        loadAccVoucher({ params: params, transactionType: transactionType })
+  
+      voucher.row = { ...AccTransactionRowInitialData };
+      // Handle master data
+      voucher.transaction = vch;
+
+      voucher.transaction.master.employeeID =
+      userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
+        ? userSession.employeeId
+        : formState.transaction.master.employeeID;
+
+      if (voucher.transaction.master.isLocked === true) {
+        voucher.formElements.lnkUnlockVoucher.visible = true;
+      }
+
+      let BillwiseaccTransactionDetailID = 0;
+      voucher.transaction.details = voucher.transaction.details.map(
+        (detail, index) => {
+          const baseDetail = {
+            ...detail,
+            slNo: index + 1,
+            amountFC: detail.amount,
+            bankDate: detail.bankDate
+              ? new Date(detail.bankDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+            chqDate: detail.chqDate
+              ? new Date(detail.chqDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+            checkBouncedDate: detail.checkBouncedDate
+              ? new Date(detail.checkBouncedDate).toISOString()
+              : new Date(2000, 0, 1).toISOString(),
+          };
+
+          // Handle voucher type specific logic
+          switch (voucher.transaction.master.voucherType) {
+            case "CP":
+            case "BP":
+            case "CN":
+            case "CQP":
+            case "SV":
+            case "PBP":
+              return {
+                ...baseDetail,
+                ledgerCode: detail.ledgerCode,
+                ledgerName: detail.ledgerName,
+                ledgerID: detail.ledgerID,
+              };
+
+            case "CR":
+            case "BR":
+            case "DN":
+            case "CQR":
+            case "PV":
+            case "PBR":
+              BillwiseaccTransactionDetailID++;
+              return {
+                ...baseDetail,
+                ledgerCode: detail.relatedLedgerCode,
+                ledgerName: detail.particulars,
+                ledgerID: detail.relatedLedgerID,
+              };
+
+            case "JV":
+              BillwiseaccTransactionDetailID++;
+              if (voucher.transaction.master.drCr === "Dr") {
+                return {
+                  ...baseDetail,
+                  ledgerCode: detail.relatedLedgerCode,
+                  ledgerName: detail.particulars,
+                  ledgerID: detail.relatedLedgerID,
+                };
+              } else {
+                return {
+                  ...baseDetail,
+                  ledgerCode: detail.ledgerCode,
+                  ledgerName: detail.ledgerName,
+                  ledgerID: detail.ledgerID,
+                };
+              }
+
+            case "OB":
+            case "MJV":
+              return {
+                ...baseDetail,
+                ledgerCode: detail.ledgerCode,
+                ledgerName: detail.ledgerName,
+                ledgerID: detail.ledgerID,
+                drCr: Number(detail.debit) > 0 ? "Debit" : "Credit",
+              };
+
+            default:
+              return baseDetail;
+          }
+        }
       );
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    } catch (error) {
-      return null;
-    }
+
+      // Handle attachments
+      voucher.transaction.attachments = voucher.transaction.attachments || [];
+
+      // Calculate total amount
+      if (voucher.transaction.details?.length > 0) {
+        voucher.total = voucher.transaction.details.reduce((total, detail) => {
+          const amount =
+            voucher.transaction.master.voucherType !== VoucherType.MultiJournal
+              ? detail.amount
+              : detail.debit;
+          return total + (amount || 0);
+        }, 0);
+
+        // Set master account ID based on voucher type
+        const firstDetail = voucher.transaction.details[0];
+
+        switch (voucher.transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "CN":
+          case "CQP":
+          case "SV":
+          case "PBP":
+            voucher.masterAccountID = firstDetail.relatedLedgerID;
+            break;
+
+          case "CR":
+          case "BR":
+          case "DN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+            voucher.masterAccountID = firstDetail.ledgerID;
+            break;
+
+          case "JV":
+            voucher.transaction.master.drCr =
+              voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
+            voucher.masterAccountID =
+              voucher.transaction.master.drCr === "Dr"
+                ? firstDetail.ledgerID
+                : firstDetail.relatedLedgerID;
+            break;
+        }
+      }
+
+      voucher.transactionLoading = false;
+      voucher.formElements.pnlMasters.disabled = true;
+      voucher.formElements.btnSave.disabled = true;
+      voucher.transaction.master.totalAmount = calculateTotal(voucher);
+   
+    return voucher;
   };
 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -574,78 +753,78 @@ export const useAccTransaction = (
     if (master.voucherType === "JV" || master.voucherType === "MJV") {
       master.totalDebit = master.totalCredit = totalAmount;
     }
-    dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+    // dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
 
-  const setupBahamdoonPOSReceipts = () => {
-    let master = { ...formState.transaction.master };
-    let row = { ...formState.row };
-    dispatch(
-      accFormStateRowHandleFieldChange({
-        fields: { ledgerCode: "2768", ledgerID: 3107 },
-      })
-    );
+  // const setupBahamdoonPOSReceipts = () => {
+  //   let master = { ...formState.transaction.master };
+  //   let row = { ...formState.row };
+  //   dispatch(
+  //     accFormStateRowHandleFieldChange({
+  //       fields: { ledgerCode: "2768", ledgerID: 3107 },
+  //     })
+  //   );
 
-    master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
+  //   master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
 
-    // Handle master account selection based on voucher type
-    if (master.voucherType === "BR" || master.voucherType === "PBR") {
-      const defaultAccID =
-        applicationSettings.accountsSettings?.defaultCreditCardAcc > 0
-          ? applicationSettings.accountsSettings?.defaultCreditCardAcc
-          : applicationSettings.accountsSettings?.defaultBankAcc;
+  //   // Handle master account selection based on voucher type
+  //   if (master.voucherType === "BR" || master.voucherType === "PBR") {
+  //     const defaultAccID =
+  //       applicationSettings.accountsSettings?.defaultCreditCardAcc > 0
+  //         ? applicationSettings.accountsSettings?.defaultCreditCardAcc
+  //         : applicationSettings.accountsSettings?.defaultBankAcc;
 
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            masterAccountID: defaultAccID,
-            isBahamdoonPOSReceipt: true,
-          },
-        })
-      );
-    } else if (master.voucherType === "CR" || master.voucherType === "CP") {
-      const cashLedgerID =
-        userSession.counterwiseCashLedgerId > 0 &&
-        applicationSettings.accountsSettings?.allowSalesCounter
-          ? userSession.counterwiseCashLedgerId
-          : applicationSettings.accountsSettings?.defaultCashAcc;
+  //     dispatch(
+  //       accFormStateHandleFieldChange({
+  //         fields: {
+  //           masterAccountID: defaultAccID,
+  //           isBahamdoonPOSReceipt: true,
+  //         },
+  //       })
+  //     );
+  //   } else if (master.voucherType === "CR" || master.voucherType === "CP") {
+  //     const cashLedgerID =
+  //       userSession.counterwiseCashLedgerId > 0 &&
+  //       applicationSettings.accountsSettings?.allowSalesCounter
+  //         ? userSession.counterwiseCashLedgerId
+  //         : applicationSettings.accountsSettings?.defaultCashAcc;
 
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            masterAccountID: cashLedgerID,
-            isBahamdoonPOSReceipt: true,
-          },
-        })
-      );
-    }
-    dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+  //     dispatch(
+  //       accFormStateHandleFieldChange({
+  //         fields: {
+  //           masterAccountID: cashLedgerID,
+  //           isBahamdoonPOSReceipt: true,
+  //         },
+  //       })
+  //     );
+  //   }
+  //   dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
 
-    dispatch(
-      updateFormElement({
-        fields: {
-          voucherPrefix: { disabled: true },
-          voucherNumber: { disabled: true },
-          btnDown: { disabled: true },
-          transactionDate: { disabled: true },
-          ledgerCode: { disabled: true },
-          remarks: { disabled: true },
-          commonNarration: { disabled: true },
-          ledgerID: { disabled: true },
-          btnBillWise: { disabled: true },
-          referenceDate: { disabled: true },
-          masterAccount: { disabled: true },
-          employee: { disabled: true },
-          projectId: { disabled: true },
-          discount: { disabled: true },
-          chequeNumber: { disabled: true },
-          bankDate: { disabled: true },
-          btnEdit: { visible: false },
-        },
-      })
-    );
-  };
+  //   dispatch(
+  //     updateFormElement({
+  //       fields: {
+  //         voucherPrefix: { disabled: true },
+  //         voucherNumber: { disabled: true },
+  //         btnDown: { disabled: true },
+  //         transactionDate: { disabled: true },
+  //         ledgerCode: { disabled: true },
+  //         remarks: { disabled: true },
+  //         commonNarration: { disabled: true },
+  //         ledgerID: { disabled: true },
+  //         btnBillWise: { disabled: true },
+  //         referenceDate: { disabled: true },
+  //         masterAccount: { disabled: true },
+  //         employee: { disabled: true },
+  //         projectId: { disabled: true },
+  //         discount: { disabled: true },
+  //         chequeNumber: { disabled: true },
+  //         bankDate: { disabled: true },
+  //         btnEdit: { visible: false },
+  //       },
+  //     })
+  //   );
+  // };
   const save = async () => {
     debugger;
     dispatch(
@@ -855,7 +1034,7 @@ export const useAccTransaction = (
             return false;
           },
         });
-            return false;
+        return false;
       }
       const fdd = isNullOrUndefinedOrZero(formState.row.amount);
       const fdsdd = isNullOrUndefinedOrZero(
@@ -1115,7 +1294,7 @@ export const useAccTransaction = (
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
-      debugger
+      debugger;
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);
@@ -1246,7 +1425,8 @@ export const useAccTransaction = (
         }
       } else if (
         applicationSettings.accountsSettings?.maintainCostCenter &&
-        formState.formElements.costCentreID.visible == true && (formState.userConfig?.presetCostenterId??0) <= 0
+        formState.formElements.costCentreID.visible == true &&
+        (formState.userConfig?.presetCostenterId ?? 0) <= 0
       ) {
         focusCostCenterRef();
       } else {
@@ -1423,16 +1603,15 @@ export const useAccTransaction = (
             } else if (res?.isOk == true) {
               ERPAlert.show({
                 icon: "success",
-                title:"Deleted",
+                title: "Deleted",
                 text: res.message,
-            });
-            clearControls(
-              formState.isEdit,
-              formState.transaction.master.accTransactionMasterID
-            );
+              });
+              clearControls(
+                formState.isEdit,
+                formState.transaction.master.accTransactionMasterID
+              );
+            }
           }
-          
-        }
         } catch (error) {
           console.error("Error deleting voucher:", error);
         }
@@ -1643,10 +1822,12 @@ export const useAccTransaction = (
   return {
     undoEditMode,
     getNextVoucherNumber,
+    loadAndSetAccTransVoucher,
     loadAccTransVoucher,
+    setAccTransVoucher,
     deleteAccTransVoucher,
     validate,
-    setupBahamdoonPOSReceipts,
+    // setupBahamdoonPOSReceipts,
     save,
     clearControls,
     addOrEditRow,

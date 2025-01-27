@@ -1,5 +1,6 @@
 import { FC, lazy, Suspense, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import {  BrowserRouter as Router, Routes, Route  } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ApplicationSettings from "../../../pages/settings/system/application-settings";
 import ApplicationSettingsNew from "../../../pages/settings/system/application-settings-new";
 import ApplicationSettingsVirtual from "../../../pages/settings/system/app-new/application-settings-virtual";

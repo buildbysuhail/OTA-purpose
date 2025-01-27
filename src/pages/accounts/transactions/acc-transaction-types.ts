@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { inputBox } from "../../../redux/slices/app/types";
 
 // AccTransaction interface
@@ -11,7 +12,8 @@ export interface AccTransactionProps {
   drCr?: string;
   voucherNo?: number;
   transactionMasterID?: number,
-  financialYearID?: number
+  financialYearID?: number,
+  setPrevState?: Dispatch<SetStateAction<any>>;
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;
@@ -246,8 +248,6 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
   };
 // AccDetailInput interface
 export interface AccTransactionRowForOutPut extends AccTransactionRow {
-  relatedLedgerCode: string;
-  particulars: string;
 
 }
 export interface AccTransactionRow {
@@ -261,6 +261,8 @@ export interface AccTransactionRow {
   ledger: string;
   drCr: string;
   relatedLedgerID: number;
+  relatedLedgerCode: string;
+  particulars: string;
   amount?: number;
   amountFC?: number;
   hasDiscount?: boolean;
@@ -341,7 +343,9 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   billwiseDetails: "",
   chqDate: "",
   accGroupName: "",
-  exchangeRate: 0
+  exchangeRate: 0,
+  relatedLedgerCode: "",
+  particulars: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {

@@ -7,7 +7,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams, useSearchParams } from "react-router-dom";
-import { AccTransactionProps, AccUserConfig } from "./acc-transaction-types";
+import { AccTransactionData, AccTransactionProps, AccTransactionRow, AccUserConfig } from "./acc-transaction-types";
 import {
   useAppDispatch,
   useAppSelector,
@@ -42,6 +42,8 @@ import AccTransactionForm from "./acc-transaction";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
+import { useComplexFormStateComparison } from "./use-complex-form-state-comparison";
+import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -53,77 +55,28 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   transactionType,
 }) => {
   const { t } = useTranslation();
+  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const {setPrevState} = useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
   const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =
     useState<boolean>(false);
-  const [store, setStore] = useState<{ data: any; totalCount: number }>();
+    const [store, setStore] = useState<{ data: any; totalCount: number }>();
   const [data, setData] = useState<{
     voucherPrefix: string;
     formType: string;
     voucherNo: number;
   }>({ voucherPrefix: "", formType: formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
-  const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const dispatch = useDispatch();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
 
-  const fetchUserConfig = async () => {
-    try {
-      const base64 = await api.get(Urls.get_acc_user_config);
-      localStorage.setItem('utc', base64);
-      // Decode the base64 back to JSON string
-      const _userConfig = atob(base64);
-      const userConfig: AccUserConfig = customJsonParse(_userConfig);
   
-      dispatch(
-        accFormStateRowHandleFieldChange({
-          fields: {
-            costCentreID:
-              userConfig?.presetCostenterId ?? 0 > 0
-                ? userConfig?.presetCostenterId
-                : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-                ? 0
-                : applicationSettings?.accountsSettings?.defaultCostCenterID,
-          },
-        })
-      );
-      dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
-    } catch (error) {
-      console.error("Error fetching user config:", error);
-    }
-  };
   
   const initializeVoucher = async () => {
-    try {
-      debugger;
-      const Utc = localStorage.getItem("utc");
-  
-      if (Utc) {
-        // If userConfig is available in localStorage, use it
-        const _userConfig = atob(Utc);
-        const userConfig: AccUserConfig = customJsonParse(_userConfig);
-  
-        dispatch(
-          accFormStateRowHandleFieldChange({
-            fields: {
-              costCentreID:
-                userConfig?.presetCostenterId ?? 0 > 0
-                  ? userConfig?.presetCostenterId
-                  : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-                  ? 0
-                  : applicationSettings?.accountsSettings?.defaultCostCenterID,
-            },
-          })
-        );
-        dispatch(accFormStateHandleFieldChange({ fields: { userConfig } }));
-      } else {
-        // If userConfig is not available in localStorage, fetch it from the API
-        await fetchUserConfig();
-      }
-  
+    try {  
       setReadyToShowVoucher(true);
     } catch (error) {
       console.error("Error initializing voucher:", error);
@@ -214,6 +167,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             title={title}
             drCr={drCr}
             transactionType={transactionType}
+            setPrevState={setPrevState}
           />
         )
       )}

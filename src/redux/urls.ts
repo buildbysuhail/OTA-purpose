@@ -388,6 +388,7 @@ const Urls = {
   get_and_set_transaction_edit_mode:
     "/Core/TransactionBase/GetAndSetTransactionEditMode/",
   get_ledgerId_by_code: "/Core/TransactionBase/GetLedgerIdByCode/",
+  get_ledgerCode_by_id: "/Core/TransactionBase/GetLedgerCodeById/",
   upsert_bill_modified_history:
     "/Core/TransactionBase/UpsertBillModifiedHistory/",
   unlock_acc_transaction_master:

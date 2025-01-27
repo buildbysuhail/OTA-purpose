@@ -438,19 +438,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         userSession.dbIdValue == "543140180640";
 
       // Prepare the fields to update based on conditions
-      const fieldsToUpdate = {
-        btnSave: { disabled: true },
-        btnEdit: { disabled: true },
-        btnPrint: { disabled: true },
-        foreignCurrency: { visible: isForeignCurrencyVisible },
-        lblGroupName: { label: "" }, // Dynamically set the label as needed
-        masterAccount: { disabled: true },
-        discount: { visible: false },
-        hasDiscount: { visible: false },
-        projectId: { visible: isProjectIdVisible },
-      };
-      dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      // Dispatch the update action
+     
+      // dispatch(updateFormElement({ fields: fieldsToUpdate }));
+      // // Dispatch the update action
 
       let _formState: AccTransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
@@ -553,21 +543,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       );
       _formState.row.ledgerCode = ledgerData.ledgerCode;
       debugger;
-      setAccTransVoucher(_formState)
-      debugger;
-
-      
-    };
-    initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    }
-  }, [voucherType, voucherPrefix]);
-  
-  useEffect(() => {
-    if (!voucherType) return;
-    const updateFormElementsBasedOnVoucherType = () => {
-      let fieldsToUpdate = initialFormElements;
+      let fieldsToUpdate = { 
+        ...initialFormElements,
+        btnSave: {...initialFormElements.btnSave, disabled: true },
+        btnEdit: {...initialFormElements.btnEdit, disabled: true },
+        btnPrint: {...initialFormElements.btnPrint, disabled: true },
+        foreignCurrency: {...initialFormElements.foreignCurrency, visible: isForeignCurrencyVisible },
+        lblGroupName: {...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
+        masterAccount: {...initialFormElements.masterAccount, disabled: true },
+        discount: {...initialFormElements.discount, visible: false },
+        hasDiscount: {...initialFormElements.hasDiscount, visible: false },
+        projectId: {...initialFormElements.projectId, visible: isProjectIdVisible },
+      } as any;
       switch (voucherType) {
         case "CR":
         case "CP": {
@@ -825,13 +812,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
       }
+      _formState.formElements = fieldsToUpdate;
+      setAccTransVoucher(_formState)
+      debugger;
 
-      // Dispatch the update action with all the required fields
-      dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      focusLedgerCode();
+      
     };
-    updateFormElementsBasedOnVoucherType();
-  }, [voucherType]);
+    initializeFormElements();
+    if (voucherNo != undefined && voucherNo > 0) {
+      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
+    }
+  }, [voucherType, voucherPrefix]);
+  
+  // useEffect(() => {
+  //   if (!voucherType) return;
+  //   const updateFormElementsBasedOnVoucherType = () => {
+      
+
+  //     // Dispatch the update action with all the required fields
+  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
+  //     focusLedgerCode();
+  //   };
+  //   updateFormElementsBasedOnVoucherType();
+  // }, [voucherType]);
   // const fetchVoucherNumber = useCallback(async () => {
   //   const nextVoucherNumber = await getNextVoucherNumber(
   //     formType ?? "",

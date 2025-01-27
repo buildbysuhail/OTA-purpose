@@ -516,7 +516,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   masterAccount: { visible: true, disabled: false, label: "default_account" },
   jvDrCr: { visible: false, disabled: false, label: "dr/cr" },
   employee: { visible: true, disabled: false, label: "employee" },
-  remarks: { visible: true, disabled: false, label: "employee" },
+  remarks: { visible: true, disabled: false, label: "remarks" },
   commonNarration: { visible: true, disabled: false, label: "notes" },
   ledgerCode: { visible: true, disabled: false, label: "ledger_code" },
   ledgerID: { visible: true, disabled: false, label: "ledger" },

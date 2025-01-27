@@ -480,6 +480,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         const event = {
                           isCustomNumberChangerEvent: true,
                           target: { value: newValue.toString() },
+                          mode:"up"
                         } as any;
                         handleChange(event);
                       }
@@ -506,6 +507,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         const event = {
                           isCustomNumberChangerEvent: true,
                           target: { value: newValue.toString() },
+                          mode:"down"
                         } as any;
                         handleChange(event);
                       }

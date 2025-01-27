@@ -13,7 +13,6 @@ import {
   accTransactionInitialData,
   AccTransactionProps,
   AccTransactionRowInitialData,
-  AccUserConfig,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -45,8 +44,6 @@ import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import AttachmentSidebar from "../../transaction-base/Attachment-button";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
-import DownloadPreview from "../../LabelDesigner/download-preview";
-import { DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./acc-templates";
@@ -54,14 +51,12 @@ import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import {
-  Delete,
   Ellipsis,
   EllipsisVertical,
   KeyRound,
   Pencil,
   Printer,
   RefreshCw,
-  Replace,
   Trash2,
   ChevronUp,
   BadgePlusIcon,
@@ -69,18 +64,11 @@ import {
   X,
   FileUp,
   History,
-  Menu,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
-import HistorySidebar from "./historySidebar";
-import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn-premium";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
-import { customJsonParse } from "../../../utilities/jsonConverter";
-import AccountTransactionsVoucher from "../../InvoiceDesigner/DownloadPreview/account_transactiocn_standard";
-import AccountTransactionsUniversal from "../../InvoiceDesigner/DownloadPreview/account_transaction-universal";
-import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
 interface BilledItem {
@@ -115,7 +103,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionType,
   transactionMasterID,
   financialYearID,
-  setPrevState,
 }) => {
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
@@ -213,7 +200,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     voucherNumberRef,
     chequeNumberRef,
     remarksRef,
-    setPrevState
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -438,19 +424,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         userSession.dbIdValue == "543140180640";
 
       // Prepare the fields to update based on conditions
-      const fieldsToUpdate = {
-        btnSave: { disabled: true },
-        btnEdit: { disabled: true },
-        btnPrint: { disabled: true },
-        foreignCurrency: { visible: isForeignCurrencyVisible },
-        lblGroupName: { label: "" }, // Dynamically set the label as needed
-        masterAccount: { disabled: true },
-        discount: { visible: false },
-        hasDiscount: { visible: false },
-        projectId: { visible: isProjectIdVisible },
-      };
-      dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      // Dispatch the update action
+     
+      // dispatch(updateFormElement({ fields: fieldsToUpdate }));
+      // // Dispatch the update action
 
       let _formState: AccTransactionFormState;
       const isInvoker = voucherNo && voucherNo > 0;
@@ -553,21 +529,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       );
       _formState.row.ledgerCode = ledgerData.ledgerCode;
       debugger;
-      setAccTransVoucher(_formState)
-      debugger;
-
-      
-    };
-    initializeFormElements();
-    if (voucherNo != undefined && voucherNo > 0) {
-      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
-    }
-  }, [voucherType, voucherPrefix]);
-  
-  useEffect(() => {
-    if (!voucherType) return;
-    const updateFormElementsBasedOnVoucherType = () => {
-      let fieldsToUpdate = initialFormElements;
+      let fieldsToUpdate = { 
+        ...initialFormElements,
+        btnSave: {...initialFormElements.btnSave, disabled: true },
+        btnEdit: {...initialFormElements.btnEdit, disabled: true },
+        btnPrint: {...initialFormElements.btnPrint, disabled: true },
+        foreignCurrency: {...initialFormElements.foreignCurrency, visible: isForeignCurrencyVisible },
+        lblGroupName: {...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
+        masterAccount: {...initialFormElements.masterAccount, disabled: true },
+        discount: {...initialFormElements.discount, visible: false },
+        hasDiscount: {...initialFormElements.hasDiscount, visible: false },
+        projectId: {...initialFormElements.projectId, visible: isProjectIdVisible },
+      } as any;
       switch (voucherType) {
         case "CR":
         case "CP": {
@@ -825,13 +798,32 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
       }
+      _formState.formElements = fieldsToUpdate;
+      setAccTransVoucher(_formState, true)
+      debugger;
 
-      // Dispatch the update action with all the required fields
-      dispatch(updateFormElement({ fields: fieldsToUpdate }));
-      focusLedgerCode();
+      
     };
-    updateFormElementsBasedOnVoucherType();
-  }, [voucherType]);
+
+   
+
+    initializeFormElements();
+    if (voucherNo != undefined && voucherNo > 0) {
+      dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
+    }
+  }, [voucherType, voucherPrefix]);
+  
+  // useEffect(() => {
+  //   if (!voucherType) return;
+  //   const updateFormElementsBasedOnVoucherType = () => {
+      
+
+  //     // Dispatch the update action with all the required fields
+  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
+  //     focusLedgerCode();
+  //   };
+  //   updateFormElementsBasedOnVoucherType();
+  // }, [voucherType]);
   // const fetchVoucherNumber = useCallback(async () => {
   //   const nextVoucherNumber = await getNextVoucherNumber(
   //     formType ?? "",
@@ -1588,14 +1580,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         type="number"
                         showCustomNumberChanger={true}
                         className="max-w-[200px]"
-                        onChange={(e: any) => {
+                        onChange={async (e: any) => {
+                          
+                          if (e.isCustomNumberChangerEvent == true) {
+                            const ret = await loadAndSetAccTransVoucher(false, e.target?.value);
+                            // if(ret) {
+                            //   dispatch(
+                            //     accFormStateTransactionMasterHandleFieldChange({
+                            //       fields: { voucherNumber: e.target?.value },
+                            //     })
+                            //   );
+                            // }
+                          }
+                          else {
+                            
                           dispatch(
                             accFormStateTransactionMasterHandleFieldChange({
                               fields: { voucherNumber: e.target?.value },
                             })
                           );
-                          if (e.isCustomNumberChangerEvent == true) {
-                            loadAndSetAccTransVoucher(false, e.target?.value);
                           }
                         }}
                         disabled={

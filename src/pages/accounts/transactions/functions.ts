@@ -7,6 +7,8 @@ import { UserModel } from "../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import { AccTransactionFormState } from "./acc-transaction-types";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { isEqual } from "lodash";
+import { modelToBase64, modelToBase64Unicode } from "../../../utilities/jsonConverter";
 
 export const calculateTotal = (state: AccTransactionFormState): number => {
   return state.transaction.master.voucherType !== "MJV"
@@ -22,7 +24,6 @@ export const calculateTotal = (state: AccTransactionFormState): number => {
 export const clearEntryControl = (
   state: AccTransactionFormState,
   defaultCostCenterID: number
-
 ): AccTransactionFormState => {
   state.row.ledgerCode = "";
   state.row.accGroupName = "";
@@ -39,10 +40,12 @@ export const clearEntryControl = (
       : "";
   state.row.chequeNumber = "";
   state.isRowEdit = false;
-  state.formElements.costCentreID.disabled = (state.userConfig?.presetCostenterId ?? 0) > 0;
-  state.row.costCentreID = (state.userConfig?.presetCostenterId ?? 0) > 0
-  ? state.userConfig?.presetCostenterId ?? 0
-  : defaultCostCenterID;
+  state.formElements.costCentreID.disabled =
+    (state.userConfig?.presetCostenterId ?? 0) > 0;
+  state.row.costCentreID =
+    (state.userConfig?.presetCostenterId ?? 0) > 0
+      ? state.userConfig?.presetCostenterId ?? 0
+      : defaultCostCenterID;
 
   state.transaction.master.totalAmount = calculateTotal(state);
   state.formElements.btnAdd.label = "Add";
@@ -69,7 +72,10 @@ export const validateTransactionDate = (
     return { valid: false, message: "Invalid Financial year." };
   }
 
-  if ((moment(transDate).local() < moment(userSession.finFrom).local()) || (moment(transDate).local() > moment(userSession.finTo).local())) {
+  if (
+    moment(transDate).local() < moment(userSession.finFrom).local() ||
+    moment(transDate).local() > moment(userSession.finTo).local()
+  ) {
     return {
       valid: false,
       message: "Transaction date is outside the financial period.",
@@ -78,17 +84,27 @@ export const validateTransactionDate = (
 
   // Skip post-dated and pre-dated checks if specified
   if (!skipPostDatedAndPredated) {
-    const softwareDate = moment(clientSession.softwareDate,"DD/MM/YYYY").local();
-// Post-dated transaction validation
+    const softwareDate = moment(
+      clientSession.softwareDate,
+      "DD/MM/YYYY"
+    ).local();
+    // Post-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPostdatedTrans &&
-      moment(transDate).local().format('YYYY-MM-DD') !== moment(softwareDate,"DD/MM/YYYY", ).local().format('YYYY-MM-DD')
+      moment(transDate).local().format("YYYY-MM-DD") !==
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
     ) {
-      if (hasBlockedRight == undefined || (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)) {
-        const maxPostDate = moment().local().add(
-          applicationSettings.mainSettings?.postDatedTransInNumbers,
-          "days"
-        ).toDate();
+      if (
+        hasBlockedRight == undefined ||
+        (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
+      ) {
+        const maxPostDate = moment()
+          .local()
+          .add(
+            applicationSettings.mainSettings?.postDatedTransInNumbers,
+            "days"
+          )
+          .toDate();
 
         if (transDate > maxPostDate) {
           return {
@@ -107,13 +123,20 @@ export const validateTransactionDate = (
     // Pre-dated transaction validation
     if (
       applicationSettings.mainSettings?.allowPredatedTrans &&
-      moment(transDate).local().format('YYYY-MM-DD') !== moment(softwareDate,"DD/MM/YYYY").local().format('YYYY-MM-DD')
+      moment(transDate).local().format("YYYY-MM-DD") !==
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
     ) {
-      if (hasBlockedRight == undefined || (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)) {
-        const minPreDate = moment().local().subtract(
-          applicationSettings.mainSettings?.preDatedTransInNumbers,
-          "days"
-        ).toDate();
+      if (
+        hasBlockedRight == undefined ||
+        (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
+      ) {
+        const minPreDate = moment()
+          .local()
+          .subtract(
+            applicationSettings.mainSettings?.preDatedTransInNumbers,
+            "days"
+          )
+          .toDate();
 
         if (transDate < minPreDate) {
           return {
@@ -131,4 +154,17 @@ export const validateTransactionDate = (
   }
 
   return { valid: isValid, message };
+};
+export const isDirtyAccTransaction = (
+  prevState: any,
+  currentState: any
+): boolean => {
+  // // const _prevState = customJsonParse(atob(prevState))
+  // const keys = Object.keys(_prevState ?? {}).length;
+  const _current = modelToBase64Unicode({
+        transaction: { ...currentState.transaction },
+        row: { ...currentState.row },
+      });
+  const _isEqual = prevState === _current;
+  return _isEqual === false && prevState !== undefined && prevState !== "";
 };

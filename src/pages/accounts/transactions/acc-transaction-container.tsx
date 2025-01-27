@@ -1,48 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { useParams, useSearchParams } from "react-router-dom";
-import { AccTransactionData, AccTransactionProps, AccTransactionRow, AccUserConfig } from "./acc-transaction-types";
+import { useSearchParams } from "react-router-dom";
+import { AccTransactionProps } from "./acc-transaction-types";
 import {
-  useAppDispatch,
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
-import {
-  accFormStateHandleFieldChange,
-  accFormStateRowHandleFieldChange,
-  accFormStateTransactionDetailsRowAdd,
-  accFormStateTransactionMasterHandleFieldChange,
-} from "./reducer";
-import { useDispatch, useSelector } from "react-redux";
-import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { useDispatch } from "react-redux";
 import { APIClient } from "../../../helpers/api-client";
-import {
-  ApplicationMainSettings,
-  ApplicationMainSettingsInitialState,
-} from "../../settings/system/application-settings-types/application-settings-types-main";
-import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useAccTransaction } from "./use-acc-transaction";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import { useTransaction } from "../../use-transaction";
-import { AccTransactionUserConfig } from "./acc-transaction-user-config";
-import BillWisePopup from "./billwise-popup";
-import CustomerDetailsSidebar from "../../transaction-base/customer-details";
-import AttachmentSidebar from "../../transaction-base/Attachment-button";
-import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 import { isChooseVoucherEnabled } from "../../../components/common/content/transaction-routes";
 import AccTransactionForm from "./acc-transaction";
-import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
 import VoucherSelector from "../../transaction-base/voucher-selector";
-import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
-import { useComplexFormStateComparison } from "./use-complex-form-state-comparison";
 import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
 
 const api = new APIClient();
@@ -54,8 +24,10 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   drCr,
   transactionType,
 }) => {
-  const { t } = useTranslation("transaction");
+  const { t } = useTranslation("transaction"); 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
+ 
   const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =

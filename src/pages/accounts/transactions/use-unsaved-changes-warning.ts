@@ -41,8 +41,8 @@ export const useUnsavedChangesWarning = (currentState: any) => {
   }, []);
   // Handle in-app navigation using React Router
   useEffect(() => {
-    const _prevState: { transaction: AccTransactionData; row: AccTransactionRow } = customJsonParse(atob(formState.prev))
-const _s_isDirty =isDirtyAccTransaction(_prevState, currentState);
+    debugger;
+const _s_isDirty =isDirtyAccTransaction(formState.prev, currentState);
     // usePrompt({when: isDirty, message: 'You have unsaved changes. Are you sure you want to leave?'});
     if(_s_isDirty) {
       alert("SAveChanges")

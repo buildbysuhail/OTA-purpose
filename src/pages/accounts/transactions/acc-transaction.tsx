@@ -13,7 +13,6 @@ import {
   accTransactionInitialData,
   AccTransactionProps,
   AccTransactionRowInitialData,
-  AccUserConfig,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -45,8 +44,6 @@ import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import AttachmentSidebar from "../../transaction-base/Attachment-button";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
-import DownloadPreview from "../../LabelDesigner/download-preview";
-import { DummyVoucherData } from "../../InvoiceDesigner/constants/DummyData";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import TemplatesView from "./acc-templates";
@@ -54,14 +51,12 @@ import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import {
-  Delete,
   Ellipsis,
   EllipsisVertical,
   KeyRound,
   Pencil,
   Printer,
   RefreshCw,
-  Replace,
   Trash2,
   ChevronUp,
   BadgePlusIcon,
@@ -69,18 +64,11 @@ import {
   X,
   FileUp,
   History,
-  Menu,
 } from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
 import AccExcelImport from "./acc-Excel-Import";
-import HistorySidebar from "./historySidebar";
-import AccountTransactionsTemplate from "../../InvoiceDesigner/DownloadPreview/account_transactiocn-premium";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
-import { customJsonParse } from "../../../utilities/jsonConverter";
-import AccountTransactionsVoucher from "../../InvoiceDesigner/DownloadPreview/account_transactiocn_standard";
-import AccountTransactionsUniversal from "../../InvoiceDesigner/DownloadPreview/account_transaction-universal";
-import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
 interface BilledItem {

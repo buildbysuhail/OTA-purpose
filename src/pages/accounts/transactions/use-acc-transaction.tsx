@@ -1,7 +1,17 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 // import { handleResponse } from '../HandleResponse';
-import { customJsonParse } from "../../../utilities/jsonConverter";
+import {
+  customJsonParse,
+  modelToBase64Unicode,
+} from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import {
@@ -39,7 +49,9 @@ import {
   AccTransactionData,
   AccTransactionFormState,
   accTransactionFormStateInitialData,
+  accTransactionInitialData,
   AccTransactionMaster,
+  AccTransactionMasterInitialData,
   AccTransactionRow,
   AccTransactionRowInitialData,
   AccUserConfig,
@@ -52,7 +64,11 @@ import {
 } from "../../../utilities/Utils";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
-import { calculateTotal, validateTransactionDate } from "./functions";
+import {
+  calculateTotal,
+  isDirtyAccTransaction,
+  validateTransactionDate,
+} from "./functions";
 import { printCheque_AccTransaction } from "./acc-print-trans-service";
 import { useAccPrint } from "./use-print";
 import moment from "moment";
@@ -85,9 +101,7 @@ export const useAccTransaction = (
   narrationRef?: any,
   voucherNumberRef?: any,
   chequeNumberRef?: any,
-  remarksRef?: any,  
-  setPrevState?: Dispatch<SetStateAction<any>>
-  
+  remarksRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -183,18 +197,18 @@ export const useAccTransaction = (
 
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
-      try {
-        const base64 = await api.get(Urls.get_acc_user_config);
-        localStorage.setItem("utc", base64);
-        // Decode the base64 back to JSON string
-        const _userConfig = atob(base64);
-        const userConfig: AccUserConfig = customJsonParse(_userConfig);
-  
-        return userConfig;
-      } catch (error) {
-        console.error("Error fetching user config:", error);
-      }
-    };
+    try {
+      const base64 = await api.get(Urls.get_acc_user_config);
+      localStorage.setItem("utc", base64);
+      // Decode the base64 back to JSON string
+      const _userConfig = atob(base64);
+      const userConfig: AccUserConfig = customJsonParse(_userConfig);
+
+      return userConfig;
+    } catch (error) {
+      console.error("Error fetching user config:", error);
+    }
+  };
   const loadAndSetAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
     voucherNumber?: number,
@@ -202,46 +216,115 @@ export const useAccTransaction = (
     voucherType?: string,
     formType?: string,
     manualInvoiceNumber?: number,
-    accTransactionMasterID?: number
+    accTransactionMasterID?: number,
+    mode?: "increment" | "decrement" | undefined
   ) => {
-    let _formState = await loadAccTransVoucher(usingManualInvNumber, voucherNumber,
-      voucherPrefix,voucherType,formType,manualInvoiceNumber,accTransactionMasterID
+    debugger;
+    const _s_isDirty = isDirtyAccTransaction(formState.prev, {
+      transaction: { ...formState.transaction },
+      row: { ...formState.row },
+    });
+    if (_s_isDirty) {
+      if (mode == "increment" || mode == "decrement") {
+        const _voucherNumber =
+          mode == "increment"
+            ? parseFloat(
+                formState.transaction.master.voucherNumber.toString()
+              ) - 1
+            : parseFloat(
+                formState.transaction.master.voucherNumber.toString()
+              ) + 1;
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              voucherNumber: _voucherNumber,
+            },
+          })
+        );
+      }
+      return false;
+    }
+    let _formState = await loadAccTransVoucher(
+      usingManualInvNumber,
+      voucherNumber,
+      voucherPrefix,
+      voucherType,
+      formType,
+      manualInvoiceNumber,
+      accTransactionMasterID
     );
+
+    debugger;
+
+    _formState.formElements = {
+      ..._formState.formElements,
+      btnAdd: {
+        ..._formState.formElements.btnAdd,
+        label: "Add",
+      },
+      amount: {
+        ..._formState.formElements.amount,
+        disabled: _formState.transaction.master.isLocked === true,
+      },
+      lnkUnlockVoucher: {
+        ..._formState.formElements.lnkUnlockVoucher,
+        visible:
+          _formState.transaction.master.isLocked === true
+            ? true
+            : _formState.formElements.lnkUnlockVoucher.visible,
+      },
+      pnlMasters: {
+        ..._formState.formElements.pnlMasters,
+        disabled:
+          _formState.transaction.master.isLocked === true
+            ? true
+            : _formState.formElements.pnlMasters.disabled,
+      },
+      btnSave: {
+        ..._formState.formElements.btnSave,
+        disabled:
+          _formState.transaction.master.isLocked === true
+            ? true
+            : _formState.formElements.btnSave.disabled,
+      },
+    };
     setAccTransVoucher(_formState);
-
+    return true;
   };
-  const setAccTransVoucher = async (_formState: AccTransactionFormState) => {
+  const setAccTransVoucher = async (
+    _formState: AccTransactionFormState,
+    loadUserConfig: boolean = false
+  ) => {
     const Utc = localStorage.getItem("utc");
-      let userConfig: AccUserConfig | undefined;
-      if (Utc) {
-        const _userConfig = atob(Utc);
-        userConfig = customJsonParse(_userConfig);
-      } else {
-        userConfig = await fetchUserConfig();
-      }
-      if (userConfig) {
-        // If userConfig is available in localStorage, use it
+    let userConfig: AccUserConfig | undefined;
+    if (Utc) {
+      const _userConfig = atob(Utc);
+      userConfig = customJsonParse(_userConfig);
+    } else {
+      userConfig = await fetchUserConfig();
+    }
+    if (userConfig) {
+      // If userConfig is available in localStorage, use it
 
-        _formState.row.costCentreID =
-          (userConfig?.presetCostenterId ?? 0 > 0
-            ? userConfig?.presetCostenterId
-            : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-            ? 0
-            : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
-        _formState.userConfig = userConfig;
-      }
-      setPrevState &&
-        setPrevState({
-          transaction: { ..._formState.transaction },
-          row: { ..._formState.row },
-        });
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            ..._formState,
-          },
-        })
-      );
+      _formState.row.costCentreID =
+        (userConfig?.presetCostenterId ?? 0 > 0
+          ? userConfig?.presetCostenterId
+          : userSession.dbIdValue == "SAMAPLASTICS12121212121"
+          ? 0
+          : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
+      _formState.userConfig = userConfig;
+    }
+    _formState.prev = modelToBase64Unicode({
+      transaction: { ..._formState.transaction },
+      row: { ..._formState.row },
+    });
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          ..._formState,
+        },
+      })
+    );
   };
   const loadAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
@@ -252,9 +335,11 @@ export const useAccTransaction = (
     manualInvoiceNumber?: number,
     accTransactionMasterID?: number
   ) => {
-    let voucher: AccTransactionFormState = {
-      ...accTransactionFormStateInitialData
-}
+    let voucher: AccTransactionFormState = JSON.parse(
+      JSON.stringify({
+        ...formState,
+      })
+    );
     if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
     }
@@ -268,43 +353,61 @@ export const useAccTransaction = (
       MannualInvoiceNumber: manualInvoiceNumber ?? "", // Convert undefined to an empty string or appropriate string value
       SearchUsingMannualInvNo: usingManualInvNumber, // Convert boolean to string
     };
-    const vch = await api.getAsync(
+    let vch = await api.getAsync(
       `${Urls.acc_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
-    
-
     debugger;
+    if (vch == null || vch?.master == null) {
+      vch = {
+        ...accTransactionInitialData,
+        master: {
+          ...accTransactionInitialData.master,
+          voucherNumber: voucherNumber,
+          voucherType: voucherType ?? formState.transaction.master.voucherType,
+          voucherPrefix:
+            voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          formType: formType ?? formState.transaction.master.formType,
+        },
+      };
+    }
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       accTransactionMasterID ??
         formState.transaction.master.accTransactionMasterID
     );
-    
-    voucher.formElements.btnAdd = {
-      ...voucher.formElements.btnAdd,
-      text: "Add",
+
+    // voucher.formElements.btnAdd = {
+    //   ...voucher.formElements.btnAdd,
+    //   text: "Add",
+    // };
+    // voucher.formElements.amount = {
+    //   ...voucher.formElements.amount,
+    //   disabled: false,
+    // };
+    voucher.transaction = {
+      ...(vch || {}),
+      attachments: [...(vch.transaction?.attachments || [])],
     };
-    voucher.formElements.amount = {
-      ...voucher.formElements.amount,
-      disabled: false,
-    };
-
-  
-      voucher.row = { ...AccTransactionRowInitialData };
-      // Handle master data
-      voucher.transaction = vch;
-
-      voucher.transaction.master.employeeID =
-      userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
-        ? userSession.employeeId
-        : formState.transaction.master.employeeID;
-
-      if (voucher.transaction.master.isLocked === true) {
-        voucher.formElements.lnkUnlockVoucher.visible = true;
-      }
-
+    voucher.row = { ...AccTransactionRowInitialData };
+    // Handle master data
+    debugger;
+    voucher.transaction = vch;
+    if (vch?.master) {
+      const updatedMaster = {
+        ...voucher.transaction.master,
+        employeeID:
+          userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
+            ? userSession.employeeId
+            : formState.transaction.master.employeeID,
+      };
+      voucher.transaction.master = updatedMaster;
+    }
+    // if (voucher.transaction.master.isLocked === true) {
+    //   voucher.formElements.lnkUnlockVoucher.visible = true;
+    // }
+    if (vch?.details) {
       let BillwiseaccTransactionDetailID = 0;
       voucher.transaction.details = voucher.transaction.details.map(
         (detail, index) => {
@@ -385,58 +488,56 @@ export const useAccTransaction = (
           }
         }
       );
+    }
+    // Handle attachments
 
-      // Handle attachments
-      voucher.transaction.attachments = voucher.transaction.attachments || [];
+    // Calculate total amount
+    if (voucher.transaction.details?.length > 0) {
+      voucher.total = voucher.transaction.details.reduce((total, detail) => {
+        const amount =
+          voucher.transaction.master.voucherType !== VoucherType.MultiJournal
+            ? detail.amount
+            : detail.debit;
+        return total + (amount || 0);
+      }, 0);
 
-      // Calculate total amount
-      if (voucher.transaction.details?.length > 0) {
-        voucher.total = voucher.transaction.details.reduce((total, detail) => {
-          const amount =
-            voucher.transaction.master.voucherType !== VoucherType.MultiJournal
-              ? detail.amount
-              : detail.debit;
-          return total + (amount || 0);
-        }, 0);
+      // Set master account ID based on voucher type
+      const firstDetail = voucher.transaction.details[0];
 
-        // Set master account ID based on voucher type
-        const firstDetail = voucher.transaction.details[0];
+      switch (voucher.transaction.master.voucherType) {
+        case "CP":
+        case "BP":
+        case "CN":
+        case "CQP":
+        case "SV":
+        case "PBP":
+          voucher.masterAccountID = firstDetail.relatedLedgerID;
+          break;
 
-        switch (voucher.transaction.master.voucherType) {
-          case "CP":
-          case "BP":
-          case "CN":
-          case "CQP":
-          case "SV":
-          case "PBP":
-            voucher.masterAccountID = firstDetail.relatedLedgerID;
-            break;
+        case "CR":
+        case "BR":
+        case "DN":
+        case "CQR":
+        case "PV":
+        case "PBR":
+          voucher.masterAccountID = firstDetail.ledgerID;
+          break;
 
-          case "CR":
-          case "BR":
-          case "DN":
-          case "CQR":
-          case "PV":
-          case "PBR":
-            voucher.masterAccountID = firstDetail.ledgerID;
-            break;
-
-          case "JV":
-            voucher.transaction.master.drCr =
-              voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
-            voucher.masterAccountID =
-              voucher.transaction.master.drCr === "Dr"
-                ? firstDetail.ledgerID
-                : firstDetail.relatedLedgerID;
-            break;
-        }
+        case "JV":
+          voucher.transaction.master.drCr =
+            voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
+          voucher.masterAccountID =
+            voucher.transaction.master.drCr === "Dr"
+              ? firstDetail.ledgerID
+              : firstDetail.relatedLedgerID;
+          break;
       }
+    }
 
-      voucher.transactionLoading = false;
-      voucher.formElements.pnlMasters.disabled = true;
-      voucher.formElements.btnSave.disabled = true;
-      voucher.transaction.master.totalAmount = calculateTotal(voucher);
-   
+    voucher.transactionLoading = false;
+
+    voucher.transaction.master.totalAmount = calculateTotal(voucher);
+
     return voucher;
   };
 
@@ -1454,7 +1555,21 @@ export const useAccTransaction = (
 
     if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
       if (currentNumber > 0) {
-        await loadAccTransVoucher();
+        debugger;
+        await loadAndSetAccTransVoucher(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          e == "ArrowDown"
+            ? "decrement"
+            : e == "ArrowUp"
+            ? "increment"
+            : undefined
+        );
       }
     }
   };
@@ -1620,9 +1735,9 @@ export const useAccTransaction = (
   };
   const handleLoadByRefNo = useCallback(() => {
     if (formState.transaction.master.referenceNumber) {
-      loadAccTransVoucher(true);
+      loadAndSetAccTransVoucher(true);
     }
-  }, [loadAccTransVoucher]);
+  }, [formState.transaction.master.referenceNumber]);
 
   const handleRefresh = async () => {
     try {

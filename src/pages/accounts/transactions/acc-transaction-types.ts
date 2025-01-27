@@ -13,7 +13,6 @@ export interface AccTransactionProps {
   voucherNo?: number;
   transactionMasterID?: number,
   financialYearID?: number,
-  setPrevState?: Dispatch<SetStateAction<any>>;
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;
@@ -300,6 +299,54 @@ export interface AccTransactionRow {
   firstCreditLedgerId?: number;
   firstDebitLedgerId?: number;
 }
+export const AccTransactionMasterInitialData: AccTransactionMaster  = {
+  accTransactionMasterID: 0,
+  departmentId: 0,
+  costCentreID: 0,
+  billwiseMasterId: 0,
+  employeeID: 0,
+  invTransactionId: 0,
+  transactionDate: new Date().toISOString(),
+  totalAmount: 0.00,
+  prevTransDate: new Date().toISOString(),
+  // bankDate: new Date().toISOString(),
+  voucherPrefix: "",
+  voucherNumber: 0,
+  referenceNumber: "",
+  referenceDate: new Date().toISOString(),
+  dueDate: new Date().toISOString(),
+  particulars: "",
+  totalDebit: undefined,
+  billwiseTotalAdjAmt: undefined,
+  billwiseAdjAmt: undefined,
+  totalCredit: undefined,
+  totDiscount: undefined,
+  empIncentive: undefined,
+  commonNarration: "",
+  remarks: "",
+  voucherType: "",
+  formType: "",
+  debitNoteTransId: 0,
+  creditNoteTransId: 0,
+  currencyId: 0,
+  // accTransactionDetailID: 0,
+  adjustedTransDetailId: 0,
+  currencyRate: undefined,
+  isPosted: false,
+  randomKey: 0,
+  onlineTrans: "",
+  isEdit: false,
+  checkStatus: "",
+  checkBouncedDate: new Date().toISOString(),
+  drCr: "",
+  isSalesView: false,
+  branchId: 0,
+  counterId: 0,
+  refBranchId: 0,
+  uuid: "",
+  manualInvoiceNumber: "",
+  isLocked: false
+}
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
   accTransactionDetailId: 0,
@@ -348,54 +395,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   particulars: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
-  master: {
-    accTransactionMasterID: 0,
-    departmentId: 0,
-    costCentreID: 0,
-    billwiseMasterId: 0,
-    employeeID: 0,
-    invTransactionId: 0,
-    transactionDate: new Date().toISOString(),
-    totalAmount: 0.00,
-    prevTransDate: new Date().toISOString(),
-    // bankDate: new Date().toISOString(),
-    voucherPrefix: "",
-    voucherNumber: 0,
-    referenceNumber: "",
-    referenceDate: new Date().toISOString(),
-    dueDate: new Date().toISOString(),
-    particulars: "",
-    totalDebit: undefined,
-    billwiseTotalAdjAmt: undefined,
-    billwiseAdjAmt: undefined,
-    totalCredit: undefined,
-    totDiscount: undefined,
-    empIncentive: undefined,
-    commonNarration: "",
-    remarks: "",
-    voucherType: "",
-    formType: "",
-    debitNoteTransId: 0,
-    creditNoteTransId: 0,
-    currencyId: 0,
-    // accTransactionDetailID: 0,
-    adjustedTransDetailId: 0,
-    currencyRate: undefined,
-    isPosted: false,
-    randomKey: 0,
-    onlineTrans: "",
-    isEdit: false,
-    checkStatus: "",
-    checkBouncedDate: new Date().toISOString(),
-    drCr: "",
-    isSalesView: false,
-    branchId: 0,
-    counterId: 0,
-    refBranchId: 0,
-    uuid: "",
-    manualInvoiceNumber: "",
-    isLocked: false
-  },
+  master: AccTransactionMasterInitialData,
   details: [],
   attachments: [],
   masterValidations: initialAccTransactionMasterValidations
@@ -474,6 +474,7 @@ export interface AccTransactionFormState {
   masterAccountName: string; // Master account name
   previousNarration: string;
   row: AccTransactionRow;
+  prev: string;
   rowProcessing: boolean;
   transactionProcessing: boolean;
   transactionLoading: boolean;
@@ -643,7 +644,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formElements: initialFormElements,
   saving: false,
   store: undefined,
-  transactionType: ""
+  transactionType: "",
+  prev: ""
 }
 export interface PrintTransProps {
   masterAccount: string;

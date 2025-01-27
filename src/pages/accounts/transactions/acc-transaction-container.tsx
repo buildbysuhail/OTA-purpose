@@ -54,9 +54,8 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   drCr,
   transactionType,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const {setPrevState} = useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
   const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] =
@@ -167,7 +166,6 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             title={title}
             drCr={drCr}
             transactionType={transactionType}
-            setPrevState={setPrevState}
           />
         )
       )}

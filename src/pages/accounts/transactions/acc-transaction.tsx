@@ -115,7 +115,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionType,
   transactionMasterID,
   financialYearID,
-  setPrevState,
 }) => {
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
@@ -213,7 +212,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     voucherNumberRef,
     chequeNumberRef,
     remarksRef,
-    setPrevState
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -813,11 +811,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       _formState.formElements = fieldsToUpdate;
-      setAccTransVoucher(_formState)
+      setAccTransVoucher(_formState, true)
       debugger;
 
       
     };
+
+   
+
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
@@ -1591,14 +1592,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         type="number"
                         showCustomNumberChanger={true}
                         className="max-w-[200px]"
-                        onChange={(e: any) => {
+                        onChange={async (e: any) => {
+                          
+                          if (e.isCustomNumberChangerEvent == true) {
+                            const ret = await loadAndSetAccTransVoucher(false, e.target?.value);
+                            // if(ret) {
+                            //   dispatch(
+                            //     accFormStateTransactionMasterHandleFieldChange({
+                            //       fields: { voucherNumber: e.target?.value },
+                            //     })
+                            //   );
+                            // }
+                          }
+                          else {
+                            
                           dispatch(
                             accFormStateTransactionMasterHandleFieldChange({
                               fields: { voucherNumber: e.target?.value },
                             })
                           );
-                          if (e.isCustomNumberChangerEvent == true) {
-                            loadAndSetAccTransVoucher(false, e.target?.value);
                           }
                         }}
                         disabled={

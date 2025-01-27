@@ -32,6 +32,9 @@ const Logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("ut");
     localStorage.removeItem("up");
+    localStorage.removeItem("as");
+    localStorage.removeItem("ur");
+    localStorage.removeItem("utc");
     dispatch(setUserSession(initialUserSessionData));
       dispatch(setUserBranches([]));
       dispatch(setUserRights([]));

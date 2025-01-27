@@ -9,7 +9,7 @@ const TotalSummary: React.FC = () => {
             ID: 1,
             OrderNumber: 35703,
             OrderDate: '2014-04-10',
-            SaleAmount: 11800,
+            saleAmount: 11800,
             Terms: '15 Days',
             TotalAmount: 12175,
             CustomerStoreState: 'California',
@@ -21,7 +21,7 @@ const TotalSummary: React.FC = () => {
             ID: 4,
             OrderNumber: 35711,
             OrderDate: '2014-01-12',
-            SaleAmount: 16050,
+            saleAmount: 16050,
             Terms: '15 Days',
             TotalAmount: 16550,
             CustomerStoreState: 'California',
@@ -32,7 +32,7 @@ const TotalSummary: React.FC = () => {
             ID: 4,
             OrderNumber: 35711,
             OrderDate: '2014-01-12',
-            SaleAmount: 16050,
+            saleAmount: 16050,
             Terms: '15 Days',
             TotalAmount: 16550,
             CustomerStoreState: 'California',
@@ -98,7 +98,7 @@ const TotalSummary: React.FC = () => {
         },
 
         {
-            dataField: 'SaleAmount',
+            dataField: 'saleAmount',
             caption: 'Sale Amount',
             dataType: 'number',
             allowSorting: true,
@@ -116,7 +116,7 @@ const summaryItems: SummaryConfig[] = [
     customizeText: (itemInfo) => `Total: $${itemInfo.value.toFixed(2)}`
   },
   {
-    column: 'SaleAmount',
+    column: 'saleAmount',
     summaryType: "sum",
     valueFormat: "currency",
     customizeText: (itemInfo) => `Sales Total: $${itemInfo.value.toFixed(2)}`

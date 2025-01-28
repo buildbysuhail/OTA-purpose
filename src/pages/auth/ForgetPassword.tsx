@@ -2,134 +2,99 @@ import React, { useState } from "react";
 import { X, ArrowLeft, Mail, Phone, Lock } from "lucide-react";
 import Urls from "../../redux/urls";
 import { APIClient } from "../../helpers/api-client";
+import { handleResponse } from "../../utilities/HandleResponse";
+import ERPToast from "../../components/ERPComponents/erp-toast";
 
 // API endpoints
 
 interface ForgotPasswordProps {
   onClose: () => void;
 }
+interface emailItems {
+  userName:string;
+  isMobile:boolean;
+  credential:string
+}
 const api = new APIClient();
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const [step, setStep] = useState(1);
-  const [emailData, setEmailData] = useState(1);
+  const [emailData, setEmailData] = useState<emailItems[]>([]);
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [isOk, setIsOk] = useState(false);
-  const [otpMethod, setOtpMethod] = useState<"email" | "phone" | null>(null);
+  const [otpMethod, setOtpMethod] = useState<emailItems>();
   const [otp, setOtp] = useState("");
+  const [verifyOtp,setVerifyOtp] = useState({})
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsOk(true);
-    setStep(2);
-  };
+ 
 
   const handleVerifyEmail = async () => {
     try {
-      
-
-      const response = await api.getAsync(`${Urls.SendEmailToken}${emailOrPhone}`);
-
-      if (!response.ok) {
-        setError("Failed to send OTP");
-      }
-      setEmailData(response.items);
-      setStep(2);
+      const response = await api.getAsync(`${Urls.get_login_credentials}${emailOrPhone}`);
+      if (!response.isOk) {
+        setError(response.message);
+      }else{
+        setEmailData(response.items);
+        setStep(2);
+        setIsOk(true);
+        setError(null);
+      } 
     } catch (err) {
       setError("Failed");
       console.error(err);
     }
   };
 
-  const handleSendOTP = async () => {
+
+  const handleSendOTP = async()=>{
     try {
-      const response = await fetch(Urls.SendEmailToken, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          emailOrPhone,
-          token: otp,
-        }),
+      const response = await api.post(Urls.sent_token,otpMethod);
+      handleResponse(response,()=>{
+        setVerifyOtp(response.item) ; 
+        setStep(3)
       });
+    } catch (error) {
+      console.error("Error in setOpt:", error);
+    } 
+  }
 
-      if (!response.ok) {
-        throw new Error("Invalid OTP");
-      }
 
-      console.log(`OTP verified: ${otp}`);
-      setStep(4);
-    } catch (err) {
-      setError("Invalid OTP. Please try again.");
-      console.error(err);
-    }
-  };
+
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch(Urls.SendEmailToken, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          emailOrPhone,
-          token: otp,
-        }),
-      });
+      const response = await api.post(Urls.validate_token,
+        {
+          ...verifyOtp,
+          tokenOrOtp:otp
+        });
 
-      if (!response.ok) {
-        throw new Error("Invalid OTP");
-      }
+        
+      handleResponse(response,()=>setStep(4));
 
-      console.log(`OTP verified: ${otp}`);
-      setStep(4);
-    } catch (err) {
-      setError("Invalid OTP. Please try again.");
-      console.error(err);
-    }
+    } catch (error) {
+      console.error("Error in verifyOpt:", error);
+    } 
   };
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+      ERPToast.showWith("Passwords do not match", "warning")
       return;
-    }
-
-    try {
-      const response = await fetch(Urls.SendEmailToken, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          emailOrPhone,
-          newPassword,
-          token: otp,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to reset password");
+    }else{
+      try {
+        const response = await api.post(Urls.validate_token,otp);
+        handleResponse(response,()=>onClose());
+      } catch (err) {
+        setError("Failed to reset password. Please try again.");
+        console.error(err);
       }
-
-      console.log(`Password reset successfully: ${newPassword}`);
-      alert("Password reset successfully!");
-      onClose();
-    } catch (err) {
-      setError("Failed to reset password. Please try again.");
-      console.error(err);
     }
   };
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
+
 
   return (
     <div className="fixed inset-0 bg-[#0005] flex items-center justify-center p-4 backdrop-blur-sm">
@@ -155,12 +120,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
           </h2>
           {error && (
             <div className="bg-[#fef2f2] border border-[#fecaca] text-[#b91c1c] px-4 py-3 rounded-lg mb-4 flex items-center gap-3 animate-pulse w-fit mx-auto">
-              <X className="w-4 h-4 text-[#ef4444]" />
-              {error}
+             {error}
+            <X className="w-4 h-4 text-[#ef4444]" />
+             
             </div>
           )}
           {step === 1 && (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e)=> e.preventDefault()} className="space-y-6">
               <input
                 type="text"
                 value={emailOrPhone}
@@ -183,33 +149,36 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
           )}
           {step === 2 && isOk && (
             <div className="space-y-6">
-              <p className="text-gray-700 text-center font-medium">
-                Select OTP method:
-              </p>
-              <div className="flex justify-around my-4">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
+            
+              <div className="max-w-md mx-auto  p-6 bg-white rounded-xl shadow-md">
+              <p className="text-gray-700 text-center font-medium mb-2">Select OTP method</p>
+                <ul className="space-y-4">
+                  {emailData.map((item, index) => (
+                    <li key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <input
                     type="radio"
                     name="otpMethod"
                     value="email"
-                    onChange={() => setOtpMethod("email")}
+                    onChange={() => setOtpMethod(item)}
                     className="form-radio h-4 w-4 text-[#2563eb] border-2 border-[#93c5fd] focus:ring-2 focus:ring-[#3b82f6]"
                   />
-                  <Mail className="w-5 h-5 text-[#3b82f6]" />
-                  <span className="text-gray-700 font-medium">Email</span>
-                </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="otpMethod"
-                    value="phone"
-                    onChange={() => setOtpMethod("phone")}
-                    className="form-radio h-4 w-4 text-[#2563eb] border-2 border-[#93c5fd] focus:ring-2 focus:ring-[#3b82f6]"
-                  />
-                  <Phone className="w-5 h-5 text-[#3b82f6]" />
-                  <span className="text-gray-700 font-medium">Phone</span>
-                </label>
-              </div>
+                    <div className="flex-shrink-0">
+                      {item.isMobile ? (
+                        <Phone className="w-5 h-5 text-[#3b82f6]" />
+                      ) : (
+                        <Mail className="w-5 h-5 text-[#3b82f6]" />
+                      )}
+                    </div>
+                    <div className="flex-grow">
+                      <p className="text-sm font-medium text-gray-900">{item.userName}</p>
+                      <p className="text-sm text-gray-500">{item.credential}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+          </div>
+      
+
               <button
                 onClick={handleSendOTP}
                 disabled={!otpMethod}

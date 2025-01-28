@@ -20,6 +20,8 @@ import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 import { setApplicationSettings } from "../redux/slices/app/application-settings-reducer";
 import { APIClient } from "../helpers/api-client";
 import Urls from "../redux/urls";
+import ERPModal from "../components/ERPComponents/erp-modal";
+import CounterSettings from "./settings/system/counter-settings";
 
 interface ChildComponentProps {
   onLoadingChange: (isLoading: boolean) => void;
@@ -36,6 +38,10 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
 
   const UserSession = useAppSelector((state: RootState) => state?.UserBranches);
   let userBranches = useAppSelector((state: RootState) => state.UserBranches);
+  const [error, setError] = useState<any>();const [counterSettings, setCounterSettings] = useState<{
+    show: boolean;
+    token: string;
+  }>({ show: false, token: "" });
 
   /* ########################################################################################### */
   const avatarStyle = useMemo(() => {
@@ -74,6 +80,14 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
           ...settings,
           apiLoaded: true
       }));        
+    }
+    else {
+      if (response.item.hasToSetCounter) {
+        localStorage.setItem("_token", response.item.token);
+        setCounterSettings({ show: true, token: response.item.token });
+      } else {
+        setError(response.message);
+      }
     }
     handleResponse(response, () => {
       // navigate("/")
@@ -164,6 +178,20 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
         </div> */}
       </div>
       {/* </div> */}
+      <ERPModal
+        isForm={true}
+        isOpen={counterSettings.show}
+        closeButton="LeftArrow"
+        hasSubmit={false}
+        closeTitle="Close"
+        title="Counter Settings"
+        width="w-full"
+        isFullHeight={true}
+        closeModal={() => {
+          setCounterSettings({ show: false, token: "" });
+        }}
+        content={<CounterSettings token={counterSettings.token} />}
+      ></ERPModal>
     </>
   );
 };

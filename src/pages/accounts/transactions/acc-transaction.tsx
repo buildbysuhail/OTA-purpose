@@ -464,8 +464,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
+debugger;
+console.log('masterAccountID = -2;');
 
-      let masterAccountID = 0;
+      let masterAccountID = -2;
       let employeeID = 0;
       let _voucherNo = 0;
       if (!isInvoker) {
@@ -475,18 +477,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
+        debugger;
         employeeID = userSession.employeeId ?? 0;
-        masterAccountID =
-          (voucherType == "CP" || voucherType == "CR") &&
-          userSession?.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings?.allowSalesCounter
-            ? userSession?.counterwiseCashLedgerId
-            : applicationSettings.accountsSettings?.defaultCashAcc;
+        if (voucherType == "CP" || voucherType == "CR") {
+          masterAccountID =
+            userSession?.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings?.allowSalesCounter
+              ? userSession?.counterwiseCashLedgerId
+              : applicationSettings.accountsSettings?.defaultCashAcc;
+        }
+        debugger;
+        if (voucherType == "JV" || voucherType == "MJV") {
+          masterAccountID = 0;
+        }
+        debugger;
         if (userSession.dbIdValue === "543140180640") {
           if (voucherType === "CP" || voucherType === "CR") {
             let userCashLedgerID = 0;
             userCashLedgerID = await api.getAsync(
-              `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
+              `${Urls.get_userLedger_by_user_id}${userSession.userId}`
             );
 
             masterAccountID =
@@ -501,6 +510,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
           ...accTransactionFormStateInitialData,
+          masterAccountID:masterAccountID,
           transaction: {
             ...voucher,
             master: {
@@ -532,12 +542,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ? 0
                 : applicationSettings.accountsSettings?.defaultCostCenterID,
           },
-          masterAccountID:
-            (voucherType == "CP" || voucherType == "CR") &&
-            userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter
-              ? userSession?.counterwiseCashLedgerId
-              : applicationSettings.accountsSettings?.defaultCashAcc,
+          
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
@@ -841,6 +846,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       _formState.formElements = fieldsToUpdate;
+      debugger;
       setAccTransVoucher(_formState, true);
       debugger;
     };
@@ -1756,7 +1762,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       </div>
                     </div>
                   )}
-
                 <div>
                   {formState.formElements.commonNarration.visible && (
                     <ERPInput
@@ -1783,7 +1788,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   )}
                 </div>
-
                 <div className="grid grid-cols-2 gap-2">
                   {formState.formElements.foreignCurrency.visible == true &&
                     formState.foreignCurrency == true && (
@@ -2209,7 +2213,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   className="min-w-[70px] max-w-[150px]"
                   label={t(formState.formElements.drCr.label)}
                   value={formState.row.drCr}
-                  onSelectItem={(e) => 
+                  onSelectItem={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: { drCr: e.value },
@@ -2351,8 +2355,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onClick={() => addOrEditRow()}
                     onKeyDown={(e) => {
                       console.log(`Key:${e.key}`);
-                      
-                      if(e.key == "Enter") {
+
+                      if (e.key == "Enter") {
                         addOrEditRow();
                       }
                     }}

@@ -139,18 +139,18 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const { t } = useTranslation("transaction");
 
   return (
-    <div className="max-w-2xl mx-auto p-4 overflow-auto ">
+    <div className="max-w-2xl dark:bg-dark-bg mx-auto p-4 overflow-auto ">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center">
             <img
-              className="text-lg font-medium dark:bg-[#f2f2f28a]"
+              className="text-lg font-medium dark:bg-[#f2f2f28a] rounded-md"
               src={ledgerData?.partyPhoto || profile}
             ></img>
           </div>
           <div>
-            <div className="text-sm text-black">{ledgerData?.partyName}</div>
+            <div className="text-sm dark:text-dark-text text-black">{ledgerData?.partyName}</div>
             <div className="flex items-center gap-1">
               <span className="font-medium">{ledgerData?.partyCategory}</span>
               {/* <h6 className="text-sm text-gray-600">{customerName.user}</h6> */}
@@ -169,12 +169,12 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b mb-6">
+      <div className="flex gap-6 dark:border-dark-border border-b mb-6">
         <button
           className={`px-1 py-2 text-sm ${
             activeTab === "details"
               ? "border-b-2 border-primary font-medium"
-              : "text-black"
+              : "dark:text-dark-text text-black"
           }`}
           onClick={() => setActiveTab("details")}
         >
@@ -184,7 +184,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           className={`px-1 py-2 text-sm ${
             activeTab === "activity"
               ? "border-b-2 border-primary font-medium"
-              : "text-black"
+              : "dark:text-dark-text text-black "
           }`}
           onClick={() => setActiveTab("activity")}
         >
@@ -198,57 +198,57 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           {ledgerData?.partyType == "Supp" ||
             (ledgerData?.partyType == "Cust" && (
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 dark:border-dark-border border rounded-lg">
                   <div className="flex flex-col justify-center items-center gap-2 text-amber-500 mb-1">
                     <AlertTriangle className="h-3 w-3" />
-                    <span className="text-[12px] text-gray-600">
+                    <span className="text-[12px] dark:text-dark-text text-gray-600">
                       {t("receivables")}
                     </span>
-                    <p className="text-[16px] text-black font-semibold">
+                    <p className="text-[16px] dark:text-dark-text text-black font-semibold">
                       {getFormattedValue(ledgerData?.outstandingReceivables)}
                     </p>
                   </div>
                 </div>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 dark:border-dark-border border rounded-lg">
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    <span className="text-[12px] text-gray-600">
+                    <span className="text-[12px] dark:text-dark-text text-gray-600">
                       {t("total_sales_amount")}
                     </span>
-                    <p className="text-[16px] text-black font-semibold">
+                    <p className="text-[16px] dark:text-dark-text text-black font-semibold">
                       {getFormattedValue(ledgerData?.totalSalesAmount)}
                     </p>
                   </div>
                 </div>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 dark:border-dark-border border rounded-lg">
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    <span className="text-[12px] text-gray-600">
+                    <span className="text-[12px] dark:text-dark-text text-gray-600">
                       {t("total_purchase_amount")}
                     </span>
-                    <p className="text-[16px] text-black font-semibold">
+                    <p className="text-[16px] dark:text-dark-text text-black font-semibold">
                       {getFormattedValue(ledgerData?.totalPurchaseAmount)}
                     </p>
                   </div>
                 </div>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 dark:border-dark-border border rounded-lg">
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    <span className="text-[12px] text-gray-600">
+                    <span className="text-[12px] dark:text-dark-text text-gray-600">
                       {t("total_sales_count")}
                     </span>
-                    <p className="text-[16px] text-black font-semibold">
+                    <p className="text-[16px] dark:text-dark-text text-black font-semibold">
                       {ledgerData?.totalSalesCount}
                     </p>
                   </div>
                 </div>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 dark:border-dark-border border rounded-lg">
                   <div className="flex flex-col justify-center items-center gap-2 text-emerald-500 mb-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    <span className="text-[12px] text-gray-600">
+                    <span className="text-[12px] dark:text-dark-text text-gray-600">
                       {t("total_purchase_count")}
                     </span>
-                    <p className="text-[16px] text-black font-semibold">
+                    <p className="text-[16px] dark:text-dark-text text-black font-semibold">
                       {ledgerData?.totalPurchaseCount}
                     </p>
                   </div>
@@ -257,14 +257,14 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             ))}
 
           {/* Contact Details */}
-          <div className="p-4 shadow rounded-lg">
+          <div className="p-4 dark:bg-dark-bg-card shadow rounded-lg">
             <div className="space-y-6">
               {/* <h2 className="text-lg font-semibold">Contact Details</h2> */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("party_type")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -273,8 +273,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("party_category")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -283,8 +283,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("price_category")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -293,8 +293,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("tax_number")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -303,8 +303,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("credit_amount")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -313,8 +313,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("credit_days")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -323,8 +323,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("billwise_applicable")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -333,8 +333,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className="dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("route_name")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -343,8 +343,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className=" dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("created_date")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -353,8 +353,8 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-black flex items-center justify-between">
-                      <p className="text-[#8c8c8c] text-[12px]">
+                    <div className="text-sm dark:text-dark-text text-black flex items-center justify-between">
+                      <p className=" dark:text-dark-text text-[#8c8c8c] text-[12px]">
                         {t("expiry_date")}
                       </p>
                       <div className="w-1/2 text-[12px] text-left">
@@ -368,14 +368,14 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           </div>
 
           {/* Billing Details */}
-          <div className="p-4 shadow rounded-lg">
+          <div className="p-4 dark:bg-dark-bg-card shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg text-black font-semibold text-start">
+              <h2 className="text-lg dark:text-dark-text text-black font-semibold text-start">
                 {t("billing_address")}
               </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-gray-700 font-medium text-[12px] flex flex-col items-start space-y-1">
+                  <div className="dark:text-dark-text text-gray-700 font-medium text-[12px] flex flex-col items-start space-y-1">
                     {ledgerData?.billingAddress?.length > 0 ? (
                       ledgerData?.billingAddress?.map(
                         (line: any, index: Key | null | undefined) => (
@@ -392,14 +392,14 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
           </div>
 
           {/* Shipping Address */}
-          <div className="p-4 shadow rounded-lg">
+          <div className="p-4 dark:bg-dark-bg-card shadow rounded-lg">
             <div className="space-y-6">
-              <h2 className="text-lg text-black font-semibold text-start">
+              <h2 className="text-lg dark:text-dark-text text-black font-semibold text-start">
                 {t("shipping_address")}
               </h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <div className="text-[12px] text-gray-700 font-medium flex flex-col items-start space-y-1">
+                  <div className="text-[12px] dark:text-dark-text text-gray-700 font-medium flex flex-col items-start space-y-1">
                     {ledgerData?.shippingAddress?.length > 0 ? (
                       ledgerData.shippingAddress.map(
                         (line: any, index: Key | null | undefined) => (
@@ -454,7 +454,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             return (
               <div
                 key={activity.id}
-                className="flex items-start gap-3 py-2 hover:bg-gray-50 rounded-lg px-2 transition-colors"
+                className="flex items-start gap-3 py-2 dark:hover:bg-dark-hover-bg hover:bg-gray-50 rounded-lg px-2 transition-colors"
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 `}
@@ -463,14 +463,14 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm text-gray-900">
+                    <span className="font-medium text-sm dark:text-dark-text text-gray-900">
                       {activity.user}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs dark:text-dark-text text-gray-500">
                       {activity.timestamp}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-0.5 leading-tight">
+                  <p className="text-sm dark:text-dark-text text-gray-600 mt-0.5 leading-tight">
                     {activity.message}
                   </p>
                 </div>

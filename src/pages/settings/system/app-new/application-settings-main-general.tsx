@@ -112,6 +112,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           id="showNumberFormat"
           label={t("currency_format")}
           data={settings?.mainSettings}
+          value={settings?.mainSettings?.showNumberFormat}    
           onChangeData={(data) =>
             handleFieldChange(
               "mainSettings",

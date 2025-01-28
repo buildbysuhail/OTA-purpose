@@ -579,6 +579,10 @@ console.log('masterAccountID = -2;');
           ...initialFormElements.projectId,
           visible: isProjectIdVisible,
         },
+        costCentreID: {
+          ...initialFormElements.costCentreID,
+          visible: true,
+        }
       } as any;
       switch (voucherType) {
         case "CR":
@@ -3304,7 +3308,7 @@ console.log('masterAccountID = -2;');
             variant="primary"
             onClick={save}
             className="w-24"
-            disabled={formState.formElements.pnlMasters?.disabled}
+            disabled={formState.formElements.pnlMasters?.disabled || formState.transaction.details == null || formState.transaction.details.length == 0}
           />
         </div>
       </div>

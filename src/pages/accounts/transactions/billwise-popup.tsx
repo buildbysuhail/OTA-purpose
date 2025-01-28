@@ -21,6 +21,7 @@ import _cloneDeep from "lodash/cloneDeep";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
@@ -35,6 +36,7 @@ import { APIClient } from "../../../helpers/api-client";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import { BillwiseData } from "./acc-transaction-types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
 
 interface BillwiseProps {
   onSave?: (
@@ -417,11 +419,10 @@ const BillwiseComponent = ({
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
-    const DRCR = "YourCondition"; // Replace with your DRCR condition
-    const VisibleRow = true; // Replace with your visibility condition
-debugger;
     if (e.rowType === "data") {
+      debugger;
       if (e.data.drCr === formState.transaction.master.drCr) {
+        e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
@@ -489,6 +490,198 @@ debugger;
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
+  const columns: DevGridColumn[] = [
+    {
+        dataField: "slNo",
+        caption: "slNo",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 50,
+        showInPdf: true,
+    },
+    {
+        dataField: "voucherType",
+        caption: "VoucherType",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 100,
+        showInPdf: true,
+    },
+    {
+        dataField: "voucherNumber",
+        caption: "Bill No",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "transactionDate",
+        caption: "TransactionDate",
+        dataType: "date",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 100,
+        showInPdf: true,
+    },
+    {
+        dataField: "amount",
+        caption: "Amount",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "right",
+        width: 100,
+        showInPdf: true,
+    },
+    {
+        dataField: "adjustedAmount",
+        caption: "Adjusted Amount",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "right",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "balance",
+        caption: "Balance",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "right",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "billwiseAmount",
+        caption: "Amount To Set",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowEditing: true,
+        allowFiltering: true,
+        alignment: "right",
+        width: 100,
+        showInPdf: true,
+    },
+    {
+        dataField: "balanceAfter",
+        caption: "Balance After",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "right",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "drCr",
+        caption: "DrCr",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "center",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "referenceNumber",
+        caption: "ReferenceNumber",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "financialYearID",
+        caption: "FinancialYearID",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 130,
+        showInPdf: true,
+    },
+    {
+        dataField: "formType",
+        caption: "FormType",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 100,
+        showInPdf: true,
+    },
+    {
+        dataField: "voucherPrefix",
+        caption: "VoucherPrefix",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 130,
+        showInPdf: true,
+    },
+    {
+        dataField: "partyName",
+        caption: "PartyName",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: true,
+    },
+    {
+        dataField: "referenceDate",
+        caption: "Reference Date",
+        dataType: "date",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 100,
+        visible: false,
+        showInPdf: true,
+    },
+    {
+        dataField: "formType",
+        caption: "Form Type",
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 100,
+        visible: false,
+        showInPdf: true,
+    },
+];
 
   return (
     <Card
@@ -497,6 +690,7 @@ debugger;
       sx={{ p: 0, m: 0 }}
     >
       <CardContent sx={{ p: 0 }}>
+        frm {formState.transaction.master.drCr}
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
@@ -544,11 +738,14 @@ debugger;
           </Item>
         </Toolbar>
 
-        <DataGrid
+        <ERPDevGrid
           ref={dataGridRef}
+          rowAlternationEnabled={false} 
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"
+          columns={columns}
+          gridId="billwise_popup"
           // height={gridHeight}
           dataSource={store?.filter(
             (row: any) =>
@@ -561,7 +758,8 @@ debugger;
           columnAutoWidth={true}
           showColumnLines={false}
           showRowLines={true}
-          onEditorPreparing={(e) => {
+          ShowGridPreferenceChooser={true}
+          onEditorPreparing={(e: any) => {
             if (
               e.dataField === "billwiseAmount" &&
               e.parentType === "dataRow"
@@ -615,214 +813,12 @@ debugger;
             allowAdding: false,
             allowDeleting: false,
           }}
+          allowSelection={true}
+          selectionMode={"multiple"}
+          allowKeyboardNavigation={true}
         >
-          <KeyboardNavigation
-            editOnKeyPress={true}
-            enterKeyAction={"startEdit"}
-            enterKeyDirection={"column"}
-          />
-          <Selection
-            mode="multiple"
-            selectAllMode={"allPages"}
-            showCheckBoxesMode={"always"}
-          />
-          <FilterRow visible={true} />
-          <SearchPanel visible={false} />
-          <ColumnFixing enabled={true} />
-          <Scrolling mode="standard" />
-          <Paging enabled={false} />
-          {/* <LoadPanel visible={true} /> */}
-
-          <Column
-            dataField="slNo"
-            caption="slNo"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={50}
-          />
-
-          {/* <Column
-                    dataField="isSelected"
-                    caption="Select"
-                    dataType="boolean"
-                    width={70}
-                    allowFiltering={false}
-                    allowSearch={false}
-                    allowEditing={true}
-                    cellRender={(cellData: any) => (
-                      <CheckBox
-                        value={cellData.value}
-                        onValueChanged={(e) => {
-                          handleCheckboxChange(e.value, cellData.data);
-                        }}
-                      />
-                    )}
-                  /> */}
-
-          <Column
-            dataField="voucherType"
-            caption="VoucherType"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={100}
-          />
-
-          <Column
-            dataField="voucherNumber"
-            caption="TransactionDate"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-          />
-
-          <Column
-            dataField="transactionDate"
-            caption="TransactionDate"
-            dataType="date"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={100}
-          />
-
-          <Column
-            dataField="amount"
-            caption="Amount"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={100}
-          />
-
-          <Column
-            dataField="adjustedAmount"
-            caption="Adjusted Amount"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-          />
-          <Column
-            dataField="balance"
-            caption="Balance"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-          />
-
-          <Column
-            dataField="billwiseAmount"
-            caption="Amount To Set"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={true}
-            width={100}
-          />
           
-          <Column
-            dataField="balanceAfter"
-            caption="Balance After"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={true}
-          />
-          <Column
-            dataField="referenceNumber"
-            caption="ReferenceNumber"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-          />
-
-          <Column
-            dataField="financialYearID"
-            caption="FinancialYearID"
-            dataType="number"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={130}
-          />
-
-          <Column
-            dataField="formType"
-            caption="FormType"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-          />
-
-          <Column
-            dataField="voucherPrefix"
-            caption="VoucherPrefix"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={130}
-          />
-
-          <Column
-            dataField="partyName"
-            caption="PartyName"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={false}
-          />
-
-          <Column
-            dataField="referenceDate"
-            caption="Reference Date"
-            dataType="date"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={100}
-            visible={false}
-          />
-
-          <Column
-            dataField="FormType"
-            caption="Form Type"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={100}
-            visible={false}
-          />
-
-
-          <Column
-            dataField="drCr"
-            caption="DrCr"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={false}
-          />
+          
 
           {/* Add Summary for "Amount" column */}
           <Summary calculateCustomSummary={handleCustomSummary}>
@@ -859,7 +855,7 @@ debugger;
               }
             />
           </Summary>
-        </DataGrid>
+        </ERPDevGrid>
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
             <strong className="mr-3">Net Adjustment</strong>

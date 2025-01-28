@@ -21,6 +21,7 @@ import { ApplicationSettingsType } from "../../settings/system/application-setti
 import { calculateTotal, clearEntryControl } from "./functions";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import moment from "moment";
+import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -56,8 +57,8 @@ const accTransactionSlice = createSlice({
         voucherNo,
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
-      (state.transaction.master.accTransactionMasterID = 0),
-        (state.row.ledgerCode = "");
+      state.transaction.master.accTransactionMasterID = 0,
+      state.row.ledgerCode = "";
       state.transaction.attachments = [];
       state.row.ledgerID = 0;
       state.transaction.master.remarks = "";
@@ -110,6 +111,11 @@ const accTransactionSlice = createSlice({
             applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0;
         }
       }
+      state.formElements.btnAdd.label = "Add"
+      state.prev = modelToBase64Unicode({
+            transaction: { ...state.transaction },
+            row: { ...state.row },
+          });
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (

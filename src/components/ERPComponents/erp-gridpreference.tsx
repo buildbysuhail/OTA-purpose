@@ -8,7 +8,6 @@ import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference 
 import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
-import { json } from "react-router-dom";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];

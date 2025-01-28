@@ -26,7 +26,6 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
 }) => {
   const { t } = useTranslation("transaction"); 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
  
   const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);

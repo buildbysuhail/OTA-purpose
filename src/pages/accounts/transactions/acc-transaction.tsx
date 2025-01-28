@@ -104,6 +104,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionMasterID,
   financialYearID,
 }) => {
+  const [triggerEffect, setTriggerEffect] = useState(false);
+
+  useEffect(() => {
+    if (triggerEffect) {
+      const timer = setTimeout(() => {
+        setTriggerEffect(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [triggerEffect]);
+
+  const handleClearControls = () => {
+    clearControls(
+      formState.isEdit,
+      formState.transaction.master.accTransactionMasterID
+    );
+    // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
+    setTriggerEffect(true); 
+  };
+
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
     `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
@@ -360,7 +380,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
           dispatch(
             accFormStateRowHandleFieldChange({
-              fields: { ledgerCode: 0 },
+              fields: { ledgerCode: "" },
             })
           );
         }
@@ -537,8 +557,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         foreignCurrency: {...initialFormElements.foreignCurrency, visible: isForeignCurrencyVisible },
         lblGroupName: {...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
         masterAccount: {...initialFormElements.masterAccount, disabled: true },
-        discount: {...initialFormElements.discount, visible: false },
-        hasDiscount: {...initialFormElements.hasDiscount, visible: false },
+        discount: {...initialFormElements.discount, visible: true },
         projectId: {...initialFormElements.projectId, visible: isProjectIdVisible },
       } as any;
       switch (voucherType) {
@@ -738,6 +757,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...initialFormElements.jvDrCr,
               visible: true,
             },
+            discount: {
+              ...initialFormElements.discount,
+              visible: false,
+            },
           };
           break;
         }
@@ -767,6 +790,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             drCr: {
               ...initialFormElements.drCr,
               visible: true,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: false,
             },
           };
           break;
@@ -1379,12 +1406,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   >
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        clearControls(
-                          formState.isEdit,
-                          formState.transaction.master.accTransactionMasterID
-                        );
-                      }}
+                      onClick={handleClearControls}
+                      // onClick={() => {
+                      //   clearControls(
+                      //     formState.isEdit,
+                      //     formState.transaction.master.accTransactionMasterID
+                      //   );
+                      // }}
                     >
                       <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
@@ -2109,6 +2137,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     ref={ledgerIdRef}
+                    triggerEffect={triggerEffect}
                     id="ledgerID"
                     className="w-full"
                     label={t(formState.formElements.ledgerID.label)}
@@ -2193,8 +2222,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              <div className="xl:w-[170px] lg:w-[250px] ">
-                {formState.formElements.hasDiscount.visible && (
+              <div className="xl:w-[170px] lg:w-[250px]  mb-[13px]">
+                {formState.formElements.discount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="hasDiscount"
@@ -2469,6 +2498,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
+              showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
                 onSelectionChanged(e, state)
@@ -2878,7 +2908,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ) => {
                   if (
                     applicationSettings.accountsSettings?.billwiseMandatory &&
-                    formState.row.billwiseDetails != ""
+                    billwiseDetails != ""
                   ) {
                     setTimeout(() => {
                       dispatch(
@@ -2892,7 +2922,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     formState.formElements.costCentreID.visible == false ||
                     fromAutoPost
                   ) {
-                    addOrEditRow(billwiseDetails);
+                    addOrEditRow(billwiseDetails, totalAmount);
                     focusLedgerCode();
                   } else {
                     focusCostCenterRef();

@@ -162,6 +162,14 @@ const SystemVoucher = () => {
           <ERPGridActions
             view={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             edit={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            delete={{
+              visible: cellElement?.data?.isDeletable == false,
+              confirmationRequired: true,
+              confirmationMessage:
+                "Are you sure you want to delete this item?",
+              url: Urls?.account_group,
+              key: cellElement?.data?.id,
+            }}
           // delete={{
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",

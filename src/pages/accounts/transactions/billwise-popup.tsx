@@ -673,7 +673,7 @@ debugger;
 
           <Column
             dataField="voucherNumber"
-            caption="TransactionDate"
+            caption="Bill No"
             dataType="string"
             allowFiltering={true}
             allowSearch={true}
@@ -740,6 +740,17 @@ debugger;
             width={150}
             visible={true}
           />
+
+          <Column
+            dataField="drCr"
+            caption="DrCr"
+            dataType="string"
+            allowFiltering={true}
+            allowSearch={true}
+            allowEditing={false}
+            width={150}
+            visible={true}
+          />
           <Column
             dataField="referenceNumber"
             caption="ReferenceNumber"
@@ -759,7 +770,6 @@ debugger;
             allowEditing={false}
             width={130}
           />
-
           <Column
             dataField="formType"
             caption="FormType"
@@ -787,7 +797,7 @@ debugger;
             allowSearch={true}
             allowEditing={false}
             width={150}
-            visible={false}
+            visible={true}
           />
 
           <Column
@@ -813,16 +823,6 @@ debugger;
           />
 
 
-          <Column
-            dataField="drCr"
-            caption="DrCr"
-            dataType="string"
-            allowFiltering={true}
-            allowSearch={true}
-            allowEditing={false}
-            width={150}
-            visible={false}
-          />
 
           {/* Add Summary for "Amount" column */}
           <Summary calculateCustomSummary={handleCustomSummary}>

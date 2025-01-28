@@ -1798,18 +1798,19 @@ export const useAccTransaction = (
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-
+debugger;
+const lastPrefix = selectVoucherData ? selectVoucherData[0].lastPrefix: ""
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
         formState.transaction.master.voucherType,
-        formState.transaction.master.voucherPrefix,
+        lastPrefix,
         false
       );
-
+debugger;
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
-            voucherPrefix: selectVoucherData.lastPrefix,
+            voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
             accTransactionMasterID: 0,
             transactionDate: moment(

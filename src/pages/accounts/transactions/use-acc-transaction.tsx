@@ -1082,7 +1082,7 @@ export const useAccTransaction = (
       })
     );
   };
-  const addOrEditRow = async (billwiseDetails?: string) => {
+  const addOrEditRow = async (billwiseDetails?: string, totalAmount?: number) => {
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         if (formState.isRowEdit != true) {
@@ -1138,12 +1138,12 @@ export const useAccTransaction = (
         });
         return false;
       }
-      const fdd = isNullOrUndefinedOrZero(formState.row.amount);
+      const fdd = isNullOrUndefinedOrZero(totalAmount??formState.row.amount);
       const fdsdd = isNullOrUndefinedOrZero(
         formState.transaction.master.totalAmount
       );
       if (
-        isNullOrUndefinedOrZero(formState.row.amount) &&
+        isNullOrUndefinedOrZero(totalAmount??formState.row.amount) &&
         !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
       ) {
         if (hasRight(formState.formCode, UserAction.Add)) {
@@ -1174,7 +1174,7 @@ export const useAccTransaction = (
         return false;
       }
 
-      if (isNullOrUndefinedOrZero(formState.row.amount)) {
+      if (isNullOrUndefinedOrZero(totalAmount??formState.row.amount)) {
         ERPAlert.show({
           icon: "info",
           title: "Please Enter the Amount..!",
@@ -1207,6 +1207,7 @@ export const useAccTransaction = (
         accFormStateTransactionDetailsRowAdd({
           row: {
             ...formState.row,
+            amount: totalAmount??formState.row.amount,
             billwiseDetails:
               billwiseDetails != undefined
                 ? billwiseDetails

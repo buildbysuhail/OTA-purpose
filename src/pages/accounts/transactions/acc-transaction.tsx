@@ -2900,7 +2900,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     formState.formElements.costCentreID.visible == false ||
                     fromAutoPost
                   ) {
-                    addOrEditRow(billwiseDetails);
+                    addOrEditRow(billwiseDetails, totalAmount);
                     focusLedgerCode();
                   } else {
                     focusCostCenterRef();

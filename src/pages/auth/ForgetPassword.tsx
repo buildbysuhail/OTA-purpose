@@ -16,6 +16,18 @@ interface emailItems {
   isMobile:boolean;
   credential:string
 }
+interface verifyOpt{
+    isMobile?: boolean,
+    confirmToken?: string,
+    value?: string,
+    tokenOrOtp?: string
+}
+interface passWord {
+ 
+    password?: string;
+    confirmPassword?: string;
+    userName?:string;
+}
 const api = new APIClient();
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -24,9 +36,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const [isOk, setIsOk] = useState(false);
   const [otpMethod, setOtpMethod] = useState<emailItems>();
   const [otp, setOtp] = useState("");
-  const [verifyOtp,setVerifyOtp] = useState({})
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [verifyOtp,setVerifyOtp] = useState<verifyOpt>({})
+  const [Password, setPassword] = useState<passWord>({});
   const [error, setError] = useState<string | null>(null);
   const [otpTimeout, setOtpTimeout] = useState(false)
   const [resetCount, setResetCount] = useState(0);
@@ -67,7 +78,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
           // Set new timeout
           timeoutRef.current = setTimeout(() => {
             setOtpTimeout(false);
-          }, 1 * 60 * 1000);
+          }, 5 * 60 * 1000);
         })
     } catch (error) {
       console.error("Error in setOpt:", error);
@@ -92,12 +103,15 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   };
 
   const handleResetPassword = async () => {
-    if (newPassword !== confirmPassword) {
+    if (Password?.password !== Password?.confirmPassword) {
       setError("password not match!!!");
       return;
     }else{
       try {
-        const response = await api.post(Urls.updatePassword,{password:confirmPassword});
+        const response = await api.post(Urls.reset_password,{
+          ...Password,
+          userName:emailOrPhone
+        });
         handleResponse(response,()=>onClose());
       } catch (err) {
         setError("Failed to reset password. Please try again.");
@@ -106,7 +120,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
     }
   };
 
-
+ 
 
   return (
     <div className="fixed inset-0 bg-[#0005] flex items-center justify-center p-4 backdrop-blur-sm">
@@ -212,7 +226,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
               className="space-y-6"
             >
                 <div className="flex flex-col items-center mb-4">
-                <CircularProgressBar key={resetCount} duration={60} size={120} strokeWidth={8} color="#3b82f6" />
+                <CircularProgressBar key={resetCount} duration={300} size={120} strokeWidth={8} color="#3b82f6" />
                 {!otpTimeout && 
                <p className="text-gray-700 mt-2">
                OTP has expired. <span onClick={handleSendOTP} className="text-sky-500 underline cursor-pointer">Reset the OTP</span>
@@ -250,16 +264,28 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
             >
               <input
                 type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                id="password"
+                value={Password.password}
+                onChange={(e) =>
+                  setPassword((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
                 placeholder="Enter new password"
                 className="w-full px-4 py-3 border-2 border-[#93c5fd] rounded-xl focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] outline-none transition-all placeholder-gray-400 hover:border-[#93c5fd]"
                 required
               />
               <input
                 type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                id="confirmPassword"
+                value={Password.confirmPassword}
+                onChange={(e) =>
+                  setPassword((prev) => ({
+                    ...prev,
+                    confirmPassword: e.target.value,
+                  }))
+                }
                 placeholder="Confirm password"
                 className="w-full px-4 py-3 border-2 border-[#93c5fd] rounded-xl focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] outline-none transition-all placeholder-gray-400 hover:border-[#93c5fd]"
                 required

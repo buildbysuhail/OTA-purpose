@@ -104,6 +104,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionMasterID,
   financialYearID,
 }) => {
+  const [triggerEffect, setTriggerEffect] = useState(false);
+
+  useEffect(() => {
+    if (triggerEffect) {
+      const timer = setTimeout(() => {
+        setTriggerEffect(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [triggerEffect]);
+
+  const handleClearControls = () => {
+    clearControls(
+      formState.isEdit,
+      formState.transaction.master.accTransactionMasterID
+    );
+    // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
+    setTriggerEffect(true); 
+  };
+
   const { t } = useTranslation("transaction");
   const [gridCode, setGridCode] = useState<string>(
     `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
@@ -1386,12 +1406,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   >
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        clearControls(
-                          formState.isEdit,
-                          formState.transaction.master.accTransactionMasterID
-                        );
-                      }}
+                      onClick={handleClearControls}
+                      // onClick={() => {
+                      //   clearControls(
+                      //     formState.isEdit,
+                      //     formState.transaction.master.accTransactionMasterID
+                      //   );
+                      // }}
                     >
                       <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
@@ -2116,6 +2137,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     ref={ledgerIdRef}
+                    triggerEffect={triggerEffect}
                     id="ledgerID"
                     className="w-full"
                     label={t(formState.formElements.ledgerID.label)}

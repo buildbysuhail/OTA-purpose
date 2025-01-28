@@ -94,7 +94,6 @@ const Urls = {
   sent_token:"/Subscription/Auth/SendTokenAsync",
   validate_token:"/Subscription/Auth/ValidateTokenAsync",
 
-
   // App
   application_setting: "/Core/ApplicationSettings/",
   getUserAppSetting: "/User/getUserAppSetting/",

@@ -93,6 +93,7 @@ const Urls = {
   get_login_credentials:"/Subscription/Auth/LoginCredentials/",
   sent_token:"/Subscription/Auth/SendTokenAsync",
   validate_token:"/Subscription/Auth/ValidateTokenAsync",
+  reset_password:"/Subscription/Auth/ResetPasswordAsync",
 
   // App
   application_setting: "/Core/ApplicationSettings/",

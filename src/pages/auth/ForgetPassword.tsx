@@ -108,7 +108,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
       return;
     }else{
       try {
-        const response = await api.post(Urls.updatePassword,{
+        const response = await api.post(Urls.reset_password,{
           ...Password,
           userName:emailOrPhone
         });

@@ -276,10 +276,7 @@ export const useAccTransaction = (
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled:
-          _formState.transaction.master.isLocked === true
-            ? true
-            : _formState.formElements.pnlMasters.disabled,
+        disabled:true,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -1389,9 +1386,10 @@ export const useAccTransaction = (
       handleLedgerCodeKeyDown(key);
     } else if (field === "amount") {
       handleAmountKeyDown(key);
+    }else if (field === "drCr") {
+      handleDrCrKeyDown(key);
     } else if (field === "costCentre") {
       if (key == "Enter") {
-        debugger;
         focusBtnAdd();
       }
     } else if (field === "voucherNumber") {
@@ -1478,6 +1476,7 @@ export const useAccTransaction = (
   };
 
   const handleLedgerIdKeyDown = async (id: any) => {
+    debugger;
     if (id > 0) {
       setTimeout(() => {
         focusAmount();
@@ -1493,6 +1492,18 @@ export const useAccTransaction = (
         focusNarration();
       } else {
         focusDrCr();
+      }
+    }
+  };
+
+  // DrCr keydown handler
+  const handleDrCrKeyDown = (e: any) => {
+    if (e === "Enter") {
+      const voucherType = formState.transaction.master.voucherType;
+      if (formState.formElements.costCentreID.visible == true) {
+        focusCostCenterRef();
+      } else {
+        focusBtnAdd();
       }
     }
   };

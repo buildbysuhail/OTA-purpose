@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid, GroupItem } from "devextreme-react/data-grid";
+import { DataGrid, GroupItem, KeyboardNavigation } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -134,6 +134,7 @@ interface ERPDevGridProps {
     operation: FilterOperation;
   }>;
   allowSorting?: boolean;
+  allowKeyboardNavigation?: boolean;
   allowSearching?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
@@ -151,6 +152,7 @@ interface ERPDevGridProps {
   onFilterChanged?: (e: any) => void;
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
+  onRowPrepared?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
   onSelectionChangedByRootState?: (e: any, state: RootState) => void;
   onKeyDown?: (e: any) => void;
@@ -190,6 +192,7 @@ interface ERPDevGridProps {
   allowEditing?: boolean;
   editMode?: "row" | "form" | "popup" | "batch";
   onRowUpdating?: (e: any) => void;
+  onRowUpdated?: (e: any) => void;
   onRowInserting?: (e: any) => void;
   onRowRemoving?: (e: any) => void;
   rowRender?: (row: any) => React.ReactNode;
@@ -428,14 +431,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       initialFilters = [],
       allowSorting = true,
       allowSearching = true,
+      allowKeyboardNavigation = false,
       showFilterRow = true,
       remoteOperations = true,
       condition,
       focusedRowEnabled = false,
       onRowClick,
+      onRowUpdated,
       onFilterChanged,
       onCellClick,
       onRowDblClick,
+      onRowPrepared,
       onSelectionChanged,
       onSelectionChangedByRootState,
       onKeyDown,
@@ -1317,6 +1323,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         ) {
           e.rowElement.style.display = "none"; // Hide row
         }
+        onRowPrepared && onRowPrepared(e)
       },
       [condition] // Add dependencies here
     );
@@ -1353,10 +1360,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     useEffect(() => {
       if (gridRef.current && enableScrollButton) {
         const gridInstance = gridRef.current.instance();
-        gridInstance.getScrollable().on("scroll", handleScroll);
+        gridInstance.getScrollable()?.on("scroll", handleScroll);
 
         return () => {
-          gridInstance.getScrollable().off("scroll", handleScroll);
+          gridInstance.getScrollable()?.off("scroll", handleScroll);
         };
       }
     }, [enableScrollButton, handleScroll]);
@@ -1413,6 +1420,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 : onSelectionChanged && onSelectionChanged(e)
             }
             onKeyDown={onKeyDown}
+            onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
             showColumnLines={showColumnLines}
@@ -1448,10 +1456,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               </FilterRow>
             )}
             {allowSearching && <SearchPanel visible={true} />}
+            {allowKeyboardNavigation && <KeyboardNavigation
+            editOnKeyPress={true}
+            enterKeyAction={"startEdit"}
+            enterKeyDirection={"column"}
+          />}
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
-            {allowSelection && <Selection mode={selectionMode} />}
+            {allowSelection && <Selection mode={selectionMode} selectAllMode={"allPages"}
+            showCheckBoxesMode={"always"}/>
+            }
             {allowGrouping && <Grouping />}
             {groupPanelVisible && (
               <Grouping contextMenuEnabled={true} expandMode="rowClick" />

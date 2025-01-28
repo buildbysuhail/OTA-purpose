@@ -636,6 +636,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       disabledApiCall,
     ]);
 
+    
     const loadData = async () => {
       setLoading(true);
       try {
@@ -667,9 +668,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         setFilteredItems(_options);
 debugger;
         // Automatically select the first option after data is loaded
-        if (value == -2) {
-          handleItemClick(_options[0]);
-        }
+       
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -734,10 +733,13 @@ debugger;
       } else {
         setInitial(final);
       }
-
+      if (value == -2 && items != undefined && items != null && items.length > 0) {
+        debugger
+        handleItemClick(items[0]);
+      }
       setActiveIndex(
         final != null
-          ? filteredItems.findIndex((item) => item.value === final.value)
+          ? filteredItems?.findIndex((item) => item.value === final.value)
           : -1
       );
     // }

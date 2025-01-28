@@ -972,6 +972,14 @@ export const useAccTransaction = (
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
           const fieldsToUpdate: Record<string, any> = {
+            employee: { disabled: false },
+            jvDrCr: { disabled: false },
+            masterAccount: { disabled: false },
+            referenceDate: { disabled: false },
+            referenceNumber: { disabled: false },
+            transactionDate: { disabled: false },
+            linkEdit: { visible: false },
+            
             pnlMasters: { disabled: false },
             dxGrid: { disabled: false },
             btnSave: { disabled: true },
@@ -1599,6 +1607,7 @@ export const useAccTransaction = (
           jvDrCr: { disabled: false },
           masterAccount: { disabled: false },
           referenceDate: { disabled: false },
+          referenceNumber: { disabled: false },
           transactionDate: { disabled: false },
           linkEdit: { visible: false },
         },

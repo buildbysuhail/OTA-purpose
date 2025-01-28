@@ -360,7 +360,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           );
           dispatch(
             accFormStateRowHandleFieldChange({
-              fields: { ledgerCode: 0 },
+              fields: { ledgerCode: "" },
             })
           );
         }

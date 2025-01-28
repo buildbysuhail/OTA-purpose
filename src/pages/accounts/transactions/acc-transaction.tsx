@@ -410,7 +410,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     loadLedgerData();
   }, [formState.row.ledgerID]);
   useEffect(() => {
-    if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
+    // if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -418,8 +418,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           },
         })
       );
-    } else {
-    }
+    // } else {
+    // }
   }, [formState.row.amount]);
   useEffect(() => {
     dispatch(
@@ -1651,6 +1651,7 @@ console.log('masterAccountID = -2;');
                             const ret = await loadAndSetAccTransVoucher(
                               false,
                               e.target?.value
+                              , undefined, undefined, undefined, undefined, undefined, undefined, true
                             );
                             // if(ret) {
                             //   dispatch(
@@ -2191,6 +2192,7 @@ console.log('masterAccountID = -2;');
                   className=""
                   label={t(formState.formElements.amount.label)}
                   type="number"
+                  min={0}
                   value={formState.row.amount}
                   onKeyDown={(e) => {
                     handleKeyDown(e, "amount");

@@ -217,14 +217,15 @@ export const useAccTransaction = (
     formType?: string,
     manualInvoiceNumber?: number,
     accTransactionMasterID?: number,
-    mode?: "increment" | "decrement" | undefined
+    mode?: "increment" | "decrement" | undefined,
+    skipPrompt?: boolean | false
   ) => {
     debugger;
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });
-    if (_s_isDirty) {
+    if (_s_isDirty && skipPrompt != true) {
       alert('changed')
       if (mode == "increment" || mode == "decrement") {
         const _voucherNumber =
@@ -1075,6 +1076,8 @@ export const useAccTransaction = (
         fields: {
           ledgerID: { reload: true },
           costCentreID: { reload: true },
+          amount:{ disabled: false},
+          pnlMasters: { disabled: false}
         },
       })
     );
@@ -1506,8 +1509,9 @@ export const useAccTransaction = (
 
   // DrCr keydown handler
   const handleDrCrKeyDown = (e: any) => {
-    if (e === "Enter") {
+    if(e === "Enter" && (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")) {
       const voucherType = formState.transaction.master.voucherType;
+
       if (formState.formElements.costCentreID.visible == true) {
         focusCostCenterRef();
       } else {
@@ -1757,7 +1761,7 @@ export const useAccTransaction = (
   };
   const handleLoadByRefNo = useCallback(() => {
     if (formState.transaction.master.referenceNumber) {
-      loadAndSetAccTransVoucher(true);
+      loadAndSetAccTransVoucher(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
     }
   }, [formState.transaction.master.referenceNumber]);
 

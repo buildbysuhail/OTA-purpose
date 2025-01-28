@@ -87,6 +87,7 @@ const accTransactionSlice = createSlice({
       state.isRowEdit = false;
       state.printOnSave = true;
       state.transaction.master.isLocked = false;
+      state.transaction.master.totalAmount = 0;
 
       if (counterwiseCashLedgerId > 0 && allowSalesCounter) {
         if (

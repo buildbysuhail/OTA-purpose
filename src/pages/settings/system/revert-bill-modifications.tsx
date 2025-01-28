@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
@@ -37,13 +37,19 @@ const RevertBillModifications: React.FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("system");
   const rootState = useRootState();
+    const dataGridRef = useRef<any>(null);
   const handleDelete = async (data: any) => {
     const res = await api.post(Urls.revertBillModifications, {
       transactionMasterId: data.data.invTransactionMasterID,
       remarks: '',
       transactionType: data.data.tType,
     });
-    handleResponse(res);
+    handleResponse(res, () => {
+      debugger;
+      dispatch(
+        toggleRevertBillModifications({ ...rootState.PopupData.revertBillModifications, reload: true })
+      );
+    });
   };
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -147,6 +153,7 @@ const RevertBillModifications: React.FC = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
+                  ref={dataGridRef}
                   columns={columns}
                   gridHeader={t("revert_bill_modifications")}
                   dataUrl={Urls.revertBillModifications}
@@ -154,7 +161,11 @@ const RevertBillModifications: React.FC = () => {
                   popupAction={toggleRevertBillModifications}
                   changeReload={(reload: any) => {
                     dispatch(
-                      toggleRevertBillModifications({ ...rootState, reload: reload })
+                      toggleRevertBillModifications(
+                        { 
+                          ...rootState.PopupData.revertBillModifications,
+                          reload: reload
+                        })
                     );
                   }}
                   hideGridAddButton={true}

@@ -88,6 +88,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, 
                   remoteOperations={{paging: false,filtering: false,  sorting: false}}
                   hideGridAddButton={true}
                   reload={true}
+                  showTotalCount={false}
                 ></ErpDevGrid>
               </div>
             </div>

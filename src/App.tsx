@@ -59,6 +59,7 @@ import { ApplicationSettingsType } from "./pages/settings/system/application-set
 import AutoClicker from "./Nodevwatermark";
 import { setSoftwareDate } from "./redux/slices/client-session/reducer";
 import moment from "moment";
+import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -102,6 +103,8 @@ function App() {
   const { i18n } = useTranslation()
 
   
+  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
 
   useEffect(() => {
     const token = localStorage.getItem("token");

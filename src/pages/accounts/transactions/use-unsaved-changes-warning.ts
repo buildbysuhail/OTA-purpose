@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { unstable_usePrompt as usePrompt } from 'react-router-dom';
 import { isEqual } from 'lodash'; // For deep comparison
 import { AccTransactionData, AccTransactionRow } from './acc-transaction-types';
@@ -16,6 +16,7 @@ import { customJsonParse } from '../../../utilities/jsonConverter';
 export const useUnsavedChangesWarning = (currentState: any) => {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
 
@@ -42,9 +43,10 @@ export const useUnsavedChangesWarning = (currentState: any) => {
   // Handle in-app navigation using React Router
   useEffect(() => {
     debugger;
+    const isOnAccountsRoute = location.pathname.includes('accounts/transactions');
 const _s_isDirty =isDirtyAccTransaction(formState.prev, currentState);
     // usePrompt({when: isDirty, message: 'You have unsaved changes. Are you sure you want to leave?'});
-    if(_s_isDirty) {
+    if (_s_isDirty && isOnAccountsRoute) {
       alert("SAveChanges")
       navigate(1)
     }

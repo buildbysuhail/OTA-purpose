@@ -537,8 +537,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         foreignCurrency: {...initialFormElements.foreignCurrency, visible: isForeignCurrencyVisible },
         lblGroupName: {...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
         masterAccount: {...initialFormElements.masterAccount, disabled: true },
-        discount: {...initialFormElements.discount, visible: false },
-        hasDiscount: {...initialFormElements.hasDiscount, visible: false },
+        discount: {...initialFormElements.discount, visible: true },
         projectId: {...initialFormElements.projectId, visible: isProjectIdVisible },
       } as any;
       switch (voucherType) {
@@ -738,6 +737,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...initialFormElements.jvDrCr,
               visible: true,
             },
+            discount: {
+              ...initialFormElements.discount,
+              visible: false,
+            },
           };
           break;
         }
@@ -767,6 +770,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             drCr: {
               ...initialFormElements.drCr,
               visible: true,
+            },
+            discount: {
+              ...initialFormElements.discount,
+              visible: false,
             },
           };
           break;
@@ -2193,8 +2200,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              <div className="xl:w-[170px] lg:w-[250px] ">
-                {formState.formElements.hasDiscount.visible && (
+              <div className="xl:w-[170px] lg:w-[250px]  mb-[13px]">
+                {formState.formElements.discount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="hasDiscount"
@@ -2469,6 +2476,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
+              showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
                 onSelectionChanged(e, state)
@@ -2878,7 +2886,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ) => {
                   if (
                     applicationSettings.accountsSettings?.billwiseMandatory &&
-                    formState.row.billwiseDetails != ""
+                    billwiseDetails != ""
                   ) {
                     setTimeout(() => {
                       dispatch(

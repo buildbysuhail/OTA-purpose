@@ -225,6 +225,7 @@ export const useAccTransaction = (
       row: { ...formState.row },
     });
     if (_s_isDirty) {
+      alert('changed')
       if (mode == "increment" || mode == "decrement") {
         const _voucherNumber =
           mode == "increment"

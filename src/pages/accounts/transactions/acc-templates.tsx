@@ -56,9 +56,9 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
   return (
     <div className="relative">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px]  bg-[#f9fafb] h-20 p-4 z-50">
-       <h1 className=" font-medium text-xl capitalize">{t("templates")}</h1>
-        <button className="text-gray-500 hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
+      <div className="flex items-center justify-between mb-6 sticky top-0  ml-[5px] dark:!bg-dark-bg  bg-[#f9fafb] h-20 p-4 z-50">
+       <h1 className=" font-medium text-xl dark:text-dark-text  capitalize">{t("templates")}</h1>
+        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
           <X className="h-5 w-5" />
         </button>
       </div>
@@ -75,7 +75,7 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
                       key={`ti_${temp?.id}`}
                       tabIndex={0}
                       onClick={() => { }}
-                      className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px  w-auto min-w-[140px]  aspect-[2.3/3] border border-accent/30 rounded"
+                      className=" relative dark:border-dark-border hover:ring-0 hover:shadow-xl cursor-pointer 100px  w-auto min-w-[140px]  aspect-[2.3/3] border border-accent/30 rounded"
                     >
                       <div className="relative group">
                         <img
@@ -88,12 +88,12 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
                       </div>
                       <div className="px-2 py-3">
                     
-                        <div className="flex text-xs justify-around mt-1">
-                            <h1 className="font-medium text-xs text-center capitalize break-words truncate" title={temp?.templateName}>
+                        <div className="flex text-xs dark:text-dark-text justify-around mt-1">
+                            <h1 className="font-medium dark:text-dark-text text-xs text-center capitalize break-words truncate" title={temp?.templateName}>
                             {temp?.templateName}
 
                             </h1>
-                            <button className="ti-btn hover:bg-primary bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" 
+                            <button className="ti-btn dark:hover:bg-dark-hover-bg hover:bg-primary  dark:border-dark-border dark:!bg-dark-bg-card bg-gray-400 dark:text-dark-text dark:hover:text-dark-text hover:text-white  !text-[10px] !px-2 !py-1 rounded" 
                             onClick={()=>loadTemplateId(temp)}
                             >
                               {"use this"}

@@ -1,0 +1,44 @@
+$dark-label: #e1e0e0;
+// $dark-text: #e1e0e0;
+$dark-text: #e0e0e0;
+$dark-bg: #1e1e1f;
+// $dark-bg-header: #404344bf;
+$dark-bg-header: #383a3b;
+$dark-hover-text: #000000;
+$dark-border: #f2f4f538;
+$dark-bg-card: #202223;
+$dark-hover-bg: #343536;
+$dark-combo-dd: #373737;
+$dark-grid-hover: #000000;
+$dark-grid-selection: #000000;
+
+.resizable-sidebar-custom {
+  position: fixed !important;
+  z-index: 55 !important;
+  background: white !important;
+  height: 100% !important;
+  top: 0;
+  right: 0px;
+}
+
+.dark .resizable-sidebar-custom {
+  
+  background: $dark-bg  !important;
+  
+}
+
+.custom-handle {
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  cursor: ew-resize;
+  background: transparent;
+}
+
+.ltr-handle {
+  left: 0;
+}
+
+.rtl-handle {
+  right: 0;
+}

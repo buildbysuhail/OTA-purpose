@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
-import "./erp-resizable-sidebar.css";
+import "./erp-resizable-sidebar.scss";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "./erp-scrollbar";
 

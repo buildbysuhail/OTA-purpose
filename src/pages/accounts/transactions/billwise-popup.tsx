@@ -70,7 +70,11 @@ const BillwiseComponent = ({
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [netAdjustment, setNetAdjustment] = useState(0);
-  const [gridHeight, setGridHeight] = useState<number>(500);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
@@ -104,11 +108,14 @@ const BillwiseComponent = ({
       setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
     }
   }, [formState.billwiseData, formState.showbillwise]);
+
   useEffect(() => {
     let wh = modalHeight;
-    let gridHeightWindows = isMaximized ? wh - 300 : wh - 350;
-    setGridHeight(gridHeightWindows);
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows =  wh - 360;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
+
   useEffect(() => {
     const voucherType = formState.transaction.master.voucherType;
     if (
@@ -755,7 +762,7 @@ debugger;
               ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
             )
           )}
-          height={gridHeight}
+          heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"
           showBorders={true}
           columnAutoWidth={true}

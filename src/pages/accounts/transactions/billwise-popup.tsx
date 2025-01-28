@@ -750,9 +750,9 @@ debugger;
           dataSource={store?.filter(
             (row: any) =>
               showAllTransactions ||
-              ((formState.transaction.master.voucherType == VoucherType.OpeningBalance && row.drCr !== formState.row.drCr) 
+              (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
               ||
-              (formState.transaction.master.voucherType != VoucherType.OpeningBalance && row.drCr !== formState.transaction.master.drCr)
+              ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
             )
           )}
           height={gridHeight}

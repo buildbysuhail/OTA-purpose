@@ -972,6 +972,14 @@ export const useAccTransaction = (
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
           const fieldsToUpdate: Record<string, any> = {
+            employee: { disabled: false },
+            jvDrCr: { disabled: false },
+            masterAccount: { disabled: false },
+            referenceDate: { disabled: false },
+            referenceNumber: { disabled: false },
+            transactionDate: { disabled: false },
+            linkEdit: { visible: false },
+
             pnlMasters: { disabled: false },
             dxGrid: { disabled: false },
             btnSave: { disabled: true },
@@ -1599,6 +1607,7 @@ export const useAccTransaction = (
           jvDrCr: { disabled: false },
           masterAccount: { disabled: false },
           referenceDate: { disabled: false },
+          referenceNumber: { disabled: false },
           transactionDate: { disabled: false },
           linkEdit: { visible: false },
         },
@@ -1798,18 +1807,19 @@ export const useAccTransaction = (
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-
+debugger;
+const lastPrefix = selectVoucherData ? selectVoucherData[0].lastPrefix: ""
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
+        formState.transaction.master.voucherType,        
         formState.transaction.master.voucherType,
-        formState.transaction.master.voucherPrefix,
         false
       );
-
+debugger;
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
-            voucherPrefix: selectVoucherData.lastPrefix,
+            // voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
             accTransactionMasterID: 0,
             transactionDate: moment(

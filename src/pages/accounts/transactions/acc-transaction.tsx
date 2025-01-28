@@ -1757,7 +1757,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                   )}
 
-                  <div>
+                <div>
                   {formState.formElements.commonNarration.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -1782,7 +1782,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                     />
                   )}
-                  </div>
+                </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   {formState.formElements.foreignCurrency.visible == true &&
@@ -2113,6 +2113,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     label={t(formState.formElements.ledgerID.label)}
                     data={formState.row}
                     reload={formState.formElements.ledgerID.reload}
+                    disableEnterNavigation={true}
                     changeReload={(reload: boolean) =>
                       dispatch(
                         updateFormElement({
@@ -2120,6 +2121,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         })
                       )
                     }
+                    onKeyDown={(e) => {
+                      handleKeyDown(e, "ledgerID");
+                    }}
                     onSelectItem={(e) => {
                       dispatch(
                         accFormStateRowHandleFieldChange({
@@ -2188,6 +2192,40 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                   disabled={
                     formState.formElements.amount?.disabled ||
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                />
+              )}
+              {formState.formElements.drCr.visible && (
+                <ERPDataCombobox
+                  onKeyDown={(e) => {
+                    handleKeyDown(e, "drCr");
+                  }}
+                  ref={drCrRef}
+                  disableEnterNavigation={true}
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="drCr"
+                  enableClearOption={false}
+                  className="min-w-[70px] max-w-[150px]"
+                  label={t(formState.formElements.drCr.label)}
+                  value={formState.row.drCr}
+                  onSelectItem={(e) => 
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: { drCr: e.value },
+                      })
+                    )
+                  }
+                  field={{
+                    valueKey: "value",
+                    labelKey: "label",
+                  }}
+                  options={[
+                    { value: "Dr", label: "Debit" },
+                    { value: "Cr", label: "Credit" },
+                  ]}
+                  disabled={
+                    formState.formElements.drCr?.disabled ||
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
@@ -2277,43 +2315,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         fields: { narration: e.target?.value },
                       })
                     )
-                  }  
+                  }
                   disabled={
                     formState.formElements.narration?.disabled ||
                     formState.formElements.pnlMasters?.disabled
                   }
                 />
               )}
-              {formState.formElements.drCr.visible && (
-                <ERPDataCombobox
-                ref={drCrRef}
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="drCr"
-                  enableClearOption={false}
-                  className="min-w-[70px] max-w-[150px]"
-                  label={t(formState.formElements.drCr.label)}
-                  value={formState.row.drCr}
-                  onChange={(e) =>
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: { drCr: e.value },
-                      })
-                    )
-                  }
-                  field={{
-                    valueKey: "value",
-                    labelKey: "label",
-                  }}
-                  options={[
-                    { value: "Dr", label: "Debit" },
-                    { value: "Cr", label: "Credit" },
-                  ]}
-                  disabled={
-                    formState.formElements.drCr?.disabled ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                />
-              )}
+
               {formState.transaction?.master?.isLocked !== undefined &&
                 formState.transaction?.master?.isLocked == true &&
                 (userSession.userTypeCode == "CA" ||
@@ -2340,6 +2349,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     loading={formState.rowProcessing}
                     type="button"
                     onClick={() => addOrEditRow()}
+                    onKeyDown={(e) => {
+                      console.log(`Key:${e.key}`);
+                      
+                      if(e.key == "Enter") {
+                        addOrEditRow();
+                      }
+                    }}
                     disabled={
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||

@@ -1666,7 +1666,6 @@ console.log('masterAccountID = -2;');
                     </>
                   )}
                 </div>
-                {JSON.stringify(formState.masterAccountID)}
                 {formState.formElements.masterAccount.visible &&
                   formState.formElements?.masterAccount?.accLedgerType !=
                     undefined && (

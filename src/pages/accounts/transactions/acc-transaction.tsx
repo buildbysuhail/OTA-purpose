@@ -1757,6 +1757,33 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                   )}
 
+                  <div>
+                  {formState.formElements.commonNarration.visible && (
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="notes"
+                      label={t(formState.formElements.commonNarration.label)}
+                      className="max-w-full"
+                      value={formState.transaction.master.commonNarration}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateTransactionMasterHandleFieldChange({
+                            fields: { commonNarration: e.target?.value },
+                          })
+                        )
+                      }
+                      disableEnterNavigation={true}
+                      onKeyDown={(e) => {
+                        handleKeyDown(e, "commonNarration");
+                      }}
+                      disabled={
+                        formState.formElements.commonNarration?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
+                  </div>
+
                 <div className="grid grid-cols-2 gap-2">
                   {formState.formElements.foreignCurrency.visible == true &&
                     formState.foreignCurrency == true && (
@@ -1820,49 +1847,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         )}
                       </>
                     )}
-                  {formState.formElements.chequeNumber.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="chequeNumber"
-                      label={t(formState.formElements.chequeNumber.label)}
-                      value={formState.row.chequeNumber}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { chequeNumber: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.chequeNumber?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-
-                  {formState.formElements.bankDate.visible && (
-                    <ERPDateInput
-                      localInputBox={formState.userConfig?.inputBoxStyle}
-                      id="bankDate"
-                      label={t(formState.formElements.bankDate.label)}
-                      value={new Date(formState.row.bankDate)}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { bankDate: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.bankDate?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, "bankDate");
-                      }}
-                    />
-                  )}
                   {formState.formElements.linkEdit.visible == true && (
                     <button className="">
                       <span
@@ -2036,31 +2020,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                       disabled={
                         formState.formElements.remarks?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-
-                  {formState.formElements.commonNarration.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="notes"
-                      label={t(formState.formElements.commonNarration.label)}
-                      className="max-w-full"
-                      value={formState.transaction.master.commonNarration}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateTransactionMasterHandleFieldChange({
-                            fields: { commonNarration: e.target?.value },
-                          })
-                        )
-                      }
-                      disableEnterNavigation={true}
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, "commonNarration");
-                      }}
-                      disabled={
-                        formState.formElements.commonNarration?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
                     />
@@ -2439,6 +2398,49 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.bankName?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
+                    />
+                  )}
+                  {formState.formElements.chequeNumber.visible && (
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="chequeNumber"
+                      label={t(formState.formElements.chequeNumber.label)}
+                      value={formState.row.chequeNumber}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { chequeNumber: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.chequeNumber?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
+
+                  {formState.formElements.bankDate.visible && (
+                    <ERPDateInput
+                      localInputBox={formState.userConfig?.inputBoxStyle}
+                      id="bankDate"
+                      label={t(formState.formElements.bankDate.label)}
+                      value={new Date(formState.row.bankDate)}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { bankDate: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.bankDate?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                      disableEnterNavigation
+                      onKeyDown={(e) => {
+                        handleKeyDown(e, "bankDate");
+                      }}
                     />
                   )}
                 </>

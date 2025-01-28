@@ -348,6 +348,7 @@ const Urls = {
   // Accounts End
   //Grid Preference
   grid_preference: "/Core/GridPreference",
+  grid_preference_reset: "/Core/GridPreference/Reset/",
   //Templates
   templates: "/Core/Template/",
   crm_templates: "/Core/Template/CRM/",

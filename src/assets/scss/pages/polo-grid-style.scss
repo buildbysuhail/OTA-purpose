@@ -561,6 +561,9 @@ $dark-grid-selection: #000000;
 
 .custom-data-grid {
   // Table Header Styling
+  .dx-row-matched-red {
+    background-color: red !important;
+  }
   .dx-datagrid-headers {
     overflow: hidden;
     // border-radius: 10px;

@@ -419,11 +419,10 @@ const BillwiseComponent = ({
     }, 0);
   };
   const handleRowPrepared = (e: any) => {
-    const DRCR = "YourCondition"; // Replace with your DRCR condition
-    const VisibleRow = true; // Replace with your visibility condition
-debugger;
     if (e.rowType === "data") {
+      debugger;
       if (e.data.drCr === formState.transaction.master.drCr) {
+        e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
@@ -691,6 +690,7 @@ debugger;
       sx={{ p: 0, m: 0 }}
     >
       <CardContent sx={{ p: 0 }}>
+        frm {formState.transaction.master.drCr}
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
@@ -740,6 +740,7 @@ debugger;
 
         <ERPDevGrid
           ref={dataGridRef}
+          rowAlternationEnabled={false} 
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"

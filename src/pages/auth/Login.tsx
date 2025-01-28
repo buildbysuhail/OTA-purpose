@@ -304,13 +304,20 @@ const Login = () => {
         hasSubmit={false}
         closeTitle="Close"
         title="Counter Settings"
-        width="w-full"
-        isFullHeight={true}
+        width="w-full max-w-[700px]"
+        minHeight={800}
         closeModal={() => {
           setCounterSettings({ show: false, token: "" });
         }}
-        content={<CounterSettings token={counterSettings.token} />}
+        content={
+          <CounterSettings
+          token={counterSettings.token}
+          isFromLogin={true}
+          onSuccess={() => setCounterSettings({ show: false, token: "" })}
+        />
+      }
       ></ERPModal>
+
       {showForgotPassword && (
         <ForgotPassword onClose={() => setShowForgotPassword(false)} />
       )}

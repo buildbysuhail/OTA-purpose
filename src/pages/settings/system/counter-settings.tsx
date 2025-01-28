@@ -26,13 +26,18 @@ interface CounterData {
   systemName: string;
   systemCode: string;
   counterId: number | null;
+ 
 }
 const api = new APIClient();
 interface CounterSettingsProps {
   token?: string;
+  isFromLogin?:boolean
+  onSuccess?: () => void;
+  isMaximized?: boolean;
+  modalHeight?: any
 }
 
-const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
+const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, onSuccess,isMaximized,modalHeight}) => {
   const initData: CounterData = {
     systemName: "",
     systemCode: "",
@@ -45,7 +50,17 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const navigate = useNavigate();
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
 
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightMobile =isFromLogin ? modalHeight - 100: wh - 50;
+    let gridHeightWindows =isFromLogin ?  modalHeight - 540 : wh - 480;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, []);
   useEffect(() => {
     loadCounterData();
     setReload(true);
@@ -85,6 +100,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
         response,
         () => {
           setReload(true);
+          if(isFromLogin && onSuccess) onSuccess();
         },
         () => {}
       );
@@ -105,7 +121,6 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation("system");
-  const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -115,7 +130,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 200,
+        minWidth: 150,
       },
       {
         dataField: "systemCode",
@@ -134,7 +149,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 200,
+        minWidth: 150,
         allowEditing: true,
       },
       {
@@ -156,9 +171,6 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
       <div className="grid grid-cols-12 gap-x-6 dark:bg-dark-bg bg-[#ffffff]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
-            <h1 className="text-2xl font-normal tracking-wide text-#3f3f46 dark:te">
-              {t("counter_settings")}
-            </h1>
             <div className="grid grid-cols-1 gap-4 md:w-[550px] my-3">
               <ErpInput
                 // labelDirection="horizontal"
@@ -252,7 +264,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token }) => {
                 hideGridAddButton={true}
                 hideDefaultExportButton={true}
                 onRowClick={handleRowClick}
-                heightToAdjustOnWindows={500}
+                heightToAdjustOnWindowsInModal={gridHeight.windows}
                 reload={reload}
                 pageSize={40}
                 allowSearching

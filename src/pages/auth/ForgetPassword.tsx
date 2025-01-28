@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { X, ArrowLeft, Mail, Phone, Lock } from "lucide-react";
 import Urls from "../../redux/urls";
 import { APIClient } from "../../helpers/api-client";
 import { handleResponse } from "../../utilities/HandleResponse";
 import ERPToast from "../../components/ERPComponents/erp-toast";
+import CircularProgressBar from "./CircularProgressBar";
 
 // API endpoints
 
@@ -27,8 +28,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-
- 
+  const [otpTimeout, setOtpTimeout] = useState(false)
+  const [resetCount, setResetCount] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const handleVerifyEmail = async () => {
     try {
@@ -42,7 +44,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
         setError(null);
       } 
     } catch (err) {
-      setError("Failed");
+      setError("Failed to Identify email or Phone number Please try Again");
       console.error(err);
     }
   };
@@ -51,10 +53,22 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
   const handleSendOTP = async()=>{
     try {
       const response = await api.post(Urls.sent_token,otpMethod);
-      handleResponse(response,()=>{
-        setVerifyOtp(response.item) ; 
-        setStep(3)
-      });
+        handleResponse(response, () => {
+          setVerifyOtp(response.item)
+          setStep(3)
+          setResetCount(prev => prev + 1);
+          setOtpTimeout(true)
+
+        // Clear existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+          // Set new timeout
+          timeoutRef.current = setTimeout(() => {
+            setOtpTimeout(false);
+          }, 1 * 60 * 1000);
+        })
     } catch (error) {
       console.error("Error in setOpt:", error);
     } 
@@ -70,22 +84,20 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
           ...verifyOtp,
           tokenOrOtp:otp
         });
-
-        
       handleResponse(response,()=>setStep(4));
-
     } catch (error) {
+      setError("Error in VerifyOpt Please try Again");
       console.error("Error in verifyOpt:", error);
     } 
   };
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmPassword) {
-      ERPToast.showWith("Passwords do not match", "warning")
+      setError("password not match!!!");
       return;
     }else{
       try {
-        const response = await api.post(Urls.validate_token,otp);
+        const response = await api.post(Urls.updatePassword,{password:confirmPassword});
         handleResponse(response,()=>onClose());
       } catch (err) {
         setError("Failed to reset password. Please try again.");
@@ -199,6 +211,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
               }}
               className="space-y-6"
             >
+                <div className="flex flex-col items-center mb-4">
+                <CircularProgressBar key={resetCount} duration={60} size={120} strokeWidth={8} color="#3b82f6" />
+                {!otpTimeout && 
+               <p className="text-gray-700 mt-2">
+               OTP has expired. <span onClick={handleSendOTP} className="text-sky-500 underline cursor-pointer">Reset the OTP</span>
+               </p>
+                }
+              </div>
               <input
                 type="text"
                 value={otp}
@@ -206,9 +226,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
                 placeholder="Enter OTP"
                 className="w-full px-4 py-3 border-2 border-[#93c5fd] rounded-xl focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] outline-none transition-all placeholder-gray-400 hover:border-[#93c5fd]"
                 required
+                disabled={!otpTimeout}
               />
               <button
                 type="submit"
+                disabled={!otpTimeout}
                 className="w-full bg-[#2563eb] text-white py-3 rounded-xl hover:bg-[#1d4ed8] focus:ring-2 focus:ring-[#3b82f6] focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl group"
               >
                 Verify OTP

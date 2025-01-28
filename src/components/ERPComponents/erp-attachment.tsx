@@ -24,6 +24,7 @@ interface ERPAttachmentProps {
 
 export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
   const [files, setFiles] = useState<FileUpload[]>([]);
+  const [ERPAttachmentOpen, setERPAttachmentOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -94,19 +95,25 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
   const { t } = useTranslation("transaction");
   return (
     <div className="w-full p-2 self-end max-h-[100%] overflow-auto pb-[64px]">
-      <button
-        className="text-gray-500 hover:text-gray-700 right-0"
+      {/* <button
+        className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text hover:text-gray-700 right-0"
         onClick={() => {
           setIsOpen(false);
         }}
       >
         <X className="h-5 w-5" />
-      </button>
+      </button> */}
+      <div className="flex items-center justify-between mb-1 sticky top-0   dark:!bg-dark-bg  h-[3rem] py-4 z-50">
+       <h6 className=" font-medium  dark:text-dark-text  capitalize">{t("attachment")}</h6>
+        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
       <div
         className={`border-2 border-dashed rounded-lg p-3 text-center transition-colors ${
           isDragging
-            ? "border-[#3b82f6] bg-[#eff6ff]"
-            : "border-gray-300 hover:border-[#93c5fd]"
+            ? "border-[#3b82f6] dark:bg-dark-bg-header bg-[#eff6ff]"
+            : " dark:border-dark-border border-gray-300 hover:border-[#93c5fd]"
         }`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -145,7 +152,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               onChange={handleFileSelect}
             />
           </div> 
-          <p className="text-sm text-gray-500">{t("or_drop")}</p>
+          <p className="text-sm dark:text-dark-text text-gray-500">{t("or_drop")}</p>
         </div>
       </div>
 
@@ -153,7 +160,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         {files.map((file) => (
           <div
             key={file.id}
-            className="flex items-center  bg-gray-50 rounded-lg p-3 transition-all hover:bg-gray-300 border border-b-[#00000024]"
+            className="flex items-center dark:bg-dark-bg-card  bg-gray-50 rounded-lg p-3 transition-all dark:hover:bg-dark-hover-bg hover:bg-gray-300 border dark:border-dark-border border-b-[#00000024]"
           >
             <svg
               className="w-5 h-5 text-[#3b82f6] flex-shrink-0"
@@ -174,12 +181,12 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
                 <p className="font-medium truncate text-sm">{file.file.name}</p>
               </div>
               <div className="flex items-center space-x-2">
-                <p className="text-xs text-gray-500 whitespace-nowrap">
+                <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
                   {formatFileSize(file.file.size)}
                 </p>
                 <button
                   onClick={() => removeFile(file.id)}
-                  className="h-6 w-6 flex items-center justify-center text-gray-500 hover:text-[#ef4444]"
+                  className="h-6 w-6 flex items-center justify-center dark:text-dark-text text-gray-500 hover:text-[#ef4444]"
                 >
                   {file.uploaded ? (
                     <svg

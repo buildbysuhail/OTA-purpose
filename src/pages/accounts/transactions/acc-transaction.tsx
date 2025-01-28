@@ -79,6 +79,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
+import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 interface BilledItem {
   id?: number;
   name: string;
@@ -899,6 +900,9 @@ console.log('masterAccountID = -2;');
       setTemplateLoad(false);
     }
   }, []);
+  const selectAttachment = useCallback(async () => {
+    setIsAttachmentOpen(true);
+  }, []);
   const { round } = useNumberFormat();
   const handleCustomSummary = (options: any) => {
     if (options.summaryProcess === "start") {
@@ -1118,6 +1122,7 @@ console.log('masterAccountID = -2;');
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
@@ -3275,9 +3280,18 @@ console.log('masterAccountID = -2;');
                 {t("template_elite")}
               </span>
             </button>
-            <button className="text-blue-600">
-              <AttachmentSidebar displayType="link" />
+            <button className="text-blue-600 whitespace-nowrap">
+              <span
+                className="hover:underline text-[#0ea5e9] capitalize"
+                onClick={selectAttachment}
+              >
+                {/* {t("change")} */}
+                {t("attachment")}
+              </span>
             </button>
+            {/* <button className="text-blue-600">
+              <AttachmentSidebar displayType="link" />
+            </button> */}
           </div>
         </div>
 
@@ -3340,6 +3354,12 @@ console.log('masterAccountID = -2;');
         isOpen={isTemplateOpen}
         setIsOpen={setIsTemplateOpen}
         children={<TemplatesView setIsOpen={setIsTemplateOpen} />}
+      ></ERPResizableSidebar>
+      <ERPResizableSidebar
+        minWidth={350}
+        isOpen={isAttachmentOpen}
+        setIsOpen={setIsAttachmentOpen}
+        children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
       ></ERPResizableSidebar>
     </div>
   );

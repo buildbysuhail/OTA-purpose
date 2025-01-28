@@ -276,10 +276,7 @@ export const useAccTransaction = (
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled:
-          _formState.transaction.master.isLocked === true
-            ? true
-            : _formState.formElements.pnlMasters.disabled,
+        disabled:true,
       },
       btnSave: {
         ..._formState.formElements.btnSave,

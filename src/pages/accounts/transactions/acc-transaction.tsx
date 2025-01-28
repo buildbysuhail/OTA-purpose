@@ -1,11 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
-import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../components/ERPComponents/erp-dev-grid";
 import {
   AccTransactionData,
   AccTransactionFormState,
@@ -121,7 +129,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       formState.transaction.master.accTransactionMasterID
     );
     // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
-    setTriggerEffect(true); 
+    setTriggerEffect(true);
   };
 
   const { t } = useTranslation("transaction");
@@ -219,7 +227,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     narrationRef,
     voucherNumberRef,
     chequeNumberRef,
-    remarksRef,
+    remarksRef
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -444,7 +452,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         userSession.dbIdValue == "543140180640";
 
       // Prepare the fields to update based on conditions
-     
+
       // dispatch(updateFormElement({ fields: fieldsToUpdate }));
       // // Dispatch the update action
 
@@ -549,16 +557,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       );
       _formState.row.ledgerCode = ledgerData.ledgerCode;
       debugger;
-      let fieldsToUpdate = { 
+      let fieldsToUpdate = {
         ...initialFormElements,
-        btnSave: {...initialFormElements.btnSave, disabled: true },
-        btnEdit: {...initialFormElements.btnEdit, disabled: true },
-        btnPrint: {...initialFormElements.btnPrint, disabled: true },
-        foreignCurrency: {...initialFormElements.foreignCurrency, visible: isForeignCurrencyVisible },
-        lblGroupName: {...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
-        masterAccount: {...initialFormElements.masterAccount, disabled: true },
-        discount: {...initialFormElements.discount, visible: true },
-        projectId: {...initialFormElements.projectId, visible: isProjectIdVisible },
+        pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
+        btnSave: { ...initialFormElements.btnSave, disabled: true },
+        btnEdit: { ...initialFormElements.btnEdit, disabled: true },
+        btnPrint: { ...initialFormElements.btnPrint, disabled: true },
+        foreignCurrency: {
+          ...initialFormElements.foreignCurrency,
+          visible: isForeignCurrencyVisible,
+        },
+        lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
+        masterAccount: { ...initialFormElements.masterAccount, disabled: true },
+        discount: { ...initialFormElements.discount, visible: true },
+        projectId: {
+          ...initialFormElements.projectId,
+          visible: isProjectIdVisible,
+        },
       } as any;
       switch (voucherType) {
         case "CR":
@@ -826,24 +841,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       _formState.formElements = fieldsToUpdate;
-      setAccTransVoucher(_formState, true)
+      setAccTransVoucher(_formState, true);
       debugger;
-
-      
     };
-
-   
 
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
   }, [voucherType, voucherPrefix]);
-  
+
   // useEffect(() => {
   //   if (!voucherType) return;
   //   const updateFormElementsBasedOnVoucherType = () => {
-      
 
   //     // Dispatch the update action with all the required fields
   //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
@@ -1081,18 +1091,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     },
   ];
 
-  const customizeAmount= useMemo(() => {
-    return (itemInfo: { value: any }) => `Amount Total: ${getFormattedValue(itemInfo.value) }`
-  }, []) 
-  
-  const summaryItems:SummaryConfig[] = [
-     {
-      column: 'amount',
-      summaryType: "sum", 
+  const customizeAmount = useMemo(() => {
+    return (itemInfo: { value: any }) =>
+      `Amount Total: ${getFormattedValue(itemInfo.value)}`;
+  }, []);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "amount",
+      summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeAmount
+      customizeText: customizeAmount,
     },
-  
   ];
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const [activeButton, setActiveButton] = useState("credit");
@@ -1369,20 +1379,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
 
                   {/* Edit Button */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("edit")}
-                  >
-                    <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        handleEdit();
-                      }}
+                  {formState.formElements.lnkUnlockVoucher.visible == true && (
+                    <div
+                      className="group relative inline-flex flex-col items-center"
+                      title={t("edit")}
                     >
-                      <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
+                      <button
+                        className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                        onClick={() => {
+                          handleEdit();
+                        }}
+                      >
+                        <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                      </button>
+                    </div>
+                  )}
                   {/* Print Button */}
                   <div
                     className="group relative inline-flex flex-col items-center"
@@ -1621,9 +1632,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         showCustomNumberChanger={true}
                         className="max-w-[200px]"
                         onChange={async (e: any) => {
-                          
                           if (e.isCustomNumberChangerEvent == true) {
-                            const ret = await loadAndSetAccTransVoucher(false, e.target?.value);
+                            const ret = await loadAndSetAccTransVoucher(
+                              false,
+                              e.target?.value
+                            );
                             // if(ret) {
                             //   dispatch(
                             //     accFormStateTransactionMasterHandleFieldChange({
@@ -1631,14 +1644,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             //     })
                             //   );
                             // }
-                          }
-                          else {
-                            
-                          dispatch(
-                            accFormStateTransactionMasterHandleFieldChange({
-                              fields: { voucherNumber: e.target?.value },
-                            })
-                          );
+                          } else {
+                            dispatch(
+                              accFormStateTransactionMasterHandleFieldChange({
+                                fields: { voucherNumber: e.target?.value },
+                              })
+                            );
                           }
                         }}
                         disabled={
@@ -2212,7 +2223,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   onChange={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({
-                        fields: { amount: parseFloat(e.target?.value)},
+                        fields: { amount: parseFloat(e.target?.value) },
                       })
                     )
                   }
@@ -2481,7 +2492,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="relative">
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
-              
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}
@@ -2504,10 +2514,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onSelectionChanged(e, state)
               }
               className="pb-14"
-            
-            >
-       
-            </ErpDevGrid>
+            ></ErpDevGrid>
           </div>
           {formState.showSaveDialog && (
             <ERPAlert

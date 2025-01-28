@@ -979,7 +979,7 @@ export const useAccTransaction = (
             referenceNumber: { disabled: false },
             transactionDate: { disabled: false },
             linkEdit: { visible: false },
-            
+
             pnlMasters: { disabled: false },
             dxGrid: { disabled: false },
             btnSave: { disabled: true },
@@ -1811,15 +1811,15 @@ debugger;
 const lastPrefix = selectVoucherData ? selectVoucherData[0].lastPrefix: ""
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
+        formState.transaction.master.voucherType,        
         formState.transaction.master.voucherType,
-        lastPrefix,
         false
       );
 debugger;
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
-            voucherPrefix: lastPrefix,
+            // voucherPrefix: lastPrefix,
             voucherNumber: getVoucherNumber,
             accTransactionMasterID: 0,
             transactionDate: moment(

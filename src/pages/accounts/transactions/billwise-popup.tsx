@@ -750,7 +750,10 @@ debugger;
           dataSource={store?.filter(
             (row: any) =>
               showAllTransactions ||
-              row.drCr !== formState.transaction.master.drCr
+              ((formState.transaction.master.voucherType == VoucherType.OpeningBalance && row.drCr !== formState.row.drCr) 
+              ||
+              (formState.transaction.master.voucherType != VoucherType.OpeningBalance && row.drCr !== formState.transaction.master.drCr)
+            )
           )}
           height={gridHeight}
           className="custom-data-grid"

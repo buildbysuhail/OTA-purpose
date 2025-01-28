@@ -1379,7 +1379,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
 
                   {/* Edit Button */}
-                  {formState.formElements.lnkUnlockVoucher.visible == true && (
+                  {formState.formElements.lnkUnlockVoucher.visible != true && (
                     <div
                       className="group relative inline-flex flex-col items-center"
                       title={t("edit")}
@@ -2277,7 +2277,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         fields: { narration: e.target?.value },
                       })
                     )
-                  }
+                  }  
                   disabled={
                     formState.formElements.narration?.disabled ||
                     formState.formElements.pnlMasters?.disabled
@@ -2286,6 +2286,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
               {formState.formElements.drCr.visible && (
                 <ERPDataCombobox
+                ref={drCrRef}
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="drCr"
                   enableClearOption={false}

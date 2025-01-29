@@ -280,7 +280,13 @@ const BillwiseComponent = ({
     }
 
     try {
-      list.forEach((bill) => {
+      
+      list?.filter((row: BillwiseData) => showAllTransactions ||
+      (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+      ||
+      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+    )
+  ).forEach((bill) => {
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 

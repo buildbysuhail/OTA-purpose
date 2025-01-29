@@ -51,12 +51,13 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
             <div className="p-4">
+            <div className="flex items-center gap-4 w-full">
               <ERPDateInput
                 id="transactionDate"
                 value={filter.filter.transactionDate}
                 customSize='sm'
+                 
                 data={filter.filter}
                 label={t("transaction_date")}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
@@ -72,6 +73,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 id="counterID"
                 value={filter.filter.counterID}
                 customSize='sm'
+               className="w-[300px]"
                 data={filter.filter}
                 label={t("counter")}
                 field={{
@@ -90,10 +92,12 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                   }
                 }))}
               />
+          
               <ERPDataCombobox
                 id="costCentreID"
                 value={filter.filter.costCentreID}
                 customSize='sm'
+                className="w-[300px]"
                 data={filter.filter}
                 label={t("cost_centre")}
                 field={{
@@ -116,6 +120,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 id="counterShiftId"
                 value={filter.filter.counterShiftId}
                 customSize='sm'
+                className="w-[300px]"
                 data={filter.filter}
                 label={t("shift")}
                 field={{
@@ -138,6 +143,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 id="employeeID"
                 value={filter.filter.employeeID}
                 customSize='sm'
+               className="w-[300px]"
                 data={filter.filter}
                 label={t("employee")}
                 field={{
@@ -156,13 +162,15 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                   }
                 }))}
               />
+              </div>
+             
               <div className="grid grid-cols-1 gap-3">
                 <Tabs value={activeTab} onChange={handleTabChange}>
                   <Tab label="Sales Report Summary" value="salesReportSummary" className="dark:text-dark-text" />
                   <Tab label="Credit Details" value="creditDetails" className="dark:text-dark-text" />
                   <Tab label="Receipt Details" value="receiptDetails" className="dark:text-dark-text" />
                 </Tabs>
-                <div className="pt-4">
+                <div className="pt-2">
                   {activeTab === "salesReportSummary" && (
                     <DailySummary filter={filter.filter}></DailySummary>
                   )}
@@ -177,7 +185,6 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
             </div>
           </div>
         </div>
-      </div>
     </Fragment>
   );
 };

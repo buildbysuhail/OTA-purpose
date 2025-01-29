@@ -310,10 +310,10 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 heightToAdjustOnWindows={280}
                  remoteOperations={{filtering:false,paging:false,sorting:false}}
                   columns={columns}
                   gridHeader={t("party_summary_purchase_return")}
@@ -329,8 +329,7 @@ const PartySummaryPurchaseReturn: React.FC<PartySummaryFilter> = ({ filter }) =>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
 
     </Fragment>
   );

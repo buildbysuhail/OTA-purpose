@@ -44,7 +44,6 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
       showInPdf: true,
     },
     {
@@ -54,6 +53,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+
     },
     {
       dataField: "autoBarcode",
@@ -61,7 +61,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
     },
     {
       dataField: "quantity",
@@ -69,7 +69,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -112,7 +112,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.free;
@@ -154,7 +154,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.unitPrice;
@@ -196,7 +196,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -239,7 +239,7 @@ const InventoryHistoryDetails = ({contentProps,isMaximized,modalHeight}:Inventor
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 110,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {

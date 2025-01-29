@@ -103,6 +103,7 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -145,6 +146,7 @@ const OutstandingAccountReceivableReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf:true,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;

@@ -645,9 +645,10 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-          <div className="px-4 pt-4 pb-2 ">
+        
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+               heightToAdjustOnWindows={275}
                 columns={columns}
                 showSerialNo={true}
                 gridHeader={t("daily_summary_report")}
@@ -661,13 +662,14 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
                 hideGridAddButton={true}
               ></ErpDevGrid>
             </div>
-          </div>
+         
         </div>
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-          <div className="px-4 pt-4 pb-2 ">
+        
             <div className="grid grid-cols-1 gap-3">
             { voucherType != undefined && voucherType != null && voucherType != "" && !["CB","CRS","CD","TMR"].includes(voucherType)&& <ErpDevGrid
                remoteOperations={{filtering:true,paging:true,sorting:true}}
+               heightToAdjustOnWindows={275}
                 columns={detailsColumns}
                 gridHeader={t("daily_summary_detailed")}
                 dataUrl={Urls.acc_reports_daily_summary_detailed}
@@ -687,7 +689,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
                 reload={reload}
               ></ErpDevGrid>}
             </div>
-          </div>
+         
         </div>
       </div>
     </Fragment>

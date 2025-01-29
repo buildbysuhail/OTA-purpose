@@ -237,7 +237,7 @@ const CashBookSummary = () => {
                     content: <CashBookMonthWise />,
                     title: t("acc_group_monthview"),
                     isForm: false,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0

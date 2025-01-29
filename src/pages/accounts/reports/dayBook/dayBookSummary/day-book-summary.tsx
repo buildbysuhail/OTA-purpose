@@ -240,7 +240,7 @@ const DayBookSummary = () => {
                     content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
                     isForm: false,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "voucherType",
                     bodyProps: "voucherType",
                     // enableFn: (data: any) => data?.voucherType != ""

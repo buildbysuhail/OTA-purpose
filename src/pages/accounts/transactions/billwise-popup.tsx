@@ -54,6 +54,7 @@ interface BillwiseProps {
   isMaximized?: boolean;
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
+  drCr: string;
 }
 const api = new APIClient();
 const BillwiseComponent = ({
@@ -63,6 +64,7 @@ const BillwiseComponent = ({
   isMaximized,
   modalHeight,
   onMaximizeChange,
+  drCr
 }: BillwiseProps) => {
   const dispatch = useDispatch();
   const { round } = useNumberFormat();
@@ -78,6 +80,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
+  // const [drCr, setDrCr] = useState<string>("");
   const { getFormattedValue } = useNumberFormat();
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
@@ -100,6 +103,7 @@ const BillwiseComponent = ({
    if(userSession.dbIdValue == "LATAJFOODS") {
     setShowAllTransactions(true);
    }
+   
   }, []);
   useEffect(() => {
     
@@ -184,27 +188,15 @@ const BillwiseComponent = ({
     }
   };
 
-  const onRowUpdating = (e: any) => {
-    const updatedRow = { ...e.oldData, ...e.newData };
-
-    setStore((prevStore: any) =>
-      prevStore.map((item: any) =>
-        item.slNo === updatedRow.slNo ? updatedRow : item
-      )
-    );
-    e.newData = updatedRow;
-  };
 
   // Load billwise transactions
   useEffect(() => {
+    debugger;
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
-      ) ){
+        row.drCr != drCr){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -274,37 +266,26 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
-    let DRCR = formState.transaction.master.drCr.toUpperCase()
-    if(formState.transaction.master.voucherType == VoucherType.MultiJournal
-      || formState.transaction.master.voucherType == VoucherType.OpeningBalance
-    ) {
-      DRCR = formState.row.drCr.toUpperCase()
-    }
-    if(formState.transaction.master.voucherType == VoucherType.JournalVoucher
-    ) {
-      DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
-    }
-
 
     try {
       
-      list?.filter((row: BillwiseData) => showAllTransactions ||
-      (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-      ||
-      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
-    )
-  ).forEach((bill) => {
+      store
+      ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+      ?.map((row: any, index: number) => ({
+        ...row,
+        slNo: index + 1, // Assign serial number starting from 1
+      })).forEach((bill: BillwiseData) => {
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 
-        if (drCrCol === "DR") {
+        if (drCrCol.toUpperCase() === "DR") {
           totalDr += amountToSet;
         } else {
           totalCr += amountToSet;
         }
       });
-debugger;
-      if (DRCR === "CR") {
+
+      if (drCr.toLowerCase() === "CR") {
         total = totalDr - totalCr;
       } else {
         total = totalCr - totalDr;
@@ -450,19 +431,18 @@ debugger;
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
   
-      // if (e.data.drCr === formState.transaction.master.drCr) {
-      if(
-        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && e.data.drCr === formState.row.drCr) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && e.data.drCr === formState.transaction.master.drCr)
-      ) {
+        console.log(`e.data.drCr ${e.data.drCr }`);
+        console.log(`DrCr ${drCr}`);
+      if (e.data.drCr === drCr) {
+        
+        debugger;
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
   };
   const handleAutoPost = () => {
-    debugger;
+    
     let remainingAmount: number = parseFloat(
       (formState.row.amount ?? 0).toString()
     );
@@ -473,13 +453,10 @@ debugger;
     updatedBills.forEach((bill) => {});
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
-      debugger;
+      
       const bill = updatedBills[i];
-      if (
-        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
-      ) {
+      if (bill.drCr.toUpperCase() !== drCr)
+      {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
         setShowAllTransactions(true);
@@ -820,27 +797,22 @@ const customizeSummaryRow = useMemo(() => {
             </p>
           </Item>
         </Toolbar>
-
+        Drcr:{drCr}
         <ERPDevGrid
+        key={`grid-${drCr}`}
           ref={dataGridRef}
           summaryItems={summaryItems}
           rowAlternationEnabled={false} 
-          key={"slNo"}
-          keyExpr={"slNo"}
-          id="TestPopup"
+          keyExpr="slNo"
           columns={columns}
           gridId="billwise_popup"
           showTotalCount={false}
           hideGridAddButton={true}
           // height={gridHeight}
-          dataSource={store?.filter(
-            (row: any) =>
-              showAllTransactions ||
-              (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-              ||
-              ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
-            )
-          )}
+          dataSource={store
+            ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            
+          }
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"
           showBorders={true}

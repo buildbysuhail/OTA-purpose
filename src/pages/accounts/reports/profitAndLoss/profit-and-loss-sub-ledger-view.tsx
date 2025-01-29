@@ -35,7 +35,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 180;
+    let gridHeightWindows = modalHeight - 170;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -46,7 +46,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "branch",
@@ -169,8 +169,6 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   heightToAdjustOnWindowsInModal={gridHeight.windows}
@@ -205,8 +203,6 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </Fragment>
   );
 };

@@ -456,7 +456,7 @@ debugger;
       
     debugger
       const bill = updatedBills[i];
-      if (bill.drCr.toUpperCase() === drCr)
+      if (bill.drCr.toUpperCase() === drCr.toUpperCase())
       {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;

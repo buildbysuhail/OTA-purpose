@@ -266,7 +266,7 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
-
+debugger;
     try {
       
       store
@@ -454,8 +454,9 @@ const BillwiseComponent = ({
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       
+    debugger
       const bill = updatedBills[i];
-      if (bill.drCr.toUpperCase() !== drCr)
+      if (bill.drCr.toUpperCase() === drCr.toUpperCase())
       {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;

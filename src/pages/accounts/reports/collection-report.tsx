@@ -36,7 +36,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowSorting:false,
       allowFiltering: true,
-      width: 180,
+      width: 100,
       // groupIndex: 0,
       showInPdf:true,
     },
@@ -46,7 +46,7 @@ const CollectionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 125,
       showInPdf:true,
     },
     {
@@ -55,7 +55,7 @@ const CollectionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -105,7 +105,7 @@ const CollectionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 150,
     },
     {
       dataField: "narration",

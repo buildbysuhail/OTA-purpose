@@ -78,7 +78,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
-  const [DrCr, setDrCr] = useState<string>("");
+  const [drCr, setDrCr] = useState<string>("");
   const { getFormattedValue } = useNumberFormat();
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
@@ -155,7 +155,7 @@ const BillwiseComponent = ({
   
   
    }
-  }, []);
+  }, [formState.transaction.master.voucherType, formState.row.drCr, formState.transaction.master.drCr]);
   useEffect(() => {
     
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
@@ -256,10 +256,7 @@ const BillwiseComponent = ({
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
-      ) ){
+        row.drCr != drCr){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -339,7 +336,7 @@ const BillwiseComponent = ({
     ) {
       DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
     }
-debugger
+
 
     try {
       
@@ -358,7 +355,7 @@ debugger
           totalCr += amountToSet;
         }
       });
-debugger;
+
       if (DRCR === "CR") {
         total = totalDr - totalCr;
       } else {
@@ -505,14 +502,18 @@ debugger;
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
   
-      if (e.data.drCr === DrCr) {
+        console.log(`e.data.drCr ${e.data.drCr }`);
+        console.log(`DrCr ${drCr}`);
+      if (e.data.drCr === drCr) {
+        
+        debugger;
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
   };
   const handleAutoPost = () => {
-    debugger;
+    
     let remainingAmount: number = parseFloat(
       (formState.row.amount ?? 0).toString()
     );
@@ -523,9 +524,9 @@ debugger;
     updatedBills.forEach((bill) => {});
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
-      debugger;
+      
       const bill = updatedBills[i];
-      if (bill.drCr.toUpperCase() !== DrCr)
+      if (bill.drCr.toUpperCase() !== drCr)
       {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
@@ -867,14 +868,13 @@ const customizeSummaryRow = useMemo(() => {
             </p>
           </Item>
         </Toolbar>
-
+        Drcr:{drCr}
         <ERPDevGrid
+        key={`grid-${drCr}`}
           ref={dataGridRef}
           summaryItems={summaryItems}
           rowAlternationEnabled={false} 
-          key={"slNo"}
-          keyExpr={"slNo"}
-          id="TestPopup"
+          keyExpr="slNo"
           columns={columns}
           gridId="billwise_popup"
           showTotalCount={false}
@@ -883,10 +883,7 @@ const customizeSummaryRow = useMemo(() => {
           dataSource={store?.filter(
             (row: any) =>
               showAllTransactions ||
-              (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-              || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr == "Cr" && row.drCr === "Cr")))
-              || ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal && formState.transaction.master.voucherType != VoucherType.JournalVoucher) && row.drCr !== formState.transaction.master.drCr)
-            )
+            row.drCr !== drCr
           )}
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"

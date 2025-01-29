@@ -284,7 +284,7 @@ const BillwiseComponent = ({
     ) {
       DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
     }
-
+debugger
 
     try {
       
@@ -477,8 +477,10 @@ debugger;
       const bill = updatedBills[i];
       if (
         ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
+       
+      || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && bill.drCr === "Cr") || (formState.transaction.master.drCr == "Cr" && bill.drCr === "Dr")))
+      ||
+      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.JournalVoucher && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr !== formState.transaction.master.drCr)
       ) {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;

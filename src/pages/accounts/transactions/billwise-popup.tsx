@@ -198,8 +198,10 @@ const BillwiseComponent = ({
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        row.drCr !== formState.transaction.master.drCr
-      ) {
+        (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+        ||
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+      ) ){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows

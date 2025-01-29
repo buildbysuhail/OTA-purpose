@@ -589,6 +589,7 @@ export const useAccTransaction = (
   };
 
   const validate = (): boolean => {
+    debugger;
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
       const demoExpiryDate = new Date(clientSession.demoExpiryDate);
@@ -679,30 +680,39 @@ export const useAccTransaction = (
       });
       return false;
     }
-
+    let firstDebitLedgerID =  formState.firstDebitLedgerID;
+    let firstCreditLedgerID =  formState.firstCreditLedgerID;
     if (formState.transaction.master.voucherType == "MJV") {
       for (let i = 0; i < formState.transaction.details.length; i++) {
         const row = formState.transaction.details[i];
 
         // Check if debit amount is greater than 0
         if (Number(row.debit) > 0) {
-          if (formState.firstDebitLedgerID === 0) {
-            formState.firstDebitLedgerID = Number(row.ledgerID || 0);
+          if (firstDebitLedgerID === 0) {
+            firstDebitLedgerID = Number(row.ledgerID || 0);
           }
         } else {
-          if (formState.firstCreditLedgerID === 0) {
-            formState.firstCreditLedgerID = Number(row.ledgerID || 0);
+          if (firstCreditLedgerID === 0) {
+            firstCreditLedgerID = Number(row.ledgerID || 0);
           }
         }
 
         // Break if we found both
         if (
-          formState.firstCreditLedgerID > 0 &&
-          formState.firstDebitLedgerID > 0
+          firstCreditLedgerID > 0 &&
+          firstDebitLedgerID > 0
         )
           break;
       }
     }
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          firstCreditLedgerID: firstCreditLedgerID,
+          firstDebitLedgerID: firstDebitLedgerID,
+        },
+      })
+    );
     if (
       formState.transaction.master.voucherType == "JV" &&
       (formState.transaction.master.drCr == "" ||
@@ -734,23 +744,24 @@ export const useAccTransaction = (
       }
     }
 
-    if (formState.transaction.master.voucherType == "MJV") {
-      const totalDebit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.debit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
-      const totalCredit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.credit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
-      if (totalDebit !== totalCredit) {
-        ERPAlert.show({
-          icon: "warning",
-          title: "Total Debit and Credit amount should be Same",
-        });
-        return false;
-      }
-    }
-
+    // if (formState.transaction.master.voucherType == "MJV") {
+    //   const totalDebit = formState.transaction.details
+    //     .reduce((sum, x) => sum + (x.debit || 0), 0)
+    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
+    //   const totalCredit = formState.transaction.details
+    //     .reduce((sum, x) => sum + (x.credit || 0), 0)
+    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
+    //   if (totalDebit !== totalCredit) {
+    //     ERPAlert.show({
+    //       icon: "warning",
+    //       title: "Total Debit and Credit amount should be Same",
+    //     });
+    //     return false;
+    //   }
+    // }
+debugger;
     return true;
+
   };
   const attachDetails = (): AccTransactionRow[] => {
     const details = JSON.parse(

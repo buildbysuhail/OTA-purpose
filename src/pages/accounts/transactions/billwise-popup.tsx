@@ -78,6 +78,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
+  const [DrCr, setDrCr] = useState<string>("");
   const { getFormattedValue } = useNumberFormat();
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
@@ -99,6 +100,60 @@ const BillwiseComponent = ({
   useEffect(() => {
    if(userSession.dbIdValue == "LATAJFOODS") {
     setShowAllTransactions(true);
+   }
+   switch (formState.transaction.master.voucherType)
+   {
+       case "CP":
+       case "BP":
+       case "DN":
+       case "CQP":
+       case "SV":
+       case "SRV":
+       case "PBP":
+  
+       setDrCr("Dr");
+           break;
+       case "CR":
+       case "BR":
+       case "CN":
+       case "CQR":
+       case "PV":
+       case "PBR":
+  
+       setDrCr("Cr")
+  
+           break;
+       case "OB":
+       case "MJV":
+  
+  
+  
+           if (formState.row.drCr == "Dr")
+           {
+               setDrCr("Dr")
+           }
+           else
+           {
+               setDrCr("Cr")
+           }
+           break;
+       case "JV":
+  
+  
+  
+           if (formState.transaction.master.drCr == "Dr")
+           {
+               setDrCr("Cr")
+           }
+           else
+           {
+            setDrCr("Dr")
+           }
+           break;
+  
+        
+  
+  
    }
   }, []);
   useEffect(() => {
@@ -475,13 +530,8 @@ debugger;
     while (remainingAmount > 0 && i < updatedBills.length) {
       debugger;
       const bill = updatedBills[i];
-      if (
-        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
-       
-      || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && bill.drCr === "Cr") || (formState.transaction.master.drCr == "Cr" && bill.drCr === "Dr")))
-      ||
-      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.JournalVoucher && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr !== formState.transaction.master.drCr)
-      ) {
+      if (bill.drCr.toUpperCase() !== DrCr)
+      {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
         setShowAllTransactions(true);

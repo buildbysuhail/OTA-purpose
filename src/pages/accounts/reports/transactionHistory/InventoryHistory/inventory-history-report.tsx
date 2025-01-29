@@ -253,7 +253,7 @@ const InventoryHistoryReport = () => {
                       dataField == "vchNo"
                         ? t(`inventory_transaction_history_popup`)
                         : t(`productsDetailedReportTransaction`),
-                    width: "max-w-[1100px]",
+                    width: "max-w-[1500px]",
                     isForm: false,
                     content:
                       dataField == "vchNo" ? (

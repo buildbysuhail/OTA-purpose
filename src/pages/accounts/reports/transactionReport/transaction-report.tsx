@@ -45,7 +45,7 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 130,
       showInPdf: true,
     },
     {
@@ -54,7 +54,7 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
       showInPdf: true,
     },
     {
@@ -126,7 +126,7 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
       dataField: "debit",

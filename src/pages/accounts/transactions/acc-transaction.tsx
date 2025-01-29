@@ -1754,9 +1754,10 @@ console.log('masterAccountID = -2;');
                               </button>
                               {t("bal")}:{" "}
                               {`${
-                                formState.masterBalance < 0
-                                  ? -1 * formState.masterBalance
-                                  : formState.masterBalance || "0.00"
+                                getFormattedValue(formState.masterBalance < 0
+                                  ? (-1 * formState.masterBalance)
+                                  : (formState.masterBalance || 0))
+                                
                               } ${
                                 (formState.masterBalance ?? 0) < 0 ? "Cr" : "Dr"
                               }`}
@@ -1764,7 +1765,6 @@ console.log('masterAccountID = -2;');
                           </div>
                         }
                       />
-                      {formState.masterBalance}
                       <div className="flex flex-wrap gap-4">
                         {formState.formElements.jvDrCr.visible && (
                           <ERPDataCombobox
@@ -2192,7 +2192,7 @@ console.log('masterAccountID = -2;');
                               <CustomerDetailsSidebar displayType="link" />
                             </button>
                             Bal:{" "}
-                            ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`
+                            {`${getFormattedValue(parseFloat((formState.ledgerBalance.toString())))} ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`}
                           </span>
                         </div>
                       )
@@ -2200,7 +2200,6 @@ console.log('masterAccountID = -2;');
                   />
                 </>
               )}
-{formState.ledgerBalance}
               {formState.formElements.amount.visible && (
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2392,7 +2391,8 @@ console.log('masterAccountID = -2;');
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||
                       formState.ledgerIsBillWiseAdjustExistLoading ||
-                      formState.formElements.pnlMasters?.disabled
+                      formState.formElements.pnlMasters?.disabled 
+                      
                     }
                   />
                 )}
@@ -2500,10 +2500,12 @@ console.log('masterAccountID = -2;');
                   enableClearOption={false}
                   ref={costCenterRef}
                   id="costCentreID"
+                  // nameField="costCentreName"
                   className="min-w-[180px]"
                   label={t(formState.formElements.costCentreID.label)}
                   data={formState.row}
                   onSelectItem={(e) => {
+                    debugger;
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: {

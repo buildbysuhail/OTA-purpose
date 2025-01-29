@@ -215,7 +215,7 @@ export const useAccTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: number,
+    manualInvoiceNumber?: string,
     accTransactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false
@@ -332,7 +332,7 @@ export const useAccTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     formType?: string,
-    manualInvoiceNumber?: number,
+    manualInvoiceNumber?: string,
     accTransactionMasterID?: number
   ) => {
     let voucher: AccTransactionFormState = JSON.parse(
@@ -1290,8 +1290,8 @@ export const useAccTransaction = (
   const handleRowClick = async ({ row }: RowClickHandlerParams) => {
     try {
       // Check PDC validation first
-      if (row.accTransactionDetailId) {
-        const isPDCValid = await validatePDC(row.accTransactionDetailId);
+      if (row?.accTransactionDetailId) {
+        const isPDCValid = await validatePDC(row?.accTransactionDetailId);
         if (isPDCValid) {
           ERPAlert.show({
             title: "Warning",
@@ -1764,7 +1764,7 @@ export const useAccTransaction = (
   };
   const handleLoadByRefNo = useCallback(() => {
     if (formState.transaction.master.referenceNumber) {
-      loadAndSetAccTransVoucher(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
+      loadAndSetAccTransVoucher(true, undefined, undefined, undefined, undefined,formState.transaction.master.referenceNumber, undefined, undefined, true);
     }
   }, [formState.transaction.master.referenceNumber]);
 

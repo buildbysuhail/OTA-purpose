@@ -853,6 +853,7 @@ console.log('masterAccountID = -2;');
       _formState.formElements = fieldsToUpdate;
       debugger;
       setAccTransVoucher(_formState, true);
+      focusLedgerCode();
       debugger;
     };
 
@@ -1084,7 +1085,8 @@ console.log('masterAccountID = -2;');
         state.AccTransaction.formElements.pnlMasters?.disabled ==
         true ? null : (
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               handleRemoveItem(cellElement.rowIndex);
             }}
             disabled={
@@ -1746,7 +1748,7 @@ console.log('masterAccountID = -2;');
                             id="drCr"
                             className="min-w-[70px] max-w-[170px] ml-4"
                             label={t(formState.formElements.jvDrCr.label)}
-                            value={formState.transaction.master.drCr}
+                            value={formState.transaction.master.drCr == undefined || formState.transaction.master.drCr == "" ? "Dr" : formState.transaction.master.drCr }
                             data={formState.transaction.master}
                             onChange={(e) => {
                               dispatch(
@@ -2223,7 +2225,7 @@ console.log('masterAccountID = -2;');
                   enableClearOption={false}
                   className="min-w-[70px] max-w-[150px]"
                   label={t(formState.formElements.drCr.label)}
-                  value={formState.row.drCr}
+                  value={formState.row.drCr == undefined || formState.row.drCr == "" ? "Dr" : formState.row.drCr}
                   onSelectItem={(e) =>
                     dispatch(
                       accFormStateRowHandleFieldChange({

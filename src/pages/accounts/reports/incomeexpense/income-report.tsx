@@ -24,7 +24,7 @@ const IncomeReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 50,
       showInPdf: true,
     },
     {
@@ -33,7 +33,7 @@ const IncomeReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 250,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -84,7 +84,7 @@ const IncomeReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -122,7 +122,7 @@ const IncomeReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -160,7 +160,7 @@ const IncomeReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 200,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {

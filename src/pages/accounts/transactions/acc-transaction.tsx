@@ -2500,10 +2500,12 @@ console.log('masterAccountID = -2;');
                   enableClearOption={false}
                   ref={costCenterRef}
                   id="costCentreID"
+                  // nameField="costCentreName"
                   className="min-w-[180px]"
                   label={t(formState.formElements.costCentreID.label)}
                   data={formState.row}
                   onSelectItem={(e) => {
+                    debugger;
                     dispatch(
                       accFormStateRowHandleFieldChange({
                         fields: {

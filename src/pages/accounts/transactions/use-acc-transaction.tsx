@@ -1174,7 +1174,7 @@ export const useAccTransaction = (
       focusAmount();
       return false;
     }
-    if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
+    if (!["OB","MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
       ERPAlert.show({
         icon: "info",
         title: "Please select master account..!",

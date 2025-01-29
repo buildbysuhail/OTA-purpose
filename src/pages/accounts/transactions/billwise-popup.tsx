@@ -524,8 +524,8 @@ debugger;
   const columns: DevGridColumn[] = [
     {
         dataField: "slNo",
-        caption: "slNo",
-        dataType: "number",
+        caption: "Sl.No",
+        dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
@@ -535,13 +535,13 @@ debugger;
     },
     {
         dataField: "voucherType",
-        caption: "VoucherType",
+        caption: "Vr Type",
         dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 100,
+        width: 80,
         showInPdf: true,
     },
     {
@@ -552,7 +552,7 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 150,
+        width: 100,
         showInPdf: true,
     },
     {
@@ -582,7 +582,7 @@ debugger;
     },
     {
         dataField: "adjustedAmount",
-        caption: "Adjusted Amount",
+        caption: "Adj.Amount",
         dataType: "number",
         allowSorting: false,
         allowSearch: true,
@@ -615,7 +615,7 @@ debugger;
         allowEditing: true,
         allowFiltering: true,
         alignment: "right",
-        width: 100,
+        width: 130,
         showInPdf: true,
         customizeText: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value,false,4)}`,
@@ -643,19 +643,6 @@ debugger;
         alignment: "center",
         width: 150,
         showInPdf: true,
-    },
-    {
-        dataField: "referenceNumber",
-        caption: "ReferenceNumber",
-        format:"dd/MM/yyyy",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 150,
-        showInPdf: false,
-        visible: false
     },
     {
         dataField: "financialYearID",
@@ -706,7 +693,20 @@ debugger;
         visible: false
     },
     {
+        dataField: "referenceNumber",
+        caption: "ReferenceNumber",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: false,
+        visible: false
+    },
+    {
         dataField: "referenceDate",
+        format:"dd/MM/yyyy",
         caption: "Reference Date",
         dataType: "date",
         allowSorting: false,

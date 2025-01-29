@@ -390,7 +390,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   billwiseDetails: "",
   chqDate: "",
   accGroupName: "",
-  exchangeRate: 0,
+  exchangeRate: 1,
   relatedLedgerCode: "",
   particulars: ""
 }

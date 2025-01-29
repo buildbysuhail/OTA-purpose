@@ -451,10 +451,10 @@ debugger;
 
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {});
-    debugger
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       
+    debugger
       const bill = updatedBills[i];
       if (bill.drCr.toUpperCase() === drCr)
       {

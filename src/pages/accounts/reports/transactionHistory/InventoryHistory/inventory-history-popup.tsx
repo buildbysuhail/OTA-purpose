@@ -58,7 +58,7 @@ const InventoryHistoryPopup = ({
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -75,7 +75,6 @@ const InventoryHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.oldInvTransactionID > 0 ? (
@@ -94,7 +93,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.grandTotal;
@@ -136,7 +135,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 120,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.cashReceived;
@@ -178,7 +177,7 @@ const InventoryHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+    
     },
     {
       dataField: "oldInvTransactionID",
@@ -186,7 +185,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 180,
     },
     {
       dataField: "invTransactionMasterID",
@@ -194,7 +193,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 180,
       visible: false,
     },
     {
@@ -203,7 +202,7 @@ const InventoryHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 80,
       cellRender: (cellElement: any, cellInfo: any) => (
         <DrillDownCellTemplate
           data={cellElement}
@@ -216,8 +215,7 @@ const InventoryHistoryPopup = ({
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="">
+        
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
@@ -237,7 +235,7 @@ const InventoryHistoryPopup = ({
                       dataField == "vchNo"
                         ? t(`inventory_transaction_history_popup`)
                         : t(`productsDetailedReportTransaction`),
-                    width: "700px",
+                    width: "max-w-[1100px]",
                     isForm: false,
                     content:
                       dataField == "vchNo" ? (
@@ -259,8 +257,7 @@ const InventoryHistoryPopup = ({
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
     </Fragment>
   );
 };

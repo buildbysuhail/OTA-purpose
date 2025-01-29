@@ -493,7 +493,7 @@ const OutstandingAccountReceivableAgingReport = () => {
                     content: <OutstandingAccountAgingAnalysis />,
                     title: t("account_aging_analysis"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgername",
                     bodyProps: "ledgerID",
                     //"asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"

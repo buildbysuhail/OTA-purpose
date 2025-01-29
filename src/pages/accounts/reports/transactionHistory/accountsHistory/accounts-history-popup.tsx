@@ -49,7 +49,7 @@ const AccountsHistoryPopup = ({
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 70,
       showInPdf: true,
     },
     {
@@ -59,6 +59,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      width: 70,
     },
     {
       dataField: "vchNo",
@@ -67,7 +68,7 @@ const AccountsHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width: 150,
+      width: 120,
       cellRender: (cellElement: any, cellInfo: any) => {
         
         return (
@@ -82,7 +83,7 @@ const AccountsHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+
       showInPdf: true,
     },
     {
@@ -91,7 +92,7 @@ const AccountsHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+
       showInPdf: true,
     },
     {
@@ -100,7 +101,7 @@ const AccountsHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -143,7 +144,7 @@ const AccountsHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -186,7 +187,7 @@ const AccountsHistoryPopup = ({
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -195,6 +196,8 @@ const AccountsHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
+      showInPdf:false,
       width: 150,
     },
     {
@@ -203,6 +206,8 @@ const AccountsHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
+      showInPdf:false,
       width: 150,
     },
   ];
@@ -232,7 +237,7 @@ const AccountsHistoryPopup = ({
                     content: <AccountsHistoryPopup />,
                     title: t("accounts_transaction_history_popup"),
                     isForm: false,
-                    width: "mw-100",
+                    width: "max-w-[1500px]",
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID",
                     enableFn: (data: any) => data.oldAccTransactionMasterID > 0

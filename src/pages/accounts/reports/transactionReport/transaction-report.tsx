@@ -45,7 +45,7 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 100,
       showInPdf: true,
     },
     {

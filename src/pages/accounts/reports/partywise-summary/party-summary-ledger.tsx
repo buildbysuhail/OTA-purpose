@@ -325,10 +325,10 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
+        
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 heightToAdjustOnWindows={280}
                   columns={columns}
                   gridHeader={t("party_summary_ledger_report")}
                   dataUrl={Urls.acc_reports_party_summary_ledger}
@@ -344,8 +344,6 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </Fragment>
   );
 };

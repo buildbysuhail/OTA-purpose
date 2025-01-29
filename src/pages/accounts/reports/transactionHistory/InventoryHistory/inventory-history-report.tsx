@@ -207,6 +207,8 @@ const InventoryHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
+      showInPdf:false,
       width: 200,
     },
     {
@@ -251,7 +253,7 @@ const InventoryHistoryReport = () => {
                       dataField == "vchNo"
                         ? t(`inventory_transaction_history_popup`)
                         : t(`productsDetailedReportTransaction`),
-                    width: "700px",
+                    width: "max-w-[1100px]",
                     isForm: false,
                     content:
                       dataField == "vchNo" ? (

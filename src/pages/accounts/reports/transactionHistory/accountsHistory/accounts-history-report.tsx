@@ -244,7 +244,7 @@ const AccountsHistoryReport = () => {
                     content: <AccountsHistoryPopup />,
                     title: t("accounts_transaction_history_popup"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1100px]",
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID",
                     enableFn: (data: any) => data.oldAccTransactionMasterID > 0,

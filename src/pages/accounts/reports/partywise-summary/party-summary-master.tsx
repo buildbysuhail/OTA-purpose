@@ -121,10 +121,11 @@ const PartySummaryMaster = ({
                       }))
                     }
                   />
-                  <div className="mt-[21px]">
+                  <div className="mt-[24px]">
                     <ERPButton
                       type="button"
                       variant="primary"
+                      className="h-[32px]"
                       onClick={handleShowButtonClick}
                       title={t("show")}
                     ></ERPButton>
@@ -173,7 +174,7 @@ const PartySummaryMaster = ({
                   <Tab className="dark:text-dark-text"  label="Sales Return" value="salesReturn" />
                   <Tab className="dark:text-dark-text"  label="Sales Order" value="salesOrder" />
                 </Tabs>
-                <div className="pt-4">
+                <div className="pt-2">
                   {activeTab === "basicInfo" && (
                     <PartySummaryBasicInfo
                       filter={filter.filter}

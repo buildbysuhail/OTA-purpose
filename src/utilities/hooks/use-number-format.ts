@@ -64,15 +64,19 @@ export const useNumberFormat = () => {
     "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
     "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
   ];
-
+  
   const tens: string[] = [
     "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
   ];
-
+  
   const scales: string[] = [
     "", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion"
   ];
-
+  
+  const indianScales: string[] = [
+    "", "Thousand", "Lakh", "Crore", "Arab", "Kharab", "Neel", "Padma"
+  ];
+  
   /**
    * Converts a number below 1000 to words.
    */
@@ -88,45 +92,46 @@ export const useNumberFormat = () => {
     const remainderPart = remainder ? ` ${convertBelowThousand(remainder)}` : "";
     return `${hundredsPart}${remainderPart}`;
   }
-
+  
   /**
    * Converts a large number into words using scales (thousands, millions, etc.).
    */
-  function convertLargeNumber(num: number): string {
+  function convertLargeNumber(num: number, useIndianSystem: boolean = false): string {
     if (num === 0) return belowTwenty[0];
-
+  
     let words = "";
     let scaleIndex = 0;
-
+    const selectedScales = useIndianSystem ? indianScales : scales;
+  
     while (num > 0) {
-      const chunk = num % 1000;
+      const chunk = num % (useIndianSystem && scaleIndex === 2 ? 100 : 1000); // For Lakh, use 100 instead of 1000
       if (chunk !== 0) {
         const chunkWords = convertBelowThousand(chunk);
-        const scale = scales[scaleIndex];
+        const scale = selectedScales[scaleIndex];
         words = `${chunkWords} ${scale} ${words}`.trim();
       }
-      num = Math.floor(num / 1000);
+      num = Math.floor(num / (useIndianSystem && scaleIndex === 2 ? 100 : 1000)); // For Lakh, divide by 100 instead of 1000
       scaleIndex++;
     }
-
+  
     return words.trim();
   }
-
+  
   /**
    * Converts an amount (including decimals) into words.
    */
   function convertAmountToWords(amount: string): string {
     const [wholePart, decimalPart] = amount.split(".");
-
-    const wholePartWords = convertLargeNumber(parseInt(wholePart || "0"));
+  
+    const wholePartWords = convertLargeNumber(parseInt(wholePart || "0"), applicationSettings.mainSettings?.showNumberFormat == "Lakhs");
     let result = `${wholePartWords} ${userSession.currency?.currencyName}`;
-
+  
     if (decimalPart) {
       const decimalValue = parseInt(decimalPart.padEnd(applicationSettings.mainSettings?.decimalPoints, "0"));
       const decimalWords = convertBelowThousand(decimalValue);
       result += ` and ${decimalWords} ${userSession.currency?.subUnit}`;
     }
-
+  
     return `${result} Only`;
   }
   function round(value: number, decimalPoints: number | undefined = undefined): number {

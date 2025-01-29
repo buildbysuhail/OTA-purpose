@@ -280,6 +280,11 @@ const BillwiseComponent = ({
     ) {
       DRCR = formState.row.drCr.toUpperCase()
     }
+    if(formState.transaction.master.voucherType == VoucherType.JournalVoucher
+    ) {
+      DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
+    }
+debugger
 
     try {
       
@@ -472,8 +477,10 @@ debugger;
       const bill = updatedBills[i];
       if (
         ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
+       
+      || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && bill.drCr === "Cr") || (formState.transaction.master.drCr == "Cr" && bill.drCr === "Dr")))
+      ||
+      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.JournalVoucher && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr !== formState.transaction.master.drCr)
       ) {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
@@ -524,8 +531,8 @@ debugger;
   const columns: DevGridColumn[] = [
     {
         dataField: "slNo",
-        caption: "slNo",
-        dataType: "number",
+        caption: "Sl.No",
+        dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
@@ -535,13 +542,13 @@ debugger;
     },
     {
         dataField: "voucherType",
-        caption: "VoucherType",
+        caption: "Vr Type",
         dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 100,
+        width: 80,
         showInPdf: true,
     },
     {
@@ -552,7 +559,7 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 150,
+        width: 100,
         showInPdf: true,
     },
     {
@@ -582,7 +589,7 @@ debugger;
     },
     {
         dataField: "adjustedAmount",
-        caption: "Adjusted Amount",
+        caption: "Adj.Amount",
         dataType: "number",
         allowSorting: false,
         allowSearch: true,
@@ -615,7 +622,7 @@ debugger;
         allowEditing: true,
         allowFiltering: true,
         alignment: "right",
-        width: 100,
+        width: 130,
         showInPdf: true,
         customizeText: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value,false,4)}`,
@@ -643,19 +650,6 @@ debugger;
         alignment: "center",
         width: 150,
         showInPdf: true,
-    },
-    {
-        dataField: "referenceNumber",
-        caption: "ReferenceNumber",
-        format:"dd/MM/yyyy",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 150,
-        showInPdf: false,
-        visible: false
     },
     {
         dataField: "financialYearID",
@@ -706,7 +700,20 @@ debugger;
         visible: false
     },
     {
+        dataField: "referenceNumber",
+        caption: "ReferenceNumber",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: false,
+        visible: false
+    },
+    {
         dataField: "referenceDate",
+        format:"dd/MM/yyyy",
         caption: "Reference Date",
         dataType: "date",
         allowSorting: false,
@@ -832,8 +839,8 @@ const customizeSummaryRow = useMemo(() => {
             (row: any) =>
               showAllTransactions ||
               (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-              ||
-              ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+              || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr == "Cr" && row.drCr === "Cr")))
+              || ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal && formState.transaction.master.voucherType != VoucherType.JournalVoucher) && row.drCr !== formState.transaction.master.drCr)
             )
           )}
           heightToAdjustOnWindowsInModal={gridHeight.windows}

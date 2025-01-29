@@ -194,7 +194,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
                     ),
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0,

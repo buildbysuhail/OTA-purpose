@@ -19,6 +19,7 @@ import {
   AccTransactionFormState,
   accTransactionFormStateInitialData,
   accTransactionInitialData,
+  AccTransactionMasterInitialData,
   AccTransactionProps,
   AccTransactionRowInitialData,
   initialFormElements,
@@ -80,6 +81,7 @@ import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
 import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
+import VoucherType from "../../../enums/voucher-types";
 interface BilledItem {
   id?: number;
   name: string;
@@ -521,7 +523,7 @@ console.log('masterAccountID = -2;');
               formType: formType ?? "",
               transactionDate: softwareDate.toISOString(),
               referenceDate: new Date().toISOString(),
-              drCr: drCr ?? "",
+              drCr: drCr == undefined || drCr == "" ? AccTransactionMasterInitialData.drCr : drCr,
               employeeID: employeeID,
               voucherNumber: _voucherNo,
             },
@@ -574,8 +576,11 @@ console.log('masterAccountID = -2;');
           visible: isForeignCurrencyVisible,
         },
         lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
-        masterAccount: { ...initialFormElements.masterAccount, disabled: userSession?.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings?.allowSalesCounter },
+        masterAccount: { ...initialFormElements.masterAccount, disabled: (
+          (_formState.transaction.master.voucherType == VoucherType.CashPayment 
+            || _formState.transaction.master.voucherType == VoucherType.CashReceipt) &&
+          userSession?.counterwiseCashLedgerId > 0 &&
+          applicationSettings.accountsSettings?.allowSalesCounter) },
         discount: { ...initialFormElements.discount, visible: true },
         projectId: {
           ...initialFormElements.projectId,
@@ -777,7 +782,7 @@ console.log('masterAccountID = -2;');
             },
             drCr: {
               ...fieldsToUpdate.drCr,
-              visible: true,
+              visible: false,
             },
             jvDrCr: {
               ...fieldsToUpdate.jvDrCr,

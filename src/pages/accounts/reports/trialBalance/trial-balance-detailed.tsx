@@ -28,7 +28,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -64,13 +65,16 @@ const TrialBalancePeriodwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      visible:false,
+      width: 100,
     },
     {
       dataField: "accGroupName",
       caption: t("acc_group_name"),
       dataType: "string",
       allowSearch: true,
+      width:220,
+      visible:false,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -263,7 +267,7 @@ const TrialBalancePeriodwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 110,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -302,7 +306,7 @@ const TrialBalancePeriodwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 110,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -498,7 +502,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -538,6 +543,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width:100,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -575,6 +582,8 @@ const TrialBalancePeriodwise = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      width:100,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -612,6 +621,8 @@ const TrialBalancePeriodwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width:100,
+      visible:false
     },
   ];
   return (
@@ -643,7 +654,7 @@ const TrialBalancePeriodwise = () => {
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.isGroup == false && data?.ledgerName != "TOTAL"

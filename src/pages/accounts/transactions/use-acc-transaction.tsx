@@ -225,6 +225,7 @@ export const useAccTransaction = (
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });
+    debugger;
     if (_s_isDirty && skipPrompt != true) {
       alert('changed')
       if (mode == "increment" || mode == "decrement") {
@@ -339,11 +340,12 @@ export const useAccTransaction = (
         ...formState,
       })
     );
-    if (voucherNumber == undefined || voucherNumber <= 0) {
+    const _voucherNumber =  voucherNumber??(formState.transaction?.master?.voucherNumber || 0)
+    if (_voucherNumber == undefined || _voucherNumber <= 0) {
       return voucher;
     }
     const params: Record<any, any> = {
-      VoucherNumber: String(voucherNumber ?? ""), // Ensuring it's always a string
+      VoucherNumber: _voucherNumber, // Ensuring it's always a string
       voucherPrefix:
         voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || ""),
       voucherType:
@@ -1594,6 +1596,7 @@ export const useAccTransaction = (
             : e == "ArrowUp"
             ? "increment"
             : undefined
+            ,true
         );
       }
     }

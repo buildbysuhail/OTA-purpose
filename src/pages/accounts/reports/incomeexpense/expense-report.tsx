@@ -85,7 +85,7 @@ const ExpenseReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -123,7 +123,7 @@ const ExpenseReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -161,7 +161,7 @@ const ExpenseReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {

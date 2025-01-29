@@ -227,7 +227,7 @@ export const useAccTransaction = (
     });
     debugger;
     if (_s_isDirty && skipPrompt != true) {
-      alert('changed')
+      alert("changed");
       if (mode == "increment" || mode == "decrement") {
         const _voucherNumber =
           mode == "increment"
@@ -278,7 +278,7 @@ export const useAccTransaction = (
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled:true,
+        disabled: true,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -340,7 +340,8 @@ export const useAccTransaction = (
         ...formState,
       })
     );
-    const _voucherNumber =  voucherNumber??(formState.transaction?.master?.voucherNumber || 0)
+    const _voucherNumber =
+      voucherNumber ?? (formState.transaction?.master?.voucherNumber || 0);
     if (_voucherNumber == undefined || _voucherNumber <= 0) {
       return voucher;
     }
@@ -1078,8 +1079,8 @@ export const useAccTransaction = (
         fields: {
           ledgerID: { reload: true },
           costCentreID: { reload: true },
-          amount:{ disabled: false},
-          pnlMasters: { disabled: false}
+          amount: { disabled: false },
+          pnlMasters: { disabled: false },
         },
       })
     );
@@ -1092,74 +1093,60 @@ export const useAccTransaction = (
       })
     );
   };
-  const addOrEditRow = async (billwiseDetails?: string, totalAmount?: number) => {
-    
+  const addOrEditRow = async (
+    billwiseDetails?: string,
+    totalAmount?: number
+  ) => {
     debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
-        let _drCr
-        switch (formState.transaction.master.voucherType)
-        {
-            case "CP":
-            case "BP":
-            case "DN":
-            case "CQP":
-            case "SV":
-            case "SRV":
-            case "PBP":
-        
+        let _drCr;
+        switch (formState.transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "DN":
+          case "CQP":
+          case "SV":
+          case "SRV":
+          case "PBP":
             _drCr = "Dr";
-                break;
-            case "CR":
-            case "BR":
-            case "CN":
-            case "CQR":
-            case "PV":
-            case "PBR":
-        
-            _drCr ="Cr"
-        
-                break;
-            case "OB":
-            case "MJV":
-        
-        
-        
-                if (formState.row.drCr == "Dr")
-                {
-                    _drCr = "Dr"
-                }
-                else
-                {
-                    _drCr = "Cr"
-                }
-                break;
-            case "JV":       
-        
-        
-                if (formState.transaction.master.drCr == "Dr")
-                {
-                    _drCr = "Cr"
-                }
-                else
-                {
-                  _drCr = "Dr"
-                }
-                break;
-        
-              
-        
-        
+            break;
+          case "CR":
+          case "BR":
+          case "CN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+            _drCr = "Cr";
+
+            break;
+          case "OB":
+          case "MJV":
+            if (formState.row.drCr == "Dr") {
+              _drCr = "Dr";
+            } else {
+              _drCr = "Cr";
+            }
+            break;
+          case "JV":
+            if (formState.transaction.master.drCr == "Dr") {
+              _drCr = "Cr";
+            } else {
+              _drCr = "Dr";
+            }
+            break;
         }
         if (formState.isRowEdit != true) {
-          if ((billwiseDetails == undefined || billwiseDetails == null) && formState.row.billwiseDetails == "") {
+          if (
+            (billwiseDetails == undefined || billwiseDetails == null) &&
+            formState.row.billwiseDetails == ""
+          ) {
             if (formState.IsBillwiseTransAdjustmentExists) {
-             
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
                     showbillwise: true,
-                  billwiseDrCr: _drCr,
+                    billwiseDrCr: _drCr,
                   },
                 })
               );
@@ -1177,7 +1164,7 @@ export const useAccTransaction = (
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
             debugger;
-            
+
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -1195,126 +1182,126 @@ export const useAccTransaction = (
           );
         }
       }
-      if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
-        ERPAlert.show({
-          icon: "warning",
-          title: "Please select Ledger..!",
-          onConfirm() {
-            focusLedgerCombo();
-            return false;
-          },
-          onCancel() {
-            return false;
-          },
-        });
-        return false;
-      }
-      const fdd = isNullOrUndefinedOrZero(totalAmount??formState.row.amount);
-      const fdsdd = isNullOrUndefinedOrZero(
-        formState.transaction.master.totalAmount
-      );
-      if (
-        isNullOrUndefinedOrZero(totalAmount??formState.row.amount) &&
-        !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
-      ) {
-        if (hasRight(formState.formCode, UserAction.Add)) {
-          dispatch(
-            updateFormElement({
-              fields: {
-                btnSave: {
-                  disabled: false,
-                  label: "Add",
-                },
-              },
-            })
-          );
-        }
-        ERPAlert.show({
-          title: "Are you sure save now?",
-          icon: "warning",
-          confirmButtonText: "Yes, Save now!",
-          cancelButtonText: "Cancel",
-          onConfirm: (result: any) => {
-            if (result.isConfirmed) {
-              save();
-              return false;
-            }
-          },
-        });
-        focusLedgerCode();
-        return false;
-      }
-
-      if (isNullOrUndefinedOrZero(totalAmount??formState.row.amount)) {
-        ERPAlert.show({
-          icon: "info",
-          title: "Please Enter the Amount..!",
-        });
-        focusAmount();
-        return false;
-      }
-      if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
-        ERPAlert.show({
-          icon: "info",
-          title: "Please select master account..!",
-        });
-        focusMasterAccount();
-        return false;
-      }
-      if (
-        isNullOrUndefinedOrZero(formState.row.costCentreID) &&
-        formState.formElements.costCentreID.visible == true
-      ) {
-        ERPAlert.show({
-          icon: "info",
-          title: "Please select a cost center..!",
-        });
-        focusCostCenterRef();
-        return false;
-      }
-      formState.formElements.btnAdd;
-
-      dispatch(
-        accFormStateTransactionDetailsRowAdd({
-          row: {
-            ...formState.row,
-            amount: totalAmount??formState.row.amount,
-            billwiseDetails:
-              billwiseDetails != undefined
-                ? billwiseDetails
-                : formState.row.billwiseDetails,
-          },
-          applicationSettings: applicationSettings,
-          exchangeRate: formState.transaction.master.currencyRate ?? 1,
-          isForeignCurrencyEnabled: formState.foreignCurrency,
-          userSession: userSession,
-        })
-      );
-      const updatedFields: Record<string, any> = {
-        employee: { disabled: true },
-        jvDrCr: { disabled: true },
-        masterAccount: { disabled: true },
-        referenceNumber: { disabled: true },
-        referenceDate: { disabled: true },
-        transactionDate: { disabled: true },
-        btnEdit: { visible: true },
-        amount: { disabled: false },
-        linkEdit: { visible: true },
-      };
-
-      // Conditionally update costCentreID if needed
-      if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
-        updatedFields.costCentreID = { disabled: true };
-      }
-
-      // Dispatch the updateFormElement action
-      dispatch(
-        updateFormElement({
-          fields: updatedFields,
-        })
-      );
-      focusLedgerCombo();
     }
+    if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
+      ERPAlert.show({
+        icon: "warning",
+        title: "Please select Ledger..!",
+        onConfirm() {
+          focusLedgerCombo();
+          return false;
+        },
+        onCancel() {
+          return false;
+        },
+      });
+      return false;
+    }
+    const fdd = isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount);
+    const fdsdd = isNullOrUndefinedOrZero(
+      formState.transaction.master.totalAmount
+    );
+    if (
+      isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount) &&
+      !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
+    ) {
+      if (hasRight(formState.formCode, UserAction.Add)) {
+        dispatch(
+          updateFormElement({
+            fields: {
+              btnSave: {
+                disabled: false,
+                label: "Add",
+              },
+            },
+          })
+        );
+      }
+      ERPAlert.show({
+        title: "Are you sure save now?",
+        icon: "warning",
+        confirmButtonText: "Yes, Save now!",
+        cancelButtonText: "Cancel",
+        onConfirm: (result: any) => {
+          if (result.isConfirmed) {
+            save();
+            return false;
+          }
+        },
+      });
+      focusLedgerCode();
+      return false;
+    }
+
+    if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
+      ERPAlert.show({
+        icon: "info",
+        title: "Please Enter the Amount..!",
+      });
+      focusAmount();
+      return false;
+    }
+    if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
+      ERPAlert.show({
+        icon: "info",
+        title: "Please select master account..!",
+      });
+      focusMasterAccount();
+      return false;
+    }
+    if (
+      isNullOrUndefinedOrZero(formState.row.costCentreID) &&
+      formState.formElements.costCentreID.visible == true
+    ) {
+      ERPAlert.show({
+        icon: "info",
+        title: "Please select a cost center..!",
+      });
+      focusCostCenterRef();
+      return false;
+    }
+    formState.formElements.btnAdd;
+
+    dispatch(
+      accFormStateTransactionDetailsRowAdd({
+        row: {
+          ...formState.row,
+          amount: totalAmount ?? formState.row.amount,
+          billwiseDetails:
+            billwiseDetails != undefined
+              ? billwiseDetails
+              : formState.row.billwiseDetails,
+        },
+        applicationSettings: applicationSettings,
+        exchangeRate: formState.transaction.master.currencyRate ?? 1,
+        isForeignCurrencyEnabled: formState.foreignCurrency,
+        userSession: userSession,
+      })
+    );
+    const updatedFields: Record<string, any> = {
+      employee: { disabled: true },
+      jvDrCr: { disabled: true },
+      masterAccount: { disabled: true },
+      referenceNumber: { disabled: true },
+      referenceDate: { disabled: true },
+      transactionDate: { disabled: true },
+      btnEdit: { visible: true },
+      amount: { disabled: false },
+      linkEdit: { visible: true },
+    };
+
+    // Conditionally update costCentreID if needed
+    if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
+      updatedFields.costCentreID = { disabled: true };
+    }
+
+    // Dispatch the updateFormElement action
+    dispatch(
+      updateFormElement({
+        fields: updatedFields,
+      })
+    );
+    focusLedgerCombo();
   };
   const validatePDC = async (
     accTransactionDetailsId: number
@@ -1460,7 +1447,7 @@ export const useAccTransaction = (
       handleLedgerCodeKeyDown(key);
     } else if (field === "amount") {
       handleAmountKeyDown(key);
-    }else if (field === "drCr") {
+    } else if (field === "drCr") {
       handleDrCrKeyDown(key);
     } else if (field === "costCentre") {
       if (key == "Enter") {
@@ -1573,7 +1560,10 @@ export const useAccTransaction = (
   // DrCr keydown handler
   const handleDrCrKeyDown = (e: any) => {
     debugger;
-    if(e === "Enter" && (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")) {
+    if (
+      e === "Enter" &&
+      (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")
+    ) {
       const voucherType = formState.transaction.master.voucherType;
 
       if (formState.formElements.costCentreID.visible == true) {
@@ -1657,8 +1647,8 @@ export const useAccTransaction = (
             ? "decrement"
             : e == "ArrowUp"
             ? "increment"
-            : undefined
-            ,true
+            : undefined,
+          true
         );
       }
     }
@@ -1826,7 +1816,17 @@ export const useAccTransaction = (
   };
   const handleLoadByRefNo = useCallback(() => {
     if (formState.transaction.master.referenceNumber) {
-      loadAndSetAccTransVoucher(true, undefined, undefined, undefined, undefined,formState.transaction.master.referenceNumber, undefined, undefined, true);
+      loadAndSetAccTransVoucher(
+        true,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        formState.transaction.master.referenceNumber,
+        undefined,
+        undefined,
+        true
+      );
     }
   }, [formState.transaction.master.referenceNumber]);
 
@@ -1876,15 +1876,17 @@ export const useAccTransaction = (
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-debugger;
-const lastPrefix = selectVoucherData ? selectVoucherData[0].lastPrefix: ""
+      debugger;
+      const lastPrefix = selectVoucherData
+        ? selectVoucherData[0].lastPrefix
+        : "";
       const getVoucherNumber = await getNextVoucherNumber(
         formState.transaction.master.formType,
-        formState.transaction.master.voucherType,        
+        formState.transaction.master.voucherType,
         formState.transaction.master.voucherType,
         false
       );
-debugger;
+      debugger;
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
@@ -1961,59 +1963,41 @@ debugger;
       );
       if (isBillwiseApplicable == true) {
         debugger;
-        let _drCr
-        switch (formState.transaction.master.voucherType)
-        {
-            case "CP":
-            case "BP":
-            case "DN":
-            case "CQP":
-            case "SV":
-            case "SRV":
-            case "PBP":
-        
+        let _drCr;
+        switch (formState.transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "DN":
+          case "CQP":
+          case "SV":
+          case "SRV":
+          case "PBP":
             _drCr = "Dr";
-                break;
-            case "CR":
-            case "BR":
-            case "CN":
-            case "CQR":
-            case "PV":
-            case "PBR":
-        
-            _drCr ="Cr"
-        
-                break;
-            case "OB":
-            case "MJV":
-        
-        
-        
-                if (formState.row.drCr == "Dr")
-                {
-                    _drCr = "Dr"
-                }
-                else
-                {
-                    _drCr = "Cr"
-                }
-                break;
-            case "JV":       
-        
-        
-                if (formState.transaction.master.drCr == "Dr")
-                {
-                    _drCr = "Cr"
-                }
-                else
-                {
-                  _drCr = "Dr"
-                }
-                break;
-        
-              
-        
-        
+            break;
+          case "CR":
+          case "BR":
+          case "CN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+            _drCr = "Cr";
+
+            break;
+          case "OB":
+          case "MJV":
+            if (formState.row.drCr == "Dr") {
+              _drCr = "Dr";
+            } else {
+              _drCr = "Cr";
+            }
+            break;
+          case "JV":
+            if (formState.transaction.master.drCr == "Dr") {
+              _drCr = "Cr";
+            } else {
+              _drCr = "Dr";
+            }
+            break;
         }
         dispatch(
           accFormStateHandleFieldChange({

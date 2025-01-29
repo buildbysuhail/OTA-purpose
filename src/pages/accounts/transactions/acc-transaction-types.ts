@@ -331,7 +331,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster  = {
   currencyId: 0,
   // accTransactionDetailID: 0,
   adjustedTransDetailId: 0,
-  currencyRate: undefined,
+  currencyRate: 1,
   isPosted: false,
   randomKey: 0,
   onlineTrans: "",

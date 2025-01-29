@@ -80,6 +80,7 @@ import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
 import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
+import VoucherType from "../../../enums/voucher-types";
 interface BilledItem {
   id?: number;
   name: string;
@@ -574,7 +575,11 @@ console.log('masterAccountID = -2;');
           visible: isForeignCurrencyVisible,
         },
         lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
-        masterAccount: { ...initialFormElements.masterAccount, disabled: true },
+        masterAccount: { ...initialFormElements.masterAccount, disabled: (
+          (_formState.transaction.master.voucherType == VoucherType.CashPayment 
+            || _formState.transaction.master.voucherType == VoucherType.CashReceipt) &&
+          userSession?.counterwiseCashLedgerId > 0 &&
+          applicationSettings.accountsSettings?.allowSalesCounter) },
         discount: { ...initialFormElements.discount, visible: true },
         projectId: {
           ...initialFormElements.projectId,
@@ -591,33 +596,33 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Cash Account",
               accLedgerType: LedgerType.CashInHand,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: voucherType === "CR" ? "Collected By" : "Paid By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: true,
             },
             costCentreID: {
-              ...initialFormElements.costCentreID,
+              ...fieldsToUpdate.costCentreID,
               visible: true,
               // applicationSettings?.accountsSettings?.maintainCostCenter ===
               // true,
             },
             chequeNumber: {
-              ...initialFormElements.chequeNumber,
+              ...fieldsToUpdate.chequeNumber,
               visible: false,
             },
             bankDate: {
-              ...initialFormElements.bankDate,
+              ...fieldsToUpdate.bankDate,
               visible: false,
             },
           };
@@ -629,7 +634,7 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label:
                 voucherType === "PV" ? "Purchase Account" : "Sales Account",
               accLedgerType:
@@ -638,14 +643,14 @@ console.log('masterAccountID = -2;');
                   : LedgerType.Sales_Account,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Done By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: true,
             },
           };
@@ -657,31 +662,31 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Bank Account",
               accLedgerType: LedgerType.BankAccount,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Collected By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: true,
             },
             chequeNumber: {
-              ...initialFormElements.chequeNumber,
+              ...fieldsToUpdate.chequeNumber,
               visible: true,
             },
             bankDate: {
-              ...initialFormElements.bankDate,
+              ...fieldsToUpdate.bankDate,
               visible: true,
             },
             gridColumns: {
-              ...initialFormElements.gridColumns,
+              ...fieldsToUpdate.gridColumns,
               showChqNo: true,
               showChqDate: true,
             },
@@ -689,7 +694,7 @@ console.log('masterAccountID = -2;');
 
           if (voucherType === "CQR") {
             fieldsToUpdate.ledger = {
-              ...initialFormElements.ledger,
+              ...fieldsToUpdate.ledger,
               selectedIndex: -1,
             };
           }
@@ -701,31 +706,31 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Bank Account",
               accLedgerType: LedgerType.BankAccount,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Paid By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: true,
             },
             chequeNumber: {
-              ...initialFormElements.chequeNumber,
+              ...fieldsToUpdate.chequeNumber,
               visible: true,
             },
             bankDate: {
-              ...initialFormElements.bankDate,
+              ...fieldsToUpdate.bankDate,
               visible: true,
             },
             gridColumns: {
-              ...initialFormElements.gridColumns,
+              ...fieldsToUpdate.gridColumns,
               showChqNo: true,
               showChqDate: true,
             },
@@ -733,7 +738,7 @@ console.log('masterAccountID = -2;');
 
           if (voucherType === "CQP") {
             fieldsToUpdate.ledger = {
-              ...initialFormElements.ledger,
+              ...fieldsToUpdate.ledger,
             };
           }
           break;
@@ -744,16 +749,16 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Party Account",
               accLedgerType: LedgerType.CustomerAndSupplier,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: voucherType === "CN" ? "Collected By" : "Paid By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
           };
           break;
@@ -763,27 +768,27 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Master Account",
               accLedgerType: LedgerType.All,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Done By",
             },
             narration: {
-              ...initialFormElements.narration,
+              ...fieldsToUpdate.narration,
             },
             drCr: {
-              ...initialFormElements.drCr,
-              visible: true,
+              ...fieldsToUpdate.drCr,
+              visible: false,
             },
             jvDrCr: {
-              ...initialFormElements.jvDrCr,
+              ...fieldsToUpdate.jvDrCr,
               visible: true,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: false,
             },
           };
@@ -794,30 +799,30 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Master Account",
               visible: false,
               accLedgerType: LedgerType.All,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Employee",
             },
             gridColumns: {
-              ...initialFormElements.gridColumns,
+              ...fieldsToUpdate.gridColumns,
               showDrCr: false,
               showDebitColumn: true,
               showCreditColumn: true,
               showAmountColumn: false,
-              debitIndex: initialFormElements.gridColumns?.amountIndex,
-              creditIndex: initialFormElements.gridColumns?.amountIndex + 1,
+              debitIndex: fieldsToUpdate.gridColumns?.amountIndex,
+              creditIndex: fieldsToUpdate.gridColumns?.amountIndex + 1,
             },
             drCr: {
-              ...initialFormElements.drCr,
+              ...fieldsToUpdate.drCr,
               visible: true,
             },
             discount: {
-              ...initialFormElements.discount,
+              ...fieldsToUpdate.discount,
               visible: false,
             },
           };
@@ -828,22 +833,22 @@ console.log('masterAccountID = -2;');
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
-              ...initialFormElements.masterAccount,
+              ...fieldsToUpdate.masterAccount,
               label: "Master Account",
               visible: false,
               accLedgerType: LedgerType.All,
             },
             employee: {
-              ...initialFormElements.employee,
+              ...fieldsToUpdate.employee,
               label: "Employee",
-              left: initialFormElements.masterAccount.left,
+              left: fieldsToUpdate.masterAccount.left,
             },
             gridColumns: {
-              ...initialFormElements.gridColumns,
+              ...fieldsToUpdate.gridColumns,
               showDrCr: true,
             },
             drCr: {
-              ...initialFormElements.drCr,
+              ...fieldsToUpdate.drCr,
               visible: true,
             },
           };
@@ -979,6 +984,8 @@ console.log('masterAccountID = -2;');
       dataType: "number",
       caption: t("amount"),
       width: 200,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value)}`,
     },
     {
       dataField: "drCr",
@@ -1015,7 +1022,7 @@ console.log('masterAccountID = -2;');
       caption: t("discount"),
       visible: false,
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
     },
     {
       dataField: "costCentreID",
@@ -1036,7 +1043,7 @@ console.log('masterAccountID = -2;');
       dataField: "amountFC",
       caption: t("amount_FC"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
@@ -1053,14 +1060,14 @@ console.log('masterAccountID = -2;');
       dataField: "debit",
       caption: t("debit"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
       dataField: "credit",
       caption: t("credit"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
@@ -1107,9 +1114,9 @@ console.log('masterAccountID = -2;');
     },
   ];
 
-  const customizeAmount = useMemo(() => {
+  const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) =>
-      `Amount Total: ${getFormattedValue(itemInfo.value)}`;
+      `${getFormattedValue(itemInfo.value)}`;
   }, []);
 
   const summaryItems: SummaryConfig[] = [
@@ -1117,7 +1124,31 @@ console.log('masterAccountID = -2;');
       column: "amount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeAmount,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "amountFC",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "debit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     },
   ];
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);

@@ -20,7 +20,7 @@ const DayBookDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       format: 'MMMM dd, yyyy',
       showInPdf:true,
     },
@@ -39,7 +39,7 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 130,
       showInPdf:true,
     },
     // {
@@ -56,7 +56,7 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      // width: 200,
       showInPdf:true,
       cellRender: (
         cellElement: any,
@@ -100,7 +100,7 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "refDate",
@@ -108,7 +108,7 @@ const DayBookDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "narration",

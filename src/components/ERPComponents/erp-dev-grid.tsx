@@ -1600,6 +1600,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     : column.caption
                 }
                 groupIndex={column.groupIndex}
+                format={column.format}
                 dataType={column.dataType}
                 allowSorting={column.allowSorting}
                 allowSearch={column.allowSearch}

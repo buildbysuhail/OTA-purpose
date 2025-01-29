@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
 import {
   Column,
@@ -21,7 +21,7 @@ import _cloneDeep from "lodash/cloneDeep";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
@@ -97,8 +97,10 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, onMaximizeChange]);
   useEffect(() => {
-   
-  }, [formState.billwiseData, formState.showbillwise]);
+   if(userSession.dbIdValue == "LATAJFOODS") {
+    setShowAllTransactions(true);
+   }
+  }, []);
   useEffect(() => {
     
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
@@ -178,6 +180,7 @@ const BillwiseComponent = ({
 
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
+      dataGridRef?.current?.rePaint();
     }
   };
 
@@ -198,8 +201,10 @@ const BillwiseComponent = ({
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        row.drCr !== formState.transaction.master.drCr
-      ) {
+        (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+        ||
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+      ) ){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -269,9 +274,26 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
+    let DRCR = formState.transaction.master.drCr.toUpperCase()
+    if(formState.transaction.master.voucherType == VoucherType.MultiJournal
+      || formState.transaction.master.voucherType == VoucherType.OpeningBalance
+    ) {
+      DRCR = formState.row.drCr.toUpperCase()
+    }
+    if(formState.transaction.master.voucherType == VoucherType.JournalVoucher
+    ) {
+      DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
+    }
+
 
     try {
-      list.forEach((bill) => {
+      
+      list?.filter((row: BillwiseData) => showAllTransactions ||
+      (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+      ||
+      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+    )
+  ).forEach((bill) => {
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 
@@ -281,8 +303,8 @@ const BillwiseComponent = ({
           totalCr += amountToSet;
         }
       });
-
-      if (formState.transaction.master.drCr.toUpperCase() === "CR") {
+debugger;
+      if (DRCR === "CR") {
         total = totalDr - totalCr;
       } else {
         total = totalCr - totalDr;
@@ -427,14 +449,20 @@ const BillwiseComponent = ({
   };
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
-      debugger;
-      if (e.data.drCr === formState.transaction.master.drCr) {
+  
+      // if (e.data.drCr === formState.transaction.master.drCr) {
+      if(
+        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && e.data.drCr === formState.row.drCr) 
+        ||
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && e.data.drCr === formState.transaction.master.drCr)
+      ) {
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
   };
   const handleAutoPost = () => {
+    debugger;
     let remainingAmount: number = parseFloat(
       (formState.row.amount ?? 0).toString()
     );
@@ -443,13 +471,14 @@ const BillwiseComponent = ({
 
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {});
-debugger;
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
+      debugger;
       const bill = updatedBills[i];
       if (
-        bill.drCr.toUpperCase() ===
-        formState.transaction.master.drCr.toUpperCase()
+        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
+        ||
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
       ) {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;
@@ -500,8 +529,8 @@ debugger;
   const columns: DevGridColumn[] = [
     {
         dataField: "slNo",
-        caption: "slNo",
-        dataType: "number",
+        caption: "Sl.No",
+        dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
@@ -511,13 +540,13 @@ debugger;
     },
     {
         dataField: "voucherType",
-        caption: "VoucherType",
+        caption: "Vr Type",
         dataType: "string",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 100,
+        width: 80,
         showInPdf: true,
     },
     {
@@ -528,17 +557,18 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 150,
+        width: 100,
         showInPdf: true,
     },
     {
         dataField: "transactionDate",
-        caption: "TransactionDate",
+        caption: "Date",
         dataType: "date",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
+        format:"dd/MM/yyyy",
         width: 100,
         showInPdf: true,
     },
@@ -552,10 +582,12 @@ debugger;
         alignment: "right",
         width: 100,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "adjustedAmount",
-        caption: "Adjusted Amount",
+        caption: "Adj.Amount",
         dataType: "number",
         allowSorting: false,
         allowSearch: true,
@@ -563,6 +595,8 @@ debugger;
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "balance",
@@ -574,6 +608,8 @@ debugger;
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "billwiseAmount",
@@ -584,19 +620,23 @@ debugger;
         allowEditing: true,
         allowFiltering: true,
         alignment: "right",
-        width: 100,
+        width: 130,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "balanceAfter",
         caption: "Balance After",
-        dataType: "string",
+        dataType: "number",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue((cellInfo.value??0),false,4)}`,
     },
     {
         dataField: "drCr",
@@ -610,17 +650,6 @@ debugger;
         showInPdf: true,
     },
     {
-        dataField: "referenceNumber",
-        caption: "ReferenceNumber",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 150,
-        showInPdf: true,
-    },
-    {
         dataField: "financialYearID",
         caption: "FinancialYearID",
         dataType: "number",
@@ -629,7 +658,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 130,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "formType",
@@ -640,7 +670,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 100,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "voucherPrefix",
@@ -651,7 +682,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 130,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "partyName",
@@ -662,10 +694,24 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 150,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
+    },
+    {
+        dataField: "referenceNumber",
+        caption: "ReferenceNumber",
+        dataType: "number",
+        allowSorting: false,
+        allowSearch: true,
+        allowFiltering: true,
+        alignment: "left",
+        width: 150,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "referenceDate",
+        format:"dd/MM/yyyy",
         caption: "Reference Date",
         dataType: "date",
         allowSorting: false,
@@ -673,22 +719,53 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 100,
-        visible: false,
-        showInPdf: true,
-    },
-    {
-        dataField: "formType",
-        caption: "Form Type",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 100,
-        visible: false,
+        visible: true,
         showInPdf: true,
     },
 ];
+const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) =>
+      `${getFormattedValue(itemInfo.value)}`;
+  }, []);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "adjustedAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "billwiseAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "balance",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "balanceAfter",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Card
@@ -697,7 +774,6 @@ debugger;
       sx={{ p: 0, m: 0 }}
     >
       <CardContent sx={{ p: 0 }}>
-        frm {formState.transaction.master.drCr}
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
@@ -747,12 +823,15 @@ debugger;
 
         <ERPDevGrid
           ref={dataGridRef}
+          summaryItems={summaryItems}
           rowAlternationEnabled={false} 
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"
           columns={columns}
           gridId="billwise_popup"
+          showTotalCount={false}
+          hideGridAddButton={true}
           // height={gridHeight}
           dataSource={store?.filter(
             (row: any) =>
@@ -831,40 +910,7 @@ debugger;
           
 
           {/* Add Summary for "Amount" column */}
-          <Summary calculateCustomSummary={handleCustomSummary}>
-            <TotalItem
-              column="amount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              } // Handle undefined gracefully
-            />
-            <TotalItem
-              column="adjustedAmount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-            <TotalItem
-              column="billwiseAmount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-            <TotalItem
-              column="balance"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-          </Summary>
+         
         </ERPDevGrid>
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">

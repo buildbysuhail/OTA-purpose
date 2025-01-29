@@ -1735,7 +1735,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             width={
               childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).width
-                : childPopupProps?.width
+                : childPopupProps?.width ?? "max-w-[1000px]"
             }
             isForm={
               childPopupPropsDynamic

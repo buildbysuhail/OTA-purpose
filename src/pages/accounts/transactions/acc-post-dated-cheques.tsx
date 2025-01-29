@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
@@ -8,6 +8,7 @@ import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ErpInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
+import { FileSpreadsheet, X } from "lucide-react";
 
 interface FormState {
   paymentType: "payment" | "receipt";
@@ -50,6 +51,19 @@ const PostDatedCheques = () => {
     close: false,
   });
   const { t } = useTranslation("transaction");
+
+  const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const [gridHeight, setGridHeight] = useState(200);
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightWindows = wh - 800;
+    setGridHeight(gridHeightWindows);
+  }, [window.innerHeight]);
+
+  const goToPreviousPage = () => {
+    window.history.back();
+  };
+
   const handlePaymentTypeChange = (type: "payment" | "receipt") => {
     setFormState((prev) => ({ ...prev, paymentType: type }));
   };
@@ -129,6 +143,16 @@ const PostDatedCheques = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     } finally {
       setLoading((prev) => ({ ...prev, close: false }));
+    }
+  };
+
+  const handlePrint = async () => {
+    setLoading((prev) => ({ ...prev, print: true }));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } finally {
+      setLoading((prev) => ({ ...prev, print: false }));
     }
   };
 
@@ -268,164 +292,186 @@ const PostDatedCheques = () => {
   );
 
   return (
-    <div className="space-y-6 p-4">
-      <h1 className="box-title !text-xl !font-medium">{t("post_dated_cheques")}</h1>
-      <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="border rounded-sm shadow-sm p-4 my-3 basis-1/2">
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-4 gap-4 items-center">
-                <ERPRadio
-                  id="payment"
-                  name="paymentType"
-                  checked={formState.paymentType === "payment"}
-                  onChange={() => handlePaymentTypeChange("payment")}
-                  label={t("payment")}
-                />
-                <ERPRadio
-                  id="receipt"
-                  name="paymentType"
-                  checked={formState.paymentType === "receipt"}
-                  onChange={() => handlePaymentTypeChange("receipt")}
-                  label={t("receipt")}
-                />
-                <ERPButton
-                  title={t("set_all_date")}
-                  onClick={handleSetAllDate}
-                  type="reset"
-                  loading={loading.setAllDate}
-                />
-                <ERPButton
-                  title={t("to_excel")}
-                  onClick={handleExportToExcel}
-                  startIcon="ri-file-excel-2-line"
-                  variant="primary"
-                  loading={loading.exportToExcel}
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <ERPDateInput
-                  id="chequeFromDate"
-                  label={t("cheque_from_date")}
-                  onChange={(e) =>
-                    handleDateChange("chequeFromDate", e.target.value)
-                  }
-                  value={formState.chequeFromDate}
-                />
-                <ERPDateInput
-                  id="chequeToDate"
-                  label={t("to_date")}
-                  onChange={(e) =>
-                    handleDateChange("chequeToDate", e.target.value)
-                  }
-                  value={formState.chequeToDate}
-                />
-              </div>
+    <div className="relative min-h-screen">
+      <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
+        <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
+          <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
+            {t("post_dated_cheques")}
+          </h6>
+          <i className="fas fa-cog ms-1"></i>
+        </div>
 
-              <div className="flex items-center justify-start space-x-4">
-                <ERPCheckbox
-                  id="bankCheckbox"
-                  name="bankCheckbox"
-                  checked={formState.isBank}
-                  onChange={(e) => handleBankCheckboxChange(e.target.checked)}
-                  label={t("bank")}
-                />
-                <ERPDataCombobox
-                  className="min-w-[259px]"
-                  id="counterID"
-                  noLabel
-                  value={formState.selectedBankId}
-                  onChange={(e) => handleBankSelection(e?.value ?? null)}
-                />
+        <div className="flex items-center justify-end space-x-4 p-1 w-full">
+          <div className="group relative inline-flex flex-col items-center" title={t("excel")}>
+            <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handleExportToExcel}>
+              <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+
+          <div className="group relative inline-flex flex-col items-center" title={t("close")}>
+            <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
+              <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="px-4 my-3 w-1/2">
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-4 gap-4 items-center">
+                  <ERPRadio
+                    id="payment"
+                    name="paymentType"
+                    checked={formState.paymentType === "payment"}
+                    onChange={() => handlePaymentTypeChange("payment")}
+                    label={t("payment")}
+                  />
+                  <ERPRadio
+                    id="receipt"
+                    name="paymentType"
+                    checked={formState.paymentType === "receipt"}
+                    onChange={() => handlePaymentTypeChange("receipt")}
+                    label={t("receipt")}
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <ERPDateInput
+                    id="chequeFromDate"
+                    label={t("cheque_from_date")}
+                    onChange={(e) =>
+                      handleDateChange("chequeFromDate", e.target.value)
+                    }
+                    value={formState.chequeFromDate}
+                  />
+                  <ERPDateInput
+                    id="chequeToDate"
+                    label={t("to_date")}
+                    onChange={(e) =>
+                      handleDateChange("chequeToDate", e.target.value)
+                    }
+                    value={formState.chequeToDate}
+                  />
+                  <div className="flex items-center gap-4 mt-[23px]">
+                    <ERPDataCombobox
+                      className="min-w-[280px]"
+                      id="counterID"
+                      noLabel
+                      value={formState.selectedBankId}
+                      onChange={(e) => handleBankSelection(e?.value ?? null)}
+                    />
+                    <ERPCheckbox
+                      id="bankCheckbox"
+                      name="bankCheckbox"
+                      checked={formState.isBank}
+                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
+                      label={t("bank")}
+                    />
+                    <ERPButton
+                      title={t("show")}
+                      onClick={handleShow}
+                      variant="primary"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col px-4 my-3 w-1/2">
+              <h1 className="box-title !text-xl !font-medium text-left">
+                {t("set_as_bank_date")}
+              </h1>
+              <div className="grid grid-cols-1 gap-5 my-3">
+                <div className="flex items-center gap-4">
+                  <ERPRadio
+                    id="todayDate"
+                    name="bankDateType"
+                    checked={formState.bankDateType === "today"}
+                    onChange={() => handleBankDateTypeChange("today")}
+                    label={t("today's_date")}
+                  />
+                  <ERPRadio
+                    id="chequeDate"
+                    name="bankDateType"
+                    checked={formState.bankDateType === "cheque"}
+                    onChange={() => handleBankDateTypeChange("cheque")}
+                    label={t("cheque_date")}
+                  />
+                  <ERPButton
+                    title={t("set_all_date")}
+                    onClick={handleSetAllDate}
+                    type="reset"
+                    loading={loading.setAllDate}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="border rounded-sm shadow-sm p-4 my-3 basis-1/2 py-11">
-            <h1 className="box-title !text-xl !font-medium text-center">
-             {t("set_as_bank_date")}
-            </h1>
-            <div className="grid grid-cols-1 gap-5 my-3">
-              <div className="flex items-center justify-center space-x-10">
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              columns={columns}
+              gridId="grid_post-dated_cheques"
+              hideGridAddButton={true}
+              hideDefaultExportButton={true}
+              heightToAdjustOnWindows={800}
+              // height={gridHeight}
+              reload={formState.reload}
+              pageSize={40}
+            // className="pb-16"
+            />
+          </div>
+
+          <div className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+            style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
+            <div className="w-full mx-auto flex justify-between items-center">
+              {/* Left section - Radio buttons */}
+              <div className="flex items-center space-x-2 ml-[14.5rem]">
                 <ERPRadio
-                  id="todayDate"
-                  name="bankDateType"
-                  checked={formState.bankDateType === "today"}
-                  onChange={() => handleBankDateTypeChange("today")}
-                  label={t("today's_date")}
+                  id="bankChange"
+                  name="bankChangeType"
+                  checked={formState.bankChangeType === "change"}
+                  onChange={() => handleBankChangeTypeChange("change")}
+                  label={t("bank_change")}
                 />
                 <ERPRadio
-                  id="chequeDate"
-                  name="bankDateType"
-                  checked={formState.bankDateType === "cheque"}
-                  onChange={() => handleBankDateTypeChange("cheque")}
-                  label={t("cheque_date")}
+                  id="bankCommission"
+                  name="bankChangeType"
+                  checked={formState.bankChangeType === "commission"}
+                  onChange={() => handleBankChangeTypeChange("commission")}
+                  label={t("bank_commission")}
                 />
               </div>
 
-              <div className="flex items-center justify-center space-x-5">
+              {/* Center section - Total input */}
+              <div className="flex-1 flex justify-center ml-32">
+                <ErpInput
+                  id="total"
+                  label={t("total")}
+                  labelDirection="horizontal"
+                  onChange={handleTotalChange}
+                  value={formState.total}
+                />
+              </div>
+
+              {/* Right section - Buttons */}
+              <div className="flex items-center space-x-2">
                 <ERPButton
-                  title={t("show")}
-                  onClick={handleShow}
-                  startIcon="ri-slideshow-2-line"
-                  variant="secondary"
-                  loading={loading.show}
+                  ref={btnSaveRef}
+                  title={t("cancel")}
+                  onClick={goToPreviousPage}
+                  className="w-24"
                 />
                 <ERPButton
                   title={t("save")}
                   onClick={handleSave}
-                  startIcon="ri-save-line"
                   variant="primary"
-                  loading={loading.save}
-                />
-                <ERPButton
-                  title={t("close")}
-                  onClick={handleClose}
-                  startIcon="ri-file-close-line"
-                  variant="secondary"
-                  loading={loading.close}
+                  className="w-24"
                 />
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3">
-          <ErpDevGrid
-            columns={columns}
-            gridId="grid_post-dated_cheques"
-            hideGridAddButton={true}
-            hideDefaultExportButton={true}
-            heightToAdjustOnWindows={500}
-            reload={formState.reload}
-            pageSize={40}
-          />
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-10 border border-dotted border-gray-400 rounded-sm py-4 px-2">
-            <ERPRadio
-              id="bankChange"
-              name="bankChangeType"
-              checked={formState.bankChangeType === "change"}
-              onChange={() => handleBankChangeTypeChange("change")}
-              label={t("bank_change")}
-            />
-            <ERPRadio
-              id="bankCommission"
-              name="bankChangeType"
-              checked={formState.bankChangeType === "commission"}
-              onChange={() => handleBankChangeTypeChange("commission")}
-              label={t("bank_commission")}
-            />
-          </div>
-
-          <ErpInput
-            id="total"
-            label={t("total")}
-            labelDirection="horizontal"
-            onChange={handleTotalChange}
-            value={formState.total}
-          />
         </div>
       </div>
     </div>

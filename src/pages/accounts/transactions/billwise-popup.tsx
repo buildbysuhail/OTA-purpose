@@ -277,10 +277,14 @@ const BillwiseComponent = ({
     let DRCR = formState.transaction.master.drCr.toUpperCase()
     if(formState.transaction.master.voucherType == VoucherType.MultiJournal
       || formState.transaction.master.voucherType == VoucherType.OpeningBalance
-      || formState.transaction.master.voucherType == VoucherType.JournalVoucher
     ) {
       DRCR = formState.row.drCr.toUpperCase()
     }
+    if(formState.transaction.master.voucherType == VoucherType.JournalVoucher
+    ) {
+      DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
+    }
+
 
     try {
       

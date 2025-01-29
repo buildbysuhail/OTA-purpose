@@ -401,6 +401,9 @@ const Urls = {
   get_currency_exchange_rate: "/Core/TransactionBase/GetCurrencyExchangeRate",
   is_ledger_billwise_applicable:
     "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
+
+    pdc:"/Accounts/PDC/",
+    bankReconciliation:"/Accounts/BankReconciliation/"
 };
 
 export default Urls;

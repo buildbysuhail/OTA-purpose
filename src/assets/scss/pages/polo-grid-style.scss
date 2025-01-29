@@ -572,7 +572,7 @@ $dark-grid-selection: #000000;
 
   .dx-datagrid-rowsview {
     .dx-selection.dx-row:not(.dx-row-focused).dx-row-matched-red > td {
-      background-color: #51ff00 !important;
+      background-color: red !important;
     }
   }
 

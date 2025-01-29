@@ -97,8 +97,10 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, onMaximizeChange]);
   useEffect(() => {
-   
-  }, [formState.billwiseData, formState.showbillwise]);
+   if(userSession.dbIdValue == "LATAJFOODS") {
+    setShowAllTransactions(true);
+   }
+  }, []);
   useEffect(() => {
     
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
@@ -454,6 +456,7 @@ debugger;
     }
   };
   const handleAutoPost = () => {
+    debugger;
     let remainingAmount: number = parseFloat(
       (formState.row.amount ?? 0).toString()
     );
@@ -462,13 +465,14 @@ debugger;
 
     // First pass: Handle DR/CR transactions
     updatedBills.forEach((bill) => {});
-debugger;
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
+      debugger;
       const bill = updatedBills[i];
       if (
-        bill.drCr.toUpperCase() ===
-        formState.transaction.master.drCr.toUpperCase()
+        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
+        ||
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
       ) {
         const tyu = 2 * bill.balance;
         remainingAmount += tyu;

@@ -180,6 +180,7 @@ const BillwiseComponent = ({
 
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
+      dataGridRef?.current?.rePaint();
     }
   };
 
@@ -556,12 +557,13 @@ debugger;
     },
     {
         dataField: "transactionDate",
-        caption: "TransactionDate",
+        caption: "Date",
         dataType: "date",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
+        format:"dd/MM/yyyy",
         width: 100,
         showInPdf: true,
     },
@@ -645,13 +647,15 @@ debugger;
     {
         dataField: "referenceNumber",
         caption: "ReferenceNumber",
+        format:"dd/MM/yyyy",
         dataType: "number",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
         width: 150,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "financialYearID",
@@ -662,7 +666,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 130,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "formType",
@@ -673,7 +678,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 100,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "voucherPrefix",
@@ -684,7 +690,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 130,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "partyName",
@@ -695,7 +702,8 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 150,
-        showInPdf: true,
+        showInPdf: false,
+        visible: false
     },
     {
         dataField: "referenceDate",
@@ -706,19 +714,7 @@ debugger;
         allowFiltering: true,
         alignment: "left",
         width: 100,
-        visible: false,
-        showInPdf: true,
-    },
-    {
-        dataField: "formType",
-        caption: "Form Type",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 100,
-        visible: false,
+        visible: true,
         showInPdf: true,
     },
 ];

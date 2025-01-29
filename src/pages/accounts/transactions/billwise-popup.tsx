@@ -239,16 +239,6 @@ const BillwiseComponent = ({
     }
   };
 
-  const onRowUpdating = (e: any) => {
-    const updatedRow = { ...e.oldData, ...e.newData };
-
-    setStore((prevStore: any) =>
-      prevStore.map((item: any) =>
-        item.slNo === updatedRow.slNo ? updatedRow : item
-      )
-    );
-    e.newData = updatedRow;
-  };
 
   // Load billwise transactions
   useEffect(() => {
@@ -880,11 +870,13 @@ const customizeSummaryRow = useMemo(() => {
           showTotalCount={false}
           hideGridAddButton={true}
           // height={gridHeight}
-          dataSource={store?.filter(
-            (row: any) =>
-              showAllTransactions ||
-            row.drCr !== drCr
-          )}
+          dataSource={store
+            ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            ?.map((row: any, index: number) => ({
+              ...row,
+              slNo: index + 1, // Assign serial number starting from 1
+            }))
+          }
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"
           showBorders={true}

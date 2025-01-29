@@ -49,7 +49,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -338,7 +338,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
                     title: t(""),
                     isForm: false,
                     isTransactionScreen:true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
                   }}

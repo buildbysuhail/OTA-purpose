@@ -50,7 +50,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}  field="transactionDate" ></DrillDownCellTemplate>
     },
@@ -307,7 +307,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                     content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
                     title: t("acc_group_detailed"),
                     isForm: false,
-                    width: "mw-100",
+                    width: "max-w-[1500px]",
                     drillDownCells: "transactionDate",
                     bodyProps: "transactionDate",
                   }}

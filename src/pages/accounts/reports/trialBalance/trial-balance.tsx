@@ -28,7 +28,7 @@ const TrialBalance = () => {
       allowSearch: true,
       visible: false,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       // cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement}></DrillDownCellTemplate>
     },
     {
@@ -37,6 +37,8 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width:220,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -191,6 +193,7 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -228,6 +231,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      visible:false,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -337,7 +341,7 @@ const TrialBalance = () => {
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     origin: "trialBalance",

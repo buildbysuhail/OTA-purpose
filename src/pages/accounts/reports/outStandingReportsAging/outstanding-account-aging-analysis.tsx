@@ -54,6 +54,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
+      width:100
     },
     {
       dataField: "form",
@@ -61,7 +62,6 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -105,7 +105,6 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
       showInPdf:true,
     },
     {
@@ -213,8 +212,6 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                 rowData={rowData}
@@ -238,8 +235,6 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
               </div>
             </div>
           </div>
-        </div>
-      </div>
       
     </Fragment>
   );

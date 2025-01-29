@@ -454,6 +454,7 @@ export interface AccTransactionFormState {
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
+  billwiseDrCr: string;
   showbillwise: boolean;
   showSaveDialog: boolean;
   accTransDetailsID: number; // AccTransDetailsID
@@ -563,6 +564,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   dtLedgerCodes: [],
   billwiseData: [],
   showbillwise: false,
+  billwiseDrCr: "",
   showSaveDialog: false,
   accTransDetailsID: 0,
   accTransDetailsIDCr: 0,

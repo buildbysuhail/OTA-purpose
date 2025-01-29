@@ -54,6 +54,7 @@ interface BillwiseProps {
   isMaximized?: boolean;
   modalHeight?: any;
   onMaximizeChange?: (maximized: boolean) => void;
+  drCr: string;
 }
 const api = new APIClient();
 const BillwiseComponent = ({
@@ -63,6 +64,7 @@ const BillwiseComponent = ({
   isMaximized,
   modalHeight,
   onMaximizeChange,
+  drCr
 }: BillwiseProps) => {
   const dispatch = useDispatch();
   const { round } = useNumberFormat();
@@ -78,7 +80,7 @@ const BillwiseComponent = ({
   const [store, setStore] = useState<any>(
     JSON.parse(JSON.stringify(formState.billwiseData))
   );
-  const [drCr, setDrCr] = useState<string>("");
+  // const [drCr, setDrCr] = useState<string>("");
   const { getFormattedValue } = useNumberFormat();
   const ledgerData = useAppSelector(
     (state: RootState) => state.AccTransaction.ledgerData
@@ -101,61 +103,8 @@ const BillwiseComponent = ({
    if(userSession.dbIdValue == "LATAJFOODS") {
     setShowAllTransactions(true);
    }
-   switch (formState.transaction.master.voucherType)
-   {
-       case "CP":
-       case "BP":
-       case "DN":
-       case "CQP":
-       case "SV":
-       case "SRV":
-       case "PBP":
-  
-       setDrCr("Dr");
-           break;
-       case "CR":
-       case "BR":
-       case "CN":
-       case "CQR":
-       case "PV":
-       case "PBR":
-  
-       setDrCr("Cr")
-  
-           break;
-       case "OB":
-       case "MJV":
-  
-  
-  
-           if (formState.row.drCr == "Dr")
-           {
-               setDrCr("Dr")
-           }
-           else
-           {
-               setDrCr("Cr")
-           }
-           break;
-       case "JV":
-  
-  
-  
-           if (formState.transaction.master.drCr == "Dr")
-           {
-               setDrCr("Cr")
-           }
-           else
-           {
-            setDrCr("Dr")
-           }
-           break;
-  
-        
-  
-  
-   }
-  }, [formState.transaction.master.voucherType, formState.row.drCr, formState.transaction.master.drCr]);
+   
+  }, []);
   useEffect(() => {
     
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
@@ -242,6 +191,7 @@ const BillwiseComponent = ({
 
   // Load billwise transactions
   useEffect(() => {
+    debugger;
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       if (
@@ -861,10 +811,7 @@ const customizeSummaryRow = useMemo(() => {
           // height={gridHeight}
           dataSource={store
             ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
-            ?.map((row: any, index: number) => ({
-              ...row,
-              slNo: index + 1, // Assign serial number starting from 1
-            }))
+            
           }
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"

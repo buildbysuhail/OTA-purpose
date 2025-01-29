@@ -2956,7 +2956,10 @@ console.log('masterAccountID = -2;');
       {formState.showbillwise == true &&
         formState.billwiseData != undefined &&
         formState.billwiseData != null &&
-        formState.billwiseData.length > 0 && (
+        formState.billwiseData.length > 0 &&
+        formState.billwiseDrCr != undefined &&
+        formState.billwiseDrCr != null&&
+        formState.billwiseDrCr != "" &&(
           <ERPModal
             isFullHeight={true}
             isOpen={formState.showbillwise ?? false}
@@ -2975,6 +2978,7 @@ console.log('masterAccountID = -2;');
             width="!w-[80rem] !max-w-[60rem]"
             content={
               <BillWisePopup
+              drCr={formState.billwiseDrCr}
                 onSave={(
                   billwiseDetails: string,
                   totalAmount: number,

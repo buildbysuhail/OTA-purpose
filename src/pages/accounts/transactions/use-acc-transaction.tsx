@@ -1093,15 +1093,73 @@ export const useAccTransaction = (
     );
   };
   const addOrEditRow = async (billwiseDetails?: string, totalAmount?: number) => {
+    
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
+        let _drCr
+        switch (formState.transaction.master.voucherType)
+        {
+            case "CP":
+            case "BP":
+            case "DN":
+            case "CQP":
+            case "SV":
+            case "SRV":
+            case "PBP":
+        
+            _drCr = "Dr";
+                break;
+            case "CR":
+            case "BR":
+            case "CN":
+            case "CQR":
+            case "PV":
+            case "PBR":
+        
+            _drCr ="Cr"
+        
+                break;
+            case "OB":
+            case "MJV":
+        
+        
+        
+                if (formState.row.drCr == "Dr")
+                {
+                    _drCr = "Dr"
+                }
+                else
+                {
+                    _drCr = "Cr"
+                }
+                break;
+            case "JV":       
+        
+        
+                if (formState.transaction.master.drCr == "Dr")
+                {
+                    _drCr = "Cr"
+                }
+                else
+                {
+                  _drCr = "Dr"
+                }
+                break;
+        
+              
+        
+        
+        }
         if (formState.isRowEdit != true) {
-          if (billwiseDetails == null && formState.row.billwiseDetails == "") {
+          if ((billwiseDetails == undefined || billwiseDetails == null) && formState.row.billwiseDetails == "") {
             if (formState.IsBillwiseTransAdjustmentExists) {
+             
               dispatch(
                 accFormStateHandleFieldChange({
                   fields: {
                     showbillwise: true,
+                  billwiseDrCr: _drCr,
                   },
                 })
               );
@@ -1118,10 +1176,13 @@ export const useAccTransaction = (
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
+            debugger;
+            
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
                   showbillwise: true,
+                  billwiseDrCr: _drCr,
                 },
               })
             );
@@ -1899,9 +1960,64 @@ debugger;
           : formState.row.ledgerID
       );
       if (isBillwiseApplicable == true) {
+        debugger;
+        let _drCr
+        switch (formState.transaction.master.voucherType)
+        {
+            case "CP":
+            case "BP":
+            case "DN":
+            case "CQP":
+            case "SV":
+            case "SRV":
+            case "PBP":
+        
+            _drCr = "Dr";
+                break;
+            case "CR":
+            case "BR":
+            case "CN":
+            case "CQR":
+            case "PV":
+            case "PBR":
+        
+            _drCr ="Cr"
+        
+                break;
+            case "OB":
+            case "MJV":
+        
+        
+        
+                if (formState.row.drCr == "Dr")
+                {
+                    _drCr = "Dr"
+                }
+                else
+                {
+                    _drCr = "Cr"
+                }
+                break;
+            case "JV":       
+        
+        
+                if (formState.transaction.master.drCr == "Dr")
+                {
+                    _drCr = "Cr"
+                }
+                else
+                {
+                  _drCr = "Dr"
+                }
+                break;
+        
+              
+        
+        
+        }
         dispatch(
           accFormStateHandleFieldChange({
-            fields: { showbillwise: true },
+            fields: { showbillwise: true, billwiseDrCr: _drCr },
           })
         );
       } else {

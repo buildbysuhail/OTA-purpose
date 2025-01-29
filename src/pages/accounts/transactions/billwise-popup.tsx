@@ -837,7 +837,7 @@ const customizeSummaryRow = useMemo(() => {
             (row: any) =>
               showAllTransactions ||
               (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-              || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && row.drCr === "Cr")))
+              || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr == "Cr" && row.drCr === "Cr")))
               || ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal && formState.transaction.master.voucherType != VoucherType.JournalVoucher) && row.drCr !== formState.transaction.master.drCr)
             )
           )}

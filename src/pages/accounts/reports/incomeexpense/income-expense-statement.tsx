@@ -150,7 +150,7 @@ const IncomExpenseStatement = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -187,7 +187,7 @@ const IncomExpenseStatement = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 200,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {

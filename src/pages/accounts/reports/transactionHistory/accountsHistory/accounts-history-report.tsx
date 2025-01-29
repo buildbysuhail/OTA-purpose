@@ -37,13 +37,13 @@ const AccountsHistoryReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 130,
       showInPdf: true,
     },
     {
       dataField: "modifiedDate",
       caption: t("modified_date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 120,
@@ -63,7 +63,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 130,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.oldAccTransactionMasterID > 0 ? (
@@ -82,7 +82,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 120,
       showInPdf: true,
     },
     {
@@ -91,7 +91,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+
       showInPdf: true,
     },
     {
@@ -100,7 +100,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+
       showInPdf: true,
     },
     {
@@ -109,7 +109,7 @@ const AccountsHistoryReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -152,7 +152,7 @@ const AccountsHistoryReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -195,7 +195,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 200,
       showInPdf: true,
     },
     {
@@ -204,7 +204,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "userName",
@@ -212,7 +212,7 @@ const AccountsHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 140,
+      width: 150,
     },
   ];
   return (

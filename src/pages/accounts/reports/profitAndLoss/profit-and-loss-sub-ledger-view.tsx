@@ -61,7 +61,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 140,
       showInPdf: true,
     },
     {
@@ -70,7 +70,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "ledgerName",
@@ -78,7 +78,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 130,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.ledgerName === "TOTAL" ? (
@@ -96,7 +96,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 120,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-[#DC143C]" : "" }`}>
@@ -116,7 +116,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 120,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-[#DC143C]" : "" }`}>
@@ -136,7 +136,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 120,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${ cellElement.data.ledgerName === "TOTAL" ? "font-bold text-[#DC143C]" : "" }`}>
@@ -194,7 +194,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
                     ),
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "max-w-[1000px]",
+                    width: "max-w-[1200px]",
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0,

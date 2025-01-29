@@ -589,6 +589,7 @@ export const useAccTransaction = (
   };
 
   const validate = (): boolean => {
+    debugger;
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
       const demoExpiryDate = new Date(clientSession.demoExpiryDate);
@@ -679,30 +680,39 @@ export const useAccTransaction = (
       });
       return false;
     }
-
+    let firstDebitLedgerID =  formState.firstDebitLedgerID;
+    let firstCreditLedgerID =  formState.firstCreditLedgerID;
     if (formState.transaction.master.voucherType == "MJV") {
       for (let i = 0; i < formState.transaction.details.length; i++) {
         const row = formState.transaction.details[i];
 
         // Check if debit amount is greater than 0
         if (Number(row.debit) > 0) {
-          if (formState.firstDebitLedgerID === 0) {
-            formState.firstDebitLedgerID = Number(row.ledgerID || 0);
+          if (firstDebitLedgerID === 0) {
+            firstDebitLedgerID = Number(row.ledgerID || 0);
           }
         } else {
-          if (formState.firstCreditLedgerID === 0) {
-            formState.firstCreditLedgerID = Number(row.ledgerID || 0);
+          if (firstCreditLedgerID === 0) {
+            firstCreditLedgerID = Number(row.ledgerID || 0);
           }
         }
 
         // Break if we found both
         if (
-          formState.firstCreditLedgerID > 0 &&
-          formState.firstDebitLedgerID > 0
+          firstCreditLedgerID > 0 &&
+          firstDebitLedgerID > 0
         )
           break;
       }
     }
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          firstCreditLedgerID: firstCreditLedgerID,
+          firstDebitLedgerID: firstDebitLedgerID,
+        },
+      })
+    );
     if (
       formState.transaction.master.voucherType == "JV" &&
       (formState.transaction.master.drCr == "" ||
@@ -715,6 +725,7 @@ export const useAccTransaction = (
       return false;
     }
     // Validate master ledger existence
+    debugger;
     if (
       formState.transaction.master.voucherType !== "OB" &&
       formState.transaction.master.voucherType !== "MJV"
@@ -733,23 +744,24 @@ export const useAccTransaction = (
       }
     }
 
-    if (formState.transaction.master.voucherType == "MJV") {
-      const totalDebit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.debit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
-      const totalCredit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.credit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
-      if (totalDebit !== totalCredit) {
-        ERPAlert.show({
-          icon: "warning",
-          title: "Total Debit and Credit amount should be Same",
-        });
-        return false;
-      }
-    }
-
+    // if (formState.transaction.master.voucherType == "MJV") {
+    //   const totalDebit = formState.transaction.details
+    //     .reduce((sum, x) => sum + (x.debit || 0), 0)
+    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
+    //   const totalCredit = formState.transaction.details
+    //     .reduce((sum, x) => sum + (x.credit || 0), 0)
+    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
+    //   if (totalDebit !== totalCredit) {
+    //     ERPAlert.show({
+    //       icon: "warning",
+    //       title: "Total Debit and Credit amount should be Same",
+    //     });
+    //     return false;
+    //   }
+    // }
+debugger;
     return true;
+
   };
   const attachDetails = (): AccTransactionRow[] => {
     const details = JSON.parse(
@@ -860,74 +872,6 @@ export const useAccTransaction = (
     return master;
   };
 
-  // const setupBahamdoonPOSReceipts = () => {
-  //   let master = { ...formState.transaction.master };
-  //   let row = { ...formState.row };
-  //   dispatch(
-  //     accFormStateRowHandleFieldChange({
-  //       fields: { ledgerCode: "2768", ledgerID: 3107 },
-  //     })
-  //   );
-
-  //   master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
-
-  //   // Handle master account selection based on voucher type
-  //   if (master.voucherType === "BR" || master.voucherType === "PBR") {
-  //     const defaultAccID =
-  //       applicationSettings.accountsSettings?.defaultCreditCardAcc > 0
-  //         ? applicationSettings.accountsSettings?.defaultCreditCardAcc
-  //         : applicationSettings.accountsSettings?.defaultBankAcc;
-
-  //     dispatch(
-  //       accFormStateHandleFieldChange({
-  //         fields: {
-  //           masterAccountID: defaultAccID,
-  //           isBahamdoonPOSReceipt: true,
-  //         },
-  //       })
-  //     );
-  //   } else if (master.voucherType === "CR" || master.voucherType === "CP") {
-  //     const cashLedgerID =
-  //       userSession.counterwiseCashLedgerId > 0 &&
-  //       applicationSettings.accountsSettings?.allowSalesCounter
-  //         ? userSession.counterwiseCashLedgerId
-  //         : applicationSettings.accountsSettings?.defaultCashAcc;
-
-  //     dispatch(
-  //       accFormStateHandleFieldChange({
-  //         fields: {
-  //           masterAccountID: cashLedgerID,
-  //           isBahamdoonPOSReceipt: true,
-  //         },
-  //       })
-  //     );
-  //   }
-  //   dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
-
-  //   dispatch(
-  //     updateFormElement({
-  //       fields: {
-  //         voucherPrefix: { disabled: true },
-  //         voucherNumber: { disabled: true },
-  //         btnDown: { disabled: true },
-  //         transactionDate: { disabled: true },
-  //         ledgerCode: { disabled: true },
-  //         remarks: { disabled: true },
-  //         commonNarration: { disabled: true },
-  //         ledgerID: { disabled: true },
-  //         btnBillWise: { disabled: true },
-  //         referenceDate: { disabled: true },
-  //         masterAccount: { disabled: true },
-  //         employee: { disabled: true },
-  //         projectId: { disabled: true },
-  //         discount: { disabled: true },
-  //         chequeNumber: { disabled: true },
-  //         bankDate: { disabled: true },
-  //         btnEdit: { visible: false },
-  //       },
-  //     })
-  //   );
-  // };
   const save = async () => {
     debugger;
     dispatch(
@@ -938,7 +882,7 @@ export const useAccTransaction = (
       })
     );
     debugger;
-    if (true == true) {
+    if (validate() == true) {
       debugger;
 
       const params: AccTransactionData = {
@@ -1241,7 +1185,7 @@ export const useAccTransaction = (
       focusAmount();
       return false;
     }
-    if (isNullOrUndefinedOrZero(formState.masterAccountID)) {
+    if (!["OB","MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
       ERPAlert.show({
         icon: "info",
         title: "Please select master account..!",

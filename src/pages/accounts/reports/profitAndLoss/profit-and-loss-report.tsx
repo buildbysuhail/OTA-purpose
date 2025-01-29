@@ -650,7 +650,7 @@ const handleExport = async () => {
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
           title={t("")}
-          width="w-full max-w-[90%]"
+          width={isOpenDetails.key == -500 ?"w-full max-w-[500px]":"max-w-[1200px]"}
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0 });

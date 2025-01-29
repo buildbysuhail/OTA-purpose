@@ -68,6 +68,7 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      width:100
     },
     {
       dataField: "vchNo",
@@ -76,6 +77,7 @@ const InventoryHistoryPopup = ({
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      width:150,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.oldInvTransactionID > 0 ? (
           <DrillDownCellTemplate
@@ -135,7 +137,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 110,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.cashReceived;
@@ -185,6 +187,8 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
+      showInPdf:false,
       width: 180,
     },
     {
@@ -193,7 +197,7 @@ const InventoryHistoryPopup = ({
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 150,
       visible: false,
     },
     {

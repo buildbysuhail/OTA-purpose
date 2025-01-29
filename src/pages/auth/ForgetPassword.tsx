@@ -174,10 +174,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
             </form>
           )}
           {step === 2 && isOk && (
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[500px]">
             
               <div className="max-w-md mx-auto  p-6 bg-white rounded-xl shadow-md">
               <p className="text-gray-700 text-center font-medium mb-2">Select OTP method</p>
+              
                 <ul className="space-y-4">
                   {emailData.map((item, index) => (
                     <li key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
@@ -196,7 +197,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onClose }) => {
                       )}
                     </div>
                     <div className="flex-grow">
-                      <p className="text-sm font-medium text-gray-900">{item.userName}</p>
+                      {/* <p className="text-sm font-medium text-gray-900">{item.userName}</p> */}
                       <p className="text-sm text-gray-500">{item.credential}</p>
                     </div>
                   </li>

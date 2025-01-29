@@ -781,7 +781,7 @@ console.log('masterAccountID = -2;');
             },
             drCr: {
               ...fieldsToUpdate.drCr,
-              visible: true,
+              visible: false,
             },
             jvDrCr: {
               ...fieldsToUpdate.jvDrCr,

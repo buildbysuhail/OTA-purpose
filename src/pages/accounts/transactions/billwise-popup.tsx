@@ -239,16 +239,6 @@ const BillwiseComponent = ({
     }
   };
 
-  const onRowUpdating = (e: any) => {
-    const updatedRow = { ...e.oldData, ...e.newData };
-
-    setStore((prevStore: any) =>
-      prevStore.map((item: any) =>
-        item.slNo === updatedRow.slNo ? updatedRow : item
-      )
-    );
-    e.newData = updatedRow;
-  };
 
   // Load billwise transactions
   useEffect(() => {
@@ -326,37 +316,26 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
-    let DRCR = formState.transaction.master.drCr.toUpperCase()
-    if(formState.transaction.master.voucherType == VoucherType.MultiJournal
-      || formState.transaction.master.voucherType == VoucherType.OpeningBalance
-    ) {
-      DRCR = formState.row.drCr.toUpperCase()
-    }
-    if(formState.transaction.master.voucherType == VoucherType.JournalVoucher
-    ) {
-      DRCR = formState.transaction.master?.drCr.toUpperCase() == "CR" ? "DR" : "CR";
-    }
-
 
     try {
       
-      list?.filter((row: BillwiseData) => showAllTransactions ||
-      (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-      ||
-      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
-    )
-  ).forEach((bill) => {
+      store
+      ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+      ?.map((row: any, index: number) => ({
+        ...row,
+        slNo: index + 1, // Assign serial number starting from 1
+      })).forEach((bill: BillwiseData) => {
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 
-        if (drCrCol === "DR") {
+        if (drCrCol.toUpperCase() === "DR") {
           totalDr += amountToSet;
         } else {
           totalCr += amountToSet;
         }
       });
 
-      if (DRCR === "CR") {
+      if (drCr.toLowerCase() === "CR") {
         total = totalDr - totalCr;
       } else {
         total = totalCr - totalDr;
@@ -880,11 +859,13 @@ const customizeSummaryRow = useMemo(() => {
           showTotalCount={false}
           hideGridAddButton={true}
           // height={gridHeight}
-          dataSource={store?.filter(
-            (row: any) =>
-              showAllTransactions ||
-            row.drCr !== drCr
-          )}
+          dataSource={store
+            ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            ?.map((row: any, index: number) => ({
+              ...row,
+              slNo: index + 1, // Assign serial number starting from 1
+            }))
+          }
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"
           showBorders={true}

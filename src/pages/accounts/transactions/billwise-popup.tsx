@@ -202,8 +202,9 @@ const BillwiseComponent = ({
       if (
         showAllTransactions ||
         (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+        || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && row.drCr === "Cr")))
         ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.JournalVoucher && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
       ) ){
         const _it = {
           ...row,
@@ -290,8 +291,9 @@ const BillwiseComponent = ({
       
       list?.filter((row: BillwiseData) => showAllTransactions ||
       (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
+      || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && row.drCr === "Cr")))
       ||
-      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+      ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.JournalVoucher && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
     )
   ).forEach((bill) => {
         const drCrCol = bill.drCr?.toUpperCase();
@@ -453,6 +455,7 @@ debugger;
       // if (e.data.drCr === formState.transaction.master.drCr) {
       if(
         ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && e.data.drCr === formState.row.drCr) 
+        || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && e.data.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && e.data.drCr === "Cr")))
         ||
         ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && e.data.drCr === formState.transaction.master.drCr)
       ) {
@@ -477,6 +480,7 @@ debugger;
       const bill = updatedBills[i];
       if (
         ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.row.drCr.toUpperCase()) 
+        || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && bill.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && bill.drCr === "Cr")))
         ||
         ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && bill.drCr.toUpperCase() === formState.transaction.master.drCr.toUpperCase())
       ) {
@@ -837,8 +841,8 @@ const customizeSummaryRow = useMemo(() => {
             (row: any) =>
               showAllTransactions ||
               (((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && row.drCr !== formState.row.drCr) 
-              ||
-              ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && row.drCr !== formState.transaction.master.drCr)
+              || (formState.transaction.master.voucherType == VoucherType.JournalVoucher && ((formState.transaction.master.drCr == "Dr" && row.drCr === "Dr") || (formState.transaction.master.drCr === "Cr" && row.drCr === "Cr")))
+              || ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal && formState.transaction.master.voucherType != VoucherType.JournalVoucher) && row.drCr !== formState.transaction.master.drCr)
             )
           )}
           heightToAdjustOnWindowsInModal={gridHeight.windows}

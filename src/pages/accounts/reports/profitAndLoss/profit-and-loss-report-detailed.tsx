@@ -680,7 +680,7 @@ const handleExport = async () => {
           isOpen={isOpenDetails.isOpen && isOpenDetails.item !==  undefined && isOpenDetails.item !== null}
           // title={t("bank_cards")}
           title={isOpenDetails.key == -500 ?"Inventory Value":isOpenDetails.title === "L" ?"Ledger Report monthview":"Account Ledger" }
-          width="w-full max-w-[90%]"
+          width={isOpenDetails.key == -500 ?"w-full max-w-[500px]":"max-w-[1200px]"}
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0, item:undefined });

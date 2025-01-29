@@ -33,7 +33,7 @@ const IncomeReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 120,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -83,6 +83,7 @@ const IncomeReportDetailed = () => {
       caption: t("voucherNumber"),
       dataType: "string",
       allowSearch: true,
+      width: 80,
       allowFiltering: true,
       showInPdf:true,
     },
@@ -91,6 +92,7 @@ const IncomeReportDetailed = () => {
       caption: t("date"),
       dataType: "date",
       allowSearch: true,
+      width: 100,
       allowFiltering: true,
       showInPdf:true,
     },
@@ -118,7 +120,7 @@ const IncomeReportDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -156,7 +158,7 @@ const IncomeReportDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -194,7 +196,7 @@ const IncomeReportDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -241,7 +243,7 @@ const IncomeReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      width: 150,
     },
     {
       dataField: "branchName",

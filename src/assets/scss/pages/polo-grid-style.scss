@@ -564,6 +564,18 @@ $dark-grid-selection: #000000;
   .dx-row-matched-red {
     background-color: red !important;
   }
+
+
+  // .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused)>td {
+  //   background-color: #51ff00 !important ;
+  // }
+
+  .dx-datagrid-rowsview {
+    .dx-selection.dx-row:not(.dx-row-focused).dx-row-matched-red > td {
+      background-color: #51ff00 !important;
+    }
+  }
+
   .dx-datagrid-headers {
     overflow: hidden;
     // border-radius: 10px;

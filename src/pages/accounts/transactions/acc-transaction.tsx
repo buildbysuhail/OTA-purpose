@@ -980,6 +980,8 @@ console.log('masterAccountID = -2;');
       dataType: "number",
       caption: t("amount"),
       width: 200,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value)}`,
     },
     {
       dataField: "drCr",
@@ -1016,7 +1018,7 @@ console.log('masterAccountID = -2;');
       caption: t("discount"),
       visible: false,
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
     },
     {
       dataField: "costCentreID",
@@ -1037,7 +1039,7 @@ console.log('masterAccountID = -2;');
       dataField: "amountFC",
       caption: t("amount_FC"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
@@ -1054,14 +1056,14 @@ console.log('masterAccountID = -2;');
       dataField: "debit",
       caption: t("debit"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
       dataField: "credit",
       caption: t("credit"),
       customizeText: (cellInfo: any) =>
-        `${parseFloat(cellInfo.value).toFixed(2)}`,
+        `${getFormattedValue(cellInfo.value)}`,
       visible: false,
     },
     {
@@ -1108,9 +1110,9 @@ console.log('masterAccountID = -2;');
     },
   ];
 
-  const customizeAmount = useMemo(() => {
+  const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) =>
-      `Amount Total: ${getFormattedValue(itemInfo.value)}`;
+      `${getFormattedValue(itemInfo.value)}`;
   }, []);
 
   const summaryItems: SummaryConfig[] = [
@@ -1118,7 +1120,31 @@ console.log('masterAccountID = -2;');
       column: "amount",
       summaryType: "sum",
       valueFormat: "currency",
-      customizeText: customizeAmount,
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "amountFC",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "debit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     },
   ];
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);

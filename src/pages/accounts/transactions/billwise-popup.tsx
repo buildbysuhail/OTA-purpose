@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
 import {
   Column,
@@ -21,7 +21,7 @@ import _cloneDeep from "lodash/cloneDeep";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
@@ -271,6 +271,13 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
+    let DRCR = formState.transaction.master.drCr.toUpperCase()
+    if(formState.transaction.master.voucherType == VoucherType.MultiJournal
+      || formState.transaction.master.voucherType == VoucherType.OpeningBalance
+      || formState.transaction.master.voucherType == VoucherType.JournalVoucher
+    ) {
+      DRCR = "CR"
+    }
 
     try {
       list.forEach((bill) => {
@@ -283,8 +290,8 @@ const BillwiseComponent = ({
           totalCr += amountToSet;
         }
       });
-
-      if (formState.transaction.master.drCr.toUpperCase() === "CR") {
+debugger;
+      if (DRCR === "CR") {
         total = totalDr - totalCr;
       } else {
         total = totalCr - totalDr;
@@ -554,6 +561,8 @@ debugger;
         alignment: "right",
         width: 100,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "adjustedAmount",
@@ -565,6 +574,8 @@ debugger;
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "balance",
@@ -576,6 +587,8 @@ debugger;
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "billwiseAmount",
@@ -588,17 +601,21 @@ debugger;
         alignment: "right",
         width: 100,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue(cellInfo.value,false,4)}`,
     },
     {
         dataField: "balanceAfter",
         caption: "Balance After",
-        dataType: "string",
+        dataType: "number",
         allowSorting: false,
         allowSearch: true,
         allowFiltering: true,
         alignment: "right",
         width: 150,
         showInPdf: true,
+        customizeText: (cellInfo: any) =>
+          `${getFormattedValue((cellInfo.value??0),false,4)}`,
     },
     {
         dataField: "drCr",
@@ -691,6 +708,49 @@ debugger;
         showInPdf: true,
     },
 ];
+const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) =>
+      `${getFormattedValue(itemInfo.value)}`;
+  }, []);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "adjustedAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "billwiseAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "balance",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "discount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "balanceAfter",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+  ];
 
   return (
     <Card
@@ -699,7 +759,6 @@ debugger;
       sx={{ p: 0, m: 0 }}
     >
       <CardContent sx={{ p: 0 }}>
-        frm {formState.transaction.master.drCr}
         <Toolbar className="!bg-[#f6f6f6] rounded-tl-[10px] rounded-tr-[10px] !p-[1rem]">
           <Item location="before">
             <div className="flex items-center gap-3">
@@ -749,12 +808,15 @@ debugger;
 
         <ERPDevGrid
           ref={dataGridRef}
+          summaryItems={summaryItems}
           rowAlternationEnabled={false} 
           key={"slNo"}
           keyExpr={"slNo"}
           id="TestPopup"
           columns={columns}
           gridId="billwise_popup"
+          showTotalCount={false}
+          hideGridAddButton={true}
           // height={gridHeight}
           dataSource={store?.filter(
             (row: any) =>
@@ -833,40 +895,7 @@ debugger;
           
 
           {/* Add Summary for "Amount" column */}
-          <Summary calculateCustomSummary={handleCustomSummary}>
-            <TotalItem
-              column="amount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              } // Handle undefined gracefully
-            />
-            <TotalItem
-              column="adjustedAmount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-            <TotalItem
-              column="billwiseAmount"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-            <TotalItem
-              column="balance"
-              summaryType="custom"
-              displayFormat="{0}"
-              customizeText={(e) =>
-                `${round(parseFloat((e.value || "0") as string))}`
-              }
-            />
-          </Summary>
+         
         </ERPDevGrid>
         <div className="flex items-center justify-between">
           <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">

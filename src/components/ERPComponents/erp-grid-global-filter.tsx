@@ -149,7 +149,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
               type="button"
               // onClick={onClose}
               onClick={() => setIsOpen(false)}
-              className="bg-[#e5e7eb] dark:text-dark-hover-black text-[black] max-w-[115px]"
+              className="bg-[#808080] dark:text-dark-hover-black text-[black] max-w-[115px]"
             >
               {t("cancel")}
             </ERPSubmitButton>

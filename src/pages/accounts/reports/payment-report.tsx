@@ -34,7 +34,7 @@ const PaymentReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -52,7 +52,7 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -102,7 +102,7 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 100,
     },
     {
       dataField: "narration",

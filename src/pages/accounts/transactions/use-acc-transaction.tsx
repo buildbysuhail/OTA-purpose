@@ -1511,6 +1511,7 @@ export const useAccTransaction = (
 
   // DrCr keydown handler
   const handleDrCrKeyDown = (e: any) => {
+    debugger;
     if(e === "Enter" && (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")) {
       const voucherType = formState.transaction.master.voucherType;
 

@@ -505,12 +505,7 @@ debugger;
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
   
-      // if (e.data.drCr === formState.transaction.master.drCr) {
-      if(
-        ((formState.transaction.master.voucherType == VoucherType.OpeningBalance || formState.transaction.master.voucherType == VoucherType.MultiJournal) && e.data.drCr === formState.row.drCr) 
-        ||
-        ((formState.transaction.master.voucherType != VoucherType.OpeningBalance && formState.transaction.master.voucherType != VoucherType.MultiJournal) && e.data.drCr === formState.transaction.master.drCr)
-      ) {
+      if (e.data.drCr === DrCr) {
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }

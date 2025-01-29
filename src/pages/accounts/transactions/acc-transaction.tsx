@@ -1758,20 +1758,13 @@ console.log('masterAccountID = -2;');
                                   ? -1 * formState.masterBalance
                                   : formState.masterBalance || "0.00"
                               } ${
-                                formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
+                                (formState.masterBalance ?? 0) < 0 ? "Cr" : "Dr"
                               }`}
                             </span>
                           </div>
                         }
                       />
-                      {/* <div className="flex justify-between items-center mt-1">
-                      <span className="text-xs text-gray-500">
-                        Bal:{" "}
-                        {`${formState.masterBalance || "0.00"} ${
-                          formState.masterBalance ?? 0 < 0 ? "Cr" : "Dr"
-                        }`}
-                      </span>
-                    </div> */}
+                      {formState.masterBalance}
                       <div className="flex flex-wrap gap-4">
                         {formState.formElements.jvDrCr.visible && (
                           <ERPDataCombobox
@@ -2199,25 +2192,15 @@ console.log('masterAccountID = -2;');
                               <CustomerDetailsSidebar displayType="link" />
                             </button>
                             Bal:{" "}
-                            {`${Math.abs(formState.ledgerBalance || 0).toFixed(
-                              2
-                            )} ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`}
+                            ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`
                           </span>
                         </div>
                       )
                     }
                   />
-                  {/* <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-gray-500">
-                      Bal:{" "}
-                      {`${formState.ledgerBalance || "0.00"} ${
-                        formState.ledgerBalance ?? 0 < 0 ? "Cr" : "Dr"
-                      }`}
-                    </span>
-                  </div> */}
                 </>
               )}
-
+{formState.ledgerBalance}
               {formState.formElements.amount.visible && (
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}

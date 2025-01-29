@@ -715,6 +715,7 @@ export const useAccTransaction = (
       return false;
     }
     // Validate master ledger existence
+    debugger;
     if (
       formState.transaction.master.voucherType !== "OB" &&
       formState.transaction.master.voucherType !== "MJV"
@@ -860,74 +861,6 @@ export const useAccTransaction = (
     return master;
   };
 
-  // const setupBahamdoonPOSReceipts = () => {
-  //   let master = { ...formState.transaction.master };
-  //   let row = { ...formState.row };
-  //   dispatch(
-  //     accFormStateRowHandleFieldChange({
-  //       fields: { ledgerCode: "2768", ledgerID: 3107 },
-  //     })
-  //   );
-
-  //   master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
-
-  //   // Handle master account selection based on voucher type
-  //   if (master.voucherType === "BR" || master.voucherType === "PBR") {
-  //     const defaultAccID =
-  //       applicationSettings.accountsSettings?.defaultCreditCardAcc > 0
-  //         ? applicationSettings.accountsSettings?.defaultCreditCardAcc
-  //         : applicationSettings.accountsSettings?.defaultBankAcc;
-
-  //     dispatch(
-  //       accFormStateHandleFieldChange({
-  //         fields: {
-  //           masterAccountID: defaultAccID,
-  //           isBahamdoonPOSReceipt: true,
-  //         },
-  //       })
-  //     );
-  //   } else if (master.voucherType === "CR" || master.voucherType === "CP") {
-  //     const cashLedgerID =
-  //       userSession.counterwiseCashLedgerId > 0 &&
-  //       applicationSettings.accountsSettings?.allowSalesCounter
-  //         ? userSession.counterwiseCashLedgerId
-  //         : applicationSettings.accountsSettings?.defaultCashAcc;
-
-  //     dispatch(
-  //       accFormStateHandleFieldChange({
-  //         fields: {
-  //           masterAccountID: cashLedgerID,
-  //           isBahamdoonPOSReceipt: true,
-  //         },
-  //       })
-  //     );
-  //   }
-  //   dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
-
-  //   dispatch(
-  //     updateFormElement({
-  //       fields: {
-  //         voucherPrefix: { disabled: true },
-  //         voucherNumber: { disabled: true },
-  //         btnDown: { disabled: true },
-  //         transactionDate: { disabled: true },
-  //         ledgerCode: { disabled: true },
-  //         remarks: { disabled: true },
-  //         commonNarration: { disabled: true },
-  //         ledgerID: { disabled: true },
-  //         btnBillWise: { disabled: true },
-  //         referenceDate: { disabled: true },
-  //         masterAccount: { disabled: true },
-  //         employee: { disabled: true },
-  //         projectId: { disabled: true },
-  //         discount: { disabled: true },
-  //         chequeNumber: { disabled: true },
-  //         bankDate: { disabled: true },
-  //         btnEdit: { visible: false },
-  //       },
-  //     })
-  //   );
-  // };
   const save = async () => {
     debugger;
     dispatch(
@@ -938,7 +871,7 @@ export const useAccTransaction = (
       })
     );
     debugger;
-    if (true == true) {
+    if (validate() == true) {
       debugger;
 
       const params: AccTransactionData = {

@@ -162,15 +162,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
 
   const [showValidation, setShowValidation] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const onSelectionChanged = (e: any, state: RootState) => {
+  const onSelectionChanged = (e: any, state: RootState, isRowClick: boolean) => {
     if (state.AccTransaction.formElements.pnlMasters?.disabled == true) {
       return false;
     }
-    setSelectedRows(e.selectedRows); // Contains full row data
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
+      debugger;
     if (selectedIndexes.length > 0) {
       handleRowClick({
         row: formState?.transaction?.details[selectedIndexes[0]],
@@ -2203,7 +2202,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               <CustomerDetailsSidebar displayType="link" />
                             </button>
                             Bal:{" "}
-                            {`${getFormattedValue(parseFloat((formState.ledgerBalance.toString())))} ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`}
+                            {
+`${getFormattedValue(formState.ledgerBalance < 0
+                                ? (-1 * formState.ledgerBalance)
+                                : (formState.ledgerBalance || 0))
+
+                                } ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"
+                                }`   }
                           </span>
                         </div>
                       )
@@ -2572,10 +2577,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
+              onClickByRootState={(e: any, state: RootState) => {debugger; onSelectionChanged(e,state, true)}}
               showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
-                onSelectionChanged(e, state)
+                onSelectionChanged(e, state, false)
               }
               className="pb-14"
             ></ErpDevGrid>

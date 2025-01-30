@@ -484,7 +484,10 @@ const InvoiceDesigner = () => {
         </div>
         {/* */}
 
-        {currentSection.type == "properties" && (
+        {currentSection.type == "properties" && 
+           (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+            <NoDataMessage message="Oops, There is No Properties" />
+          ) : (
           <PropertiesDesigner
             templateGroup={templateGroup}
             tempImages={{ templateImages, setTemplateImages }}
@@ -493,16 +496,19 @@ const InvoiceDesigner = () => {
               dispatch(setTemplatePropertiesState(propertiesState))
             }
           />
-        )}
+        ))}
 
-        {currentSection.type == "header&footer" && (
+        {currentSection.type == "header&footer" && 
+         (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
+          <NoDataMessage message="Oops, There is No Header&Footer" />
+        ) : (
           <HeaderFooterDesigner
             tempImages={{ templateImages, setTemplateImages }}
             footerState={templateData?.activeTemplate?.footerState}
             headerState={templateData?.activeTemplate?.headerState}
             // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
           />
-        )}
+        ))}
         
        {
         currentSection.type === "transactions" &&

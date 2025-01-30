@@ -1421,7 +1421,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
-            onRowClick={onClickByRootState != undefined ? onClickByRootState : onRowClick}
+            onRowClick={(e) => onClickByRootState != undefined ? onClickByRootState(e, rootState) : onRowClick(e)}
             onSelectionChanged={(e) =>
               onSelectionChangedByRootState != undefined
                 ? onSelectionChangedByRootState(e, rootState)

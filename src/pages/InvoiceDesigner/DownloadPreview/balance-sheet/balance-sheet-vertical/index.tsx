@@ -95,12 +95,12 @@ const BalanceSheetVerticalTemplate = ({ template,currentBranch,userSession,data 
             <View style={{ display: "flex", flexDirection: "column",alignContent:"center" ,
               justifyContent:"center" ,
               padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,}}>
-              {headerState?.showLogo && (
+              {/* {headerState?.showLogo && (
                 <Image
                   src={currentBranch?.logo}
                   style={[styles.logo, { width: 80 * logoWidthRatio }]}
                 />
-              )}
+              )} */}
               {headerState?.showOrgName && (
                 <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold",fontFamily:fontFamily,}}>
                   {/* {currentBranch?.name} */}

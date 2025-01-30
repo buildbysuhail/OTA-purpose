@@ -1330,23 +1330,11 @@ debugger;
 
       // Update row data in form state
       dispatch(
-        accFormStateRowHandleFieldChange({
+        accFormStateHandleFieldChange({
           fields: {
-            slNo: row.slNo,
-            amount: row.amountFC?.toString() || row.amount?.toString() || "0",
-            discount: row.discount?.toString() || "0",
-            ledgerCode: row.ledgerCode || "",
-            ledgerID: row.ledgerID || 0,
-            narration: row.narration || "",
-            nameOnCheque: row.nameOnCheque || "",
-            bankName: row.bankName || "",
-            costCentreID: row.costCentreID || 0,
-            projectId: row.projectId || 0,
-            billwiseDetails: row.billwiseDetails || "",
-            chequeNumber: row.chequeNumber || "",
-            checkStatus: row.checkStatus || "",
-            bankDate: row.bankDate || new Date().toISOString(),
-            drCr: row.drCr || "",
+            row: {...row,
+              // amount: row.amountFC?.toString() || row.amount?.toString() || "0",
+            }
           },
         })
       );

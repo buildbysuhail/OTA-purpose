@@ -1371,6 +1371,7 @@ console.log('masterAccountID = -2;');
                 padding: 0,
               }}
             >
+              {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -1393,14 +1394,14 @@ console.log('masterAccountID = -2;');
                       <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
-
+                  
                   {/* Delete Button */}
                   <div
                     className="group relative inline-flex flex-col items-center"
                     title={t("delete")}
                   >
                     <button
-                      disabled={formState.transaction.master.billwiseMasterId > 0 && !formState.isEdit}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         deleteAccTransVoucher();
@@ -1442,6 +1443,7 @@ console.log('masterAccountID = -2;');
                       title={t("edit")}
                     >
                       <button
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                         className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                         onClick={() => {
                           handleEdit();

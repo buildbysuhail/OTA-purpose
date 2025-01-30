@@ -58,7 +58,7 @@ const LedgerReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -93,7 +93,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "refDate",
@@ -101,7 +101,7 @@ const LedgerReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "narration",
@@ -161,7 +161,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -201,7 +201,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -242,7 +242,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width: 170,
+      width: 150,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -292,7 +292,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
     {
       dataField: "checkStatus",
@@ -300,7 +300,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 100,
     },
     {
       dataField: "chequeDate",
@@ -308,7 +308,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
   ];
   return (

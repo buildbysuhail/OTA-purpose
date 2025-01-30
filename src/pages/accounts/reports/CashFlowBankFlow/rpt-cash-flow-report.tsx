@@ -47,6 +47,7 @@ const CashFlowReport = () => {
       caption: t("month"),
       dataType: "string",
       allowSearch: true,
+      width: 100,
       allowFiltering: true,
       showInPdf:true,
       cellRender: (
@@ -133,7 +134,7 @@ const CashFlowReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      // width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -171,7 +172,7 @@ const CashFlowReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      // width: 300,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -207,7 +208,7 @@ const CashFlowReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true, 
-      width: 80,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="showSummary"></DrillDownCellTemplate>
     },
@@ -238,7 +239,7 @@ const CashFlowReport = () => {
                   hideGridAddButton={true}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:dataField == "showSummary"? t("cash_flow_report_summary"):t("cash_flow_report_detailed"),
-                    width: "700px",
+                    width: "max-w-[1500px]",
                     isForm: false,
                     content: 
                     dataField == "showSummary" ?

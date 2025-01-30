@@ -1398,7 +1398,7 @@ console.log('masterAccountID = -2;');
                     title={t("delete")}
                   >
                     <button
-                      disabled={formState.transaction.master.billwiseMasterId > 0 && !formState.isEdit}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && !formState.isEdit)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         deleteAccTransVoucher();
@@ -1440,6 +1440,7 @@ console.log('masterAccountID = -2;');
                       title={t("edit")}
                     >
                       <button
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && !formState.isEdit)}
                         className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                         onClick={() => {
                           handleEdit();

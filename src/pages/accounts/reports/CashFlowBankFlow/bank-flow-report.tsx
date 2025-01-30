@@ -48,6 +48,7 @@ const BankFlowReport = () => {
           dataField: "month",
           caption: t("month"),
           dataType: "string",
+          width: 100,
           allowSearch: true,
           allowFiltering: true,
           showInPdf:true,
@@ -97,7 +98,7 @@ const BankFlowReport = () => {
           dataType: "number",
           allowSearch: true,
           allowFiltering: true,
-          width: 300,
+          // width: 300,
           showInPdf:true,
           cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
             if (exportCell != undefined) {
@@ -135,7 +136,7 @@ const BankFlowReport = () => {
           dataType: "number",
           allowSearch: true,
           allowFiltering: true,
-          width: 300,
+          // width: 300,
           showInPdf:true,
           cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
             if (exportCell != undefined) {
@@ -173,7 +174,7 @@ const BankFlowReport = () => {
           dataType: "number",
           allowSearch: true,
           allowFiltering: true,
-          width: 300,
+          // width: 300,
           showInPdf:true,
           cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
             if (exportCell != undefined) {
@@ -209,7 +210,7 @@ const BankFlowReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true, 
-      width: 250,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => <DrillDownCellTemplate data={cellElement} field="showSummary"></DrillDownCellTemplate>
     },
@@ -266,7 +267,7 @@ const BankFlowReport = () => {
                   // }}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:dataField == "showSummary"? t("bank_flow_report_summary"):t("bank_flow_report_detailed"),
-                    width: "700px",
+                    width: "max-w-[1500px]",
                     isForm: false,
                     content: 
                     dataField == "showSummary" ?

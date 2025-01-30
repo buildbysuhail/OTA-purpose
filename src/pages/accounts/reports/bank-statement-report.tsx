@@ -28,8 +28,8 @@ const BankStatementReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
-      format: 'MMMM dd, yyyy',
+      width: 100,
+      // format: 'MM , dd, yyyy',
       showInPdf:true,
     },
     {
@@ -38,7 +38,7 @@ const BankStatementReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       format: 'MMMM dd, yyyy',
       showInPdf:true,
     },
@@ -57,7 +57,7 @@ const BankStatementReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -119,7 +119,7 @@ const BankStatementReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -164,7 +164,7 @@ const BankStatementReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -210,7 +210,7 @@ const BankStatementReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -262,7 +262,7 @@ const BankStatementReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 50,
     },
     {
       dataField: "refDate",
@@ -270,7 +270,7 @@ const BankStatementReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "invtransactionID",
@@ -278,7 +278,7 @@ const BankStatementReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 50,
     },
     {
       dataField: "financialYearID",
@@ -286,7 +286,7 @@ const BankStatementReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 50,
     },
     {
       dataField: "branch",

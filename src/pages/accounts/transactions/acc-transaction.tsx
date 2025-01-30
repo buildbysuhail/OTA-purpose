@@ -413,13 +413,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.row.ledgerID]);
   useEffect(() => {
     // if (applicationSettings.mainSettings?.showNumberFormat == "Millions") {
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            amountInWords: getAmountInWords(formState.row.amount ?? 0),
-          },
-        })
-      );
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {
+          amountInWords: getAmountInWords(formState.row.amount ?? 0),
+        },
+      })
+    );
     // } else {
     // }
   }, [formState.row.amount]);
@@ -467,8 +467,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-debugger;
-console.log('masterAccountID = -2;');
+      debugger;
+      console.log('masterAccountID = -2;');
 
       let masterAccountID = -2;
       let employeeID = 0;
@@ -485,7 +485,7 @@ console.log('masterAccountID = -2;');
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
             userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter
+              applicationSettings.accountsSettings?.allowSalesCounter
               ? userSession?.counterwiseCashLedgerId
               : applicationSettings.accountsSettings?.defaultCashAcc;
         }
@@ -513,7 +513,7 @@ console.log('masterAccountID = -2;');
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
           ...accTransactionFormStateInitialData,
-          masterAccountID:masterAccountID,
+          masterAccountID: masterAccountID,
           transaction: {
             ...voucher,
             master: {
@@ -542,10 +542,10 @@ console.log('masterAccountID = -2;');
               (formState.userConfig?.presetCostenterId ?? 0) > 0
                 ? formState.userConfig?.presetCostenterId ?? 0
                 : userSession.dbIdValue == "SAMAPLASTICS121212121"
-                ? 0
-                : applicationSettings.accountsSettings?.defaultCostCenterID,
+                  ? 0
+                  : applicationSettings.accountsSettings?.defaultCostCenterID,
           },
-          
+
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
@@ -576,11 +576,13 @@ console.log('masterAccountID = -2;');
           visible: isForeignCurrencyVisible,
         },
         lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
-        masterAccount: { ...initialFormElements.masterAccount, disabled: (
-          (_formState.transaction.master.voucherType == VoucherType.CashPayment 
-            || _formState.transaction.master.voucherType == VoucherType.CashReceipt) &&
-          userSession?.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings?.allowSalesCounter) },
+        masterAccount: {
+          ...initialFormElements.masterAccount, disabled: (
+            (_formState.transaction.master.voucherType == VoucherType.CashPayment
+              || _formState.transaction.master.voucherType == VoucherType.CashReceipt) &&
+            userSession?.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings?.allowSalesCounter)
+        },
         discount: { ...initialFormElements.discount, visible: true },
         projectId: {
           ...initialFormElements.projectId,
@@ -929,13 +931,13 @@ console.log('masterAccountID = -2;');
     }
   };
 
-  const renderCell = (cellData: any, validation: string) => {
+  const renderCell = (cellData: any, validation: string, enableFormat: boolean = false) => {
     return (
       <div
         className={validation ? "grid-error-cell" : ""}
         title={validation ? validation : ""} // Add validation message as tooltip
       >
-        {cellData.value}
+        {enableFormat ? getFormattedValue(cellData.value) : cellData.value}
       </div>
     );
   };
@@ -949,13 +951,13 @@ console.log('masterAccountID = -2;');
         <div
           className={
             cellData.data?.isValid != undefined &&
-            cellData.data?.isValid != true
+              cellData.data?.isValid != true
               ? "grid-error-cell"
               : ""
           }
           title={
             cellData.data?.isValid != undefined &&
-            (cellData.data?.isValid != true) != true
+              (cellData.data?.isValid != true) != true
               ? "Validation failed for this row"
               : ""
           } // Add validation message as tooltip
@@ -987,10 +989,14 @@ console.log('masterAccountID = -2;');
       width: 200,
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.amount_Validation, true)
     },
     {
       dataField: "drCr",
       caption: t("dr/cr"),
+      cellRender: (cellData) =>
+        cellData.data.drCr == "Dr" ? "Debit" : "Credit",
       width: 100,
     },
     {
@@ -1063,6 +1069,8 @@ console.log('masterAccountID = -2;');
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.debit_Validation, true)
     },
     {
       dataField: "credit",
@@ -1070,6 +1078,8 @@ console.log('masterAccountID = -2;');
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.credit_Validation, true)
     },
     {
       dataField: "projectId",
@@ -1091,7 +1101,7 @@ console.log('masterAccountID = -2;');
         state: RootState
       ) =>
         state.AccTransaction.formElements.pnlMasters?.disabled ==
-        true ? null : (
+          true ? null : (
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -1100,7 +1110,7 @@ console.log('masterAccountID = -2;');
             disabled={
               (formState.isRowEdit &&
                 cellElement.data.accTransactionDetailId ==
-                  formState.row.accTransactionDetailId) ||
+                formState.row.accTransactionDetailId) ||
               formState.formElements.pnlMasters?.disabled
             }
             className="ti-btn-link"
@@ -1279,7 +1289,7 @@ console.log('masterAccountID = -2;');
   const { bankAccountField, handleBankNameChange, handleLedgerChange } =
     useFormComponent();
 
-  const handleChange = (selectedOption: { value: string; label: string }) => {};
+  const handleChange = (selectedOption: { value: string; label: string }) => { };
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -1356,16 +1366,18 @@ console.log('masterAccountID = -2;');
             <div
               className="w-full max-w-full mx-0"
               style={{
-                position: "absolute",
-                top: 0,
+                position: "fixed",
+                top: "60px",
                 left: 0,
                 right: 0,
                 padding: 0,
+                zIndex: 10,
               }}
             >
+              {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
+                  <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
                     {t(formState.title)}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
@@ -1392,7 +1404,7 @@ console.log('masterAccountID = -2;');
                     title={t("delete")}
                   >
                     <button
-                      disabled={formState.formElements.pnlMasters?.disabled}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         deleteAccTransVoucher();
@@ -1434,6 +1446,7 @@ console.log('masterAccountID = -2;');
                       title={t("edit")}
                     >
                       <button
+                        disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                         className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                         onClick={() => {
                           handleEdit();
@@ -1449,7 +1462,7 @@ console.log('masterAccountID = -2;');
                     title={t("print")}
                   >
                     <button
-                      disabled={formState.formElements.pnlMasters?.disabled}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         printVoucher(setIsPrintModalOpen);
@@ -1467,12 +1480,12 @@ console.log('masterAccountID = -2;');
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={handleClearControls}
-                      // onClick={() => {
-                      //   clearControls(
-                      //     formState.isEdit,
-                      //     formState.transaction.master.accTransactionMasterID
-                      //   );
-                      // }}
+                    // onClick={() => {
+                    //   clearControls(
+                    //     formState.isEdit,
+                    //     formState.transaction.master.accTransactionMasterID
+                    //   );
+                    // }}
                     >
                       <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
@@ -1540,21 +1553,21 @@ console.log('masterAccountID = -2;');
 
                             {formState.formElements.lnkUnlockVoucher
                               .visible && (
-                              <li>
-                                <button
-                                  className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                  onClick={(e) => {
-                                    // Prevent default link behavior
+                                <li>
+                                  <button
+                                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                    onClick={(e) => {
+                                      // Prevent default link behavior
 
-                                    unlockVoucher();
-                                  }}
-                                >
-                                  <KeyRound className="h-4 w-4" />
-                                  {/* <span>UnlockVoucher_Click</span> */}
-                                  <span>{t("unlock_voucher")}</span>
-                                </button>
-                              </li>
-                            )}
+                                      unlockVoucher();
+                                    }}
+                                  >
+                                    <KeyRound className="h-4 w-4" />
+                                    {/* <span>UnlockVoucher_Click</span> */}
+                                    <span>{t("unlock_voucher")}</span>
+                                  </button>
+                                </li>
+                              )}
 
                             {formState.transaction.master.voucherType ===
                               "MJV" &&
@@ -1712,7 +1725,7 @@ console.log('masterAccountID = -2;');
                 </div>
                 {formState.formElements.masterAccount.visible &&
                   formState.formElements?.masterAccount?.accLedgerType !=
-                    undefined && (
+                  undefined && (
                     <div className="flex items-center">
                       <ERPDataCombobox
                         localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -1753,14 +1766,12 @@ console.log('masterAccountID = -2;');
                                 {/* <CustomerDetailsSidebar displayType="link" /> */}
                               </button>
                               {t("bal")}:{" "}
-                              {`${
-                                getFormattedValue(formState.masterBalance < 0
-                                  ? (-1 * formState.masterBalance)
-                                  : (formState.masterBalance || 0))
-                                
-                              } ${
-                                (formState.masterBalance ?? 0) < 0 ? "Cr" : "Dr"
-                              }`}
+                              {`${getFormattedValue(formState.masterBalance < 0
+                                ? (-1 * formState.masterBalance)
+                                : (formState.masterBalance || 0))
+
+                                } ${(formState.masterBalance ?? 0) < 0 ? "Cr" : "Dr"
+                                }`}
                             </span>
                           </div>
                         }
@@ -1773,7 +1784,7 @@ console.log('masterAccountID = -2;');
                             id="drCr"
                             className="min-w-[70px] max-w-[170px] ml-4"
                             label={t(formState.formElements.jvDrCr.label)}
-                            value={formState.transaction.master.drCr == undefined || formState.transaction.master.drCr == "" ? "Dr" : formState.transaction.master.drCr }
+                            value={formState.transaction.master.drCr == undefined || formState.transaction.master.drCr == "" ? "Dr" : formState.transaction.master.drCr}
                             data={formState.transaction.master}
                             onChange={(e) => {
                               dispatch(
@@ -2073,7 +2084,7 @@ console.log('masterAccountID = -2;');
                       label={t(formState.formElements.projectId.label)}
                       options={
                         formState.row.ledgerID != undefined &&
-                        formState.row.ledgerID != 0
+                          formState.row.ledgerID != 0
                           ? undefined
                           : []
                       }
@@ -2185,7 +2196,7 @@ console.log('masterAccountID = -2;');
                     }
                     labelInfo={
                       formState.formElements.pnlMasters?.disabled ==
-                      true ? null : (
+                        true ? null : (
                         <div>
                           <span className="text-xs text-primary">
                             <button className="pe-3">
@@ -2361,17 +2372,17 @@ console.log('masterAccountID = -2;');
               <div className="flex items-center gap-2 mt-3">
                 {applicationSettings.accountsSettings
                   ?.maintainBillwiseAccount == true && (
-                  <ERPButton
-                    title={formState.formElements.btnBillWise.label}
-                    variant="secondary"
-                    onClick={showBillwise}
-                    disabled={
-                      formState.ledgerBillWiseLoading ||
-                      formState.formElements.btnBillWise.disabled == true ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
+                    <ERPButton
+                      title={formState.formElements.btnBillWise.label}
+                      variant="secondary"
+                      onClick={showBillwise}
+                      disabled={
+                        formState.ledgerBillWiseLoading ||
+                        formState.formElements.btnBillWise.disabled == true ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
                 {formState.formElements.btnAdd.visible == true && (
                   <ERPButton
                     ref={btnAddRef}
@@ -2391,8 +2402,8 @@ console.log('masterAccountID = -2;');
                       formState.formElements.btnAdd.disabled == true ||
                       formState.ledgerBillWiseLoading ||
                       formState.ledgerIsBillWiseAdjustExistLoading ||
-                      formState.formElements.pnlMasters?.disabled 
-                      
+                      formState.formElements.pnlMasters?.disabled
+
                     }
                   />
                 )}
@@ -2889,7 +2900,7 @@ console.log('masterAccountID = -2;');
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                    // size={16}
+                  // size={16}
                   >
                     {" "}
                     {t("add_items")}{" "}
@@ -2924,13 +2935,13 @@ console.log('masterAccountID = -2;');
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title={t("save_&_new")}
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title={t("save")}
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />
@@ -2943,8 +2954,8 @@ console.log('masterAccountID = -2;');
         formState.billwiseData != null &&
         formState.billwiseData.length > 0 &&
         formState.billwiseDrCr != undefined &&
-        formState.billwiseDrCr != null&&
-        formState.billwiseDrCr != "" &&(
+        formState.billwiseDrCr != null &&
+        formState.billwiseDrCr != "" && (
           <ERPModal
             isFullHeight={true}
             isOpen={formState.showbillwise ?? false}
@@ -2955,15 +2966,15 @@ console.log('masterAccountID = -2;');
             closeModal={() => {
               dispatch(
                 accFormStateHandleFieldChange({
-                  fields: { showbillwise: false },
+                  fields: { showbillwise: false, billwiseData: [] },
                 })
               );
             }}
-            onSubmit={() => {}}
+            onSubmit={() => { }}
             width="!w-[80rem] !max-w-[60rem]"
             content={
               <BillWisePopup
-              drCr={formState.billwiseDrCr}
+                drCr={formState.billwiseDrCr}
                 onSave={(
                   billwiseDetails: string,
                   totalAmount: number,
@@ -2993,7 +3004,7 @@ console.log('masterAccountID = -2;');
                   }
                   dispatch(
                     accFormStateHandleFieldChange({
-                      fields: { showbillwise: false },
+                      fields: { showbillwise: false, billwiseData: [] },
                     })
                   );
                 }}
@@ -3161,13 +3172,13 @@ console.log('masterAccountID = -2;');
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
                   title={t("save_&_new")}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
                   title={t("save")}
-                  onClick={() => {}}
+                  onClick={() => { }}
                   variant="primary"
                   className="flex-1 !m-0 !rounded-none"
                 />
@@ -3338,7 +3349,7 @@ console.log('masterAccountID = -2;');
             title={t("cancel")}
             onClick={goToPreviousPage}
             className="w-24"
-            // disabled={formState.formElements.pnlMasters?.disabled}
+          // disabled={formState.formElements.pnlMasters?.disabled}
           />
           <ERPButton
             ref={btnSaveRef}

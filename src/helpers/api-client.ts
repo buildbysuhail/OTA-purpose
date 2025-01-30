@@ -152,6 +152,10 @@ class APIClient {
     return axios.patch(url, data);
   };
 
+  putAsync = async(url: string, data: any, token?: string): Promise<AxiosResponse> => {
+    setAuthorization(token);
+    return await axios.put(url, data);
+  };
   put = (url: string, data: any, token?: string): Promise<AxiosResponse> => {
     setAuthorization(token);
     return axios.put(url, data);

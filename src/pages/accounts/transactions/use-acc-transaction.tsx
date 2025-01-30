@@ -482,7 +482,7 @@ export const useAccTransaction = (
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
                 ledgerID: detail.ledgerID,
-                drCr: Number(detail.debit) > 0 ? "Debit" : "Credit",
+                drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
               };
 
             default:
@@ -680,39 +680,7 @@ export const useAccTransaction = (
       });
       return false;
     }
-    let firstDebitLedgerID =  formState.firstDebitLedgerID;
-    let firstCreditLedgerID =  formState.firstCreditLedgerID;
-    if (formState.transaction.master.voucherType == "MJV") {
-      for (let i = 0; i < formState.transaction.details.length; i++) {
-        const row = formState.transaction.details[i];
-
-        // Check if debit amount is greater than 0
-        if (Number(row.debit) > 0) {
-          if (firstDebitLedgerID === 0) {
-            firstDebitLedgerID = Number(row.ledgerID || 0);
-          }
-        } else {
-          if (firstCreditLedgerID === 0) {
-            firstCreditLedgerID = Number(row.ledgerID || 0);
-          }
-        }
-
-        // Break if we found both
-        if (
-          firstCreditLedgerID > 0 &&
-          firstDebitLedgerID > 0
-        )
-          break;
-      }
-    }
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          firstCreditLedgerID: firstCreditLedgerID,
-          firstDebitLedgerID: firstDebitLedgerID,
-        },
-      })
-    );
+    
     if (
       formState.transaction.master.voucherType == "JV" &&
       (formState.transaction.master.drCr == "" ||
@@ -725,7 +693,6 @@ export const useAccTransaction = (
       return false;
     }
     // Validate master ledger existence
-    debugger;
     if (
       formState.transaction.master.voucherType !== "OB" &&
       formState.transaction.master.voucherType !== "MJV"
@@ -744,24 +711,52 @@ export const useAccTransaction = (
       }
     }
 
-    // if (formState.transaction.master.voucherType == "MJV") {
-    //   const totalDebit = formState.transaction.details
-    //     .reduce((sum, x) => sum + (x.debit || 0), 0)
-    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
-    //   const totalCredit = formState.transaction.details
-    //     .reduce((sum, x) => sum + (x.credit || 0), 0)
-    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
-    //   if (totalDebit !== totalCredit) {
-    //     ERPAlert.show({
-    //       icon: "warning",
-    //       title: "Total Debit and Credit amount should be Same",
-    //     });
-    //     return false;
-    //   }
-    // }
+    if (formState.transaction.master.voucherType == "MJV") {
+      const totalDebit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.debit || 0), 0)
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
+      const totalCredit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.credit || 0), 0)
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
+      if (totalDebit !== totalCredit) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Debit/Credit",
+          text:"Total Debit and Credit amount should be Same"
+        });
+        return false;
+      }
+    }
 debugger;
     return true;
 
+  };
+  const getFirstDebitCreditLedgerIDs = (transaction: any) => {
+    let firstDebitLedgerID = 0;
+    let firstCreditLedgerID = 0;
+  
+   if (transaction.master.voucherType === "MJV") {
+      for (const row of transaction.details) {
+        const ledgerID = Number(row.ledgerID || 0);
+  
+        if (Number(row.debit) > 0) {
+          if (firstDebitLedgerID === 0) {
+            firstDebitLedgerID = ledgerID;
+          }
+        } else {
+          if (firstCreditLedgerID === 0) {
+            firstCreditLedgerID = ledgerID;
+          }
+        }
+  
+        // Stop if we found both
+        if (firstDebitLedgerID > 0 && firstCreditLedgerID > 0) {
+          break;
+        }
+      }
+    } 
+  
+    return { firstDebitLedgerID, firstCreditLedgerID };
   };
   const attachDetails = (): AccTransactionRow[] => {
     const details = JSON.parse(
@@ -771,7 +766,8 @@ debugger;
     let debtorID = 0,
       arra = 0,
       detailID = 0;
-
+      const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction);
+debugger;
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
@@ -825,15 +821,15 @@ debugger;
           break;
 
         case "MJV":
-          if (formState.row.drCr === "Dr") {
+          if (element.drCr === "Dr") {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
-            element.relatedLedgerID = formState.firstCreditLedgerID;
-            element.debit = Number(formState.row.amount);
+            element.relatedLedgerID = firstCreditLedgerID;
+            element.debit = element.amount;
             element.credit = 0;
           } else {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
-            element.relatedLedgerID = formState.firstCreditLedgerID;
-            element.credit = Number(formState.row.amount);
+            element.relatedLedgerID = firstDebitLedgerID;
+            element.credit = element.amount;
             element.debit = 0;
           }
           break;
@@ -890,7 +886,12 @@ debugger;
         details: attachDetails(),
         attachments: [...formState.transaction.attachments],
       };
-      const saveRes = await api.postAsync(
+      const saveRes = formState.transaction.master.accTransactionMasterID > 0 
+      ?await api.putAsync(
+        `${Urls.acc_transaction_base}${transactionType}`,
+        params
+      ) 
+      :await api.postAsync(
         `${Urls.acc_transaction_base}${transactionType}`,
         params
       );
@@ -1099,7 +1100,7 @@ debugger;
           }
           dispatch(
             accFormStateHandleFieldChange({
-              fields: { showbillwise: false },
+              fields: { showbillwise: false, billwiseData: [] },
             })
           );
         } else {
@@ -1121,7 +1122,7 @@ debugger;
           }
           dispatch(
             accFormStateHandleFieldChange({
-              fields: { showbillwise: false },
+              fields: { showbillwise: false, billwiseData: [] },
             })
           );
         }
@@ -1180,9 +1181,17 @@ debugger;
     if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
       ERPAlert.show({
         icon: "info",
+        onCancel:() => {
+          focusAmount();
+      return false;
+        },
         title: "Please Enter the Amount..!",
+        onConfirm: (result: any) => {
+          focusAmount();
+      return false;
+        },
       });
-      focusAmount();
+      
       return false;
     }
     if (!["OB","MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
@@ -1205,7 +1214,7 @@ debugger;
       return false;
     }
     formState.formElements.btnAdd;
-
+debugger;
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {
@@ -1991,7 +2000,7 @@ debugger;
         //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
         //     break;
         // }
-
+debugger;
         if (
           formState.showbillwise === true &&
           formState.row.ledgerID &&

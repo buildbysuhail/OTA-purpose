@@ -58,7 +58,7 @@ const LedgerReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 100,
       showInPdf: true,
     },
     {
@@ -92,16 +92,18 @@ const LedgerReport = () => {
       caption: t("ref_no"),
       dataType: "string",
       allowSearch: true,
+      visible: false,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "refDate",
       caption: t("ref_date"),
       dataType: "date",
+      visible: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "narration",
@@ -161,7 +163,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -201,7 +203,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -242,7 +244,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
-      width: 170,
+      width: 150,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -290,25 +292,28 @@ const LedgerReport = () => {
       dataField: "chequeNumber",
       caption: t("cheque_number"),
       dataType: "string",
+      visible: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
     {
       dataField: "checkStatus",
       caption: t("check_status"),
       dataType: "string",
+      visible: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 100,
     },
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
       dataType: "string",
+      visible: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
   ];
   return (

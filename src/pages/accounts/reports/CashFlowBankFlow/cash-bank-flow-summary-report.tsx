@@ -92,6 +92,7 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
       minWidth: 200,
       showInPdf:true,
       cellRender: (
@@ -187,6 +188,7 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
       minWidth: 200,
       showInPdf:true,
       cellRender: (
@@ -254,7 +256,7 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
                   hideGridAddButton={true}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary"),
-                    width: "700px",
+                    width: "max-w-[1500px]",
                     isForm: false,
                     content: 
                     dataField == "ledgerNameIN" ?

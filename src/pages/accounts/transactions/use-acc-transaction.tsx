@@ -1332,7 +1332,9 @@ debugger;
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
-            row: row
+            row: {...row,
+              // amount: row.amountFC?.toString() || row.amount?.toString() || "0",
+            }
           },
         })
       );

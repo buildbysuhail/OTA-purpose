@@ -162,12 +162,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
 
   const [showValidation, setShowValidation] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const onSelectionChanged = (e: any, state: RootState) => {
+  const onSelectionChanged = (e: any, state: RootState, isRowClick: boolean) => {
     if (state.AccTransaction.formElements.pnlMasters?.disabled == true) {
       return false;
     }
-    setSelectedRows(e.selectedRows); // Contains full row data
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
@@ -2579,10 +2577,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
+              onClickByRootState={(e: any, state: RootState) => {debugger; onSelectionChanged(e,state, true)}}
               showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
-                onSelectionChanged(e, state)
+                onSelectionChanged(e, state, false)
               }
               className="pb-14"
             ></ErpDevGrid>

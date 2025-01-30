@@ -734,7 +734,7 @@ debugger;
     let firstDebitLedgerID = 0;
     let firstCreditLedgerID = 0;
   
-    if (transaction.master.voucherType === "MJV") {
+   if (transaction.master.voucherType === "MJV") {
       for (const row of transaction.details) {
         const ledgerID = Number(row.ledgerID || 0);
   
@@ -753,7 +753,7 @@ debugger;
           break;
         }
       }
-    }
+    } 
   
     return { firstDebitLedgerID, firstCreditLedgerID };
   };

@@ -34,7 +34,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 150,
       showInPdf: true,
       cellRender: (
         cellElement: any,
@@ -83,7 +83,7 @@ const ExpenseReportDetailed = () => {
       dataField: "vchNo",
       caption: t("voucherNumber"),
       dataType: "string",
-      width: 100,
+      // width: 100,
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
@@ -92,6 +92,7 @@ const ExpenseReportDetailed = () => {
       dataField: "date",
       caption: t("date"),
       dataType: "date",
+      width: 100,
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
@@ -102,6 +103,7 @@ const ExpenseReportDetailed = () => {
       caption: t("ledger"),
       dataType: "string",
       allowSearch: true,
+      width: 100,
       allowFiltering: true,
       showInPdf:true,
     },
@@ -119,7 +121,7 @@ const ExpenseReportDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -157,7 +159,7 @@ const ExpenseReportDetailed = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -241,7 +243,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      width: 100,
     },
     {
       dataField: "branchName",

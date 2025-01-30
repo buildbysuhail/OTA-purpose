@@ -711,21 +711,22 @@ export const useAccTransaction = (
       }
     }
 
-    // if (formState.transaction.master.voucherType == "MJV") {
-    //   const totalDebit = formState.transaction.details
-    //     .reduce((sum, x) => sum + (x.debit || 0), 0)
-    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
-    //   const totalCredit = formState.transaction.details
-    //     .reduce((sum, x) => sum + (x.credit || 0), 0)
-    //     .toFixed(applicationSettings.mainSettings?.decimalPoints);
-    //   if (totalDebit !== totalCredit) {
-    //     ERPAlert.show({
-    //       icon: "warning",
-    //       title: "Total Debit and Credit amount should be Same",
-    //     });
-    //     return false;
-    //   }
-    // }
+    if (formState.transaction.master.voucherType == "MJV") {
+      const totalDebit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.debit || 0), 0)
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
+      const totalCredit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.credit || 0), 0)
+        .toFixed(applicationSettings.mainSettings?.decimalPoints);
+      if (totalDebit !== totalCredit) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Debit/Credit",
+          text:"Total Debit and Credit amount should be Same"
+        });
+        return false;
+      }
+    }
 debugger;
     return true;
 
@@ -734,7 +735,7 @@ debugger;
     let firstDebitLedgerID = 0;
     let firstCreditLedgerID = 0;
   
-    if (transaction.master.voucherType === "MJV") {
+   if (transaction.master.voucherType === "MJV") {
       for (const row of transaction.details) {
         const ledgerID = Number(row.ledgerID || 0);
   
@@ -753,7 +754,7 @@ debugger;
           break;
         }
       }
-    }
+    } 
   
     return { firstDebitLedgerID, firstCreditLedgerID };
   };
@@ -766,7 +767,7 @@ debugger;
       arra = 0,
       detailID = 0;
       const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction);
-
+debugger;
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
       if (isNullOrUndefinedOrZero(element.ledgerID)) {

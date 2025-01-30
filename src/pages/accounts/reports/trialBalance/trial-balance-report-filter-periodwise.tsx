@@ -60,6 +60,21 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
             handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
           }
         />
+        <ERPCheckbox
+          {...getFieldProps("detailedView")}
+          label={t("detailed_view")}
+          onChangeData={(data) =>
+            handleFieldChange("detailedView", data.detailedView)
+          }
+        />
+          <ERPCheckbox
+          {...getFieldProps("excludeOpeningIncomeExpense")}
+          label={t("exclude_opening_income_&_expense")}
+          onChangeData={(data) =>
+            handleFieldChange("excludeOpeningIncomeExpense", data.excludeOpeningIncomeExpense)
+          }
+        />
+
       {userSession.countryId==Countries.India &&
       <ERPCheckbox
       {...getFieldProps("isExcludeZeroBalance")}
@@ -77,5 +92,7 @@ export const TrialBalancePeriodwiseReportFilterInitialState = {
   costCentreID: 0,
   isPeriodWise: true,
   isExcludeZeroBalance:false,
-  showGroupSummaryOnly:false
+  showGroupSummaryOnly:false,
+  detailedView:false,
+  excludeOpeningIncomeExpense:false
 };

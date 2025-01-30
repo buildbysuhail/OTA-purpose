@@ -42,6 +42,7 @@ const Table = ({ data, template }: { data?: any; template?: TemplateState }) => 
     },
   });
 
+  
   return (
     <View style={[styles.table,{borderBottom:"none"}]}>
       <View style={styles.tableRow}>

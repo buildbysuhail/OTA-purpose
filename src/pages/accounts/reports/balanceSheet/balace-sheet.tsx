@@ -1,11 +1,11 @@
-import {MouseEventHandler,useCallback,useEffect,useRef,useState} from "react";
+import { MouseEventHandler, useCallback, useEffect, useRef, useState } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
-import BalanceSheetFilter, {BalanceSheetFilterInitialState} from "./balance-sheet-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 import Urls from "../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
-import {EllipsisVertical,FileText,FileUp,Printer,RectangleVertical,X} from "lucide-react";
+import { EllipsisVertical, FileText, FileUp, Printer, RectangleVertical, X } from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
@@ -16,8 +16,9 @@ import { RootState } from "../../../../redux/store";
 import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 import { PDFDownloadLink, BlobProvider, PDFViewer } from '@react-pdf/renderer';
 import BalanceSheetVerticalTemplate from "../../../InvoiceDesigner/DownloadPreview/balance-sheet/balance-sheet-vertical";
-import BalanceSheetPDFTemplate from "./balance-sheet-horizontal-pdf";
+import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import { useSelector } from "react-redux";
+import BalanceSheetVerticalPDFTemplate from "./balance-sheet-pdf/balance-sheet-vertical-pdf";
 
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
@@ -26,7 +27,7 @@ const BalanceSheetRow: React.FC<{
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
-  const userSession =  useSelector((state: RootState) => (state.UserSession));
+  const userSession = useSelector((state: RootState) => (state.UserSession));
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     setIsOpenDetails({
       isOpen: true,
@@ -38,13 +39,12 @@ const BalanceSheetRow: React.FC<{
   return (
     <tr>
       <td
-        className={`py-2 ${
-          item.title == "M"
+        className={`py-2 ${item.title == "M"
             ? "text-[#3b82f6]"
             : item.groupName == "TOTAL"
-            ? "text-[#FF0000]"
-            : "dark:text-dark-text text-[#03070f]"
-        }`}
+              ? "text-[#FF0000]"
+              : "dark:text-dark-text text-[#03070f]"
+          }`}
         style={{
           paddingLeft:
             item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
@@ -60,13 +60,12 @@ const BalanceSheetRow: React.FC<{
         <td className="py-2 text-end">
           <a
             href="#"
-            className={`py-2 hover:text-[#1d4ed8] ${
-              item.title == "M"
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M"
                 ? "text-[#3b82f6]"
                 : item.groupName == "TOTAL"
-                ? "text-[#FF0000]"
-                : "dark:text-dark-text text-[#03070f]"
-            }`}
+                  ? "text-[#FF0000]"
+                  : "dark:text-dark-text text-[#03070f]"
+              }`}
             style={{
               paddingRight:
                 item.title == "M" || item.groupName == "TOTAL" ? "0px" : "20px",
@@ -76,23 +75,22 @@ const BalanceSheetRow: React.FC<{
                   : "normal",
             }}
           >
-            {`${
-              item.transType == "L"
+            {`${item.transType == "L"
                 ? item.title == "M"
                   ? getFormattedValue(item.total)
                   : item.total > 0
-                  ? "(-)" + getFormattedValue(item.total)
-                  : item.total === 0
-                  ? getFormattedValue(0)
-                  : getFormattedValue(-1 * item.total)
+                    ? "(-)" + getFormattedValue(item.total)
+                    : item.total === 0
+                      ? getFormattedValue(0)
+                      : getFormattedValue(-1 * item.total)
                 : item.title == "M"
-                ? getFormattedValue(item.total)
-                : item.total < 0
-                ? "(-)" + getFormattedValue(-1 * item.total)
-                : item.total === 0
-                ? getFormattedValue(0)
-                : getFormattedValue(item.total)
-            }`}
+                  ? getFormattedValue(item.total)
+                  : item.total < 0
+                    ? "(-)" + getFormattedValue(-1 * item.total)
+                    : item.total === 0
+                      ? getFormattedValue(0)
+                      : getFormattedValue(item.total)
+              }`}
           </a>
         </td>
       )}
@@ -281,7 +279,7 @@ const BalanceSheet = () => {
   const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Balance Sheet");
-  
+
     // Add page title
     const pageTitle = `Balance Sheet - As of ${new Date(
       filter.asonDate
@@ -290,7 +288,7 @@ const BalanceSheet = () => {
       month: "long",
       day: "2-digit",
     })}`;
-  
+
     // Merge cells for the title
     const lastColumnLetter = String.fromCharCode(64 + 4); // Assuming 4 columns (A, B, C, D)
     let mergeRange = `A1:${lastColumnLetter}1`;
@@ -298,9 +296,9 @@ const BalanceSheet = () => {
     worksheet.getCell(`A1`).value = pageTitle;
     worksheet.getCell(`A1`).font = { bold: true, size: 12 };
     worksheet.getCell(`A1`).alignment = { horizontal: "left" };
-  
+
     let currentRow = 2; // Start from row 2 after the title
-  
+
     // Add header footer information from userSession
     if (
       userSession.headerFooter != undefined &&
@@ -347,7 +345,7 @@ const BalanceSheet = () => {
       };
       currentRow += 1;
     }
-  
+
     // Headers
     worksheet.mergeCells(`A${currentRow}:B${currentRow}`);
     worksheet.mergeCells(`C${currentRow}:D${currentRow}`);
@@ -365,7 +363,7 @@ const BalanceSheet = () => {
       fgColor: { argb: "FFD3D3D3" },
     };
     currentRow += 1;
-  
+
     // Filter and prepare data
     const assets = data.filter(
       (item) => item?.transType === "A" && item?.groupName !== "TOTAL"
@@ -374,7 +372,7 @@ const BalanceSheet = () => {
       (item) => item?.transType === "L" && item?.groupName !== "TOTAL"
     );
     const maxLength = Math.max(assets.length, liabilities.length);
-  
+
     // Add data rows
     for (let i = 0; i < maxLength; i++) {
       if (liabilities[i]) {
@@ -384,18 +382,18 @@ const BalanceSheet = () => {
             ? liabilities[i].title == "M"
               ? getFormattedValue(liabilities[i].total)
               : liabilities[i].total > 0
-              ? "(-)" + getFormattedValue(liabilities[i].total)
-              : liabilities[i].total === 0
-              ? getFormattedValue(0)
-              : getFormattedValue(-1 * liabilities[i].total)
+                ? "(-)" + getFormattedValue(liabilities[i].total)
+                : liabilities[i].total === 0
+                  ? getFormattedValue(0)
+                  : getFormattedValue(-1 * liabilities[i].total)
             : liabilities[i].title == "M"
-            ? getFormattedValue(liabilities[i].total)
-            : liabilities[i].total < 0
-            ? "(-)" + getFormattedValue(-1 * liabilities[i].total)
-            : liabilities[i].total === 0
-            ? getFormattedValue(0)
-            : getFormattedValue(liabilities[i].total);
-  
+              ? getFormattedValue(liabilities[i].total)
+              : liabilities[i].total < 0
+                ? "(-)" + getFormattedValue(-1 * liabilities[i].total)
+                : liabilities[i].total === 0
+                  ? getFormattedValue(0)
+                  : getFormattedValue(liabilities[i].total);
+
         if (liabilities[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -428,7 +426,7 @@ const BalanceSheet = () => {
           };
         }
       }
-  
+
       if (assets[i]) {
         worksheet.getCell(`C${currentRow}`).value = assets[i].groupName;
         worksheet.getCell(`D${currentRow}`).value =
@@ -436,18 +434,18 @@ const BalanceSheet = () => {
             ? assets[i].title == "M"
               ? getFormattedValue(assets[i].total)
               : assets[i].total > 0
-              ? "(-)" + getFormattedValue(assets[i].total)
-              : assets[i].total === 0
-              ? getFormattedValue(0)
-              : getFormattedValue(-1 * assets[i].total)
+                ? "(-)" + getFormattedValue(assets[i].total)
+                : assets[i].total === 0
+                  ? getFormattedValue(0)
+                  : getFormattedValue(-1 * assets[i].total)
             : assets[i].title == "M"
-            ? getFormattedValue(assets[i].total)
-            : assets[i].total < 0
-            ? "(-)" + getFormattedValue(-1 * assets[i].total)
-            : assets[i].total === 0
-            ? getFormattedValue(0)
-            : getFormattedValue(assets[i].total);
-  
+              ? getFormattedValue(assets[i].total)
+              : assets[i].total < 0
+                ? "(-)" + getFormattedValue(-1 * assets[i].total)
+                : assets[i].total === 0
+                  ? getFormattedValue(0)
+                  : getFormattedValue(assets[i].total);
+
         if (assets[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
@@ -482,7 +480,7 @@ const BalanceSheet = () => {
       }
       currentRow++;
     }
-  
+
     // Add totals
     const totalRow = currentRow;
     worksheet.getCell(`A${totalRow}`).value = "Total";
@@ -497,7 +495,7 @@ const BalanceSheet = () => {
         data.find((item) => item?.transType === "A" && item?.groupName === "TOTAL")
           ?.total
       ) || 0;
-  
+
     // Format totals row
     ["A", "B", "C", "D"].forEach((col) => {
       worksheet.getCell(`${col}${totalRow}`).font = {
@@ -517,17 +515,17 @@ const BalanceSheet = () => {
     worksheet.getCell(`D${totalRow}`).alignment = {
       horizontal: "right",
     };
-  
+
     // Set column widths
     worksheet.columns.forEach((column) => {
       column.width = 30;
     });
-  
+
     // Format amounts as numbers
     ["B", "D"].forEach((col) => {
       worksheet.getColumn(col).numFmt = "#,##0.00";
     });
-  
+
     // Generate Excel file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
@@ -571,9 +569,8 @@ const BalanceSheet = () => {
               </div>
             </div> */}
             <div
-              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${
-                isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
-              }`}
+              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
+                }`}
             >
               <div
                 className="flex justify-center items-center w-8 h-8"
@@ -583,9 +580,8 @@ const BalanceSheet = () => {
                 }} /* Ensures consistent dimensions */
               >
                 <div
-                  className={`transition-transform duration-500 ${
-                    isVerticalView ? "rotate-0" : "rotate-90"
-                  }`}
+                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-0" : "rotate-90"
+                    }`}
                 >
                   <RectangleVertical />
                 </div>
@@ -653,20 +649,20 @@ const BalanceSheet = () => {
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
-          
+
             <div className="relative">
               <button
                 className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
                 ref={buttonRef}
               >
                 {/* <i className="fas fa-file-export me-1"></i> */}
-                <EllipsisVertical className="!w-4 !h-4" 
-                 onClick={() => setIsPopupVisible(!isPopupVisible)}
+                <EllipsisVertical className="!w-4 !h-4"
+                  onClick={() => setIsPopupVisible(!isPopupVisible)}
                 />
                 {/* <span>{t("export")}</span> */}
               </button>
 
-              {/* {isPopupVisible && (
+              {isPopupVisible && (
                 <div
                   ref={popupRef} // Attach ref to the popup
                   className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
@@ -694,11 +690,23 @@ const BalanceSheet = () => {
                       <li>
                           <BlobProvider
                             document={
-                              <BalanceSheetPDFTemplate
-                              getFormattedValue={getFormattedValue}
-                                filter={filter}
-                                data={data}
-                              />
+                              !isVerticalView ? (
+                                <BalanceSheetPDFTemplate
+                                  userSession={userSession}
+                                  getFormattedValue={getFormattedValue}
+                                  filter={filter}
+                                  data={data}
+                                />):(
+                                  <BalanceSheetVerticalPDFTemplate
+                                  userSession={userSession}
+                                  getFormattedValue={getFormattedValue}
+                                  filter={filter}
+                                  data={data}
+                                />
+                                  
+                                )
+                          
+
                             }
                           >
                             {({ blob, loading }) => (
@@ -726,7 +734,7 @@ const BalanceSheet = () => {
                     </ul>
                   </nav>
                 </div>
-              )} */}
+              )}
             </div>
             <button
               onClick={goToPreviousPage}
@@ -799,9 +807,9 @@ const BalanceSheet = () => {
       {isOpenDetails.key > 0 && (
         <ERPModal
           isOpen={isOpenDetails.isOpen}
-          // title={t("bank_cards")}
+          minHeight={800}
           title={t("balance_sheet")}
-          width="w-full max-w-[90%]"
+          width="w-full max-w-[1200px]"
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0, item: {} });
@@ -820,35 +828,45 @@ const BalanceSheet = () => {
           }}
         />
       )}
-
+{/* 
       <ERPModal
-          isOpen={isPopupVisible}
-          // title={t("bank_cards")}
-          title={t("balance_sheet")}
-          width="w-full max-w-[90%]"
-          minHeight={1200}
-          isForm={true}
-          closeModal={() => {
-            setIsPopupVisible(false)
-          }}
-    
-          content={
-                   <PDFViewer
-                        className="pdf-viewer"
-                        width="100%"
-                        height={1200}
-                        style={{ padding: "10px" }}
-                      >
-                          <BalanceSheetPDFTemplate
-                           userSession={userSession}
-                              getFormattedValue={getFormattedValue}
-                                filter={filter}
-                                data={data}
-                              />
-                      </PDFViewer>
-          }
-     
-        />
+        isOpen={isPopupVisible}
+        // title={t("bank_cards")}
+        title={t("balance_sheet")}
+        width="w-full max-w-[90%]"
+        minHeight={1200}
+        isForm={true}
+        closeModal={() => {
+          setIsPopupVisible(false)
+        }}
+
+        content={
+          <PDFViewer
+            className="pdf-viewer"
+            width="100%"
+            height={1200}
+            style={{ padding: "10px" }}
+          >
+            {!isVerticalView ? (
+            <BalanceSheetPDFTemplate
+              userSession={userSession}
+              getFormattedValue={getFormattedValue}
+              filter={filter}
+              data={data}
+            />):(
+              <BalanceSheetVerticalPDFTemplate
+              userSession={userSession}
+              getFormattedValue={getFormattedValue}
+              filter={filter}
+              data={data}
+            />
+              
+            )
+        }
+          </PDFViewer>
+        }
+
+      /> */}
     </div>
   );
 };

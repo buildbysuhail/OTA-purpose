@@ -1,0 +1,316 @@
+import React from 'react';
+import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { useTranslation } from 'react-i18next';
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import { BalanceSheetFilterInitialState } from "../balance-sheet-filter";
+import FontRegistration from '../../../../LabelDesigner/fontRegister';
+
+
+const styles = StyleSheet.create({
+  page: {
+    fontFamily: "Poppins",
+    backgroundColor: '#ffffff',
+    paddingVertical: 10, paddingHorizontal: 20,
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%'
+  },
+
+  subheader1: {
+    fontSize: 10,
+    fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium'
+  },
+  subheader2: {
+    fontSize: 9,
+    fontWeight: 400, fontFamily: "Poppins", fontStyle: 'normal'
+  },
+  table: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 4,
+    marginBottom: 5
+  },
+  subtable: {
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  tableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+  },
+  tableHeader: {
+    width: "50%",
+    backgroundColor: '#d3d3d3',
+    padding: 5,
+    fontSize: 12, fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium'
+  },
+  tableCell: {
+    paddingVertical: 5,
+    width: "50%",
+  },
+  total: {
+    backgroundColor:"rgb(245, 243, 243)",
+    color: '#f00',
+    padding: 5,
+    fontSize: 12, fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium'
+  },
+  title: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  amount: {
+    textAlign: 'right',
+  },
+  bold: {
+    fontWeight: 700,
+    fontStyle: 'bold'
+  },
+  blue: {
+    color: '#3b82f6',
+    fontSize: 10, fontFamily: "Poppins",
+  },
+  red: {
+    fontWeight: 700,
+    fontStyle: 'bold',
+    color: '#FF0000',
+    fontFamily: "Poppins",
+    fontSize: 10
+  },
+  darkText: {
+    color: '#03070f',
+    fontWeight: 400,
+    fontStyle: 'normal',
+    fontFamily: "Poppins",
+    fontSize: 10,
+    paddingLeft: 10
+  },
+  darkTextnum: {
+    color: '#03070f',
+    fontWeight: 400,
+    fontStyle: 'normal',
+    fontFamily: "Poppins",
+    fontSize: 10,
+    paddingRight: 10
+  },
+
+  greyText: {
+    color: '#666',
+  },
+});
+
+const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
+
+
+  const assets = data?.filter(
+    (item: any) => item?.transType === "A" && item?.groupName !== "TOTAL"
+  );
+  const liabilities = data?.filter(
+    (item: any) => item?.transType === "L" && item?.groupName !== "TOTAL"
+  );
+
+  const assetTotal =
+    data?.find(
+      (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
+    )?.total || 0;
+  const liabilityTotal =
+    data?.find(
+      (item: any) => item?.transType === "L" && item?.groupName === "TOTAL"
+    )?.total || 0;
+
+
+  return (
+    <Document>
+      <FontRegistration />
+      <Page size="A4" orientation="portrait">
+        <View style={styles.page}>
+          <View style={{ marginBottom: 20, }}>
+
+            {/*
+                <Image
+                  src={currentBranch?.logo}
+                  style={[styles.logo, { width: 80 * logoWidthRatio }]}
+                />
+              */}
+
+            <Text style={{ color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium' }}>
+              {userSession.headerFooter?.heading7}
+            </Text>
+
+
+            <Text style={{ fontFamily: 'Amiri', fontWeight: 400, color: '#fff', fontSize: 14, fontStyle: 'normal' }}>{userSession.headerFooter.heading8}</Text>
+            <Text style={{ fontSize: 8, fontWeight: 400, fontFamily: "Poppins", fontStyle: 'normal' }}>{userSession.headerFooter.heading9}</Text>
+            <View style={{ display: 'flex', flexDirection: "row", gap: 0 }}>
+              <Text style={styles.subheader1}>Balance Sheet - </Text>
+              <Text style={styles.subheader2}>
+                as of {new Date(filter.asonDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "2-digit",
+                })}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.table}>
+            {/* table1 */}
+            <View style={styles.subtable}>
+              {/* table Head*/}
+              <View style={styles.tableRow}>
+                <View style={[styles.tableHeader,]}>
+                  <Text>Liabilities</Text>
+                </View>
+                <View style={[styles.tableHeader, styles.amount]}>
+                  <Text>Amount</Text>
+                </View>
+              </View>
+
+              {/* table body*/}
+              {liabilities?.map((item: any, index: number) => (
+                <View key={`liability-${index}`} style={styles.tableRow}>
+                  <View style={[styles.tableCell,]}>
+                    <Text
+                      style={[
+
+                        item.title === "M" || item.groupName === "TOTAL"
+                          ? styles.bold
+                          : {},
+                        item.title === "M"
+                          ? styles.blue
+                          : item.groupName === "TOTAL"
+                            ? styles.red
+                            : styles.darkText,
+                      ]}
+                    >
+                      {item.groupName}
+                    </Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.amount]}>
+                    <Text
+                      style={[
+
+                        item.title === "M" || item.groupName === "TOTAL"
+                          ? styles.bold
+                          : {},
+                        item.title === "M"
+                          ? styles.blue
+                          : item.groupName === "TOTAL"
+                            ? styles.red
+                            : styles.darkTextnum,
+                      ]}
+                    >
+                      {item.transType === "L"
+                        ? item.title === "M"
+                          ? getFormattedValue(item.total)
+                          : item.total > 0
+                            ? "(-)" + getFormattedValue(item.total)
+                            : item.total === 0
+                              ? getFormattedValue(0)
+                              : getFormattedValue(-1 * item.total)
+                        : item.title === "M"
+                          ? getFormattedValue(item.total)
+                          : item.total < 0
+                            ? "(-)" + getFormattedValue(-1 * item.total)
+                            : item.total === 0
+                              ? getFormattedValue(0)
+                              : getFormattedValue(item.total)}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+
+            </View>
+
+            {/* table2 */}
+            <View style={styles.subtable}>
+              {/* table Head*/}
+              <View style={styles.tableRow}>
+                <View style={[styles.tableHeader,]}>
+                  <Text>Assets</Text>
+                </View>
+                <View style={[styles.tableHeader, styles.amount]}>
+                  <Text>Amount</Text>
+                </View>
+              </View>
+
+              {/* table body*/}
+              {assets?.map((item: any, index: number) => (
+                <View key={`liability-${index}`} style={styles.tableRow}>
+                  <View style={[styles.tableCell,]}>
+                    <Text
+                      style={[
+
+                        item.title === "M" || item.groupName === "TOTAL"
+                          ? styles.bold
+                          : {},
+                        item.title === "M"
+                          ? styles.blue
+                          : item.groupName === "TOTAL"
+                            ? styles.red
+                            : styles.darkText,
+                      ]}
+                    >
+                      {item.groupName}
+                    </Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.amount]}>
+                    <Text
+                      style={[
+
+                        item.title === "M" || item.groupName === "TOTAL"
+                          ? styles.bold
+                          : {},
+                        item.title === "M"
+                          ? styles.blue
+                          : item.groupName === "TOTAL"
+                            ? styles.red
+                            : styles.darkTextnum,
+                      ]}
+                    >
+                      {item.transType === "L"
+                        ? item.title === "M"
+                          ? getFormattedValue(item.total)
+                          : item.total > 0
+                            ? "(-)" + getFormattedValue(item.total)
+                            : item.total === 0
+                              ? getFormattedValue(0)
+                              : getFormattedValue(-1 * item.total)
+                        : item.title === "M"
+                          ? getFormattedValue(item.total)
+                          : item.total < 0
+                            ? "(-)" + getFormattedValue(-1 * item.total)
+                            : item.total === 0
+                              ? getFormattedValue(0)
+                              : getFormattedValue(item.total)}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.tableRow}>
+            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
+              <Text>total</Text>
+            </View>
+            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
+              <Text>{getFormattedValue(liabilityTotal)}</Text>
+            </View>
+            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
+              <Text>total</Text>
+            </View>
+            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
+              <Text>{getFormattedValue(assetTotal)}</Text>
+            </View>
+          </View>
+         
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
+export default BalanceSheetPDFTemplate;

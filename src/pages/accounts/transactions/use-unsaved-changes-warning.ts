@@ -40,80 +40,80 @@ export const useUnsavedChangesWarning = (formState: any) => {
 
   // Handle page refresh and close
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges()) {
-        e.preventDefault();
-        e.returnValue = '';
-        setIsModalOpen(true);
-        setIsLeavingPage(true);
-        return '';
-      }
-    };
+    // const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    //   if (hasUnsavedChanges()) {
+    //     e.preventDefault();
+    //     e.returnValue = '';
+    //     setIsModalOpen(true);
+    //     setIsLeavingPage(true);
+    //     return '';
+    //   }
+    // };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
-        // setIsModalOpen(true);
-        setIsLeavingPage(true);
-      }
-    };
+    // const handleVisibilityChange = () => {
+    //   if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
+    //     // setIsModalOpen(true);
+    //     setIsLeavingPage(true);
+    //   }
+    // };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // window.addEventListener('beforeunload', handleBeforeUnload);
+    // document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    // return () => {
+    //   window.removeEventListener('beforeunload', handleBeforeUnload);
+    //   document.removeEventListener('visibilitychange', handleVisibilityChange);
+    // };
   }, [hasUnsavedChanges]);
 
   // Prevent navigation attempts
   useEffect(() => {
-    const blockNavigation = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isNavigationLink = target.tagName === 'A' ||
-        target.closest('a') ||
-        target.hasAttribute('href') ||
-        target.role === 'link';
+    // const blockNavigation = (e: MouseEvent) => {
+    //   const target = e.target as HTMLElement;
+    //   const isNavigationLink = target.tagName === 'A' ||
+    //     target.closest('a') ||
+    //     target.hasAttribute('href') ||
+    //     target.role === 'link';
 
-      if (isNavigationLink && hasUnsavedChanges()) {
-        e.preventDefault();
-        e.stopPropagation();
-        const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
-        if (href) {
-          pendingLocation.current = href;
-        }
-        setIsModalOpen(true);
-        setIsLeavingPage(false);
-      }
-    };
+    //   if (isNavigationLink && hasUnsavedChanges()) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
+    //     if (href) {
+    //       pendingLocation.current = href;
+    //     }
+    //     setIsModalOpen(true);
+    //     setIsLeavingPage(false);
+    //   }
+    // };
 
-    document.addEventListener('click', blockNavigation, true);
-    return () => document.removeEventListener('click', blockNavigation, true);
+    // document.addEventListener('click', blockNavigation, true);
+    // return () => document.removeEventListener('click', blockNavigation, true);
   }, [hasUnsavedChanges]);
 
   // Handle history changes and location updates
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+    // if (isInitialMount.current) {
+    //   isInitialMount.current = false;
+    //   return;
+    // }
 
-    const now = Date.now();
-    if (now - lastNavigationTime.current < 100) {
-      return;
-    }
-    lastNavigationTime.current = now;
+    // const now = Date.now();
+    // if (now - lastNavigationTime.current < 100) {
+    //   return;
+    // }
+    // lastNavigationTime.current = now;
 
-    if (location.pathname !== currentPath.current && !navigationAttempted.current) {
-      if (hasUnsavedChanges()) {
-        pendingLocation.current = location.pathname;
-        navigationAttempted.current = true;
-        window.history.pushState(null, '', currentPath.current);
-        // setIsModalOpen(true);
-        setIsLeavingPage(false);
-        return;
-      }
-    }
+    // if (location.pathname !== currentPath.current && !navigationAttempted.current) {
+    //   if (hasUnsavedChanges()) {
+    //     pendingLocation.current = location.pathname;
+    //     navigationAttempted.current = true;
+    //     window.history.pushState(null, '', currentPath.current);
+    //     // setIsModalOpen(true);
+    //     setIsLeavingPage(false);
+    //     return;
+    //   }
+    // }
   }, [location, hasUnsavedChanges]);
 
   // Handle browser back/forward buttons

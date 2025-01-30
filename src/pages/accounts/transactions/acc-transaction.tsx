@@ -929,13 +929,13 @@ console.log('masterAccountID = -2;');
     }
   };
 
-  const renderCell = (cellData: any, validation: string) => {
+  const renderCell = (cellData: any, validation: string,enableFormat:boolean=false) => {
     return (
       <div
         className={validation ? "grid-error-cell" : ""}
         title={validation ? validation : ""} // Add validation message as tooltip
       >
-        {cellData.value}
+        {enableFormat?getFormattedValue(cellData.value):cellData.value}
       </div>
     );
   };
@@ -988,7 +988,7 @@ console.log('masterAccountID = -2;');
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.amount_Validation)
+        renderCell(cellData, cellData.data.amount_Validation,true)
     },
     {
       dataField: "drCr",
@@ -1068,7 +1068,7 @@ console.log('masterAccountID = -2;');
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.debit_Validation)
+        renderCell(cellData, cellData.data.debit_Validation,true)
     },
     {
       dataField: "credit",
@@ -1077,7 +1077,7 @@ console.log('masterAccountID = -2;');
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.credit_Validation)
+        renderCell(cellData, cellData.data.credit_Validation,true)
     },
     {
       dataField: "projectId",

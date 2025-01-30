@@ -191,7 +191,7 @@ const BillwiseComponent = ({
 
   // Load billwise transactions
   useEffect(() => {
-    debugger;
+    
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       if (
@@ -266,15 +266,15 @@ const BillwiseComponent = ({
     let total = 0;
     let totalDr = 0;
     let totalCr = 0;
-debugger;
     try {
       
-      store
+      list
       ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
       ?.map((row: any, index: number) => ({
         ...row,
         slNo: index + 1, // Assign serial number starting from 1
       })).forEach((bill: BillwiseData) => {
+        debugger;
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 
@@ -285,7 +285,7 @@ debugger;
         }
       });
 
-      if (drCr.toLowerCase() === "CR") {
+      if (drCr.toUpperCase() === "CR") {
         total = totalDr - totalCr;
       } else {
         total = totalCr - totalDr;
@@ -435,7 +435,7 @@ debugger;
         console.log(`DrCr ${drCr}`);
       if (e.data.drCr === drCr) {
         
-        debugger;
+        
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
@@ -454,7 +454,6 @@ debugger;
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       
-    debugger
       const bill = updatedBills[i];
       if (bill.drCr.toUpperCase() === drCr.toUpperCase())
       {

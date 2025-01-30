@@ -118,18 +118,18 @@ export const useUnsavedChangesWarning = (formState: any) => {
 
   // Handle browser back/forward buttons
   useEffect(() => {
-    const handlePopState = (e: PopStateEvent) => {
-      if (hasUnsavedChanges()) {
-        e.preventDefault();
-        pendingLocation.current = window.location.pathname;
-        window.history.pushState(null, '', currentPath.current);
-        setIsModalOpen(true);
-        setIsLeavingPage(false);
-      }
-    };
+    // const handlePopState = (e: PopStateEvent) => {
+    //   if (hasUnsavedChanges()) {
+    //     e.preventDefault();
+    //     pendingLocation.current = window.location.pathname;
+    //     window.history.pushState(null, '', currentPath.current);
+    //     setIsModalOpen(true);
+    //     setIsLeavingPage(false);
+    //   }
+    // };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    // window.addEventListener('popstate', handlePopState);
+    // return () => window.removeEventListener('popstate', handlePopState);
   }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {

@@ -495,9 +495,9 @@ setStore(obj);
     setStore(updatedBills);
     // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.billwiseAmount || 0), 0);
     const amtAdjusted = getTotalAmountToSet(updatedBills);
-
+debugger;
     // Check if the adjusted amount exceeds the original amount
-    if (round(amtAdjusted) > round(remainingAmount)) {
+    if (round(amtAdjusted) > round(formState.row.amount??0)) {
       ERPAlert.show({
         title: "Auto Post",
         text: "Excess adjustment.",

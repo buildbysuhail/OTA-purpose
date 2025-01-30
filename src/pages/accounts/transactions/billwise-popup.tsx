@@ -116,6 +116,7 @@ obj = obj.map((x: BillwiseData) => ({
   ...x, 
   balanceAfter: x.balance // Correctly updating balanceAfter
 }));
+debugger;
 setStore(obj);
     }
   }, [formState.billwiseData, formState.showbillwise]);
@@ -187,6 +188,8 @@ setStore(obj);
                 balanceAfter: item.isSelected == true ? 0: storeItem.balance,
               }
             : storeItem
+
+            return it;
             
       }
         );
@@ -194,7 +197,7 @@ setStore(obj);
       // updatedBills[i].balanceAfter = billBalance - remainingAmount;
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
-      dataGridRef?.current?.rePaint();
+      // dataGridRef?.current?.rePaint();
     }
   };
 
@@ -206,7 +209,7 @@ setStore(obj);
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        row.drCr != drCr){
+        row?.drCr != drCr){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -279,7 +282,7 @@ setStore(obj);
     try {
       
       list
-      ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+      ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
       ?.map((row: any, index: number) => ({
         ...row,
         slNo: index + 1, // Assign serial number starting from 1
@@ -825,7 +828,7 @@ const customizeSummaryRow = useMemo(() => {
           hideGridAddButton={true}
           // height={gridHeight}
           dataSource={store
-            ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
             
           }
           heightToAdjustOnWindowsInModal={gridHeight.windows}

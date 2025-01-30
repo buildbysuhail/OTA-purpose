@@ -725,7 +725,6 @@ export const useAccTransaction = (
       return false;
     }
     // Validate master ledger existence
-    debugger;
     if (
       formState.transaction.master.voucherType !== "OB" &&
       formState.transaction.master.voucherType !== "MJV"
@@ -1099,7 +1098,7 @@ debugger;
           }
           dispatch(
             accFormStateHandleFieldChange({
-              fields: { showbillwise: false },
+              fields: { showbillwise: false, billwiseData: [] },
             })
           );
         } else {
@@ -1121,7 +1120,7 @@ debugger;
           }
           dispatch(
             accFormStateHandleFieldChange({
-              fields: { showbillwise: false },
+              fields: { showbillwise: false, billwiseData: [] },
             })
           );
         }
@@ -1991,7 +1990,7 @@ debugger;
         //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
         //     break;
         // }
-
+debugger;
         if (
           formState.showbillwise === true &&
           formState.row.ledgerID &&

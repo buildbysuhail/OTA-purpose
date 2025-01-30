@@ -34,6 +34,8 @@ export interface DevGridColumn {
     visibleDynamic?: (filter: any) => boolean;
     captionDynamic?: (filter: any) => string;
     groupIndex?:any;
+    editorOptions?: any;
+    validationRules?: any;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
     cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => React.ReactNode;

@@ -1420,6 +1420,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 : onSelectionChanged && onSelectionChanged(e)
             }
             onKeyDown={onKeyDown}
+            
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
@@ -1591,6 +1592,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {gridCols?.map((column) => (
               <Column
                 customizeText={column.customizeText}
+                editorOptions={column.editorOptions}
+                validationRules={column.validationRules}
                 allowEditing={column.allowEditing || false}
                 key={column.dataField}
                 dataField={column.dataField}

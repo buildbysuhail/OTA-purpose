@@ -3207,12 +3207,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
         }}
       >
-        <div className="flex flex-col xl:flex-row xl:items-center xl:space-x-4 xl:space-y-0 overflow-x-auto">
-          {/* <div className="xl:hidden">
-          <Menu onClick={toggleMenu} className="cursor-pointer" />
-        </div>
-        <div className={`${isMenuOpen ? 'block' : 'hidden'} xl:flex lg:items-center xl:space-x-2 md:space-x-4`}> */}
-          <div className="flex items-center justify-between space-x-2 md:space-x-4">
+        <div className="flex flex-col w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[990px]:grid-cols-3 xl:flex xl:flex-row xl:flex-wrap xl:items-center xl:gap-4">
             {formState.formElements.printOnSave.visible && (
               <ERPCheckbox
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3229,6 +3225,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 disabled={formState.formElements.printOnSave?.disabled}
               />
             )}
+            
             {formState.formElements.printPreview.visible && (
               <ERPCheckbox
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3245,27 +3242,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 disabled={formState.formElements.printPreview?.disabled}
               />
             )}
-          </div>
-          <div className="flex space-x-2 md:space-x-4">
-            {formState.formElements.keepNarration.visible && (
-              <ERPCheckbox
-                id="keepNarrationForJV"
-                label={t("keep_narration_for_jv")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.keepNarrationForJV}
-                onChangeData={(e) => {
-                  const updatedUserConfig = {
-                    ...formState.userConfig,
-                    keepNarrationForJV: e.keepNarrationForJV,
-                  };
-                  dispatch(
-                    accFormStateHandleFieldChange({
-                      fields: { userConfig: updatedUserConfig },
-                    })
-                  );
-                }}
-              />
-            )}
+            
             {(voucherType == "BP" || voucherType == "CQP") &&
               formState.formElements.printCheque.visible && (
                 <ERPCheckbox
@@ -3286,9 +3263,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                   className="text-sm xl:text-base"
                 />
-              )}
-          </div>
-          <div className="flex space-x-2 md:space-x-4">
+            )}
+
+            {(voucherType == "BP" || voucherType == "CQP") && (
+              <ERPButton
+                title={t("print_cheque")}
+                variant="secondary"
+                onClick={() => {
+                  /* Handle print cheque */
+                }}
+              />
+            )}
+
             {formState.formElements.keepNarration.visible && (
               <ERPCheckbox
                 localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3308,48 +3294,56 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 }
               />
             )}
-            {(voucherType == "BP" || voucherType == "CQP") && (
-              <ERPButton
-                title={t("print_cheque")}
-                variant="secondary"
-                onClick={() => {
-                  /* Handle print cheque */
+
+            {formState.formElements.keepNarration.visible && (
+              <ERPCheckbox
+                id="keepNarrationForJV"
+                label={t("keep_narration_for_jv")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.keepNarrationForJV}
+                onChangeData={(e) => {
+                  const updatedUserConfig = {
+                    ...formState.userConfig,
+                    keepNarrationForJV: e.keepNarrationForJV,
+                  };
+                  dispatch(
+                    accFormStateHandleFieldChange({
+                      fields: { userConfig: updatedUserConfig },
+                    })
+                  );
                 }}
               />
             )}
-            <button className="text-blue-600 whitespace-nowrap">
+
+            <button className="text-blue-600">
               <span
                 className="hover:underline text-[#0ea5e9] capitalize"
                 onClick={selectTemplates}
               >
-                {/* {t("change")} */}
                 {t("template_elite")}
               </span>
             </button>
-            <button className="text-blue-600 whitespace-nowrap">
+
+            <button className="text-blue-600">
               <span
                 className="hover:underline text-[#0ea5e9] capitalize"
                 onClick={selectAttachment}
               >
-                {/* {t("change")} */}
                 {t("attachment")}
               </span>
             </button>
-            {/* <button className="text-blue-600">
-              <AttachmentSidebar displayType="link" />
-            </button> */}
           </div>
         </div>
 
         {/* </div> */}
-        <div className="hidden md:block lg:ml-16 mx-4">
+        <div className="hidden md:block">
           <h6 className="font-semibold whitespace-nowrap text-[20px] ">
             {" "}
             <span className="!font-medium !text-gray-600">{t("total")}: </span>
             {getFormattedValue(formState.transaction.master?.totalAmount ?? 0)}
           </h6>
         </div>
-        <div>
+        <div className="flex items-center gap-2">
           <ERPButton
             ref={btnSaveRef}
             title={t("cancel")}

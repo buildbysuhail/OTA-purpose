@@ -1457,7 +1457,7 @@ console.log('masterAccountID = -2;');
                     title={t("print")}
                   >
                     <button
-                      disabled={formState.transaction.master.billwiseMasterId < 1}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         printVoucher(setIsPrintModalOpen);

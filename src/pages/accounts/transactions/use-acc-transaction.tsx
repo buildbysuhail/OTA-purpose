@@ -824,12 +824,12 @@ debugger;
           if (element.drCr === "Dr") {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
             element.relatedLedgerID = firstCreditLedgerID;
-            element.debit = Number(formState.row.amount);
+            element.debit = element.amount;
             element.credit = 0;
           } else {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
             element.relatedLedgerID = firstDebitLedgerID;
-            element.credit = Number(formState.row.amount);
+            element.credit = element.amount;
             element.debit = 0;
           }
           break;
@@ -886,7 +886,12 @@ debugger;
         details: attachDetails(),
         attachments: [...formState.transaction.attachments],
       };
-      const saveRes = await api.postAsync(
+      const saveRes = formState.transaction.master.accTransactionMasterID > 0 
+      ?await api.putAsync(
+        `${Urls.acc_transaction_base}${transactionType}`,
+        params
+      ) 
+      :await api.postAsync(
         `${Urls.acc_transaction_base}${transactionType}`,
         params
       );
@@ -1201,7 +1206,7 @@ debugger;
       return false;
     }
     formState.formElements.btnAdd;
-
+debugger;
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {

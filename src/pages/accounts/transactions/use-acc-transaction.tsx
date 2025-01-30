@@ -1181,10 +1181,17 @@ debugger;
     if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
       ERPAlert.show({
         icon: "info",
-        title: "Please Enter the Amount..!",
-      });
-      focusAmount();
+        onCancel:() => {
+          focusAmount();
       return false;
+        },
+        title: "Please Enter the Amount..!",
+        onConfirm: (result: any) => {
+          focusAmount();
+      return false;
+        },
+      });
+      
     }
     if (!["OB","MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
       ERPAlert.show({

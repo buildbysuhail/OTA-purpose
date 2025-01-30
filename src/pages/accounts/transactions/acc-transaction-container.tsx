@@ -2,9 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../redux/urls";
 import { useSearchParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import {
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import { useDispatch } from "react-redux";
@@ -14,6 +12,7 @@ import { isChooseVoucherEnabled } from "../../../components/common/content/trans
 import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
+import UnsavedChangesModal from "./unsavedChangesModal";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -24,14 +23,12 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   drCr,
   transactionType,
 }) => {
-  const { t } = useTranslation("transaction"); 
+  const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
- 
   const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const [openVoucherSelector, setOpenVoucherSelector] =
-    useState<boolean>(false);
-    const [store, setStore] = useState<{ data: any; totalCount: number }>();
+  const [openVoucherSelector, setOpenVoucherSelector] = useState<boolean>(false);
+  const [store, setStore] = useState<{ data: any; totalCount: number }>();
   const [data, setData] = useState<{
     voucherPrefix: string;
     formType: string;
@@ -39,14 +36,11 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }>({ voucherPrefix: "", formType: formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const applicationSettings = useAppSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
 
-  
-  
+  const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning(formState);
+
   const initializeVoucher = async () => {
-    try {  
+    try {
       setReadyToShowVoucher(true);
     } catch (error) {
       console.error("Error initializing voucher:", error);
@@ -127,8 +121,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
           }}
         />
       ) : (
-        readyToShowVoucher == true &&
-        formState?.userConfig && (
+        readyToShowVoucher && formState?.userConfig && (
           <AccTransactionForm
             voucherType={voucherType}
             voucherPrefix={data.voucherPrefix}
@@ -139,6 +132,14 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             transactionType={transactionType}
           />
         )
+      )}
+      {isModalOpen && (
+        <UnsavedChangesModal
+          isOpen={isModalOpen}
+          onClose={handleStay}
+          onStay={handleStay}
+          onLeave={handleLeave}
+        />
       )}
     </>
   );

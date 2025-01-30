@@ -926,26 +926,28 @@ export const useAccTransaction = (
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
           const fieldsToUpdate: Record<string, any> = {
-            employee: { disabled: false },
-            jvDrCr: { disabled: false },
-            masterAccount: { disabled: false },
-            referenceDate: { disabled: false },
-            referenceNumber: { disabled: false },
-            transactionDate: { disabled: false },
-            linkEdit: { visible: false },
+            // employee: { disabled: false },
+            // jvDrCr: { disabled: false },
+            // masterAccount: { disabled: false },
+            // referenceDate: { disabled: false },
+            // referenceNumber: { disabled: false },
+            // transactionDate: { disabled: false },
+            // linkEdit: { visible: false },
 
-            pnlMasters: { disabled: false },
-            dxGrid: { disabled: false },
-            btnSave: { disabled: true },
-            btnEdit: {
-              disabled:
-                !isFinancialYearClosed &&
-                hasRight(formState.formCode, UserAction.Edit)
-                  ? false
-                  : true,
-            },
-            btnDelete: { disabled: true },
-            btnPrint: { disabled: true },
+            pnlMasters: { disabled: true },
+
+            linkEdit: { visible: false },
+            // dxGrid: { disabled: false },
+            // btnSave: { disabled: true },
+            // btnEdit: {
+            //   disabled:
+            //     !isFinancialYearClosed &&
+            //     hasRight(formState.formCode, UserAction.Edit)
+            //       ? false
+            //       : true,
+            // },
+            // btnDelete: { disabled: true },
+            // btnPrint: { disabled: true },
           };
 
           // Dispatch the update action with all the required fields

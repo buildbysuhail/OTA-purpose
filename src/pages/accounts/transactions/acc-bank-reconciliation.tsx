@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
+import { FileSpreadsheet, Printer, X } from "lucide-react";
 
 interface FormState {
   showReconciled: boolean;
@@ -44,6 +45,17 @@ const BankReconciliation = () => {
   });
 
   const { t } = useTranslation("transaction");
+  const btnSaveRef = useRef<HTMLButtonElement>(null);
+  const [gridHeight, setGridHeight] = useState(200);
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightWindows = wh - 800;
+    setGridHeight(gridHeightWindows);
+  }, [window.innerHeight]);
+
+  const goToPreviousPage = () => {
+    window.history.back();
+  };
 
   const handleReconciledChange = (checked: boolean) => {
     setFormState((prev) => ({ ...prev, showReconciled: checked }));
@@ -274,98 +286,120 @@ const BankReconciliation = () => {
   );
 
   return (
-    <div className="space-y-6 p-4">
-      <h1 className="box-title !text-xl !font-medium">
-        {t("bank_reconciliation")}
-      </h1>
-      <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
-        <div className="border rounded-sm shadow-sm p-4">
-          <div className="w-1/3">
-            <div className="flex items-center justify-between">
-              <ERPRadio
-                id="todayDate"
-                name="bankDateType"
-                checked={formState.bankDateType === "today"}
-                onChange={() => handleBankDateTypeChange("today")}
-                label={t("today's_date")}
-              />
-              <ERPRadio
-                id="chequeDate"
-                name="bankDateType"
-                checked={formState.bankDateType === "cheque"}
-                onChange={() => handleBankDateTypeChange("cheque")}
-                label={t("cheque_date")}
-              />
-              <ERPButton
-                title={t("set_all_date")}
-                onClick={handleSetAllDate}
-                type="reset"
-                loading={loading.setAllDate}
-              />
+    <>
+      <div className="relative min-h-screen">
+        <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
+          <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
+            <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
+              {t("bank_reconciliation")}
+            </h6>
+            <i className="fas fa-cog ms-1"></i>
+          </div>
+
+          <div className="flex items-center justify-end space-x-4 p-1 w-full">
+            <div className="group relative inline-flex flex-col items-center" title={t("print")}>
+              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handlePrint}>
+                <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
             </div>
 
-            <div className="flex items-center justify-between space-x-4 my-2">
-              <ERPCheckbox
-                id="showReconciled"
-                name="showReconciled"
-                checked={formState.showReconciled}
-                onChange={(e) => handleReconciledChange(e.target.checked)}
-                label={t("show_reconciled")}
-              />
-              <ERPButton
-                title={t("show")}
-                onClick={handleShow}
-                startIcon="ri-slideshow-2-line"
-                variant="secondary"
-                loading={loading.show}
-              />
-              <ERPDataCombobox
-                id="BankAC"
-                noLabel
-                value={formState.selectedBankId}
-                onChange={(e) => handleBankSelection(e?.value ?? null)}
-              />
+            <div className="group relative inline-flex flex-col items-center" title={t("excel")}>
+              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handleExportToExcel}>
+                <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
             </div>
 
-            <div className="flex items-center gap-4">
-              <ERPButton
-                title={t("save")}
-                onClick={handleSave}
-                startIcon="ri-save-line"
-                variant="primary"
-                loading={loading.save}
-              />
-              <ERPButton
-                title={t("print")}
-                onClick={handlePrint}
-                startIcon="ri-printer-line"
-                variant="secondary"
-                loading={loading.print}
-              />
-              <ERPButton
-                title={t("to_excel")}
-                onClick={handleExportToExcel}
-                startIcon="ri-file-excel-2-line"
-                variant="primary"
-                loading={loading.exportToExcel}
-              />
+            <div className="group relative inline-flex flex-col items-center" title={t("close")}>
+              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
+                <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3">
-          <ErpDevGrid
-            columns={columns}
-            gridId="grid_bank_reconciliation"
-            hideGridAddButton={true}
-            hideDefaultExportButton={true}
-            heightToAdjustOnWindows={1000}
-            reload={formState.reload}
-            pageSize={40}
-          />
+        <div className="space-y-6">
+          <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
+            <div className="p-4">
+              <div className="flex flex-col gap-2 w-1/3">
+                <div className="flex items-center justify-between gap-4">
+                  <ERPRadio
+                    id="todayDate"
+                    name="bankDateType"
+                    checked={formState.bankDateType === "today"}
+                    onChange={() => handleBankDateTypeChange("today")}
+                    label={t("today's_date")}
+                  />
+                  <ERPRadio
+                    id="chequeDate"
+                    name="bankDateType"
+                    checked={formState.bankDateType === "cheque"}
+                    onChange={() => handleBankDateTypeChange("cheque")}
+                    label={t("cheque_date")}
+                  />
+                  <ERPButton
+                    title={t("set_all_date")}
+                    onClick={handleSetAllDate}
+                    type="reset"
+                    loading={loading.setAllDate}
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <ERPCheckbox
+                    id="showReconciled"
+                    name="showReconciled"
+                    checked={formState.showReconciled}
+                    onChange={(e) => handleReconciledChange(e.target.checked)}
+                    label={t("show_reconciled")}
+                  />
+                  <ERPButton
+                    title={t("show")}
+                    onClick={handleShow}
+                    startIcon="ri-slideshow-2-line"
+                    variant="secondary"
+                    loading={loading.show}
+                  />
+                  <ERPDataCombobox
+                    id="BankAC"
+                    noLabel
+                    value={formState.selectedBankId}
+                    onChange={(e) => handleBankSelection(e?.value ?? null)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <ErpDevGrid
+              columns={columns}
+              gridId="grid_bank_reconciliation"
+              hideGridAddButton={true}
+              hideDefaultExportButton={true}
+              height={gridHeight}
+              reload={formState.reload}
+              pageSize={40}
+              className="pb-16"
+            />
+
+            <div className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
+              <div className="w-full mx-auto flex items-center gap-4 justify-end">
+                <ERPButton
+                  ref={btnSaveRef}
+                  title={t("cancel")}
+                  onClick={goToPreviousPage}
+                  className="w-24"
+                />
+                <ERPButton
+                  title={t("save")}
+                  onClick={handleSave}
+                  variant="primary"
+                  className="w-24"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

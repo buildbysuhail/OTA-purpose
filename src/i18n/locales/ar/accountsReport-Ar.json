@@ -228,7 +228,8 @@
     "share": "الحصة",
     "schedule_report": "تقرير الجدول",
     "print": "طباعة",
-    "export": "تصدير",
+    "export_to_excel": "تصدير",
+     "export_to_pdf":"تصدير إلى PDF",
 
     "total_value": "القيمة الإجمالية",
     "grd_profit_and_loss_closing_stock_detailed": "تفاصيل شبكة الأرباح والخسائر للمخزون الختامي",

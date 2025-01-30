@@ -21,6 +21,7 @@ import AmiriRegular from "../../assets/font/Amiri/Amiri-Regular.ttf"
 import PoppinsRegular from '../../assets/font/Poppins/Poppins-Regular.ttf';
 import PoppinsBold from '../../assets/font/Poppins/Poppins-Bold.ttf';
 import PoppinsItalic from '../../assets/font/Poppins/Poppins-Italic.ttf';
+import PoppinsMedium from '../../assets/font/Poppins/Poppins-Medium.ttf';
 // ../../assets/font/RobotMono/RobotMono-Italic.ttf
 export default function FontRegistration() {
   useEffect(() => {
@@ -61,6 +62,8 @@ export default function FontRegistration() {
         { src: PoppinsRegular, fontWeight: 400, fontStyle: 'normal' },
         { src: PoppinsBold, fontWeight: 700, fontStyle: 'bold' },
         { src: PoppinsItalic, fontWeight: 400, fontStyle: 'italic' },
+        { src: PoppinsMedium, fontWeight: 500, fontStyle: 'medium' },
+        
       ],
     });
 

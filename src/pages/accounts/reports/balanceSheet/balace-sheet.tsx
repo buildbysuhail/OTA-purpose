@@ -5,7 +5,7 @@ import BalanceSheetFilter, {BalanceSheetFilterInitialState} from "./balance-shee
 import Urls from "../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
-import {EllipsisVertical,FileUp,Printer,RectangleVertical,X} from "lucide-react";
+import {EllipsisVertical,FileText,FileUp,Printer,RectangleVertical,X} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
@@ -14,6 +14,10 @@ import ExcelJS from "exceljs";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
+import { PDFDownloadLink, BlobProvider, PDFViewer } from '@react-pdf/renderer';
+import BalanceSheetVerticalTemplate from "../../../InvoiceDesigner/DownloadPreview/balance-sheet/balance-sheet-vertical";
+import BalanceSheetPDFTemplate from "./balance-sheet-horizontal-pdf";
+import { useSelector } from "react-redux";
 
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
@@ -22,6 +26,7 @@ const BalanceSheetRow: React.FC<{
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
+  const userSession =  useSelector((state: RootState) => (state.UserSession));
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     setIsOpenDetails({
       isOpen: true,
@@ -539,7 +544,7 @@ const BalanceSheet = () => {
     <div className="p-6 dark:bg-dark-bg bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
       <div className="max-w-full mx-2">
-        <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
+        <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4 justify-between">
           {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
@@ -549,7 +554,7 @@ const BalanceSheet = () => {
             <i className="fas fa-cog ms-1"></i>
           </div>
 
-          <div className="flex items-center ms-auto space-x-4">
+          <div className="flex items-center ms-auto space-x-2">
             {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
               <RectangleVertical />
               <p  className="pe-2">Show Vertical</p>
@@ -644,30 +649,24 @@ const BalanceSheet = () => {
             {/* <span>{t("schedule_report")}</span> */}
             {/* </button> */}
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-print me-1"></i> */}
+
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
-            <button
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-              onClick={handleExport}
-            >
-              {/* <i className="fas fa-file-export me-1"></i> */}
-              <FileUp className="pe-2" />
-              <span>{t("export")}</span>
-            </button>
+          
             <div className="relative">
               <button
-                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
                 ref={buttonRef}
-                onClick={() => setIsPopupVisible(!isPopupVisible)}
               >
                 {/* <i className="fas fa-file-export me-1"></i> */}
-                <EllipsisVertical className="pe-2" />
-                <span>{t("export")}</span>
+                <EllipsisVertical className="!w-4 !h-4" 
+                 onClick={() => setIsPopupVisible(!isPopupVisible)}
+                />
+                {/* <span>{t("export")}</span> */}
               </button>
 
-              {isPopupVisible && (
+              {/* {isPopupVisible && (
                 <div
                   ref={popupRef} // Attach ref to the popup
                   className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
@@ -680,17 +679,54 @@ const BalanceSheet = () => {
                 >
                   <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
                     <ul className="space-y-1">
-                      <li></li>
-
                       <li>
-                        <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm">
-                          <span>Unlock Voucher</span>
-                        </button>
+                       <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      onClick={handleExport}
+                    >
+                 
+                      <FileUp className="pe-2" />
+                      <span>{t("export_to_excel")}</span>
+                    </button>
                       </li>
+
+                      
+                      <li>
+                          <BlobProvider
+                            document={
+                              <BalanceSheetPDFTemplate
+                              getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                            }
+                          >
+                            {({ blob, loading }) => (
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                disabled={loading} // Disable the button while loading
+                                onClick={async () => {
+                                  if (blob) {
+                                    // Create a download link and trigger the download
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = 'BalanceSheet.pdf';
+                                    a.click();
+                                    URL.revokeObjectURL(url); // Clean up the URL object
+                                  }
+                                }}
+                              >
+                                <FileText className="pe-2" />
+                                <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
+                              </button>
+                            )}
+                          </BlobProvider>
+                        </li>
                     </ul>
                   </nav>
                 </div>
-              )}
+              )} */}
             </div>
             <button
               onClick={goToPreviousPage}
@@ -784,6 +820,35 @@ const BalanceSheet = () => {
           }}
         />
       )}
+
+      <ERPModal
+          isOpen={isPopupVisible}
+          // title={t("bank_cards")}
+          title={t("balance_sheet")}
+          width="w-full max-w-[90%]"
+          minHeight={1200}
+          isForm={true}
+          closeModal={() => {
+            setIsPopupVisible(false)
+          }}
+    
+          content={
+                   <PDFViewer
+                        className="pdf-viewer"
+                        width="100%"
+                        height={1200}
+                        style={{ padding: "10px" }}
+                      >
+                          <BalanceSheetPDFTemplate
+                           userSession={userSession}
+                              getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                      </PDFViewer>
+          }
+     
+        />
     </div>
   );
 };

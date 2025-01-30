@@ -91,6 +91,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
       minWidth: 300,
       showInPdf: true,
       cellRender: (
@@ -189,6 +190,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
       minWidth: 250,
       showInPdf: true,
       cellRender: (
@@ -238,6 +240,7 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
       minWidth: 200,
       showInPdf: true,
     },

@@ -302,7 +302,12 @@ const createStore = async (
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach(([key, value]) => {
-          params[key] = JSON.stringify(value);
+          if (value instanceof Date) {
+            // Convert date to YYYY-MM-DD format with time 00:00:00.000Z
+            params[key] = JSON.stringify(value.toISOString().split("T")[0] + "T00:00:00.000Z");
+          } else {
+            params[key] = JSON.stringify(value);
+          }
         });
       }
 
@@ -596,6 +601,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
+      debugger;
       const dss = { ..._filter };
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
@@ -1420,6 +1426,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 : onSelectionChanged && onSelectionChanged(e)
             }
             onKeyDown={onKeyDown}
+            
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
@@ -1591,6 +1598,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {gridCols?.map((column) => (
               <Column
                 customizeText={column.customizeText}
+                editorOptions={column.editorOptions}
+                validationRules={column.validationRules}
                 allowEditing={column.allowEditing || false}
                 key={column.dataField}
                 dataField={column.dataField}

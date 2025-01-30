@@ -111,7 +111,13 @@ const BillwiseComponent = ({
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else
     {
-      setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
+      let obj = JSON.parse(JSON.stringify(formState.billwiseData));
+obj = obj.map((x: BillwiseData) => ({
+  ...x, 
+  balanceAfter: x.balance // Correctly updating balanceAfter
+}));
+debugger;
+setStore(obj);
     }
   }, [formState.billwiseData, formState.showbillwise]);
 
@@ -182,6 +188,8 @@ const BillwiseComponent = ({
                 balanceAfter: item.isSelected == true ? 0: storeItem.balance,
               }
             : storeItem
+
+            return it;
             
       }
         );
@@ -189,7 +197,7 @@ const BillwiseComponent = ({
       // updatedBills[i].balanceAfter = billBalance - remainingAmount;
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
-      dataGridRef?.current?.rePaint();
+      // dataGridRef?.current?.rePaint();
     }
   };
 
@@ -201,7 +209,7 @@ const BillwiseComponent = ({
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        row.drCr != drCr){
+        row?.drCr != drCr){
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -274,7 +282,7 @@ const BillwiseComponent = ({
     try {
       
       list
-      ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+      ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
       ?.map((row: any, index: number) => ({
         ...row,
         slNo: index + 1, // Assign serial number starting from 1
@@ -334,7 +342,7 @@ const BillwiseComponent = ({
   };
   const closeBillwise = () => {
     dispatch(
-      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+      accFormStateHandleFieldChange({ fields: { showbillwise: false, billwiseData: [] } })
     );
 
     // onClose && onClose();
@@ -349,6 +357,13 @@ const BillwiseComponent = ({
       //   dataGridRef.current.instance.saveEditData();
       // }
       updatedBills = updatedBills??store;
+      if(updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
+        ERPAlert.show({
+          title: "failed",
+          text: "Invalid Adjustment. -ve value(s) are not allowed",
+        });
+        return;
+      }
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString(updatedBills);
@@ -483,9 +498,9 @@ const BillwiseComponent = ({
     setStore(updatedBills);
     // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.billwiseAmount || 0), 0);
     const amtAdjusted = getTotalAmountToSet(updatedBills);
-
+debugger;
     // Check if the adjusted amount exceeds the original amount
-    if (round(amtAdjusted) > round(remainingAmount)) {
+    if (round(amtAdjusted) > round(formState.row.amount??0)) {
       ERPAlert.show({
         title: "Auto Post",
         text: "Excess adjustment.",
@@ -813,7 +828,7 @@ const customizeSummaryRow = useMemo(() => {
           hideGridAddButton={true}
           // height={gridHeight}
           dataSource={store
-            ?.filter((row: any) => showAllTransactions || row.drCr !== drCr)
+            ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
             
           }
           heightToAdjustOnWindowsInModal={gridHeight.windows}

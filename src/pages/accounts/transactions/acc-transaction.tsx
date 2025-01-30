@@ -2955,7 +2955,7 @@ console.log('masterAccountID = -2;');
             closeModal={() => {
               dispatch(
                 accFormStateHandleFieldChange({
-                  fields: { showbillwise: false },
+                  fields: { showbillwise: false, billwiseData: [] },
                 })
               );
             }}
@@ -2993,7 +2993,7 @@ console.log('masterAccountID = -2;');
                   }
                   dispatch(
                     accFormStateHandleFieldChange({
-                      fields: { showbillwise: false },
+                      fields: { showbillwise: false, billwiseData: [] },
                     })
                   );
                 }}

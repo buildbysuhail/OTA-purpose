@@ -993,6 +993,8 @@ console.log('masterAccountID = -2;');
     {
       dataField: "drCr",
       caption: t("dr/cr"),
+      cellRender: (cellData) =>
+        cellData.data.drCr=="Dr"?"Debit":"Credit",
       width: 100,
     },
     {

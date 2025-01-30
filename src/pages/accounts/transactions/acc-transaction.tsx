@@ -987,6 +987,8 @@ console.log('masterAccountID = -2;');
       width: 200,
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.amount_Validation)
     },
     {
       dataField: "drCr",
@@ -1063,6 +1065,8 @@ console.log('masterAccountID = -2;');
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.debit_Validation)
     },
     {
       dataField: "credit",
@@ -1070,6 +1074,8 @@ console.log('masterAccountID = -2;');
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
+      cellRender: (cellData) =>
+        renderCell(cellData, cellData.data.credit_Validation)
     },
     {
       dataField: "projectId",

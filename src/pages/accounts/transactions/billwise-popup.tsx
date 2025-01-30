@@ -111,7 +111,12 @@ const BillwiseComponent = ({
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else
     {
-      setStore(JSON.parse(JSON.stringify(formState.billwiseData)));
+      let obj = JSON.parse(JSON.stringify(formState.billwiseData));
+obj = obj.map((x: BillwiseData) => ({
+  ...x, 
+  balanceAfter: x.balance // Correctly updating balanceAfter
+}));
+setStore(obj);
     }
   }, [formState.billwiseData, formState.showbillwise]);
 

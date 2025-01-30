@@ -931,13 +931,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
 
-  const renderCell = (cellData: any, validation: string,enableFormat:boolean=false) => {
+  const renderCell = (cellData: any, validation: string, enableFormat: boolean = false) => {
     return (
       <div
         className={validation ? "grid-error-cell" : ""}
         title={validation ? validation : ""} // Add validation message as tooltip
       >
-        {enableFormat?getFormattedValue(cellData.value):cellData.value}
+        {enableFormat ? getFormattedValue(cellData.value) : cellData.value}
       </div>
     );
   };
@@ -990,13 +990,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       customizeText: (cellInfo: any) =>
         `${getFormattedValue(cellInfo.value)}`,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.amount_Validation,true)
+        renderCell(cellData, cellData.data.amount_Validation, true)
     },
     {
       dataField: "drCr",
       caption: t("dr/cr"),
       cellRender: (cellData) =>
-        cellData.data.drCr=="Dr"?"Debit":"Credit",
+        cellData.data.drCr == "Dr" ? "Debit" : "Credit",
       width: 100,
     },
     {
@@ -1070,7 +1070,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.debit_Validation,true)
+        renderCell(cellData, cellData.data.debit_Validation, true)
     },
     {
       dataField: "credit",
@@ -1079,7 +1079,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         `${getFormattedValue(cellInfo.value)}`,
       visible: false,
       cellRender: (cellData) =>
-        renderCell(cellData, cellData.data.credit_Validation,true)
+        renderCell(cellData, cellData.data.credit_Validation, true)
     },
     {
       dataField: "projectId",
@@ -1371,13 +1371,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 left: 0,
                 right: 0,
                 padding: 0,
-                zIndex:10,
+                zIndex: 10,
               }}
             >
               {formState.isEdit}
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-                  <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis absolute left-[13%]">
+                  <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
                     {t(formState.title)}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>

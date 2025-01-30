@@ -596,6 +596,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
+      debugger;
       const dss = { ..._filter };
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);

@@ -354,6 +354,13 @@ setStore(obj);
       //   dataGridRef.current.instance.saveEditData();
       // }
       updatedBills = updatedBills??store;
+      if(updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
+        ERPAlert.show({
+          title: "failed",
+          text: "Invalid Adjustment. -ve value(s) are not allowed",
+        });
+        return;
+      }
       if (isFromAccTrans) {
         if (!validate()) return;
         const billwiseString = getBillwiseString(updatedBills);

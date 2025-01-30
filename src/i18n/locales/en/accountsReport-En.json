@@ -229,7 +229,8 @@
     "share": "Share",
     "schedule_report": "Schedule Report",
     "print":"Print",
-    "export":"Export",
+    "export_to_excel":"Export to Excel",
+    "export_to_pdf":"Export to Pdf",
 
     "total_value":"Total Value",
     "grd_profit_and_loss_closing_stock_detailed":"Grid Profit and Loss Closing Stock Detailed",

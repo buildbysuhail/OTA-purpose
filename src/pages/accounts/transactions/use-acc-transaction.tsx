@@ -680,39 +680,7 @@ export const useAccTransaction = (
       });
       return false;
     }
-    let firstDebitLedgerID =  formState.firstDebitLedgerID;
-    let firstCreditLedgerID =  formState.firstCreditLedgerID;
-    if (formState.transaction.master.voucherType == "MJV") {
-      for (let i = 0; i < formState.transaction.details.length; i++) {
-        const row = formState.transaction.details[i];
-
-        // Check if debit amount is greater than 0
-        if (Number(row.debit) > 0) {
-          if (firstDebitLedgerID === 0) {
-            firstDebitLedgerID = Number(row.ledgerID || 0);
-          }
-        } else {
-          if (firstCreditLedgerID === 0) {
-            firstCreditLedgerID = Number(row.ledgerID || 0);
-          }
-        }
-
-        // Break if we found both
-        if (
-          firstCreditLedgerID > 0 &&
-          firstDebitLedgerID > 0
-        )
-          break;
-      }
-    }
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          firstCreditLedgerID: firstCreditLedgerID,
-          firstDebitLedgerID: firstDebitLedgerID,
-        },
-      })
-    );
+    
     if (
       formState.transaction.master.voucherType == "JV" &&
       (formState.transaction.master.drCr == "" ||
@@ -762,6 +730,33 @@ debugger;
     return true;
 
   };
+  const getFirstDebitCreditLedgerIDs = (transaction: any) => {
+    let firstDebitLedgerID = 0;
+    let firstCreditLedgerID = 0;
+  
+    if (transaction.master.voucherType === "MJV") {
+      for (const row of transaction.details) {
+        const ledgerID = Number(row.ledgerID || 0);
+  
+        if (Number(row.debit) > 0) {
+          if (firstDebitLedgerID === 0) {
+            firstDebitLedgerID = ledgerID;
+          }
+        } else {
+          if (firstCreditLedgerID === 0) {
+            firstCreditLedgerID = ledgerID;
+          }
+        }
+  
+        // Stop if we found both
+        if (firstDebitLedgerID > 0 && firstCreditLedgerID > 0) {
+          break;
+        }
+      }
+    }
+  
+    return { firstDebitLedgerID, firstCreditLedgerID };
+  };
   const attachDetails = (): AccTransactionRow[] => {
     const details = JSON.parse(
       JSON.stringify([...formState.transaction.details])
@@ -770,6 +765,7 @@ debugger;
     let debtorID = 0,
       arra = 0,
       detailID = 0;
+      const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction);
 
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
@@ -826,12 +822,12 @@ debugger;
         case "MJV":
           if (formState.row.drCr === "Dr") {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
-            element.relatedLedgerID = formState.firstCreditLedgerID;
+            element.relatedLedgerID = firstCreditLedgerID;
             element.debit = Number(formState.row.amount);
             element.credit = 0;
           } else {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
-            element.relatedLedgerID = formState.firstCreditLedgerID;
+            element.relatedLedgerID = firstCreditLedgerID;
             element.credit = Number(formState.row.amount);
             element.debit = 0;
           }

@@ -482,7 +482,7 @@ export const useAccTransaction = (
                 ledgerCode: detail.ledgerCode,
                 ledgerName: detail.ledgerName,
                 ledgerID: detail.ledgerID,
-                drCr: Number(detail.debit) > 0 ? "Debit" : "Credit",
+                drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
               };
 
             default:
@@ -1192,6 +1192,7 @@ debugger;
         },
       });
       
+      return false;
     }
     if (!["OB","MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
       ERPAlert.show({

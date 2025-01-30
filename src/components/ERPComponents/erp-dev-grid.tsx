@@ -155,6 +155,7 @@ interface ERPDevGridProps {
   onRowPrepared?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
   onSelectionChangedByRootState?: (e: any, state: RootState) => void;
+  onClickByRootState?: (e: any, state: RootState) => void;
   onKeyDown?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
@@ -449,6 +450,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onRowPrepared,
       onSelectionChanged,
       onSelectionChangedByRootState,
+      onClickByRootState,
       onKeyDown,
       onExporting,
       onContentReady,
@@ -1419,7 +1421,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onRowPrepared={handleRowPrepared}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
-            onRowClick={onRowClick}
+            onRowClick={onClickByRootState != undefined ? onClickByRootState : onRowClick}
             onSelectionChanged={(e) =>
               onSelectionChangedByRootState != undefined
                 ? onSelectionChangedByRootState(e, rootState)

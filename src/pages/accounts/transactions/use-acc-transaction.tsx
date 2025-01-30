@@ -725,7 +725,6 @@ export const useAccTransaction = (
       return false;
     }
     // Validate master ledger existence
-    debugger;
     if (
       formState.transaction.master.voucherType !== "OB" &&
       formState.transaction.master.voucherType !== "MJV"

@@ -172,7 +172,9 @@ const BillwiseComponent = ({
       };
       mergedKeys.forEach((item: any) => {
         updatedStore = store.map((storeItem: any) =>
-          item.key === storeItem.slNo
+          {
+            debugger;
+            const it = item.key === storeItem.slNo
             ? {
                 ...storeItem,
                 isSelected: item.isSelected,
@@ -180,9 +182,10 @@ const BillwiseComponent = ({
                 balanceAfter: item.isSelected == true ? 0: storeItem.balance,
               }
             : storeItem
+            
+      }
         );
       });
-
       // updatedBills[i].balanceAfter = billBalance - remainingAmount;
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
@@ -276,7 +279,6 @@ const BillwiseComponent = ({
         ...row,
         slNo: index + 1, // Assign serial number starting from 1
       })).forEach((bill: BillwiseData) => {
-        debugger;
         const drCrCol = bill.drCr?.toUpperCase();
         const amountToSet = bill.billwiseAmount;
 

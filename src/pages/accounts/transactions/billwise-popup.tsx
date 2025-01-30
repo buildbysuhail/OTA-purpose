@@ -342,7 +342,7 @@ setStore(obj);
   };
   const closeBillwise = () => {
     dispatch(
-      accFormStateHandleFieldChange({ fields: { showbillwise: false } })
+      accFormStateHandleFieldChange({ fields: { showbillwise: false, billwiseData: [] } })
     );
 
     // onClose && onClose();

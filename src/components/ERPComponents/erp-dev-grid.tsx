@@ -302,7 +302,12 @@ const createStore = async (
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach(([key, value]) => {
-          params[key] = JSON.stringify(value);
+          if (value instanceof Date) {
+            // Convert date to YYYY-MM-DD format with time 00:00:00.000Z
+            params[key] = JSON.stringify(value.toISOString().split("T")[0] + "T00:00:00.000Z");
+          } else {
+            params[key] = JSON.stringify(value);
+          }
         });
       }
 

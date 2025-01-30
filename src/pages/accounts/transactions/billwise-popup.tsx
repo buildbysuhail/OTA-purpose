@@ -177,11 +177,13 @@ const BillwiseComponent = ({
                 ...storeItem,
                 isSelected: item.isSelected,
                 billwiseAmount: item.isSelected == true ? storeItem.balance : 0,
+                balanceAfter: item.isSelected == true ? 0: storeItem.balance,
               }
             : storeItem
         );
       });
 
+      // updatedBills[i].balanceAfter = billBalance - remainingAmount;
       setStore(updatedStore);
       setNetAdjustment(getTotalAmountToSet(updatedStore));
       dataGridRef?.current?.rePaint();
@@ -450,29 +452,28 @@ const BillwiseComponent = ({
     const updatedBills: BillwiseData[] = JSON.parse(JSON.stringify(store));
 
     // First pass: Handle DR/CR transactions
-    updatedBills.forEach((bill) => {});
+    // updatedBills.forEach((bill) => {});
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
       
-      const bill = updatedBills[i];
-      if (bill.drCr.toUpperCase() === drCr.toUpperCase())
+      if (updatedBills[i].drCr.toUpperCase() === drCr.toUpperCase())
       {
-        const tyu = 2 * bill.balance;
+        const tyu = 2 * updatedBills[i].balance;
         remainingAmount += tyu;
         setShowAllTransactions(true);
       }
 
-      const billBalance = bill.balance;
+      const billBalance = updatedBills[i].balance;
 
       if (billBalance <= remainingAmount) {
         // Full payment
-        bill.billwiseAmount = billBalance;
-        bill.balanceAfter = 0;
+        updatedBills[i].billwiseAmount = billBalance;
+        updatedBills[i].balanceAfter = 0;
         remainingAmount -= billBalance;
       } else {
         // Partial payment
-        bill.billwiseAmount = remainingAmount;
-        bill.balanceAfter = billBalance - remainingAmount;
+        updatedBills[i].billwiseAmount = remainingAmount;
+        updatedBills[i].balanceAfter = billBalance - remainingAmount;
         remainingAmount = 0;
       }
       i++;

@@ -820,14 +820,14 @@ debugger;
           break;
 
         case "MJV":
-          if (formState.row.drCr === "Dr") {
+          if (element.drCr === "Dr") {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
             element.relatedLedgerID = firstCreditLedgerID;
             element.debit = Number(formState.row.amount);
             element.credit = 0;
           } else {
             element.ledgerID = element.ledgerID; // Keep original ledger ID
-            element.relatedLedgerID = firstCreditLedgerID;
+            element.relatedLedgerID = firstDebitLedgerID;
             element.credit = Number(formState.row.amount);
             element.debit = 0;
           }

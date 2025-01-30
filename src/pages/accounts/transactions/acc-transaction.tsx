@@ -171,6 +171,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
+      debugger;
     if (selectedIndexes.length > 0) {
       handleRowClick({
         row: formState?.transaction?.details[selectedIndexes[0]],
@@ -2203,7 +2204,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               <CustomerDetailsSidebar displayType="link" />
                             </button>
                             Bal:{" "}
-                            {`${getFormattedValue(parseFloat((formState.ledgerBalance.toString())))} ${formState.ledgerBalance < 0 ? "Cr" : "Dr"}`}
+                            {
+`${getFormattedValue(formState.ledgerBalance < 0
+                                ? (-1 * formState.ledgerBalance)
+                                : (formState.ledgerBalance || 0))
+
+                                } ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"
+                                }`   }
                           </span>
                         </div>
                       )

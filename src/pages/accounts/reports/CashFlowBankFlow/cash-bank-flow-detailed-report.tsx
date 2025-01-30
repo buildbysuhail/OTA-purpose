@@ -45,7 +45,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "date",
       allowSearch: true,
       allowFiltering: true, 
-      width: 150,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -54,7 +54,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -63,7 +63,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
     },
     {
@@ -72,7 +72,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      // width: 150,
       showInPdf:true,
       cellRender: (
         cellElement: any,
@@ -114,7 +114,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 100,
       showInPdf:true,
       cellRender: (
         cellElement: any,
@@ -156,7 +156,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 100,
       showInPdf:true,
       cellRender: (
         cellElement: any,
@@ -198,7 +198,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+      width: 200,
       showInPdf:true,
       cellRender: (
         cellElement: any,

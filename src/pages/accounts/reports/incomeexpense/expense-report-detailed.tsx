@@ -92,7 +92,7 @@ const ExpenseReportDetailed = () => {
       dataField: "date",
       caption: t("date"),
       dataType: "date",
-      width: 100,
+      width: 80,
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,

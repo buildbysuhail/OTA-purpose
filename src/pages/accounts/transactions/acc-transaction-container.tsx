@@ -13,6 +13,7 @@ import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
 import UnsavedChangesModal from "./unsavedChangesModal";
+import { useNavigate } from "react-router-dom";
 
 const api = new APIClient();
 const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
@@ -29,6 +30,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] = useState<boolean>(false);
   const [store, setStore] = useState<{ data: any; totalCount: number }>();
+  const navigate = useNavigate();
   const [data, setData] = useState<{
     voucherPrefix: string;
     formType: string;
@@ -38,7 +40,9 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const dispatch = useDispatch();
 
   const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning(formState);
-
+  const goBack = () => {
+    navigate(-1); // Goes back to the previous page
+  };
   const initializeVoucher = async () => {
     try {
       setReadyToShowVoucher(true);
@@ -114,7 +118,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             ></VoucherSelector>
           }
           closeModal={() => {
-            setOpenVoucherSelector(false);
+            setOpenVoucherSelector(false); goBack() 
           }}
           onSubmit={() => {
             setOpenVoucherSelector(false);

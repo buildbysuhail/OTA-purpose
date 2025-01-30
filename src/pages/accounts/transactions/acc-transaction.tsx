@@ -1461,7 +1461,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     title={t("print")}
                   >
                     <button
-                      disabled={formState.transaction.master.accTransactionMasterID < 1}
+                      disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         printVoucher(setIsPrintModalOpen);

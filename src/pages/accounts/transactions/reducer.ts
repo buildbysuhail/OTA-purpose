@@ -78,8 +78,15 @@ const accTransactionSlice = createSlice({
         .local()
         .toISOString();
       state.row.narration = "";
+      state.row.bankName = "";
+      state.row.projectId = 0;
+      state.row.projectName = "";
+      state.row.costCentreName = "";
       state.row.amount = 0.0;
       state.row.discount = 0.0;
+      state.row.hasDiscount = false;
+      state.row.nameOnCheque = "";
+      state.row.chequeNumber = "";
       // state.masterAccountID = 0;
       state.row.costCentreID = defaultCostCenterID;
       state.transaction.details = [];

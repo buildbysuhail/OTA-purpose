@@ -220,12 +220,12 @@ export const useAccTransaction = (
     mode?: "increment" | "decrement" | undefined,
     skipPrompt?: boolean | false
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });
-    debugger;
+    
     if (_s_isDirty && skipPrompt != true) {
       alert("changed");
       if (mode == "increment" || mode == "decrement") {
@@ -257,7 +257,7 @@ export const useAccTransaction = (
       accTransactionMasterID
     );
 
-    debugger;
+    
 
     _formState.formElements = {
       ..._formState.formElements,
@@ -359,7 +359,7 @@ export const useAccTransaction = (
       `${Urls.acc_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
-    debugger;
+    
     if (vch == null || vch?.master == null) {
       vch = {
         ...accTransactionInitialData,
@@ -394,7 +394,7 @@ export const useAccTransaction = (
     };
     voucher.row = { ...AccTransactionRowInitialData };
     // Handle master data
-    debugger;
+    
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster = {
@@ -589,7 +589,7 @@ export const useAccTransaction = (
   };
 
   const validate = (): boolean => {
-    debugger;
+    
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
       const demoExpiryDate = new Date(clientSession.demoExpiryDate);
@@ -626,27 +626,9 @@ export const useAccTransaction = (
         return false;
       }
     }
-    if (
-      formState.isEdit &&
-      formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
-    ) {
-      ERPAlert.show({
-        icon: "info",
-        title: "Are you sure to modify this transaction.",
-        onCancel() {
-          debugger;
-          return false;
-        },
-        onConfirm() {
-          debugger;
-          return finalSave();
-        },
-      });
-    } else {
-      debugger;
-      return finalSave();
-    }
-    return true;
+   
+      const isvld =  finalSave();
+    return isvld;
   };
   const finalSave = () => {
     const validateTransDate = validateTransactionDate(
@@ -727,7 +709,7 @@ export const useAccTransaction = (
         return false;
       }
     }
-debugger;
+
     return true;
 
   };
@@ -767,7 +749,7 @@ debugger;
       arra = 0,
       detailID = 0;
       const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction);
-debugger;
+
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
@@ -867,9 +849,31 @@ debugger;
     // dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
     return master;
   };
+  const preSave = async () => {
+    if (
+      formState.isEdit &&
+      formState.userConfig?.mnuShowConfirmationForEditOnAccounts == true
+    ) {
+      ERPAlert.show({
+        icon: "info",
 
+        title: "Are you sure to modify this transaction.",
+        onCancel() {
+          
+          return false;
+        },
+        onConfirm: async () => { // Make this an async function
+          await save();
+        },
+      });
+    }
+    else{
+      await save()
+    }
+  }
   const save = async () => {
-    debugger;
+    
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -878,7 +882,8 @@ debugger;
       })
     );
     debugger;
-    if (validate() == true) {
+    const valid = validate()
+    if (valid == true) {
       debugger;
 
       const params: AccTransactionData = {
@@ -1042,7 +1047,7 @@ debugger;
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr;
@@ -1108,7 +1113,7 @@ debugger;
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
-            debugger;
+            
 
             dispatch(
               accFormStateHandleFieldChange({
@@ -1214,7 +1219,7 @@ debugger;
       return false;
     }
     formState.formElements.btnAdd;
-debugger;
+
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {
@@ -1235,7 +1240,7 @@ debugger;
       employee: { disabled: true },
       jvDrCr: { disabled: true },
       masterAccount: { disabled: true },
-      referenceNumber: { disabled: true },
+      // referenceNumber: { disabled: true },
       referenceDate: { disabled: true },
       transactionDate: { disabled: true },
       btnEdit: { visible: true },
@@ -1397,7 +1402,7 @@ debugger;
     } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
-      debugger;
+      
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);
@@ -1478,7 +1483,7 @@ debugger;
   };
 
   const handleLedgerIdKeyDown = async (id: any) => {
-    debugger;
+    
     if (id > 0) {
       setTimeout(() => {
         focusAmount();
@@ -1500,7 +1505,7 @@ debugger;
 
   // DrCr keydown handler
   const handleDrCrKeyDown = (e: any) => {
-    debugger;
+    
     if (
       e === "Enter" &&
       (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")
@@ -1551,7 +1556,7 @@ debugger;
       ) {
         focusCostCenterRef();
       } else {
-        debugger;
+        
         focusBtnAdd();
       }
 
@@ -1575,7 +1580,7 @@ debugger;
 
     if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
       if (currentNumber > 0) {
-        debugger;
+        
         await loadAndSetAccTransVoucher(
           undefined,
           undefined,
@@ -1728,7 +1733,7 @@ debugger;
                 transactionType: transactionType,
               })
             ).unwrap();
-            debugger;
+            
             if (res != undefined && res.isOk != true) {
               ERPAlert.show({
                 title: "failed",
@@ -1817,7 +1822,7 @@ debugger;
       const selectVoucherData = await selectVoucherForms(
         formState.transaction.master.voucherType
       );
-      debugger;
+      
       const lastPrefix = selectVoucherData
         ? selectVoucherData[0].lastPrefix
         : "";
@@ -1827,7 +1832,7 @@ debugger;
         formState.transaction.master.voucherType,
         false
       );
-      debugger;
+      
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
@@ -1903,7 +1908,7 @@ debugger;
           : formState.row.ledgerID
       );
       if (isBillwiseApplicable == true) {
-        debugger;
+        
         let _drCr;
         switch (formState.transaction.master.voucherType) {
           case "CP":
@@ -1988,7 +1993,7 @@ debugger;
         //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
         //     break;
         // }
-debugger;
+
         if (
           formState.showbillwise === true &&
           formState.row.ledgerID &&
@@ -2015,7 +2020,7 @@ debugger;
     deleteAccTransVoucher,
     validate,
     // setupBahamdoonPOSReceipts,
-    save,
+    save: preSave,
     clearControls,
     addOrEditRow,
     handleRemoveItem,

@@ -302,18 +302,34 @@ const createStore = async (
 
       // Append filterData to params
       if (enablefilter && filterData) {
-        Object.entries(filterData).forEach(([key, value]) => {
-          if (value instanceof Date) {
-            // Convert date to YYYY-MM-DD format with time 00:00:00.000Z
-            params[key] = JSON.stringify(value.toISOString().split("T")[0] + "T00:00:00.000Z");
-          } else {
-            params[key] = JSON.stringify(value);
+        Object.entries(filterData).forEach((x : any) => {
+          debugger;
+          if (x[1] instanceof Date || x[0]?.includes('date') || x[0]?.includes('Date')) {
+            
+            const sds = moment(x[1]).utc().startOf('day'); 
+params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
+          } else {  
+            params[x[0]] = JSON.stringify(x[1]);
           }
         });
       }
 
       const queryString = new URLSearchParams(params).toString();
-
+      const updated =
+      filterData && Object.keys(filterData).length > 0
+        ? Object.fromEntries(
+            Object.entries(filterData).map(([key, value]) => {
+              if (
+                (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
+                key.toLowerCase().includes("date")
+              ) {
+                return [key, moment(value).format("YYYY-MM-DD")]; // Keep only the date part
+              }
+              return [key, value];
+            })
+          )
+        : filterData;
+    
       try {
         setFilterValidations(undefined);
         const result =
@@ -322,8 +338,8 @@ const createStore = async (
             : method === ActionType.POST
             ? await api.postAsync(
                 dataUrl,
-                filterData != undefined && Object.keys(filterData).length > 0
-                  ? filterData
+                updated != undefined && Object.keys(updated).length > 0
+                  ? updated
                   : postData != undefined
                   ? postData
                   : {},

@@ -69,7 +69,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
           break;
         case "secondary":
         default:
-          setVariantType("bg-slate-100 hover:bg-slate-200 text-black");
+          setVariantType("bg-slate-100 hover:bg-slate-200 text-black secondaryBorder ");
           break;
       }
     }, [variant, customVariant, status]);

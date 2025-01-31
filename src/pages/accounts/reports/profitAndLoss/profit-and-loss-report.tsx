@@ -1,11 +1,29 @@
-import { useState, MouseEventHandler, useCallback, useEffect, useRef } from "react";
+import {
+  useState,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
-import {  Clock1,  EllipsisVertical,  FileDown,  FileText,  FileUp,  Forward,  Printer,  RectangleVertical,  X} from "lucide-react";
+import {
+  Clock1,
+  EllipsisVertical,
+  FileDown,
+  FileText,
+  FileUp,
+  Forward,
+  Printer,
+  RectangleVertical,
+  X,
+} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import ProfitAndLossReportFilter, {  ProfitAndLossReportFilterInitialState} from "./profit-and-loss-report-filter";
+import ProfitAndLossReportFilter, {
+  ProfitAndLossReportFilterInitialState,
+} from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
@@ -50,7 +68,8 @@ const ProfitAndLossRow: React.FC<{
           paddingLeft:
             item.title == "M" ? "0px" : item.title == "G" ? "20px" : "10px",
           fontWeight: item.title == "M" ? "bold" : "normal",
-        }}>
+        }}
+      >
         <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
           {item.groupName}
         </a>
@@ -79,7 +98,8 @@ const ProfitAndLossRow: React.FC<{
                   ? "20px"
                   : "20px",
               fontWeight: item.title == "M" ? "bold" : "normal",
-            }}>
+            }}
+          >
             {getFormattedValue(item.total)}
           </a>
         </td>
@@ -178,7 +198,9 @@ const HorizontalProfitAndLoss: React.FC<{
 const ProfitAndLossReport = () => {
   const [data, setData] = useState<any[]>([]);
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>( ProfitAndLossReportFilterInitialState );
+  const [filter, setFilter] = useState<any>(
+    ProfitAndLossReportFilterInitialState
+  );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [filterValidations, setFilterValidations] = useState();
@@ -193,12 +215,11 @@ const ProfitAndLossReport = () => {
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const userSession = useSelector((state: RootState) => (state.UserSession));
+  const userSession = useSelector((state: RootState) => state.UserSession);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    
     if (filterShowCount == 0) {
       setShowFilter(true);
     } else {
@@ -212,14 +233,11 @@ const ProfitAndLossReport = () => {
       Urls.acc_reports_profit_and_loss,
       _filter || filter
     );
-    if (
-      res != undefined &&
-      res.isOk != undefined &&
-      res.isOk == false
-    ) {
-      
+    if (res != undefined && res.isOk != undefined && res.isOk == false) {
       setFilterValidations(res.validations);
-      setShowFilter((prev: any) => { return true });
+      setShowFilter((prev: any) => {
+        return true;
+      });
     } else {
       setFilterValidations(undefined);
     }
@@ -228,33 +246,32 @@ const ProfitAndLossReport = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-    
-        setShowFilter(false);
-        setFilter({ ..._filter });
-        await LoadAsync(_filter);
-      };
-    
-      const onCloseFilter = useCallback(() => {1
-        if (filterShowCount === 0) {
-          setFilter({});
-          setFilterShowCount((prev) => prev + 1);
-        }
-        
-        setShowFilter(false);
-      }, [filterShowCount]);
+    setShowFilter(false);
+    setFilter({ ..._filter });
+    await LoadAsync(_filter);
+  };
+
+  const onCloseFilter = useCallback(() => {
+    1;
+    if (filterShowCount === 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+    }
+
+    setShowFilter(false);
+  }, [filterShowCount]);
 
   const goToPreviousPage = () => {
     window.history.back();
   };
-const handleExport = async () => {
+  const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Profit And Loss");
 
     // Add title and date
     worksheet.mergeCells("A1:D1");
     const titleCell = worksheet.getCell("A1");
-    titleCell.value = 
-   `From
+    titleCell.value = `From
     ${new Date(filter.fromDate).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -267,8 +284,6 @@ const handleExport = async () => {
       day: "2-digit",
     })}`;
 
-    
-    
     // `As of ${new Date(filter.asonDate).toLocaleDateString(
     //   "en-US",
     //   {
@@ -335,8 +350,10 @@ const handleExport = async () => {
     for (let i = 0; i < maxLength; i++) {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
-    
-        worksheet.getCell(`B${currentRow}`).value =getFormattedValue(expense[i].total)
+
+        worksheet.getCell(`B${currentRow}`).value = getFormattedValue(
+          expense[i].total
+        );
 
         // income[i].transType == "I"
         //     ? income[i].title == "M"
@@ -347,7 +364,6 @@ const handleExport = async () => {
         //       ? getFormattedValue(0)
         //       : getFormattedValue(-1 * liabilities[i].total)
 
-
         //     : liabilities[i].title == "M"
         //     ? getFormattedValue(liabilities[i].total)
         //     : liabilities[i].total < 0
@@ -355,8 +371,7 @@ const handleExport = async () => {
         //     : liabilities[i].total === 0
         //     ? getFormattedValue(0)
         //     : getFormattedValue(liabilities[i].total);
-      
-    
+
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -395,7 +410,9 @@ const handleExport = async () => {
       if (income[i]) {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
 
-        worksheet.getCell(`D${currentRow}`).value =getFormattedValue(income[i].total);
+        worksheet.getCell(`D${currentRow}`).value = getFormattedValue(
+          income[i].total
+        );
         // assets[i].transType == "E"
         // ? assets[i].title == "M"
         //   ?getFormattedValue(assets[i].total)
@@ -404,7 +421,7 @@ const handleExport = async () => {
         //   : assets[i].total === 0
         //   ? getFormattedValue(0)
         //   : getFormattedValue(-1 * assets[i].total)
-          
+
         // : assets[i].title == "M"
         // ?getFormattedValue(assets[i].total)
         // : assets[i].total < 0
@@ -412,7 +429,7 @@ const handleExport = async () => {
         // : assets[i].total === 0
         // ? getFormattedValue(0)
         // : getFormattedValue(assets[i].total);
-    
+
         if (income[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
@@ -455,14 +472,18 @@ const handleExport = async () => {
     const totalRow = currentRow;
     worksheet.getCell(`A${totalRow}`).value = "Total";
     worksheet.getCell(`B${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "I" && item?.groupName === "TOTAL"
-      )?.total) || 0;
+      getFormattedValue(
+        data.find(
+          (item) => item?.transType === "I" && item?.groupName === "TOTAL"
+        )?.total
+      ) || 0;
     worksheet.getCell(`C${totalRow}`).value = "Total";
     worksheet.getCell(`D${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "E" && item?.groupName === "TOTAL"
-      )?.total) || 0;
+      getFormattedValue(
+        data.find(
+          (item) => item?.transType === "E" && item?.groupName === "TOTAL"
+        )?.total
+      ) || 0;
 
     // Format totals row
     ["A", "B", "C", "D"].forEach((col) => {
@@ -527,7 +548,8 @@ const handleExport = async () => {
           <div className="flex items-center ms-auto space-x-4">
             <button
               className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
-              onClick={() => setIsVerticalView(!isVerticalView)}>
+              onClick={() => setIsVerticalView(!isVerticalView)}
+            >
               <RectangleVertical className="mr-2" />
               <span className="mr-2">
                 {isVerticalView ? t("show_horizontal") : t("show_vertical")}
@@ -543,8 +565,8 @@ const handleExport = async () => {
                 />
                 <label
                   htmlFor="toggle"
-                  className="toggle-label block overflow-hidden h-6 rounded-full dark:bg-dark-bg bg-gray-300 cursor-pointer">
-                </label>
+                  className="toggle-label block overflow-hidden h-6 rounded-full dark:bg-dark-bg bg-gray-300 cursor-pointer"
+                ></label>
               </div>
             </button>
 
@@ -567,7 +589,10 @@ const handleExport = async () => {
               {/* <i className="fas fa-share-alt me-1"></i> */}
               <Forward className="pe-2" />
               <span>{t("share")}</span>
-              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">  0  </span>
+              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
+                {" "}
+                0{" "}
+              </span>
             </button>
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-clock me-1"></i> */}
@@ -586,7 +611,8 @@ const handleExport = async () => {
                 ref={buttonRef}
               >
                 {/* <i className="fas fa-file-export me-1"></i> */}
-                <EllipsisVertical className="!w-4 !h-4"
+                <EllipsisVertical
+                  className="!w-4 !h-4"
                   onClick={() => setIsPopupVisible(!isPopupVisible)}
                 />
                 {/* <span>{t("export")}</span> */}
@@ -667,17 +693,18 @@ const handleExport = async () => {
               )} */}
             </div>
 
-
-
-
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-               onClick={handleExport}
+            <button
+              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+              onClick={handleExport}
             >
               {/* <i className="fas fa-file-export me-1"></i> */}
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+            <button
+              onClick={goToPreviousPage}
+              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+            >
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />
@@ -752,7 +779,11 @@ const handleExport = async () => {
           isOpen={isOpenDetails.isOpen}
           // title={t("bank_cards")}
           title={t("")}
-          width={isOpenDetails.key == -500 ?"w-full max-w-[500px]":"max-w-[1200px]"}
+          width={
+            isOpenDetails.key == -500
+              ? "w-full max-w-[500px]"
+              : "max-w-[1200px]"
+          }
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0 });
@@ -785,23 +816,26 @@ const handleExport = async () => {
               />
             )
           }
-postData={isOpenDetails.key == -500 ? {
-  fromDate: filter.fromDate,
-  toDate: filter.toDate,
-  valuationUsing: filter.valuationUsing,
-}
-: {
-  accGroupID: isOpenDetails.key,
-  expAccGroupID:
-    isOpenDetails.key === 19
-      ? 23
-      : isOpenDetails.key === 10
-      ? 26
-      : 0,
-  dateFrom: filter.fromDate,
-  asOnDate: filter.toDate,
-  isDateForm: true,
-}}
+          postData={
+            isOpenDetails.key == -500
+              ? {
+                  fromDate: filter.fromDate,
+                  toDate: filter.toDate,
+                  valuationUsing: filter.valuationUsing,
+                }
+              : {
+                  accGroupID: isOpenDetails.key,
+                  expAccGroupID:
+                    isOpenDetails.key === 19
+                      ? 23
+                      : isOpenDetails.key === 10
+                      ? 26
+                      : 0,
+                  dateFrom: filter.fromDate,
+                  asOnDate: filter.toDate,
+                  isDateForm: true,
+                }
+          }
         />
       )}
 
@@ -813,9 +847,8 @@ postData={isOpenDetails.key == -500 ? {
         minHeight={1200}
         isForm={true}
         closeModal={() => {
-          setIsPopupVisible(false)
+          setIsPopupVisible(false);
         }}
-
         content={
           <PDFViewer
             className="pdf-viewer"
@@ -824,24 +857,22 @@ postData={isOpenDetails.key == -500 ? {
             style={{ padding: "10px" }}
           >
             {!isVerticalView ? (
-            <ProfitAndLossPDFTemplate
-              userSession={userSession}
-              getFormattedValue={getFormattedValue}
-              filter={filter}
-              data={data}
-            />):(
+              <ProfitAndLossPDFTemplate
+                userSession={userSession}
+                getFormattedValue={getFormattedValue}
+                filter={filter}
+                data={data}
+              />
+            ) : (
               <ProfitAndLossVerticalPDFTemplate
-              userSession={userSession}
-              getFormattedValue={getFormattedValue}
-              filter={filter}
-              data={data}
-            />
-              
-            )
-        }
+                userSession={userSession}
+                getFormattedValue={getFormattedValue}
+                filter={filter}
+                data={data}
+              />
+            )}
           </PDFViewer>
         }
-
       />
     </div>
   );

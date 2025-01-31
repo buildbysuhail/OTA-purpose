@@ -619,6 +619,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               // applicationSettings?.accountsSettings?.maintainCostCenter ===
               // true,
             },
+            bankName: {
+              ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
             chequeNumber: {
               ...fieldsToUpdate.chequeNumber,
               visible: false,
@@ -762,6 +770,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             narration: {
               ...fieldsToUpdate.narration,
             },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: true,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: true,
+            },
           };
           break;
         }
@@ -792,6 +808,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             discount: {
               ...fieldsToUpdate.discount,
               visible: false,
+            },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: true,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: true,
             },
           };
           break;
@@ -827,6 +851,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...fieldsToUpdate.discount,
               visible: false,
             },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: true,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: true,
+            },
           };
           break;
         }
@@ -852,6 +884,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             drCr: {
               ...fieldsToUpdate.drCr,
               visible: true,
+            },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: true,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: true,
+            },
+            bankName: {
+              ...fieldsToUpdate.bankName,
+              visible: false,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.nameOnCheque,
+              visible: false,
             },
           };
           break;
@@ -1697,7 +1745,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             const ret = await loadAndSetAccTransVoucher(
                               false,
                               e.target?.value
-                              , undefined, undefined, undefined, undefined, undefined, undefined, true
+                              , undefined, undefined, undefined, undefined, undefined, undefined, false
                             );
                             // if(ret) {
                             //   dispatch(
@@ -2427,7 +2475,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             }}
           >
             <div className="flex flex-wrap gap-4">
-              {(voucherType == "BP" || voucherType == "BR" || voucherType == "CQP" || voucherType == "CQP") && (
+              {/* {(voucherType == "BP" || voucherType == "BR" || voucherType == "CQP" || voucherType == "CQP") && ( */}
                 <>
                   {formState.formElements.nameOnCheque.visible && (
                     <ERPInput
@@ -2509,7 +2557,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   )}
                 </>
-              )}
+              
               {formState.formElements.costCentreID.visible && (
                 <ERPDataCombobox
                   localInputBox={formState?.userConfig?.inputBoxStyle}

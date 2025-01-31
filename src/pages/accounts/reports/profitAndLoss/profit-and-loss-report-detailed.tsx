@@ -37,6 +37,8 @@ import BalanceSheetPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-s
 import BalanceSheetVerticalPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-sheet-vertical-pdf";
 import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
 import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
+import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-detailed-horizontal-pdf ";
+import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-detailed-vertical-pdf";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -702,14 +704,14 @@ const ProfitAndLossDetailedReport = () => {
                         <BlobProvider
                           document={
                             !isVerticalView ? (
-                              <ProfitAndLossPDFTemplate
+                              <ProfitAndLossDetailedPDFTemplate
                                 userSession={userSession}
                                 getFormattedValue={getFormattedValue}
                                 filter={filter}
                                 data={data}
                               />
                             ) : (
-                              <ProfitAndLossVerticalPDFTemplate
+                              <ProfitAndLossDetailedVerticalPDFTemplate
                                 userSession={userSession}
                                 getFormattedValue={getFormattedValue}
                                 filter={filter}

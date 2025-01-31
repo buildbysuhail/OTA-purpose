@@ -39,7 +39,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning(formState);
+  const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
   const goBack = () => {
     navigate(-1); // Goes back to the previous page
   };

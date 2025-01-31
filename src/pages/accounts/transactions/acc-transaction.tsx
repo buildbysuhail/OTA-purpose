@@ -559,10 +559,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           transactionMasterID
         );
       }
-      const ledgerData = await api.getAsync(
-        `${Urls.ledgerDataForTransaction}?LedgerId=${_formState.row.ledgerID}&DrCr=${_formState.transaction.master.drCr}`
-      );
-      _formState.row.ledgerCode = ledgerData.ledgerCode;
+      // const ledgerData = await api.getAsync(
+      //   `${Urls.ledgerDataForTransaction}?LedgerId=${_formState.row.ledgerID}&DrCr=${_formState.transaction.master.drCr}`
+      // );
+      // _formState.row.ledgerCode = ledgerData.ledgerCode;
       debugger;
       let fieldsToUpdate = {
         ...initialFormElements,

@@ -104,7 +104,7 @@ function App() {
 
   
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  useUnsavedChangesWarning({transaction: {...formState.transaction},row:{...formState.row}})
+  useUnsavedChangesWarning();
 
   useEffect(() => {
     const token = localStorage.getItem("token");

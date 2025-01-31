@@ -83,6 +83,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     }
     else {
       if (response.item.hasToSetCounter) {
+        localStorage.removeItem("_token");
         localStorage.setItem("_token", response.item.token);
         setCounterSettings({ show: true, token: response.item.token });
       } else {

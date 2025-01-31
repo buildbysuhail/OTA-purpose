@@ -36,6 +36,7 @@ import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+import { printPdf } from "../../../../utilities/print-report-utils";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -531,6 +532,23 @@ const ProfitAndLossReport = () => {
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+  const handlePrint = async () => {
+    const PDFComponent = isVerticalView ? ProfitAndLossVerticalPDFTemplate : ProfitAndLossPDFTemplate;
+    const documentProps = {
+      userSession,
+      getFormattedValue,
+      filter,
+      data,
+    };
+
+    await printPdf({
+      PDFComponent,
+      documentProps,
+    });
+  };
+
+
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
@@ -546,29 +564,42 @@ const ProfitAndLossReport = () => {
           </div>
 
           <div className="flex items-center ms-auto space-x-4">
-            <button
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
-              onClick={() => setIsVerticalView(!isVerticalView)}
+          <div
+              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
+                }`}
             >
-              <RectangleVertical className="mr-2" />
-              <span className="mr-2">
+              <div
+                className="flex justify-center items-center w-8 h-8"
+                style={{
+                  minWidth: "2rem",
+                  minHeight: "2rem",
+                }} /* Ensures consistent dimensions */
+              >
+                <div
+                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-0" : "rotate-90"
+                    }`}
+                >
+                  <RectangleVertical />
+                </div>
+              </div>
+              <span className="ml-2">
                 {isVerticalView ? t("show_horizontal") : t("show_vertical")}
               </span>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+              <div className="relative inline-block w-12 h-6 ml-2 align-middle select-none transition duration-200 ease-in">
                 <input
                   type="checkbox"
                   name="toggle"
                   id="toggle"
-                  className="toggle-checkbox absolute block w-6 h-6 rounded-full dark:bg-dark-bg bg-white border-4 appearance-none cursor-pointer"
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out transform checked:translate-x-6"
                   checked={isVerticalView}
                   onChange={() => setIsVerticalView(!isVerticalView)}
                 />
                 <label
                   htmlFor="toggle"
-                  className="toggle-label block overflow-hidden h-6 rounded-full dark:bg-dark-bg bg-gray-300 cursor-pointer"
+                  className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"
                 ></label>
               </div>
-            </button>
+            </div>
 
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
@@ -599,7 +630,8 @@ const ProfitAndLossReport = () => {
               <Clock1 className="pe-2" />
               <span>{t("schedule_report")}</span>
             </button>
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+              onClick={handlePrint}>
               {/* <i className="fas fa-print me-1"></i> */}
               <Printer className="pe-2" />
               <span>{t("print")}</span>
@@ -618,7 +650,7 @@ const ProfitAndLossReport = () => {
                 {/* <span>{t("export")}</span> */}
               </button>
 
-              {/* {isPopupVisible && (
+              {isPopupVisible && (
                 <div
                   ref={popupRef} // Attach ref to the popup
                   className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
@@ -661,8 +693,6 @@ const ProfitAndLossReport = () => {
                                 />
                                   
                                 )
-                          
-
                             }
                           >
                             {({ blob, loading }) => (
@@ -690,17 +720,9 @@ const ProfitAndLossReport = () => {
                     </ul>
                   </nav>
                 </div>
-              )} */}
+              )}
             </div>
 
-            <button
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-              onClick={handleExport}
-            >
-              {/* <i className="fas fa-file-export me-1"></i> */}
-              <FileDown className="pe-2" />
-              <span>{t("export")}</span>
-            </button>
             <button
               onClick={goToPreviousPage}
               className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
@@ -839,41 +861,6 @@ const ProfitAndLossReport = () => {
         />
       )}
 
-      <ERPModal
-        isOpen={isPopupVisible}
-        // title={t("bank_cards")}
-        title={t("balance_sheet")}
-        width="w-full max-w-[90%]"
-        minHeight={1200}
-        isForm={true}
-        closeModal={() => {
-          setIsPopupVisible(false);
-        }}
-        content={
-          <PDFViewer
-            className="pdf-viewer"
-            width="100%"
-            height={1200}
-            style={{ padding: "10px" }}
-          >
-            {!isVerticalView ? (
-              <ProfitAndLossPDFTemplate
-                userSession={userSession}
-                getFormattedValue={getFormattedValue}
-                filter={filter}
-                data={data}
-              />
-            ) : (
-              <ProfitAndLossVerticalPDFTemplate
-                userSession={userSession}
-                getFormattedValue={getFormattedValue}
-                filter={filter}
-                data={data}
-              />
-            )}
-          </PDFViewer>
-        }
-      />
     </div>
   );
 };

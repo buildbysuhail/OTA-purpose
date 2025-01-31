@@ -406,13 +406,13 @@ export const useAccTransaction = (
             amountFC: detail.amount,
             bankDate: detail.bankDate
               ? new Date(detail.bankDate).toISOString()
-              : moment("01/10/2000").local().toISOString(),
+              : moment.utc("2000-01-01").startOf("day").toISOString(),
             chqDate: detail.chqDate
               ? new Date(detail.chqDate).toISOString()
-              : moment("01/10/2000").local().toISOString(),
+              : moment.utc("2000-01-01").startOf("day").toISOString(),
             checkBouncedDate: detail.checkBouncedDate
               ? new Date(detail.checkBouncedDate).toISOString()
-              : moment("01/10/2000").local().toISOString(),
+              : moment.utc("2000-01-01").startOf("day").toISOString(),
           };
 
           // Handle voucher type specific logic

@@ -273,15 +273,12 @@ const ComboboxList = React.forwardRef<
 ComboboxList.displayName = "ComboboxList";
 
 const logProps = (props: ERPDataComboboxProps, label: string) => {
-  console.log(`${label} props:`, Object.keys(props));
 };
 
 const propsAreEqual = (
   prevProps: ERPDataComboboxProps,
   nextProps: ERPDataComboboxProps
 ) => {
-  console.log(prevProps);
-  console.log(nextProps);
   const allKeys = Array.from(
     new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])
   );
@@ -293,7 +290,6 @@ const propsAreEqual = (
     // Handle function comparisons
     if (typeof prevValue === "function" && typeof nextValue === "function") {
       if (prevValue !== nextValue) {
-        console.log(`Function prop ${key} changed`);
         return false;
       }
       continue;
@@ -302,7 +298,6 @@ const propsAreEqual = (
     // Handle array comparisons
     if (Array.isArray(prevValue) && Array.isArray(nextValue)) {
       if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        console.log(`Array prop ${key} changed`);
         return false;
       }
       continue;
@@ -316,7 +311,6 @@ const propsAreEqual = (
       nextValue !== null
     ) {
       if (JSON.stringify(prevValue) !== JSON.stringify(nextValue)) {
-        console.log(`Object prop ${key} changed`);
         return false;
       }
       continue;
@@ -324,9 +318,6 @@ const propsAreEqual = (
 
     // Handle primitive comparisons
     if (prevValue !== nextValue) {
-      console.log(
-        `Primitive prop ${key} changed from ${prevValue} to ${nextValue}`
-      );
       return false;
     }
   }
@@ -385,7 +376,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }: ERPDataComboboxProps,
     ref
   ) => {
-    console.log("Re Rendered");
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
@@ -619,8 +609,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
-      console.log(`freezeDataLoad${field?.freezeDataLoad}`);
-      console.log(`disabledApiCall${disabledApiCall}`);
       if (_reload !== undefined && _reload !== true) {
         return;
       }

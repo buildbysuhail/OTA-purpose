@@ -1273,7 +1273,7 @@ export const useAccTransaction = (
       };
 
       const response = await api.getAsync(
-        `${Urls.validate_cheque_status}${accTransactionDetailsId}`
+        `${Urls.validate_cheque_status}`, `detailId=${accTransactionDetailsId}`,
       );
 
       if (response == undefined || response.isOk === false) {

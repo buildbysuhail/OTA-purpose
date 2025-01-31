@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isEqual } from 'lodash';
-import { customJsonParse } from '../../../utilities/jsonConverter';
+import { customJsonParse, modelToBase64 } from '../../../utilities/jsonConverter';
 import { AccTransactionData, AccTransactionRow } from './acc-transaction-types';
+import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 
-export const useUnsavedChangesWarning = (formState: any) => {
+export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,33 +15,41 @@ export const useUnsavedChangesWarning = (formState: any) => {
   const isInitialMount = useRef(true);
   const navigationAttempted = useRef(false);
   const lastNavigationTime = useRef(Date.now());
+  const _formState = useAppSelector(x => x.AccTransaction);
 
   const hasUnsavedChanges = useCallback(() => {
     try {
-      if (!formState || !formState.prev) return false;
+      debugger;
+      if (!_formState || !_formState.prev) return false;
+      const currentStateCompare = {
+        transaction: _formState.transaction,
+        row: _formState.row
+      };
+      if(!_formState) return false;
 
       const _prevState: {
         transaction: AccTransactionData;
         row: AccTransactionRow
-      } = customJsonParse(atob(formState.prev));
+      } = customJsonParse(atob(_formState.prev));
 
       if (!_prevState || Object.keys(_prevState).length !== 2) return false;
 
-      const currentStateCompare = {
-        transaction: formState.transaction,
-        row: formState.row
-      };
-
-      return !isEqual(_prevState, currentStateCompare);
+      const base64 = modelToBase64(currentStateCompare);
+      const isEqual = _formState.prev === base64;
+      console.log(`isEqual: ${isEqual}`);
+      
+      return !isEqual;
     } catch (error) {
       console.error('Error checking for unsaved changes:', error);
       return false;
     }
-  }, [formState]);
+  }, [_formState]);
 
   // Handle page refresh and close
   useEffect(() => {
+      debugger;
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      debugger;
       if (hasUnsavedChanges()) {
         e.preventDefault();
         e.returnValue = '';
@@ -51,6 +60,7 @@ export const useUnsavedChangesWarning = (formState: any) => {
     };
 
     const handleVisibilityChange = () => {
+      debugger;
       if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
         // setIsModalOpen(true);
         setIsLeavingPage(true);
@@ -68,68 +78,68 @@ export const useUnsavedChangesWarning = (formState: any) => {
 
   // Prevent navigation attempts
   useEffect(() => {
-    // const blockNavigation = (e: MouseEvent) => {
-    //   const target = e.target as HTMLElement;
-    //   const isNavigationLink = target.tagName === 'A' ||
-    //     target.closest('a') ||
-    //     target.hasAttribute('href') ||
-    //     target.role === 'link';
+    const blockNavigation = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isNavigationLink = target.tagName === 'A' ||
+        target.closest('a') ||
+        target.hasAttribute('href') ||
+        target.role === 'link';
 
-    //   if (isNavigationLink && hasUnsavedChanges()) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
-    //     if (href) {
-    //       pendingLocation.current = href;
-    //     }
-    //     setIsModalOpen(true);
-    //     setIsLeavingPage(false);
-    //   }
-    // };
+      if (isNavigationLink && hasUnsavedChanges()) {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
+        if (href) {
+          pendingLocation.current = href;
+        }
+        setIsModalOpen(true);
+        setIsLeavingPage(false);
+      }
+    };
 
-    // document.addEventListener('click', blockNavigation, true);
-    // return () => document.removeEventListener('click', blockNavigation, true);
+    document.addEventListener('click', blockNavigation, true);
+    return () => document.removeEventListener('click', blockNavigation, true);
   }, [hasUnsavedChanges]);
 
   // Handle history changes and location updates
   useEffect(() => {
-    // if (isInitialMount.current) {
-    //   isInitialMount.current = false;
-    //   return;
-    // }
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
 
-    // const now = Date.now();
-    // if (now - lastNavigationTime.current < 100) {
-    //   return;
-    // }
-    // lastNavigationTime.current = now;
+    const now = Date.now();
+    if (now - lastNavigationTime.current < 100) {
+      return;
+    }
+    lastNavigationTime.current = now;
 
-    // if (location.pathname !== currentPath.current && !navigationAttempted.current) {
-    //   if (hasUnsavedChanges()) {
-    //     pendingLocation.current = location.pathname;
-    //     navigationAttempted.current = true;
-    //     window.history.pushState(null, '', currentPath.current);
-    //     // setIsModalOpen(true);
-    //     setIsLeavingPage(false);
-    //     return;
-    //   }
-    // }
+    if (location.pathname !== currentPath.current && !navigationAttempted.current) {
+      if (hasUnsavedChanges()) {
+        pendingLocation.current = location.pathname;
+        navigationAttempted.current = true;
+        window.history.pushState(null, '', currentPath.current);
+        // setIsModalOpen(true);
+        setIsLeavingPage(false);
+        return;
+      }
+    }
   }, [location, hasUnsavedChanges]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
-    // const handlePopState = (e: PopStateEvent) => {
-    //   if (hasUnsavedChanges()) {
-    //     e.preventDefault();
-    //     pendingLocation.current = window.location.pathname;
-    //     window.history.pushState(null, '', currentPath.current);
-    //     setIsModalOpen(true);
-    //     setIsLeavingPage(false);
-    //   }
-    // };
+    const handlePopState = (e: PopStateEvent) => {
+      if (hasUnsavedChanges()) {
+        e.preventDefault();
+        pendingLocation.current = window.location.pathname;
+        window.history.pushState(null, '', currentPath.current);
+        setIsModalOpen(true);
+        setIsLeavingPage(false);
+      }
+    };
 
-    // window.addEventListener('popstate', handlePopState);
-    // return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {

@@ -71,6 +71,13 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontSize: 10
   },
+  SaddleBrown: {
+    fontWeight: 700,
+    fontStyle: "bold",
+    color: "#8B4513",
+    fontFamily: "Poppins",
+    fontSize: 10,
+  },
   darkText: {
     color: '#03070f',
     fontWeight: 400,
@@ -96,21 +103,13 @@ const styles = StyleSheet.create({
 const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
 
 
-  const assets = data?.filter(
-    (item: any) => item?.transType === "A" && item?.groupName !== "TOTAL"
+  const expense = data.filter(
+    (item) => item?.transType === "E" && item?.groupName !== "TOTAL"
   );
-  const liabilities = data?.filter(
-    (item: any) => item?.transType === "L" && item?.groupName !== "TOTAL"
+  const income = data.filter(
+    (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
   );
 
-  const assetTotal =
-    data?.find(
-      (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
-    )?.total || 0;
-  const liabilityTotal =
-    data?.find(
-      (item: any) => item?.transType === "L" && item?.groupName === "TOTAL"
-    )?.total || 0;
 
 
   return (
@@ -133,7 +132,7 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
             {/* <Text style={{ fontFamily: 'Amiri', fontWeight: 400, color: '#fff', fontSize: 14, fontStyle: 'normal' }}>{userSession.headerFooter.heading8}</Text> */}
             {/* <Text style={{ fontSize: 8, fontWeight: 400, fontFamily: "Poppins", fontStyle: 'normal' }}>{userSession.headerFooter.heading9}</Text> */}
             <View style={{ display: 'flex', flexDirection: "row", gap: 0 }}>
-              <Text style={styles.subheader1}>Profit and Loss - </Text>
+              <Text style={styles.subheader1}>Profit and Loss Detailed - </Text>
               <Text style={styles.subheader2}>
                 as of  {new Date(filter.asonDate).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -160,58 +159,58 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
               {/* table body*/}
             <View  style={styles.tableRow}>
               <View style={[styles.tableCell,]}>
-              {assets?.map((item: any, index: number) => (
+              {expense?.map((item: any, index: number) => (
                    <Text
                    style={[
 
-                     item.title === "M" || item.groupName === "TOTAL"
+                     item.title === "I" || item.groupName === "TOTAL"
                        ? styles.bold
                        : {},
                      item.title === "M"
-                       ? styles.blue
-                       : item.groupName === "TOTAL"
-                         ? styles.red
-                         : styles.darkText,
+                       ? styles.SaddleBrown
+                       : item.groupName === "L"
+                         ? styles.darkText
+                         : styles.blue,
                    ]}
                  >
                    {item.groupName}
                  </Text>
               ))}
-              <Text style={styles.total}>total</Text>
-             {liabilities?.map((item: any, index: number) => (
+              <Text style={styles.total}>Total</Text>
+             {income?.map((item: any, index: number) => (
                 <Text
                 style={[
 
-                  item.title === "M" || item.groupName === "TOTAL"
+                  item.title === "I" || item.groupName === "TOTAL"
                     ? styles.bold
                     : {},
                   item.title === "M"
-                    ? styles.blue
-                    : item.groupName === "TOTAL"
-                      ? styles.red
-                      : styles.darkText,
+                    ? styles.SaddleBrown
+                    : item.groupName === "L"
+                      ? styles.darkText
+                      : styles.blue,
                 ]}
               >
                 {item.groupName}
               </Text>
             ))}
             
-              <Text style={styles.total}>total</Text>
+              <Text style={styles.total}>Total</Text>
            
               </View>
               <View style={[styles.tableCell,styles.amount]}>
-              {assets?.map((item: any, index: number) => (
+              {expense?.map((item: any, index: number) => (
                   <Text
                   style={[
 
-                    item.title === "M" || item.groupName === "TOTAL"
+                    item.title === "I" || item.groupName === "TOTAL"
                       ? styles.bold
                       : {},
                     item.title === "M"
-                      ? styles.blue
-                      : item.groupName === "TOTAL"
-                        ? styles.red
-                        : styles.darkTextnum,
+                      ? styles.SaddleBrown
+                      : item.groupName === "L"
+                        ? styles.darkTextnum
+                        : styles.blue,
                   ]}
                 >
                   {item.transType === "L"
@@ -231,19 +230,18 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
                           : getFormattedValue(item.total)}
                 </Text>
             ))}
-             <Text style={[styles.total,styles.amount]}>{getFormattedValue(assetTotal)}</Text>
-            {liabilities?.map((item: any, index: number) => (
+            {income?.map((item: any, index: number) => (
                  <Text
                  style={[
 
-                   item.title === "M" || item.groupName === "TOTAL"
+                   item.title === "I" || item.groupName === "TOTAL"
                      ? styles.bold
                      : {},
                    item.title === "M"
-                     ? styles.blue
-                     : item.groupName === "TOTAL"
-                       ? styles.red
-                       : styles.darkTextnum,
+                     ? styles.SaddleBrown
+                     : item.groupName === "L"
+                       ? styles.darkTextnum
+                       : styles.blue,
                  ]}
                >
                  {item.transType === "L"
@@ -263,7 +261,6 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
                          : getFormattedValue(item.total)}
                </Text>
              ))}
-             <Text style={[styles.total,styles.amount]}>{getFormattedValue(liabilityTotal)}</Text>
               </View>
             </View>
            

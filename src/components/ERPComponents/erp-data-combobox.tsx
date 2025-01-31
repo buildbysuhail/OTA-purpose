@@ -1450,7 +1450,7 @@ debugger;
                   // whiteSpace: "nowrap",
                 }}
                 className={`form-control ${sizeClasses?.input} dark:!bg-dark-bg-card overflow-hidden text-ellipsis whitespace-nowrap
-                ${ enableClearOption && (initial || inputValue) && !noXMarkIcon && !disabled ? '!pr-[60px]' : '!pr-[30px]'} dark:!text-dark-text placeholder:capitalize`}
+                ${ enableClearOption && (initial || inputValue) && !noXMarkIcon && !disabled ? '!pr-[60px]' : '!pr-[30px]'} dark:!text-dark-text placeholder:capitalize ${disabled ? "border-dashed" : ""}`}
                 displayValue={() => inputValue || initial?.label || ""}
                 onChange={handleInputChange}
                 onClick={(e) => {

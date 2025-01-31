@@ -533,7 +533,7 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 50,
+        width: 80,
         showInPdf: true,
     },
     {
@@ -555,7 +555,6 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 100,
         showInPdf: true,
     },
     {
@@ -716,7 +715,6 @@ debugger;
         allowSearch: true,
         allowFiltering: true,
         alignment: "left",
-        width: 100,
         visible: true,
         showInPdf: true,
     },
@@ -905,8 +903,8 @@ const customizeSummaryRow = useMemo(() => {
           {/* Add Summary for "Amount" column */}
          
         </ERPDevGrid>
-        <div className="flex items-center justify-between">
-          <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
+        <div className="flex h-12 justify-between mt-1">
+          <div className="flex h-11 items-center  p-3 bg-gray-100 rounded-md max-w-60">
             <strong className="mr-3">Net Adjustment</strong>
             <span className="">{getFormattedValue(netAdjustment)}</span>
           </div>

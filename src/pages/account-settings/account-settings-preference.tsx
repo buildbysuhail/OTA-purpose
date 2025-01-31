@@ -243,6 +243,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
             const theme = atob(res.item);
             // dispatch(setInputBox(res.inputBox));
             const _theme: AppState = customJsonParse(theme);
+            localStorage.setItem("ut", res.item);
             updateAppState(_theme);
           });
         },

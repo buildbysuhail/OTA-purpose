@@ -94,6 +94,7 @@ export const AccTransactionUserConfig = () => {
           const res = await api.postAsync(Urls.reset_user_settings, {});
           handleResponse(res, () => {
             const st = atob(res.item);
+            localStorage.setItem("utc", res.item);
             // dispatch(setInputBox(res.inputBox));
             const _st: any = customJsonParse(st);
             dispatch(

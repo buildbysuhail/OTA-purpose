@@ -70,7 +70,8 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
           onChange={(e) => handleChange("header", "showLogo", e.target.checked)}
         />
       
-        {headerState?.showLogo && (
+        {headerState?.showLogo &&userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined && 
+        userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== null &&(
           <div className="flex flex-col gap-2">
             <img src={userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
             <ERPSlider

@@ -1273,13 +1273,10 @@ export const useAccTransaction = (
       };
 
       const response = await api.getAsync(
-        `${Urls.validate_cheque_status}${accTransactionDetailsId}`
+        `${Urls.validate_cheque_status}`, `detailId=${accTransactionDetailsId}`,
       );
-
-      if (response == undefined || response.isOk === false) {
-        return false;
-      }
-      return true;
+ 
+      return response;
     } catch (error) {
       ERPAlert.show({
         type: "error",
@@ -1297,6 +1294,7 @@ export const useAccTransaction = (
       // Check PDC validation first
       if (row?.accTransactionDetailID) {
         const isPDCValid = await validatePDC(row?.accTransactionDetailID);
+        debugger;
         if (isPDCValid) {
           ERPAlert.show({
             title: "Warning",

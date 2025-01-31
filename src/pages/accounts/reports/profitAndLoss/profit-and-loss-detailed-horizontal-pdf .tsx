@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   total: {
-    backgroundColor:"rgb(245, 243, 243)",
+    backgroundColor: "rgb(245, 243, 243)",
     color: '#f00',
     padding: 5,
     fontSize: 12, fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium'
@@ -77,8 +77,15 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontSize: 10
   },
+  SaddleBrown: {
+    fontWeight: 700,
+    fontStyle: "bold",
+    color: "#8B4513",
+    fontFamily: "Poppins",
+    fontSize: 10,
+  },
   darkText: {
-    color: '#03070f',
+    color: '#00000',
     fontWeight: 400,
     fontStyle: 'normal',
     fontFamily: "Poppins",
@@ -109,14 +116,7 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
   const income = data.filter(
     (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
   );
-  const assetTotal =
-    data?.find(
-      (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
-    )?.total || 0;
-  const liabilityTotal =
-    data?.find(
-      (item: any) => item?.transType === "L" && item?.groupName === "TOTAL"
-    )?.total || 0;
+
 
 
   return (
@@ -171,15 +171,14 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                   <View style={[styles.tableCell,]}>
                     <Text
                       style={[
-
-                        item.title === "M" || item.groupName === "TOTAL"
+                        item.title === "I" || item.groupName === "TOTAL"
                           ? styles.bold
                           : {},
                         item.title === "M"
-                          ? styles.blue
-                          : item.groupName === "TOTAL"
-                            ? styles.red
-                            : styles.darkText,
+                          ? styles.SaddleBrown
+                          : item.groupName === "L"
+                            ? styles.darkText
+                            : styles.blue,
                       ]}
                     >
                       {item.groupName}
@@ -189,14 +188,14 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                     <Text
                       style={[
 
-                        item.title === "M" || item.groupName === "TOTAL"
+                        item.title === "I" || item.groupName === "TOTAL"
                           ? styles.bold
                           : {},
                         item.title === "M"
-                          ? styles.blue
-                          : item.groupName === "TOTAL"
-                            ? styles.red
-                            : styles.darkTextnum,
+                          ? styles.SaddleBrown
+                          : item.groupName === "L"
+                            ? styles.darkTextnum
+                            : styles.blue,
                       ]}
                     >
                       {item.transType === "L"
@@ -221,7 +220,7 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
             </View>
 
             {/* table2 */}
-            
+
 
             <View style={styles.subtable}>
               {/* table Head*/}
@@ -240,15 +239,14 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                   <View style={[styles.tableCell,]}>
                     <Text
                       style={[
-
-                        item.title === "M" || item.groupName === "TOTAL"
+                        item.transType === "I" || item.groupName === "TOTAL"
                           ? styles.bold
                           : {},
                         item.title === "M"
-                          ? styles.blue
-                          : item.groupName === "TOTAL"
-                            ? styles.red
-                            : styles.darkText,
+                          ? styles.SaddleBrown
+                          : item.groupName === "L"
+                            ? styles.darkText
+                            : styles.blue,
                       ]}
                     >
                       {item.groupName}
@@ -258,14 +256,14 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                     <Text
                       style={[
 
-                        item.title === "M" || item.groupName === "TOTAL"
+                        item.title === "I" || item.groupName === "TOTAL"
                           ? styles.bold
                           : {},
                         item.title === "M"
-                          ? styles.blue
-                          : item.groupName === "TOTAL"
-                            ? styles.red
-                            : styles.darkTextnum,
+                          ? styles.SaddleBrown
+                          : item.groupName === "L"
+                            ? styles.darkTextnum
+                            : styles.blue,
                       ]}
                     >
                       {item.transType === "L"
@@ -291,7 +289,7 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
             </View>
           </View>
 
-          <View style={styles.tableRow}>
+          {/* <View style={styles.tableRow}>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
               <Text>Total</Text>
             </View>
@@ -304,8 +302,8 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(assetTotal)}</Text>
             </View>
-          </View>
-         
+          </View> */}
+
         </View>
       </Page>
     </Document>

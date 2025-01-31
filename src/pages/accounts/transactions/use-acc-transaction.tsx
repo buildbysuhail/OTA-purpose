@@ -55,6 +55,7 @@ import {
   AccTransactionRow,
   AccTransactionRowInitialData,
   AccUserConfig,
+  BillwiseData,
   PrintTransProps,
 } from "./acc-transaction-types";
 import {
@@ -1294,8 +1295,8 @@ export const useAccTransaction = (
   const handleRowClick = async ({ row }: RowClickHandlerParams) => {
     try {
       // Check PDC validation first
-      if (row?.accTransactionDetailId) {
-        const isPDCValid = await validatePDC(row?.accTransactionDetailId);
+      if (row?.accTransactionDetailID) {
+        const isPDCValid = await validatePDC(row?.accTransactionDetailID);
         if (isPDCValid) {
           ERPAlert.show({
             title: "Warning",
@@ -1342,7 +1343,7 @@ export const useAccTransaction = (
         })
       );
 
-      let accTransDetailsID = row.accTransactionDetailId;
+      let accTransDetailsID = row.accTransactionDetailID;
 
       // Handle special voucher type cases
       if (
@@ -1883,9 +1884,17 @@ export const useAccTransaction = (
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
         formState.row.ledgerID
       }&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${
-        formState.row.accTransactionDetailId ?? 0
+        formState.row.accTransactionDetailID ?? 0 
       }`
     );
+    if(formState.row.accTransactionDetailID ?? 0 > 0) {
+      billwise.map((x: BillwiseData) => {
+        return {
+          ...x,
+          balanceAfter: x.balance - x.billwiseAmount
+        }
+      })
+    }
     setTimeout(() => {
       dispatch(
         accFormStateHandleFieldChange({

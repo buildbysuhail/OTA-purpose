@@ -1108,8 +1108,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             }}
             disabled={
               (formState.isRowEdit &&
-                cellElement.data.accTransactionDetailId ==
-                formState.row.accTransactionDetailId) ||
+                cellElement.data.accTransactionDetailID ==
+                formState.row.accTransactionDetailID) ||
               formState.formElements.pnlMasters?.disabled
             }
             className="ti-btn-link"

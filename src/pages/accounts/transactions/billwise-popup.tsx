@@ -107,17 +107,19 @@ const BillwiseComponent = ({
   }, []);
   useEffect(() => {
     
+      debugger;
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else
     {
+      debugger;
       let obj = JSON.parse(JSON.stringify(formState.billwiseData));
-obj = obj.map((x: BillwiseData) => ({
-  ...x, 
-  balanceAfter: x.balance // Correctly updating balanceAfter
-}));
-debugger;
-setStore(obj);
+      obj = obj.map((x: BillwiseData) => ({
+        ...x, 
+        balanceAfter: x.balance // Correctly updating balanceAfter
+      }));
+      debugger;
+      setStore(obj);
     }
   }, [formState.billwiseData, formState.showbillwise]);
 
@@ -246,6 +248,7 @@ setStore(obj);
       if (rowIndex !== -1) {
         updatedData[rowIndex].billwiseAmount = parseFloat(amount);
         updatedData[rowIndex].isSelected = parseFloat(amount) > 0;
+        updatedData[rowIndex].balanceAfter = updatedData[rowIndex].balance - (parseFloat(amount));
       }
     });
 

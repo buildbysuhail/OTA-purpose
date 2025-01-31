@@ -40,30 +40,30 @@ export const useUnsavedChangesWarning = (formState: any) => {
 
   // Handle page refresh and close
   useEffect(() => {
-    // const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    //   if (hasUnsavedChanges()) {
-    //     e.preventDefault();
-    //     e.returnValue = '';
-    //     setIsModalOpen(true);
-    //     setIsLeavingPage(true);
-    //     return '';
-    //   }
-    // };
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = '';
+        setIsModalOpen(true);
+        setIsLeavingPage(true);
+        return '';
+      }
+    };
 
-    // const handleVisibilityChange = () => {
-    //   if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
-    //     // setIsModalOpen(true);
-    //     setIsLeavingPage(true);
-    //   }
-    // };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
+        // setIsModalOpen(true);
+        setIsLeavingPage(true);
+      }
+    };
 
-    // window.addEventListener('beforeunload', handleBeforeUnload);
-    // document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // return () => {
-    //   window.removeEventListener('beforeunload', handleBeforeUnload);
-    //   document.removeEventListener('visibilitychange', handleVisibilityChange);
-    // };
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [hasUnsavedChanges]);
 
   // Prevent navigation attempts

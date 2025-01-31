@@ -46,12 +46,6 @@ const BankReconciliation = () => {
 
   const { t } = useTranslation("transaction");
   const btnSaveRef = useRef<HTMLButtonElement>(null);
-  const [gridHeight, setGridHeight] = useState(200);
-  useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightWindows = wh - 800;
-    setGridHeight(gridHeightWindows);
-  }, [window.innerHeight]);
 
   const goToPreviousPage = () => {
     window.history.back();
@@ -287,37 +281,57 @@ const BankReconciliation = () => {
 
   return (
     <>
-      <div className="relative min-h-screen">
-        <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
-          <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-            <h6 className="text-center text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis">
-              {t("bank_reconciliation")}
-            </h6>
-            <i className="fas fa-cog ms-1"></i>
-          </div>
-
-          <div className="flex items-center justify-end space-x-4 p-1 w-full">
-            <div className="group relative inline-flex flex-col items-center" title={t("print")}>
-              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handlePrint}>
-                <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
+      <div className="relative min-h-screen bg-white">
+        <div className="fixed w-full left-0 z-10 top-[60px]">
+          <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
+            <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
+              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
+                {t("bank_reconciliation")}
+              </h6>
+              <i className="fas fa-cog ms-1"></i>
             </div>
 
-            <div className="group relative inline-flex flex-col items-center" title={t("excel")}>
-              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handleExportToExcel}>
-                <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
-            </div>
+            <div className="flex items-center justify-end space-x-4 p-1 w-full">
+              <div
+                className="group relative inline-flex flex-col items-center"
+                title={t("print")}
+              >
+                <button
+                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                  onClick={handlePrint}
+                >
+                  <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                </button>
+              </div>
 
-            <div className="group relative inline-flex flex-col items-center" title={t("close")}>
-              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
-                <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
+              <div
+                className="group relative inline-flex flex-col items-center"
+                title={t("excel")}
+              >
+                <button
+                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                  onClick={handleExportToExcel}
+                >
+                  <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                </button>
+              </div>
+
+              <div
+                className="group relative inline-flex flex-col items-center"
+                title={t("close")}
+              >
+                <button
+                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                  onClick={goToPreviousPage}
+                >
+                  <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="mt-8">
           <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
             <div className="p-4">
               <div className="flex flex-col gap-2 max-w-[500px]">
@@ -373,14 +387,19 @@ const BankReconciliation = () => {
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
               hideDefaultExportButton={true}
-              height={gridHeight}
+              heightToAdjustOnWindows={350}
               reload={formState.reload}
               pageSize={40}
-              className="pb-16"
+              // className="pb-16"
             />
 
-            <div className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
-              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
+            <div
+              className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+              style={{
+                boxShadow:
+                  "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+              }}
+            >
               <div className="w-full mx-auto flex items-center gap-4 justify-end">
                 <ERPButton
                   ref={btnSaveRef}

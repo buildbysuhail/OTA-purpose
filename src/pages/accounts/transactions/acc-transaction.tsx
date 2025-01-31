@@ -537,6 +537,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               : title + "[" + formType + "]") ?? "",
           row: {
             ...AccTransactionRowInitialData,
+            bankDate:["CR","CP"].includes(voucher.master.voucherType) ? moment.utc("2000-01-01").startOf("day").toISOString() : moment().local().toISOString(),
             costCentreID:
               (formState.userConfig?.presetCostenterId ?? 0) > 0
                 ? formState.userConfig?.presetCostenterId ?? 0
@@ -3384,7 +3385,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
 
         {/* </div> */}
-        <div className="hidden md:block">
+        <div className="hidden md:block mr-2">
           <h6 className="font-semibold whitespace-nowrap text-[20px] ">
             {" "}
             <span className="!font-medium !text-gray-600">{t("total")}: </span>

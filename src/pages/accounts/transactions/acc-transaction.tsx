@@ -2427,7 +2427,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             }}
           >
             <div className="flex flex-wrap gap-4">
-              {(voucherType == "BP" || voucherType == "CQP") && (
+              {(voucherType == "BP" || voucherType == "BR" || voucherType == "CQP" || voucherType == "CQP") && (
                 <>
                   {formState.formElements.nameOnCheque.visible && (
                     <ERPInput

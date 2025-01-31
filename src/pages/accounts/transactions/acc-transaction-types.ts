@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { inputBox } from "../../../redux/slices/app/types";
+import moment from "moment";
 
 // AccTransaction interface
 export interface AccTransactionProps {
@@ -337,7 +338,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster  = {
   onlineTrans: "",
   isEdit: false,
   checkStatus: "",
-  checkBouncedDate: new Date().toISOString(),
+  checkBouncedDate: moment.utc("2000-01-01").startOf("day").toISOString(),
   drCr: "Dr",
   isSalesView: false,
   branchId: 0,
@@ -363,14 +364,14 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   narration: "",
   currencyId: 1,
   adjAmount: undefined,
-  bankDate: new Date().toISOString(),
+  bankDate: moment.utc("2000-01-01").startOf("day").toISOString(),
   chequeNumber: "",
   particularsLedgerId: 0,
   isDr: true,
   isDisplay: false,
   voucherType: "",
   checkStatus: "",
-  checkBouncedDate: new Date(2000, 0, 1).toISOString(), // January 1, 2000
+  checkBouncedDate: moment.utc("2000-01-01").startOf("day").toISOString(), // January 1, 2000
   billwiseData: [],
   branchId: 0,
   costCentreID: 0,

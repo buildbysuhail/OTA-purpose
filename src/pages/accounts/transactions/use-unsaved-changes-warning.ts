@@ -53,8 +53,10 @@ export const useUnsavedChangesWarning = () => {
       if (hasUnsavedChanges()) {
         e.preventDefault();
         e.returnValue = '';
-        // setIsModalOpen(true);
+        setIsModalOpen(true);
         setIsLeavingPage(true);
+        console.log('1');
+        
         return '';
       }
     };
@@ -64,6 +66,7 @@ export const useUnsavedChangesWarning = () => {
       if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
         // setIsModalOpen(true);
         setIsLeavingPage(true);
+        console.log('2');
       }
     };
 
@@ -88,11 +91,13 @@ export const useUnsavedChangesWarning = () => {
       if (isNavigationLink && hasUnsavedChanges()) {
         e.preventDefault();
         e.stopPropagation();
+        console.log('3');
         const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
         if (href) {
+          console.log('4');
           pendingLocation.current = href;
         }
-        // setIsModalOpen(true);
+        setIsModalOpen(true);
         setIsLeavingPage(false);
       }
     };
@@ -104,6 +109,7 @@ export const useUnsavedChangesWarning = () => {
   // Handle history changes and location updates
   useEffect(() => {
     if (isInitialMount.current) {
+      console.log('5');
       isInitialMount.current = false;
       return;
     }
@@ -111,11 +117,14 @@ export const useUnsavedChangesWarning = () => {
     const now = Date.now();
     if (now - lastNavigationTime.current < 100) {
       return;
+      console.log('6');
     }
     lastNavigationTime.current = now;
 
     if (location.pathname !== currentPath.current && !navigationAttempted.current) {
+      console.log('7');
       if (hasUnsavedChanges()) {
+        console.log('8');
         pendingLocation.current = location.pathname;
         navigationAttempted.current = true;
         window.history.pushState(null, '', currentPath.current);
@@ -129,11 +138,12 @@ export const useUnsavedChangesWarning = () => {
   // Handle browser back/forward buttons
   useEffect(() => {
     const handlePopState = (e: PopStateEvent) => {
+      console.log('9');
       if (hasUnsavedChanges()) {
         e.preventDefault();
         pendingLocation.current = window.location.pathname;
         window.history.pushState(null, '', currentPath.current);
-        // setIsModalOpen(true);
+        setIsModalOpen(true);
         setIsLeavingPage(false);
       }
     };
@@ -143,6 +153,7 @@ export const useUnsavedChangesWarning = () => {
   }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {
+    console.log('10');
     setIsModalOpen(false);
     setIsLeavingPage(false);
     pendingLocation.current = null;
@@ -151,7 +162,9 @@ export const useUnsavedChangesWarning = () => {
   }, []);
 
   const handleLeave = useCallback(() => {
+    console.log('11');
     if (isLeavingPage) {
+      console.log('12');
       // If user is trying to refresh or close the page
       window.removeEventListener('beforeunload', () => { });
       window.location.reload();
@@ -164,16 +177,19 @@ export const useUnsavedChangesWarning = () => {
     navigationAttempted.current = false;
 
     if (targetLocation) {
+      console.log('13');
       setTimeout(() => {
         navigate(targetLocation);
       }, 0);
     }
+    console.log('14');
     pendingLocation.current = null;
   }, [navigate, isLeavingPage]);
 
   // Reset navigation attempt flag when modal closes
   useEffect(() => {
     if (!isModalOpen) {
+      console.log('15');
       navigationAttempted.current = false;
     }
   }, [isModalOpen]);

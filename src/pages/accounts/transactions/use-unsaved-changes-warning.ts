@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { isEqual } from 'lodash';
 import { customJsonParse, modelToBase64 } from '../../../utilities/jsonConverter';
 import { AccTransactionData, AccTransactionRow } from './acc-transaction-types';
 import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
+import { useDispatch } from 'react-redux';
+import { accFormStateHandleFieldChange } from './reducer';
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -16,16 +17,16 @@ export const useUnsavedChangesWarning = () => {
   const navigationAttempted = useRef(false);
   const lastNavigationTime = useRef(Date.now());
   const _formState = useAppSelector(x => x.AccTransaction);
+  const dispatch = useDispatch();
 
   const hasUnsavedChanges = useCallback(() => {
     try {
-      debugger;
       if (!_formState || !_formState.prev) return false;
       const currentStateCompare = {
         transaction: _formState.transaction,
         row: _formState.row
       };
-      if(!_formState) return false;
+      if (!_formState) return false;
 
       const _prevState: {
         transaction: AccTransactionData;
@@ -37,7 +38,7 @@ export const useUnsavedChangesWarning = () => {
       const base64 = modelToBase64(currentStateCompare);
       const isEqual = _formState.prev === base64;
       console.log(`isEqual: ${isEqual}`);
-      
+
       return !isEqual;
     } catch (error) {
       console.error('Error checking for unsaved changes:', error);
@@ -47,35 +48,20 @@ export const useUnsavedChangesWarning = () => {
 
   // Handle page refresh and close
   useEffect(() => {
-      debugger;
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      debugger;
       if (hasUnsavedChanges()) {
         e.preventDefault();
-        e.returnValue = '';
-        setIsModalOpen(true);
+        setIsModalOpen(true); // Show custom modal
         setIsLeavingPage(true);
-        console.log('1');
         
-        return '';
+        // Remove the default browser dialog
+        delete e.returnValue; 
       }
     };
-
-    const handleVisibilityChange = () => {
-      debugger;
-      if (document.visibilityState === 'hidden' && hasUnsavedChanges()) {
-        // setIsModalOpen(true);
-        setIsLeavingPage(true);
-        console.log('2');
-      }
-    };
-
+  
     window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [hasUnsavedChanges]);
 
@@ -128,7 +114,6 @@ export const useUnsavedChangesWarning = () => {
         pendingLocation.current = location.pathname;
         navigationAttempted.current = true;
         window.history.pushState(null, '', currentPath.current);
-        // setIsModalOpen(true);
         setIsLeavingPage(false);
         return;
       }
@@ -176,6 +161,8 @@ export const useUnsavedChangesWarning = () => {
     setIsLeavingPage(false);
     navigationAttempted.current = false;
 
+    dispatch(accFormStateHandleFieldChange({fields: {prev: undefined}}));
+
     if (targetLocation) {
       console.log('13');
       setTimeout(() => {
@@ -184,7 +171,7 @@ export const useUnsavedChangesWarning = () => {
     }
     console.log('14');
     pendingLocation.current = null;
-  }, [navigate, isLeavingPage]);
+  }, [navigate, isLeavingPage, dispatch]);
 
   // Reset navigation attempt flag when modal closes
   useEffect(() => {

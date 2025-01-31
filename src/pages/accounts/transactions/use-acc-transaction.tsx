@@ -395,7 +395,7 @@ export const useAccTransaction = (
     };
     voucher.row = { ...AccTransactionRowInitialData };
     // Handle master data
-    
+    debugger;
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster = {
@@ -403,7 +403,7 @@ export const useAccTransaction = (
         employeeID:
           userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
             ? userSession.employeeId
-            : formState.transaction.master.employeeID,
+            : voucher.transaction.master.employeeID,
       };
       voucher.transaction.master = updatedMaster;
     }
@@ -420,13 +420,13 @@ export const useAccTransaction = (
             amountFC: detail.amount,
             bankDate: detail.bankDate
               ? new Date(detail.bankDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
             chqDate: detail.chqDate
               ? new Date(detail.chqDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
             checkBouncedDate: detail.checkBouncedDate
               ? new Date(detail.checkBouncedDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
           };
 
           // Handle voucher type specific logic
@@ -830,7 +830,7 @@ export const useAccTransaction = (
       ? master.accTransactionMasterID
       : 0;
     // master.bankDate = new Date().toISOString();
-    master.checkBouncedDate = new Date().toISOString();
+    master.checkBouncedDate = moment().local().toISOString();
     master.dueDate = master.transactionDate;
     const totalAmount = master.totalAmount || 0;
 

@@ -137,7 +137,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     // const [inputBoxState] = useState(localInputBox);
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     // const inputBoxState = localInputBox || appState?.inputBox;
-
+    useEffect(() => {
+      document.querySelectorAll("input").forEach((input) => {
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("spellcheck", "false");
+        input.setAttribute("autocorrect", "off");
+      });
+    }, []);
     const [_customSize, setCustomSize] = useState(customSize ? customSize : inputBoxState?.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
     const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
@@ -419,8 +425,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const sizeStyles = getSizeStyles();
     const commonProps = {
-      id,
-      name: id,
+      id: `${id}_${Math.random()}`,
+      name: `input_${id}_${Math.random()}`,
       value: value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
@@ -647,11 +653,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
-                autoComplete={autocomplete}
+                autoComplete="new-password"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {
                   setIsFocused(true);
+
+                  e.target.setAttribute("autocomplete", "off");
+                  e.target.setAttribute("readonly", "true");
+                  setTimeout(() => e.target.removeAttribute("readonly"), 100);
+                  
                   onFocus && onFocus(e);
                 }}
                 onBlur={(e) => {

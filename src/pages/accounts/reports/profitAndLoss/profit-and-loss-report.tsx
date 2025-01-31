@@ -1,9 +1,9 @@
-import { MouseEventHandler, useCallback, useEffect, useState } from "react";
+import { useState, MouseEventHandler, useCallback, useEffect, useRef } from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
-import {  Clock1,  FileDown,  Forward,  Printer,  RectangleVertical,  X} from "lucide-react";
+import {  Clock1,  EllipsisVertical,  FileDown,  FileText,  FileUp,  Forward,  Printer,  RectangleVertical,  X} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ProfitAndLossReportFilter, {  ProfitAndLossReportFilterInitialState} from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
@@ -12,6 +12,12 @@ import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-de
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTranslation } from "react-i18next";
 import ExcelJS from "exceljs";
+import { BlobProvider, PDFViewer } from "@react-pdf/renderer";
+import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
+import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -185,6 +191,11 @@ const ProfitAndLossReport = () => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
+
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const userSession = useSelector((state: RootState) => (state.UserSession));
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     
@@ -568,6 +579,97 @@ const handleExport = async () => {
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
+
+            <div className="relative">
+              <button
+                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
+                ref={buttonRef}
+              >
+                {/* <i className="fas fa-file-export me-1"></i> */}
+                <EllipsisVertical className="!w-4 !h-4"
+                  onClick={() => setIsPopupVisible(!isPopupVisible)}
+                />
+                {/* <span>{t("export")}</span> */}
+              </button>
+
+              {/* {isPopupVisible && (
+                <div
+                  ref={popupRef} // Attach ref to the popup
+                  className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                  style={{
+                    top: "100%", // Position the popup right below the button
+                    left: "-139px", // Align it with the left edge of the button
+                    width: "221px", // Set your desired width
+                    marginTop: "8px", // Add some spacing between the button and the popup
+                  }}
+                >
+                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                    <ul className="space-y-1">
+                      <li>
+                       <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      onClick={handleExport}
+                    >
+                 
+                      <FileUp className="pe-2" />
+                      <span>{t("export_to_excel")}</span>
+                    </button>
+                      </li>
+
+                      
+                      <li>
+                          <BlobProvider
+                            document={
+                              !isVerticalView ? (
+                                <ProfitAndLossPDFTemplate
+                                  userSession={userSession}
+                                  getFormattedValue={getFormattedValue}
+                                  filter={filter}
+                                  data={data}
+                                />):(
+                                  <ProfitAndLossVerticalPDFTemplate
+                                  userSession={userSession}
+                                  getFormattedValue={getFormattedValue}
+                                  filter={filter}
+                                  data={data}
+                                />
+                                  
+                                )
+                          
+
+                            }
+                          >
+                            {({ blob, loading }) => (
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                disabled={loading} // Disable the button while loading
+                                onClick={async () => {
+                                  if (blob) {
+                                    // Create a download link and trigger the download
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = 'BalanceSheet.pdf';
+                                    a.click();
+                                    URL.revokeObjectURL(url); // Clean up the URL object
+                                  }
+                                }}
+                              >
+                                <FileText className="pe-2" />
+                                <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
+                              </button>
+                            )}
+                          </BlobProvider>
+                        </li>
+                    </ul>
+                  </nav>
+                </div>
+              )} */}
+            </div>
+
+
+
+
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
                onClick={handleExport}
             >
@@ -702,6 +804,45 @@ postData={isOpenDetails.key == -500 ? {
 }}
         />
       )}
+
+      <ERPModal
+        isOpen={isPopupVisible}
+        // title={t("bank_cards")}
+        title={t("balance_sheet")}
+        width="w-full max-w-[90%]"
+        minHeight={1200}
+        isForm={true}
+        closeModal={() => {
+          setIsPopupVisible(false)
+        }}
+
+        content={
+          <PDFViewer
+            className="pdf-viewer"
+            width="100%"
+            height={1200}
+            style={{ padding: "10px" }}
+          >
+            {!isVerticalView ? (
+            <ProfitAndLossPDFTemplate
+              userSession={userSession}
+              getFormattedValue={getFormattedValue}
+              filter={filter}
+              data={data}
+            />):(
+              <ProfitAndLossVerticalPDFTemplate
+              userSession={userSession}
+              getFormattedValue={getFormattedValue}
+              filter={filter}
+              data={data}
+            />
+              
+            )
+        }
+          </PDFViewer>
+        }
+
+      />
     </div>
   );
 };

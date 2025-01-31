@@ -741,7 +741,7 @@ export const useAccTransaction = (
       }
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
-      element.currencyId = 1;
+      element.currencyID = 1;
       element.exchangeRate = 1;
       element.isDisplay = true;
       element.isDr = true;

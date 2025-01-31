@@ -129,7 +129,7 @@ export interface AccTransactionMaster {
   formType: string;
   debitNoteTransId: number;
   creditNoteTransId: number;
-  currencyId: number;
+  currencyID: number;
   // accTransactionDetailID: number;
   adjustedTransDetailId: number;
   currencyRate?: number;
@@ -179,7 +179,7 @@ export interface AccTransactionMasterValidations {
   formType: string;
   debitNoteTransId: string;
   creditNoteTransId: string;
-  currencyId: string;
+  currencyID: string;
   accTransactionDetailID: string;
   adjustedTransDetailId: string;
   currencyRate: string;
@@ -228,7 +228,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
     formType: "",
     debitNoteTransId: "",
     creditNoteTransId: "",
-    currencyId: "",
+    currencyID: "",
     accTransactionDetailID: "",
     adjustedTransDetailId: "",
     currencyRate: "",
@@ -274,7 +274,7 @@ export interface AccTransactionRow {
   incentives?: number;
   projectSiteId: number;
   narration: string;
-  currencyId: number;
+  currencyID: number;
   exchangeRate: number;
   adjAmount?: number;
   bankDate: string;
@@ -329,7 +329,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster  = {
   formType: "",
   debitNoteTransId: 0,
   creditNoteTransId: 0,
-  currencyId: 0,
+  currencyID: 0,
   // accTransactionDetailID: 0,
   adjustedTransDetailId: 0,
   currencyRate: 1,
@@ -362,7 +362,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   incentives: undefined,
   projectSiteId: 0,
   narration: "",
-  currencyId: 1,
+  currencyID: 1,
   adjAmount: undefined,
   bankDate: moment.utc("2000-01-01").startOf("day").toISOString(),
   chequeNumber: "",

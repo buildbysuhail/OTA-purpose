@@ -1845,7 +1845,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             id="currencyID"
                             data={formState.row}
                             label={t(formState.formElements.currencyID.label)}
-                            value={formState.transaction.master.currencyId}
+                            value={formState.transaction.master.currencyID}
                             field={{
                               valueKey: "id",
                               labelKey: "name",
@@ -1856,7 +1856,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                               dispatch(
                                 accFormStateTransactionMasterHandleFieldChange({
                                   fields: {
-                                    currencyId: e.value,
+                                    currencyID: e.value,
                                     currencyRate: e.rate,
                                     currencyName: e.label,
                                   },

@@ -53,7 +53,7 @@ export const useUnsavedChangesWarning = () => {
       if (hasUnsavedChanges()) {
         e.preventDefault();
         e.returnValue = '';
-        setIsModalOpen(true);
+        // setIsModalOpen(true);
         setIsLeavingPage(true);
         return '';
       }
@@ -92,7 +92,7 @@ export const useUnsavedChangesWarning = () => {
         if (href) {
           pendingLocation.current = href;
         }
-        setIsModalOpen(true);
+        // setIsModalOpen(true);
         setIsLeavingPage(false);
       }
     };
@@ -133,7 +133,7 @@ export const useUnsavedChangesWarning = () => {
         e.preventDefault();
         pendingLocation.current = window.location.pathname;
         window.history.pushState(null, '', currentPath.current);
-        setIsModalOpen(true);
+        // setIsModalOpen(true);
         setIsLeavingPage(false);
       }
     };

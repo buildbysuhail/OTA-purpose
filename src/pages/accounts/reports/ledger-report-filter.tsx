@@ -132,7 +132,8 @@ const LedgerReportFilter = ({
         />
       )}
 
-      {formState.ledgerID != undefined &&
+      {
+      formState.ledgerID != undefined &&
         formState.ledgerID != null &&
         formState.ledgerID != 0 &&
         applicationSettings.accountsSettings?.maintainProjectSite == true && (
@@ -141,8 +142,10 @@ const LedgerReportFilter = ({
             label={t("project")}
             field={{
               id: "project",
-              getListUrl: `${Urls.data_projects_by_ledgerid}${formState.ledgerID}`,
+              // getListUrl: `${Urls.data_projects_by_ledgerid}${formState.ledgerID}`,
               // params: `ledgerID=${formState.ledgerID}`,
+              getListUrl: Urls.data_projects_by_ledgerid,
+              params: `LedgerID=${formState.ledgerID}`,
               valueKey: "id",
               labelKey: "name",
             }}

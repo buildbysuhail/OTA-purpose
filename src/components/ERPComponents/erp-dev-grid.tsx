@@ -892,7 +892,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
-   const orientation = preferences?.orientation;
    const pageOrientation = preferences?.orientation === "landscape" ? "landscape" : "portrait";
     const generatePdf = async (gridInstance: any) => {
       const doc = new jsPDF({
@@ -957,7 +956,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           dataField: column.dataField,
           visible: column.visible,
         }));
-    
+    debugger;
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
             .filter((colPref) => colPref.showInPdf)
@@ -965,7 +964,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         : gridCols
             .filter((col) => col.showInPdf)
             .map((col) => col.dataField);
-    
+ 
       const pageWidth = doc.internal.pageSize.getWidth() - 80;
     
       const columnsWithoutWidth = pdfVisibleColumns.filter(
@@ -974,7 +973,20 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             (colPref) => colPref.dataField === colField && colPref.width
           )
       );
-    
+      const isAnyPdfColumn = pdfVisibleColumns.filter(
+        (colField) =>
+          !preferences?.columnPreferences.find(
+            (colPref) => colPref.dataField === colField && colPref.width
+          )
+      );
+      if (pdfVisibleColumns === undefined || pdfVisibleColumns.length <= 0) {
+        ERPAlert.show({
+          title: "Warning",
+          text: "Please Select At Least One Column",
+          icon: "warning",
+        });
+        return undefined;
+      }
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
             .filter((colPref) => colPref.showInPdf)
@@ -982,7 +994,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         : gridCols
             .filter((col) => col.showInPdf)
             .map((col) => col.width || 100);
-    
+
+        
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
           .filter((width) => width > 0)
@@ -1079,7 +1092,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
               if (e.format === "pdf") {
               const doc = await generatePdf(e.component); // Generate the PDF
-              doc.save(`${gridId}.pdf`); // Save the PDF
+              doc?.save(`${gridId}.pdf`); // Save the PDF
             } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
@@ -1205,8 +1218,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
         const doc = await generatePdf(gridInstance); // Generate the PDF
-        doc.autoPrint(); // Automatically trigger the print dialog
-        doc.output("dataurlnewwindow"); // Open the PDF in a new window
+        doc?.autoPrint(); // Automatically trigger the print dialog
+        doc?.output("dataurlnewwindow"); // Open the PDF in a new window
       }
     };
 

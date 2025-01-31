@@ -317,3 +317,7 @@
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: #888 #333; /* For Firefox */
   }
+
+  .secondaryBorder {
+    @apply border border-stone-200 shadow-sm;
+  }

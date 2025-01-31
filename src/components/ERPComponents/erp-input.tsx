@@ -137,7 +137,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     // const [inputBoxState] = useState(localInputBox);
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     // const inputBoxState = localInputBox || appState?.inputBox;
-
+    useEffect(() => {
+      document.querySelectorAll("input").forEach((input) => {
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("spellcheck", "false");
+        input.setAttribute("autocorrect", "off");
+      });
+    }, []);
     const [_customSize, setCustomSize] = useState(customSize ? customSize : inputBoxState?.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
     const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
@@ -419,8 +425,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const sizeStyles = getSizeStyles();
     const commonProps = {
-      id,
-      name: id,
+      id: `${id}_${Math.random()}`,
+      name: `input_${id}_${Math.random()}`,
       value: value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
@@ -636,7 +642,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {prefix && (
               <div
                 onClick={onClickPrefix}
-                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100`}
+                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100 ${disabled ? "border-dashed" : ""}`}
                 style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor }}
               >
                 {prefix}
@@ -647,11 +653,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
-                autoComplete={autocomplete}
+                autoComplete="new-password"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {
                   setIsFocused(true);
+
+                  e.target.setAttribute("autocomplete", "off");
+                  e.target.setAttribute("readonly", "true");
+                  setTimeout(() => e.target.removeAttribute("readonly"), 100);
+                  
                   onFocus && onFocus(e);
                 }}
                 onBlur={(e) => {
@@ -676,25 +687,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
                 }}
-                // style={{
-                //   height,
-                //   fontSize,
-                //   fontWeight,
-                //   color,
-                //   borderColor: borderStyles,
-                //   outline: "none",
-                //   transition: "border-color 0.2s ease-in-out",
-                //   borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
-                //   borderBottomLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
-                //   borderTopRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
-                //   borderBottomRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
-                //   backgroundColor: bgCol, // Use the computed background color
-                //   paddingRight: type === "number" ? "2rem" : undefined,
-                //   ...(!prefix && !suffix && {
-                //     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                //   }),
-                // }}
-                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed " : ""}`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();
@@ -792,7 +786,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {suffix && (
               <div
                 onClick={onClickSuffix}
-                className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+                className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100 ${disabled ? "border-dashed" : ""}`}
                 style={{ height, fontSize, borderColor: borderStyles, color, backgroundColor: isFocused ? `rgb(${inputBoxState?.focusBgColor})` : `rgb(${inputBoxState?.defaultBgColor})` }}
               >
                 {suffix}

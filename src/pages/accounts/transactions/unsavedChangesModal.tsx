@@ -18,7 +18,7 @@ const UnsavedChangesModal: React.FC<UnsavedChangesModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <div className="relative w-full max-w-md bg-white rounded-lg shadow-xl p-6 transform transition-all duration-300 scale-100">
+      <div className="relative mb-auto w-full max-w-md bg-white rounded-lg shadow-xl p-6 transform transition-all duration-300 scale-100">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 rounded-full p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-200"
@@ -36,7 +36,7 @@ const UnsavedChangesModal: React.FC<UnsavedChangesModalProps> = ({
               </h3>
               <p className="text-sm text-[#b91c1c]">
                 You have unsaved changes that will be lost if you leave this page. 
-                Are you sure you want to continue?
+                Are you sure you want to leave this page?
               </p>
             </div>
           </div>

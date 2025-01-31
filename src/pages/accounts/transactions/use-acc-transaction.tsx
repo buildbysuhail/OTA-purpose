@@ -1200,6 +1200,14 @@ export const useAccTransaction = (
       focusCostCenterRef();
       return false;
     }
+    if (
+      formState.formElements.costCentreID.visible == false
+      && (applicationSettings.accountsSettings.maintainBillwiseAccount == true 
+          || applicationSettings.accountsSettings.billwiseMandatory == true
+      )
+    ) {
+      formState.formElements.amount.disabled = false;
+    }
     formState.formElements.btnAdd;
 
     dispatch(

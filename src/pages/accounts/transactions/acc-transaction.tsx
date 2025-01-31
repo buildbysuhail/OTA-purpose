@@ -537,7 +537,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               : title + "[" + formType + "]") ?? "",
           row: {
             ...AccTransactionRowInitialData,
-            bankDate:["CR","CP"].includes(voucher.master.voucherType) ? moment.utc("2000-01-01").startOf("day").toISOString() : moment().local().toISOString(),
+            bankDate: ["CR","CP"].includes(voucher.master.voucherType) ? moment.utc("2000-01-01").startOf("day").toISOString() : moment().local().toISOString(),
             costCentreID:
               (formState.userConfig?.presetCostenterId ?? 0) > 0
                 ? formState.userConfig?.presetCostenterId ?? 0

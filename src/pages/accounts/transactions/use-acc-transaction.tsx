@@ -360,6 +360,7 @@ export const useAccTransaction = (
         },
       };
     }
+    debugger;
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -397,6 +398,52 @@ export const useAccTransaction = (
     //   voucher.formElements.lnkUnlockVoucher.visible = true;
     // }
     if (vch?.details) {
+
+      if (voucher.transaction.details?.length > 0) {
+        voucher.total = voucher.transaction.details.reduce((total, detail) => {
+          const amount =
+            voucher.transaction.master.voucherType !== VoucherType.MultiJournal
+              ? detail.amount
+              : detail.debit;
+          return total + (amount || 0);
+        }, 0);
+  
+        // Set master account ID based on voucher type
+        const firstDetail = voucher.transaction.details[0];
+  
+        switch (voucher.transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "CN":
+          case "CQP":
+          case "SV":
+          case "PBP":
+            voucher.masterAccountID = firstDetail.relatedLedgerID;
+            break;
+  
+          case "CR":
+          case "BR":
+          case "DN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+            voucher.masterAccountID = firstDetail.ledgerID;
+            break;
+  
+          case "JV":
+            debugger;
+           
+            voucher.masterAccountID =
+              voucher.transaction.master.drCr === "Dr"
+                ? firstDetail.ledgerID
+                : firstDetail.relatedLedgerID;
+                // voucher.transaction.master.drCr =
+                // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
+            break;
+        }
+      }
+
+      debugger;
       let BillwiseaccTransactionDetailID = 0;
       voucher.transaction.details = voucher.transaction.details.map(
         (detail, index) => {
@@ -446,7 +493,7 @@ export const useAccTransaction = (
 
             case "JV":
               BillwiseaccTransactionDetailID++;
-              if (voucher.transaction.master.drCr === "Dr") {
+              if (voucher.transaction.master.drCr === "Dr" || voucher.transaction.master.drCr === "Debit") {
                 return {
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
@@ -481,48 +528,7 @@ export const useAccTransaction = (
     // Handle attachments
 
     // Calculate total amount
-    if (voucher.transaction.details?.length > 0) {
-      voucher.total = voucher.transaction.details.reduce((total, detail) => {
-        const amount =
-          voucher.transaction.master.voucherType !== VoucherType.MultiJournal
-            ? detail.amount
-            : detail.debit;
-        return total + (amount || 0);
-      }, 0);
-
-      // Set master account ID based on voucher type
-      const firstDetail = voucher.transaction.details[0];
-
-      switch (voucher.transaction.master.voucherType) {
-        case "CP":
-        case "BP":
-        case "CN":
-        case "CQP":
-        case "SV":
-        case "PBP":
-          voucher.masterAccountID = firstDetail.relatedLedgerID;
-          break;
-
-        case "CR":
-        case "BR":
-        case "DN":
-        case "CQR":
-        case "PV":
-        case "PBR":
-          voucher.masterAccountID = firstDetail.ledgerID;
-          break;
-
-        case "JV":
-          voucher.transaction.master.drCr =
-            voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
-          voucher.masterAccountID =
-            voucher.transaction.master.drCr === "Dr"
-              ? firstDetail.ledgerID
-              : firstDetail.relatedLedgerID;
-          break;
-      }
-    }
-
+   
     voucher.transactionLoading = false;
 
     voucher.transaction.master.totalAmount = calculateTotal(voucher);

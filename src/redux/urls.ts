@@ -397,7 +397,7 @@ const Urls = {
   ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
   voucher_selector: "/Core/VoucherSelector/",
   partiesBankNames: "/Core/TransactionBase/SelectPartiesBankNames",
-  validate_cheque_status: "/Core/TransactionBase/ValidateChequeStatus",
+  validate_cheque_status: "/Core/TransactionBase/ValidateChequeStatus/",
   get_currency_exchange_rate: "/Core/TransactionBase/GetCurrencyExchangeRate",
   is_ledger_billwise_applicable:
     "/Core/TransactionBase/IsLedgerBillwiseApplicable/",

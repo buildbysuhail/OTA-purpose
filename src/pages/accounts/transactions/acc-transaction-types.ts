@@ -252,7 +252,7 @@ export interface AccTransactionRowForOutPut extends AccTransactionRow {
 export interface AccTransactionRow {
   slNo?: number;
   accTransactionMasterID: number;
-  accTransactionDetailId: number;
+  accTransactionDetailID: number;
   ledgerID: number;
   ledgerCode: string;
   ledgerName: string;
@@ -349,7 +349,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster  = {
 }
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
-  accTransactionDetailId: 0,
+  accTransactionDetailID: 0,
   ledgerID: 0,
   relatedLedgerID: 0,
   amount: undefined,

@@ -51,14 +51,14 @@ export const useUnsavedChangesWarning = () => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges()) {
         e.preventDefault();
-        setIsModalOpen(true); // Show custom modal
+        e.returnValue = '';
+        // setIsModalOpen(true);
         setIsLeavingPage(true);
-        
-        // Remove the default browser dialog
-        delete e.returnValue; 
+        console.log('1');
+        return '';
       }
     };
-  
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -161,6 +161,7 @@ export const useUnsavedChangesWarning = () => {
     setIsLeavingPage(false);
     navigationAttempted.current = false;
 
+    // Dispatch action to reset formState.prev before navigating
     dispatch(accFormStateHandleFieldChange({fields: {prev: undefined}}));
 
     if (targetLocation) {

@@ -358,7 +358,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
           dispatch(
             accFormStateRowHandleFieldChange({
-              fields: { ledgerCode: ledgerData?.ledgerCode },
+              fields: { ledgerCode: ledgerData?.ledgerCode, ledgerName: ledgerData?.partyName  },
             })
           );
           dispatch(
@@ -521,7 +521,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               voucherPrefix: voucherPrefix ?? "",
               formType: formType ?? "",
               transactionDate: softwareDate.toISOString(),
-              referenceDate: new Date().toISOString(),
+              referenceDate: moment().local().toISOString(),
               drCr: drCr == undefined || drCr == "" ? AccTransactionMasterInitialData.drCr : drCr,
               employeeID: employeeID,
               voucherNumber: _voucherNo,

@@ -68,9 +68,10 @@ const accTransactionSlice = createSlice({
       state.transaction.master.currencyRate = 1;
       state.row.currencyId = 0;
       state.transaction.master.referenceNumber = "";
+      state.transaction.master.commonNarration = "";
       state.transaction.master.voucherNumber = voucherNo ?? 0;
-      state.row.chqDate = new Date().toISOString();
-      state.row.bankDate = new Date().toISOString();
+      state.row.chqDate = moment().local().toISOString();
+      state.row.bankDate = moment().local().toISOString();
       state.transaction.master.transactionDate = moment(
         softwareDate,
         "DD/MM/YYYY"
@@ -490,13 +491,13 @@ const accTransactionSlice = createSlice({
             amountFC: detail.amount,
             bankDate: detail.bankDate
               ? new Date(detail.bankDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
             chqDate: detail.chqDate
               ? new Date(detail.chqDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
             checkBouncedDate: detail.checkBouncedDate
               ? new Date(detail.checkBouncedDate).toISOString()
-              : new Date(2000, 0, 1).toISOString(),
+              : moment("01/10/2000").local().toISOString(),
           };
 
           // Handle voucher type specific logic

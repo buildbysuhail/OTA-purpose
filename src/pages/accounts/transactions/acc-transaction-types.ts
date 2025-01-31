@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { inputBox } from "../../../redux/slices/app/types";
+import moment from "moment";
 
 // AccTransaction interface
 export interface AccTransactionProps {
@@ -370,7 +371,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   isDisplay: false,
   voucherType: "",
   checkStatus: "",
-  checkBouncedDate: new Date(2000, 0, 1).toISOString(), // January 1, 2000
+  checkBouncedDate: moment("01/10/2000").local().toISOString(), // January 1, 2000
   billwiseData: [],
   branchId: 0,
   costCentreID: 0,

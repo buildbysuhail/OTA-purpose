@@ -124,7 +124,7 @@ setStore(obj);
   useEffect(() => {
     let wh = modalHeight;
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows =  wh - 360;
+    let gridHeightWindows =  wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 

@@ -320,7 +320,7 @@ const BankReconciliation = () => {
         <div className="space-y-6">
           <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
             <div className="p-4">
-              <div className="flex flex-col gap-2 w-1/3">
+              <div className="flex flex-col gap-2 max-w-[500px]">
                 <div className="flex items-center justify-between gap-4">
                   <ERPRadio
                     id="todayDate"

@@ -10,6 +10,7 @@ export const initialGridPreference: GridPreference = {
     gridLine: "rgb(25,118,210,1)",
     backgroundColor: "rgb(25,118,210,1)",
     foreColor: "rgb(25,118,210,1)",
+    orientation:"portrait",
     columnPreferences: [],
     
     // groupIndex:0
@@ -89,5 +90,6 @@ export interface DevGridColumn {
     gridLine: string;
     backgroundColor: string;
     foreColor: string;
+    orientation:"portrait"|"landscape";
     columnPreferences: Array<ColumnPreference>;
   }

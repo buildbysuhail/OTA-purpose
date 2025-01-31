@@ -319,5 +319,5 @@
   }
 
   .secondaryBorder {
-    @apply border border-stone-300 shadow-sm;
+    @apply border border-stone-200 shadow-sm;
   }

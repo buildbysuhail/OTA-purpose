@@ -32,6 +32,7 @@ const BalancesheetVertical = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => {
 
         return (
@@ -49,6 +50,7 @@ const BalancesheetVertical = () => {
       caption: t("ledger_ID"),
       dataType: "number",
       allowSearch: true,
+      showInPdf:true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => {
 
@@ -442,6 +444,7 @@ const BalancesheetVertical = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  remoteOperations={false}
                   gridHeader={t("balance_sheet")}
                   dataUrl={Urls.acc_reports_balance_sheet_vertical}
                   // postData={postData}
@@ -460,7 +463,7 @@ const BalancesheetVertical = () => {
 
                   childPopupPropsDynamic={(dataField: string) => ({
                     title: dataField == "accGroupID" ? t(`balance_detailed`) : t(`monthwise_balance`),
-                    width: "700px",
+                    width: "w-full max-w-[1100px]",
                     isForm: false,
                     content:
                       dataField == "accGroupID" ?

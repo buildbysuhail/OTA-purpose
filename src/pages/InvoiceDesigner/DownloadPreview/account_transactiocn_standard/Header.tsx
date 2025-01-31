@@ -77,6 +77,14 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
     fontFamily,
   };
 
+  const isValidLogo = (logo: any): boolean => {
+    if (!logo) return false;
+    if (typeof logo !== 'string') return false;
+    if (logo.trim() === '') return false;
+    // Add any other specific validation you need
+    return true;
+  };
+  
   return (
     <View style={{
       width:"100%",height:headerState?.headerHeight?`${headerState?.headerHeight}pt`:"auto",
@@ -99,12 +107,12 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
       <View style={styles.companyInfo}>
         <View style={{ display: "flex", flexDirection: "column",flexBasis:"33.33%",
           justifyContent:"flex-start", alignItems:"flex-start",paddingLeft:10}}>
-          {headerState?.showLogo && (
+             {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch?.logo}
+              src={currentBranch.logo}
               style={{ width: 80 * logoWidthRatio }}
             />
-          )}
+             )}
           {headerState?.showOrgName && (
             <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold",fontFamily:fontFamily,}}>
               {currentBranch?.name}

@@ -1,18 +1,42 @@
-import { MouseEventHandler, useCallback, useEffect, useState } from "react";
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { APIClient } from "../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../components/ERPComponents/erp-grid-global-filter";
 import Urls from "../../../../redux/urls";
 import "../balanceSheet/Loader.css";
-import {  Clock1,  FileDown,  Forward,  Printer,  RectangleVertical,  X } from "lucide-react";
+import {
+  Clock1,
+  EllipsisVertical,
+  FileDown,
+  FileText,
+  FileUp,
+  Forward,
+  Printer,
+  RectangleVertical,
+  X,
+} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import ProfitAndLossReportFilter, {  ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
+import ProfitAndLossReportFilter, {
+  ProfitAndLossReportFilterInitialState,
+} from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
 import CashBookMonthWise from "../cashBook/cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ExcelJS from "exceljs";
+import { BlobProvider } from "@react-pdf/renderer";
+import { userSession } from "../../../../redux/slices/user-session/thunk";
+import BalanceSheetPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-sheet-horizontal-pdf";
+import BalanceSheetVerticalPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-sheet-vertical-pdf";
+import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
+import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -20,10 +44,8 @@ const ProfitAndLossRow: React.FC<{
 }> = ({ item, setIsOpenDetails }) => {
   const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation("accountsReport");
-  
-  const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-   
 
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     setIsOpenDetails({
       isOpen: true,
       key: item.groupID,
@@ -203,12 +225,9 @@ const HorizontalProfitAndLoss: React.FC<{
 const ProfitAndLossDetailedReport = () => {
   const [data, setData] = useState<any[]>([]);
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(
-    ProfitAndLossReportFilterInitialState
-  );
+  const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-
   const [filterValidations, setFilterValidations] = useState();
   // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const [isOpenDetails, setIsOpenDetails] = useState<{
@@ -220,7 +239,32 @@ const ProfitAndLossDetailedReport = () => {
   }>({ isOpen: false, key: 0 });
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Check if the click is outside the popup AND not on the button
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsPopupVisible(false);
+      }
+    }
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -250,11 +294,10 @@ const ProfitAndLossDetailedReport = () => {
   };
 
   const onApplyFilter = async (_filter: any) => {
-    
-        setShowFilter(false);
-        setFilter({ ..._filter });
-        await LoadAsync(_filter);
-      };
+    setShowFilter(false);
+    setFilter({ ..._filter });
+    await LoadAsync(_filter);
+  };
 
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
@@ -267,15 +310,14 @@ const ProfitAndLossDetailedReport = () => {
   const goToPreviousPage = () => {
     window.history.back();
   };
-const handleExport = async () => {
+  const handleExport = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Profit And Loss");
 
     // Add title and date
     worksheet.mergeCells("A1:D1");
     const titleCell = worksheet.getCell("A1");
-    titleCell.value = 
-   `From
+    titleCell.value = `From
     ${new Date(filter.fromDate).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -288,8 +330,6 @@ const handleExport = async () => {
       day: "2-digit",
     })}`;
 
-    
-    
     // `As of ${new Date(filter.asonDate).toLocaleDateString(
     //   "en-US",
     //   {
@@ -356,11 +396,11 @@ const handleExport = async () => {
     for (let i = 0; i < maxLength; i++) {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
-    
-        worksheet.getCell(`B${currentRow}`).value =getFormattedValue(expense[i].total)
 
-      
-    
+        worksheet.getCell(`B${currentRow}`).value = getFormattedValue(
+          expense[i].total
+        );
+
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -399,7 +439,9 @@ const handleExport = async () => {
       if (income[i]) {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
 
-        worksheet.getCell(`D${currentRow}`).value =getFormattedValue(income[i].total);
+        worksheet.getCell(`D${currentRow}`).value = getFormattedValue(
+          income[i].total
+        );
         // assets[i].transType == "E"
         // ? assets[i].title == "M"
         //   ?getFormattedValue(assets[i].total)
@@ -408,7 +450,7 @@ const handleExport = async () => {
         //   : assets[i].total === 0
         //   ? getFormattedValue(0)
         //   : getFormattedValue(-1 * assets[i].total)
-          
+
         // : assets[i].title == "M"
         // ?getFormattedValue(assets[i].total)
         // : assets[i].total < 0
@@ -416,7 +458,7 @@ const handleExport = async () => {
         // : assets[i].total === 0
         // ? getFormattedValue(0)
         // : getFormattedValue(assets[i].total);
-    
+
         if (income[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
@@ -459,14 +501,18 @@ const handleExport = async () => {
     const totalRow = currentRow;
     worksheet.getCell(`A${totalRow}`).value = "Total";
     worksheet.getCell(`B${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "I" && item?.groupName === "TOTAL"
-      )?.total) || 0;
+      getFormattedValue(
+        data.find(
+          (item) => item?.transType === "I" && item?.groupName === "TOTAL"
+        )?.total
+      ) || 0;
     worksheet.getCell(`C${totalRow}`).value = "Total";
     worksheet.getCell(`D${totalRow}`).value =
-    getFormattedValue(  data.find(
-        (item) => item?.transType === "E" && item?.groupName === "TOTAL"
-      )?.total) || 0;
+      getFormattedValue(
+        data.find(
+          (item) => item?.transType === "E" && item?.groupName === "TOTAL"
+        )?.total
+      ) || 0;
 
     // Format totals row
     ["A", "B", "C", "D"].forEach((col) => {
@@ -546,25 +592,40 @@ const handleExport = async () => {
             </div> */}
 
             <button
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
-              onClick={() => setIsVerticalView(!isVerticalView)}
+              className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${
+                isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
+              }`}
             >
-              <RectangleVertical className="mr-2" />
-              <span className="mr-2">
+              <div
+                className="flex justify-center items-center w-8 h-8"
+                style={{
+                  minWidth: "2rem",
+                  minHeight: "2rem",
+                }} /* Ensures consistent dimensions */
+              >
+                <div
+                  className={`transition-transform duration-500 ${
+                    isVerticalView ? "rotate-0" : "rotate-90"
+                  }`}
+                >
+                  <RectangleVertical />
+                </div>
+              </div>
+              <span className="ml-2">
                 {isVerticalView ? t("show_horizontal") : t("show_vertical")}
               </span>
-              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+              <div className="relative inline-block w-12 h-6 ml-2 align-middle select-none transition duration-200 ease-in">
                 <input
                   type="checkbox"
                   name="toggle"
                   id="toggle"
-                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out transform checked:translate-x-6"
                   checked={isVerticalView}
                   onChange={() => setIsVerticalView(!isVerticalView)}
                 />
                 <label
                   htmlFor="toggle"
-                  className="toggle-label block overflow-hidden h-6 rounded-full dark:bg-dark-bg bg-gray-300 cursor-pointer"
+                  className="toggle-label block h-6 w-full bg-gray-300 rounded-full cursor-pointer transition-colors duration-300 ease-in-out checked:bg-blue-500"
                 ></label>
               </div>
             </button>
@@ -601,14 +662,105 @@ const handleExport = async () => {
               <Printer className="pe-2" />
               <span>{t("print")}</span>
             </button>
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+
+            <div className="relative">
+              <button
+                className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-full hover:bg-slate-300"
+                ref={buttonRef}
+              >
+                {/* <i className="fas fa-file-export me-1"></i> */}
+                <EllipsisVertical
+                  className="!w-4 !h-4"
+                  onClick={() => setIsPopupVisible(!isPopupVisible)}
+                />
+                {/* <span>{t("export")}</span> */}
+              </button>
+
+              {isPopupVisible && (
+                <div
+                  ref={popupRef} // Attach ref to the popup
+                  className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                  style={{
+                    top: "100%", // Position the popup right below the button
+                    left: "-139px", // Align it with the left edge of the button
+                    width: "221px", // Set your desired width
+                    marginTop: "8px", // Add some spacing between the button and the popup
+                  }}
+                >
+                  <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                    <ul className="space-y-1">
+                      <li>
+                        <button
+                          className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          onClick={handleExport}
+                        >
+                          <FileUp className="pe-2" />
+                          <span>{t("export_to_excel")}</span>
+                        </button>
+                      </li>
+                      <li>
+                        <BlobProvider
+                          document={
+                            !isVerticalView ? (
+                              <ProfitAndLossPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                            ) : (
+                              <ProfitAndLossVerticalPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+                            )
+                          }
+                        >
+                          {({ blob, loading }) => (
+                            <button
+                              className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              disabled={loading}
+                              onClick={async () => {
+                                if (blob) {
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement("a");
+                                  a.href = url;
+                                  a.download = "ProfitAndLoss.pdf";
+                                  a.click();
+                                  URL.revokeObjectURL(url);
+                                }
+                              }}
+                            >
+                              <FileText className="pe-2" />
+                              <span>
+                                {loading
+                                  ? "Loading document..."
+                                  : t("export_to_pdf")}
+                              </span>
+                            </button>
+                          )}
+                        </BlobProvider>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              )}
+            </div>
+
+            <button
+              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
               onClick={handleExport}
             >
               {/* <i className="fas fa-file-export me-1"></i> */}
               <FileDown className="pe-2" />
               <span>{t("export")}</span>
             </button>
-            <button onClick={goToPreviousPage} className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+            <button
+              onClick={goToPreviousPage}
+              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+            >
               {/* <i className="fas fa-times"></i> */}
               {/* <Timer /> */}
               <X />
@@ -675,63 +827,78 @@ const handleExport = async () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p> */}
       </div>
-      {isOpenDetails.isOpen == true  && isOpenDetails.item !==  undefined && isOpenDetails.item !== null && isOpenDetails.key !== 0 && isOpenDetails.key !== -400 && (
-        <ERPModal
-          isOpen={isOpenDetails.isOpen && isOpenDetails.item !==  undefined && isOpenDetails.item !== null}
-          // title={t("bank_cards")}
-          title={isOpenDetails.key == -500 ?"Inventory Value":isOpenDetails.title === "L" ?"Ledger Report monthview":"Account Ledger" }
-          width={isOpenDetails.key == -500 ?"w-full max-w-[500px]":"max-w-[1200px]"}
-          isForm={true}
-          closeModal={() => {
-            setIsOpenDetails({ isOpen: false, key: 0, item:undefined });
-          }}
-          
-          content={
-        
-            isOpenDetails.key == -500 ? (
-              <ProfitAndLossClosingStockDetails
-                postData={{
-                  fromDate: filter.fromDate,
-                  toDate: filter.toDate,
-                  valuationUsing: filter.valuationUsing,
-                }}
-                groupName={isOpenDetails.groupName}
-              />
-            ) : isOpenDetails.title === "L" ? (
-
-              <CashBookMonthWise
-                
-          groupName={isOpenDetails.groupName}
-              />
-            ) : (
-              <ProfitAndLossSubledgerwiseView
-                postData={{
-                  accGroupID: isOpenDetails.key,
-                  expAccGroupID:
-                    isOpenDetails.key === 19
-                      ? 23
-                      : isOpenDetails.key === 10
-                      ? 26
-                      : 0,
-                  dateFrom: filter.fromDate,
-                  asOnDate: filter.toDate,
-                  isDateForm: true,
-                }}
-                groupName={isOpenDetails.groupName}
-              />
-            )
-          }
-          postData={isOpenDetails.key == -500 ?
-
-           { fromDate: filter.fromDate,
-                  toDate: filter.toDate,
-                  valuationUsing: filter.valuationUsing}
-                  :
-                  isOpenDetails.title === "L"?
-                  { asOnDate: filter.toDate,
+      {isOpenDetails.isOpen == true &&
+        isOpenDetails.item !== undefined &&
+        isOpenDetails.item !== null &&
+        isOpenDetails.key !== 0 &&
+        isOpenDetails.key !== -400 && (
+          <ERPModal
+            isOpen={
+              isOpenDetails.isOpen &&
+              isOpenDetails.item !== undefined &&
+              isOpenDetails.item !== null
+            }
+            // title={t("bank_cards")}
+            title={
+              isOpenDetails.key == -500
+                ? "Inventory Value"
+                : isOpenDetails.title === "L"
+                ? "Ledger Report monthview"
+                : "Account Ledger"
+            }
+            width={
+              isOpenDetails.key == -500
+                ? "w-full max-w-[500px]"
+                : "max-w-[1200px]"
+            }
+            isForm={true}
+            closeModal={() => {
+              setIsOpenDetails({ isOpen: false, key: 0, item: undefined });
+            }}
+            content={
+              isOpenDetails.key == -500 ? (
+                <ProfitAndLossClosingStockDetails
+                  postData={{
+                    fromDate: filter.fromDate,
+                    toDate: filter.toDate,
+                    valuationUsing: filter.valuationUsing,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                />
+              ) : isOpenDetails.title === "L" ? (
+                <CashBookMonthWise groupName={isOpenDetails.groupName} />
+              ) : (
+                <ProfitAndLossSubledgerwiseView
+                  postData={{
+                    accGroupID: isOpenDetails.key,
+                    expAccGroupID:
+                      isOpenDetails.key === 19
+                        ? 23
+                        : isOpenDetails.key === 10
+                        ? 26
+                        : 0,
+                    dateFrom: filter.fromDate,
+                    asOnDate: filter.toDate,
+                    isDateForm: true,
+                  }}
+                  groupName={isOpenDetails.groupName}
+                />
+              )
+            }
+            postData={
+              isOpenDetails.key == -500
+                ? {
+                    fromDate: filter.fromDate,
+                    toDate: filter.toDate,
+                    valuationUsing: filter.valuationUsing,
+                  }
+                : isOpenDetails.title === "L"
+                ? {
+                    asOnDate: filter.toDate,
                     ledgerID: isOpenDetails.key,
-                    fromDate:filter.fromDate}:
-                  {
+                    fromDate: filter.fromDate,
+                  }
+                : {
                     accGroupID: isOpenDetails.key,
                     expAccGroupID:
                       isOpenDetails.key === 19
@@ -743,17 +910,15 @@ const handleExport = async () => {
                     asOnDate: filter.toDate,
                     isDateForm: true,
                   }
-                  
-            // accGroupID: isOpenDetails.key,
-            // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
-            // dateFrom: filter.fromDate,
-          
-          }
-      
-          rowData={isOpenDetails.item}
-          origin = "PandL"
-        />
-      )}
+
+              // accGroupID: isOpenDetails.key,
+              // expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
+              // dateFrom: filter.fromDate,
+            }
+            rowData={isOpenDetails.item}
+            origin="PandL"
+          />
+        )}
     </div>
   );
 };

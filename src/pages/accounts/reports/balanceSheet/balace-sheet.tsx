@@ -14,11 +14,12 @@ import ExcelJS from "exceljs";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
-import { PDFDownloadLink, BlobProvider, PDFViewer } from '@react-pdf/renderer';
+import { pdf, BlobProvider, PDFViewer } from '@react-pdf/renderer';
 import BalanceSheetVerticalTemplate from "../../../InvoiceDesigner/DownloadPreview/balance-sheet/balance-sheet-vertical";
 import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import { useSelector } from "react-redux";
 import BalanceSheetVerticalPDFTemplate from "./balance-sheet-pdf/balance-sheet-vertical-pdf";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
@@ -538,6 +539,56 @@ const BalanceSheet = () => {
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+
+  const handlePrint = async() => {
+    const pdfDocument =
+      !isVerticalView  ? (
+        <BalanceSheetPDFTemplate
+          userSession={userSession}
+          getFormattedValue={getFormattedValue}
+          filter={filter}
+          data={data}
+        />):(
+          <BalanceSheetVerticalPDFTemplate
+          userSession={userSession}
+          getFormattedValue={getFormattedValue}
+          filter={filter}
+          data={data}
+        />  
+        )
+        const blob = await pdf(pdfDocument).toBlob();
+        const pdfUrl = URL.createObjectURL(blob);
+         // Open the PDF in a new tab for printing
+    const printWindow = window.open(pdfUrl);
+    if (!printWindow) {
+      console.error("Failed to open print window. Please check your browser settings.");
+      ERPAlert.show({
+        title: "Error",
+        text: "Failed to  print ",
+        icon: "error",
+      });
+      return;
+    }
+
+    
+         // Wait for the PDF to load in the new tab
+         printWindow.onload = () => {
+          printWindow.print(); // Trigger print
+        };
+
+   try{
+  
+   } catch (error) {
+    console.error("Error printing voucher:", error);
+    ERPAlert.show({
+          title: "Warning",
+          text: "An error occurred while printing. Please try again.",
+          icon: "warning",
+        });
+     }
+  };
+
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
@@ -644,7 +695,8 @@ const BalanceSheet = () => {
             {/* <Clock1 className="pe-2" /> */}
             {/* <span>{t("schedule_report")}</span> */}
             {/* </button> */}
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+             onClick={handlePrint}>
 
               <Printer className="pe-2" />
               <span>{t("print")}</span>

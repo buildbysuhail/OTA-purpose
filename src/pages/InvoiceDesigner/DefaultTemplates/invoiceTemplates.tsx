@@ -69,7 +69,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
       headerState: {
         showDocTitle: true,
         docTitle: "Invoice",
-        showLogo: true,
+        showLogo: false,
         logoSize: 60,
         showOrgName: true,
         showOrgAddress: true,

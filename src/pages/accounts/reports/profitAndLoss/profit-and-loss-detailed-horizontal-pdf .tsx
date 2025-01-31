@@ -1,6 +1,6 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import FontRegistration from '../../../../LabelDesigner/fontRegister';
+import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import FontRegistration from '../../../LabelDesigner/fontRegister';
 
 
 const styles = StyleSheet.create({
@@ -99,16 +99,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
+const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
 
 
-  const assets = data?.filter(
-    (item: any) => item?.transType === "A" && item?.groupName !== "TOTAL"
+
+  const expense = data.filter(
+    (item) => item?.transType === "E" && item?.groupName !== "TOTAL"
   );
-  const liabilities = data?.filter(
-    (item: any) => item?.transType === "L" && item?.groupName !== "TOTAL"
+  const income = data.filter(
+    (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
   );
-
   const assetTotal =
     data?.find(
       (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
@@ -138,10 +138,10 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
             </Text>
 
 
-            <Text style={{ fontFamily: 'Amiri', fontWeight: 400, color: '#fff', fontSize: 14, fontStyle: 'normal' }}>{userSession.headerFooter.heading8}</Text>
-            <Text style={{ fontSize: 8, fontWeight: 400, fontFamily: "Poppins", fontStyle: 'normal' }}>{userSession.headerFooter.heading9}</Text>
+            {/* <Text style={{ fontFamily: 'Amiri', fontWeight: 400, color: '#fff', fontSize: 14, fontStyle: 'normal' }}>{userSession.headerFooter.heading8}</Text> */}
+            {/* <Text style={{ fontSize: 8, fontWeight: 400, fontFamily: "Poppins", fontStyle: 'normal' }}>{userSession.headerFooter.heading9}</Text> */}
             <View style={{ display: 'flex', flexDirection: "row", gap: 0 }}>
-              <Text style={styles.subheader1}>Balance Sheet - </Text>
+              <Text style={styles.subheader1}>Profit and Loss Detailed - </Text>
               <Text style={styles.subheader2}>
                 as of {new Date(filter.asonDate).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -158,7 +158,7 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
               {/* table Head*/}
               <View style={styles.tableRow}>
                 <View style={[styles.tableHeader,]}>
-                  <Text>Liabilities</Text>
+                  <Text>Expense</Text>
                 </View>
                 <View style={[styles.tableHeader, styles.amount]}>
                   <Text>Amount</Text>
@@ -166,8 +166,8 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
               </View>
 
               {/* table body*/}
-              {liabilities?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
+              {expense?.map((item: any, index: number) => (
+                <View key={`expense-${index}`} style={styles.tableRow}>
                   <View style={[styles.tableCell,]}>
                     <Text
                       style={[
@@ -218,15 +218,16 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
                   </View>
                 </View>
               ))}
-
             </View>
 
             {/* table2 */}
+            
+
             <View style={styles.subtable}>
               {/* table Head*/}
               <View style={styles.tableRow}>
                 <View style={[styles.tableHeader,]}>
-                  <Text>Assets</Text>
+                  <Text>Income</Text>
                 </View>
                 <View style={[styles.tableHeader, styles.amount]}>
                   <Text>Amount</Text>
@@ -234,8 +235,8 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
               </View>
 
               {/* table body*/}
-              {assets?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
+              {income?.map((item: any, index: number) => (
+                <View key={`income-${index}`} style={styles.tableRow}>
                   <View style={[styles.tableCell,]}>
                     <Text
                       style={[
@@ -286,18 +287,19 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
                   </View>
                 </View>
               ))}
+
             </View>
           </View>
 
           <View style={styles.tableRow}>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
+              <Text>Total</Text>
             </View>
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(liabilityTotal)}</Text>
             </View>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
+              <Text>Total</Text>
             </View>
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(assetTotal)}</Text>
@@ -310,4 +312,4 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
   );
 };
 
-export default BalanceSheetPDFTemplate;
+export default ProfitAndLossDetailedPDFTemplate;

@@ -33,6 +33,7 @@ import { ApplicationSettingsType } from "../settings/system/application-settings
 import { setApplicationSettings } from "../../redux/slices/app/application-settings-reducer";
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
+import polo from "../../assets/images/brand-logos/polo_logo.png";
 
 const api = new APIClient()
 const Login = () => {
@@ -189,9 +190,10 @@ const Login = () => {
           <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
           <div className="flex-1">
             <div className="text-center">
-              <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-dark-text">
+              <img src={polo} alt="logo" className="unset h-[110px] w-[150px] mx-auto my-4"  />
+              {/* <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-dark-text">
                 Polosys
-              </h2>
+              </h2> */}
               <p className="mt-3 text-gray-500 dark:text-dark-text">
                 Sign in to access your account
               </p>

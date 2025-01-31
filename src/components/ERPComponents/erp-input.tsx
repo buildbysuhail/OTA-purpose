@@ -642,7 +642,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {prefix && (
               <div
                 onClick={onClickPrefix}
-                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100`}
+                className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100 ${disabled ? "border-dashed" : ""}`}
                 style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor }}
               >
                 {prefix}
@@ -687,25 +687,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
                 }}
-                // style={{
-                //   height,
-                //   fontSize,
-                //   fontWeight,
-                //   color,
-                //   borderColor: borderStyles,
-                //   outline: "none",
-                //   transition: "border-color 0.2s ease-in-out",
-                //   borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
-                //   borderBottomLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0}px`,
-                //   borderTopRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
-                //   borderBottomRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
-                //   backgroundColor: bgCol, // Use the computed background color
-                //   paddingRight: type === "number" ? "2rem" : undefined,
-                //   ...(!prefix && !suffix && {
-                //     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                //   }),
-                // }}
-                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed " : ""}`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();
@@ -803,7 +786,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {suffix && (
               <div
                 onClick={onClickSuffix}
-                className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+                className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100 ${disabled ? "border-dashed" : ""}`}
                 style={{ height, fontSize, borderColor: borderStyles, color, backgroundColor: isFocused ? `rgb(${inputBoxState?.focusBgColor})` : `rgb(${inputBoxState?.defaultBgColor})` }}
               >
                 {suffix}

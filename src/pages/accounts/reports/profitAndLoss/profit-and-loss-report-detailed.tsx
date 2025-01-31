@@ -39,6 +39,7 @@ import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
 import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
 import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-detailed-horizontal-pdf ";
 import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-detailed-vertical-pdf";
+import { printPdf } from "../../../../utilities/print-report-utils";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -153,26 +154,7 @@ const HorizontalProfitAndLoss: React.FC<{
             </tbody>
           </table>
         </div>
-        {/* <div>
-        <h3 className="text-lg font-bold mb-2">{t("subLedger")}</h3>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("subLedger")}</th>
-              <th className="py-2 text-end pe-2">{t("amount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subLedger?.map((item: any, index: number) => (
-              <ProfitAndLossRow
-                key={`liability-${index}`}
-                item={item}
-                setIsOpenDetails={setIsOpenDetails}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div> */}
+    
         <div>
           {/* <h3 className="text-lg font-bold mb-2">{t("income")}</h3> */}
           <table className="w-full text-left border-collapse">
@@ -562,6 +544,21 @@ const ProfitAndLossDetailedReport = () => {
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+  const handlePrint = async () => {
+    const PDFComponent = isVerticalView ? ProfitAndLossDetailedVerticalPDFTemplate : ProfitAndLossDetailedPDFTemplate;
+    const documentProps = {
+      userSession,
+      getFormattedValue,
+      filter,
+      data,
+    };
+
+    await printPdf({
+      PDFComponent,
+      documentProps,
+    });
+  };
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">
       {/* <div className="max-w-5xl mx-auto"> */}
@@ -659,7 +656,8 @@ const ProfitAndLossDetailedReport = () => {
               <Clock1 className="pe-2" />
               <span>{t("schedule_report")}</span>
             </button>
-            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">
+            <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
+             onClick={handlePrint}>
               {/* <i className="fas fa-print me-1"></i> */}
               <Printer className="pe-2" />
               <span>{t("print")}</span>
@@ -751,14 +749,6 @@ const ProfitAndLossDetailedReport = () => {
               )}
             </div>
 
-            <button
-              className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"
-              onClick={handleExport}
-            >
-              {/* <i className="fas fa-file-export me-1"></i> */}
-              <FileDown className="pe-2" />
-              <span>{t("export")}</span>
-            </button>
             <button
               onClick={goToPreviousPage}
               className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md"

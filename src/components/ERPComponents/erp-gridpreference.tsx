@@ -256,6 +256,60 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
 
           </div>
+          <div className="m-2 p-1 ">
+              <p className="switcher-style-head">
+                  Pdf Orientation
+              </p>
+            <div className="flex items-center gap-5 my-2 pl-5">
+                <div className="flex items-center">
+                <input
+                  type="radio"
+                  name="portrait"
+                  className="ti-form-radio"
+                  id="portrait"
+                  checked={preferences.orientation === "portrait"}
+                  onChange={(e) => {
+                    setPreferences((previous) => ({
+                    ...previous,
+                      orientation: "portrait" 
+                    }))
+                  }}
+                />
+
+                <label
+                  htmlFor="portrait"
+                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                >
+                  Portrait
+                </label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  name="landscape"
+                  className="ti-form-radio"
+                  id="landscape"
+                  checked={preferences.orientation === "landscape"}
+                  onChange={(e) => {
+                    setPreferences((previous) => ({
+                    ...previous,
+                      orientation: "landscape" 
+                    }))
+                  }}
+                />
+
+                <label
+                  htmlFor="landscape"
+                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                >
+                  Landscape
+                </label>
+              </div>
+              
+            </div>
+          </div>
+     
         </div>
         )}
         footer={(

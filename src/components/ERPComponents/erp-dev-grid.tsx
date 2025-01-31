@@ -892,9 +892,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
+   const orientation = preferences?.orientation;
+   const pageOrientation = preferences?.orientation === "landscape" ? "landscape" : "portrait";
     const generatePdf = async (gridInstance: any) => {
       const doc = new jsPDF({
-        orientation: "landscape",
+        orientation: pageOrientation,
         unit: "pt",
         format: "a4",
       });

@@ -26,7 +26,7 @@ const Nodevwatermark: React.FC = () => {
     clickElement();
 
     // Cleanup on unmount
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []); // Empty dependency array ensures this runs only once
 
   return (

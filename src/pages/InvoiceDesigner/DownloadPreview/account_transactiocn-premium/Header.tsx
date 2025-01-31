@@ -1,4 +1,4 @@
-import { View, Text, Image,StyleSheet } from "@react-pdf/renderer";
+import { View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 import { AccountTransactionProps } from ".";
 import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
   orgAddress: {
     display: "flex",
     flexDirection: "column",
-    gap:2
+    gap: 2
   },
-  otherInfo:{
-    display:"flex",
-    flexDirection:"row",
-    gap:2,
-    justifyContent:"flex-start"
+  otherInfo: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 2,
+    justifyContent: "flex-start"
   },
   bgImage: {
     position: 'absolute',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string;currency?: string;}) => {
+export const Header = ({ data, template, currentBranch, docIDKey, currency }: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
   const paddingLeft = template?.propertiesState?.padding?.left;
@@ -54,7 +54,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
 
   const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
   const orgNameFontSize = headerState?.OrganizationFontSize || 12;
-
+  debugger;
   const fontStyles = {
     color,
     fontSize,
@@ -66,17 +66,26 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
     color: template?.propertiesState?.label_font_color || "#000",
     fontSize: template?.propertiesState?.label_font_size || 12,
     fontWeight: template?.propertiesState?.label_font_weight || 400,
-    fontStyle:  template?.propertiesState?.label_font_style || "normal",
+    fontStyle: template?.propertiesState?.label_font_style || "normal",
     fontFamily,
   };
+
+  const isValidLogo = (logo: any): boolean => {
+    if (!logo) return false;
+    if (typeof logo !== 'string') return false;
+    if (logo.trim() === '') return false;
+    // Add any other specific validation you need
+    return true;
+  };
+
   return (
     <View style={{
-      width:"100%",height:headerState?.headerHeight?`${headerState?.headerHeight}pt`:"auto",
+      width: "100%", height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
       backgroundColor: template?.headerState?.bgColor || "#fff",
       position: 'relative',
-      }}>
-{/* Background Image */}
-    {template?.background_image_header && (
+    }}>
+      {/* Background Image */}
+      {template?.background_image_header && (
         <Image
           src={template?.background_image_header}
           style={[
@@ -86,23 +95,26 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
         />
       )}
       {/* Company Info */}
-  
-      <View style={[styles.companyInfo,{paddingLeft,paddingRight,paddingTop,marginVertical: 4,}]}>
-        <View style={{ display: "flex", flexDirection: "column",alignContent:"center" ,
-          justifyContent:"center" ,paddingLeft:8}}>
-          {headerState?.showLogo && (
+      {/* {headerState?.showLogo &&userBranches?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo !== undefined &&( */}
+
+      <View style={[styles.companyInfo, { paddingLeft, paddingRight, paddingTop, marginVertical: 4, }]}>
+        <View style={{
+          display: "flex", flexDirection: "column", alignContent: "center",
+          justifyContent: "center", paddingLeft: 8
+        }}>
+          {headerState?.showLogo && isValidLogo(currentBranch?.logo) && (
             <Image
-              src={currentBranch?.logo}
+              src={currentBranch.logo}
               style={{ width: 80 * logoWidthRatio }}
             />
           )}
           {headerState?.showOrgName && (
-            <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold",fontFamily:fontFamily,textAlign:"center" }}>
+            <Text style={{ color: orgNameFontColor, fontSize: orgNameFontSize, fontWeight: "semibold", fontFamily: fontFamily, textAlign: "center" }}>
               {currentBranch?.name}
             </Text>
           )}
         </View>
-       
+
         <View style={styles.orgAddress}>
           {headerState?.showOrgAddress &&
             currentBranch.address?.map((org: any, idx: number) => (
@@ -122,7 +134,7 @@ export  const Header = ({ data, template, currentBranch,docIDKey,currency}: { da
             </View>
           )}
         </View>
-        
+
       </View>
     </View>
   );

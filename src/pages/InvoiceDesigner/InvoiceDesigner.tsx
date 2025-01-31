@@ -585,7 +585,7 @@ const InvoiceDesigner = () => {
       </div>
 
       {/* Preview  */}
-      {["BalanceSheet","ProfitAndLoss"].includes(templateGroup) && (
+      {/* {["BalanceSheet","ProfitAndLoss"].includes(templateGroup) && (
         <PDFViewer
         className="pdf-viewer"
         width="100%"
@@ -598,7 +598,7 @@ const InvoiceDesigner = () => {
       userSession={userSession}
       />
       </PDFViewer>
-      )}
+      )} */}
       {["CP", "CR"].includes(templateGroup) && (
         <>
           {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}

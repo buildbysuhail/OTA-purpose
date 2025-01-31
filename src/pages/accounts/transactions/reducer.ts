@@ -57,8 +57,8 @@ const accTransactionSlice = createSlice({
         voucherNo,
       } = action.payload;
       state.isBahamdoonPOSReceipt = false;
-      state.transaction.master.accTransactionMasterID = 0,
-      state.row.ledgerCode = "";
+      (state.transaction.master.accTransactionMasterID = 0),
+        (state.row.ledgerCode = "");
       state.transaction.attachments = [];
       state.row.ledgerID = 0;
       state.transaction.master.remarks = "";
@@ -104,10 +104,22 @@ const accTransactionSlice = createSlice({
           state.masterAccountID = counterwiseCashLedgerId;
         }
       }
+
       state.transaction.master.employeeID =
         userSession.employeeId > 0 ? userSession.employeeId : 0;
-      
-      debugger;
+
+      state.formElements.ledgerID.reload = true;
+      state.formElements.costCentreID.reload = true;
+      state.formElements.amount.disabled = false;
+      state.formElements.pnlMasters.disabled = false;
+      state.formElements.employee.disabled = false;
+      state.formElements.jvDrCr.disabled = false;
+      state.formElements.masterAccount.disabled = false;
+      state.formElements.referenceDate.disabled = false;
+      state.formElements.referenceNumber.disabled = false;
+      state.formElements.transactionDate.disabled = false;
+      state.formElements.linkEdit.visible = false;
+
       if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
         state.row.costCentreID = state.userConfig?.presetCostenterId ?? 0;
         state.formElements.costCentreID.disabled = true;
@@ -120,11 +132,11 @@ const accTransactionSlice = createSlice({
             applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0;
         }
       }
-      state.formElements.btnAdd.label = "Add"
+      state.formElements.btnAdd.label = "Add";
       state.prev = modelToBase64Unicode({
-            transaction: { ...state.transaction },
-            row: { ...state.row },
-          });
+        transaction: { ...state.transaction },
+        row: { ...state.row },
+      });
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (

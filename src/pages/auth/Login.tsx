@@ -122,7 +122,7 @@ const Login = () => {
           userThemes,
           userProfileDetails,
           userRights,
-          locale
+          locale 
         );
       } else {
         if (login.item.hasToSetCounter) {

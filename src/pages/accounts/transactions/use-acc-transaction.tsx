@@ -1013,7 +1013,6 @@ export const useAccTransaction = (
         voucherNo: vNo,
       })
     );
-
     // Reset combobox specific states
     // dispatch(
     //   accFormStateRowHandleFieldChange({
@@ -1029,10 +1028,7 @@ export const useAccTransaction = (
     dispatch(
       updateFormElement({
         fields: {
-          ledgerID: { reload: true },
-          costCentreID: { reload: true },
-          amount: { disabled: false },
-          pnlMasters: { disabled: false },
+          
         },
       })
     );

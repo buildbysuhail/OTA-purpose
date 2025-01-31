@@ -86,7 +86,7 @@ const PaymentReport = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
             }
           } : undefined;
         }
@@ -140,7 +140,7 @@ const PaymentReport = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
             },
           };
         }

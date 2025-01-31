@@ -47,6 +47,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
+      width: 250,
     },
     {
       dataField: "balance",
@@ -54,7 +55,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 90,
+      width: 150,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
@@ -68,7 +69,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+
     },
     {
       dataField: "credit",
@@ -76,7 +77,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
@@ -90,7 +91,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
       showInPdf:true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
@@ -139,7 +140,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                     content: <CashBookMonthWise postData={filter} />,
                     title: t("acc_group_monthview"),
                     isForm: true,
-                    width: "mw-100",
+                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID,",
                     enableFn: (data: any) => data?.ledgerName != "TOTAL"

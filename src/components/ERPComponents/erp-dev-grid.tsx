@@ -69,6 +69,7 @@ import { RootState } from "../../redux/store";
 import { UserModel } from "../../redux/slices/user-session/reducer";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
+import { Printer } from "lucide-react";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -891,8 +892,166 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
+    const generatePdf = async (gridInstance: any) => {
+      const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "pt",
+        format: "a4",
+      });
+    
+      const arabicFont = arabicFontBase64;
+      doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
+      doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
+      doc.setFont("Amiri");
+    
+      const pageTitle = `${gridHeader} - ${
+        !filterText || !filter
+          ? filterText || ""
+          : formatStringWithConditions(filterText.toString(), filter)
+      }`;
+    
+      let currentY = 30;
+    
+      // Header content remains the same
+      if (
+        userSession.headerFooter != undefined &&
+        !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
+      ) {
+        doc.setFontSize(13);
+        doc.text(userSession.headerFooter.heading7, 40, currentY, {
+          align: "left",
+        });
+        currentY += 15;
+      }
+      if (
+        userSession.headerFooter != undefined &&
+        !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
+      ) {
+        doc.setFontSize(9);
+        doc.text(userSession.headerFooter.heading8, 40, currentY, {
+          align: "left",
+        });
+        currentY += 15;
+      }
+      if (
+        userSession.headerFooter != undefined &&
+        !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
+      ) {
+        doc.setFontSize(9);
+        doc.text(userSession.headerFooter.heading9, 40, currentY, {
+          align: "left",
+        });
+        currentY += 15;
+      }
+    
+      doc.setFont("Amiri");
+      doc.setFontSize(12);
+      doc.text(pageTitle, 40, currentY, { align: "left" });
+      doc.setFontSize(10);
+    
+      const originalColumnVisibility = gridInstance
+        .getVisibleColumns()
+        .map((column: any) => ({
+          dataField: column.dataField,
+          visible: column.visible,
+        }));
+    
+      const pdfVisibleColumns = preferences
+        ? preferences.columnPreferences
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => colPref.dataField)
+        : gridCols
+            .filter((col) => col.showInPdf)
+            .map((col) => col.dataField);
+    
+      const pageWidth = doc.internal.pageSize.getWidth() - 80;
+    
+      const columnsWithoutWidth = pdfVisibleColumns.filter(
+        (colField) =>
+          !preferences?.columnPreferences.find(
+            (colPref) => colPref.dataField === colField && colPref.width
+          )
+      );
+    
+      const pdfColumnsWidths = preferences
+        ? preferences.columnPreferences
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => colPref.width || 0)
+        : gridCols
+            .filter((col) => col.showInPdf)
+            .map((col) => col.width || 100);
+    
+      if (columnsWithoutWidth.length > 0) {
+        const specifiedWidthTotal = pdfColumnsWidths
+          .filter((width) => width > 0)
+          .reduce((sum, width) => sum + width, 0);
+        const remainingWidth = pageWidth - specifiedWidthTotal;
+        const defaultColumnWidth = remainingWidth / columnsWithoutWidth.length;
+    
+        pdfColumnsWidths.forEach((width, index) => {
+          if (width === 0) {
+            pdfColumnsWidths[index] =
+              defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
+          }
+        });
+      }
+    
+      // Customize the export to PDF to use rendered values
+      const customizeCell = (options: any) => {
+        if (options.gridCell.rowType != "data") return;
+        const column = gridCols.find(
+          (x) => x.dataField == options.gridCell.column.dataField
+        );
+    
+        if (column && column.cellRender) {
+          const renderResult = column.cellRender(
+            { data: options.gridCell.data },
+            options.gridCell,
+            filter,
+            options.pdfCell
+          );
+    
+          let isDefined = renderResult !== undefined;
+          let isObject = typeof renderResult === "object";
+          let isValidReactElement = React.isValidElement(renderResult);
+    
+          if (isDefined && isObject && !isValidReactElement) {
+            options.pdfCell = renderResult;
+          } else {
+            options.pdfCell = options.pdfCell; // Retain the original value
+          }
+        }
+      };
+    
+      gridInstance.beginUpdate();
+      gridInstance.option("wordWrapEnabled", true);
+      gridInstance.getVisibleColumns().forEach((column: any) => {
+        if (!pdfVisibleColumns.includes(column.dataField)) {
+          gridInstance.columnOption(column.dataField, "visible", false);
+        }
+      });
+    
+      await exportDataGridToPdf({
+        jsPDFDocument: doc,
+        component: gridInstance,
+        columnWidths: pdfColumnsWidths,
+        topLeft: { x: 0, y: currentY },
+        customizeCell: customizeCell,
+      });
+    
+      // Restore original column visibility and settings
+      originalColumnVisibility.forEach((column: any) => {
+        gridInstance.columnOption(column.dataField, "visible", column.visible);
+      });
+    
+      gridInstance.option("wordWrapEnabled", false);
+      gridInstance.endUpdate();
+      gridInstance.repaint();
+    
+      return doc; // Return the generated PDF document
+    };
     const onExportingHandler = useCallback(
-      (e: any) => {
+      async(e: any) => {
         if (onExporting) {
           onExporting(e);
         } else {
@@ -916,168 +1075,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             return cellElement.data[column.dataField];
           };
 
-          if (e.format === "pdf") {
-            const doc = new jsPDF({
-              orientation: "landscape",
-              unit: "pt",
-              format: "a4",
-            });
-
-            const arabicFont = arabicFontBase64;
-            doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
-            doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
-            doc.setFont("Amiri");
-
-            const pageTitle = `${gridHeader} - ${
-              !filterText || !filter
-                ? filterText || ""
-                : formatStringWithConditions(filterText.toString(), filter)
-            }`;
-
-            let currentY = 30;
-
-            // Header content remains the same
-            if (
-              userSession.headerFooter != undefined &&
-              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading7)
-            ) {
-              doc.setFontSize(13);
-              doc.text(userSession.headerFooter.heading7, 40, currentY, {
-                align: "left",
-              });
-              currentY += 15;
-            }
-            if (
-              userSession.headerFooter != undefined &&
-              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading8)
-            ) {
-              doc.setFontSize(9);
-              doc.text(userSession.headerFooter.heading8, 40, currentY, {
-                align: "left",
-              });
-              currentY += 15;
-            }
-            if (
-              userSession.headerFooter != undefined &&
-              !isNullOrUndefinedOrEmpty(userSession.headerFooter.heading9)
-            ) {
-              doc.setFontSize(9);
-              doc.text(userSession.headerFooter.heading9, 40, currentY, {
-                align: "left",
-              });
-              currentY += 15;
-            }
-
-            doc.setFont("Amiri");
-            doc.setFontSize(12);
-            doc.text(pageTitle, 40, currentY, { align: "left" });
-            doc.setFontSize(10);
-
-            const originalColumnVisibility = e.component
-              .getVisibleColumns()
-              .map((column: any) => ({
-                dataField: column.dataField,
-                visible: column.visible,
-              }));
-
-            const pdfVisibleColumns = preferences
-              ? preferences.columnPreferences
-                  .filter((colPref) => colPref.showInPdf)
-                  .map((colPref) => colPref.dataField)
-              : gridCols
-                  .filter((col) => col.showInPdf)
-                  .map((col) => col.dataField);
-
-            const pageWidth = doc.internal.pageSize.getWidth() - 80;
-
-            const columnsWithoutWidth = pdfVisibleColumns.filter(
-              (colField) =>
-                !preferences?.columnPreferences.find(
-                  (colPref) => colPref.dataField === colField && colPref.width
-                )
-            );
-
-            const pdfColumnsWidths = preferences
-              ? preferences.columnPreferences
-                  .filter((colPref) => colPref.showInPdf)
-                  .map((colPref) => colPref.width || 0)
-              : gridCols
-                  .filter((col) => col.showInPdf)
-                  .map((col) => col.width || 100);
-
-            if (columnsWithoutWidth.length > 0) {
-              const specifiedWidthTotal = pdfColumnsWidths
-                .filter((width) => width > 0)
-                .reduce((sum, width) => sum + width, 0);
-              const remainingWidth = pageWidth - specifiedWidthTotal;
-              const defaultColumnWidth =
-                remainingWidth / columnsWithoutWidth.length;
-
-              pdfColumnsWidths.forEach((width, index) => {
-                if (width === 0) {
-                  pdfColumnsWidths[index] =
-                    defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
-                }
-              });
-            }
-
-            // Customize the export to PDF to use rendered values
-            const customizeCell = (options: any) => {
-              if (options.gridCell.rowType != "data") return;
-              // const column = e.component.columnOption(options.gridCell.column.dataField);
-              const column = gridCols.find(
-                (x) => x.dataField == options.gridCell.column.dataField
-              );
-
-              if (column && column.cellRender) {
-                const renderResult = column.cellRender(
-                  { data: options.gridCell.data },
-                  options.gridCell,
-                  filter,
-                  options.pdfCell
-                );
-
-                let isDefined = renderResult !== undefined;
-                let isObject = typeof renderResult === "object";
-                let isValidReactElement = React.isValidElement(renderResult);
-
-                if (isDefined && isObject && !isValidReactElement) {
-                  options.pdfCell = renderResult;
-                } else {
-                  options.pdfCell = options.pdfCell; // Retain the original value
-                }
-              }
-            };
-
-            e.component.beginUpdate();
-            e.component.option("wordWrapEnabled", true);
-            e.component.getVisibleColumns().forEach((column: any) => {
-              if (!pdfVisibleColumns.includes(column.dataField)) {
-                e.component.columnOption(column.dataField, "visible", false);
-              }
-            });
-
-            exportDataGridToPdf({
-              jsPDFDocument: doc,
-              component: e.component,
-              columnWidths: pdfColumnsWidths,
-              topLeft: { x: 0, y: currentY },
-              customizeCell: customizeCell,
-            }).then(() => {
-              originalColumnVisibility.forEach((column: any) => {
-                e.component.columnOption(
-                  column.dataField,
-                  "visible",
-                  column.visible
-                );
-              });
-
-              e.component.option("wordWrapEnabled", false);
-              e.component.endUpdate();
-              e.component.repaint();
-              doc.save(`${gridId}.pdf`);
-            });
-          } else if (e.format === "xlsx") {
+              if (e.format === "pdf") {
+              const doc = await generatePdf(e.component); // Generate the PDF
+              doc.save(`${gridId}.pdf`); // Save the PDF
+            } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
 
@@ -1197,6 +1198,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       },
       [onExporting, gridId, preferences, gridCols, header]
     );
+
+    const handlePrintPdf = async () => {
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        const doc = await generatePdf(gridInstance); // Generate the PDF
+        doc.autoPrint(); // Automatically trigger the print dialog
+        doc.output("dataurlnewwindow"); // Open the PDF in a new window
+      }
+    };
+
     const handleInvoke = useCallback(
       (row: any) => {
         // Extracting data from row
@@ -1547,7 +1558,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               {!hideDefaultExportButton && allowExport && (
                 <Item name="exportButton" />
               )}
-
+                {/* New Print Button */}
+                <Item >
+                 
+                 <button className='ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]'
+                   onClick={handlePrintPdf}
+                 >
+                   
+                   <Printer className="w-4 h-4" />
+                 </button>
+               </Item>
               {enablefilter == true && (
                 <Item>
                   <ErpGridGlobalFilter
@@ -1612,6 +1632,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     {toolbarItem.item}
                   </Item>
                 ))}
+
+               
             </Toolbar>
             {gridCols?.map((column) => (
               <Column

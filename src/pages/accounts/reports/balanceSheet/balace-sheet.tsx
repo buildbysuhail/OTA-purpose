@@ -20,6 +20,7 @@ import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizonta
 import { useSelector } from "react-redux";
 import BalanceSheetVerticalPDFTemplate from "./balance-sheet-pdf/balance-sheet-vertical-pdf";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { printPdf } from "../../../../utilities/print-report-utils";
 
 const api = new APIClient();
 const BalanceSheetRow: React.FC<{
@@ -540,54 +541,69 @@ const BalanceSheet = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const handlePrint = async () => {
+    const PDFComponent = isVerticalView ? BalanceSheetVerticalPDFTemplate : BalanceSheetPDFTemplate;
+    const documentProps = {
+      userSession,
+      getFormattedValue,
+      filter,
+      data,
+    };
 
-  const handlePrint = async() => {
-    const pdfDocument =
-      !isVerticalView  ? (
-        <BalanceSheetPDFTemplate
-          userSession={userSession}
-          getFormattedValue={getFormattedValue}
-          filter={filter}
-          data={data}
-        />):(
-          <BalanceSheetVerticalPDFTemplate
-          userSession={userSession}
-          getFormattedValue={getFormattedValue}
-          filter={filter}
-          data={data}
-        />  
-        )
-        const blob = await pdf(pdfDocument).toBlob();
-        const pdfUrl = URL.createObjectURL(blob);
-         // Open the PDF in a new tab for printing
-    const printWindow = window.open(pdfUrl);
-    if (!printWindow) {
-      console.error("Failed to open print window. Please check your browser settings.");
-      ERPAlert.show({
-        title: "Error",
-        text: "Failed to  print ",
-        icon: "error",
-      });
-      return;
-    }
+    await printPdf({
+      PDFComponent,
+      documentProps,
+    });
+  };
+
+
+  // const handlePrint = async() => {
+  //   const pdfDocument =
+  //     !isVerticalView  ? (
+  //       <BalanceSheetPDFTemplate
+  //         userSession={userSession}
+  //         getFormattedValue={getFormattedValue}
+  //         filter={filter}
+  //         data={data}
+  //       />):(
+  //         <BalanceSheetVerticalPDFTemplate
+  //         userSession={userSession}
+  //         getFormattedValue={getFormattedValue}
+  //         filter={filter}
+  //         data={data}
+  //       />  
+  //       )
+  //       const blob = await pdf(pdfDocument).toBlob();
+  //       const pdfUrl = URL.createObjectURL(blob);
+  //        // Open the PDF in a new tab for printing
+  //   const printWindow = window.open(pdfUrl);
+  //   if (!printWindow) {
+  //     console.error("Failed to open print window. Please check your browser settings.");
+  //     ERPAlert.show({
+  //       title: "Error",
+  //       text: "Failed to  print ",
+  //       icon: "error",
+  //     });
+  //     return;
+  //   }
 
     
-         // Wait for the PDF to load in the new tab
-         printWindow.onload = () => {
-          printWindow.print(); // Trigger print
-        };
+  //        // Wait for the PDF to load in the new tab
+  //        printWindow.onload = () => {
+  //         printWindow.print(); // Trigger print
+  //       };
 
-   try{
+  //  try{
   
-   } catch (error) {
-    console.error("Error printing voucher:", error);
-    ERPAlert.show({
-          title: "Warning",
-          text: "An error occurred while printing. Please try again.",
-          icon: "warning",
-        });
-     }
-  };
+  //  } catch (error) {
+  //   console.error("Error printing voucher:", error);
+  //   ERPAlert.show({
+  //         title: "Warning",
+  //         text: "An error occurred while printing. Please try again.",
+  //         icon: "warning",
+  //       });
+  //    }
+  // };
 
   return (
     <div className="p-6 dark:bg-dark-bg bg-white">

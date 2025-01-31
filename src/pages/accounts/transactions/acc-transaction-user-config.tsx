@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
+import {
+  customJsonParse,
+  modelToBase64,
+} from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -18,6 +21,7 @@ import { inputBox } from "../../../redux/slices/app/types";
 import InputBoxStyling from "../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 
 const api = new APIClient();
 interface pageBgColor {
@@ -44,23 +48,23 @@ export const AccTransactionUserConfig = () => {
   };
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
-  const postUserConfigOnOk = async (response: any) => { 
- const base64 = modelToBase64(response);
-      localStorage.setItem('utc', base64);
-  }
+  const postUserConfigOnOk = async (response: any) => {
+    const base64 = modelToBase64(response);
+    localStorage.setItem("utc", base64);
+  };
   const postUserConfig = async () => {
     try {
       const response = await api.post(
         `${Urls.post_acc_user_config}`,
         formState.userConfig
       );
-debugger;
-      handleResponse(response, ()=>{const base64 = modelToBase64(formState.userConfig);
-        localStorage.setItem('utc', base64);});
+      debugger;
+      handleResponse(response, () => {
+        const base64 = modelToBase64(formState.userConfig);
+        localStorage.setItem("utc", base64);
+      });
     } catch (error) {
       console.error("Error post System Code settings:", error);
     } finally {
@@ -78,6 +82,31 @@ debugger;
         fields: { userConfig: updatedUserConfig },
       })
     );
+  };
+  const resetThemeChange = async () => {
+    try {
+      ERPAlert.show({
+        title: "Are you sure reset now?",
+        icon: "warning",
+        confirmButtonText: "Yes, reset now!",
+        cancelButtonText: "Cancel",
+        onConfirm: async (result: any) => {
+          const res = await api.postAsync(Urls.reset_user_settings, {});
+          handleResponse(res, () => {
+            const st = atob(res.item);
+            // dispatch(setInputBox(res.inputBox));
+            const _st: any = customJsonParse(st);
+            dispatch(
+              accFormStateHandleFieldChange({
+                fields: { userConfig: _st },
+              })
+            );
+          });
+        },
+      });
+    } catch (error) {
+      console.error("Error getInputBox data:", error);
+    }
   };
 
   const { t } = useTranslation("transaction");
@@ -167,10 +196,7 @@ debugger;
                   labelKey: "name",
                 }}
                 onChangeData={(e) =>
-                  handleFieldChange(
-                    "presetCostenterId",
-                    e.presetCostenterId
-                  )
+                  handleFieldChange("presetCostenterId", e.presetCostenterId)
                 }
               />
               <ERPInput
@@ -295,8 +321,8 @@ debugger;
 
             <div className="w-full p-2 flex justify-end space-x-2">
               <ERPButton
-                title={t("cancel")}
-                onClick={() => setIsOpen(false)}
+                title={t("reset")}
+                onClick={resetThemeChange}
                 type="reset"
               ></ERPButton>
               <ERPButton

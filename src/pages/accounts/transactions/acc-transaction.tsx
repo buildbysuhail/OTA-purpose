@@ -1393,7 +1393,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {/* <h1>{transactionType}</h1> */}
       {!deviceInfo?.isMobile && (
         <div
-          className={`dark:!bg-dark-bg  space-y-6 p-4`}
+          className={`dark:!bg-dark-bg p-4`}
           style={{
             backgroundColor: formState.userConfig?.outerPageBg
               ? `rgb(${formState.userConfig?.outerPageBg})`
@@ -2103,7 +2103,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1">
                   {formState.formElements.remarks.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2326,7 +2326,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   }
                 />
               )}
-              <div className="xl:w-[170px] lg:w-[250px]  mb-[13px]">
+              <div className="xl:w-[170px] lg:w-[250px]">
                 {formState.formElements.discount.visible && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2354,7 +2354,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     id="discount"
                     type="number"
                     min={0}
-                    className="!mb-[4px]"
+                    className=""
                     label=" "
                     value={formState.row.discount}
                     onChange={(e) =>
@@ -2374,10 +2374,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-4">
-              <span className="text-blue-600 font-bold self-center">
-                {t("group_name")}: {formState.ledgerData?.accGroupName}
-              </span>
+            <div className="grid grid-cols-3">
+              <div className="flex flex-wrap gap-4">
+                <span className="text-blue-600 font-bold self-center">
+                  {t("group_name")}: {formState.ledgerData?.accGroupName}
+                </span>
+              </div>
+              <div className="text-red-600" style={{ fontSize: "12px", color: "chocolate" }}>
+                {t("amount_in_words")}: {formState.amountInWords}
+              </div>
             </div>
           </div>
 
@@ -2419,11 +2424,52 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
               )}
 
+              {formState.formElements.costCentreID.visible && (
+                <ERPDataCombobox
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  enableClearOption={false}
+                  ref={costCenterRef}
+                  id="costCentreID"
+                  // nameField="costCentreName"
+                  className="min-w-[180px]"
+                  label={t(formState.formElements.costCentreID.label)}
+                  data={formState.row}
+                  onSelectItem={(e) => {
+                    debugger;
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: {
+                          costCentreID: e.value,
+                          costCentreName: e.label,
+                        },
+                      })
+                    );
+                    handleFieldKeyDown("costCentreID", "Enter");
+                  }}
+                  value={formState.row.costCentreID}
+                  field={{
+                    id: "costCentreID",
+                    valueKey: "id",
+                    labelKey: "name",
+                    getListUrl: Urls.data_costcentres,
+                  }}
+                  disabled={
+                    (formState.userConfig?.presetCostenterId ?? 0) > 0 ||
+                    formState.formElements.costCentreID.disabled ||
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                  disableEnterNavigation
+                  onKeyDown={(e: any) => {
+                    handleKeyDown(e, "costCentre");
+                  }}
+                />
+              )}
+
               {formState.transaction?.master?.isLocked !== undefined &&
                 formState.transaction?.master?.isLocked == true &&
                 (userSession.userTypeCode == "CA" ||
                   userSession.userTypeCode == "BA") && <>{t("unlock")}</>}
-              <div className="flex items-center gap-2 mt-3">
+              <div className="flex items-center gap-2 mt-4">
                 {applicationSettings.accountsSettings
                   ?.maintainBillwiseAccount == true && (
                     <ERPButton
@@ -2558,54 +2604,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   />
                 )}
               </>
+            </div>
 
-              {formState.formElements.costCentreID.visible && (
-                <ERPDataCombobox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  enableClearOption={false}
-                  ref={costCenterRef}
-                  id="costCentreID"
-                  // nameField="costCentreName"
-                  className="min-w-[180px]"
-                  label={t(formState.formElements.costCentreID.label)}
-                  data={formState.row}
-                  onSelectItem={(e) => {
-                    debugger;
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: {
-                          costCentreID: e.value,
-                          costCentreName: e.label,
-                        },
-                      })
-                    );
-                    handleFieldKeyDown("costCentreID", "Enter");
-                  }}
-                  value={formState.row.costCentreID}
-                  field={{
-                    id: "costCentreID",
-                    valueKey: "id",
-                    labelKey: "name",
-                    getListUrl: Urls.data_costcentres,
-                  }}
-                  disabled={
-                    (formState.userConfig?.presetCostenterId ?? 0) > 0 ||
-                    formState.formElements.costCentreID.disabled ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                  disableEnterNavigation
-                  onKeyDown={(e: any) => {
-                    handleKeyDown(e, "costCentre");
-                  }}
-                />
-              )}
-            </div>
-            <div
-              className="text-red-600 mt-4"
-              style={{ fontSize: "12px", color: "chocolate" }}
-            >
-              {t("amount_in_words")}: {formState.amountInWords}
-            </div>
           </div>
           <div className="relative">
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
@@ -2632,6 +2632,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               onSelectionChangedByRootState={(e: any, state: RootState) =>
                 onSelectionChanged(e, state, false)
               }
+              enableScrollButton={false}
               className="pb-14"
             ></ErpDevGrid>
           </div>
@@ -3412,13 +3413,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
       </div>
 
-      {formState.transaction && formState.template && isPrintModalOpen && (
+      {formState.transaction && formState.template && (
         <ERPModal
-          isOpen={isPrintModalOpen}
+          isOpen={formState.printPreview && isPrintModalOpen}
           title={t("Template")}
           isForm={true}
           closeModal={() => {
-            setIsPrintModalOpen(false);
+            setIsPrintModalOpen(false)
+            dispatch(
+              accFormStateHandleFieldChange({ fields: { printPreview: false } })
+            );
           }}
           content={
             <PDFViewer

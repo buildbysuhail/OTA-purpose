@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     backgroundColor: '#ffffff',
     paddingVertical: 10, paddingHorizontal: 20,
+    flex: 1,
     flexDirection: 'column',
     width: '100%',
     height: '100%'
@@ -26,8 +27,8 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-
   },
+
   tableRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -45,9 +46,9 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   total: {
- 
+    backgroundColor: "rgb(245, 243, 243)",
     color: '#f00',
-   
+    padding: 5,
     fontSize: 12, fontWeight: 600, fontFamily: "Poppins", fontStyle: 'medium'
   },
   title: {
@@ -57,13 +58,18 @@ const styles = StyleSheet.create({
   amount: {
     textAlign: 'right',
   },
-  bold: {
-    fontWeight: 700,
-    fontStyle: 'bold'
-  },
+
   blue: {
+    fontWeight: 500, fontStyle: 'medium',
     color: '#3b82f6',
     fontSize: 10, fontFamily: "Poppins",
+    paddingLeft: 8
+  },
+  blueTextNum:{
+    fontWeight: 500, fontStyle: 'medium',
+    color: '#3b82f6',
+    fontSize: 10, fontFamily: "Poppins",
+    paddingRight: 8
   },
   red: {
     fontWeight: 700,
@@ -80,12 +86,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   darkText: {
-    color: '#03070f',
+    color: '#00000',
     fontWeight: 400,
     fontStyle: 'normal',
     fontFamily: "Poppins",
     fontSize: 10,
-    paddingLeft: 10
+    paddingLeft: 16
   },
   darkTextnum: {
     color: '#03070f',
@@ -93,12 +99,10 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: "Poppins",
     fontSize: 10,
-    paddingRight: 10
+    paddingRight: 16
   },
 
-  greyText: {
-    color: '#666',
-  },
+
 });
 
 const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
@@ -111,7 +115,14 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
     (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
   );
 
-
+  const expenseTotal =
+    data?.find(
+      (item: any) => item?.transType === "E" && item?.groupName === "TOTAL"
+    )?.total || 0;
+  const incomeTotal =
+    data?.find(
+      (item: any) => item?.transType === "I" && item?.groupName === "TOTAL"
+    )?.total || 0;
 
   return (
     <Document>
@@ -145,9 +156,7 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
           </View>
 
           <View style={styles.table}>
-            {/* table1 */}
        
-              {/* table Head*/}
               <View style={styles.tableRow}>
                 <View style={[styles.tableHeader,]}>
                   <Text>Account</Text>
@@ -160,58 +169,67 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
               {/* table body*/}
             <View  style={styles.tableRow}>
               <View style={[styles.tableCell,]}>
+              {income?.map((item: any, index: number) => (
+                <Text
+                key={`inc${index}`}
+                style={[
+                  item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                  styles.darkText :styles.blue    
+                ]}
+              >
+               {item?.groupName || " "}
+              </Text>
+            ))}
+              <Text style={styles.total}>Total</Text>   
               {expense?.map((item: any, index: number) => (
                    <Text
+                   key={`exp${index}`}
                    style={[
-
-                     item.title === "I" || item.groupName === "TOTAL"
-                       ? styles.bold
-                       : {},
-                     item.title === "M"
-                       ? styles.SaddleBrown
-                       : item.groupName === "L"
-                         ? styles.darkText
-                         : styles.blue,
-                   ]}
+                    item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                    styles.darkText :styles.blue    
+                  ]}
                  >
-                   {item.groupName}
+                   {item?.groupName || " "}
                  </Text>
               ))}
               <Text style={styles.total}>Total</Text>
-             {income?.map((item: any, index: number) => (
-                <Text
-                style={[
-
-                  item.title === "I" || item.groupName === "TOTAL"
-                    ? styles.bold
-                    : {},
-                  item.title === "M"
-                    ? styles.SaddleBrown
-                    : item.groupName === "L"
-                      ? styles.darkText
-                      : styles.blue,
-                ]}
-              >
-                {item.groupName}
-              </Text>
-            ))}
-            
-              <Text style={styles.total}>Total</Text>
+      
            
               </View>
               <View style={[styles.tableCell,styles.amount]}>
-              {expense?.map((item: any, index: number) => (
+          
+              {income?.map((item: any, index: number) => (
+                 <Text
+                 key={`income${index}`}
+                 style={[
+                  item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                  styles.darkTextnum :styles.blueTextNum    
+                ]}
+               >
+                 {item.transType === "L"
+                   ? item.title === "M"
+                     ? getFormattedValue(item.total)
+                     : item.total > 0
+                       ? "(-)" + getFormattedValue(item.total)
+                       : item.total === 0
+                         ? getFormattedValue(0)
+                         : getFormattedValue(-1 * item.total)
+                   : item.title === "M"
+                     ? getFormattedValue(item.total)
+                     : item.total < 0
+                       ? "(-)" + getFormattedValue(-1 * item.total)
+                       : item.total === 0
+                         ? getFormattedValue(0)
+                         : getFormattedValue(item.total)}
+               </Text>
+             ))}
+         <Text style={[styles.total,styles.amount]}>{getFormattedValue(incomeTotal)}</Text>
+            {expense?.map((item: any, index: number) => (
                   <Text
+                  key={`expense${index}`}
                   style={[
-
-                    item.title === "I" || item.groupName === "TOTAL"
-                      ? styles.bold
-                      : {},
-                    item.title === "M"
-                      ? styles.SaddleBrown
-                      : item.groupName === "L"
-                        ? styles.darkTextnum
-                        : styles.blue,
+                    item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                    styles.darkTextnum :styles.blueTextNum    
                   ]}
                 >
                   {item.transType === "L"
@@ -231,37 +249,7 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
                           : getFormattedValue(item.total)}
                 </Text>
             ))}
-            {income?.map((item: any, index: number) => (
-                 <Text
-                 style={[
-
-                   item.title === "I" || item.groupName === "TOTAL"
-                     ? styles.bold
-                     : {},
-                   item.title === "M"
-                     ? styles.SaddleBrown
-                     : item.groupName === "L"
-                       ? styles.darkTextnum
-                       : styles.blue,
-                 ]}
-               >
-                 {item.transType === "L"
-                   ? item.title === "M"
-                     ? getFormattedValue(item.total)
-                     : item.total > 0
-                       ? "(-)" + getFormattedValue(item.total)
-                       : item.total === 0
-                         ? getFormattedValue(0)
-                         : getFormattedValue(-1 * item.total)
-                   : item.title === "M"
-                     ? getFormattedValue(item.total)
-                     : item.total < 0
-                       ? "(-)" + getFormattedValue(-1 * item.total)
-                       : item.total === 0
-                         ? getFormattedValue(0)
-                         : getFormattedValue(item.total)}
-               </Text>
-             ))}
+            <Text style={[styles.total,styles.amount]}>{getFormattedValue(expenseTotal)}</Text>
               </View>
             </View>
            
@@ -270,20 +258,7 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
          
           </View>
 
-          {/* <View style={styles.tableRow}>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(liabilityTotal)}</Text>
-            </View>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(assetTotal)}</Text>
-            </View>
-         </View> */}
+  
       </Page>
     </Document>
   );

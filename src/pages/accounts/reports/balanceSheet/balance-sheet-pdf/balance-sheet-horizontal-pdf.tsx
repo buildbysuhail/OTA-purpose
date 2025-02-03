@@ -182,7 +182,7 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
                             : styles.darkText,
                       ]}
                     >
-                      {item.groupName}
+                     {item?.groupName || " "}
                     </Text>
                   </View>
                   <View style={[styles.tableCell, styles.amount]}>
@@ -250,7 +250,7 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
                             : styles.darkText,
                       ]}
                     >
-                      {item.groupName}
+                     {item?.groupName || " "}
                     </Text>
                   </View>
                   <View style={[styles.tableCell, styles.amount]}>

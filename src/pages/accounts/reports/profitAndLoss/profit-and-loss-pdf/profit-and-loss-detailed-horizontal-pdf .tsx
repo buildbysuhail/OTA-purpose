@@ -63,13 +63,18 @@ const styles = StyleSheet.create({
   amount: {
     textAlign: 'right',
   },
-  bold: {
-    fontWeight: 700,
-    fontStyle: 'bold'
-  },
+
   blue: {
+    fontWeight: 500, fontStyle: 'medium',
     color: '#3b82f6',
     fontSize: 10, fontFamily: "Poppins",
+    paddingLeft: 8
+  },
+  blueTextNum:{
+    fontWeight: 500, fontStyle: 'medium',
+    color: '#3b82f6',
+    fontSize: 10, fontFamily: "Poppins",
+    paddingRight: 8
   },
   red: {
     fontWeight: 700,
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: "Poppins",
     fontSize: 10,
-    paddingLeft: 10
+    paddingLeft: 16
   },
   darkTextnum: {
     color: '#03070f',
@@ -99,12 +104,10 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: "Poppins",
     fontSize: 10,
-    paddingRight: 10
+    paddingRight: 16
   },
 
-  greyText: {
-    color: '#666',
-  },
+
 });
 
 const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
@@ -118,7 +121,14 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
     (item) => item?.transType === "I" && item?.groupName !== "TOTAL"
   );
 
-
+  const expenseTotal =
+    data?.find(
+      (item: any) => item?.transType === "E" && item?.groupName === "TOTAL"
+    )?.total || 0;
+  const incomeTotal =
+    data?.find(
+      (item: any) => item?.transType === "I" && item?.groupName === "TOTAL"
+    )?.total || 0;
 
   return (
     <Document>
@@ -144,16 +154,24 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
             <View style={{ display: 'flex', flexDirection: "row", gap: 0 }}>
               <Text style={styles.subheader1}>Profit and Loss Detailed - </Text>
               <Text style={styles.subheader2}>
-                as of {new Date(filter.asonDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "2-digit",
-                })}
+              From{" "}
+          {new Date(filter.fromDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          })}{" "}
+          to{" "}
+          {new Date(filter.toDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          })}
               </Text>
             </View>
           </View>
 
           <View style={styles.table}>
+
             {/* table1 */}
             <View style={styles.subtable}>
               {/* table Head*/}
@@ -171,32 +189,21 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                 <View key={`expense-${index}`} style={styles.tableRow}>
                   <View style={[styles.tableCell,]}>
                     <Text
+                    key={`exp${index}`}
                       style={[
-                        item.title === "I" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "L"
-                            ? styles.darkText
-                            : styles.blue,
+                        item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                        styles.darkText :styles.blue    
                       ]}
                     >
-                      {item.groupName}
+                     {item?.groupName || " "}
                     </Text>
                   </View>
                   <View style={[styles.tableCell, styles.amount]}>
                     <Text
-                      style={[
-
-                        item.title === "I" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "L"
-                            ? styles.darkTextnum
-                            : styles.blue,
+                     key={`expense${index}`}
+                       style={[
+                        item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                        styles.darkTextnum :styles.blueTextNum    
                       ]}
                     >
                       {item.transType === "L"
@@ -239,33 +246,22 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
                 <View key={`income-${index}`} style={styles.tableRow}>
                   <View style={[styles.tableCell,]}>
                     <Text
-                      style={[
-                        item.transType === "I" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "L"
-                            ? styles.darkText
-                            : styles.blue,
-                      ]}
+                    key={`inc${index}`}
+                    style={[
+                      item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                      styles.darkText :styles.blue    
+                    ]}
                     >
-                      {item.groupName}
+                     {item?.groupName || " "}
                     </Text>
                   </View>
                   <View style={[styles.tableCell, styles.amount]}>
                     <Text
-                      style={[
-
-                        item.title === "I" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "L"
-                            ? styles.darkTextnum
-                            : styles.blue,
-                      ]}
+                     key={`income${index}`}
+                          style={[
+                            item.title === "M" ? styles.SaddleBrown : item.title === "L" || item.title === "G"?
+                            styles.darkTextnum :styles.blueTextNum    
+                          ]}
                     >
                       {item.transType === "L"
                         ? item.title === "M"
@@ -288,23 +284,22 @@ const ProfitAndLossDetailedPDFTemplate: React.FC<{ data: any[], filter: any, get
               ))}
 
             </View>
+
           </View>
-
-          {/* <View style={styles.tableRow}>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>Total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(liabilityTotal)}</Text>
-            </View>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>Total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(assetTotal)}</Text>
-            </View>
-          </View> */}
-
+            <View style={styles.tableRow}>
+               <View style={[{ flex: 1, padding: 5, }, styles.total]}>
+                 <Text>Total</Text>
+               </View>
+               <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
+                 <Text>{getFormattedValue(expenseTotal)}</Text>
+               </View>
+               <View style={[{ flex: 1, padding: 5, }, styles.total]}>
+                 <Text>Total</Text>
+               </View>
+               <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
+                 <Text>{getFormattedValue(incomeTotal)}</Text>
+               </View>
+             </View>       
         </View>
       </Page>
     </Document>

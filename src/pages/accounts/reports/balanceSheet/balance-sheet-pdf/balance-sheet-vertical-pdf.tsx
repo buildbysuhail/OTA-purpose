@@ -177,7 +177,7 @@ const BalanceSheetVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getF
                          : styles.darkText,
                    ]}
                  >
-                   {item.groupName}
+                   {item?.groupName || " "}
                  </Text>
               ))}
               <Text style={styles.total}>total</Text>
@@ -195,7 +195,7 @@ const BalanceSheetVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getF
                       : styles.darkText,
                 ]}
               >
-                {item.groupName}
+                {item?.groupName || " "}
               </Text>
             ))}
             
@@ -275,20 +275,7 @@ const BalanceSheetVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getF
          
           </View>
 
-          {/* <View style={styles.tableRow}>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(liabilityTotal)}</Text>
-            </View>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(assetTotal)}</Text>
-            </View>
-         </View> */}
+  
       </Page>
     </Document>
   );

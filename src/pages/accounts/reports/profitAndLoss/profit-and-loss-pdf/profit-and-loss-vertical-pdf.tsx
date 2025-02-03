@@ -230,6 +230,7 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
               <View style={[styles.tableCell]}>
                 {expense?.map((item: any, index: number) => (
                   <Text
+                   key={`exp${index}`}
                     style={[
                       item.title === "M" || item.groupName === "TOTAL"
                         ? styles.bold
@@ -241,12 +242,13 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
                         : styles.darkText,
                     ]}
                   >
-                    {item.groupName}
+                     {item?.groupName || " "}
                   </Text>
                 ))}
                 {/* <Text style={styles.total}>total</Text> */}
                 {income?.map((item: any, index: number) => (
                   <Text
+                  key={`inc${index}`}
                     style={[
                       item.title === "M" || item.groupName === "TOTAL"
                         ? styles.bold
@@ -258,7 +260,7 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
                         : styles.darkText,
                     ]}
                   >
-                    {item.groupName}
+                    {item?.groupName || " "}
                   </Text>
                 ))}
 
@@ -267,6 +269,7 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
               <View style={[styles.tableCell, styles.amount]}>
                 {expense?.map((item: any, index: number) => (
                   <Text
+                  key={`expT${index}`}
                     style={[
                       item.title === "M" || item.groupName === "TOTAL"
                         ? styles.bold
@@ -298,6 +301,7 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
                 {/* <Text style={[styles.total,styles.amount]}>{getFormattedValue(assetTotal)}</Text> */}
                 {income?.map((item: any, index: number) => (
                   <Text
+                  key={`incT${index}`}
                     style={[
                       item.title === "M" || item.groupName === "TOTAL"
                         ? styles.bold
@@ -332,20 +336,7 @@ const ProfitAndLossVerticalPDFTemplate: React.FC<{
           </View>
         </View>
 
-        {/* <View style={styles.tableRow}>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(liabilityTotal)}</Text>
-            </View>
-            <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
-            </View>
-            <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
-              <Text>{getFormattedValue(assetTotal)}</Text>
-            </View>
-         </View> */}
+ 
       </Page>
     </Document>
   );

@@ -79,8 +79,8 @@ export interface SummaryConfig {
   column: string;
   summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
   valueFormat?: string;
-  showInColumn?:string;
-  alignment?:"center"|"left"|"right";
+  showInColumn?: string;
+  alignment?: "center" | "left" | "right";
   customizeText?: (itemInfo: { value: any }) => string;
 }
 
@@ -98,6 +98,7 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
+  showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
   columns: DevGridColumn[];
@@ -139,15 +140,15 @@ interface ERPDevGridProps {
   allowSearching?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
-    | boolean
-    | {
-        filtering?: boolean;
-        sorting?: boolean;
-        paging?: boolean;
-        summary?: boolean;
-        groupPaging?: boolean;
-        grouping?: boolean;
-      };
+  | boolean
+  | {
+    filtering?: boolean;
+    sorting?: boolean;
+    paging?: boolean;
+    summary?: boolean;
+    groupPaging?: boolean;
+    grouping?: boolean;
+  };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
@@ -303,13 +304,13 @@ const createStore = async (
 
       // Append filterData to params
       if (enablefilter && filterData) {
-        Object.entries(filterData).forEach((x : any) => {
+        Object.entries(filterData).forEach((x: any) => {
           debugger;
           if (x[1] instanceof Date || x[0]?.includes('date') || x[0]?.includes('Date')) {
-            
-            const sds = moment(x[1]).utc().startOf('day'); 
-params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
-          } else {  
+
+            const sds = moment(x[1]).utc().startOf('day');
+            params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
+          } else {
             params[x[0]] = JSON.stringify(x[1]);
           }
         });
@@ -317,8 +318,8 @@ params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
 
       const queryString = new URLSearchParams(params).toString();
       const updated =
-      filterData && Object.keys(filterData).length > 0
-        ? Object.fromEntries(
+        filterData && Object.keys(filterData).length > 0
+          ? Object.fromEntries(
             Object.entries(filterData).map(([key, value]) => {
               if (
                 (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
@@ -329,24 +330,24 @@ params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
               return [key, value];
             })
           )
-        : filterData;
-    
+          : filterData;
+
       try {
         setFilterValidations(undefined);
         const result =
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-            ? await api.postAsync(
+              ? await api.postAsync(
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
                   : postData != undefined
-                  ? postData
-                  : {},
+                    ? postData
+                    : {},
                 queryString
               )
-            : null;
+              : null;
 
         if (
           result != undefined &&
@@ -376,21 +377,21 @@ params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
-                data: [],
-                totalCount: -1,
-                summary: {},
-                groupCount: 0,
-              }
-            : {
-                data: result.data,
-                totalCount: result.totalCount,
-              }
-          : {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            };
+            }
+            : {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+            data: [],
+            totalCount: -1,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -420,6 +421,7 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
+      showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
       columns,
@@ -563,8 +565,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         heightToAdjustOnWindowsInModal !== undefined
           ? heightToAdjustOnWindowsInModal
           : wh - heightToAdjustOnWindows < 300
-          ? 300
-          : wh - heightToAdjustOnWindows;
+            ? 300
+            : wh - heightToAdjustOnWindows;
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [
       heightToAdjustOnMobile,
@@ -788,18 +790,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           );
           const result = conditionResult
             ? trueValue.replace(
-                /\[([^\]]+)\]/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(formState[innerPlaceholder]);
-                  }
-                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+              /\[([^\]]+)\]/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return formatDate(formState[innerPlaceholder]);
                 }
-              )
+                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -807,22 +809,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return rowData != undefined
-                      ? formatDate(rowData[innerPlaceholder])
-                      : "N/A";
-                  }
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
                   return rowData != undefined
-                    ? rowData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+                    ? formatDate(rowData[innerPlaceholder])
+                    : "N/A";
                 }
-              )
+                return rowData != undefined
+                  ? rowData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -830,20 +832,20 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("****");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(postData[innerPlaceholder]);
-                  }
-                  return postData != undefined
-                    ? postData[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date")
+                ) {
+                  // If the placeholder is a date, format it
+                  return formatDate(postData[innerPlaceholder]);
                 }
-              )
+                return postData != undefined
+                  ? postData[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -851,22 +853,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("---");
           const result = r
             ? r.replace(
-                /\(([^\]]+)\)/g,
-                (innerMatch: any, innerPlaceholder: any) => {
-                  if (
-                    innerPlaceholder.includes("date") ||
-                    innerPlaceholder.includes("Date") ||
-                    innerPlaceholder.includes("finFrom") ||
-                    innerPlaceholder.includes("finTo")
-                  ) {
-                    // If the placeholder is a date, format it
-                    return formatDate(userSession[innerPlaceholder]);
-                  }
-                  return userSession != undefined
-                    ? userSession[innerPlaceholder] || "N/A"
-                    : "N/A"; // Return the value from formState, or "N/A" if not found
+              /\(([^\]]+)\)/g,
+              (innerMatch: any, innerPlaceholder: any) => {
+                if (
+                  innerPlaceholder.includes("date") ||
+                  innerPlaceholder.includes("Date") ||
+                  innerPlaceholder.includes("finFrom") ||
+                  innerPlaceholder.includes("finTo")
+                ) {
+                  // If the placeholder is a date, format it
+                  return formatDate(userSession[innerPlaceholder]);
                 }
-              )
+                return userSession != undefined
+                  ? userSession[innerPlaceholder] || "N/A"
+                  : "N/A"; // Return the value from formState, or "N/A" if not found
+              }
+            )
             : "";
 
           return result;
@@ -892,27 +894,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
-   const pageOrientation = preferences?.orientation === "landscape" ? "landscape" : "portrait";
-    const generatePdf = async (gridInstance: any) => {
+    const pageOrientation = preferences?.orientation === "landscape" ? "landscape" : "portrait";
+    const generatePdf = async (gridInstance: any, isPrintAction: boolean = false) => {
       const doc = new jsPDF({
         orientation: pageOrientation,
         unit: "pt",
         format: "a4",
       });
-    
+
       const arabicFont = arabicFontBase64;
       doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
       doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
       doc.setFont("Amiri");
-    
-      const pageTitle = `${gridHeader} - ${
-        !filterText || !filter
-          ? filterText || ""
-          : formatStringWithConditions(filterText.toString(), filter)
-      }`;
-    
+
+      const pageTitle = `${gridHeader} - ${!filterText || !filter
+        ? filterText || ""
+        : formatStringWithConditions(filterText.toString(), filter)
+        }`;
+
       let currentY = 30;
-    
+
       // Header content remains the same
       if (
         userSession.headerFooter != undefined &&
@@ -944,29 +945,29 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         });
         currentY += 15;
       }
-    
+
       doc.setFont("Amiri");
       doc.setFontSize(12);
       doc.text(pageTitle, 40, currentY, { align: "left" });
       doc.setFontSize(10);
-    
+
       const originalColumnVisibility = gridInstance
         .getVisibleColumns()
         .map((column: any) => ({
           dataField: column.dataField,
           visible: column.visible,
         }));
-    debugger;
+      debugger;
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.dataField)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.dataField)
         : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.dataField);
- 
+          .filter((col) => col.showInPdf)
+          .map((col) => col.dataField);
+
       const pageWidth = doc.internal.pageSize.getWidth() - 80;
-    
+
       const columnsWithoutWidth = pdfVisibleColumns.filter(
         (colField) =>
           !preferences?.columnPreferences.find(
@@ -989,20 +990,20 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
-            .filter((colPref) => colPref.showInPdf)
-            .map((colPref) => colPref.width || 0)
+          .filter((colPref) => colPref.showInPdf)
+          .map((colPref) => colPref.width || 0)
         : gridCols
-            .filter((col) => col.showInPdf)
-            .map((col) => col.width || 100);
+          .filter((col) => col.showInPdf)
+          .map((col) => col.width || 100);
 
-        
+
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
           .filter((width) => width > 0)
           .reduce((sum, width) => sum + width, 0);
         const remainingWidth = pageWidth - specifiedWidthTotal;
         const defaultColumnWidth = remainingWidth / columnsWithoutWidth.length;
-    
+
         pdfColumnsWidths.forEach((width, index) => {
           if (width === 0) {
             pdfColumnsWidths[index] =
@@ -1010,14 +1011,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }
         });
       }
-    
+
       // Customize the export to PDF to use rendered values
       const customizeCell = (options: any) => {
         if (options.gridCell.rowType != "data") return;
         const column = gridCols.find(
           (x) => x.dataField == options.gridCell.column.dataField
         );
-    
+
         if (column && column.cellRender) {
           const renderResult = column.cellRender(
             { data: options.gridCell.data },
@@ -1025,11 +1026,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             filter,
             options.pdfCell
           );
-    
+
           let isDefined = renderResult !== undefined;
           let isObject = typeof renderResult === "object";
           let isValidReactElement = React.isValidElement(renderResult);
-    
+
           if (isDefined && isObject && !isValidReactElement) {
             options.pdfCell = renderResult;
           } else {
@@ -1037,7 +1038,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           }
         }
       };
-    
+
       gridInstance.beginUpdate();
       gridInstance.option("wordWrapEnabled", true);
       gridInstance.getVisibleColumns().forEach((column: any) => {
@@ -1045,7 +1046,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           gridInstance.columnOption(column.dataField, "visible", false);
         }
       });
-    
+
       await exportDataGridToPdf({
         jsPDFDocument: doc,
         component: gridInstance,
@@ -1053,20 +1054,46 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         topLeft: { x: 0, y: currentY },
         customizeCell: customizeCell,
       });
-    
+
       // Restore original column visibility and settings
       originalColumnVisibility.forEach((column: any) => {
         gridInstance.columnOption(column.dataField, "visible", column.visible);
       });
-    
+
       gridInstance.option("wordWrapEnabled", false);
       gridInstance.endUpdate();
       gridInstance.repaint();
-    
+
+      const totalPages = doc.getNumberOfPages();
+      const createdDate = new Date().toLocaleDateString("en-GB");
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        if (isPrintAction) {
+          doc.text(
+            `Printed on: ${createdDate}`,
+            40,
+            doc.internal.pageSize.getHeight() - 20
+          );
+        } else {
+          doc.text(
+            `Created on: ${createdDate}`,
+            40,
+            doc.internal.pageSize.getHeight() - 20
+          );
+        }
+        doc.text(
+          `Page ${i} of ${totalPages}`,
+          doc.internal.pageSize.getWidth() - 60,
+          doc.internal.pageSize.getHeight() - 20,
+          { align: "right" }
+        );
+      }
+
       return doc; // Return the generated PDF document
     };
     const onExportingHandler = useCallback(
-      async(e: any) => {
+      async (e: any) => {
         if (onExporting) {
           onExporting(e);
         } else {
@@ -1090,10 +1117,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             return cellElement.data[column.dataField];
           };
 
-              if (e.format === "pdf") {
-              const doc = await generatePdf(e.component); // Generate the PDF
-              doc?.save(`${gridId}.pdf`); // Save the PDF
-            } else if (e.format === "xlsx") {
+          if (e.format === "pdf") {
+            const doc = await generatePdf(e.component); // Generate the PDF
+            doc?.save(`${gridId}.pdf`); // Save the PDF
+          } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
 
@@ -1170,11 +1197,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               if (column) {
                 const renderResult = column.cellRender
                   ? column.cellRender(
-                      { data: options.gridCell.data },
-                      options.gridCell,
-                      filter,
-                      options.excelCell.style
-                    )
+                    { data: options.gridCell.data },
+                    options.gridCell,
+                    filter,
+                    options.excelCell.style
+                  )
                   : undefined;
 
                 let isDefined = renderResult !== undefined;
@@ -1217,7 +1244,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handlePrintPdf = async () => {
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-        const doc = await generatePdf(gridInstance); // Generate the PDF
+        const doc = await generatePdf(gridInstance, true); // Generate the PDF with the print action flag
         doc?.autoPrint(); // Automatically trigger the print dialog
         doc?.output("dataurlnewwindow"); // Open the PDF in a new window
       }
@@ -1309,9 +1336,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             dynamicProps?.bodyProps != undefined
               ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-                  const trimmedProp = prop.trim();
-                  updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-                })
+                const trimmedProp = prop.trim();
+                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+              })
               : {};
 
             const pdata =
@@ -1418,31 +1445,31 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
     }, [enableScrollButton, handleScroll]);
 
-  // Memoize the customizeText function
-  const customizeDate = useMemo(() => {
-    return (itemInfo: { value: any }) => `Sales Total: ${itemInfo.value.toFixed(2)}`
-  }, []) 
+    // Memoize the customizeText function
+    const customizeDate = useMemo(() => {
+      return (itemInfo: { value: any }) => `Sales Total: ${itemInfo.value.toFixed(2)}`
+    }, [])
 
-  // Memoize the entire Summary component
-  const MemoizedSummary = useMemo(() => {
-    return (
-      <Summary recalculateWhileEditing={true}>
-        {summaryItems?.map((config: SummaryConfig, index: number) => {
-          return (
-            <TotalItem
-              key={`summaryItem_${index}`}
-              column={config.column}
-              summaryType={config.summaryType}
-              valueFormat={config.valueFormat}
-              showInColumn={config.showInColumn}
-              alignment={config.alignment}
-              customizeText={config.customizeText}
-            />
-          )
-        })}
-      </Summary>
-    )
-  }, [summaryItems, columns,])
+    // Memoize the entire Summary component
+    const MemoizedSummary = useMemo(() => {
+      return (
+        <Summary recalculateWhileEditing={true}>
+          {summaryItems?.map((config: SummaryConfig, index: number) => {
+            return (
+              <TotalItem
+                key={`summaryItem_${index}`}
+                column={config.column}
+                summaryType={config.summaryType}
+                valueFormat={config.valueFormat}
+                showInColumn={config.showInColumn}
+                alignment={config.alignment}
+                customizeText={config.customizeText}
+              />
+            )
+          })}
+        </Summary>
+      )
+    }, [summaryItems, columns,])
 
 
     return (
@@ -1470,7 +1497,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 : onSelectionChanged && onSelectionChanged(e)
             }
             onKeyDown={onKeyDown}
-            
+
             onRowUpdated={onRowUpdated}
             onExporting={onExportingHandler}
             onContentReady={onContentReady}
@@ -1508,15 +1535,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             )}
             {allowSearching && <SearchPanel visible={true} />}
             {allowKeyboardNavigation && <KeyboardNavigation
-            editOnKeyPress={true}
-            enterKeyAction={"startEdit"}
-            enterKeyDirection={"column"}
-          />}
+              editOnKeyPress={true}
+              enterKeyAction={"startEdit"}
+              enterKeyDirection={"column"}
+            />}
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
             {allowSelection && <Selection mode={selectionMode} selectAllMode={"allPages"}
-            showCheckBoxesMode={"always"}/>
+              showCheckBoxesMode={"always"} />
             }
             {allowGrouping && <Grouping />}
             {groupPanelVisible && (
@@ -1573,16 +1600,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               {!hideDefaultExportButton && allowExport && (
                 <Item name="exportButton" />
               )}
-                {/* New Print Button */}
-                <Item >
-                 
-                 <button className='ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]'
-                   onClick={handlePrintPdf}
-                 >
-                   
-                   <Printer className="w-4 h-4" />
-                 </button>
-               </Item>
+              {showPrintButton && ( // Conditionally render the print button
+                <Item>
+                  <button
+                    className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+                    onClick={handlePrintPdf}
+                  >
+                    <Printer className="w-4 h-4" />
+                  </button>
+                </Item>
+              )}
               {enablefilter == true && (
                 <Item>
                   <ErpGridGlobalFilter
@@ -1597,7 +1624,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     }
                     toogleFilter={showFilter}
                     onApplyFilters={(filters) => onApplyFilter(filters)}
-                    // onClose={onCloseFilter}
+                  // onClose={onCloseFilter}
                   />
                 </Item>
               )}
@@ -1648,7 +1675,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   </Item>
                 ))}
 
-               
+
             </Toolbar>
             {gridCols?.map((column) => (
               <Column
@@ -1675,32 +1702,32 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 fixedPosition={column.fixedPosition}
                 cellRender={
                   column.cellRenderDynamic === undefined &&
-                  column.cellRender === undefined &&
-                  column.cellRenderDynamicRootState === undefined
+                    column.cellRender === undefined &&
+                    column.cellRenderDynamicRootState === undefined
                     ? undefined
                     : (cellElement: any, cellInfo: any) => {
-                        if (column.cellRenderDynamic) {
-                          return column.cellRenderDynamic(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
-                        if (column.cellRenderDynamicRootState) {
-                          return column.cellRenderDynamicRootState(
-                            cellElement,
-                            cellInfo,
-                            rootState
-                          );
-                        }
-                        if (column.cellRender) {
-                          return column.cellRender(
-                            cellElement,
-                            cellInfo,
-                            filter
-                          );
-                        }
+                      if (column.cellRenderDynamic) {
+                        return column.cellRenderDynamic(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
                       }
+                      if (column.cellRenderDynamicRootState) {
+                        return column.cellRenderDynamicRootState(
+                          cellElement,
+                          cellInfo,
+                          rootState
+                        );
+                      }
+                      if (column.cellRender) {
+                        return column.cellRender(
+                          cellElement,
+                          cellInfo,
+                          filter
+                        );
+                      }
+                    }
                 }
                 visible={
                   column.visibleDynamic != undefined
@@ -1710,7 +1737,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-{/* <Summary recalculateWhileEditing={true}>
+            {/* <Summary recalculateWhileEditing={true}>
   {summaryItems?.map((config: SummaryConfig, index: number) => {
     const columnConfig = columns.find((col: any) => col.dataField === config.column);
 
@@ -1777,8 +1804,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     );
   })}
 </Summary> */}
-      
-      {MemoizedSummary}
+
+            {MemoizedSummary}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
           {showTotalCount == true && (
@@ -1811,8 +1838,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               originDynamic
                 ? originDynamic(isChildOpen.key)
                 : childPopupPropsDynamic
-                ? childPopupPropsDynamic(isChildOpen.key).origin
-                : childPopupProps?.origin
+                  ? childPopupPropsDynamic(isChildOpen.key).origin
+                  : childPopupProps?.origin
             }
             closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
             content={

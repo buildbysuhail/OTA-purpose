@@ -12,8 +12,6 @@
   "cost_centre_id": "Cost Centre ID",
   "check_status": "Check Status",
   "amount_FC": "Amount FC",
-  "name_on_cheque": "Name on Cheque",
-  "bank_name": "Bank Name",
   "debit": "Debit",
   "credit": "Credit",
   "project_ID": "Project ID",
@@ -26,12 +24,10 @@
   "load": "Load",
   "create_new": "Create new",
   "edit": "Edit",
-  "print": "Print",
   "clear": "Clear",
   "previous_page": "Previous page",
   "unlock_voucher": "Unlock voucher",
 
-  "prefix": "Prefix",
   "group_name": "Group name",
   "amount_in_words": "Amount in words",
   "in_progress": "In progress......",
@@ -69,14 +65,11 @@
   "barcode_print": "Barcode print",
 
   "prefix": "Prefix",
-  "voucher_number": "Voucher number",
-  "reference_number": "Reference number",
   "reference_date": "Reference Date",
   "default_account": "Default Account",
   "dr/cr": "Dr/Cr",
   "employee": "Employee",
-  "employee": "Remarks",
-  "notes": "Notes",
+  "remarks": "Remarks",
   "currency": "Currency",
   "exchange_rate": "Exchange Rate",
   "cheque_number": "Cheque Number",
@@ -85,7 +78,6 @@
   "bank_name": "Bank Name",
   "project": "Project",
   "cost_centre": "Cost Centre",
-  "group_name": "Group Name",
   "print_on_save": "Print on Save",
   "print_preview": "Print Preview",
   "keep_narration": "Keep Narration",
@@ -106,7 +98,6 @@
   "form_type": "Form type",
   "voucher_prefix": "Voucher prefix",
   "party_name": "Party name",
-  "reference_date": "Reference date",
   "balance_after": "Balance after",
   "drcr": "DrCr",
   "net_adjustment": "Net adjustment",
@@ -154,7 +145,6 @@
 
   "print_payment": "Print payment",
   "bal": "Bal",
-  "unlock": "Unlock",
 
   "cash_receipt": "Cash receipt",
   "cash_payment_estimate": "Cash payment estimate",
@@ -173,7 +163,6 @@
   "bank_reconciliation": "Bank reconciliation",
 
   "acc_transaction_master_id": "Acc transaction master id",
-  "transaction_date": "Transaction date",
   "particulars": "Particulars",
   "form": "Form",
   "transactions": "Transactions",
@@ -231,5 +220,15 @@
   "delete_this_voucher":"Are you sure you want to delete this voucher?",
   "confirm_delete":"Confirm Delete",
   "failed":"Failed",
-  "deleted":"Deleted"
+  "deleted":"Deleted",
+
+  "collected_by":"Collected by",
+  "purchase_account":"Purchase account",
+  "sales_account":"Sales account",
+  "done_by":"Done by",
+  "bank_account":"Bank account",
+  "party_account":"Party account",
+  "master_account":"Master account",
+  "validation_failed":"Validation failed for this row",
+  "MJV_excel_import":"MJV Excel import"
 }

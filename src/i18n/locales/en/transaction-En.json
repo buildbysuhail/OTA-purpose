@@ -191,7 +191,6 @@
   "bank_commission": "Bank commission",
 
   "show_reconciled": "Show reconciled",
-
   "modify":"Modify",
   "demo_expired":"Demo expired please activate",
   "transaction_warning":"Transaction Date validation failed(Check Financial Year period)",
@@ -230,5 +229,6 @@
   "party_account":"Party account",
   "master_account":"Master account",
   "validation_failed":"Validation failed for this row",
-  "MJV_excel_import":"MJV Excel import"
+  "MJV_excel_import":"MJV Excel import",
+  "clone":"Clone"
 }

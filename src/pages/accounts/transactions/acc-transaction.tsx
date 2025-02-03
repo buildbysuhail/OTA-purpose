@@ -184,6 +184,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       erpGridRef,
       applicationSettings
     );
+    if (e.key === "Enter") {
+      if (field === "ledgerCode") {
+        const ledgerCodeExists = formState.row.ledgerCode && formState.row.ledgerCode.trim() !== "";
+        if (!ledgerCodeExists) {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: { ledgerID: "", ledgerName: "" },
+            })
+          );
+        }
+      }
+      handleFieldKeyDown(field, e.key, erpGridRef, applicationSettings);
+    }
   };
 
   const [loadTemplate, setLoadTemplate] = useState<TemplateState>();
@@ -1479,7 +1492,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* createNewVoucher */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("create_new")}
+                    title={t("clone")}
                   >
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
@@ -1553,10 +1566,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
 
                   <HistorySidebar
-                  transactionType={transactionType??""}
+                    transactionType={transactionType ?? ""}
                     isOpen={isHistorySidebarOpen}
                     onClose={() => setIsHistorySidebarOpen(false)}
-                    // data={historyData}
+                  // data={historyData}
                   />
 
                   {/* Settings  Button */}
@@ -2330,7 +2343,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
               )}
               <div className="xl:w-[170px] lg:w-[250px]">
-                {formState.formElements.discount.visible && (
+                {formState.formElements.discount.visible && !formState.row.hasDiscount && (
                   <ERPCheckbox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="hasDiscount"
@@ -2351,14 +2364,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   />
                 )}
 
-                {formState.formElements.discount.visible && (
+                {formState.formElements.discount.visible && formState.row.hasDiscount && (
                   <ERPInput
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="discount"
                     type="number"
                     min={0}
                     className=""
-                    label=" "
+                    label={t("discount")}
                     value={formState.row.discount}
                     onChange={(e) =>
                       dispatch(
@@ -2368,7 +2381,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       )
                     }
                     disabled={
-                      formState.row.hasDiscount != true ||
                       formState.formElements.discount?.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
@@ -2624,6 +2636,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               hideGridAddButton={true}
               hideDefaultExportButton={true}
               hideDefaultSearchPanel={true}
+              allowSearching={false}
+              allowExport={false}
               hideGridHeader={true}
               enablefilter={false}
               remoteOperations={false}
@@ -2636,6 +2650,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 onSelectionChanged(e, state, false)
               }
               enableScrollButton={false}
+              ShowGridPreferenceChooser={false}
+              showPrintButton={false}
               className="pb-14"
             ></ErpDevGrid>
           </div>
@@ -3399,7 +3415,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         <div className="flex items-center gap-2">
           <ERPButton
             ref={btnSaveRef}
-            title={t("cancel")}
+            title={t("close")}
             onClick={goToPreviousPage}
             className="w-24"
           // disabled={formState.formElements.pnlMasters?.disabled}

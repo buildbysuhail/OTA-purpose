@@ -8,7 +8,8 @@ import {
   Image,
   Font,
 } from "@react-pdf/renderer";
-import FontRegistration from "../../../LabelDesigner/fontRegister";
+import FontRegistration from "../../../../LabelDesigner/fontRegister";
+
 
 const styles = StyleSheet.create({
   page: {
@@ -16,7 +17,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    flex: 1,
     flexDirection: "column",
     width: "100%",
     height: "100%",
@@ -37,18 +37,12 @@ const styles = StyleSheet.create({
   table: {
     width: "100%",
     display: "flex",
-    flexDirection: "row",
-    gap: 4,
-    marginBottom: 5,
-  },
-  subtable: {
-    width: "50%",
-    display: "flex",
     flexDirection: "column",
   },
   tableRow: {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
     width: "100%",
   },
   tableHeader: {
@@ -65,9 +59,8 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   total: {
-    backgroundColor: "rgb(245, 243, 243)",
     color: "#f00",
-    padding: 5,
+
     fontSize: 12,
     fontWeight: 600,
     fontFamily: "Poppins",
@@ -125,7 +118,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfitAndLossPDFTemplate: React.FC<{
+const ProfitAndLossVerticalPDFTemplate: React.FC<{
   data: any[];
   filter: any;
   getFormattedValue: any;
@@ -174,7 +167,6 @@ const ProfitAndLossPDFTemplate: React.FC<{
             >
               {userSession.headerFooter?.heading7}
             </Text>
-
             <Text
               style={{
                 fontFamily: "Amiri",
@@ -199,7 +191,7 @@ const ProfitAndLossPDFTemplate: React.FC<{
             <View style={{ display: "flex", flexDirection: "row", gap: 0 }}>
               <Text style={styles.subheader1}>Profit and Loss Account - </Text>
               <Text style={styles.subheader2}>
-                {/* as of {new Date(filter.asonDate).toLocaleDateString("en-US", {
+                {/* as of  {new Date(filter.asonDate).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "2-digit",
@@ -222,137 +214,125 @@ const ProfitAndLossPDFTemplate: React.FC<{
 
           <View style={styles.table}>
             {/* table1 */}
-            <View style={styles.subtable}>
-              {/* table Head*/}
-              <View style={styles.tableRow}>
-                <View style={[styles.tableHeader]}>
-                  <Text>expense</Text>
-                </View>
-                <View style={[styles.tableHeader, styles.amount]}>
-                  <Text>Amount</Text>
-                </View>
-              </View>
 
-              {/* table body*/}
-              {expense?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
-                  <View style={[styles.tableCell]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkText,
-                      ]}
-                    >
-                      {item.groupName}
-                    </Text>
-                  </View>
-                  <View style={[styles.tableCell, styles.amount]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkTextnum,
-                      ]}
-                    >
-                      {item.transType === "L"
-                        ? item.title === "M"
-                          ? getFormattedValue(item.total)
-                          : item.total > 0
-                          ? "(-)" + getFormattedValue(item.total)
-                          : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(-1 * item.total)
-                        : item.title === "M"
-                        ? getFormattedValue(item.total)
-                        : item.total < 0
-                        ? "(-)" + getFormattedValue(-1 * item.total)
-                        : item.total === 0
-                        ? getFormattedValue(0)
-                        : getFormattedValue(item.total)}
-                    </Text>
-                  </View>
-                </View>
-              ))}
+            {/* table Head*/}
+            <View style={styles.tableRow}>
+              <View style={[styles.tableHeader]}>
+                <Text>Account</Text>
+              </View>
+              <View style={[styles.tableHeader, styles.amount]}>
+                <Text>Total</Text>
+              </View>
             </View>
 
-            {/* table2 */}
-            <View style={styles.subtable}>
-              {/* table Head*/}
-              <View style={styles.tableRow}>
-                <View style={[styles.tableHeader]}>
-                  <Text>income</Text>
-                </View>
-                <View style={[styles.tableHeader, styles.amount]}>
-                  <Text>Amount</Text>
-                </View>
-              </View>
+            {/* table body*/}
+            <View style={styles.tableRow}>
+              <View style={[styles.tableCell]}>
+                {expense?.map((item: any, index: number) => (
+                  <Text
+                    style={[
+                      item.title === "M" || item.groupName === "TOTAL"
+                        ? styles.bold
+                        : {},
+                      item.title === "M"
+                        ? styles.SaddleBrown
+                        : item.groupName === "TOTAL"
+                        ? styles.red
+                        : styles.darkText,
+                    ]}
+                  >
+                    {item.groupName}
+                  </Text>
+                ))}
+                {/* <Text style={styles.total}>total</Text> */}
+                {income?.map((item: any, index: number) => (
+                  <Text
+                    style={[
+                      item.title === "M" || item.groupName === "TOTAL"
+                        ? styles.bold
+                        : {},
+                      item.title === "M"
+                        ? styles.SaddleBrown
+                        : item.groupName === "TOTAL"
+                        ? styles.red
+                        : styles.darkText,
+                    ]}
+                  >
+                    {item.groupName}
+                  </Text>
+                ))}
 
-              {/* table body*/}
-              {income?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
-                  <View style={[styles.tableCell]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkText,
-                      ]}
-                    >
-                      {item.groupName}
-                    </Text>
-                  </View>
-                  <View style={[styles.tableCell, styles.amount]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkTextnum,
-                      ]}
-                    >
-                      {item.transType === "L"
-                        ? item.title === "M"
-                          ? getFormattedValue(item.total)
-                          : item.total > 0
-                          ? "(-)" + getFormattedValue(item.total)
-                          : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(-1 * item.total)
-                        : item.title === "M"
+                {/* <Text style={styles.total}>total</Text> */}
+              </View>
+              <View style={[styles.tableCell, styles.amount]}>
+                {expense?.map((item: any, index: number) => (
+                  <Text
+                    style={[
+                      item.title === "M" || item.groupName === "TOTAL"
+                        ? styles.bold
+                        : {},
+                      item.title === "M"
+                        ? styles.SaddleBrown
+                        : item.groupName === "TOTAL"
+                        ? styles.red
+                        : styles.darkTextnum,
+                    ]}
+                  >
+                    {item.transType === "L"
+                      ? item.title === "M"
                         ? getFormattedValue(item.total)
-                        : item.total < 0
-                        ? "(-)" + getFormattedValue(-1 * item.total)
+                        : item.total > 0
+                        ? "(-)" + getFormattedValue(item.total)
                         : item.total === 0
                         ? getFormattedValue(0)
-                        : getFormattedValue(item.total)}
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                        : getFormattedValue(-1 * item.total)
+                      : item.title === "M"
+                      ? getFormattedValue(item.total)
+                      : item.total < 0
+                      ? "(-)" + getFormattedValue(-1 * item.total)
+                      : item.total === 0
+                      ? getFormattedValue(0)
+                      : getFormattedValue(item.total)}
+                  </Text>
+                ))}
+                {/* <Text style={[styles.total,styles.amount]}>{getFormattedValue(assetTotal)}</Text> */}
+                {income?.map((item: any, index: number) => (
+                  <Text
+                    style={[
+                      item.title === "M" || item.groupName === "TOTAL"
+                        ? styles.bold
+                        : {},
+                      item.title === "M"
+                        ? styles.SaddleBrown
+                        : item.groupName === "TOTAL"
+                        ? styles.red
+                        : styles.darkTextnum,
+                    ]}
+                  >
+                    {item.transType === "L"
+                      ? item.title === "M"
+                        ? getFormattedValue(item.total)
+                        : item.total > 0
+                        ? "(-)" + getFormattedValue(item.total)
+                        : item.total === 0
+                        ? getFormattedValue(0)
+                        : getFormattedValue(-1 * item.total)
+                      : item.title === "M"
+                      ? getFormattedValue(item.total)
+                      : item.total < 0
+                      ? "(-)" + getFormattedValue(-1 * item.total)
+                      : item.total === 0
+                      ? getFormattedValue(0)
+                      : getFormattedValue(item.total)}
+                  </Text>
+                ))}
+                {/* <Text style={[styles.total,styles.amount]}>{getFormattedValue(liabilityTotal)}</Text> */}
+              </View>
             </View>
           </View>
+        </View>
 
-          {/* <View style={styles.tableRow}>
+        {/* <View style={styles.tableRow}>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
               <Text>total</Text>
             </View>
@@ -365,11 +345,10 @@ const ProfitAndLossPDFTemplate: React.FC<{
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(assetTotal)}</Text>
             </View>
-          </View> */}
-        </View>
+         </View> */}
       </Page>
     </Document>
   );
 };
 
-export default ProfitAndLossPDFTemplate;
+export default ProfitAndLossVerticalPDFTemplate;

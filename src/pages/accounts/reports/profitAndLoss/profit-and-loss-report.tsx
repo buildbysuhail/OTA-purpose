@@ -31,12 +31,13 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { useTranslation } from "react-i18next";
 import ExcelJS from "exceljs";
 import { BlobProvider, PDFViewer } from "@react-pdf/renderer";
-import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
-import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
+
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 import { printPdf } from "../../../../utilities/print-report-utils";
+import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-vertical-pdf";
+import ProfitAndLossPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-horizontal-pdf";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;

@@ -92,6 +92,7 @@ import { dir } from "i18next";
 import { useTranslation } from "react-i18next";
 import VoucherType from "../../enums/voucher-types";
 import { AccountMasterFields, fields } from "./fields";
+import { customJsonParse } from "../../utilities/jsonConverter";
 
 
 interface SaveDialogProps {
@@ -222,6 +223,7 @@ export default function PDFBarcodeDesigner() {
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const pxToPoint = (px: number) => px * (72 / 96);
  const { t } = useTranslation("labelDesigner");
+
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
@@ -243,18 +245,18 @@ export default function PDFBarcodeDesigner() {
     });
   };
 
-useEffect (() => {
-  setTemplateData((prevData: TemplateState) => {
-    const updated = {
-      ...prevData,
-      propertiesState:{
-        ...prevData.propertiesState,
-        template_group:templateGroup
-      }
-    };
-    return updated;
-  });
-},[])
+// useEffect (() => {
+//   setTemplateData((prevData: TemplateState) => {
+//     const updated = {
+//       ...prevData,
+//       propertiesState:{
+//         ...prevData.propertiesState,
+//         template_group:templateGroup
+//       }
+//     };
+//     return updated;
+//   });
+// },[])
 
   const handlePageResize = (
     e: React.SyntheticEvent,
@@ -322,36 +324,36 @@ useEffect (() => {
       icon: <Menu className="w-4 h-4" />,
       defaultContent: "Select",
     },
-    {
-      id: DesignerElementType.table,
-      label: "Table",
-      icon: <Table className="w-4 h-4" />,
-      defaultContent: "Table",
-    },
-    {
-      id: DesignerElementType.line,
-      label: "line",
-      icon: <Minus className="w-4 h-4" />,
-      defaultContent: "Line",
-    },
-    {
-      id: DesignerElementType.image,
-      label: "Image",
-      icon: <Image className="w-4 h-4" />,
-      defaultContent: "Image",
-    },
-    {
-      id: DesignerElementType.qrCode,
-      label: "QrCode",
-      icon: <QrCodeIcon className="w-4 h-4" />,
-      defaultContent: "QrCode",
-    },
-    {
-      id: DesignerElementType.area,
-      label: "Area",
-      icon: <SquareDashed className="w-4 h-4" />,
-      defaultContent: "Area",
-    },
+    // {
+    //   id: DesignerElementType.table,
+    //   label: "Table",
+    //   icon: <Table className="w-4 h-4" />,
+    //   defaultContent: "Table",
+    // },
+    // {
+    //   id: DesignerElementType.line,
+    //   label: "line",
+    //   icon: <Minus className="w-4 h-4" />,
+    //   defaultContent: "Line",
+    // },
+    // {
+    //   id: DesignerElementType.image,
+    //   label: "Image",
+    //   icon: <Image className="w-4 h-4" />,
+    //   defaultContent: "Image",
+    // },
+    // {
+    //   id: DesignerElementType.qrCode,
+    //   label: "QrCode",
+    //   icon: <QrCodeIcon className="w-4 h-4" />,
+    //   defaultContent: "QrCode",
+    // },
+    // {
+    //   id: DesignerElementType.area,
+    //   label: "Area",
+    //   icon: <SquareDashed className="w-4 h-4" />,
+    //   defaultContent: "Area",
+    // },
   ];
 
   const handleDragStart = (
@@ -747,6 +749,7 @@ useEffect (() => {
     }
     const activeTemplate: TemplateDto = {
       // ...templateData.activeTemplate,
+      id:id,
       templateType:tmpTemplate.propertiesState.template_type??"standard",
       templateKind:tmpTemplate.propertiesState.template_kind??"standard",
       templateGroup:tmpTemplate.propertiesState.template_group??"",
@@ -883,19 +886,37 @@ useEffect (() => {
       }
     }
   }, []);
-  const appDispatch = useAppDispatch();
-  const getPDFTemplateData = async () => {
-    const res = await api.getAsync(`${Urls.templates}${id || ""}`);
-    setTemplateData(res);
 
-    if (res && res.barcodeState && res.barcodeState.placedComponents) {
-      const maxId = res.barcodeState.placedComponents.reduce(
+  const appDispatch = useAppDispatch();
+
+  const getPDFTemplateData = async () => {
+    const res = await api.getAsync(`${Urls.templates}${id}`);
+    let cc: TemplateState = customJsonParse(res.content)
+    const _template = {
+      ...cc,
+      id: res.id,
+      branchId: res.branchId,
+      isCurrent: res.isCurrent,
+      background_image: res?.payload?.data?.background_image as string | undefined,
+      background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+      background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+      templateGroup: res.templateGroup,
+      templateKind: res.templateKind,
+      templateName: res.templateName,
+      templateType: res.templateType,
+      thumbImage: res.thumbImage as string | undefined,
+  };
+    setTemplateData(cc);
+
+    if (cc && cc.barcodeState && cc.barcodeState.placedComponents) {
+      const maxId = cc.barcodeState.placedComponents.reduce(
         (max: any, item: any) => (item.id > max ? item.id : max),
         0
       );
       setNextId(maxId + 1);
     }
   };
+
   useEffect(() => {
     if (id !== "new") getPDFTemplateData();
   }, []);

@@ -682,7 +682,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   borderTopRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
                   borderBottomRightRadius: `${!suffix && type !== "number" ? inputBoxState?.borderRadius : 0}px`,
                   backgroundColor:bgColor,
-                  paddingRight: type === "number" ? "2rem" : undefined,
+                  textAlign: type === "number" ? 'right' : 'left',
+                  paddingRight: type === "number" && showCustomNumberChanger == true ? "2rem" : undefined,
                   ...(!prefix && !suffix && {
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),

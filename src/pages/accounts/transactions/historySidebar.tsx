@@ -12,12 +12,14 @@ import { Banknote, CalendarDays, X } from "lucide-react";
 interface HistorySidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  transactionType: string;
   // data: any;
 }
 
 const HistorySidebar: React.FC<HistorySidebarProps> = ({
   isOpen,
   onClose,
+  transactionType
   // data,
 }) => {
   const { t } = useTranslation("transaction");
@@ -85,9 +87,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
 
         {/* Content */}
         <div className="space-y-4">
-          <ERPDevGrid
+          <ERPDevGrid 
             columns={columns}
-            dataUrl={`${urls.acc_transaction_base}${formState.transactionType}/List/`}
+            dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
             method={ActionType.GET}
             // postData={{voucherType: voucherType, transactionType: transactionType}}
             gridHeader={t("transactions")}

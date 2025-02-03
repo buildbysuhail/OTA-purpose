@@ -9,14 +9,14 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
 import { FileSpreadsheet, Printer, X } from "lucide-react";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import moment from "moment";
 
 interface FormState {
   showReconciled: boolean;
   selectedBankId: string | null;
-  bankDateType: "today" | "cheque";
-  reload: boolean;
 }
-
 interface LoadingState {
   setAllDate: boolean;
   exportToExcel: boolean;
@@ -24,17 +24,17 @@ interface LoadingState {
   save: boolean;
   print: boolean;
 }
-
+const api = new APIClient()
 const BankReconciliation = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
+  const [data, setData] = useState<any>();
   const [formState, setFormState] = useState<FormState>({
     showReconciled: false,
     selectedBankId: null,
-    bankDateType: "today",
-    reload: false,
   });
+  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
 
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
@@ -60,35 +60,36 @@ const BankReconciliation = () => {
   };
 
   const handleBankDateTypeChange = (type: "today" | "cheque") => {
-    setFormState((prev) => ({ ...prev, bankDateType: type }));
+    setDateChangeState(type);
   };
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const updatedTransactions = data.map((transaction: any) => {
+        if (transaction.select) {
+          return {
+            ...transaction,
+            bankDate: dateChangeState == "today"
+              ? moment().local().format("dd/MM/yyyy")
+              : transaction.chequeDate,
+          };
+        }
+        return transaction;
+      });
+  
+      setData(updatedTransactions);
     } finally {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
-    }
-  };
-
-  const handleExportToExcel = async () => {
-    setLoading((prev) => ({ ...prev, exportToExcel: true }));
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } finally {
-      setLoading((prev) => ({ ...prev, exportToExcel: false }));
     }
   };
 
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setFormState((prev) => ({ ...prev, reload: !prev.reload }));
+      debugger;
+      const _data = await api.getAsync(Urls.bankReconciliation,`LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`);
+      setData(_data);
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
     }
@@ -117,7 +118,7 @@ const BankReconciliation = () => {
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
-        dataField: "TransactionDate",
+        dataField: "transactionDate",
         caption: t("transaction_date"),
         dataType: "date",
         allowSorting: true,
@@ -126,7 +127,7 @@ const BankReconciliation = () => {
         minWidth: 200,
       },
       {
-        dataField: "VoucherType",
+        dataField: "voucherType",
         caption: t("voucher_type"),
         dataType: "string",
         allowSorting: true,
@@ -136,7 +137,7 @@ const BankReconciliation = () => {
         allowEditing: true,
       },
       {
-        dataField: "VoucherNumber",
+        dataField: "VNo",
         caption: t("voucher_number"),
         dataType: "string",
         allowSorting: true,
@@ -304,17 +305,6 @@ const BankReconciliation = () => {
                 </button>
               </div>
 
-              <div
-                className="group relative inline-flex flex-col items-center"
-                title={t("excel")}
-              >
-                <button
-                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={handleExportToExcel}
-                >
-                  <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                </button>
-              </div>
 
               <div
                 className="group relative inline-flex flex-col items-center"
@@ -339,14 +329,14 @@ const BankReconciliation = () => {
                   <ERPRadio
                     id="todayDate"
                     name="bankDateType"
-                    checked={formState.bankDateType === "today"}
+                    checked={dateChangeState === "today"}
                     onChange={() => handleBankDateTypeChange("today")}
                     label={t("today's_date")}
                   />
                   <ERPRadio
                     id="chequeDate"
                     name="bankDateType"
-                    checked={formState.bankDateType === "cheque"}
+                    checked={dateChangeState === "cheque"}
                     onChange={() => handleBankDateTypeChange("cheque")}
                     label={t("cheque_date")}
                   />
@@ -374,7 +364,17 @@ const BankReconciliation = () => {
                   />
                   <ERPDataCombobox
                     id="BankAC"
-                    noLabel
+                    label="Bank A/c"
+                    field={
+                     {
+                      id: "BankAC",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                     }
+                    }
+
                     value={formState.selectedBankId}
                     onChange={(e) => handleBankSelection(e?.value ?? null)}
                   />
@@ -388,7 +388,8 @@ const BankReconciliation = () => {
               hideGridAddButton={true}
               hideDefaultExportButton={true}
               heightToAdjustOnWindows={350}
-              reload={formState.reload}
+              data={data}
+              // reload={formState.reload}
               pageSize={40}
               // className="pb-16"
             />

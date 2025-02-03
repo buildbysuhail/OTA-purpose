@@ -82,6 +82,7 @@ import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import moment from "moment";
 import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 import VoucherType from "../../../enums/voucher-types";
+import HistorySidebar from "./historySidebar";
 interface BilledItem {
   id?: number;
   name: string;
@@ -278,6 +279,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     voucherPrefix,
     formType,
     drCr,
+    transactionType
   ]);
 
   useEffect(() => {
@@ -1390,7 +1392,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   return (
     <div className="relative">
-      {/* <h1>{transactionType}</h1> */}
+      <h1>SAFVAN{transactionType}</h1>
       {!deviceInfo?.isMobile && (
         <div
           className={`dark:!bg-dark-bg p-4`}
@@ -1550,11 +1552,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </button>
                   </div>
 
-                  {/* <HistorySidebar
+                  <HistorySidebar
+                  transactionType={transactionType??""}
                     isOpen={isHistorySidebarOpen}
                     onClose={() => setIsHistorySidebarOpen(false)}
                     // data={historyData}
-                  /> */}
+                  />
 
                   {/* Settings  Button */}
                   <div>

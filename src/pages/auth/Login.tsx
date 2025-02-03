@@ -34,11 +34,13 @@ import { setApplicationSettings } from "../../redux/slices/app/application-setti
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import polo from "../../assets/images/brand-logos/polo_logo.png";
+import ConfettiEffect from "./confetti-effect";
 
 const api = new APIClient()
 const Login = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<LoginData>(new LoginData());
+  const [showConfetti, setShowConfetti] = useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -148,6 +150,14 @@ const Login = () => {
     }
   }, [hasToChooseBranch, isLoggedToBranch]);
 
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedLogin');
+    if (!hasVisited) {
+      setShowConfetti(true);
+      localStorage.setItem('hasVisitedLogin', 'true');
+    }
+  }, []);
+
   return (
     <div className="bg-white dark:bg-dark-bg">
       <div className="flex justify-center h-screen">
@@ -188,6 +198,13 @@ const Login = () => {
             </Button>
           </div>
           <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
+          {/* <ConfettiEffect /> */}
+
+          {showConfetti && (
+            <div className="fixed inset-0 z-50 pointer-events-none">
+            <ConfettiEffect />
+          </div>
+           )}
           <div className="flex-1">
             <div className="text-center">
               <img src={polo} alt="logo" className="unset h-[110px] w-[150px] mx-auto my-4"  />

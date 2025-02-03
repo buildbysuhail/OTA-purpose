@@ -1,6 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
-import FontRegistration from '../../../LabelDesigner/fontRegister';
+import FontRegistration from '../../../../LabelDesigner/fontRegister';
+
 
 
 const styles = StyleSheet.create({

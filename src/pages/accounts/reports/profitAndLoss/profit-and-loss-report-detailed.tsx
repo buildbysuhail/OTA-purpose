@@ -35,11 +35,11 @@ import { BlobProvider } from "@react-pdf/renderer";
 import { userSession } from "../../../../redux/slices/user-session/thunk";
 import BalanceSheetPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import BalanceSheetVerticalPDFTemplate from "../balanceSheet/balance-sheet-pdf/balance-sheet-vertical-pdf";
-import ProfitAndLossPDFTemplate from "./profit-and-loss-horizontal-pdf";
-import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-vertical-pdf";
-import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-detailed-horizontal-pdf ";
-import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-detailed-vertical-pdf";
+
+
 import { printPdf } from "../../../../utilities/print-report-utils";
+import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-vertical-pdf";
+import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-horizontal-pdf ";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -574,21 +574,7 @@ const ProfitAndLossDetailedReport = () => {
           </div>
 
           <div className="flex items-center ms-auto space-x-4">
-            {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
-              <RectangleVertical />
-              <p  className="pe-2">Show Vertical</p>
-              <div className="">
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={isVerticalView}
-                    onChange={(e) => setIsVerticalView(e.target.checked)}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div> */}
+          
 
             <button
               className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${

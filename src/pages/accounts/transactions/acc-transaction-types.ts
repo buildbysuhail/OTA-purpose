@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import { inputBox } from "../../../redux/slices/app/types";
 import moment from "moment";
 
@@ -96,7 +95,7 @@ export interface FormElementState {
   label: string;
   reload?: boolean;
   accLedgerType?: number;
-  [key: string]: any; 
+  [key: string]: any;
 }
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
@@ -200,52 +199,52 @@ export interface AccTransactionMasterValidations {
 
 // Initial object with default values
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
-    accTransactionMasterID: "",
-    departmentId: "",
-    costCentreID: "",
-    billwiseMasterId: "",
-    employeeID: "",
-    invTransactionId: "",
-    transactionDate: "",
+  accTransactionMasterID: "",
+  departmentId: "",
+  costCentreID: "",
+  billwiseMasterId: "",
+  employeeID: "",
+  invTransactionId: "",
+  transactionDate: "",
 
-    prevTransDate: "",
-    bankDate: "",
-    voucherPrefix: "",
-    voucherNumber: "",
-    referenceNumber: "",
-    referenceDate: "",
-    dueDate: "",
-    particulars: "",
-    totalDebit: "",
-    billwiseTotalAdjAmt: "",
-    billwiseAdjAmt: "",
-    totalCredit: "",
-    totDiscount: "",
-    empIncentive: "",
-    commonNarration: "",
-    remarks: "",
-    voucherType: "",
-    formType: "",
-    debitNoteTransId: "",
-    creditNoteTransId: "",
-    currencyID: "",
-    accTransactionDetailID: "",
-    adjustedTransDetailId: "",
-    currencyRate: "",
-    isPosted: "",
-    randomKey: "",
-    onlineTrans: "",
-    isEdit: "",
-    checkStatus: "",
-    checkBouncedDate: "",
-    drCr: "",
-    isSalesView: "",
-    branchId: "",
-    counterId: "",
-    refBranchId: "",
-    uuid: "",
-    manualInvoiceNumber: "",
-  };
+  prevTransDate: "",
+  bankDate: "",
+  voucherPrefix: "",
+  voucherNumber: "",
+  referenceNumber: "",
+  referenceDate: "",
+  dueDate: "",
+  particulars: "",
+  totalDebit: "",
+  billwiseTotalAdjAmt: "",
+  billwiseAdjAmt: "",
+  totalCredit: "",
+  totDiscount: "",
+  empIncentive: "",
+  commonNarration: "",
+  remarks: "",
+  voucherType: "",
+  formType: "",
+  debitNoteTransId: "",
+  creditNoteTransId: "",
+  currencyID: "",
+  accTransactionDetailID: "",
+  adjustedTransDetailId: "",
+  currencyRate: "",
+  isPosted: "",
+  randomKey: "",
+  onlineTrans: "",
+  isEdit: "",
+  checkStatus: "",
+  checkBouncedDate: "",
+  drCr: "",
+  isSalesView: "",
+  branchId: "",
+  counterId: "",
+  refBranchId: "",
+  uuid: "",
+  manualInvoiceNumber: "",
+};
 // AccDetailInput interface
 export interface AccTransactionRowForOutPut extends AccTransactionRow {
 
@@ -300,7 +299,7 @@ export interface AccTransactionRow {
   firstCreditLedgerId?: number;
   firstDebitLedgerId?: number;
 }
-export const AccTransactionMasterInitialData: AccTransactionMaster  = {
+export const AccTransactionMasterInitialData: AccTransactionMaster = {
   accTransactionMasterID: 0,
   departmentId: 0,
   costCentreID: 0,
@@ -431,9 +430,9 @@ export interface AccUserConfig {
   alignment?: "left" | "center" | "right";
   presetCostenterId?: number
   counterAssignedCashLedgerId?: number
-  outerPageBg?:string;
-  innerPageBg?:string;
-  inputBoxStyle?:inputBox
+  outerPageBg?: string;
+  innerPageBg?: string;
+  inputBoxStyle?: inputBox
 }
 export interface AccTransactionFormState {
   store: any;
@@ -494,7 +493,7 @@ export interface AccTransactionFormState {
   userConfig?: AccUserConfig;
   formElements: FormElementsState
 }
-export const initialFormElements:{ [key: string]: FormElementState } = {
+export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {
     visible: true,
     disabled: false,
@@ -542,7 +541,7 @@ export const initialFormElements:{ [key: string]: FormElementState } = {
   printCheque: { visible: true, disabled: false, label: "print_cheque" },
   keepNarration: { visible: false, disabled: false, label: "keep_narration" },
   btnBillWise: { visible: false, disabled: false, label: "billwise" },
-  btnAdd: { visible: true, disabled: false, label: "Add" },
+  btnAdd: { visible: true, disabled: false, label: "add" },
   btnEdit: { visible: true, disabled: false, label: "edit" },
   linkEdit: { visible: false, disabled: false, label: "linkEdit" },
   btnDelete: { visible: true, disabled: false, label: "delete" },

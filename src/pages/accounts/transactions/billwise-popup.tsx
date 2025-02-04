@@ -1,19 +1,6 @@
-import { FC, Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { CheckBox, DataGrid, Toolbar } from "devextreme-react";
-import {
-  Column,
-  Paging,
-  Scrolling,
-  DataGridTypes,
-  ColumnFixing,
-  FilterRow,
-  SearchPanel,
-  Item,
-  Summary,
-  TotalItem,
-  KeyboardNavigation,
-  Selection,
-} from "devextreme-react/cjs/data-grid";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Toolbar } from "devextreme-react";
+import { Item } from "devextreme-react/cjs/data-grid";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useDispatch } from "react-redux";
@@ -22,14 +9,9 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CheckCircle2 } from "lucide-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
-import { Card, CardContent, CardHeader } from "@mui/material";
-import { Countries } from "../../../redux/slices/user-session/reducer";
+import { Card, CardContent } from "@mui/material";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
-import {
-  accFormStateHandleFieldChange,
-  accFormStateRowHandleFieldChange,
-  accFormStateTransactionMasterHandleFieldChange,
-} from "./reducer";
+import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "./reducer";
 import VoucherType from "../../../enums/voucher-types";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { APIClient } from "../../../helpers/api-client";
@@ -37,6 +19,7 @@ import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import { BillwiseData } from "./acc-transaction-types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import { useTranslation } from "react-i18next";
 
 interface BillwiseProps {
   onSave?: (
@@ -67,6 +50,7 @@ const BillwiseComponent = ({
   drCr
 }: BillwiseProps) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation('transaction');
   const { round } = useNumberFormat();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
@@ -100,22 +84,21 @@ const BillwiseComponent = ({
     }
   }, [isMaximized, onMaximizeChange]);
   useEffect(() => {
-   if(userSession.dbIdValue == "LATAJFOODS") {
-    setShowAllTransactions(true);
-   }
-   
+    if (userSession.dbIdValue == "LATAJFOODS") {
+      setShowAllTransactions(true);
+    }
+
   }, []);
   useEffect(() => {
-    
-      debugger;
+
+    debugger;
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
-    } else
-    {
+    } else {
       debugger;
       let obj = JSON.parse(JSON.stringify(formState.billwiseData));
       obj = obj.map((x: BillwiseData) => ({
-        ...x, 
+        ...x,
         balanceAfter: x.balance // Correctly updating balanceAfter
       }));
       debugger;
@@ -126,7 +109,7 @@ const BillwiseComponent = ({
   useEffect(() => {
     let wh = modalHeight;
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows =  wh - 300;
+    let gridHeightWindows = wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -161,16 +144,16 @@ const BillwiseComponent = ({
   const handleSelectionChange = (e: any) => {
     const selectedKeys = Array.isArray(e.currentSelectedRowKeys)
       ? e.currentSelectedRowKeys.map((key: number) => ({
-          key,
-          isSelected: true,
-        }))
+        key,
+        isSelected: true,
+      }))
       : [];
 
     const deselectedKeys = Array.isArray(e.currentDeselectedRowKeys)
       ? e.currentDeselectedRowKeys.map((key: number) => ({
-          key,
-          isSelected: false,
-        }))
+        key,
+        isSelected: false,
+      }))
       : [];
 
     const mergedKeys = [...selectedKeys, ...deselectedKeys];
@@ -179,21 +162,20 @@ const BillwiseComponent = ({
         ...store,
       };
       mergedKeys.forEach((item: any) => {
-        updatedStore = store.map((storeItem: any) =>
-          {
-            debugger;
-            const it = item.key === storeItem.slNo
+        updatedStore = store.map((storeItem: any) => {
+          debugger;
+          const it = item.key === storeItem.slNo
             ? {
-                ...storeItem,
-                isSelected: item.isSelected,
-                billwiseAmount: item.isSelected == true ? storeItem.balance : 0,
-                balanceAfter: item.isSelected == true ? 0: storeItem.balance,
-              }
+              ...storeItem,
+              isSelected: item.isSelected,
+              billwiseAmount: item.isSelected == true ? storeItem.balance : 0,
+              balanceAfter: item.isSelected == true ? 0 : storeItem.balance,
+            }
             : storeItem
 
-            return it;
-            
-      }
+          return it;
+
+        }
         );
       });
       // updatedBills[i].balanceAfter = billBalance - remainingAmount;
@@ -206,12 +188,12 @@ const BillwiseComponent = ({
 
   // Load billwise transactions
   useEffect(() => {
-    
+
     let lastIndex = 0;
     const formattedData = store?.map((row: any, index: number) => {
       if (
         showAllTransactions ||
-        row?.drCr != drCr){
+        row?.drCr != drCr) {
         const _it = {
           ...row,
           slNo: lastIndex + 1, // Assign a serial number for matching rows
@@ -228,13 +210,13 @@ const BillwiseComponent = ({
     setNetAdjustment(getTotalAmountToSet(formattedData));
     setStore(formattedData);
   }, [showAllTransactions]);
-  
+
   useEffect(() => {
     setNetAdjustment(getTotalAmountToSet(store));
   }, [store]);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
-    
+
     const rows = billwiseStr.split("|");
     const updatedData = [...store];
 
@@ -283,22 +265,22 @@ const BillwiseComponent = ({
     let totalDr = 0;
     let totalCr = 0;
     try {
-      
-      list
-      ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
-      ?.map((row: any, index: number) => ({
-        ...row,
-        slNo: index + 1, // Assign serial number starting from 1
-      })).forEach((bill: BillwiseData) => {
-        const drCrCol = bill.drCr?.toUpperCase();
-        const amountToSet = bill.billwiseAmount;
 
-        if (drCrCol.toUpperCase() === "DR") {
-          totalDr += amountToSet;
-        } else {
-          totalCr += amountToSet;
-        }
-      });
+      list
+        ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
+        ?.map((row: any, index: number) => ({
+          ...row,
+          slNo: index + 1, // Assign serial number starting from 1
+        })).forEach((bill: BillwiseData) => {
+          const drCrCol = bill.drCr?.toUpperCase();
+          const amountToSet = bill.billwiseAmount;
+
+          if (drCrCol.toUpperCase() === "DR") {
+            totalDr += amountToSet;
+          } else {
+            totalCr += amountToSet;
+          }
+        });
 
       if (drCr.toUpperCase() === "CR") {
         total = totalDr - totalCr;
@@ -306,7 +288,7 @@ const BillwiseComponent = ({
         total = totalCr - totalDr;
       }
     } catch (error) {
-      console.error("Error calculating total amount to set:", error);
+      console.error(t("error_calculating_total_amount_to_set"), error);
     }
 
     return total;
@@ -315,10 +297,10 @@ const BillwiseComponent = ({
     const totalAmount = getTotalAmountToSet(store);
     for (let index = 0; index < store.length; index++) {
       const element: BillwiseData = store[index];
-      if(element.balance < element.billwiseAmount) {
+      if (element.balance < element.billwiseAmount) {
         ERPAlert.show({
-          title: "Excess Value",
-          text: "Invalid Amount assinged in Row:" + (element.slNo).toString(),
+          title: t("excess_value"),
+          text: t("invalid_amount_assigned_in_row") + (element.slNo).toString(),
         });
         return false;
       }
@@ -326,8 +308,8 @@ const BillwiseComponent = ({
 
     if (totalAmount < 0) {
       ERPAlert.show({
-        title: "failed",
-        text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+        title: t("failed"),
+        text: t("invalid_adjustment"),
       });
       return false;
     }
@@ -355,15 +337,15 @@ const BillwiseComponent = ({
     fromAutoPost?: boolean | false
   ) => {
     try {
-      
+
       // if (dataGridRef.current?.instance) {
       //   dataGridRef.current.instance.saveEditData();
       // }
-      updatedBills = updatedBills??store;
-      if(updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
+      updatedBills = updatedBills ?? store;
+      if (updatedBills?.find(x => x.billwiseAmount < 0) != undefined) {
         ERPAlert.show({
-          title: "failed",
-          text: "Invalid Adjustment. -ve value(s) are not allowed",
+          title: t("failed"),
+          text: t("invalid_adjustment_negative_value"),
         });
         return;
       }
@@ -382,8 +364,8 @@ const BillwiseComponent = ({
 
         if (amtAdjusted < 0) {
           ERPAlert.show({
-            title: "failed",
-            text: "Invalid Adjustment. For Debit Select Credit Transaction and viceversa. Net Adjustment Amount should be zero.",
+            title: t("failed"),
+            text: t("invalid_adjustment"),
           });
           return;
         }
@@ -424,8 +406,8 @@ const BillwiseComponent = ({
       }
     } catch (error: any) {
       ERPAlert.show({
-        title: "failed",
-        text: `An error occurred: ${error.message}`,
+        title: t("failed"),
+        text: t(`an_error_occurred: ${error.message}`),
       });
     }
   };
@@ -452,19 +434,19 @@ const BillwiseComponent = ({
   };
   const handleRowPrepared = (e: any) => {
     if (e.rowType === "data") {
-  
-        console.log(`e.data.drCr ${e.data.drCr }`);
-        console.log(`DrCr ${drCr}`);
+
+      console.log(`e.data.drCr ${e.data.drCr}`);
+      console.log(`DrCr ${drCr}`);
       if (e.data.drCr === drCr) {
-        
-        
+
+
         e.rowElement.classList.add("dx-row-matched-red");
         e.rowElement.style.backgroundColor = "red"; // Apply red background
       }
     }
   };
   const handleAutoPost = () => {
-    
+
     let remainingAmount: number = parseFloat(
       (formState.row.amount ?? 0).toString()
     );
@@ -475,9 +457,8 @@ const BillwiseComponent = ({
     // updatedBills.forEach((bill) => {});
     // Second pass: Allocate amounts
     while (remainingAmount > 0 && i < updatedBills.length) {
-      
-      if (updatedBills[i].drCr.toUpperCase() === drCr.toUpperCase())
-      {
+
+      if (updatedBills[i].drCr.toUpperCase() === drCr.toUpperCase()) {
         const tyu = 2 * updatedBills[i].balance;
         remainingAmount += tyu;
         setShowAllTransactions(true);
@@ -501,19 +482,19 @@ const BillwiseComponent = ({
     setStore(updatedBills);
     // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.billwiseAmount || 0), 0);
     const amtAdjusted = getTotalAmountToSet(updatedBills);
-debugger;
+    debugger;
     // Check if the adjusted amount exceeds the original amount
-    if (round(amtAdjusted) > round(formState.row.amount??0)) {
+    if (round(amtAdjusted) > round(formState.row.amount ?? 0)) {
       ERPAlert.show({
-        title: "Auto Post",
-        text: "Excess adjustment.",
+        title: t("auto_post"),
+        text: t("excess_adjustment"),
         icon: "warning",
       });
       return false;
     }
     ERPAlert.show({
-      title: "Auto Post",
-      text: "Do you want to save",
+      title: t("auto_post"),
+      text: t("do_you_want_to_save"),
       icon: "info",
       onConfirm: () => {
         handleSave(updatedBills, true);
@@ -526,237 +507,237 @@ debugger;
   }, [store]);
   const columns: DevGridColumn[] = [
     {
-        dataField: "slNo",
-        caption: "Sl.No",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 80,
-        showInPdf: true,
+      dataField: "slNo",
+      caption: t("si_no"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 80,
+      showInPdf: true,
     },
     {
-        dataField: "voucherType",
-        caption: "Vr Type",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 80,
-        showInPdf: true,
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 80,
+      showInPdf: true,
     },
     {
-        dataField: "voucherNumber",
-        caption: "Bill No",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        showInPdf: true,
+      dataField: "voucherNumber",
+      caption: t("bill_no"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      showInPdf: true,
     },
     {
-        dataField: "transactionDate",
-        caption: "Date",
-        dataType: "date",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        format:"dd/MM/yyyy",
-        width: 100,
-        showInPdf: true,
+      dataField: "transactionDate",
+      caption: t("date"),
+      dataType: "date",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      format: "dd/MM/yyyy",
+      width: 100,
+      showInPdf: true,
     },
     {
-        dataField: "amount",
-        caption: "Amount",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "right",
-        width: 100,
-        showInPdf: true,
-        customizeText: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value,false,4)}`,
+      dataField: "amount",
+      caption: t("amount"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "right",
+      width: 100,
+      showInPdf: true,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value, false, 4)}`,
     },
     {
-        dataField: "adjustedAmount",
-        caption: "Adj.Amount",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "right",
-        width: 150,
-        showInPdf: true,
-        customizeText: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value,false,4)}`,
+      dataField: "adjustedAmount",
+      caption: t("adjusted_amount"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "right",
+      width: 150,
+      showInPdf: true,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value, false, 4)}`,
     },
     {
-        dataField: "balance",
-        caption: "Balance",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "right",
-        width: 150,
-        showInPdf: true,
-        customizeText: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value,false,4)}`,
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "right",
+      width: 150,
+      showInPdf: true,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value, false, 4)}`,
     },
     {
-        dataField: "billwiseAmount",
-        caption: "Amount To Set",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowEditing: true,
-        allowFiltering: true,
-        alignment: "right",
-        width: 130,
-        showInPdf: true,
-        customizeText: (cellInfo: any) =>
-          `${getFormattedValue(cellInfo.value,false,4)}`,
+      dataField: "billwiseAmount",
+      caption: t("amount_to_set"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowEditing: true,
+      allowFiltering: true,
+      alignment: "right",
+      width: 130,
+      showInPdf: true,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue(cellInfo.value, false, 4)}`,
     },
     {
-        dataField: "balanceAfter",
-        caption: "Balance After",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "right",
-        width: 150,
-        showInPdf: true,
-        customizeText: (cellInfo: any) =>
-          `${getFormattedValue((cellInfo.value??0),false,4)}`,
+      dataField: "balanceAfter",
+      caption: t("balance_after"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "right",
+      width: 150,
+      showInPdf: true,
+      customizeText: (cellInfo: any) =>
+        `${getFormattedValue((cellInfo.value ?? 0), false, 4)}`,
     },
     {
-        dataField: "drCr",
-        caption: "DrCr",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "center",
-        width: 150,
-        showInPdf: true,
+      dataField: "drCr",
+      caption: t("drcr"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "center",
+      width: 150,
+      showInPdf: true,
     },
     {
-        dataField: "financialYearID",
-        caption: "FinancialYearID",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 130,
-        showInPdf: false,
-        visible: false
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 130,
+      showInPdf: false,
+      visible: false
     },
     {
-        dataField: "formType",
-        caption: "FormType",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 100,
-        showInPdf: false,
-        visible: false
+      dataField: "formType",
+      caption: t("form_type"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 100,
+      showInPdf: false,
+      visible: false
     },
     {
-        dataField: "voucherPrefix",
-        caption: "VoucherPrefix",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 130,
-        showInPdf: false,
-        visible: false
+      dataField: "voucherPrefix",
+      caption: t("voucher_prefix"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 130,
+      showInPdf: false,
+      visible: false
     },
     {
-        dataField: "partyName",
-        caption: "PartyName",
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 150,
-        showInPdf: false,
-        visible: false
+      dataField: "partyName",
+      caption: t("party_name"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 150,
+      showInPdf: false,
+      visible: false
     },
     {
-        dataField: "referenceNumber",
-        caption: "ReferenceNumber",
-        dataType: "number",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        width: 150,
-        showInPdf: false,
-        visible: false
+      dataField: "referenceNumber",
+      caption: t("reference_number"),
+      dataType: "number",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      width: 150,
+      showInPdf: false,
+      visible: false
     },
     {
-        dataField: "referenceDate",
-        format:"dd/MM/yyyy",
-        caption: "Reference Date",
-        dataType: "date",
-        allowSorting: false,
-        allowSearch: true,
-        allowFiltering: true,
-        alignment: "left",
-        visible: true,
-        showInPdf: true,
+      dataField: "referenceDate",
+      caption: t("reference_date"),
+      format: "dd/MM/yyyy",
+      dataType: "date",
+      allowSorting: false,
+      allowSearch: true,
+      allowFiltering: true,
+      alignment: "left",
+      visible: true,
+      showInPdf: true,
     },
-];
-const customizeSummaryRow = useMemo(() => {
+  ];
+  const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) =>
       `${getFormattedValue(itemInfo.value)}`;
   }, []);
 
   const summaryItems: SummaryConfig[] = [
     {
-      column: "amount",
+      column: t("amount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "adjustedAmount",
+      column: t("adjusted_amount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "billwiseAmount",
+      column: t("billwise_amount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "balance",
+      column: t("balance"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "discount",
+      column: t("discount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: "balanceAfter",
+      column: t("balance_after"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -801,9 +782,8 @@ const customizeSummaryRow = useMemo(() => {
           </Item>
           <Item location="after">
             <ERPCheckbox
-              label={`Show ${
-                formState.transaction.master.drCr === "Dr" ? "Debit" : "Credit"
-              } Transactions also`}
+              label={`Show ${formState.transaction.master.drCr === "Dr" ? "Debit" : "Credit"
+                } Transactions also`}
               className="text-[12px] font-medium p-3"
               id={""}
               checked={showAllTransactions}
@@ -812,16 +792,16 @@ const customizeSummaryRow = useMemo(() => {
           </Item>
           <Item location="after">
             <p className="text-[12px] font-medium p-3 mx-2">
-              Amount to adjust : {formState.row.amount}
+              {t("amount_to_adjust")} : {formState.row.amount}
             </p>
           </Item>
         </Toolbar>
-        Drcr:{drCr}
+        {t("drcr")}:{drCr}
         <ERPDevGrid
-        key={`grid-${drCr}`}
+          key={`grid-${drCr}`}
           ref={dataGridRef}
           summaryItems={summaryItems}
-          rowAlternationEnabled={false} 
+          rowAlternationEnabled={false}
           keyExpr="slNo"
           columns={columns}
           gridId="billwise_popup"
@@ -830,7 +810,7 @@ const customizeSummaryRow = useMemo(() => {
           // height={gridHeight}
           dataSource={store
             ?.filter((row: any) => showAllTransactions || row?.drCr !== drCr)
-            
+
           }
           heightToAdjustOnWindowsInModal={gridHeight.windows}
           className="custom-data-grid"
@@ -897,29 +877,32 @@ const customizeSummaryRow = useMemo(() => {
           selectionMode={"multiple"}
           allowKeyboardNavigation={true}
         >
-          
-          
+
+
 
           {/* Add Summary for "Amount" column */}
-         
+
         </ERPDevGrid>
         <div className="flex h-12 justify-between mt-1">
           <div className="flex h-11 items-center  p-3 bg-gray-100 rounded-md max-w-60">
-            <strong className="mr-3">Net Adjustment</strong>
+            <strong className="mr-3">{t("net_adjustment")}</strong>
             <span className="">{getFormattedValue(netAdjustment)}</span>
           </div>
           <div>
             <ERPButton
-              title="Auto Post"
+              title={t("auto_post")}
               onClick={handleAutoPost}
               className="mr-2"
             />
             <ERPButton
-              title="Save"
+              title={t("save")}
               onClick={() => handleSave()}
               className="mr-2"
             />
-            <ERPButton title="Cancel" onClick={() => closeBillwise()} />
+            <ERPButton
+              title={t("cancel")}
+              onClick={() => closeBillwise()}
+            />
           </div>
         </div>
       </CardContent>

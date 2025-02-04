@@ -1,5 +1,3 @@
-import { Path } from "@react-pdf/renderer";
-import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { transactionRoutes } from "../../content/transaction-routes";
 import { TransactionTitles } from "../../content/transaction-titles";
 
@@ -37,7 +35,7 @@ export const MENUITEMS = [
     Name: "",
     active: false,
     selected: false,
-    title: "Sales",
+    title: "sales",
     badge: "",
     badgetxt: "",
     class:
@@ -55,7 +53,7 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         selected: false,
-        title: "Sales",
+        title: "sales",
         rights: "SI",
       },
       {
@@ -380,12 +378,10 @@ export const MENUITEMS = [
       "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.map((route) => ({
-        path: `${import.meta.env.BASE_URL}accounts/transactions/${
-          route.transactionType
-        }List`,
-        addPath: `${import.meta.env.BASE_URL}accounts/transactions/${
-          route.transactionType
-        }`,
+        path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType
+          }List`,
+        addPath: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType
+          }`,
         type: "link",
         active: false,
         selected: false,
@@ -393,9 +389,8 @@ export const MENUITEMS = [
         rights: route.formCode,
       })),
       {
-        path: `${
-          import.meta.env.BASE_URL
-        }accounts/transactions/BankReconciliation`,
+        path: `${import.meta.env.BASE_URL
+          }accounts/transactions/BankReconciliation`,
         type: "link",
         active: false,
         selected: false,
@@ -403,9 +398,8 @@ export const MENUITEMS = [
         rights: "BRC",
       },
       {
-        path: `${
-          import.meta.env.BASE_URL
-        }accounts/transactions/PostDatedCheques`,
+        path: `${import.meta.env.BASE_URL
+          }accounts/transactions/PostDatedCheques`,
         type: "link",
         active: false,
         selected: false,

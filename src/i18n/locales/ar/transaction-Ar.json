@@ -229,5 +229,19 @@
   "master_account": "الحساب الرئيسي",
   "validation_failed": "فشل التحقق لهذا الصف",
   "MJV_excel_import": "استيراد MJV من Excel",
-  "clone": "استنساخ"
+  "clone": "استنساخ",
+
+  "error_calculating_total_amount_to_set": "خطأ في حساب إجمالي المبلغ المطلوب تعيينه:",
+  "excess_value": "قيمة زائدة",
+  "invalid_amount_assigned_in_row": "مبلغ غير صالح مخصص في الصف:",
+  "invalid_adjustment": "تسوية غير صالحة. لتحديد الدائن اختر المعاملة المدينة والعكس صحيح. يجب أن يكون مبلغ التسوية الصافي صفراً.",
+  "invalid_adjustment_negative_value": "تسوية غير صالحة. القيم السالبة غير مسموح بها.",
+  "invalid_adjustment_for_debit_select_credit": "تسوية غير صالحة. لتحديد المدين اختر معاملة دائنة والعكس صحيح. يجب أن يكون مبلغ التسوية الصافي صفراً.",
+  "an_error_occurred": "حدث خطأ",
+  "auto_post": "نشر تلقائي",
+  "excess_adjustment": "تسوية زائدة",
+  "do_you_want_to_save": "هل تريد الحفظ؟",
+  "bill_no": "رقم الفاتورة",
+  "balance": "الرصيد",
+  "billwise_amount": "المبلغ حسب الفاتورة"
 }

@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  customJsonParse,
-  modelToBase64,
-} from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -48,7 +45,7 @@ export const AccTransactionUserConfig = () => {
   };
   const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const postUserConfigOnOk = async (response: any) => {
     const base64 = modelToBase64(response);

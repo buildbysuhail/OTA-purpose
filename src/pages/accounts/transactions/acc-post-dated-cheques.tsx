@@ -9,11 +9,17 @@ import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ErpInput from "../../../components/ERPComponents/erp-input";
 import { useTranslation } from "react-i18next";
 import { FileSpreadsheet, X } from "lucide-react";
+import Urls from "../../../redux/urls";
+import { APIClient } from "../../../helpers/api-client";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../redux/store";
+import { Countries } from "../../../redux/slices/user-session/reducer";
+import moment from "moment";
 
 interface FormState {
   paymentType: "payment" | "receipt";
-  chequeFromDate: string;
-  chequeToDate: string;
+  chequeFromDate: Date;
+  chequeToDate: Date;
   isBank: boolean;
   selectedBankId: string | null;
   bankDateType: "today" | "cheque";
@@ -30,11 +36,16 @@ interface LoadingState {
   close: boolean;
 }
 
+const api = new APIClient();
 const PostDatedCheques = () => {
+  const [data, setData] = useState<any>();
+  const [key, setKey] = useState<number>(100000);
+  const [prevData, setPrevData] = useState<any>();
+  const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({
     paymentType: "payment",
-    chequeFromDate: "",
-    chequeToDate: "",
+    chequeFromDate: new Date(),
+    chequeToDate: new Date(),
     isBank: false,
     selectedBankId: null,
     bankDateType: "today",
@@ -42,7 +53,7 @@ const PostDatedCheques = () => {
     total: "0",
     reload: false,
   });
-
+const userSession = useAppSelector((state: RootState) => state.UserSession)
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
     exportToExcel: false,
@@ -54,6 +65,14 @@ const PostDatedCheques = () => {
 
   const btnSaveRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    setFormState((prev: any) => {
+      return {
+        ...prev,
+        chequeFromDate: userSession.finFrom
+      }
+    })
+  })
   const goToPreviousPage = () => {
     window.history.back();
   };
@@ -112,9 +131,46 @@ const PostDatedCheques = () => {
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setFormState((prev) => ({ ...prev, reload: !prev.reload }));
+      let newVoucherType;
+      if (userSession.countryId != Countries.India) {
+        newVoucherType = formState.paymentType === 'payment' ? 'BP' : 'BR';
+      } else {
+        newVoucherType = formState.paymentType === 'payment' ? 'CQP' : 'CQR';
+      }
+
+      const params = new URLSearchParams({
+        FromDate: moment(formState.chequeFromDate).format("DD/MMM/YYYY"),
+        ToDate: moment(formState.chequeToDate).format("DD/MMM/YYYY"),
+        VoucherType: newVoucherType
+      }).toString();
+      // Simulated API call - replace with actual fetch/axios call
+      const response = await api.getAsync(
+        Urls.pdc,params
+        
+      );
+      const rows = response.map((row: any, index: number) => ({
+        id: index,
+        cleared: false,
+        bounced: false,
+        ledgerName: row.ledgerName,
+        chequeNumber: row.chequeNumber,
+        chequeDate: row.chequeDate,
+        chequeBounceDate: row.chequeBounceDate,
+        amount: row.amount,
+        accTransMasterID: row.accTransMasterID,
+        accTransactionDetailsID: row.accTransactionDetailsID,
+        bankCharge: row.bankCharge,
+        ...(userSession.countryId == Countries.India && {
+          ledgerID: row.ledgerID,
+          relatedLedgerID: row.relatedLedgerID
+        })
+      }));
+
+      // Calculate grand total
+      const total = rows.reduce((sum: any, row: any) => sum + parseFloat(row.amount), 0);
+      
+      setData(rows);
+      setPrevData(rows);
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
     }
@@ -437,6 +493,7 @@ const PostDatedCheques = () => {
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+            data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"
               hideGridAddButton={true}

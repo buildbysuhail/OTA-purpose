@@ -1707,20 +1707,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
           <div
             style={{
-              maxWidth: `${formState.userConfig?.maxWidth}px`,
-              marginLeft:
-                formState.userConfig?.alignment === "left" ? "0" : "auto",
-              marginRight:
-                formState.userConfig?.alignment === "right" ? "0" : "auto",
+              maxWidth: formState.userConfig?.maxWidth ? `${formState.userConfig?.maxWidth}px` : '100%',
+              marginLeft: formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight: formState.userConfig?.alignment === "right" ? "0" : "auto",
               textAlign: formState.userConfig?.alignment,
-              border: formState.userConfig?.maxWidth ? '1px solid #ccc' : 'none',
+              border: formState.userConfig?.maxWidth && formState.userConfig?.maxWidth !== '100%' ? '1px solid #ccc' : 'none',
               padding: formState.userConfig?.maxWidth ? '10px' : '0',
-              borderRadius: formState.userConfig?.maxWidth ? '10px' : 'none',
+              borderRadius: formState.userConfig?.maxWidth && formState.userConfig?.maxWidth !== '100%' ? '10px' : 'none',
+              borderBottomLeftRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
+              borderBottomRightRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
+              borderBottom: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? 'none' : '1px solid #ccc',
             }}
           >
-            <div
-              className="grid grid-cols-2 gap-8 !mt-[35px]"
-            >
+            <div  className="grid grid-cols-2 gap-8 !mt-[35px]">
               <div className="">
                 <div className="grid grid-cols-1 leading-none lg:w-3/4">
                   <div className="flex items-center gap-2">
@@ -2604,17 +2603,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
           </div>
           <div className="relative"
-          style={{
-            maxWidth: `${formState.userConfig?.maxWidth}px`,
-            marginLeft:
-              formState.userConfig?.alignment === "left" ? "0" : "auto",
-            marginRight:
-              formState.userConfig?.alignment === "right" ? "0" : "auto",
-            textAlign: formState.userConfig?.alignment,
-            border: formState.userConfig?.maxWidth ? '1px solid #ccc' : 'none',
-            padding: formState.userConfig?.maxWidth ? '10px' : '0',
-            borderRadius: formState.userConfig?.maxWidth ? '10px' : 'none',
-          }}
+            style={{
+              maxWidth: formState.userConfig?.gridMaxWidth ? `${formState.userConfig?.gridMaxWidth}px` : '100%',
+              marginLeft: formState.userConfig?.alignment === "left" ? "0" : "auto",
+              marginRight: formState.userConfig?.alignment === "right" ? "0" : "auto",
+              textAlign: formState.userConfig?.alignment,
+              border: formState.userConfig?.gridMaxWidth && formState.userConfig?.gridMaxWidth !== '100%' ? '1px solid #ccc' : 'none',
+              padding: formState.userConfig?.gridMaxWidth ? '10px' : '0',
+              borderRadius: formState.userConfig?.gridMaxWidth && formState.userConfig?.gridMaxWidth !== '100%' ? '10px' : 'none',
+              borderTopLeftRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
+              borderTopRightRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
+              borderTop: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth  ? 'none' : '0',
+            }}
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid

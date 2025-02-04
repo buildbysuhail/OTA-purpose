@@ -28,7 +28,13 @@ interface pageBgColor {
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const { t } = useTranslation("transaction");
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
@@ -57,7 +63,6 @@ export const AccTransactionUserConfig = () => {
         `${Urls.post_acc_user_config}`,
         formState.userConfig
       );
-      debugger;
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utc", base64);
@@ -83,16 +88,15 @@ export const AccTransactionUserConfig = () => {
   const resetThemeChange = async () => {
     try {
       ERPAlert.show({
-        title: "Are you sure reset now?",
+        title: t("are_you_sure_reset_now"),
         icon: "warning",
-        confirmButtonText: "Yes, reset now!",
-        cancelButtonText: "Cancel",
+        confirmButtonText: t("reset_now"),
+        cancelButtonText: t("cancel"),
         onConfirm: async (result: any) => {
           const res = await api.postAsync(Urls.reset_user_settings, {});
           handleResponse(res, () => {
             const st = atob(res.item);
             localStorage.setItem("utc", res.item);
-            // dispatch(setInputBox(res.inputBox));
             const _st: any = customJsonParse(st);
             dispatch(
               accFormStateHandleFieldChange({
@@ -107,31 +111,48 @@ export const AccTransactionUserConfig = () => {
     }
   };
 
-  const { t } = useTranslation("transaction");
-
   return (
     <>
-      <div
-        className="group relative inline-flex flex-col items-center"
-        title="Settings"
-      >
-        <button
-          // className="flex items-center bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-          className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-          onClick={() => setIsOpen(true)}
-        >
+      <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
+        <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={() => setIsOpen(true)}>
           <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>
       <ERPModal
         isOpen={isOpen}
-        title="User Config"
+        title={t("user_config")}
         width="w-full max-w-[1000px]"
         minHeight={800}
         isForm={true}
         closeModal={() => setIsOpen(false)}
         content={
           <>
+            <div className="flex items-center justify-end">
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-700 font-medium">
+                  {isExpanded ? t("expanded_view") : t("compact_view")}
+                </span>
+                <div className="relative inline-block w-14 h-8">
+                  <input
+                    type="checkbox"
+                    id="toggle-view"
+                    className="sr-only"
+                    checked={isExpanded}
+                    onChange={handleToggle}
+                  />
+                  <label
+                    htmlFor="toggle-view"
+                    className="block cursor-pointer bg-gray-300 rounded-full p-1 transition-colors duration-300 ease-in-out peer-checked:bg-[#3b82f6]"
+                  >
+                    <div
+                      className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isExpanded ? "translate-x-6" : "translate-x-0"
+                        }`}
+                    ></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
             <div className="grid gird-col-3 gap-6 p-4">
               <ERPCheckbox
                 id="keepNarrationForJV"
@@ -186,7 +207,7 @@ export const AccTransactionUserConfig = () => {
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}
-                label={t("presetCostCenter")}
+                label={t("preset_cost_center")}
                 field={{
                   id: "presetCostenterId",
                   getListUrl: Urls.data_costcentres,
@@ -197,17 +218,32 @@ export const AccTransactionUserConfig = () => {
                   handleFieldChange("presetCostenterId", e.presetCostenterId)
                 }
               />
-              <ERPInput
-                id="maxWidth"
-                label={t("max_width")}
-                placeholder={t("max_width_eg")}
-                type="text"
-                data={formState.userConfig}
-                value={formState?.userConfig?.maxWidth}
-                onChangeData={(e: { maxWidth: any }) =>
-                  handleFieldChange("maxWidth", e.maxWidth)
-                }
-              />
+              <div className="flex items-center gap-4">
+                <ERPInput
+                  id="maxWidth"
+                  label={t("max_width")}
+                  placeholder={t("max_width_eg")}
+                  type="text"
+                  className="w-full"
+                  data={formState.userConfig}
+                  value={formState?.userConfig?.maxWidth}
+                  onChangeData={(e: { maxWidth: any }) =>
+                    handleFieldChange("maxWidth", e.maxWidth)
+                  }
+                />
+                <ERPInput
+                  id="gridMaxWidth"
+                  label={t("grid_max_width")}
+                  placeholder={t("max_width_eg")}
+                  type="text"
+                  className="w-full"
+                  data={formState.userConfig}
+                  value={formState?.userConfig?.gridMaxWidth}
+                  onChangeData={(e: { gridMaxWidth: any }) =>
+                    handleFieldChange("gridMaxWidth", e.gridMaxWidth)
+                  }
+                />
+              </div>
 
               <div>
                 <ERPButton

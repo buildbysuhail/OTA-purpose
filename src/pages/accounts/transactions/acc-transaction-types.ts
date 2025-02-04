@@ -423,6 +423,7 @@ export interface BillwiseData {
 }
 export interface AccUserConfig {
   maxWidth?: any;
+  gridMaxWidth?: any;
   keepNarrationForJV?: boolean;
   clearDetailsAfterSaveAccounts?: boolean;
   mnuShowConfirmationForEditOnAccounts?: boolean;

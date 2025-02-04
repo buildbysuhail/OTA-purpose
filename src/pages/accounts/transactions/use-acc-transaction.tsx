@@ -145,6 +145,7 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCombo = () => {
+    debugger;
     if (ledgerIdRef.current) {
       ledgerIdRef.current.select();
       ledgerIdRef.current.focus();

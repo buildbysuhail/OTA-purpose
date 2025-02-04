@@ -111,7 +111,14 @@ const BankReconciliation = () => {
   };
 
   const handleShow = async () => {
-    setReload(true);
+    setLoading((prev) => ({ ...prev, show: true }));
+    try {
+      debugger;
+      const _data = await api.getAsync(Urls.bankReconciliation,`LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`);
+      setData(_data);
+    } finally {
+      setLoading((prev) => ({ ...prev, show: false }));
+    }
   };
 
   const handleSave = async () => {
@@ -395,11 +402,13 @@ const BankReconciliation = () => {
               hideDefaultExportButton={true}
               onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
-              method={ActionType.POST}
-              reload={reload}
-              changeReload={(reload: boolean) => setReload(false)}
-              dataUrl={`${Urls.bankReconciliation}`}
-              postData={{ledgerId:formState.selectedBankId, isReconciled:formState.showReconciled }}
+              data={data}
+              // method={ActionType.POST}
+              // reload={reload}
+              // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}
+              // changeReload={(reload: boolean) => setReload(false)}
+              // dataUrl={`${Urls.bankReconciliation}`}
+              // postData={{ledgerId:formState.selectedBankId, isReconciled:formState.showReconciled }}
               pageSize={40}
               allowSelection={true}
               selectionMode={"multiple"}

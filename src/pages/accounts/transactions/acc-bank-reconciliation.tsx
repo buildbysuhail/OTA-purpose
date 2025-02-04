@@ -95,7 +95,7 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       // Update the data
       const updatedTransactions = data.map((transaction: any) => {
         if (selectedKeys.includes(transaction.accTransactionDetailID)) {
@@ -110,8 +110,8 @@ const BankReconciliation = () => {
         return transaction;
       });
       debugger;
-  console.log('123');
-  
+      console.log("123");
+
       setData(updatedTransactions);
     } catch (error) {
       console.log(error);
@@ -119,8 +119,6 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
   };
-
-
 
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
@@ -131,11 +129,11 @@ const BankReconciliation = () => {
         `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
       );
       debugger;
-      console.log('1234');
+      console.log("1234");
       setData(_data);
       setPrevData(_data);
       setKey((prev: number) => {
-        return prev+1
+        return prev + 1;
       });
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
@@ -144,23 +142,29 @@ const BankReconciliation = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-  debugger;
+    debugger;
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => {
-        const prevItem = prevData.find((p: any) => p.accTransactionDetailID === item.accTransactionDetailID);
+        const prevItem = prevData.find(
+          (p: any) => p.accTransactionDetailID === item.accTransactionDetailID
+        );
         return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
       });
-  
+
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
-      .filter((item: any) => selectedKeys.includes(item.accTransactionDetailID)) // ✅ Fixed ID casing
-      .map((it: any) => ({
-        ...it,
-        ledgerID: formState.selectedBankId,
-        bankDate: it.bankDate ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD") : null, // ✅ Corrected format
-      }));
-  
+        .filter((item: any) =>
+          selectedKeys.includes(item.accTransactionDetailID)
+        ) // ✅ Fixed ID casing
+        .map((it: any) => ({
+          ...it,
+          ledgerID: formState.selectedBankId,
+          bankDate: it.bankDate
+            ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+            : null, // ✅ Corrected format
+        }));
+
       if (filteredItems.length === 0) {
         ERPAlert.show({
           icon: "info",
@@ -169,10 +173,10 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       // Step 3: Call API with only filtered modified items
       const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
-  
+
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
@@ -187,7 +191,6 @@ const BankReconciliation = () => {
     }
   };
 
-
   const handlePrint = async () => {
     setLoading((prev) => ({ ...prev, print: true }));
     try {
@@ -199,7 +202,7 @@ const BankReconciliation = () => {
   };
   const handleSetPending = async (cellInfo: any, __data: any) => {
     setLoading((prev) => ({ ...prev, print: true }));
-  const _data = cellInfo.data;
+    const _data = cellInfo.data;
     try {
       if (_data.status === "B") {
         ERPAlert.show({
@@ -209,7 +212,7 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       if (!_data.bankDate) {
         ERPAlert.show({
           icon: "info",
@@ -218,48 +221,52 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       ERPAlert.show({
         icon: "question",
         text: "Are you sure you want to change the transaction to pending?",
         title: "Changing to Pending",
         onConfirm: () => {
           debugger;
-  
+
           setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
-  
+
           try {
-            const res = api.putAsync(Urls.bankReconciliation, {
-              chequeDate: _data.bankDate,
-              accTransactionDetailID: _data.accTransactionDetailID,
-            }).then((res: any) => {
-              const updatedData = __data.map((item: any) => {
-                if (item.accTransactionDetailID === _data.accTransactionDetailID) {
-                  return {
-                    ...item,
-                    checkStatus: "p", // Update the status to pending
-                  };
-                }
-                return item;
+            const res = api
+              .putAsync(Urls.bankReconciliation, {
+                chequeDate: _data.bankDate,
+                accTransactionDetailID: _data.accTransactionDetailID,
+              })
+              .then((res: any) => {
+                const updatedData = __data.map((item: any) => {
+                  if (
+                    item.accTransactionDetailID === _data.accTransactionDetailID
+                  ) {
+                    return {
+                      ...item,
+                      checkStatus: "p", // Update the status to pending
+                    };
+                  }
+                  return item;
+                });
+
+                debugger;
+                console.log("123wewe"); // Debugging log
+
+                // Update the state to trigger a re-render of the grid
+                setData(updatedData); // Pass the array directly, not as an object
+                debugger;
+
+                // debugger;setKey((prev: number) => {
+                //   return prev+1
+                // });
               });
-              
-              debugger;
-              console.log('123wewe'); // Debugging log
-              
-              // Update the state to trigger a re-render of the grid
-              setData(updatedData); // Pass the array directly, not as an object
-              debugger;
-  
-              // debugger;setKey((prev: number) => {
-              //   return prev+1
-              // });           
-            });
-  
+
             // cellInfo.component.repaint();
             // handleResponse(res, () => {
             //   debugger;
             //   // Find and update the correct item in `data` array
-              
+
             // });
           } catch (error) {
             console.error("Error updating transaction:", error);
@@ -273,174 +280,198 @@ const BankReconciliation = () => {
     }
   };
 
-  const columns: DevGridColumn[] =[
-      {
-        dataField: "transactionDate",
-        caption: t("transaction_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-      },
-      {
-        dataField: "voucherType",
-        caption: t("voucher_type"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-      },
-      {
-        dataField: "VNo",
-        caption: t("voucher_number"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-      },
-      {
-        dataField: "particulars",
-        caption: t("particulars"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        cellRender: (cellInfo: any) => (
-          <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ''}`}>{cellInfo.data.particulars}</span>
-        ),
-      },
-      {
-        dataField: "debit",
-        caption: t("debit"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "credit",
-        caption: t("credit"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "narration",
-        caption: t("narration"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "voucherPrefix",
-        caption: t("voucher_prefix"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "referenceNumber",
-        caption: t("reference_number"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "referenceDate",
-        caption: t("reference_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "accTransactionDetailID",
-        caption: t("acc_transaction_detail_id"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "bankDate",
-        caption: t("bank_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "chequeNumber",
-        caption: t("cheque_number"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "checkStatus",
-        caption: t("check_status"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "chequeDate",
-        caption: t("cheque_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "ledgerID",
-        caption: t("ledger_id"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "",
-        caption: t("action"),
-        dataType: "string",
-        allowSorting: false,
-        allowSearch: false,
-        allowFiltering: false,
-        width: 150,
-        cellRender: (cellInfo: any) => (
-          <ERPButton
-            className="dx-row"
-            onClick={() => { handleSetPending(cellInfo, data)}} 
-            title="Set Pending"
-          >
-            Set Pending
-          </ERPButton>
-        ),
-      }
-    ];
+  const columns: DevGridColumn[] = [
+    {
+      dataField: "transactionDate",
+      caption: t("transaction_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200,
+    },
+    {
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200,
+    },
+    {
+      dataField: "VNo",
+      caption: t("voucher_number"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200,
+    },
+    {
+      dataField: "particulars",
+      caption: t("particulars"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      cellRender: (cellInfo: any) => (
+        <span
+          className={`${
+            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+          }`}
+        >
+          {cellInfo.data.particulars}
+        </span>
+      ),
+    },
+    {
+      dataField: "debit",
+      caption: t("debit"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      cellRender: (cellInfo: any) => (
+        <span
+          className={`${
+            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+          }`}
+        >
+          {cellInfo.data.debit}
+        </span>
+      ),
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      cellRender: (cellInfo: any) => (
+        <span
+          className={`${
+            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+          }`}
+        >
+          {cellInfo.data.credit}
+        </span>
+      ),
+    },
+    {
+      dataField: "narration",
+      caption: t("narration"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "voucherPrefix",
+      caption: t("voucher_prefix"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "referenceNumber",
+      caption: t("reference_number"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "referenceDate",
+      caption: t("reference_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "accTransactionDetailID",
+      caption: t("acc_transaction_detail_id"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "bankDate",
+      caption: t("bank_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      allowEditing: true,
+    },
+    {
+      dataField: "chequeNumber",
+      caption: t("cheque_number"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "checkStatus",
+      caption: t("check_status"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "chequeDate",
+      caption: t("cheque_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerID",
+      caption: t("ledger_id"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "",
+      caption: t("action"),
+      dataType: "string",
+      allowSorting: false,
+      allowSearch: false,
+      allowFiltering: false,
+      width: 150,
+      cellRender: (cellInfo: any) => (
+        <a
+          onClick={() => handleSetPending(cellInfo, data)}
+          title="Set Pending"
+          className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
+        >
+          Set Pending
+        </a>
+      ),
+    },
+  ];
   return (
     <>
       <div className="relative min-h-screen bg-white">
@@ -540,19 +571,23 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
-            key={key}
+              key={key}
               ref={dataGridRef}
               columns={columns}
+              keyExp="slNo"
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
               hideDefaultExportButton={true}
               onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
               data={data}
-              keyExpr="accTransactionDetailID" 
-              selectedRowKeys={selectedKeys} 
-              remoteOperations={{ filtering: false, paging: false, sorting: false }}
-                 
+              keyExpr="accTransactionDetailID"
+              selectedRowKeys={selectedKeys}
+              remoteOperations={{
+                filtering: false,
+                paging: false,
+                sorting: false,
+              }}
               // method={ActionType.POST}
               // reload={reload}
               // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}

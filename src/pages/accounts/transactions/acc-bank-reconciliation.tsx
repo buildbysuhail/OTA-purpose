@@ -33,6 +33,7 @@ const BankReconciliation = () => {
   const rootState = useRootState();
 
   const [data, setData] = useState<any>();
+  const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({
@@ -108,6 +109,8 @@ const BankReconciliation = () => {
         }
         return transaction;
       });
+      debugger;
+  console.log('123');
   
       setData(updatedTransactions);
     } catch (error) {
@@ -125,10 +128,15 @@ const BankReconciliation = () => {
       debugger;
       const _data = await api.getAsync(
         Urls.bankReconciliation,
-        `LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
+        `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
       );
+      debugger;
+      console.log('1234');
       setData(_data);
       setPrevData(_data);
+      setKey((prev: number) => {
+        return prev+1
+      });
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
     }
@@ -188,9 +196,9 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, print: false }));
     }
   };
-  const handleSetPending = async (_data: any, __data: any) => {
+  const handleSetPending = async (cellInfo: any, __data: any) => {
     setLoading((prev) => ({ ...prev, print: true }));
-  
+  const _data = cellInfo.data;
     try {
       if (_data.status === "B") {
         ERPAlert.show({
@@ -214,26 +222,44 @@ const BankReconciliation = () => {
         icon: "question",
         text: "Are you sure you want to change the transaction to pending?",
         title: "Changing to Pending",
-        onConfirm: async (allow) => {
+        onConfirm: () => {
           debugger;
   
           setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
   
           try {
-            const res = await api.putAsync(Urls.bankReconciliation, {
+            const res = api.putAsync(Urls.bankReconciliation, {
               chequeDate: _data.bankDate,
               accTransactionDetailID: _data.accTransactionDetailID,
+            }).then((res: any) => {
+              const updatedData = __data.map((item: any) => {
+                if (item.accTransactionDetailID === _data.accTransactionDetailID) {
+                  return {
+                    ...item,
+                    checkStatus: "p", // Update the status to pending
+                  };
+                }
+                return item;
+              });
+              
+              debugger;
+              console.log('123wewe'); // Debugging log
+              
+              // Update the state to trigger a re-render of the grid
+              setData(updatedData); // Pass the array directly, not as an object
+              debugger;
+  
+              // debugger;setKey((prev: number) => {
+              //   return prev+1
+              // });           
             });
   
-            debugger;
-            handleResponse(res, () => {
-              debugger;
-              // Find and update the correct item in `data` array
-              const item = __data.find((x: any) => x.accTransactionDetailID === _data.accTransactionDetailID);
-              if (item) {
-                item.checkStatus = "p";
-              }
-            });
+            // cellInfo.component.repaint();
+            // handleResponse(res, () => {
+            //   debugger;
+            //   // Find and update the correct item in `data` array
+              
+            // });
           } catch (error) {
             console.error("Error updating transaction:", error);
           } finally {
@@ -246,8 +272,7 @@ const BankReconciliation = () => {
     }
   };
 
-  const columns: DevGridColumn[] = useMemo(
-    () => [
+  const columns: DevGridColumn[] =[
       {
         dataField: "transactionDate",
         caption: t("transaction_date"),
@@ -404,16 +429,14 @@ const BankReconciliation = () => {
         cellRender: (cellInfo: any) => (
           <ERPButton
             className="dx-row"
-            onClick={() => handleSetPending(cellInfo.data, data)} 
+            onClick={() => { handleSetPending(cellInfo, data)}} 
             title="Set Pending"
           >
             Set Pending
           </ERPButton>
         ),
       }
-    ],
-    [data]
-  );
+    ];
   return (
     <>
       <div className="relative min-h-screen bg-white">
@@ -513,17 +536,19 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
+            key={key}
               ref={dataGridRef}
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
-              remoteOperations={false}
               hideDefaultExportButton={true}
               onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
               data={data}
               keyExpr="accTransactionDetailID" 
               selectedRowKeys={selectedKeys} 
+              remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                 
               // method={ActionType.POST}
               // reload={reload}
               // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}

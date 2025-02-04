@@ -383,8 +383,8 @@ const createStore = async (
               groupCount: 0,
             }
             : {
-              data: result.data,
-              totalCount: result.totalCount,
+              data: result.loadResult != undefined ? result.loadResult : result.data,
+              totalCount: result.loadResult != undefined ? result.loadResult.totalCount : result.totalCount,
             }
           : {
             data: [],

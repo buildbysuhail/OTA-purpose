@@ -12,6 +12,7 @@ import { FileSpreadsheet, Printer, X } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
+import { ActionType } from "../../../redux/types";
 
 interface FormState {
   showReconciled: boolean;
@@ -30,11 +31,13 @@ const BankReconciliation = () => {
   const rootState = useRootState();
 
   const [data, setData] = useState<any>();
+  const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({
     showReconciled: false,
     selectedBankId: null,
   });
   const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
+  const [reload, setReload] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
@@ -44,7 +47,8 @@ const BankReconciliation = () => {
     print: false,
   });
 
-  const { t } = useTranslation("transaction");
+  const { t } = useTranslation("transaction");  
+  const dataGridRef = useRef<any>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
 
   const goToPreviousPage = () => {
@@ -63,36 +67,51 @@ const BankReconciliation = () => {
     setDateChangeState(type);
   };
 
+  const handleSelectionChange = (e: any) => {
+    if (Array.isArray(e.selectedRowKeys)) {
+      const selectedKeys = e.selectedRowKeys.map((row: any) => 
+        typeof row === "object" ? row.accTransactionDetailID : row
+      );
+      setSelectedKeys(selectedKeys);
+    } else {
+      setSelectedKeys([]);
+    }
+  };
+
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
     try {
+      debugger;
+      if (!selectedKeys || selectedKeys.length === 0) {
+        console.warn("No rows selected.");
+        return;
+      }
+      debugger;
+
       const updatedTransactions = data.map((transaction: any) => {
-        if (transaction.select) {
+        if (selectedKeys.includes(transaction.accTransactionDetailID)) {
           return {
             ...transaction,
-            bankDate: dateChangeState == "today"
-              ? moment().local().format("dd/MM/yyyy")
-              : transaction.chequeDate,
+            bankDate:
+              dateChangeState === "today"
+                ? moment().format("DD/MM/YYYY")
+                : transaction.chequeDate,
           };
         }
         return transaction;
       });
-  
+
       setData(updatedTransactions);
-    } finally {
+    } catch(error) {
+      console.log(error);
+      
+    }finally {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
   };
 
   const handleShow = async () => {
-    setLoading((prev) => ({ ...prev, show: true }));
-    try {
-      debugger;
-      const _data = await api.getAsync(Urls.bankReconciliation,`LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`);
-      setData(_data);
-    } finally {
-      setLoading((prev) => ({ ...prev, show: false }));
-    }
+    setReload(true);
   };
 
   const handleSave = async () => {
@@ -134,7 +153,6 @@ const BankReconciliation = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 200,
-        allowEditing: true,
       },
       {
         dataField: "VNo",
@@ -144,90 +162,81 @@ const BankReconciliation = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 200,
-        allowEditing: true,
       },
       {
-        dataField: "Particulars",
+        dataField: "particulars",
         caption: t("particulars"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "Debit",
+        dataField: "debit",
         caption: t("debit"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "Credit",
+        dataField: "credit",
         caption: t("credit"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "Narration",
+        dataField: "narration",
         caption: t("narration"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "VoucherPrefix",
+        dataField: "voucherPrefix",
         caption: t("voucher_prefix"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "ReferenceNumber",
+        dataField: "referenceNumber",
         caption: t("reference_number"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "ReferenceDate",
+        dataField: "referenceDate",
         caption: t("reference_date"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "AccTransactionDetailID",
+        dataField: "accTransactionDetailID",
         caption: t("acc_transaction_detail_id"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "BankDate",
+        dataField: "bankDate",
         caption: t("bank_date"),
         dataType: "string",
         allowSorting: true,
@@ -237,44 +246,40 @@ const BankReconciliation = () => {
         allowEditing: true,
       },
       {
-        dataField: "ChequeNumber",
+        dataField: "chequeNumber",
         caption: t("cheque_number"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "CheckStatus",
+        dataField: "checkStatus",
         caption: t("check_status"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "ChequeDate",
+        dataField: "chequeDate",
         caption: t("cheque_date"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
       {
-        dataField: "LedgerID",
+        dataField: "ledgerID",
         caption: t("ledger_id"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
       },
     ],
     []
@@ -383,15 +388,21 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
+            ref={dataGridRef}
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
               hideDefaultExportButton={true}
+              onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
-              data={data}
-              // reload={formState.reload}
+              method={ActionType.POST}
+              reload={reload}
+              changeReload={(reload: boolean) => setReload(false)}
+              dataUrl={`${Urls.bankReconciliation}`}
+              postData={{ledgerId:formState.selectedBankId, isReconciled:formState.showReconciled }}
               pageSize={40}
-              // className="pb-16"
+              allowSelection={true}
+              selectionMode={"multiple"}
             />
 
             <div

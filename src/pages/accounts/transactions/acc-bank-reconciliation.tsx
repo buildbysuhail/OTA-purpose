@@ -140,7 +140,12 @@ const BankReconciliation = () => {
       });
   
       // Step 2: Filter modified items that are also in selectedRows
-      const filteredItems = modifiedItems.filter((item: any) => selectedKeys.includes(item.accTransactionDetailID));
+      const filteredItems = modifiedItems
+      .filter((item: any) => selectedKeys.includes(item.accTransactionDetailID)) // ✅ Fixed ID casing
+      .map((it: any) => ({
+        ...it,
+        bankDate: it.bankDate ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD") : null, // ✅ Corrected format
+      }));
   
       if (filteredItems.length === 0) {
         ERPAlert.show({

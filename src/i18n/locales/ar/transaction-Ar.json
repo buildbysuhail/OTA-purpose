@@ -243,5 +243,13 @@
   "do_you_want_to_save": "هل تريد الحفظ؟",
   "bill_no": "رقم الفاتورة",
   "balance": "الرصيد",
-  "billwise_amount": "المبلغ حسب الفاتورة"
+  "billwise_amount": "المبلغ حسب الفاتورة",
+
+  "are_you_sure_reset_now": "هل أنت متأكد من إعادة التعيين الآن؟",
+  "reset_now": "نعم، أعد التعيين الآن!",
+  "settings": "الإعدادات",
+  "user_config": "تكوين المستخدم",
+  "expanded_view": "عرض موسع",
+  "compact_view": "عرض مضغوط",
+  "preset_cost_center": "مركز التكلفة المسبق"
 }

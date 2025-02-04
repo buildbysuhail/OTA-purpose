@@ -107,6 +107,7 @@
   "show_confirmation_for_edit_on_accounts": "Show confirmation for edit on accounts",
   "maximize_billwise_screen_initially": "Maximize billwise screen initially",
   "max_width": "Max width",
+  "grid_max_width":"Grid max width",
   "max_width_eg": "Max Width (e.g., 1200px)",
   "left": "Left",
   "center": "Center",
@@ -244,5 +245,13 @@
   "do_you_want_to_save":"Do you want to save",
   "bill_no": "Bill no",
   "balance": "Balance",
-  "billwise_amount":"Billwise amount"
+  "billwise_amount":"Billwise amount",
+
+  "are_you_sure_reset_now":"Are you sure reset now ?",
+  "reset_now":"Yes, reset now!",
+  "settings":"Settings",
+  "user_config":"User config",
+  "expanded_view":"Expanded view",
+  "compact_view":"Compact view",
+  "preset_cost_center":"Preset cost center"
 }

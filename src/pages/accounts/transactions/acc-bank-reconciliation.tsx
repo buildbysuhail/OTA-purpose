@@ -86,13 +86,16 @@ const BankReconciliation = () => {
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
     try {
-      debugger;
       if (!selectedKeys || selectedKeys.length === 0) {
-        console.warn("No rows selected.");
+        ERPAlert.show({
+          icon: "warning",
+          text: "No rows selected.",
+          title: "",
+        });
         return;
       }
-      debugger;
-
+  
+      // Update the data
       const updatedTransactions = data.map((transaction: any) => {
         if (selectedKeys.includes(transaction.accTransactionDetailID)) {
           return {
@@ -105,7 +108,7 @@ const BankReconciliation = () => {
         }
         return transaction;
       });
-
+  
       setData(updatedTransactions);
     } catch (error) {
       console.log(error);
@@ -113,6 +116,8 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
   };
+
+
 
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
@@ -327,7 +332,7 @@ const BankReconciliation = () => {
       {
         dataField: "referenceDate",
         caption: t("reference_date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -345,7 +350,7 @@ const BankReconciliation = () => {
       {
         dataField: "bankDate",
         caption: t("bank_date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -373,7 +378,7 @@ const BankReconciliation = () => {
       {
         dataField: "chequeDate",
         caption: t("cheque_date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -512,10 +517,13 @@ const BankReconciliation = () => {
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
+              remoteOperations={false}
               hideDefaultExportButton={true}
               onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
               data={data}
+              keyExpr="accTransactionDetailID" 
+              selectedRowKeys={selectedKeys} 
               // method={ActionType.POST}
               // reload={reload}
               // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}

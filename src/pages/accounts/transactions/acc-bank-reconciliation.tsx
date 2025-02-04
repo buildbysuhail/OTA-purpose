@@ -300,7 +300,7 @@ const BankReconciliation = () => {
       minWidth: 200,
     },
     {
-      dataField: "VNo",
+      dataField: "voucherNumber",
       caption: t("voucher_number"),
       dataType: "string",
       allowSorting: true,
@@ -444,15 +444,15 @@ const BankReconciliation = () => {
       allowFiltering: true,
       width: 150,
     },
-    {
-      dataField: "ledgerID",
-      caption: t("ledger_id"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "ledgerID",
+    //   caption: t("ledger_id"),
+    //   dataType: "string",
+    //   allowSorting: true,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
     {
       dataField: "",
       caption: t("action"),

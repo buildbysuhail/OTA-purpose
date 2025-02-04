@@ -2,8 +2,6 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import FontRegistration from '../../../../LabelDesigner/fontRegister';
 
-
-
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Poppins",
@@ -28,7 +26,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-
   tableRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -101,12 +98,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
     paddingRight: 16
   },
-
-
 });
 
 const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getFormattedValue: any, userSession?: any }> = ({ data, filter, getFormattedValue, userSession }) => {
-
 
   const expense = data.filter(
     (item) => item?.transType === "E" && item?.groupName !== "TOTAL"

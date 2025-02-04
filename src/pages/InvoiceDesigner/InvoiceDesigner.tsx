@@ -52,7 +52,6 @@ import AccTableDesigner from "./Designer/accTableDesigner";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import InvoicePreview from "./InvoicePreview";
 import AccountTransactionsVoucher from "./DownloadPreview/account_transactiocn_standard";
-import BalanceSheetVerticalTemplate from "./DownloadPreview/balance-sheet/balance-sheet-vertical";
 import NoDataMessage from "./utils/visible-non-component";
 import { RootState } from "../../redux/store";
 import * as pdfjsLib from 'pdfjs-dist'
@@ -485,9 +484,7 @@ const InvoiceDesigner = () => {
         {/* */}
 
         {currentSection.type == "properties" && 
-           (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-            <NoDataMessage message="Oops, There is No Properties" />
-          ) : (
+          
           <PropertiesDesigner
             templateGroup={templateGroup}
             tempImages={{ templateImages, setTemplateImages }}
@@ -496,25 +493,21 @@ const InvoiceDesigner = () => {
               dispatch(setTemplatePropertiesState(propertiesState))
             }
           />
-        ))}
+       }
 
         {currentSection.type == "header&footer" && 
-         (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-          <NoDataMessage message="Oops, There is No Header&Footer" />
-        ) : (
+
           <HeaderFooterDesigner
             tempImages={{ templateImages, setTemplateImages }}
             footerState={templateData?.activeTemplate?.footerState}
             headerState={templateData?.activeTemplate?.headerState}
             // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
           />
-        ))}
+        }
         
        {
         currentSection.type === "transactions" &&
-          (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-            <NoDataMessage message="Oops, there is no property!!!" />
-          ) :["SI", "SR"].includes(templateGroup) ?(
+          (["SI", "SR"].includes(templateGroup) ?(
             <TransactionDetailsDesigner
               template={templateData?.activeTemplate}
               headerState={templateData?.activeTemplate?.headerState}
@@ -535,9 +528,7 @@ const InvoiceDesigner = () => {
 
         {
           currentSection.type === "table" &&
-            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-              <NoDataMessage message="Oops, there is no table property!!!" />
-            ) : ["SI", "SR"].includes(templateGroup) ? (
+            ( ["SI", "SR"].includes(templateGroup) ? (
               <ItemTableDesigner
                 template={templateData?.activeTemplate}
                 itemTableState={templateData?.activeTemplate?.itemTableState}
@@ -558,21 +549,17 @@ const InvoiceDesigner = () => {
 
         {
           currentSection.type === "total" &&
-            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-              <NoDataMessage message="Oops, there is no total property!!!" />
-            ) : (
+     
               <TotalDesigner
                 totalState={templateData?.activeTemplate?.totalState}
                 onChange={(totalState) => dispatch(setTemplateTotalState(totalState))}
               />
-            ))
+            
         }
 
         {
           currentSection.type === "others" &&
-            (["BalanceSheet", "ProfitAndLoss"].includes(templateGroup) ? (
-              <NoDataMessage message="Oops, there is no property!!!" />
-            ) : (
+           
               <FooterDesigner
                 tempImages={{ templateImages, setTemplateImages }}
                 footerState={templateData?.activeTemplate?.footerState}
@@ -580,25 +567,11 @@ const InvoiceDesigner = () => {
                   dispatch(setTemplateFooterState(footerState))
                 }
               />
-            ))
+        
         }
       </div>
 
-      {/* Preview  */}
-      {/* {["BalanceSheet","ProfitAndLoss"].includes(templateGroup) && (
-        <PDFViewer
-        className="pdf-viewer"
-        width="100%"
-        height="auto"
-        style={{ maxHeight: `${maxHeight}px`, margin: "20px", padding:"10px"}}
-       >
-      <BalanceSheetVerticalTemplate
-      template={templateData.activeTemplate}
-      currentBranch={currentBranch}
-      userSession={userSession}
-      />
-      </PDFViewer>
-      )} */}
+   
       {["CP", "CR"].includes(templateGroup) && (
         <>
           {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}

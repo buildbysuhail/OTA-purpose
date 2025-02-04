@@ -15,7 +15,6 @@ import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 import { pdf, BlobProvider, PDFViewer } from '@react-pdf/renderer';
-import BalanceSheetVerticalTemplate from "../../../InvoiceDesigner/DownloadPreview/balance-sheet/balance-sheet-vertical";
 import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import { useSelector } from "react-redux";
 import BalanceSheetVerticalPDFTemplate from "./balance-sheet-pdf/balance-sheet-vertical-pdf";

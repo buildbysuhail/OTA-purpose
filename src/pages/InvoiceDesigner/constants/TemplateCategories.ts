@@ -272,16 +272,7 @@ export const TemplateTypes: {
     name: "Request For Quotation",
     template_group_id: VoucherType.RequestForQuotation,
   },
-  {
-    id: 54,
-    name: "Balance sheet",
-    template_group_id: "BalanceSheet",
-  },
-  {
-    id: 55,
-    name: "Profit & Loss",
-    template_group_id: "ProfitAndLoss",
-  },
+
   
 ];
 

@@ -157,6 +157,7 @@ const BankReconciliation = () => {
       .filter((item: any) => selectedKeys.includes(item.accTransactionDetailID)) // ✅ Fixed ID casing
       .map((it: any) => ({
         ...it,
+        ledgerID: formState.selectedBankId,
         bankDate: it.bankDate ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD") : null, // ✅ Corrected format
       }));
   
@@ -308,6 +309,9 @@ const BankReconciliation = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        cellRender: (cellInfo: any) => (
+          <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ''}`}>{cellInfo.data.particulars}</span>
+        ),
       },
       {
         dataField: "debit",

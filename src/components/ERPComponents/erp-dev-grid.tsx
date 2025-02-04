@@ -651,6 +651,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const fetchStore = async () => {
         if (data) {
           setStore(data);
+          changeReload && changeReload(false);
           return;
         }
         if (!dataUrl) {

@@ -13,6 +13,8 @@ import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
 import { ActionType } from "../../../redux/types";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 
 interface FormState {
   showReconciled: boolean;
@@ -25,18 +27,21 @@ interface LoadingState {
   save: boolean;
   print: boolean;
 }
-const api = new APIClient()
+const api = new APIClient();
 const BankReconciliation = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
   const [data, setData] = useState<any>();
+  const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({
     showReconciled: false,
     selectedBankId: null,
   });
-  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
+  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">(
+    "today"
+  );
   const [reload, setReload] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<LoadingState>({
@@ -47,7 +52,7 @@ const BankReconciliation = () => {
     print: false,
   });
 
-  const { t } = useTranslation("transaction");  
+  const { t } = useTranslation("transaction");
   const dataGridRef = useRef<any>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
 
@@ -69,7 +74,7 @@ const BankReconciliation = () => {
 
   const handleSelectionChange = (e: any) => {
     if (Array.isArray(e.selectedRowKeys)) {
-      const selectedKeys = e.selectedRowKeys.map((row: any) => 
+      const selectedKeys = e.selectedRowKeys.map((row: any) =>
         typeof row === "object" ? row.accTransactionDetailID : row
       );
       setSelectedKeys(selectedKeys);
@@ -102,10 +107,9 @@ const BankReconciliation = () => {
       });
 
       setData(updatedTransactions);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
-      
-    }finally {
+    } finally {
       setLoading((prev) => ({ ...prev, setAllDate: false }));
     }
   };
@@ -114,8 +118,12 @@ const BankReconciliation = () => {
     setLoading((prev) => ({ ...prev, show: true }));
     try {
       debugger;
-      const _data = await api.getAsync(Urls.bankReconciliation,`LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`);
+      const _data = await api.getAsync(
+        Urls.bankReconciliation,
+        `LedgerId=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
+      );
       setData(_data);
+      setPrevData(_data);
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
     }
@@ -123,13 +131,43 @@ const BankReconciliation = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
+  debugger;
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Step 1: Find modified rows (where bankDate has changed)
+      const modifiedItems = data.filter((item: any) => {
+        const prevItem = prevData.find((p: any) => p.accTransactionDetailID === item.accTransactionDetailID);
+        return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
+      });
+  
+      // Step 2: Filter modified items that are also in selectedRows
+      const filteredItems = modifiedItems.filter((item: any) => selectedKeys.includes(item.accTransactionDetailID));
+  
+      if (filteredItems.length === 0) {
+        ERPAlert.show({
+          icon: "info",
+          text: "No changes detected in selected rows.",
+          title: "",
+        });
+        return;
+      }
+  
+      // Step 3: Call API with only filtered modified items
+      const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
+  
+      handleResponse(res, () => {
+        ERPAlert.show({
+          icon: "success",
+          text: "Changes saved successfully!",
+          title: "Success",
+        });
+      });
+    } catch (error) {
+      console.error("Error saving changes:", error);
     } finally {
       setLoading((prev) => ({ ...prev, save: false }));
     }
   };
+
 
   const handlePrint = async () => {
     setLoading((prev) => ({ ...prev, print: true }));
@@ -138,6 +176,63 @@ const BankReconciliation = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     } finally {
       setLoading((prev) => ({ ...prev, print: false }));
+    }
+  };
+  const handleSetPending = async (_data: any, __data: any) => {
+    setLoading((prev) => ({ ...prev, print: true }));
+  
+    try {
+      if (_data.status === "B") {
+        ERPAlert.show({
+          icon: "info",
+          text: "Bounced cheque cannot be changed to pending.",
+          title: "",
+        });
+        return;
+      }
+  
+      if (!_data.bankDate) {
+        ERPAlert.show({
+          icon: "info",
+          text: "Bank date is required. Please select one!",
+          title: "",
+        });
+        return;
+      }
+  
+      ERPAlert.show({
+        icon: "question",
+        text: "Are you sure you want to change the transaction to pending?",
+        title: "Changing to Pending",
+        onConfirm: async (allow) => {
+          debugger;
+  
+          setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
+  
+          try {
+            const res = await api.putAsync(Urls.bankReconciliation, {
+              chequeDate: _data.bankDate,
+              accTransactionDetailID: _data.accTransactionDetailID,
+            });
+  
+            debugger;
+            handleResponse(res, () => {
+              debugger;
+              // Find and update the correct item in `data` array
+              const item = __data.find((x: any) => x.accTransactionDetailID === _data.accTransactionDetailID);
+              if (item) {
+                item.checkStatus = "p";
+              }
+            });
+          } catch (error) {
+            console.error("Error updating transaction:", error);
+          } finally {
+            setLoading((prev) => ({ ...prev, print: false })); // Reset loading after API call
+          }
+        },
+      });
+    } catch (error) {
+      console.error("Error in handleSetPending:", error);
     }
   };
 
@@ -288,10 +383,27 @@ const BankReconciliation = () => {
         allowFiltering: true,
         width: 150,
       },
+      {
+        dataField: "",
+        caption: t("action"),
+        dataType: "string",
+        allowSorting: false,
+        allowSearch: false,
+        allowFiltering: false,
+        width: 150,
+        cellRender: (cellInfo: any) => (
+          <ERPButton
+            className="dx-row"
+            onClick={() => handleSetPending(cellInfo.data, data)} 
+            title="Set Pending"
+          >
+            Set Pending
+          </ERPButton>
+        ),
+      }
     ],
-    []
+    [data]
   );
-
   return (
     <>
       <div className="relative min-h-screen bg-white">
@@ -316,7 +428,6 @@ const BankReconciliation = () => {
                   <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                 </button>
               </div>
-
 
               <div
                 className="group relative inline-flex flex-col items-center"
@@ -377,16 +488,13 @@ const BankReconciliation = () => {
                   <ERPDataCombobox
                     id="BankAC"
                     label="Bank A/c"
-                    field={
-                     {
+                    field={{
                       id: "BankAC",
                       required: true,
                       getListUrl: Urls.data_BankAccounts,
                       valueKey: "id",
                       labelKey: "name",
-                     }
-                    }
-
+                    }}
                     value={formState.selectedBankId}
                     onChange={(e) => handleBankSelection(e?.value ?? null)}
                   />
@@ -395,7 +503,7 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
-            ref={dataGridRef}
+              ref={dataGridRef}
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}

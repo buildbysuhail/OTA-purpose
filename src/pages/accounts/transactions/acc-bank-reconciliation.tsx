@@ -317,8 +317,15 @@ const BankReconciliation = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 30,
-      visible: true
+      visible: true,
+      cellRender: (cellInfo: any) => (
+        <span
+        >
+          {cellInfo.data.isSummary == true ?'':cellInfo.data.id}
+        </span>
+      ),
     },
+    
 
     {
       dataField: "transactionDate",
@@ -618,6 +625,7 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
+            showTotalCount={false}
               key={key}
               ref={dataGridRef}
               columns={columns}

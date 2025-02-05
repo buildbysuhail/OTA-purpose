@@ -141,8 +141,8 @@ const BankReconciliation = () => {
       );
       const rows = _data.map((row: any, index: number) => ({
         ...row,
-              id: index+1,
-                        }));
+        id: index + 1,
+      }));
       debugger;
       console.log("1234");
       setData(rows);
@@ -166,7 +166,7 @@ const BankReconciliation = () => {
         );
         return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
       });
-debugger;
+      debugger;
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
@@ -505,13 +505,13 @@ debugger;
       minWidth: 100,
       cellRender: (cellInfo: any) => (
         !cellInfo.data.isSummary ?
-        (<a
-          onClick={() => handleSetPending(cellInfo, data)}
-          title={t("set_pending")}
-          className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
-        >
-          {t("set_pending")}
-        </a> ) : null
+          (<a
+            onClick={() => handleSetPending(cellInfo, data)}
+            title={t("set_pending")}
+            className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
+          >
+            {t("set_pending")}
+          </a>) : null
       ),
     },
   ];
@@ -546,58 +546,71 @@ debugger;
         <div className="mt-8">
           <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
             <div className="p-4">
-              <div className="flex flex-col gap-2 max-w-[500px]">
-                <div className="grid grid-cols-3 items-center justify-between gap-4 border p-4 rounded-md">
-                  <ERPRadio
-                    id="todayDate"
-                    name="bankDateType"
-                    checked={dateChangeState === "today"}
-                    onChange={() => handleBankDateTypeChange("today")}
-                    label={t("today's_date")}
-                  />
-                  <ERPRadio
-                    id="chequeDate"
-                    name="bankDateType"
-                    checked={dateChangeState === "cheque"}
-                    onChange={() => handleBankDateTypeChange("cheque")}
-                    label={t("cheque_date")}
-                  />
-                  <ERPButton
-                    title={t("set_all_date")}
-                    onClick={handleSetAllDate}
-                    type="reset"
-                    loading={loading.setAllDate}
-                  />
+              <div className="flex flex-col w-full max-w-[600px]">
+                <div className="grid grid-cols-12 items-center gap-4">
+                  <div className="col-span-6">
+                    <ERPRadio
+                      id="todayDate"
+                      name="bankDateType"
+                      checked={dateChangeState === "today"}
+                      onChange={() => handleBankDateTypeChange("today")}
+                      label={t("today's_date")}
+                    />
+                  </div>
+                  <div className="col-span-3">
+                    <ERPRadio
+                      id="chequeDate"
+                      name="bankDateType"
+                      checked={dateChangeState === "cheque"}
+                      onChange={() => handleBankDateTypeChange("cheque")}
+                      label={t("cheque_date")}
+                    />
+                  </div>
+                  <div className="col-span-3">
+                    <ERPButton
+                      title={t("set_all_date")}
+                      onClick={handleSetAllDate}
+                      type="reset"
+                      loading={loading.setAllDate}
+                    />
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-3 items-center justify-between gap-4 border p-4 rounded-md">
-                  <ERPDataCombobox
-                    id="selectedBankId"
-                    label={t("bank_a/c")}
-                    field={{
-                      id: "selectedBankId",
-                      required: true,
-                      getListUrl: Urls.data_BankAccounts,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    value={formState.selectedBankId}
-                    onChange={(e) => handleBankSelection(e?.value ?? null)}
-                  // className="w-64"
-                  />
-                  <ERPCheckbox
-                    id="showReconciled"
-                    name="showReconciled"
-                    checked={formState.showReconciled}
-                    onChange={(e) => handleReconciledChange(e.target.checked)}
-                    label={t("show_reconciled")}
-                  />
-                  <ERPButton
-                    title={t("show")}
-                    onClick={handleShow}
-                    variant="secondary"
-                    className="mt-[15px] !mb-0"
-                  />
+                {/* Second Row */}
+                <div className="grid grid-cols-12 items-center gap-4">
+                  <div className="col-span-6">
+                    <ERPDataCombobox
+                      id="selectedBankId"
+                      label={t("bank_a/c")}
+                      field={{
+                        id: "selectedBankId",
+                        required: true,
+                        getListUrl: Urls.data_BankAccounts,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      value={formState.selectedBankId}
+                      onChange={(e) => handleBankSelection(e?.value ?? null)}
+                      className="w-64"
+                    />
+                  </div>
+                  <div className="col-span-3">
+                    <ERPCheckbox
+                      id="showReconciled"
+                      name="showReconciled"
+                      checked={formState.showReconciled}
+                      onChange={(e) => handleReconciledChange(e.target.checked)}
+                      label={t("show_reconciled")}
+                    />
+                  </div>
+                  <div className="col-span-3">
+                    <ERPButton
+                      title={t("show")}
+                      onClick={handleShow}
+                      variant="secondary"
+                      className="mt-[15px] !mb-0 w-[100px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -616,7 +629,7 @@ debugger;
               data={data}
               keyExpr="accTransactionDetailID"
               selectedRowKeys={selectedKeys}
-              allowEditing={{allow: true, config:{edit: true}}}
+              allowEditing={{ allow: true, config: { edit: true } }}
               remoteOperations={{
                 filtering: false,
                 paging: false,

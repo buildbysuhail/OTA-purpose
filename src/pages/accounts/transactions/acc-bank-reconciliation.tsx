@@ -489,13 +489,14 @@ debugger;
       allowFiltering: false,
       minWidth: 100,
       cellRender: (cellInfo: any) => (
-        <a
+        !cellInfo.data.isSummary ?
+        (<a
           onClick={() => handleSetPending(cellInfo, data)}
           title={t("set_pending")}
           className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
         >
           {t("set_pending")}
-        </a>
+        </a> ) : null
       ),
     },
   ];

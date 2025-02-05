@@ -145,8 +145,8 @@ const BankReconciliation = () => {
                         }));
       debugger;
       console.log("1234");
-      setData(_data);
-      setPrevData(_data);
+      setData(rows);
+      setPrevData(rows);
       setKey((prev: number) => {
         return prev + 1;
       });
@@ -314,7 +314,8 @@ debugger;
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 30,
+      visible: true
     },
 
     {

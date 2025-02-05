@@ -365,11 +365,11 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowFiltering: true,
         width: 100,
         allowEditing: true,
-        cellRender: (data: any) => (
+        cellRender: (cellInfo: any) => (
           <input
             type="checkbox"
-            checked={data.Cleared}
-            onChange={(e) => handleCheckboxChange(data.data, "Cleared", e.target.checked)}
+            checked={cellInfo.data.cleared}
+            onChange={(e) => handleCheckboxChange(cellInfo.data, "Cleared", e.target.checked)}
           />
         ),
       },
@@ -382,11 +382,11 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowFiltering: true,
         width: 100,
         allowEditing: true,
-        cellRender: ({ data }: any) => (
+        cellRender: (cellInfo: any) => (
           <input
             type="checkbox"
-            checked={data.Bounced}
-            onChange={(e) => handleCheckboxChange(data.data, "Bounced", e.target.checked)}
+            checked={cellInfo.data.bounced}
+            onChange={(e) => handleCheckboxChange(cellInfo.data, "Bounced", e.target.checked)}
           />
         ),
       },

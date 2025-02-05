@@ -4,6 +4,7 @@ const Nodevwatermark: React.FC = () => {
   useEffect(() => {
     // Variable to store the interval ID
     let interval: NodeJS.Timeout;
+    let warningLogged = false;
 
     // Function to find and click the element
     const clickElement = () => {
@@ -16,8 +17,9 @@ const Nodevwatermark: React.FC = () => {
           element.click();
           console?.log("Element clicked successfully.");
           clearInterval(interval); // Stop checking once the element is found and clicked
-        } else {
+        } else if (!warningLogged) {
           console?.warn("Element not found, retrying...");
+          warningLogged = true; // Set the flag to true after logging the warning
         }
       }, 500); // Retry every 500ms
     };

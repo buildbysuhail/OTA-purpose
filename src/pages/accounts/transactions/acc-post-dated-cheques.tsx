@@ -41,7 +41,7 @@ interface LoadingState {
 const api = new APIClient();
 const PostDatedCheques = () => {
   const [total, setTotal] = useState<number>();
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any[]>([])
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
@@ -115,27 +115,16 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
         try {
-          if (!selectedKeys || selectedKeys.length === 0) {
-            ERPAlert.show({
-              icon: "warning",
-              text: "No rows selected.",
-              title: "",
-            });
-            return;
-          }
-    
+          
           // Update the data
           const updatedTransactions = data.map((transaction: any) => {
-            if (selectedKeys.includes(transaction.accTransactionDetailID)) {
-              return {
-                ...transaction,
-                bankDate:
-                  formState.bankDateType === "today"
-                    ? clientSession.softwareDate
-                    : transaction.chequeDate,
-              };
-            }
-            return transaction;
+            return {
+              ...transaction,
+              date:
+                formState.bankDateType === "today"
+                  ? clientSession.softwareDate
+                  : transaction.chequeDate,
+            };
           });
           debugger;
           console.log("123");
@@ -273,21 +262,23 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
   };
 
   const handleCheckboxChange = (row: any, field: "Cleared" | "Bounced", checked: boolean) => {
-    const updatedData = data.map((item: any) => {
-      if (item.id === row.id) {
-        const updatedRow = { ...item, [field]: checked };
-        if (field === "Cleared" && checked) {
-          updatedRow.Bounced = false;
-          updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
-        } else if (field === "Bounced" && checked) {
-          updatedRow.Cleared = false;
-          updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+    setData((prevData) => {
+      const updatedData = prevData?.map((item: any) => {
+        if (item.accTransactionDetailID === row.accTransactionDetailID) {
+          const updatedRow = { ...item, [field]: checked };
+          if (field === "Cleared" && checked) {
+            updatedRow.Bounced = false;
+            updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+          } else if (field === "Bounced" && checked) {
+            updatedRow.Cleared = false;
+            updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+          }
+          return updatedRow;
         }
-        return updatedRow;
-      }
-      return item;
+        return item;
+      }) || []; // Fallback to an empty array if prevData is undefined
+      return updatedData;
     });
-    setData(updatedData);
   };
   const ValidateCheques = (data: any[]): Promise<boolean> => {
     return new Promise(async (resolve) => {
@@ -374,11 +365,11 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowFiltering: true,
         width: 100,
         allowEditing: true,
-        cellRender: ({ data }: any) => (
+        cellRender: (data: any) => (
           <input
             type="checkbox"
             checked={data.Cleared}
-            onChange={(e) => handleCheckboxChange(data, "Cleared", e.target.checked)}
+            onChange={(e) => handleCheckboxChange(data.data, "Cleared", e.target.checked)}
           />
         ),
       },
@@ -395,13 +386,13 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
           <input
             type="checkbox"
             checked={data.Bounced}
-            onChange={(e) => handleCheckboxChange(data, "Bounced", e.target.checked)}
+            onChange={(e) => handleCheckboxChange(data.data, "Bounced", e.target.checked)}
           />
         ),
       },
       {
-        dataField: "accTransactionMasterID",
-        caption: t("acc_transaction_master_id"),
+        dataField: "date",
+        caption: t("date"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -527,6 +518,15 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowFiltering: true,
         width: 150,
         allowEditing: true,
+      },
+      {
+        dataField: "accTransactionMasterID",
+        caption: t("acc_transaction_master_id"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
       },
     ];
    // Filter columns based on the `visible` property

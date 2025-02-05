@@ -77,10 +77,10 @@ const BankReconciliation = () => {
         if (selectedKeys.includes(transaction.accTransactionDetailID)) {
           return {
             ...transaction,
-            bankDate:
+            bankDate: transaction.bankDate == null ?
               dateChangeState === "today"
                 ? moment().format("DD/MM/YYYY")
-                : transaction.chequeDate,
+                : transaction.chequeDate: transaction.bankDate,
           };
         }
         return transaction;

@@ -267,11 +267,13 @@ const PostDatedCheques = () => {
         if (item.accTransactionDetailID === row.accTransactionDetailID) {
           const updatedRow = { ...item, [field]: checked };
           if (field === "Cleared" && checked) {
-            updatedRow.Bounced = false;
-            updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+            updatedRow.bounced = false;
+            updatedRow.cleared = true;
+            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
           } else if (field === "Bounced" && checked) {
-            updatedRow.Cleared = false;
-            updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+            updatedRow.cleared = false;
+            updatedRow.bounced = true;
+            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
           }
           return updatedRow;
         }

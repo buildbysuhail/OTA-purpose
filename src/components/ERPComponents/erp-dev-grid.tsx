@@ -193,7 +193,7 @@ interface ERPDevGridProps {
   allowGrouping?: boolean;
   groupPanelVisible?: boolean;
   allowEditing?: boolean;
-  editMode?: "row" | "form" | "popup" | "batch";
+  editMode?: "row" | "form" | "popup" | "batch"|"cell";
   onRowUpdating?: (e: any) => void;
   onRowUpdated?: (e: any) => void;
   onRowInserting?: (e: any) => void;
@@ -710,26 +710,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ]);
     const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
     const memoizedStore = useMemo(() => store, [store]);
-    //SAfvan
-    // const switchPdf = useCallback((e: any) => {
-    //   setIsPdfMode((prevpdf: boolean) => {
-    //     setGridCols((prev: any) => {
-
-    //       if (!prevpdf) {
-    //         // to pdf
-    //         if (preferences) {
-    //           return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
-    //         }
-    //       } else {
-    //         if (preferences) {
-    //           return preferences.columnPreferences.filter(x => x.visible == false)
-    //         }
-    //       }
-    //       return prev;
-    //     })
-    //     return !prevpdf;  // Return the previous value if no change
-    //   });
-    // }, [preferences, gridInstance]);
+;
     const switchToPdf = useCallback(() => {
       setGridCols((prev: any) => {
         if (preferences) {
@@ -1737,74 +1718,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 }
               />
             ))}
-
-            {/* <Summary recalculateWhileEditing={true}>
-  {summaryItems?.map((config: SummaryConfig, index: number) => {
-    const columnConfig = columns.find((col: any) => col.dataField === config.column);
-
-    return (
-      <TotalItem
-        key={`summaryItem_${index}`}
-        column={config.column}
-        summaryType={config.summaryType}
-        valueFormat={config.valueFormat}
-        showInColumn={config.showInColumn}
-        alignment={config.alignment}
-     
-    
-        // customizeText={(e) => {
-
-        //   // Handle value formatting based on data type and valueFormat
-        //   const value = e.value;
-
-        //   // Handle null or undefined values
-        //   if (value === null || value === undefined) {
-        //     return "N/A"; 
-        //   }
-
-        //   // Handle number type
-        //   if (typeof value === "number") {
-        //     if (config.valueFormat === "currency") {
-        //       return `${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        //     } else if (config.valueFormat === "percent") {
-        //       return `${(value * 100).toFixed(2)}%`;
-        //     } else if (config.valueFormat === "decimal") {
-        //       return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        //     } else {
-        //       return value.toLocaleString("en-US"); // Default number formatting
-        //     }
-        //   }
-
-        //   // Handle date type
-        //   if (value instanceof Date || (typeof value === "string" && !isNaN(Date.parse(value)))) {
-        //     const date = value instanceof Date ? value : new Date(value);
-        //     if (config.valueFormat === "shortDate") {
-        //       return formatDate(date, "MM/dd/yyyy");
-        //     } else if (config.valueFormat === "longDate") {
-        //       return formatDate(date, "MMMM dd, yyyy");
-        //     } else {
-        //       return formatDate(date, "yyyy-MM-dd"); // Default date formatting
-        //     }
-        //   }
-
-        //   // Handle string type
-        //   if (typeof value === "string") {
-        //     if (config.valueFormat === "uppercase") {
-        //       return value.toUpperCase();
-        //     } else if (config.valueFormat === "lowercase") {
-        //       return value.toLowerCase();
-        //     } else {
-        //       return value; // Default string formatting
-        //     }
-        //   }
-
-        //   // Fallback for other types (e.g., boolean, object, etc.)
-        //   return `${value}`;
-        // }}
-      />
-    );
-  })}
-</Summary> */}
 
             {MemoizedSummary}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}

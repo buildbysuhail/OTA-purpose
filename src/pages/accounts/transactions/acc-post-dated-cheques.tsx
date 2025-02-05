@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
@@ -76,7 +76,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         chequeFromDate: userSession.finFrom
       }
     })
-  },[])
+  },[userSession.finFrom])
   const goToPreviousPage = () => {
     window.history.back();
   };
@@ -112,30 +112,24 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
     setFormState((prev) => ({ ...prev, total: e.target.value }));
   };
 
-  const handleSetAllDate = async () => {
+  const handleSetAllDate = useCallback(async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
-        try {
-          
-          // Update the data
-          const updatedTransactions = data.map((transaction: any) => {
-            return {
-              ...transaction,
-              date:
-                formState.bankDateType === "today"
-                  ? clientSession.softwareDate
-                  : transaction.chequeDate,
-            };
-          });
-          debugger;
-          console.log("123");
-    
-          setData(updatedTransactions);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading((prev) => ({ ...prev, setAllDate: false }));
-        }
-  };
+    try {
+      const updatedTransactions = data.map((transaction: any) => ({
+        ...transaction,
+        date: formState.bankDateType === "today" ? clientSession.softwareDate : transaction.chequeDate,
+      }));
+  
+      // Only update the state if the data has changed
+      if (JSON.stringify(updatedTransactions) !== JSON.stringify(data)) {
+        setData(updatedTransactions);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading((prev) => ({ ...prev, setAllDate: false }));
+    }
+  }, [data, formState.bankDateType, clientSession.softwareDate,]);
 
   const handleExportToExcel = async () => {
     setLoading((prev) => ({ ...prev, exportToExcel: true }));
@@ -164,8 +158,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       }).toString();
       // Simulated API call - replace with actual fetch/axios call
       const response = await api.getAsync(
-        Urls.pdc,params
-        
+        Urls.pdc,params  
       );
       const rows = response.map((row: any, index: number) => ({
         id: index,
@@ -261,27 +254,33 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
     }
   };
 
-  const handleCheckboxChange = (row: any, field: "Cleared" | "Bounced", checked: boolean) => {
+  const handleCheckboxChange = useCallback((row: any, field: "Cleared" | "Bounced", checked: boolean) => {
     setData((prevData) => {
-      const updatedData = prevData?.map((item: any) => {
-        if (item.accTransactionDetailID === row.accTransactionDetailID) {
-          const updatedRow = { ...item, [field]: checked };
+      const updatedData = prevData.map((item: any) => {
+        if (item.id === row.id) { // Use the generated unique ID
+          const updatedRow = { ...item, [field.toLowerCase()]: checked };
           if (field === "Cleared" && checked) {
             updatedRow.bounced = false;
             updatedRow.cleared = true;
-            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : item.chequeDate;
           } else if (field === "Bounced" && checked) {
             updatedRow.cleared = false;
             updatedRow.bounced = true;
-            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : item.chequeDate;
+          } else {
+            if (!updatedRow.cleared && !updatedRow.bounced) {
+              updatedRow.date = null;
+            }
           }
           return updatedRow;
         }
         return item;
-      }) || []; // Fallback to an empty array if prevData is undefined
+      });
+      console.log("Updated data:", updatedData);
       return updatedData;
     });
-  };
+  }, [ formState.bankDateType, clientSession.softwareDate]);
+
   const ValidateCheques = (data: any[]): Promise<boolean> => {
     return new Promise(async (resolve) => {
       for (let i = 0; i < data.length; i++) {
@@ -366,7 +365,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        allowEditing: true,
+        // allowEditing: true,
         cellRender: (cellInfo: any) => (
           <input
             type="checkbox"
@@ -383,7 +382,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        allowEditing: true,
+        // allowEditing: true,
         cellRender: (cellInfo: any) => (
           <input
             type="checkbox"
@@ -395,21 +394,22 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       {
         dataField: "date",
         caption: t("date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
+        allowEditing:true,
         allowFiltering: true,
         minWidth: 200,
       },
       {
         dataField: "accTransactionDetailID",
         caption: t("acc_transaction_detail_id"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         minWidth: 200,
-        allowEditing: true,
+        
       },
       {
         dataField: "ledgerName",
@@ -419,7 +419,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         minWidth: 200,
-        allowEditing: true,
+        
       },
       {
         dataField: "relatedLedger",
@@ -429,7 +429,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "chequeNumber",
@@ -439,7 +439,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "checkStatus",
@@ -449,7 +449,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "chequeDate",
@@ -459,7 +459,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "chequeBounceDate",
@@ -469,7 +469,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "amount",
@@ -479,7 +479,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "isCleared",
@@ -489,7 +489,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "ledgerID",
@@ -499,7 +499,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "relatedLedgerID",
@@ -509,7 +509,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "bankCharge",
@@ -519,7 +519,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        allowEditing: true,
+        
       },
       {
         dataField: "accTransactionMasterID",
@@ -544,7 +544,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       return column.dataField !== "BankCharge";
     }
   });
-  }, [t]);
+  }, [t, userSession.countryId]);
 
   return (
     <div className="relative min-h-screen bg-white">
@@ -664,6 +664,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
                         title={t("show")}
                         onClick={handleShow}
                         variant="primary"
+                        loading={loading.show}
                       />
                     </div>
                   </div>
@@ -696,7 +697,8 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
                     title={t("set_all_date")}
                     onClick={handleSetAllDate}
                     type="reset"
-                    className="bg-amber-500 text-white font-medium"
+                    loading={loading.setAllDate}
+                    // className="bg-amber-500 text-white font-medium"
                   />
                 </div>
               </div>
@@ -705,7 +707,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
-            data={data}
+             data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"
               hideGridAddButton={true}
@@ -713,7 +715,11 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
               heightToAdjustOnWindows={400}
               reload={formState.reload}
               pageSize={40}
+              remoteOperations={false}
+            editMode="cell"
+            allowEditing
             />
+            
           </div>
 
           <div

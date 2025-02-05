@@ -416,7 +416,7 @@ export const MENUITEMS = [
     active: false,
     selected: false,
     title: "reports",
-    path: "reports",
+    path: "/reports",
     badge: "",
     badgetxt: "",
     class:

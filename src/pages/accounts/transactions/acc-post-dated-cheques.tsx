@@ -193,7 +193,18 @@ const PostDatedCheques = () => {
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => item.date != null);
+      let newVoucherType;
+      if (userSession.countryId != Countries.India) {
+        newVoucherType = formState.paymentType === 'payment' ? 'BP' : 'BR';
+      } else {
+        newVoucherType = formState.paymentType === 'payment' ? 'CQP' : 'CQR';
+      }
 
+      const params = new URLSearchParams({
+        FromDate: moment(formState.chequeFromDate).format("DD/MMM/YYYY"),
+        ToDate: moment(formState.chequeToDate).format("DD/MMM/YYYY"),
+        VoucherType: newVoucherType
+      }).toString();
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
@@ -217,7 +228,13 @@ const PostDatedCheques = () => {
       }
 
       // Step 3: Call API with only filtered modified items
-      const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
+      const res = await api.postAsync(Urls.bankReconciliation, 
+        {
+          PDCOutputDto:filteredItems,
+          IsPayment: formState.paymentType === 'payment',
+          IsBankCharge: formState.bankChangeType == "change",
+          BankLedgerID: formState.isBank ? formState.selectedBankId:0
+        });
 
       handleResponse(res, () => {
         ERPAlert.show({
@@ -232,6 +249,7 @@ const PostDatedCheques = () => {
       setLoading((prev) => ({ ...prev, save: false }));
     }
   };
+
 
   const handleClose = async () => {
     setLoading((prev) => ({ ...prev, close: true }));
@@ -603,6 +621,7 @@ const PostDatedCheques = () => {
                     />
                   </div>
                   {/* Date Range Section */}
+                  {userSession.countryId == Countries.India && 
                   <div className="flex items-center gap-4">
                     <ERPDateInput
                       id="chequeFromDate"
@@ -619,6 +638,7 @@ const PostDatedCheques = () => {
                       className="w-40"
                     />
                   </div>
+                  }
                 </div>
               </div>
               {/* Right Column */}

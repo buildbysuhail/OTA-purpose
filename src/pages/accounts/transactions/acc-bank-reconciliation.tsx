@@ -14,6 +14,7 @@ import Urls from "../../../redux/urls";
 import moment from "moment";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface FormState {
   showReconciled: boolean;
@@ -30,6 +31,7 @@ const api = new APIClient();
 const BankReconciliation = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
+     const { getFormattedValue } = useNumberFormat()
 
   const [data, setData] = useState<any>();
   const [key, setKey] = useState<number>(100000);
@@ -392,7 +394,7 @@ const BankReconciliation = () => {
           className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
             }`}
         >
-          {cellInfo.data.debit}
+          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.debit) : getFormattedValue(cellInfo.data.debit, false,4)}
         </span>
       ),
     },
@@ -410,7 +412,7 @@ const BankReconciliation = () => {
           className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
             }`}
         >
-          {cellInfo.data.credit}
+          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.credit) : getFormattedValue(cellInfo.data.credit, false,4)}
         </span>
       ),
     },

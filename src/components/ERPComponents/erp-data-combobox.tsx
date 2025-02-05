@@ -1222,7 +1222,7 @@ debugger;
 
       return (
         <div
-          className={className}
+          className={`${className}`}
           style={{
             marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${
@@ -1268,7 +1268,11 @@ debugger;
             )}
             renderInput={(params) => (
               <>
-                <div className="flex justify-end items-center">
+                <div className={`flex justify-end pb-[1px]`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                >
                   {labelInfo &&
                     cloneElement(
                       labelInfo,
@@ -1347,78 +1351,63 @@ debugger;
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
           }}
         >
-          {!noLabel && (
-            <div className="flex justify-between">
-              <label
-                className={`capitalize block   text-left rtl:text-right dark:!text-dark-label ${
-                  appState?.mode == "dark" ? "" : ""
-                }
-          ${labelDirection === "vertical" ? "" : ""}`}
-                style={{
-                  fontSize: _customSize
-                    ? _customSize === "sm"
-                      ? "12px"
-                      : _customSize === "md"
-                      ? "14px"
-                      : _customSize === "lg"
-                      ? "16px"
-                      : `${inputBoxState?.labelFontSize}px`
-                    : `14px`,
-                  color:
-                    appState?.mode === "dark"
-                      ? "rgb(225,224,224)"
-                      : inputBoxState?.labelColor
-                      ? `rgb(${inputBoxState?.labelColor})`
-                      : "rgb(84,84,84)",
-                  transform:
-                    _customSize === "customize"
-                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                          inputBoxState?.adjustB ?? 10
-                        }px) scale(1)`
-                      : ``,
-                }}
-              >
-                {`${label || id?.replaceAll("_", " ")}  ${
-                  labelDirection === "horizontal" ? ":" : ""
-                }`}
-                {required && <span className="text-[#ef4444]">*</span>}
-              </label>
-              <label
-                className={`capitalize block text-right rtl:text-left ${
-                  appState?.mode == "dark" ? "" : ""
-                }`}
-                style={{
-                  fontSize: _customSize
-                    ? _customSize === "sm"
-                      ? "12px"
-                      : _customSize === "md"
-                      ? "14px"
-                      : _customSize === "lg"
-                      ? "16px"
-                      : `${inputBoxState?.labelFontSize}px`
-                    : `14px`,
-                  color:
-                    appState?.mode === "dark"
-                      ? "rgb(225,224,224)"
-                      : inputBoxState?.labelColor
-                      ? `rgb(${inputBoxState?.labelColor})`
-                      : "rgb(84,84,84)",
-                  transform:
-                    _customSize === "customize"
-                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                          inputBoxState?.adjustB ?? 10
-                        }px) scale(1)`
-                      : ``,
-                }}
-              >
-                {labelInfo &&
-                  cloneElement(
-                    labelInfo,
-                    labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
-                  )}
-              </label>
-            </div>
-          )}
+          <div className="relative">
+        {!noLabel && (
+          <label
+            className={`capitalize block text-left rtl:text-right dark:text-dark-label ${
+              appState?.mode == "dark" ? "" : ""
+            }`}
+            style={{
+              fontSize: _customSize
+                ? _customSize === "sm"
+                  ? "12px"
+                  : _customSize === "md"
+                  ? "14px"
+                  : _customSize === "lg"
+                  ? "16px"
+                  : `${inputBoxState?.labelFontSize}px`
+                : `14px`,
+              color:
+                appState?.mode === "dark"
+                  ? "rgb(225,224,224)"
+                  : inputBoxState?.labelColor
+                  ? `rgb(${inputBoxState?.labelColor})`
+                  : "rgb(84,84,84)",
+              transform:
+                _customSize === "customize"
+                  ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
+                      inputBoxState?.adjustB ?? 10
+                    }px) scale(1)`
+                  : ``,
+            }}
+          >
+            {`${label || id?.replaceAll("_", " ")} ${
+              labelDirection === "horizontal" ? ":" : ""
+            }`}
+            {required && <span className="text-[#ef4444]">*</span>}
+          </label>
+        )}
+        <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-end p-1 "
+         style={{
+          fontSize: _customSize
+            ? _customSize === "sm"
+              ? "12px"
+              : _customSize === "md"
+              ? "14px"
+              : _customSize === "lg"
+              ? "16px"
+              : `${inputBoxState?.labelFontSize}px`
+            : `14px`,
+     
+        }}
+        >
+          {labelInfo &&
+            cloneElement(
+              labelInfo,
+              labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
+            )}
+        </div>
+      </div>
           <Combobox as="div" className="relative">
             <div className="flex" ref={comboboxRef}>
               <Combobox.Input

@@ -2257,7 +2257,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.pnlMasters?.disabled ==
                           true ? null : (
                           <div>
-                            <span className="text-xs text-primary">
+                            <span className="text-primary">
                               <button className="pe-3">
                                 <CustomerDetailsSidebar displayType="link" />
                               </button>

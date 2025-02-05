@@ -257,9 +257,6 @@ const createStore = async (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
   enablefilter: boolean,
-  allowEditing?: {allow: boolean, config :{
-    add: boolean, edit: boolean, delete: boolean
-  }},
   method?: ActionType,
   postData?: any,
   filterData?: any,
@@ -676,7 +673,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             keyExpr,
             dataUrl ?? "",
             enablefilter,
-            allowEditing,
             method,
             postData,
             filter,
@@ -703,7 +699,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       data,
       keyExpr,
       dataUrl,
-      allowEditing,
       method,
       filter,
       _reload,

@@ -429,6 +429,17 @@ const PostDatedCheques = () => {
 
         },
         {
+          dataField: "bankCharge",
+          caption: t("bank_charge"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowEditing: true,
+          allowFiltering: true,
+          width: 150,
+
+        },
+        {
           dataField: "relatedLedger",
           caption: t("related_ledger"),
           dataType: "string",
@@ -558,7 +569,7 @@ const PostDatedCheques = () => {
           return true;
         } else {
           // Hide "BankCharge" for non-India
-          return column.dataField !== "BankCharge";
+          return column.dataField !== "bankCharge";
         }
       });
     }, [t, userSession.countryId]);
@@ -707,7 +718,8 @@ const PostDatedCheques = () => {
               pageSize={40}
               remoteOperations={false}
               editMode="cell"
-              allowEditing
+              allowEditing={{allow: true, config:{edit: true}}}
+              
             />
 
           </div>
@@ -721,23 +733,24 @@ const PostDatedCheques = () => {
           >
             <div className="w-full mx-auto flex justify-between items-center">
               {/* Left section - Radio buttons */}
+              {userSession.countryId == Countries.India &&
               <div className="flex items-center space-x-2 ml-[14.5rem]">
-                <ERPRadio
-                  id="bankChange"
-                  name="bankChangeType"
-                  checked={formState.bankChangeType === "change"}
-                  onChange={() => handleBankChangeTypeChange("change")}
-                  label={t("bank_change")}
-                />
-                <ERPRadio
-                  id="bankCommission"
-                  name="bankChangeType"
-                  checked={formState.bankChangeType === "commission"}
-                  onChange={() => handleBankChangeTypeChange("commission")}
-                  label={t("bank_commission")}
-                />
-              </div>
-
+              <ERPRadio
+                id="bankChange"
+                name="bankChangeType"
+                checked={formState.bankChangeType === "change"}
+                onChange={() => handleBankChangeTypeChange("change")}
+                label={t("bank_change")}
+              />
+              <ERPRadio
+                id="bankCommission"
+                name="bankChangeType"
+                checked={formState.bankChangeType === "commission"}
+                onChange={() => handleBankChangeTypeChange("commission")}
+                label={t("bank_commission")}
+              />
+            </div>
+}
               {/* Center section - Total input */}
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">

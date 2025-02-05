@@ -192,7 +192,9 @@ interface ERPDevGridProps {
   scrollingMode?: "standard" | "virtual" | "infinite";
   allowGrouping?: boolean;
   groupPanelVisible?: boolean;
-  allowEditing?: boolean;
+  allowEditing?: {allow: boolean, config :{
+    add?: boolean, edit?: boolean, delete?: boolean
+  }};
   editMode?: "row" | "form" | "popup" | "batch"|"cell";
   onRowUpdating?: (e: any) => void;
   onRowUpdated?: (e: any) => void;
@@ -255,7 +257,9 @@ const createStore = async (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
   enablefilter: boolean,
-  allowEditing?: boolean,
+  allowEditing?: {allow: boolean, config :{
+    add: boolean, edit: boolean, delete: boolean
+  }},
   method?: ActionType,
   postData?: any,
   filterData?: any,
@@ -402,17 +406,7 @@ const createStore = async (
         };
       }
     },
-    ...(allowEditing && {
-      insert: async (values) => {
-        // Implement insert logic
-      },
-      update: async (key, values) => {
-        // Implement update logic
-      },
-      remove: async (key) => {
-        // Implement remove logic
-      },
-    }),
+   
   });
 };
 const isNotEmpty = (value: any) =>
@@ -495,7 +489,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       scrollingMode = "virtual",
       allowGrouping = false,
       groupPanelVisible = false,
-      allowEditing = false,
+      allowEditing = {
+        allow: false,
+        config: {
+          add: false,
+          edit: false,
+          delete: false,
+        },
+      },
       editMode = "row",
       onRowUpdating,
       onRowInserting,
@@ -1531,12 +1532,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             {groupPanelVisible && (
               <Grouping contextMenuEnabled={true} expandMode="rowClick" />
             )}
-            {allowEditing && (
+            {allowEditing && allowEditing.allow && (
               <Editing
                 mode={editMode}
-                allowUpdating={true}
-                allowDeleting={true}
-                allowAdding={true}
+                allowUpdating={allowEditing.config.edit}
+                allowDeleting={allowEditing.config.delete}
+                allowAdding={allowEditing.config.add}
               />
             )}
             {allowExport ? (

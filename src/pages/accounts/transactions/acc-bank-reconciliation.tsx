@@ -70,6 +70,25 @@ const BankReconciliation = () => {
       const selectedKeys = e.selectedRowKeys.map((row: any) =>
         typeof row === "object" ? row.accTransactionDetailID : row
       );
+
+      const updatedTransactions = data.map((transaction: any) => {
+        if (selectedKeys.includes(transaction.accTransactionDetailID)) {
+          return {
+            ...transaction,
+            bankDate:
+              dateChangeState === "today"
+                ? moment().format("DD/MM/YYYY")
+                : transaction.chequeDate,
+          };
+        }
+        return transaction;
+      });
+      debugger;
+      console.log("123");
+
+      setData(updatedTransactions);
+
+      
       setSelectedKeys(selectedKeys);
     } else {
       setSelectedKeys([]);
@@ -281,6 +300,7 @@ const BankReconciliation = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible: false
     },
 
     {
@@ -576,11 +596,13 @@ const BankReconciliation = () => {
               data={data}
               keyExpr="accTransactionDetailID"
               selectedRowKeys={selectedKeys}
+              allowEditing={{allow: true, config:{edit: true}}}
               remoteOperations={{
                 filtering: false,
                 paging: false,
                 sorting: false,
               }}
+              editMode="cell"
               // method={ActionType.POST}
               // reload={reload}
               // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}

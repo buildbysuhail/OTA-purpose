@@ -16,6 +16,7 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 import moment from "moment";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface FormState {
   paymentType: "payment" | "receipt";
@@ -40,6 +41,7 @@ interface LoadingState {
 const api = new APIClient();
 const PostDatedCheques = () => {
   const [total, setTotal] = useState<number>();
+       const { getFormattedValue } = useNumberFormat()
   const [data, setData] = useState<any[]>([])
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
@@ -486,6 +488,12 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowFiltering: true,
           width: 150,
+          cellRender: (cellInfo: any) => (
+            <span
+            >
+              {getFormattedValue(cellInfo.data.debit, false,4)}
+            </span>
+          ),
 
         },
         {
@@ -755,7 +763,7 @@ const PostDatedCheques = () => {
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">
                   {" "}
-                  <span className="!font-medium !text-gray-600">{t("total")}: </span>
+                  <span className="!font-medium !text-gray-600">{t("total")}: {getFormattedValue(total??0)}</span>
                 </h6>
               </div>
 

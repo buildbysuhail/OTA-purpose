@@ -139,6 +139,10 @@ const BankReconciliation = () => {
         Urls.bankReconciliation,
         `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
       );
+      const rows = _data.map((row: any, index: number) => ({
+        ...row,
+              id: index+1,
+                        }));
       debugger;
       console.log("1234");
       setData(_data);
@@ -301,6 +305,16 @@ debugger;
       allowFiltering: true,
       minWidth: 100,
       visible: false
+    },
+
+    {
+      dataField: "id",
+      caption: t("slNo"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
     },
 
     {

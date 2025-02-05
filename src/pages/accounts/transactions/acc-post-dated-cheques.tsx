@@ -56,8 +56,8 @@ const PostDatedCheques = () => {
     total: "0",
     reload: false,
   });
-const userSession = useAppSelector((state: RootState) => state.UserSession)
-const clientSession = useAppSelector((state: RootState) => state.ClientSession)
+  const userSession = useAppSelector((state: RootState) => state.UserSession)
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession)
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
     exportToExcel: false,
@@ -76,7 +76,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
         chequeFromDate: userSession.finFrom
       }
     })
-  },[])
+  }, [])
   const goToPreviousPage = () => {
     window.history.back();
   };
@@ -114,27 +114,27 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
-        try {
-          
-          // Update the data
-          const updatedTransactions = data.map((transaction: any) => {
-            return {
-              ...transaction,
-              date:
-                formState.bankDateType === "today"
-                  ? clientSession.softwareDate
-                  : transaction.chequeDate,
-            };
-          });
-          debugger;
-          console.log("123");
-    
-          setData(updatedTransactions);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading((prev) => ({ ...prev, setAllDate: false }));
-        }
+    try {
+
+      // Update the data
+      const updatedTransactions = data.map((transaction: any) => {
+        return {
+          ...transaction,
+          date:
+            formState.bankDateType === "today"
+              ? clientSession.softwareDate
+              : transaction.chequeDate,
+        };
+      });
+      debugger;
+      console.log("123");
+
+      setData(updatedTransactions);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading((prev) => ({ ...prev, setAllDate: false }));
+    }
   };
 
   const handleExportToExcel = async () => {
@@ -164,8 +164,8 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       }).toString();
       // Simulated API call - replace with actual fetch/axios call
       const response = await api.getAsync(
-        Urls.pdc,params
-        
+        Urls.pdc, params
+
       );
       const rows = response.map((row: any, index: number) => ({
         id: index,
@@ -218,7 +218,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       if (filteredItems.length === 0) {
         ERPAlert.show({
           icon: "info",
-          text: "No changes detected in selected rows.",
+          text: t("no_changes_detected"),
           title: "",
         });
         return;
@@ -230,8 +230,8 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
-          text: "Changes saved successfully!",
-          title: "Success",
+          text: t("changes_saved_successfully"),
+          title: t("success"),
         });
       });
     } catch (error) {
@@ -285,30 +285,30 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       for (let i = 0; i < data.length; i++) {
         const chequeDate = new Date(data[i].ChequeDate); // Convert ChequeDate to a Date object
         const currentDate = new Date(); // Get the current date
-  
+
         if (chequeDate > currentDate) {
           // Show a confirmation dialog
           const result = await ERPAlert.show({
             icon: "question",
-            title: "Cheque Date",
-            text: `Cheque Date for Cheque No: ${data[i].ChequeNumber} is greater than the current date! Do you want to continue?`,
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-            onConfirm: 
+            title: t("cheque_date"),
+            text: t("cheque_date_warning", { chequeNumber: data[i].ChequeNumber }),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            onConfirm:
               () => {
                 resolve(true);
-              return;
+                return;
               },
-              onCancel: 
+            onCancel:
               () => {
                 resolve(false);
-              return;
+                return;
               }
-            
+
           });
         }
       }
-  
+
       // All cheques are valid
       resolve(true);
     });
@@ -319,14 +319,14 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
       for (let i = 0; i < data.length; i++) {
         const chequeDate = new Date(data[i].ChequeDate); // Convert ChequeDate to a Date object
         const currentDate = new Date(data[i].Date); // Convert Date to a Date object
-  
+
         if (chequeDate < currentDate) {
           // Show an error message
           await ERPAlert.show({
             icon: "error",
-            title: "Validation Error",
-            text: `Cheque Date for Cheque No: ${data[i].ChequeNumber} is less than the current date!`,
-            confirmButtonText: "Ok",
+            title: t("validation_error"),
+            text: t("cheque_date_less_warning", { chequeNumber: data[i].ChequeNumber }),
+            confirmButtonText: t("ok"),
             onConfirm: () => {
               resolve(false); // Return false if validation fails
               return;
@@ -334,21 +334,21 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
           });
         }
       }
-  
+
       // Validate default bank charge account
       if (defaultBankChargeAccount <= 0) {
         await ERPAlert.show({
           icon: "error",
-          title: "Validation Error",
-          text: "Please set the Default Bank Charge Account in Settings.",
-          confirmButtonText: "Ok",
+          title: t("validation_error"),
+          text: t("default_bank_charge_account"),
+          confirmButtonText: t("ok"),
           onConfirm: () => {
             resolve(false); // Return false if validation fails
             return;
           },
         });
       }
-  
+
       // All validations passed
       resolve(true);
     });
@@ -356,200 +356,215 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
   const columns: DevGridColumn[] = useMemo(
     () => {
       const baseColumns: DevGridColumn[] = [
-      {
-        dataField: "cleared",
-        caption: t("cleared"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        allowEditing: true,
-        cellRender: (cellInfo: any) => (
-          <input
-            type="checkbox"
-            checked={cellInfo.data.cleared}
-            onChange={(e) => handleCheckboxChange(cellInfo.data, "Cleared", e.target.checked)}
-          />
-        ),
-      },
-      {
-        dataField: "bounced",
-        caption: t("bounced"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        allowEditing: true,
-        cellRender: (cellInfo: any) => (
-          <input
-            type="checkbox"
-            checked={cellInfo.data.bounced}
-            onChange={(e) => handleCheckboxChange(cellInfo.data, "Bounced", e.target.checked)}
-          />
-        ),
-      },
-      {
-        dataField: "date",
-        caption: t("date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-      },
-      {
-        dataField: "accTransactionDetailID",
-        caption: t("acc_transaction_detail_id"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-        allowEditing: true,
-      },
-      {
-        dataField: "ledgerName",
-        caption: t("ledger_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-        allowEditing: true,
-      },
-      {
-        dataField: "relatedLedger",
-        caption: t("related_ledger"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "chequeNumber",
-        caption: t("cheque_number"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "checkStatus",
-        caption: t("check_status"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "chequeDate",
-        caption: t("cheque_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "chequeBounceDate",
-        caption: t("cheque_bounce_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "amount",
-        caption: t("amount"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "isCleared",
-        caption: t("is_cleared"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "ledgerID",
-        caption: t("ledger_id"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "relatedLedgerID",
-        caption: t("related_ledger_id"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "bankCharge",
-        caption: t("bank_charge"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        allowEditing: true,
-      },
-      {
-        dataField: "accTransactionMasterID",
-        caption: t("acc_transaction_master_id"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 200,
-      },
-    ];
-   // Filter columns based on the `visible` property
-   return baseColumns.filter((column) => {
-    if (userSession.countryId === undefined) {
-      // Handle undefined case (e.g., show all columns or hide specific columns)
-      return true; // or false, depending on your logic
-    } else if (userSession.countryId === Countries.India) {
-      // Show all columns for India
-      return true;
-    } else {
-      // Hide "BankCharge" for non-India
-      return column.dataField !== "BankCharge";
-    }
-  });
-  }, [t]);
+        {
+          dataField: "cleared",
+          caption: t("cleared"),
+          dataType: "boolean",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+          cellRender: (cellInfo: any) => (
+            <input
+              type="checkbox"
+              checked={cellInfo.data.cleared}
+              onChange={(e) => handleCheckboxChange(cellInfo.data, "Cleared", e.target.checked)}
+            />
+          ),
+        },
+
+        {
+          dataField: "bounced",
+          caption: t("bounced"),
+          dataType: "boolean",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+          cellRender: (cellInfo: any) => (
+            <input
+              type="checkbox"
+              checked={cellInfo.data.bounced}
+              onChange={(e) => handleCheckboxChange(cellInfo.data, "Bounced", e.target.checked)}
+            />
+          ),
+        },
+
+        {
+          dataField: "date",
+          caption: t("date"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+        },
+
+        {
+          dataField: "ledgerName",
+          caption: t("ledger_name"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "relatedLedger",
+          caption: t("related_ledger"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "chequeNumber",
+          caption: t("cheque_number"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "chequeBounceDate",
+          caption: t("bounce_date"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "accTransactionMasterID",
+          caption: t("acc_trans_master_id"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+        },
+
+        {
+          dataField: "amount",
+          caption: t("amount"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "accTransactionDetailID",
+          caption: t("acc_transaction_detail_id"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "bankCharge",
+          caption: t("bank_charge"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "chequeDate",
+          caption: t("cheque_date"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "ledgerID",
+          caption: t("ledger_id"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        {
+          dataField: "relatedLedgerID",
+          caption: t("related_ledger_id"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: 100,
+          allowEditing: true,
+        },
+
+        // {
+        //   dataField: "checkStatus",
+        //   caption: t("check_status"),
+        //   dataType: "date",
+        //   allowSorting: true,
+        //   allowSearch: true,
+        //   allowFiltering: true,
+        //   minWidth: 150,
+        //   allowEditing: true,
+        // },
+
+        // {
+        //   dataField: "isCleared",
+        //   caption: t("is_cleared"),
+        //   dataType: "date",
+        //   allowSorting: true,
+        //   allowSearch: true,
+        //   allowFiltering: true,
+        //   minWidth: 150,
+        //   allowEditing: true,
+        // },
+      ];
+      // Filter columns based on the `visible` property
+      return baseColumns.filter((column) => {
+        if (userSession.countryId === undefined) {
+          // Handle undefined case (e.g., show all columns or hide specific columns)
+          return true; // or false, depending on your logic
+        } else if (userSession.countryId === Countries.India) {
+          // Show all columns for India
+          return true;
+        } else {
+          // Hide "BankCharge" for non-India
+          return column.dataField !== "BankCharge";
+        }
+      });
+    }, [t]);
 
   return (
     <div className="relative min-h-screen bg-white">
       <div className="fixed w-full left-0 z-10 top-[60px]">
         <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-            <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
+            <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-minWidth:1000px)]:ml-[231px]">
               {t("post_dated_cheques")}
             </h6>
             <i className="fas fa-cog ms-1"></i>
@@ -617,7 +632,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
                         onChange={(e) =>
                           handleDateChange("chequeFromDate", e.target.value)
                         }
-                        value={ new Date(formState.chequeFromDate)}
+                        value={new Date(formState.chequeFromDate)}
                         className="w-auto"
                       />
                       <ERPDateInput
@@ -626,7 +641,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
                         onChange={(e) =>
                           handleDateChange("chequeToDate", e.target.value)
                         }
-                        value={ new Date(formState.chequeToDate)}
+                        value={new Date(formState.chequeToDate)}
                         className="w-auto"
                       />
                     </div>
@@ -634,17 +649,17 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
                   {/* Counter ID and Bank Section */}
                   <div className="flex items-end gap-4">
-                  <ERPDataCombobox
-                    id="BankAC"
-                    label="Bank A/c"
-                    field={{
-                      id: "BankAC",
-                      required: true,
-                      getListUrl: Urls.data_BankAccounts,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    value={formState.selectedBankId}
+                    <ERPDataCombobox
+                      id="BankAC"
+                      label={t("bank_a/c")}
+                      field={{
+                        id: "BankAC",
+                        required: true,
+                        getListUrl: Urls.data_BankAccounts,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      value={formState.selectedBankId}
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
                       className="w-64"
                     />
@@ -703,7 +718,7 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
-            data={data}
+              data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"
               hideGridAddButton={true}
@@ -741,21 +756,18 @@ const clientSession = useAppSelector((state: RootState) => state.ClientSession)
               </div>
 
               {/* Center section - Total input */}
-              <div className="flex-1 flex justify-center ml-32">
-                <ErpInput
-                  id="total"
-                  label={t("total")}
-                  labelDirection="horizontal"
-                  onChange={handleTotalChange}
-                  value={formState.total}
-                />
+              <div className="hidden md:block mr-2">
+                <h6 className="font-semibold whitespace-nowrap text-[20px] ">
+                  {" "}
+                  <span className="!font-medium !text-gray-600">{t("total")}: </span>
+                </h6>
               </div>
 
               {/* Right section - Buttons */}
               <div className="flex items-center space-x-2">
                 <ERPButton
                   ref={btnSaveRef}
-                  title={t("cancel")}
+                  title={t("close")}
                   onClick={goToPreviousPage}
                   className="w-24"
                 />

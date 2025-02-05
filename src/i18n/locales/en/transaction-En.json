@@ -253,5 +253,35 @@
   "user_config":"User config",
   "expanded_view":"Expanded view",
   "compact_view":"Compact view",
-  "preset_cost_center":"Preset cost center"
+  "preset_cost_center":"Preset cost center",
+
+  "no_rows_selected":"No rows selected",
+  "no_changes_detected":"No changes detected in selected rows",
+  "changes_saved_successfully":"Changes saved successfully!",
+  "success":"Success",
+  "bounced_cheque_cannot_be_changed":"Bounced cheque cannot be changed to pending",
+  "bank_date_is_required":"Bank date is required. Please select one!",
+  "change_the_transaction_to_pending":"Are you sure you want to change the transaction to pending?",
+  "changing_to_pending":"Changing to pending",
+  "set_pending":"Set pending",
+  "bank_a/c":"Bank A/c",
+
+  "v_no":"VNo",
+  "v_type":"VType",
+  "v_prefix":"VPrefix",
+  "ref_num":"Ref no",
+  "refer_date":"Ref date",
+  "change_to_pending":"Change to pending",
+  "yes":"Yes",
+  "no":"No",
+  "cheque_date_warning": "Cheque Date for Cheque No: {{chequeNumber}} is greater than the current date! Do you want to continue?",
+  "validation_error":"Validation error",
+  "cheque_date_less_warning": "Cheque Date for Cheque No: {{chequeNumber}} is less than the current date!",
+  "default_bank_charge_account":"Please set the default bank charge account in settings",
+  "cleared":"Cleared",
+  "bounced":"Bounced",
+  "bounce_date":"Bounce date",
+  "acc_trans_master_id":"Acc trans master id",
+
+  "excel":"Excel"
 }

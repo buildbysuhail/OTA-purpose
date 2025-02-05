@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -8,11 +8,10 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
-import { FileSpreadsheet, Printer, X } from "lucide-react";
+import { Printer, X } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
-import { ActionType } from "../../../redux/types";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 
@@ -36,15 +35,9 @@ const BankReconciliation = () => {
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
-  const [formState, setFormState] = useState<FormState>({
-    showReconciled: false,
-    selectedBankId: null,
-  });
-  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">(
-    "today"
-  );
+  const [formState, setFormState] = useState<FormState>({ showReconciled: false, selectedBankId: null });
+  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
   const [reload, setReload] = useState<boolean>(false);
-
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
     exportToExcel: false,
@@ -56,7 +49,6 @@ const BankReconciliation = () => {
   const { t } = useTranslation("transaction");
   const dataGridRef = useRef<any>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
-
   const goToPreviousPage = () => {
     window.history.back();
   };
@@ -90,7 +82,7 @@ const BankReconciliation = () => {
       if (!selectedKeys || selectedKeys.length === 0) {
         ERPAlert.show({
           icon: "warning",
-          text: "No rows selected.",
+          text: t("no_rows_selected"),
           title: "",
         });
         return;
@@ -168,7 +160,7 @@ const BankReconciliation = () => {
       if (filteredItems.length === 0) {
         ERPAlert.show({
           icon: "info",
-          text: "No changes detected in selected rows.",
+          text: t("no_changes_detected"),
           title: "",
         });
         return;
@@ -180,8 +172,8 @@ const BankReconciliation = () => {
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
-          text: "Changes saved successfully!",
-          title: "Success",
+          text: t("changes_saved_successfully"),
+          title: t("success"),
         });
       });
     } catch (error) {
@@ -207,7 +199,7 @@ const BankReconciliation = () => {
       if (_data.status === "B") {
         ERPAlert.show({
           icon: "info",
-          text: "Bounced cheque cannot be changed to pending.",
+          text: t("bounced_cheque_cannot_be_changed"),
           title: "",
         });
         return;
@@ -216,7 +208,7 @@ const BankReconciliation = () => {
       if (!_data.bankDate) {
         ERPAlert.show({
           icon: "info",
-          text: "Bank date is required. Please select one!",
+          text: t("bank_date_is_required"),
           title: "",
         });
         return;
@@ -224,8 +216,8 @@ const BankReconciliation = () => {
 
       ERPAlert.show({
         icon: "question",
-        text: "Are you sure you want to change the transaction to pending?",
-        title: "Changing to Pending",
+        text: t("change_the_transaction_to_pending"),
+        title: t("changing_to_pending"),
         onConfirm: () => {
           debugger;
 
@@ -282,32 +274,46 @@ const BankReconciliation = () => {
 
   const columns: DevGridColumn[] = [
     {
+      dataField: "accTransactionDetailID",
+      caption: t("acc_transaction_detail_id"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
+
+    {
       dataField: "transactionDate",
-      caption: t("transaction_date"),
+      caption: t("date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      minWidth: 100,
     },
-    {
-      dataField: "voucherType",
-      caption: t("voucher_type"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 200,
-    },
+
     {
       dataField: "voucherNumber",
-      caption: t("voucher_number"),
+      caption: t("v_no"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      minWidth: 100,
     },
+
+    {
+      dataField: "voucherType",
+      caption: t("v_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
     {
       dataField: "particulars",
       caption: t("particulars"),
@@ -315,98 +321,17 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 100,
       cellRender: (cellInfo: any) => (
         <span
-          className={`${
-            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
-          }`}
+          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+            }`}
         >
           {cellInfo.data.particulars}
         </span>
       ),
     },
-    {
-      dataField: "debit",
-      caption: t("debit"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      cellRender: (cellInfo: any) => (
-        <span
-          className={`${
-            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
-          }`}
-        >
-          {cellInfo.data.debit}
-        </span>
-      ),
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-      cellRender: (cellInfo: any) => (
-        <span
-          className={`${
-            cellInfo.data.isSummary == true ? "text-red font-bold" : ""
-          }`}
-        >
-          {cellInfo.data.credit}
-        </span>
-      ),
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "voucherPrefix",
-      caption: t("voucher_prefix"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "referenceNumber",
-      caption: t("reference_number"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "referenceDate",
-      caption: t("reference_date"),
-      dataType: "date",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "accTransactionDetailID",
-      caption: t("acc_transaction_detail_id"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+
     {
       dataField: "bankDate",
       caption: t("bank_date"),
@@ -414,9 +339,86 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 100,
       allowEditing: true,
     },
+
+    {
+      dataField: "debit",
+      caption: t("debit"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+      cellRender: (cellInfo: any) => (
+        <span
+          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+            }`}
+        >
+          {cellInfo.data.debit}
+        </span>
+      ),
+    },
+
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+      cellRender: (cellInfo: any) => (
+        <span
+          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+            }`}
+        >
+          {cellInfo.data.credit}
+        </span>
+      ),
+    },
+
+    {
+      dataField: "narration",
+      caption: t("narration"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
+    {
+      dataField: "voucherPrefix",
+      caption: t("v_prefix"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
+    {
+      dataField: "referenceNumber",
+      caption: t("ref_num"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
+    {
+      dataField: "referenceDate",
+      caption: t("refer_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+
     {
       dataField: "chequeNumber",
       caption: t("cheque_number"),
@@ -424,8 +426,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 100,
     },
+
     {
       dataField: "checkStatus",
       caption: t("check_status"),
@@ -433,8 +436,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 100,
     },
+
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
@@ -442,7 +446,7 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 100,
     },
     // {
     //   dataField: "ledgerID",
@@ -451,23 +455,23 @@ const BankReconciliation = () => {
     //   allowSorting: true,
     //   allowSearch: true,
     //   allowFiltering: true,
-    //   width: 150,
+    //   minWidth: 150,
     // },
     {
       dataField: "",
-      caption: t("action"),
+      caption: t("change_to_pending"),
       dataType: "string",
       allowSorting: false,
       allowSearch: false,
       allowFiltering: false,
-      width: 150,
+      minWidth: 100,
       cellRender: (cellInfo: any) => (
         <a
           onClick={() => handleSetPending(cellInfo, data)}
-          title="Set Pending"
+          title={t("set_pending")}
           className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
         >
-          Set Pending
+          {t("set_pending")}
         </a>
       ),
     },
@@ -478,7 +482,7 @@ const BankReconciliation = () => {
         <div className="fixed w-full left-0 z-10 top-[60px]">
           <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
             <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
+              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-minWidth:1000px)]:ml-[231px]">
                 {t("bank_reconciliation")}
               </h6>
               <i className="fas fa-cog ms-1"></i>
@@ -516,7 +520,7 @@ const BankReconciliation = () => {
           <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
             <div className="p-4">
               <div className="flex flex-col gap-2 max-w-[500px]">
-                <div className="flex items-center justify-between gap-4">
+                <div className="grid grid-cols-3 items-center justify-between gap-4 border p-4 rounded-md">
                   <ERPRadio
                     id="todayDate"
                     name="bankDateType"
@@ -538,7 +542,21 @@ const BankReconciliation = () => {
                     loading={loading.setAllDate}
                   />
                 </div>
-                <div className="flex items-center justify-between gap-4">
+                <div className="grid grid-cols-3 items-center justify-between gap-4 border p-4 rounded-md">
+                  <ERPDataCombobox
+                    id="selectedBankId"
+                    label={t("bank_a/c")}
+                    field={{
+                      id: "selectedBankId",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    value={formState.selectedBankId}
+                    onChange={(e) => handleBankSelection(e?.value ?? null)}
+                  // className="w-64"
+                  />
                   <ERPCheckbox
                     id="showReconciled"
                     name="showReconciled"
@@ -549,23 +567,8 @@ const BankReconciliation = () => {
                   <ERPButton
                     title={t("show")}
                     onClick={handleShow}
-                    startIcon="ri-slideshow-2-line"
                     variant="secondary"
-                    loading={loading.show}
-                  />
-                  <ERPDataCombobox
-                    id="selectedBankId"
-                    label="Bank A/c"
-                    field={{
-                      id: "selectedBankId",
-                      required: true,
-                      getListUrl: Urls.data_BankAccounts,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    value={formState.selectedBankId}
-                    onChange={(e) => handleBankSelection(e?.value ?? null)}
-                    className="w-64"
+                    className="mt-[15px] !mb-0"
                   />
                 </div>
               </div>
@@ -578,7 +581,8 @@ const BankReconciliation = () => {
               keyExp="slNo"
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
-              hideDefaultExportButton={true}
+              hideDefaultExportButton={false}
+              showPrintButton={false}
               onSelectionChanged={handleSelectionChange}
               heightToAdjustOnWindows={350}
               data={data}
@@ -610,7 +614,7 @@ const BankReconciliation = () => {
               <div className="w-full mx-auto flex items-center gap-4 justify-end">
                 <ERPButton
                   ref={btnSaveRef}
-                  title={t("cancel")}
+                  title={t("close")}
                   onClick={goToPreviousPage}
                   className="w-24"
                 />

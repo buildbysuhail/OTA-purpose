@@ -88,7 +88,7 @@ const BankReconciliation = () => {
 
       setData(updatedTransactions);
 
-      
+
       setSelectedKeys(selectedKeys);
     } else {
       setSelectedKeys([]);
@@ -162,7 +162,7 @@ const BankReconciliation = () => {
         );
         return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
       });
-
+debugger;
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
@@ -172,7 +172,7 @@ const BankReconciliation = () => {
           ...it,
           ledgerID: formState.selectedBankId,
           bankDate: it.bankDate
-            ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+            ? moment(it.bankDate, "YYYY/MM/DD").format("YYYY-MM-DD")
             : null, // ✅ Corrected format
         }));
 
@@ -311,6 +311,7 @@ const BankReconciliation = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      format: "dd/MMM/yyyy", // Correct format for DevExtreme
     },
 
     {
@@ -360,6 +361,7 @@ const BankReconciliation = () => {
       allowFiltering: true,
       minWidth: 100,
       allowEditing: true,
+      format: "dd/MM/yyyy",
     },
 
     {
@@ -436,6 +438,7 @@ const BankReconciliation = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      format: "dd/MMM/yyyy",
     },
 
     {
@@ -466,6 +469,7 @@ const BankReconciliation = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      format: "dd/MMM/yyyy",
     },
     // {
     //   dataField: "ledgerID",

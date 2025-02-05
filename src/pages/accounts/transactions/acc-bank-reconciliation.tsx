@@ -283,7 +283,6 @@ const BankReconciliation = () => {
       minWidth: 100,
     },
 
-
     {
       dataField: "transactionDate",
       caption: t("date"),
@@ -478,37 +477,25 @@ const BankReconciliation = () => {
   ];
   return (
     <>
-      <div className="relative min-h-screen bg-white">
+      <div className="relative bg-white">
         <div className="fixed w-full left-0 z-10 top-[60px]">
           <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
             <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
-              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-minWidth:1000px)]:ml-[231px]">
+              <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-Width:1000px)]:ml-[231px]">
                 {t("bank_reconciliation")}
               </h6>
               <i className="fas fa-cog ms-1"></i>
             </div>
 
             <div className="flex items-center justify-end space-x-4 p-1 w-full">
-              <div
-                className="group relative inline-flex flex-col items-center"
-                title={t("print")}
-              >
-                <button
-                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={handlePrint}
-                >
+              {/* <div className="group relative inline-flex flex-col items-center" title={t("print")}>
+                <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handlePrint}>
                   <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                 </button>
-              </div>
+              </div> */}
 
-              <div
-                className="group relative inline-flex flex-col items-center"
-                title={t("close")}
-              >
-                <button
-                  className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={goToPreviousPage}
-                >
+              <div className="group relative inline-flex flex-col items-center" title={t("close")}>
+                <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
                   <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                 </button>
               </div>
@@ -542,6 +529,7 @@ const BankReconciliation = () => {
                     loading={loading.setAllDate}
                   />
                 </div>
+
                 <div className="grid grid-cols-3 items-center justify-between gap-4 border p-4 rounded-md">
                   <ERPDataCombobox
                     id="selectedBankId"
@@ -582,9 +570,9 @@ const BankReconciliation = () => {
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
               hideDefaultExportButton={false}
-              showPrintButton={false}
+              showPrintButton={true}
               onSelectionChanged={handleSelectionChange}
-              heightToAdjustOnWindows={350}
+              heightToAdjustOnWindows={430}
               data={data}
               keyExpr="accTransactionDetailID"
               selectedRowKeys={selectedKeys}
@@ -604,13 +592,8 @@ const BankReconciliation = () => {
               selectionMode={"multiple"}
             />
 
-            <div
-              className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
-              style={{
-                boxShadow:
-                  "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
-              }}
-            >
+            <div className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
+              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>
               <div className="w-full mx-auto flex items-center gap-4 justify-end">
                 <ERPButton
                   ref={btnSaveRef}

@@ -15,6 +15,7 @@ export interface BranchSelectDto {
 export enum Countries {
   India = 48,
   Saudi = 1,
+  Oman = 100,
 }
 export interface UserModel {
   userId: number;

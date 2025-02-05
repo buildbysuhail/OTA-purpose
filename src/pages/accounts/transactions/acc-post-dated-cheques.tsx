@@ -15,11 +15,13 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import moment from "moment";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 interface FormState {
   paymentType: "payment" | "receipt";
-  chequeFromDate: Date;
-  chequeToDate: Date;
+  chequeFromDate: string;
+  chequeToDate: string;
   isBank: boolean;
   selectedBankId: string | null;
   bankDateType: "today" | "cheque";
@@ -38,14 +40,15 @@ interface LoadingState {
 
 const api = new APIClient();
 const PostDatedCheques = () => {
+  const [total, setTotal] = useState<number>();
   const [data, setData] = useState<any>();
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
   const [formState, setFormState] = useState<FormState>({
     paymentType: "payment",
-    chequeFromDate: new Date(),
-    chequeToDate: new Date(),
+    chequeFromDate: new Date().toISOString(),
+    chequeToDate: new Date().toISOString(),
     isBank: false,
     selectedBankId: null,
     bankDateType: "today",
@@ -54,6 +57,7 @@ const PostDatedCheques = () => {
     reload: false,
   });
 const userSession = useAppSelector((state: RootState) => state.UserSession)
+const clientSession = useAppSelector((state: RootState) => state.ClientSession)
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
     exportToExcel: false,
@@ -72,7 +76,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         chequeFromDate: userSession.finFrom
       }
     })
-  })
+  },[])
   const goToPreviousPage = () => {
     window.history.back();
   };
@@ -110,12 +114,38 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } finally {
-      setLoading((prev) => ({ ...prev, setAllDate: false }));
-    }
+        try {
+          if (!selectedKeys || selectedKeys.length === 0) {
+            ERPAlert.show({
+              icon: "warning",
+              text: "No rows selected.",
+              title: "",
+            });
+            return;
+          }
+    
+          // Update the data
+          const updatedTransactions = data.map((transaction: any) => {
+            if (selectedKeys.includes(transaction.accTransactionDetailID)) {
+              return {
+                ...transaction,
+                bankDate:
+                  formState.bankDateType === "today"
+                    ? clientSession.softwareDate
+                    : transaction.chequeDate,
+              };
+            }
+            return transaction;
+          });
+          debugger;
+          console.log("123");
+    
+          setData(updatedTransactions);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading((prev) => ({ ...prev, setAllDate: false }));
+        }
   };
 
   const handleExportToExcel = async () => {
@@ -167,8 +197,8 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
       }));
 
       // Calculate grand total
-      const total = rows.reduce((sum: any, row: any) => sum + parseFloat(row.amount), 0);
-      
+      const _total = rows.reduce((sum: any, row: any) => sum + parseFloat(row.amount), 0);
+      setTotal(_total);
       setData(rows);
       setPrevData(rows);
     } finally {
@@ -178,9 +208,45 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
+    debugger;
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Step 1: Find modified rows (where bankDate has changed)
+      const modifiedItems = data.filter((item: any) => item.date != null);
+
+      // Step 2: Filter modified items that are also in selectedRows
+      const filteredItems = modifiedItems
+        .filter((item: any) =>
+          selectedKeys.includes(item.accTransactionDetailID)
+        ) // ✅ Fixed ID casing
+        .map((it: any) => ({
+          ...it,
+          ledgerID: formState.selectedBankId,
+          bankDate: it.bankDate
+            ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+            : null, // ✅ Corrected format
+        }));
+
+      if (filteredItems.length === 0) {
+        ERPAlert.show({
+          icon: "info",
+          text: "No changes detected in selected rows.",
+          title: "",
+        });
+        return;
+      }
+
+      // Step 3: Call API with only filtered modified items
+      const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
+
+      handleResponse(res, () => {
+        ERPAlert.show({
+          icon: "success",
+          text: "Changes saved successfully!",
+          title: "Success",
+        });
+      });
+    } catch (error) {
+      console.error("Error saving changes:", error);
     } finally {
       setLoading((prev) => ({ ...prev, save: false }));
     }
@@ -206,10 +272,135 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
     }
   };
 
+  const handleCheckboxChange = (row: any, field: "Cleared" | "Bounced", checked: boolean) => {
+    const updatedData = data.map((item: any) => {
+      if (item.id === row.id) {
+        const updatedRow = { ...item, [field]: checked };
+        if (field === "Cleared" && checked) {
+          updatedRow.Bounced = false;
+          updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+        } else if (field === "Bounced" && checked) {
+          updatedRow.Cleared = false;
+          updatedRow.Date = formState.bankDateType === "today" ? clientSession.softwareDate : row.ChequeDate;
+        }
+        return updatedRow;
+      }
+      return item;
+    });
+    setData(updatedData);
+  };
+  const ValidateCheques = (data: any[]): Promise<boolean> => {
+    return new Promise(async (resolve) => {
+      for (let i = 0; i < data.length; i++) {
+        const chequeDate = new Date(data[i].ChequeDate); // Convert ChequeDate to a Date object
+        const currentDate = new Date(); // Get the current date
+  
+        if (chequeDate > currentDate) {
+          // Show a confirmation dialog
+          const result = await ERPAlert.show({
+            icon: "question",
+            title: "Cheque Date",
+            text: `Cheque Date for Cheque No: ${data[i].ChequeNumber} is greater than the current date! Do you want to continue?`,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            onConfirm: 
+              () => {
+                resolve(true);
+              return;
+              },
+              onCancel: 
+              () => {
+                resolve(false);
+              return;
+              }
+            
+          });
+        }
+      }
+  
+      // All cheques are valid
+      resolve(true);
+    });
+  };
+  const validateCheckForPDC = (data: any[], defaultBankChargeAccount: number): Promise<boolean> => {
+    return new Promise(async (resolve) => {
+      // Validate cheque dates
+      for (let i = 0; i < data.length; i++) {
+        const chequeDate = new Date(data[i].ChequeDate); // Convert ChequeDate to a Date object
+        const currentDate = new Date(data[i].Date); // Convert Date to a Date object
+  
+        if (chequeDate < currentDate) {
+          // Show an error message
+          await ERPAlert.show({
+            icon: "error",
+            title: "Validation Error",
+            text: `Cheque Date for Cheque No: ${data[i].ChequeNumber} is less than the current date!`,
+            confirmButtonText: "Ok",
+            onConfirm: () => {
+              resolve(false); // Return false if validation fails
+              return;
+            },
+          });
+        }
+      }
+  
+      // Validate default bank charge account
+      if (defaultBankChargeAccount <= 0) {
+        await ERPAlert.show({
+          icon: "error",
+          title: "Validation Error",
+          text: "Please set the Default Bank Charge Account in Settings.",
+          confirmButtonText: "Ok",
+          onConfirm: () => {
+            resolve(false); // Return false if validation fails
+            return;
+          },
+        });
+      }
+  
+      // All validations passed
+      resolve(true);
+    });
+  };
   const columns: DevGridColumn[] = useMemo(
-    () => [
+    () => {
+      const baseColumns: DevGridColumn[] = [
       {
-        dataField: "AccTransactionMasterID",
+        dataField: "cleared",
+        caption: t("cleared"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        allowEditing: true,
+        cellRender: ({ data }: any) => (
+          <input
+            type="checkbox"
+            checked={data.Cleared}
+            onChange={(e) => handleCheckboxChange(data, "Cleared", e.target.checked)}
+          />
+        ),
+      },
+      {
+        dataField: "bounced",
+        caption: t("bounced"),
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        allowEditing: true,
+        cellRender: ({ data }: any) => (
+          <input
+            type="checkbox"
+            checked={data.Bounced}
+            onChange={(e) => handleCheckboxChange(data, "Bounced", e.target.checked)}
+          />
+        ),
+      },
+      {
+        dataField: "accTransactionMasterID",
         caption: t("acc_transaction_master_id"),
         dataType: "string",
         allowSorting: true,
@@ -218,7 +409,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         minWidth: 200,
       },
       {
-        dataField: "AccTransactionDetailID",
+        dataField: "accTransactionDetailID",
         caption: t("acc_transaction_detail_id"),
         dataType: "string",
         allowSorting: true,
@@ -228,7 +419,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "LedgerName",
+        dataField: "ledgerName",
         caption: t("ledger_name"),
         dataType: "string",
         allowSorting: true,
@@ -238,7 +429,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "RelatedLedger",
+        dataField: "relatedLedger",
         caption: t("related_ledger"),
         dataType: "string",
         allowSorting: true,
@@ -248,7 +439,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "ChequeNumber",
+        dataField: "chequeNumber",
         caption: t("cheque_number"),
         dataType: "date",
         allowSorting: true,
@@ -258,7 +449,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "CheckStatus",
+        dataField: "checkStatus",
         caption: t("check_status"),
         dataType: "date",
         allowSorting: true,
@@ -268,7 +459,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "ChequeDate",
+        dataField: "chequeDate",
         caption: t("cheque_date"),
         dataType: "date",
         allowSorting: true,
@@ -278,7 +469,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "ChequeBounceDate",
+        dataField: "chequeBounceDate",
         caption: t("cheque_bounce_date"),
         dataType: "date",
         allowSorting: true,
@@ -288,7 +479,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "Amount",
+        dataField: "amount",
         caption: t("amount"),
         dataType: "date",
         allowSorting: true,
@@ -298,7 +489,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "IsCleared",
+        dataField: "isCleared",
         caption: t("is_cleared"),
         dataType: "date",
         allowSorting: true,
@@ -308,7 +499,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "LedgerID",
+        dataField: "ledgerID",
         caption: t("ledger_id"),
         dataType: "date",
         allowSorting: true,
@@ -318,7 +509,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "RelatedLedgerID",
+        dataField: "relatedLedgerID",
         caption: t("related_ledger_id"),
         dataType: "date",
         allowSorting: true,
@@ -328,7 +519,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         allowEditing: true,
       },
       {
-        dataField: "BankCharge",
+        dataField: "bankCharge",
         caption: t("bank_charge"),
         dataType: "date",
         allowSorting: true,
@@ -337,9 +528,21 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
         width: 150,
         allowEditing: true,
       },
-    ],
-    []
-  );
+    ];
+   // Filter columns based on the `visible` property
+   return baseColumns.filter((column) => {
+    if (userSession.countryId === undefined) {
+      // Handle undefined case (e.g., show all columns or hide specific columns)
+      return true; // or false, depending on your logic
+    } else if (userSession.countryId === Countries.India) {
+      // Show all columns for India
+      return true;
+    } else {
+      // Hide "BankCharge" for non-India
+      return column.dataField !== "BankCharge";
+    }
+  });
+  }, [t]);
 
   return (
     <div className="relative min-h-screen bg-white">
@@ -414,7 +617,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
                         onChange={(e) =>
                           handleDateChange("chequeFromDate", e.target.value)
                         }
-                        value={formState.chequeFromDate}
+                        value={ new Date(formState.chequeFromDate)}
                         className="w-auto"
                       />
                       <ERPDateInput
@@ -423,7 +626,7 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
                         onChange={(e) =>
                           handleDateChange("chequeToDate", e.target.value)
                         }
-                        value={formState.chequeToDate}
+                        value={ new Date(formState.chequeToDate)}
                         className="w-auto"
                       />
                     </div>
@@ -431,10 +634,17 @@ const userSession = useAppSelector((state: RootState) => state.UserSession)
 
                   {/* Counter ID and Bank Section */}
                   <div className="flex items-end gap-4">
-                    <ERPDataCombobox
-                      id="counterID"
-                      noLabel
-                      value={formState.selectedBankId}
+                  <ERPDataCombobox
+                    id="BankAC"
+                    label="Bank A/c"
+                    field={{
+                      id: "BankAC",
+                      required: true,
+                      getListUrl: Urls.data_BankAccounts,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    value={formState.selectedBankId}
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
                       className="w-64"
                     />

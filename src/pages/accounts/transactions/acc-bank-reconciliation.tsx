@@ -554,10 +554,10 @@ const BankReconciliation = () => {
                     loading={loading.show}
                   />
                   <ERPDataCombobox
-                    id="BankAC"
+                    id="selectedBankId"
                     label="Bank A/c"
                     field={{
-                      id: "BankAC",
+                      id: "selectedBankId",
                       required: true,
                       getListUrl: Urls.data_BankAccounts,
                       valueKey: "id",
@@ -565,6 +565,7 @@ const BankReconciliation = () => {
                     }}
                     value={formState.selectedBankId}
                     onChange={(e) => handleBankSelection(e?.value ?? null)}
+                    className="w-64"
                   />
                 </div>
               </div>

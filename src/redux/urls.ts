@@ -26,6 +26,7 @@ const Urls = {
   data_warehouse: "/Data/Warehouses/",
   data_employees: "/Data/Employees",
   data_user_types: "/Data/UserTypes/",
+  data_users: "/Data/users/",
   data_duties_taxes: "/Data/Duties&Taxes/",
   data_batchcriteria: "/Data/BatchCriterias/",
   data_pricectegory: "/Data/PriceCategories/",
@@ -404,7 +405,11 @@ const Urls = {
     "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
 
     pdc:"/Accounts/PDC/",
-    bankReconciliation:"/Accounts/BankReconciliation/"
+    bankReconciliation:"/Accounts/BankReconciliation/",
+
+    //Invite
+    invite_link:"/Subscription/User/SendInviteLink",
+    accept_link:"/Subscription/User/AcceptInviteLink"
 };
 
 export default Urls;

@@ -70,11 +70,11 @@ const BankReconciliation = () => {
   const handleSelectionChange = (e: any) => {
     if (Array.isArray(e.selectedRowKeys)) {
       const selectedKeys = e.selectedRowKeys.map((row: any) =>
-        typeof row === "object" ? row.accTransactionDetailID : row
+        typeof row === "object" ? row.id : row
       );
 
       const updatedTransactions = data.map((transaction: any) => {
-        if (selectedKeys.includes(transaction.accTransactionDetailID)) {
+        if (selectedKeys.includes(transaction.id)) {
           return {
             ...transaction,
             bankDate: transaction.bankDate == null ?
@@ -97,6 +97,7 @@ const BankReconciliation = () => {
     }
   };
 
+
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
     try {
@@ -111,7 +112,7 @@ const BankReconciliation = () => {
 
       // Update the data
       const updatedTransactions = data.map((transaction: any) => {
-        if (selectedKeys.includes(transaction.accTransactionDetailID)) {
+        if (selectedKeys.includes(transaction.id)) {
           return {
             ...transaction,
             bankDate:
@@ -172,7 +173,7 @@ const BankReconciliation = () => {
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
-          selectedKeys.includes(item.accTransactionDetailID)
+          selectedKeys.includes(item.id)
         ) // ✅ Fixed ID casing
         .map((it: any) => ({
           ...it,
@@ -191,7 +192,8 @@ const BankReconciliation = () => {
         return;
       }
 
-      // Step 3: Call API with only filtered modified items
+      // Step 3: Call API with only filtered modified items 
+      
       const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
 
       handleResponse(res, () => {
@@ -495,15 +497,7 @@ const BankReconciliation = () => {
       minWidth: 100,
       format: "dd/MMM/yyyy",
     },
-    // {
-    //   dataField: "ledgerID",
-    //   caption: t("ledger_id"),
-    //   dataType: "string",
-    //   allowSorting: true,
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   minWidth: 150,
-    // },
+
     {
       dataField: "",
       caption: t("change_to_pending"),
@@ -554,7 +548,7 @@ const BankReconciliation = () => {
 
         <div className="mt-8">
           <div className="dark:!bg-dark-bg bg-[#fafafa] p-4">
-            <div className="p-4">
+            <div className="py-3">
               <div className="flex flex-col w-full max-w-[600px]">
                 <div className="grid grid-cols-12 items-center gap-4">
                   <div className="col-span-6">
@@ -616,6 +610,7 @@ const BankReconciliation = () => {
                     <ERPButton
                       title={t("show")}
                       onClick={handleShow}
+                      loading={loading.show}
                       variant="secondary"
                       className="mt-[15px] !mb-0 w-[100px]"
                     />
@@ -629,15 +624,14 @@ const BankReconciliation = () => {
               key={key}
               ref={dataGridRef}
               columns={columns}
-              keyExp="slNo"
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}
               hideDefaultExportButton={false}
               showPrintButton={true}
               onSelectionChanged={handleSelectionChange}
-              heightToAdjustOnWindows={430}
+              heightToAdjustOnWindows={300}
               data={data}
-              keyExpr="accTransactionDetailID"
+              keyExpr="id"
               selectedRowKeys={selectedKeys}
               allowEditing={{ allow: true, config: { edit: true } }}
               remoteOperations={{
@@ -646,12 +640,6 @@ const BankReconciliation = () => {
                 sorting: false,
               }}
               editMode="cell"
-              // method={ActionType.POST}
-              // reload={reload}
-              // dataUrl={`${Urls.bankReconciliation}?&IsReconciled=${formState.showReconciled}`}
-              // changeReload={(reload: boolean) => setReload(false)}
-              // dataUrl={`${Urls.bankReconciliation}`}
-              // postData={{ledgerId:formState.selectedBankId, isReconciled:formState.showReconciled }}
               pageSize={40}
               allowSelection={true}
               selectionMode={"multiple"}

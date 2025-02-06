@@ -66,6 +66,7 @@ const PostDatedCheques = () => {
     save: false,
     close: false,
   });
+  const [__key, set__key] = useState<number>(10);
   const { t } = useTranslation("transaction");
 
   const btnSaveRef = useRef<HTMLButtonElement>(null);
@@ -102,6 +103,7 @@ const PostDatedCheques = () => {
   };
 
   const handleBankDateTypeChange = (type: "today" | "cheque") => {
+    set__key((pre: number) => pre+10);
     setFormState((prev) => ({ ...prev, bankDateType: type }));
   };
 
@@ -274,31 +276,33 @@ const PostDatedCheques = () => {
   };
 
   const handleCheckboxChange = useCallback((row: any, field: "Cleared" | "Bounced", checked: boolean) => {
-    setData((prevData) => {
-      const updatedData = prevData.map((item: any) => {
-        if (item.id === row.id) { // Use the generated unique ID
-          const updatedRow = { ...item, [field.toLowerCase()]: checked };
-          if (field === "Cleared" && checked) {
-            updatedRow.bounced = false;
-            updatedRow.cleared = true;
-            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : item.chequeDate;
-          } else if (field === "Bounced" && checked) {
-            updatedRow.cleared = false;
-            updatedRow.bounced = true;
-            updatedRow.date = formState.bankDateType === "today" ? clientSession.softwareDate : item.chequeDate;
-          } else {
-            if (!updatedRow.cleared && !updatedRow.bounced) {
-              updatedRow.date = null;
+    const dfd = formState.bankDateType;
+    debugger;
+      setData((prevData) => {
+        const updatedData = prevData.map((item: any) => {
+          if (item.id === row.id) {
+            const updatedRow = { ...item, [field.toLowerCase()]: checked };
+            console.log("Current bankDateType:", formState.bankDateType);
+            if (field === "Cleared" && checked) {
+              updatedRow.bounced = false;
+              updatedRow.cleared = true;
+              updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
+            } else if (field === "Bounced" && checked) {
+              updatedRow.cleared = false;
+              updatedRow.bounced = true;
+              updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
+            } else {
+              if (!updatedRow.cleared && !updatedRow.bounced) {
+                updatedRow.date = null;
+              }
             }
+            return updatedRow;
           }
-          return updatedRow;
-        }
-        return item;
+          return item;
+        });
+        return updatedData;
       });
-      console.log("Updated data:", updatedData);
-      return updatedData;
-    });
-  }, [formState.bankDateType, clientSession.softwareDate]);
+    }, [formState.bankDateType]);
 
   const ValidateCheques = (data: any[]): Promise<boolean> => {
     return new Promise(async (resolve) => {
@@ -543,7 +547,8 @@ const PostDatedCheques = () => {
           return column.dataField !== "bankCharge";
         }
       });
-    }, [t, userSession.countryId]);
+    }, [t, userSession.countryId,formState.bankDateType]);
+
 
   return (
     <div className="relative bg-white">
@@ -681,6 +686,7 @@ const PostDatedCheques = () => {
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+              key={`${__key}_grd`}
               data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"

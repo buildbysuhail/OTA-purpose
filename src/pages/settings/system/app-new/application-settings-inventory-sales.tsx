@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -10,8 +9,6 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
 import { BusinessType } from "../../../../enums/business-types";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -40,8 +37,6 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
-  subItemsRef,
   subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
@@ -54,6 +49,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("default_sales_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultSalesAcc"
           data={settings?.inventorySettings}
           field={{
@@ -78,6 +74,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("default_sales_return_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultSalesReturnAcc"
           data={settings?.inventorySettings}
           field={{
@@ -116,6 +113,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
             }
           />
           <ERPDataCombobox
+            isInModal={false}
             id="serviceWarrantyInvLedgerID"
             disabled={settings?.inventorySettings?.serviceWarrantyInvAccounts !== true}
             data={settings?.inventorySettings}
@@ -158,6 +156,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
             }
           />
           <ERPDataCombobox
+            isInModal={false}
             id="serviceNONWarrantyInvLedgerID"
             disabled={settings?.inventorySettings?.serviceNonWarrantyInvAccounts !== true}
             data={settings?.inventorySettings}
@@ -185,6 +184,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("block_bill_discount")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="blockBillDiscount"
           field={{
             id: "blockBillDiscount",
@@ -235,6 +235,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("if_less_sales_rate")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="showRateWarning"
           data={settings?.inventorySettings}
           field={{
@@ -264,6 +265,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("credit_limit")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="blockOnCreditLimit"
           data={settings?.accountsSettings}
           label={t("credit_limit")}
@@ -292,6 +294,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("sales_rounding_method")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "pOSRoundingMethod",
             valueKey: "value",
@@ -328,6 +331,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("default_sales_return_payable_acc")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultSalesReturnPayableAcc"
           disabled
           data={settings?.inventorySettings}
@@ -354,6 +358,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("bill_discount_given_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBillDiscGivenLdg"
           data={settings?.inventorySettings}
           field={{
@@ -378,6 +383,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       condition: filterComponent([t("default_customer")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultCustomerLedgerID"
           data={settings?.accountsSettings}
           label={t("default_customer")}

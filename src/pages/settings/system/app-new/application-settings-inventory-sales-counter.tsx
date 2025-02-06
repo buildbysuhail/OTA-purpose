@@ -1,11 +1,8 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -32,11 +29,8 @@ const InventorySalesCounterFilterableComponents: React.FC<ApplicationSettingsPro
   handleFieldChange,
   filterComponent,
   filterText,
-  userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
-  subItemsRef,
   subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,

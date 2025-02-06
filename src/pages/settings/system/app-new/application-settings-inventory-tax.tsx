@@ -3,8 +3,6 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -30,12 +28,9 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   handleFieldChange,
   filterComponent,
   filterText,
-  userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -46,6 +41,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_purchase")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="purchaseFormType"
           data={settings?.taxesSettings}
           field={{
@@ -65,6 +61,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("sales_form_type")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="salesFormType"
           data={settings?.taxesSettings}
           field={{
@@ -84,6 +81,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("purchase_tax_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="purchaseTaxAccount"
           data={settings?.taxesSettings}
           field={{
@@ -104,6 +102,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("sales_tax_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="salesTaxAccount"
           data={settings?.taxesSettings}
           field={{
@@ -124,6 +123,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("purchase_cst_account")], filterText) && 1 !== 1,
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="purchaseCSTAccount"
           data={settings?.taxesSettings}
           disabled
@@ -145,6 +145,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("sales_cst_account")], filterText) && 1 !== 1,
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="salesCSTAccount"
           data={settings?.taxesSettings}
           disabled
@@ -166,6 +167,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("expenses_tax_account")], filterText) && 1 !== 1,
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="expensesTaxAccount"
           data={settings?.taxesSettings}
           disabled
@@ -187,6 +189,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("income_tax_account")], filterText) && 1 !== 1,
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="incomeTaxAccount"
           data={settings?.taxesSettings}
           disabled

@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -11,8 +10,6 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useApplicationMiscSettings } from "../../../../utilities/hooks/use-application-misc-settings";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -41,9 +38,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -67,6 +62,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_BTO_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBTOAccount"
           data={settings?.inventorySettings}
           field={{
@@ -91,6 +87,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_BTI_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBTIAccount"
           data={settings?.inventorySettings}
           field={{
@@ -165,6 +162,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
             }
           />
           <ERPDataCombobox
+            isInModal={false}
             id="syncMethod"
             disabled={settings?.branchSettings?.maintainSynchronization === false}
             label=" "
@@ -196,7 +194,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("intervals_(minutes)")], filterText),
       element: (
         <ERPInput
-          id="syncIntervals"  
+          id="syncIntervals"
           min={0}
           value={settings?.branchSettings?.syncIntervals}
           data={settings?.branchSettings}
@@ -499,42 +497,39 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
 
   return (
     <>
-     {items.filter((component) => component.condition == true).length > 0 && (
-      <div>
-        <div  key={key}  ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}>
-          <h1
-            className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${
-              blinkSection === "mainMultiBranch"
+      {items.filter((component) => component.condition == true).length > 0 && (
+        <div>
+          <div key={key} ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}>
+            <h1
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "mainMultiBranch"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
-            }`}
-            onClick={handleGeneralHeaderClick}>
-            {t("multi_branch")}
-          </h1>
-          <div key="mainMultiBranch" className="space-y-4">
-            <div className={`border border-solid dark:!bg-dark-bg dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
-              <div
-                className={`grid ${
-                  isCompactView
+                }`}
+              onClick={handleGeneralHeaderClick}>
+              {t("multi_branch")}
+            </h1>
+            <div key="mainMultiBranch" className="space-y-4">
+              <div className={`border border-solid dark:!bg-dark-bg dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
+                <div
+                  className={`grid ${isCompactView
                     ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                    : `${
-                        gridClass ||
-                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
-                }`}>
-                {items?.map(
-                  (component: any, index: number) =>
-                    component.condition && (
-                      <div key={index}>{component.element}</div>
-                    )
-                )}
+                    : `${gridClass ||
+                    "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                    } gap-4 items-center justify-center`
+                    }`}>
+                  {items?.map(
+                    (component: any, index: number) =>
+                      component.condition && (
+                        <div key={index}>{component.element}</div>
+                      )
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-     )
-    }
+      )
+      }
     </>
   );
 };

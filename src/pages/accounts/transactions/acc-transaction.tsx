@@ -353,7 +353,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
-            api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`),
+            ledgerID > 0 ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`): 0,
             api.getAsync(
               `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
             ),
@@ -445,9 +445,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
     const loadLedgerData = async () => {
-      const ledgerBalance = await api.getAsync(
+      const ledgerBalance = formState.masterAccountID > 0 ? await api.getAsync(
         `${Urls.get_ledger_balance}${formState.masterAccountID ?? 0}`
-      );
+      ): 0;
       dispatch(
         accFormStateHandleFieldChange({
           fields: {

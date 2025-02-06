@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -8,8 +7,6 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -39,9 +36,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -52,6 +47,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("coupon_card_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultCouponSalesAccount"
           data={settings?.inventorySettings}
           field={{
@@ -77,6 +73,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("default_round_off_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultRoundOffAccount"
           data={settings?.inventorySettings}
           field={{
@@ -102,6 +99,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("default_additional_amount_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultAdditionalAmountAccount"
           data={settings?.inventorySettings}
           field={{
@@ -147,6 +145,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("default_service_spare_warehouse")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultServiceSpareWareHouse"
           data={settings?.inventorySettings}
           field={{
@@ -171,6 +170,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("negative_stock")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="showNegStockWarning"
           field={{
             id: "showNegStockWarning",
@@ -198,7 +198,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("maximum_allowed_line_item_amount")], filterText),
       element: (
         <ERPInput
-          id="maximum_Allowed_LineItem_Amount"  
+          id="maximum_Allowed_LineItem_Amount"
           min={0}
           value={settings?.branchSettings?.maximum_Allowed_LineItem_Amount}
           data={settings?.branchSettings}
@@ -218,6 +218,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("stock_transfer_negative_stock")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "stockTransferNegativeStock",
             valueKey: "label",
@@ -245,6 +246,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("default_brand")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBrand"
           disabled
           data={settings?.inventorySettings}
@@ -272,6 +274,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("barcode_label")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBarcodeLabel"
           disabled
           data={settings?.inventorySettings}
@@ -299,6 +302,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("default_opening_stock_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultOpeningStockValueAcc"
           data={settings?.accountsSettings}
           label={t("default_opening_stock_ledger")}

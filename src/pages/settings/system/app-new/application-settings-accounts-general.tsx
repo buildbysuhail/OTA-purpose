@@ -1,15 +1,9 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { useApplicationSetting } from "../../../../utilities/hooks/use-application-settings";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import Urls from "../../../../redux/urls";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
@@ -40,9 +34,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -53,6 +45,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_cash_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultCashAcc"
           data={settings?.accountsSettings}
           label={t("default_cash_account")}
@@ -76,6 +69,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_suspense_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultSuspenseAcc"
           data={settings?.accountsSettings}
           label={t("default_suspense_account")}
@@ -99,6 +93,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_service_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultServiceAccount"
           data={settings?.accountsSettings}
           label={t("default_service_account")}
@@ -122,6 +117,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_bank_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBankAcc"
           data={settings?.accountsSettings}
           label={t("default_bank_account")}
@@ -145,6 +141,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_credit_card_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultCreditCardAcc"
           data={settings?.accountsSettings}
           label={t("default_credit_card_account")}
@@ -168,6 +165,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_loan_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultLoanAcc"
           data={settings?.accountsSettings}
           label={t("default_loan_account")}
@@ -192,6 +190,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("default_bank_charge_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBankChargeAccount"
           data={settings?.accountsSettings}
           label={t("default_bank_charge_account")}
@@ -216,6 +215,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: userSession.countryId == Countries.India && filterComponent([t("default_indirect_expense_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultIndirectExpenseAccount"
           field={{
             id: "defaultIndirectExpenseAccount",
@@ -273,9 +273,10 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       ),
     },
     {
-      condition:userSession.countryId == Countries.India &&  filterComponent([t("default_PDC_receivable_account")], filterText),
+      condition: userSession.countryId == Countries.India && filterComponent([t("default_PDC_receivable_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPDCReceivableAccount"
           disabled={!settings?.accountsSettings?.allowPostPDC}
           data={settings?.accountsSettings}
@@ -298,9 +299,10 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       ),
     },
     {
-      condition:userSession.countryId == Countries.India &&  filterComponent([t("default_PDC_payable_account")], filterText),
+      condition: userSession.countryId == Countries.India && filterComponent([t("default_PDC_payable_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPDCPayableAccount"
           disabled={!settings?.accountsSettings?.allowPostPDC}
           data={settings?.accountsSettings}
@@ -435,17 +437,17 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("maintain_tax")], filterText),
       element: (
         <ERPCheckbox
-        id="maintainTax"
-        label={t("maintain_tax")}
-        data={settings?.branchSettings}
-        checked={settings?.branchSettings?.maintainTax}
-        onChangeData={(data) =>
-          handleFieldChange("branchSettings","maintainTax", data.maintainTax)
-        }
-      />
+          id="maintainTax"
+          label={t("maintain_tax")}
+          data={settings?.branchSettings}
+          checked={settings?.branchSettings?.maintainTax}
+          onChangeData={(data) =>
+            handleFieldChange("branchSettings", "maintainTax", data.maintainTax)
+          }
+        />
       ),
     },
-  ];  
+  ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {
     const hasMatchingItems = items.some((component) => component.condition);
@@ -455,47 +457,44 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
 
   return (
     <>
-    {items.filter((component) => component.condition == true).length > 0 && (
-      <div>
-        <div
-          key={key}
-          ref={(el) => (subItemsRef.current["accountsGeneral"] = el)}
-        >
-          <h1
-            className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${
-              blinkSection === "accountsGeneral"
+      {items.filter((component) => component.condition == true).length > 0 && (
+        <div>
+          <div
+            key={key}
+            ref={(el) => (subItemsRef.current["accountsGeneral"] = el)}
+          >
+            <h1
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "accountsGeneral"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
-            }`}
-            onClick={handleGeneralHeaderClick}
-          >
-            {t("general")}
-          </h1>
-          <div key="accountsGeneral" className="space-y-4">
-            <div className={`border border-solid  dark:!bg-dark-bg  dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
-              <div
-                className={`grid ${
-                  isCompactView
-                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                    : `${
-                        gridClass ||
-                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
                 }`}
-              >
-                {items?.map(
-                  (component: any, index: number) =>
-                    component.condition && (
-                      <div key={index}>{component.element}</div>
-                    )
-                )}
+              onClick={handleGeneralHeaderClick}
+            >
+              {t("general")}
+            </h1>
+            <div key="accountsGeneral" className="space-y-4">
+              <div className={`border border-solid  dark:!bg-dark-bg  dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
+                <div
+                  className={`grid ${isCompactView
+                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                    : `${gridClass ||
+                    "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                    } gap-4 items-center justify-center`
+                    }`}
+                >
+                  {items?.map(
+                    (component: any, index: number) =>
+                      component.condition && (
+                        <div key={index}>{component.element}</div>
+                      )
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )
-    }
+      )
+      }
     </>
   );
 };

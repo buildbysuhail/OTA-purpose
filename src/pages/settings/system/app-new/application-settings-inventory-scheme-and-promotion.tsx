@@ -1,12 +1,9 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -35,9 +32,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -47,7 +42,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
     {
       condition: filterComponent([t("gift_on_billing")], filterText),
       element: (
-          <>
+        <>
           <ERPCheckbox
             id="giftOnBilling"
             data={settings?.productsSettings}
@@ -62,6 +57,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
             }
           />
           <ERPDataCombobox
+            isInModal={false}
             field={{
               id: "giftOnBillingAs",
               valueKey: "label",
@@ -84,7 +80,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
             disabled={!settings?.productsSettings?.giftOnBilling}
             label=" "
           />
-          </>
+        </>
       ),
     },
     {

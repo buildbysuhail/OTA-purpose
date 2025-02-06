@@ -404,7 +404,11 @@ const Urls = {
     "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
 
     pdc:"/Accounts/PDC/",
-    bankReconciliation:"/Accounts/BankReconciliation/"
+    bankReconciliation:"/Accounts/BankReconciliation/",
+
+    //Invite
+    invite_link:"/Subscription/User/SendInviteLink",
+    accept_link:"/Subscription/User/AcceptInviteLink"
 };
 
 export default Urls;

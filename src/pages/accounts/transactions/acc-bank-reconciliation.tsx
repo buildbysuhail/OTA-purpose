@@ -18,7 +18,7 @@ import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface FormState {
   showReconciled: boolean;
-  selectedBankId: string | null;
+  selectedBankId: number | null;
 }
 interface LoadingState {
   setAllDate: boolean;
@@ -37,7 +37,7 @@ const BankReconciliation = () => {
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
-  const [formState, setFormState] = useState<FormState>({ showReconciled: false, selectedBankId: null });
+  const [formState, setFormState] = useState<FormState>({ showReconciled: false, selectedBankId: -2 });
   const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
   const [reload, setReload] = useState<boolean>(false);
   const [loading, setLoading] = useState<LoadingState>({
@@ -59,7 +59,7 @@ const BankReconciliation = () => {
     setFormState((prev) => ({ ...prev, showReconciled: checked }));
   };
 
-  const handleBankSelection = (value: string | null) => {
+  const handleBankSelection = (value: number | null) => {
     setFormState((prev) => ({ ...prev, selectedBankId: value }));
   };
 

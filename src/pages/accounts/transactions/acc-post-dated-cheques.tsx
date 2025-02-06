@@ -23,7 +23,7 @@ interface FormState {
   chequeFromDate: string;
   chequeToDate: string;
   isBank: boolean;
-  selectedBankId: string | null;
+  selectedBankId: number | null;
   bankDateType: "today" | "cheque";
   bankChangeType: "change" | "commission";
   total: string;
@@ -51,7 +51,7 @@ const PostDatedCheques = () => {
     chequeFromDate: new Date().toISOString(),
     chequeToDate: new Date().toISOString(),
     isBank: false,
-    selectedBankId: null,
+    selectedBankId: -2,
     bankDateType: "today",
     bankChangeType: "change",
     total: "0",
@@ -98,7 +98,7 @@ const PostDatedCheques = () => {
     setFormState((prev) => ({ ...prev, isBank: checked }));
   };
 
-  const handleBankSelection = (value: string | null) => {
+  const handleBankSelection = (value: number | null) => {
     setFormState((prev) => ({ ...prev, selectedBankId: value }));
   };
 

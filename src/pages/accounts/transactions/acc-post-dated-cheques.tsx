@@ -715,6 +715,7 @@ const PostDatedCheques = () => {
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+            showTotalCount={false}
               key={`${__key}_grd`}
               data={data}
               columns={columns}

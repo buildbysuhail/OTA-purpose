@@ -623,6 +623,7 @@ const BankReconciliation = () => {
             showTotalCount={false}
               key={key}
               ref={dataGridRef}
+              gridHeader=" "
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}

@@ -686,7 +686,15 @@ const PostDatedCheques = () => {
                   </div>
                   {/* Bank Account Section */}
                   <div className="flex items-center gap-4">
+                    <ERPCheckbox
+                      id="bankCheckbox"
+                      name="bankCheckbox"
+                      checked={formState.isBank}
+                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
+                      label={t("bank")}
+                    />
                     <ERPDataCombobox
+                    disabled={!formState.isBank}
                       id="BankAC"
                       label={t("bank_a/c")}
                       field={{
@@ -698,13 +706,6 @@ const PostDatedCheques = () => {
                       }}
                       value={formState.selectedBankId}
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
-                    />
-                    <ERPCheckbox
-                      id="bankCheckbox"
-                      name="bankCheckbox"
-                      checked={formState.isBank}
-                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
-                      label={t("bank")}
                     />
                   </div>
                 </div>
@@ -718,6 +719,7 @@ const PostDatedCheques = () => {
               data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"
+              gridHeader=" "
               hideGridAddButton={true}
               hideDefaultExportButton={true}
               heightToAdjustOnWindows={420}

@@ -1189,9 +1189,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 if (isDefined && isObject && !isValidReactElement) {
                   options.excelCell.style = {
                     ...renderResult,
-                    alignment: renderResult.alignmentExcel,
+                    alignment: renderResult?.alignmentExcel,
                   };
-                  options.excelCell.value = renderResult.text;
+                  options.excelCell.value = renderResult?.text;
                 } else {
                   options.excelCell = options.excelCell; // Retain the original value
                 }

@@ -440,23 +440,21 @@ const PostDatedCheques = () => {
         },
         {
           dataField: "relatedLedger",
-          caption: t("related_ledger"),
+          caption: t("relatedLedger"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,  
+          minWidth: 200,
+        },
+        {
+          dataField: "chequeNumber",
+          caption: t("cheque_number"),
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
           width: 150,
-
-        },
-        {
-          dataField: "chequeNumber",
-          caption: t("cheque_number"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-
         },
         {
           dataField: "chequeBounceDate",
@@ -466,8 +464,60 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowFiltering: true,
           width: 150,
-
         },
+        {
+          dataField: "amount",
+          caption: t("amount"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,
+          cellRender: (cellInfo: any) => (
+            <span
+            >
+              {getFormattedValue(cellInfo.data.amount)}
+            </span>
+          ),
+        },
+        {
+          dataField: "bankCharge",
+          caption: t("bank_charge"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowEditing: true,
+          allowFiltering: true,
+          width: 150,
+        },
+        {
+          dataField: "chequeDate",
+          caption: t("cheque_date"),
+          dataType: "date",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,
+        },
+        {
+          dataField: "ledgerID",
+          caption: t("ledger_id"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,
+        },
+        {
+          dataField: "relatedLedgerID",
+          caption: t("related_ledger_id"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 150,
+        },
+       
         {
           dataField: "accTransactionMasterID",
           caption: t("acc_transaction_master_id"),
@@ -477,22 +527,7 @@ const PostDatedCheques = () => {
           allowFiltering: true,
           minWidth: 200,
         },
-        {
-          dataField: "amount",
-          caption: t("amount"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-          cellRender: (cellInfo: any) => (
-            <span
-            >
-              {getFormattedValue(cellInfo.data.debit, false,4)}
-            </span>
-          ),
-
-        },
+       
         {
           dataField: "accTransactionDetailID",
           caption: t("acc_transaction_detail_id"),
@@ -503,66 +538,6 @@ const PostDatedCheques = () => {
           minWidth: 200,
 
         },
-        {
-          dataField: "bankCharge",
-          caption: t("bank_charge"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-
-        },
-        {
-          dataField: "chequeDate",
-          caption: t("cheque_date"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-
-        },
-        {
-          dataField: "ledgerID",
-          caption: t("ledger_id"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-
-        },
-        {
-          dataField: "relatedLedgerID",
-          caption: t("related_ledger_id"),
-          dataType: "date",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          width: 150,
-
-        },
-        // {
-        //   dataField: "checkStatus",
-        //   caption: t("check_status"),
-        //   dataType: "date",
-        //   allowSorting: true,
-        //   allowSearch: true,
-        //   allowFiltering: true,
-        //   width: 150,
-
-        // },
-        // {
-        //   dataField: "isCleared",
-        //   caption: t("is_cleared"),
-        //   dataType: "date",
-        //   allowSorting: true,
-        //   allowSearch: true,
-        //   allowFiltering: true,
-        //   width: 150,
-
-        // },
       ];
       // Filter columns based on the `visible` property
       return baseColumns.filter((column) => {

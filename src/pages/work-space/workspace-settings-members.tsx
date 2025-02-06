@@ -1,10 +1,4 @@
-import {
-  FC,
-  Fragment,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import Urls from "../../redux/urls";
 import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
@@ -13,70 +7,55 @@ import { APIClient } from "../../helpers/api-client";
 import { Link, useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataGrid, Toolbar } from "devextreme-react";
-import {
-  Column,
-  DataGridRef,
-  FilterRow,
-  Item,
-  Paging,
-  SearchPanel,
-} from "devextreme-react/cjs/data-grid";
+import { Column, DataGridRef, FilterRow, Item, Paging, SearchPanel } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import WorkspaceSettingsApis from "./workspace-settings-apis";
 import ErpAvatar from "../../components/ERPComponents/erp-avatar";
 import { postAction } from "../../redux/slices/app-thunks";
+import ERPButton from "../../components/ERPComponents/erp-button";
+import InviteModal from "./invite-modal";
 
-interface WorkspaceSettingsMembersProps {}
+interface WorkspaceSettingsMembersProps { }
 
 const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const dataGridRef = useRef<DataGridRef>(null);
+
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;
     setGridHeight(gridHeight);
-    // loadDxGrid(); // Load initial data
   });
+
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
   }
 
-  let isInitial = true;
   const store = new CustomStore({
     key: "Id",
     async load(loadOptions: any) {
-      const paramNames = [
-        "skip",
-        "take",
-        "requireTotalCount",
-        "sort",
-        "filter",
-      ];
+      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
 
       const queryString = paramNames
         .filter((paramName) => isNotEmpty(loadOptions[paramName]))
-        .map(
-          (paramName) =>
-            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
-        )
+        .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
         .join("&");
 
       try {
         const response = await WorkspaceSettingsApis.getMembers("");
-
         const result = response;
-
         return result !== undefined && result != null
           ? {
-              data: result,
-              totalCount: result.length,
-            }
+            data: result,
+            totalCount: result.length,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
@@ -85,9 +64,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
 
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
-
   const dispatch = useDispatch();
-
   const resetPassword = async () => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
@@ -101,6 +78,21 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
     });
   };
 
+  const handleInviteClick = () => {
+    setIsInviteModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsInviteModalOpen(false);
+  };
+
+  const handleInviteSuccess = () => {
+    if (dataGridRef.current) {
+      const instance = (dataGridRef.current as any).instance;
+      instance?.refresh();
+    }
+  };
+
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   return (
@@ -109,9 +101,8 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div
             id="phone-number"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "Password" ? "blink" : ""
-            } col-span-12`}
+            className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""
+              } col-span-12`}
           >
             <div className="box custom-box">
               <div className="box-header justify-between">
@@ -123,7 +114,14 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                     maximum number of seats allowed on your plan
                   </p>
                 </div>
-                <div></div>
+                <div>
+                  <ERPButton
+                    title="Invite"
+                    variant="primary"
+                    className="ml-auto"
+                    onClick={handleInviteClick}
+                  />
+                </div>
               </div>
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
@@ -288,6 +286,11 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
           </div>
         </div>
       </div>
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        onClose={handleModalClose}
+        onSuccess={handleInviteSuccess}
+      />
     </Fragment>
   );
 };

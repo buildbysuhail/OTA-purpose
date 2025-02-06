@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -7,8 +6,6 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -34,12 +31,9 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   handleFieldChange,
   filterComponent,
   filterText,
-  userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -50,6 +44,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_incentive_account_1")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultIncentiveAcc1"
           data={settings?.accountsSettings}
           label={t("default_incentive_account_1")}
@@ -74,6 +69,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_incentive_account_2")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultIncentiveAcc2"
           data={settings?.accountsSettings}
           label={t("default_incentive_account_2")}
@@ -98,7 +94,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("salesman_incentive")], filterText),
       element: (
         <ERPInput
-          id="salesmanIncentive"  
+          id="salesmanIncentive"
           min={0}
           value={settings?.miscellaneousSettings?.salesmanIncentive}
           data={settings?.miscellaneousSettings}
@@ -118,6 +114,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_incentive_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultIncentiveLedger"
           field={{
             id: "defaultIncentiveLedger",
@@ -185,47 +182,44 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
 
   return (
     <>
-    {items.filter((component) => component.condition == true).length > 0 && (
-      <div>
-        <div
-          key={key}
-          ref={(el) => (subItemsRef.current["accountsHR"] = el)}
-        >
-          <h1
-            className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${
-              blinkSection === "accountsHR"
+      {items.filter((component) => component.condition == true).length > 0 && (
+        <div>
+          <div
+            key={key}
+            ref={(el) => (subItemsRef.current["accountsHR"] = el)}
+          >
+            <h1
+              className={`h-[50px] text-[20px] dark:!bg-dark-bg-header dark:!text-dark-text font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "accountsHR"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
-            }`}
-            onClick={handleGeneralHeaderClick}
-          >
-            {t("hr")}
-          </h1>
-          <div key="accountsHR" className="space-y-4">
-            <div className={`border border-solid dark:!bg-dark-bg dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
-              <div
-                className={`grid ${
-                  isCompactView
-                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                    : `${
-                        gridClass ||
-                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
                 }`}
-              >
-                {items?.map(
-                  (component: any, index: number) =>
-                    component.condition && (
-                      <div key={index}>{component.element}</div>
-                    )
-                )}
+              onClick={handleGeneralHeaderClick}
+            >
+              {t("hr")}
+            </h1>
+            <div key="accountsHR" className="space-y-4">
+              <div className={`border border-solid dark:!bg-dark-bg dark:!border-dark-border border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg`}>
+                <div
+                  className={`grid ${isCompactView
+                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                    : `${gridClass ||
+                    "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                    } gap-4 items-center justify-center`
+                    }`}
+                >
+                  {items?.map(
+                    (component: any, index: number) =>
+                      component.condition && (
+                        <div key={index}>{component.element}</div>
+                      )
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )
-    }
+      )
+      }
     </>
   );
 };

@@ -1,12 +1,9 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
-import { LedgerType } from "../../../../enums/ledger-types";
-import { Countries } from "../../../../redux/slices/user-session/reducer";
 import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
 import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -40,12 +37,9 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
   handleFieldChange,
   filterComponent,
   filterText,
-  userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -127,6 +121,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputCSTAccount"
               disabled={
                 !hasPermitted &&
@@ -160,6 +155,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputCSTAccount"
               disabled={
                 !hasPermitted &&
@@ -193,6 +189,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputCessAccount"
               disabled={
                 !hasPermitted &&
@@ -226,6 +223,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputCessAccount"
               disabled={
                 !hasPermitted &&
@@ -259,6 +257,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputAddCessAccount"
               disabled={
                 !hasPermitted &&
@@ -292,6 +291,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputAddCessAccount"
               disabled={
                 !hasPermitted &&
@@ -325,6 +325,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="expensesTaxAccount"
               disabled={
                 !hasPermitted &&
@@ -358,6 +359,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="incomeTaxAccount"
               disabled={
                 !hasPermitted &&
@@ -391,6 +393,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputSGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -424,6 +427,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputSGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -457,6 +461,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputCGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -490,6 +495,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputCGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -523,6 +529,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputIGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -556,6 +563,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputIGSTAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -589,6 +597,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputTCSPaidAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -622,6 +631,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputTCSPayableAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -655,6 +665,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="inputCalamityCessAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -688,6 +699,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
         <ERPDisableEnable targetCount={5}>
           {(hasPermitted: boolean) => (
             <ERPDataCombobox
+              isInModal={false}
               id="outputSalesCalamityCessAccount"
               data={settings?.gSTTaxesSettings}
               disabled={
@@ -853,6 +865,7 @@ const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProp
       condition: filterComponent([t("invoice_provider_type")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "einvoiceProvider",
             valueKey: "value",

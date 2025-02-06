@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
@@ -6,8 +5,6 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -33,12 +30,9 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
   handleFieldChange,
   filterComponent,
   filterText,
-  userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -49,6 +43,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("default_purchase_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPurchaseAcc"
           data={settings?.inventorySettings}
           field={{
@@ -73,6 +68,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("default_purchase_return_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPurchaseReturnAcc"
           data={settings?.inventorySettings}
           field={{
@@ -97,6 +93,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("bill_discount_received_ledger")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultBillDiscRecvdLdg"
           data={settings?.inventorySettings}
           field={{
@@ -121,6 +118,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("unit_price_decimal_points")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "unitPrice_decimalPoint",
             valueKey: "value",
@@ -152,6 +150,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("default_purchase_assets_account")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPurchaseAssetsAccount"
           field={{
             id: "defaultPurchaseAssetsAccount",

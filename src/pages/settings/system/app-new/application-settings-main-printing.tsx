@@ -1,12 +1,9 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -35,9 +32,7 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -48,6 +43,7 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("default_printer")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="defaultPrinter"
           data={settings?.printerSettings}
           field={{
@@ -96,6 +92,7 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("printing_style")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="invoicePrintingStyle"
           field={{
             id: "invoicePrintingStyle",

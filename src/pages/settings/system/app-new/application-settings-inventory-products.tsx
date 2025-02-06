@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -7,8 +6,6 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -39,9 +36,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
   userSession,
   isCompactView,
   gridClass,
-  sectionsRef,
   subItemsRef,
-  subItemsCatRef,
   blinkSection,
   handleGeneralHeaderClick,
   key,
@@ -53,6 +48,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("batch_criteria")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           id="batchCriteria"
           field={{
             id: "batchCriteria",
@@ -72,7 +68,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("margin_round_to")], filterText),
       element: (
         <ERPInput
-          id="marginRoundTo"  
+          id="marginRoundTo"
           min={0}
           label={t("margin_round_to")}
           type="number"
@@ -88,6 +84,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("HSN_code")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "showHSNCodeWarning",
             valueKey: "label",
@@ -115,6 +112,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: userSession.countryId === Countries.India && filterComponent([t("LP_priceLess_than_selling_price")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "lPPriceLessThanSellingPrice",
             valueKey: "label",
@@ -142,6 +140,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: userSession.countryId === Countries.India && filterComponent([t("MRP_less_than_sales_price")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "mRPLessThanSalesPrice",
             valueKey: "label",
@@ -169,6 +168,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: userSession.countryId === Countries.India && filterComponent([t("zero_multi_rate_validate")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "zeroMultiRateValidate",
             valueKey: "label",
@@ -196,6 +196,7 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("weighing_scale_barcode_type")], filterText),
       element: (
         <ERPDataCombobox
+          isInModal={false}
           field={{
             id: "weighingScaleBarcodeType",
             valueKey: "label",
@@ -278,36 +279,36 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("use_product_images")], filterText),
       element: (
         <>
-        <ERPCheckbox
-          id="useProductImages"
-          label={t("use_product_images")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.useProductImages}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "useProductImages",
-              data.useProductImages
-            )
-          }
-        />
-      
-        <ERPInput
-          id="productImagePath"
-          value={settings?.productsSettings?.productImagePath}
-          data={settings?.productsSettings}
-          label=" "
-          type="text"
-          placeholder={t("product_image_path")}
-          disabled={!settings?.productsSettings?.useProductImages}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "productImagePath",
-              data.productImagePath
-            )
-          }
-        />
+          <ERPCheckbox
+            id="useProductImages"
+            label={t("use_product_images")}
+            data={settings?.productsSettings}
+            checked={settings?.productsSettings?.useProductImages}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "productsSettings",
+                "useProductImages",
+                data.useProductImages
+              )
+            }
+          />
+
+          <ERPInput
+            id="productImagePath"
+            value={settings?.productsSettings?.productImagePath}
+            data={settings?.productsSettings}
+            label=" "
+            type="text"
+            placeholder={t("product_image_path")}
+            disabled={!settings?.productsSettings?.useProductImages}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "productsSettings",
+                "productImagePath",
+                data.productImagePath
+              )
+            }
+          />
         </>
       ),
     },

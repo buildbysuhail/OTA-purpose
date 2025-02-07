@@ -567,12 +567,7 @@ const PostDatedCheques = () => {
           </div>
 
           <div className="flex items-center justify-end space-x-4 p-1 w-full">
-            <div className="group relative inline-flex flex-col items-center" title={t("excel")}>
-              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handleExportToExcel}>
-                <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
-            </div>
-
+          
             <div className="group relative inline-flex flex-col items-center" title={t("close")}>
               <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />

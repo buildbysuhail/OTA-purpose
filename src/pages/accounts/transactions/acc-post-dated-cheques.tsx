@@ -613,7 +613,7 @@ const PostDatedCheques = () => {
                     />
                   </div>
                   {/* Date Range Section */}
-                  {userSession.countryId == Countries.India && 
+                  {/* {userSession.countryId == Countries.India &&  */}
                   <div className="flex items-center gap-4">
                     <ERPDateInput
                       id="chequeFromDate"
@@ -630,7 +630,7 @@ const PostDatedCheques = () => {
                       className="w-40"
                     />
                   </div>
-                  }
+                  {/* } */}
                 </div>
               </div>
               {/* Right Column */}
@@ -659,7 +659,10 @@ const PostDatedCheques = () => {
                       variant="secondary"
                     />
                   </div>
+
+ 
                   {/* Bank Account Section */}
+                  {userSession.countryId == Countries.India && 
                   <div className="flex items-center gap-4">
                     <ERPCheckbox
                       id="bankCheckbox"
@@ -683,6 +686,7 @@ const PostDatedCheques = () => {
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
                     />
                   </div>
+}
                 </div>
               </div>
             </div>

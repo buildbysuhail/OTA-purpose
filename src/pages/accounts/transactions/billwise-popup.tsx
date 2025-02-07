@@ -91,17 +91,17 @@ const BillwiseComponent = ({
   }, []);
   useEffect(() => {
 
-    debugger;
+    
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else {
-      debugger;
+      
       let obj = JSON.parse(JSON.stringify(formState.billwiseData));
       obj = obj.map((x: BillwiseData) => ({
         ...x,
         balanceAfter: x.balance // Correctly updating balanceAfter
       }));
-      debugger;
+      
       setStore(obj);
     }
   }, [formState.billwiseData, formState.showbillwise]);
@@ -163,7 +163,7 @@ const BillwiseComponent = ({
       };
       mergedKeys.forEach((item: any) => {
         updatedStore = store.map((storeItem: any) => {
-          debugger;
+          
           const it = item.key === storeItem.slNo
             ? {
               ...storeItem,
@@ -482,7 +482,7 @@ const BillwiseComponent = ({
     setStore(updatedBills);
     // const totalAdjusted = updatedBills.reduce((sum, bill) => sum + (bill.billwiseAmount || 0), 0);
     const amtAdjusted = getTotalAmountToSet(updatedBills);
-    debugger;
+    
     // Check if the adjusted amount exceeds the original amount
     if (round(amtAdjusted) > round(formState.row.amount ?? 0)) {
       ERPAlert.show({

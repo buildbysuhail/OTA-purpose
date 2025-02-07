@@ -69,7 +69,8 @@ export const useUnsavedChangesWarning = () => {
   
       const base64 = await modelToBase64(currentStateCompare);
       const isEqual = _formState.prev === base64;
-      console.log(`isEqual: ${isEqual}`);
+      console.log(`isEqual fgfgdf: ${isEqual}`);
+      debugger;
   
       return !isEqual;
     } catch (error) {
@@ -82,15 +83,21 @@ export const useUnsavedChangesWarning = () => {
   // Handle page refresh and close
   useEffect(() => {
     const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      const unsavedChanges = await hasUnsavedChanges();
-      if (unsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-        // setIsModalOpen(true);
-        setIsLeavingPage(true);
-        console.log('1');
-        return '';
-      }
+      // const unsavedChanges = await hasUnsavedChanges();
+      hasUnsavedChanges().then((unsavedChanges) => {
+        console.log("Unsaved changes 88: ", unsavedChanges);
+          debugger; // Should hit here if executed
+        if (unsavedChanges) {
+          e.preventDefault();
+          e.returnValue = '';
+          // setIsModalOpen(true);
+          setIsLeavingPage(true);
+          console.log('1');
+          debugger;
+          return '';
+        }
+     }).catch(error => console.error(error));
+      
     };
   
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -102,15 +109,21 @@ export const useUnsavedChangesWarning = () => {
   // Prevent navigation attempts
   useEffect(() => {
     const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
-      const unsavedChanges = await hasUnsavedChanges();
-      if (unsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-        // setIsModalOpen(true);
-        setIsLeavingPage(true);
-        console.log('1');
-        return '';
-      }
+      // const unsavedChanges = await hasUnsavedChanges();
+      hasUnsavedChanges().then((unsavedChanges) => {
+        console.log("Unsaved changes 114: ", unsavedChanges);
+        debugger; // Should hit here if executed
+        if (unsavedChanges) {
+          e.preventDefault();
+          e.returnValue = '';
+          // setIsModalOpen(true);
+          setIsLeavingPage(true);
+          console.log('1');
+          debugger;
+          return '';
+        }
+     }).catch(error => console.error(error));
+      
     };
   
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -120,27 +133,35 @@ export const useUnsavedChangesWarning = () => {
   }, [hasUnsavedChanges]);
   
   useEffect(() => {
+    debugger;
     const blockNavigation = async (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const isNavigationLink = target.tagName === 'A' ||
         target.closest('a') ||
         target.hasAttribute('href') ||
         target.role === 'link';
-  
+  debugger;
       if (isNavigationLink) {
-        const unsavedChanges = await hasUnsavedChanges();
-        if (unsavedChanges) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('3');
-          const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
-          if (href) {
-            console.log('4');
-            pendingLocation.current = href;
+        // const unsavedChanges = await hasUnsavedChanges();
+        hasUnsavedChanges().then((unsavedChanges) => {
+          console.log("Unsaved changes 147: ", unsavedChanges);
+          debugger; // Should hit here if executed
+          if (unsavedChanges) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('3');
+            debugger;
+            const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
+            if (href) {
+              console.log('4');
+              debugger;
+              pendingLocation.current = href;
+            }
+            setIsModalOpen(true);
+            setIsLeavingPage(false);
           }
-          setIsModalOpen(true);
-          setIsLeavingPage(false);
-        }
+       }).catch(error => console.error(error));
+        
       }
     };
   
@@ -152,22 +173,26 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     if (isInitialMount.current) {
       console.log('5');
+      debugger;
       isInitialMount.current = false;
       return;
     }
   
     const now = Date.now();
     if (now - lastNavigationTime.current < 100) {
-      return;
       console.log('6');
+      debugger;
+      return;
     }
     lastNavigationTime.current = now;
   
     if (location.pathname !== currentPath.current && !navigationAttempted.current) {
       console.log('7');
+      debugger;
       hasUnsavedChanges().then((unsavedChanges) => {
         if (unsavedChanges) {
           console.log('8');
+          debugger;
           pendingLocation.current = location.pathname;
           navigationAttempted.current = true;
           window.history.pushState(null, '', currentPath.current);
@@ -181,14 +206,21 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     const handlePopState = async (e: PopStateEvent) => {
       console.log('9');
-      const unsavedChanges = await hasUnsavedChanges();
-      if (unsavedChanges) {
-        e.preventDefault();
-        pendingLocation.current = window.location.pathname;
-        window.history.pushState(null, '', currentPath.current);
-        setIsModalOpen(true);
-        setIsLeavingPage(false);
-      }
+      debugger;
+      debugger;
+      // const unsavedChanges = await hasUnsavedChanges();
+      hasUnsavedChanges().then((unsavedChanges) => {
+        console.log("Unsaved changes: 213 ", unsavedChanges);
+        debugger; // Should hit here if executed
+        if (unsavedChanges) {
+          e.preventDefault();
+          pendingLocation.current = window.location.pathname;
+          window.history.pushState(null, '', currentPath.current);
+          setIsModalOpen(true);
+          setIsLeavingPage(false);
+        }
+     }).catch(error => console.error(error));
+      
     };
   
     window.addEventListener('popstate', handlePopState);
@@ -197,6 +229,7 @@ export const useUnsavedChangesWarning = () => {
 
   const handleStay = useCallback(() => {
     console.log('10');
+    debugger;
     setIsModalOpen(false);
     setIsLeavingPage(false);
     pendingLocation.current = null;
@@ -206,7 +239,9 @@ export const useUnsavedChangesWarning = () => {
 
   const handleLeave = useCallback(() => {
     console.log('11');
+    debugger;
     if (isLeavingPage) {
+      debugger;
       console.log('12');
       // If user is trying to refresh or close the page
       window.removeEventListener('beforeunload', () => { });
@@ -224,11 +259,13 @@ export const useUnsavedChangesWarning = () => {
 
     if (targetLocation) {
       console.log('13');
+      debugger;
       setTimeout(() => {
         navigate(targetLocation);
       }, 0);
     }
     console.log('14');
+    debugger;
     pendingLocation.current = null;
   }, [navigate, isLeavingPage, dispatch]);
 
@@ -236,6 +273,7 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     if (!isModalOpen) {
       console.log('15');
+      debugger;
       navigationAttempted.current = false;
     }
   }, [isModalOpen]);

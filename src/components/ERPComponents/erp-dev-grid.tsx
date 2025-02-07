@@ -307,7 +307,7 @@ const createStore = async (
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach((x: any) => {
-          debugger;
+          
           if (x[1] instanceof Date || x[0]?.includes('date') || x[0]?.includes('Date')) {
 
             const sds = moment(x[1]).utc().startOf('day');
@@ -622,7 +622,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
-      debugger;
+      
       const dss = { ..._filter };
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
@@ -669,7 +669,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           setStore(currentStore);
           return;
         }
-        debugger;
+        
         try {
           const newStore = await createStore(
             keyExpr,
@@ -937,7 +937,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           dataField: column.dataField,
           visible: column.visible,
         }));
-      debugger;
+      
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
           .filter((colPref) => colPref.showInPdf)
@@ -1298,7 +1298,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           if (dynamicProps?.isTransactionScreen) {
             const params = handleInvoke(event.data);
             if (params) {
-              debugger;
+              
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object

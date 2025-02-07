@@ -186,7 +186,7 @@ const PostDatedCheques = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-    debugger;
+    
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => item.date != null);
@@ -203,7 +203,7 @@ const PostDatedCheques = () => {
         VoucherType: newVoucherType
       }).toString();
       // Step 2: Filter modified items that are also in selectedRows
-      debugger;
+      
       const filteredItems = modifiedItems
         .filter((item: any) =>
           item.cleared == true || item.bounced == true
@@ -271,7 +271,7 @@ const PostDatedCheques = () => {
 
   const handleCheckboxChange = useCallback((row: any, field: "Cleared" | "Bounced", checked: boolean) => {
     const dfd = formState.bankDateType;
-    debugger;
+    
       setData((prevData) => {
         const updatedData = prevData.map((item: any) => {
           if (item.id === row.id) {

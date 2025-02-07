@@ -101,7 +101,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
         try {
             console.log("handlleUserSelect");
             
-            debugger;
+            
             const hygu = parseInt(userData.value)
             setExistingUser(hygu);
 

@@ -45,7 +45,7 @@ const RevertBillModifications: React.FC = () => {
       transactionType: data.data.tType,
     });
     handleResponse(res, () => {
-      debugger;
+      
       dispatch(
         toggleRevertBillModifications({ ...rootState.PopupData.revertBillModifications, reload: true })
       );

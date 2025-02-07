@@ -89,7 +89,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, [voucherType]);
 
   const onRowDblClick = useCallback(async (_event: any) => {
-    debugger;
+    
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,

@@ -242,7 +242,7 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = async (dataUrl: string) => {
-    debugger;
+    
     const tmpTemplate = {
       ...templateData.activeTemplate,
       propertiesState: {

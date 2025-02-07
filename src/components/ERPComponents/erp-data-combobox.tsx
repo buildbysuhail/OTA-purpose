@@ -654,7 +654,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         _options = includeOptions ? [...includeOptions, ..._options] : _options;
         setItems(_options);
         setFilteredItems(_options);
-debugger;
+
         // Automatically select the first option after data is loaded
        
       } catch (error) {
@@ -722,7 +722,7 @@ debugger;
         setInitial(final);
       }
       if (value == -2 && items != undefined && items != null && items.length > 0) {
-        debugger
+        
         handleItemClick(items[0]);
       }
       setActiveIndex(

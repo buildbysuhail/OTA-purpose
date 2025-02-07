@@ -85,7 +85,7 @@ const BankReconciliation = () => {
         }
         return transaction;
       });
-      debugger;
+      
       console.log("123");
 
       setData(updatedTransactions);
@@ -123,7 +123,7 @@ const BankReconciliation = () => {
         }
         return transaction;
       });
-      debugger;
+      
       console.log("123");
 
       setData(updatedTransactions);
@@ -137,7 +137,7 @@ const BankReconciliation = () => {
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
     try {
-      debugger;
+      
       const _data = await api.getAsync(
         Urls.bankReconciliation,
         `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
@@ -146,7 +146,7 @@ const BankReconciliation = () => {
         ...row,
         id: index + 1,
       }));
-      debugger;
+      
       console.log("1234");
       setData(rows);
       setPrevData(rows);
@@ -160,7 +160,7 @@ const BankReconciliation = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-    debugger;
+    
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => {
@@ -169,7 +169,7 @@ const BankReconciliation = () => {
         );
         return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
       });
-      debugger;
+      
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
@@ -246,7 +246,7 @@ const BankReconciliation = () => {
         text: t("change_the_transaction_to_pending"),
         title: t("changing_to_pending"),
         onConfirm: () => {
-          debugger;
+          
 
           setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
 
@@ -269,21 +269,21 @@ const BankReconciliation = () => {
                   return item;
                 });
 
-                debugger;
+                
                 console.log("123wewe"); // Debugging log
 
                 // Update the state to trigger a re-render of the grid
                 setData(updatedData); // Pass the array directly, not as an object
-                debugger;
+                
 
-                // debugger;setKey((prev: number) => {
+                // setKey((prev: number) => {
                 //   return prev+1
                 // });
               });
 
             // cellInfo.component.repaint();
             // handleResponse(res, () => {
-            //   debugger;
+            //   
             //   // Find and update the correct item in `data` array
 
             // });

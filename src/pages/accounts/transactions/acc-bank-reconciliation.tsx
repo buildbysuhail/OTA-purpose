@@ -393,14 +393,14 @@ const BankReconciliation = () => {
     {
       dataField: "debit",
       caption: t("debit"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
       cellRender: (cellInfo: any) => (
         <span
-          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+          className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"
             }`}
         >
           {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.debit) : getFormattedValue(cellInfo.data.debit, false,4)}
@@ -411,14 +411,14 @@ const BankReconciliation = () => {
     {
       dataField: "credit",
       caption: t("credit"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
       cellRender: (cellInfo: any) => (
         <span
-          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+          className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"
             }`}
         >
           {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.credit) : getFormattedValue(cellInfo.data.credit, false,4)}
@@ -623,6 +623,7 @@ const BankReconciliation = () => {
             showTotalCount={false}
               key={key}
               ref={dataGridRef}
+              gridHeader=" "
               columns={columns}
               gridId="grid_bank_reconciliation"
               hideGridAddButton={true}

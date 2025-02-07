@@ -388,11 +388,11 @@ const ProfitAndLossDetailedReport = () => {
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
-            color: { argb: "3b82f6" },
+            color: { argb: "FF8B4513" },
           };
           worksheet.getCell(`B${currentRow}`).font = {
             bold: true,
-            color: { argb: "3b82f6" },
+            color: { argb: "FF8B4513" },
           };
           worksheet.getCell(`A${currentRow}`).alignment = {
             horizontal: "left",
@@ -402,12 +402,26 @@ const ProfitAndLossDetailedReport = () => {
             horizontal: "right",
             // indent: 2,
           };
-        } else {
+        } 
+        else if(expense[i].title === "L") {
+          worksheet.getCell(`A${currentRow}`).alignment = {
+            horizontal: "left",
+              indent: 2,
+          };
+          worksheet.getCell(`B${currentRow}`).alignment = {
+            horizontal: "right",
+            indent: 4,
+          };
+        }
+        else
+        {
           worksheet.getCell(`A${currentRow}`).font = {
-            color: { argb: "000000" },
+            color: { argb: "3b82f6" },
+            bold: true,
           };
           worksheet.getCell(`B${currentRow}`).font = {
-            color: { argb: "000000" },
+            color: { argb: "3b82f6" },
+            bold: true,
           };
           worksheet.getCell(`A${currentRow}`).alignment = {
             horizontal: "left",
@@ -446,12 +460,12 @@ const ProfitAndLossDetailedReport = () => {
         if (income[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
             bold: true,
-            color: { argb: "3b82f6" },
+            color: { argb: "FF8B4513" },
           };
 
           worksheet.getCell(`D${currentRow}`).font = {
             bold: true,
-            color: { argb: "3b82f6" },
+            color: { argb: "FF8B4513" },
           };
           worksheet.getCell(`C${currentRow}`).alignment = {
             horizontal: "left",
@@ -461,12 +475,26 @@ const ProfitAndLossDetailedReport = () => {
             horizontal: "right",
             // indent: 2,
           };
-        } else {
+        }
+        else if(income[i].title === "L") {
+          worksheet.getCell(`C${currentRow}`).alignment = {
+            horizontal: "left",
+              indent: 2,
+          };
+          worksheet.getCell(`D${currentRow}`).alignment = {
+            horizontal: "right",
+            indent: 4,
+          };
+        }
+        
+        else {
           worksheet.getCell(`C${currentRow}`).font = {
-            color: { argb: "000000" },
+            color: { argb: "3b82f6" },
+            bold: true,
           };
           worksheet.getCell(`D${currentRow}`).font = {
-            color: { argb: "000000" },
+            color: { argb: "3b82f6" },
+            bold: true,
           };
           worksheet.getCell(`C${currentRow}`).alignment = {
             horizontal: "left",

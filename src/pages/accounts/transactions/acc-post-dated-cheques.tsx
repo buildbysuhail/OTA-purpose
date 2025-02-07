@@ -41,7 +41,7 @@ interface LoadingState {
 const api = new APIClient();
 const PostDatedCheques = () => {
   const [total, setTotal] = useState<number>();
-  const { getFormattedValue } = useNumberFormat()
+       const { getFormattedValue } = useNumberFormat()
   const [data, setData] = useState<any[]>([])
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
@@ -164,17 +164,10 @@ const PostDatedCheques = () => {
         Urls.pdc, params
       );
       const rows = response.map((row: any, index: number) => ({
+        ...row,
         id: index,
         cleared: false,
         bounced: false,
-        ledgerName: row.ledgerName,
-        chequeNumber: row.chequeNumber,
-        chequeDate: row.chequeDate,
-        chequeBounceDate: row.chequeBounceDate,
-        amount: row.amount,
-        accTransMasterID: row.accTransMasterID,
-        accTransactionDetailsID: row.accTransactionDetailsID,
-        bankCharge: row.bankCharge,
         ...(userSession.countryId == Countries.India && {
           ledgerID: row.ledgerID,
           relatedLedgerID: row.relatedLedgerID
@@ -210,9 +203,10 @@ const PostDatedCheques = () => {
         VoucherType: newVoucherType
       }).toString();
       // Step 2: Filter modified items that are also in selectedRows
+      debugger;
       const filteredItems = modifiedItems
         .filter((item: any) =>
-          selectedKeys.includes(item.accTransactionDetailID)
+          item.cleared == true || item.bounced == true
         ) // ✅ Fixed ID casing
         .map((it: any) => ({
           ...it,
@@ -232,12 +226,12 @@ const PostDatedCheques = () => {
       }
 
       // Step 3: Call API with only filtered modified items
-      const res = await api.postAsync(Urls.bankReconciliation,
+      const res = await api.postAsync(Urls.pdc, 
         {
-          PDCOutputDto: filteredItems,
+          PDCOutputDto:filteredItems,
           IsPayment: formState.paymentType === 'payment',
           IsBankCharge: formState.bankChangeType == "change",
-          BankLedgerID: formState.isBank ? formState.selectedBankId : 0
+          BankLedgerID: formState.isBank ? formState.selectedBankId:0
         });
 
       handleResponse(res, () => {
@@ -432,6 +426,18 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowFiltering: true,
           minWidth: 200,
+
+        },
+        {
+          dataField: "bankCharge",
+          caption: t("bank_charge"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowEditing: true,
+          allowFiltering: true,
+          width: 150,
+
         },
         {
           dataField: "relatedLedger",
@@ -439,7 +445,7 @@ const PostDatedCheques = () => {
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
-          allowFiltering: true,
+          allowFiltering: true,  
           minWidth: 200,
         },
         {
@@ -512,7 +518,7 @@ const PostDatedCheques = () => {
           allowFiltering: true,
           width: 150,
         },
-
+       
         {
           dataField: "accTransactionMasterID",
           caption: t("acc_transaction_master_id"),
@@ -522,7 +528,7 @@ const PostDatedCheques = () => {
           allowFiltering: true,
           minWidth: 200,
         },
-
+       
         {
           dataField: "accTransactionDetailID",
           caption: t("acc_transaction_detail_id"),
@@ -562,12 +568,7 @@ const PostDatedCheques = () => {
           </div>
 
           <div className="flex items-center justify-end space-x-4 p-1 w-full">
-            <div className="group relative inline-flex flex-col items-center" title={t("excel")}>
-              <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={handleExportToExcel}>
-                <FileSpreadsheet className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-              </button>
-            </div>
-
+          
             <div className="group relative inline-flex flex-col items-center" title={t("close")}>
               <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -605,28 +606,27 @@ const PostDatedCheques = () => {
                       onClick={handleShow}
                       variant="primary"
                       className="ml-auto"
-                      loading={loading.show}
                     />
                   </div>
                   {/* Date Range Section */}
-                  {userSession.countryId == Countries.India &&
-                    <div className="flex items-center gap-4">
-                      <ERPDateInput
-                        id="chequeFromDate"
-                        label={t("cheque_from_date")}
-                        onChange={(e) => handleDateChange("chequeFromDate", e.target.value)}
-                        value={new Date(formState.chequeFromDate)}
-                        className="w-40"
-                      />
-                      <ERPDateInput
-                        id="chequeToDate"
-                        label={t("to_date")}
-                        onChange={(e) => handleDateChange("chequeToDate", e.target.value)}
-                        value={new Date(formState.chequeToDate)}
-                        className="w-40"
-                      />
-                    </div>
-                  }
+                  {/* {userSession.countryId == Countries.India &&  */}
+                  <div className="flex items-center gap-4">
+                    <ERPDateInput
+                      id="chequeFromDate"
+                      label={t("cheque_from_date")}
+                      onChange={(e) => handleDateChange("chequeFromDate", e.target.value)}
+                      value={new Date(formState.chequeFromDate)}
+                      className="w-40"
+                    />
+                    <ERPDateInput
+                      id="chequeToDate"
+                      label={t("to_date")}
+                      onChange={(e) => handleDateChange("chequeToDate", e.target.value)}
+                      value={new Date(formState.chequeToDate)}
+                      className="w-40"
+                    />
+                  </div>
+                  {/* } */}
                 </div>
               </div>
               {/* Right Column */}
@@ -653,12 +653,22 @@ const PostDatedCheques = () => {
                       onClick={handleSetAllDate}
                       type="reset"
                       variant="secondary"
-                      loading={loading.setAllDate}
                     />
                   </div>
+
+ 
                   {/* Bank Account Section */}
+                  {userSession.countryId == Countries.India && 
                   <div className="flex items-center gap-4">
+                    <ERPCheckbox
+                      id="bankCheckbox"
+                      name="bankCheckbox"
+                      checked={formState.isBank}
+                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
+                      label={t("bank")}
+                    />
                     <ERPDataCombobox
+                    disabled={!formState.isBank}
                       id="BankAC"
                       label={t("bank_a/c")}
                       field={{
@@ -671,14 +681,8 @@ const PostDatedCheques = () => {
                       value={formState.selectedBankId}
                       onChange={(e) => handleBankSelection(e?.value ?? null)}
                     />
-                    <ERPCheckbox
-                      id="bankCheckbox"
-                      name="bankCheckbox"
-                      checked={formState.isBank}
-                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
-                      label={t("bank")}
-                    />
                   </div>
+}
                 </div>
               </div>
             </div>
@@ -686,19 +690,22 @@ const PostDatedCheques = () => {
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+
+            showTotalCount={false}
               key={`${__key}_grd`}
               data={data}
               columns={columns}
               gridId="grid_post-dated_cheques"
+              gridHeader=" "
               hideGridAddButton={true}
-              hideDefaultExportButton={true}
+              hideDefaultExportButton={false}
               heightToAdjustOnWindows={420}
               reload={formState.reload}
               pageSize={40}
               remoteOperations={false}
               editMode="cell"
-              allowEditing={{ allow: true, config: { edit: true } }}
-
+              allowEditing={{allow: true, config:{edit: true}}}
+              
             />
 
           </div>
@@ -712,29 +719,29 @@ const PostDatedCheques = () => {
           >
             <div className="w-full mx-auto flex justify-between items-center">
               {/* Left section - Radio buttons */}
-              {userSession.countryId == Countries.India &&
-                <div className="flex items-center space-x-2 ml-[14.5rem]">
-                  <ERPRadio
-                    id="bankChange"
-                    name="bankChangeType"
-                    checked={formState.bankChangeType === "change"}
-                    onChange={() => handleBankChangeTypeChange("change")}
-                    label={t("bank_change")}
-                  />
-                  <ERPRadio
-                    id="bankCommission"
-                    name="bankChangeType"
-                    checked={formState.bankChangeType === "commission"}
-                    onChange={() => handleBankChangeTypeChange("commission")}
-                    label={t("bank_commission")}
-                  />
-                </div>
-              }
+              {/* {userSession.countryId == Countries.India && */}
+              <div className="flex items-center space-x-2 ml-[14.5rem]">
+              {/* <ERPRadio
+                id="bankChange"
+                name="bankChangeType"
+                checked={formState.bankChangeType === "change"}
+                onChange={() => handleBankChangeTypeChange("change")}
+                label={t("bank_change")}
+              />
+              <ERPRadio
+                id="bankCommission"
+                name="bankChangeType"
+                checked={formState.bankChangeType === "commission"}
+                onChange={() => handleBankChangeTypeChange("commission")}
+                label={t("bank_commission")}
+              /> */}
+            </div>
+{/* } */}
               {/* Center section - Total input */}
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">
                   {" "}
-                  <span className="!font-medium !text-gray-600">{t("total")}: {getFormattedValue(total ?? 0)}</span>
+                  <span className="!font-medium !text-gray-600">{t("total")}: {getFormattedValue(total??0)}</span>
                 </h6>
               </div>
 

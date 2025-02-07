@@ -178,7 +178,7 @@ const IncomExpenseStatement = () => {
         }
         else {
           return( <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
-            {`${cellElement.data?.debit == null||cellElement.data?.debit==0 ? '' : getFormattedValue(cellElement.data.debit)}`}
+            {`${cellElement.data?.debit == null||cellElement.data?.debit==0 ? '' : getFormattedValue(parseFloat(cellElement.data.debit) )}`}
               </span>)
         }}
     },
@@ -216,8 +216,8 @@ const IncomExpenseStatement = () => {
         }
         else {
           return ( <span  className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}>
-            {`${cellElement.data?.credit == null ||cellElement.data?.credit == 0? '' :cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*cellElement.data.credit):
-              getFormattedValue(cellElement.data.credit)}`}
+            {`${cellElement.data?.credit == null ||cellElement.data?.credit == 0? '' :cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*parseFloat(cellElement.data.credit) ):
+              getFormattedValue(parseFloat(cellElement.data.credit) )}`}
             </span>)
         }}
     },
@@ -256,10 +256,10 @@ const IncomExpenseStatement = () => {
           return ( <span
             className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}
             >
-              {`${cellElement.data?.balance == null
+              {`${cellElement.data?.balance == null 
                 ? ''
                 : cellElement.data.balance < 0
-                  ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(cellElement.data.balance) + ' Cr':getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+                  ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(parseFloat(cellElement.data.balance) ) + ' Cr':getFormattedValue(-1 * parseFloat(cellElement.data.balance) ) + ' Cr'
                   : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
             </span>)
               }}

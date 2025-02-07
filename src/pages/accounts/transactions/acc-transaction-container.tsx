@@ -88,12 +88,13 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     }
   }, [voucherType]);
 
-  const onRowDblClick = useCallback(async (event: any) => {
+  const onRowDblClick = useCallback(async (_event: any) => {
+    debugger;
     setData((prev: any) => ({
       ...prev,
-      formType: event.data.formType,
-      voucherNo: event.data.lastVNo,
-      voucherPrefix: event.data.lastPrefix,
+      formType: _event.data.formType,
+      voucherNo: _event.data.lastVNo,
+      voucherPrefix: _event.data.lastPrefix,
     }));
     await initializeVoucher(); // Call initializeVoucher here
     setOpenVoucherSelector(false);

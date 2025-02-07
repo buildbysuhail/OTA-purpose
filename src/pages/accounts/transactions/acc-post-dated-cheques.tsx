@@ -694,6 +694,7 @@ const PostDatedCheques = () => {
 
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+
             showTotalCount={false}
               key={`${__key}_grd`}
               data={data}
@@ -701,7 +702,7 @@ const PostDatedCheques = () => {
               gridId="grid_post-dated_cheques"
               gridHeader=" "
               hideGridAddButton={true}
-              hideDefaultExportButton={true}
+              hideDefaultExportButton={false}
               heightToAdjustOnWindows={420}
               reload={formState.reload}
               pageSize={40}
@@ -722,7 +723,7 @@ const PostDatedCheques = () => {
           >
             <div className="w-full mx-auto flex justify-between items-center">
               {/* Left section - Radio buttons */}
-              {userSession.countryId == Countries.India &&
+              {/* {userSession.countryId == Countries.India &&
               <div className="flex items-center space-x-2 ml-[14.5rem]">
               <ERPRadio
                 id="bankChange"
@@ -739,7 +740,7 @@ const PostDatedCheques = () => {
                 label={t("bank_commission")}
               />
             </div>
-}
+} */}
               {/* Center section - Total input */}
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">

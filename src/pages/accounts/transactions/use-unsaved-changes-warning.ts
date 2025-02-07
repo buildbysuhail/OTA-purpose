@@ -19,37 +19,71 @@ export const useUnsavedChangesWarning = () => {
   const _formState = useAppSelector(x => x.AccTransaction);
   const dispatch = useDispatch();
 
-  const hasUnsavedChanges = useCallback(() => {
+  // const hasUnsavedChanges = useCallback(() => {
+  //   try {
+  //     if (!_formState || !_formState.prev) return false;
+  //     const currentStateCompare = {
+  //       transaction: _formState.transaction,
+  //       row: _formState.row
+  //     };
+  //     if (!_formState) return false;
+
+  //     const _prevState: {
+  //       transaction: AccTransactionData;
+  //       row: AccTransactionRow
+  //     } = customJsonParse(atob(_formState.prev));
+
+  //     if (!_prevState || Object.keys(_prevState).length !== 2) return false;
+
+  //     const base64 = modelToBase64(currentStateCompare);
+  //     const isEqual = _formState.prev === base64;
+  //     console.log(`isEqual: ${isEqual}`);
+
+  //     return !isEqual;
+  //   } catch (error) {
+  //     console.error('Error checking for unsaved changes:', error);
+  //     return false;
+  //   }
+  // }, [_formState]);
+
+  const hasUnsavedChanges = useCallback(async () => {
     try {
       if (!_formState || !_formState.prev) return false;
+      
       const currentStateCompare = {
         transaction: _formState.transaction,
         row: _formState.row
       };
+  
       if (!_formState) return false;
-
-      const _prevState: {
-        transaction: AccTransactionData;
-        row: AccTransactionRow
-      } = customJsonParse(atob(_formState.prev));
-
+  
+      const _prevState = await new Promise((resolve, reject) => {
+        try {
+          resolve(customJsonParse(atob(_formState.prev)));
+        } catch (error) {
+          reject(error);
+        }
+      });
+  
       if (!_prevState || Object.keys(_prevState).length !== 2) return false;
-
-      const base64 = modelToBase64(currentStateCompare);
+  
+      const base64 = await modelToBase64(currentStateCompare);
       const isEqual = _formState.prev === base64;
       console.log(`isEqual: ${isEqual}`);
-
+  
       return !isEqual;
     } catch (error) {
       console.error('Error checking for unsaved changes:', error);
       return false;
     }
   }, [_formState]);
+  
 
   // Handle page refresh and close
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges()) {
+    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+      const unsavedChanges = await hasUnsavedChanges();
+      if (unsavedChanges) {
         e.preventDefault();
         e.returnValue = '';
         // setIsModalOpen(true);
@@ -58,7 +92,7 @@ export const useUnsavedChangesWarning = () => {
         return '';
       }
     };
-
+  
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -67,27 +101,49 @@ export const useUnsavedChangesWarning = () => {
 
   // Prevent navigation attempts
   useEffect(() => {
-    const blockNavigation = (e: MouseEvent) => {
+    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+      const unsavedChanges = await hasUnsavedChanges();
+      if (unsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+        // setIsModalOpen(true);
+        setIsLeavingPage(true);
+        console.log('1');
+        return '';
+      }
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+  
+  useEffect(() => {
+    const blockNavigation = async (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const isNavigationLink = target.tagName === 'A' ||
         target.closest('a') ||
         target.hasAttribute('href') ||
         target.role === 'link';
-
-      if (isNavigationLink && hasUnsavedChanges()) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('3');
-        const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
-        if (href) {
-          console.log('4');
-          pendingLocation.current = href;
+  
+      if (isNavigationLink) {
+        const unsavedChanges = await hasUnsavedChanges();
+        if (unsavedChanges) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('3');
+          const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
+          if (href) {
+            console.log('4');
+            pendingLocation.current = href;
+          }
+          setIsModalOpen(true);
+          setIsLeavingPage(false);
         }
-        setIsModalOpen(true);
-        setIsLeavingPage(false);
       }
     };
-
+  
     document.addEventListener('click', blockNavigation, true);
     return () => document.removeEventListener('click', blockNavigation, true);
   }, [hasUnsavedChanges]);
@@ -99,32 +155,34 @@ export const useUnsavedChangesWarning = () => {
       isInitialMount.current = false;
       return;
     }
-
+  
     const now = Date.now();
     if (now - lastNavigationTime.current < 100) {
       return;
       console.log('6');
     }
     lastNavigationTime.current = now;
-
+  
     if (location.pathname !== currentPath.current && !navigationAttempted.current) {
       console.log('7');
-      if (hasUnsavedChanges()) {
-        console.log('8');
-        pendingLocation.current = location.pathname;
-        navigationAttempted.current = true;
-        window.history.pushState(null, '', currentPath.current);
-        setIsLeavingPage(false);
-        return;
-      }
+      hasUnsavedChanges().then((unsavedChanges) => {
+        if (unsavedChanges) {
+          console.log('8');
+          pendingLocation.current = location.pathname;
+          navigationAttempted.current = true;
+          window.history.pushState(null, '', currentPath.current);
+          setIsLeavingPage(false);
+        }
+      });
     }
   }, [location, hasUnsavedChanges]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
-    const handlePopState = (e: PopStateEvent) => {
+    const handlePopState = async (e: PopStateEvent) => {
       console.log('9');
-      if (hasUnsavedChanges()) {
+      const unsavedChanges = await hasUnsavedChanges();
+      if (unsavedChanges) {
         e.preventDefault();
         pendingLocation.current = window.location.pathname;
         window.history.pushState(null, '', currentPath.current);
@@ -132,7 +190,7 @@ export const useUnsavedChangesWarning = () => {
         setIsLeavingPage(false);
       }
     };
-
+  
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [hasUnsavedChanges]);

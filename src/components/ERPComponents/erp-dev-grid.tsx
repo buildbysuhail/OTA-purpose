@@ -118,6 +118,7 @@ interface ERPDevGridProps {
   showBorders?: boolean;
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
+  ShowGridPreferenceChooserInRow?: boolean;
   showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
@@ -432,6 +433,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
+      ShowGridPreferenceChooserInRow = false,
       showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
@@ -1449,7 +1451,32 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       )
     }, [summaryItems, columns,])
 
-
+    const renderCustomHeader = useCallback(
+      (data: any) => {
+        return (
+          <div className="relative w-full h-full"
+          // style={{ position: "relative", height: "100%", width: "100%" }}
+          >
+          <span>{data.column.caption}</span>
+          {ShowGridPreferenceChooserInRow && (
+            <div  className={`absolute rtl:-right-3 ltr:-left-3 -top-5`}
+            // style={{ position: "absolute", left: 0, top: 0, zIndex: 1 }}
+            >
+              <GridPreferenceChooser
+                columns={columns}
+                gridId={gridId}
+                onApplyPreferences={onApplyPreferences}
+                ShowGridPreferenceChooserInRow={ShowGridPreferenceChooserInRow}
+              />
+            </div>
+          )}
+        </div>
+        );
+      },
+      [ShowGridPreferenceChooserInRow, columns, gridId, onApplyPreferences]
+    );
+    const firstVisibleColumnIndex = gridCols.findIndex(col => col.visible)
+    
     return (
       <Fragment>
         <div className={`custom-data-grid ${className}`}>
@@ -1606,7 +1633,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   />
                 </Item>
               )}
-              {ShowGridPreferenceChooser && (
+              {ShowGridPreferenceChooser && !ShowGridPreferenceChooserInRow &&(
                 <Item>
                   <GridPreferenceChooser
                     columns={columns}
@@ -1655,7 +1682,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
 
             </Toolbar>
-            {gridCols?.map((column) => (
+            {gridCols?.map((column,index) => (
               <Column
                 customizeText={column.customizeText}
                 editorOptions={column.editorOptions}
@@ -1668,6 +1695,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     ? column.captionDynamic(filter)
                     : column.caption
                 }
+                headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
                 groupIndex={column.groupIndex}
                 format={column.format}
                 dataType={column.dataType}

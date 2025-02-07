@@ -12,6 +12,7 @@ interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
+  ShowGridPreferenceChooserInRow?:boolean
 }
 const api = new APIClient();
 
@@ -19,6 +20,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   gridId,
   columns,
   onApplyPreferences,
+  ShowGridPreferenceChooserInRow
 }) => {
 
   const dragItem = useRef(null);
@@ -156,8 +158,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
-      <button onClick={() => setIsOpen(true)} className='ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] '>
-        <i className="ri-apps-line"></i>
+      <button onClick={() => setIsOpen(true)} className={`ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] `}>
+        <i className={`${ShowGridPreferenceChooserInRow ? "text-[8px]":""} ri-apps-line`}></i>
       </button>
       <ERPModal
         isForm

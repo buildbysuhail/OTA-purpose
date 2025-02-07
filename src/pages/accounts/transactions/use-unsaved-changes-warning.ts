@@ -208,18 +208,20 @@ export const useUnsavedChangesWarning = () => {
       console.log('9');
       debugger;
       debugger;
-      // const unsavedChanges = await hasUnsavedChanges();
-      hasUnsavedChanges().then((unsavedChanges) => {
+      const unsavedChanges = await hasUnsavedChanges();
+      // hasUnsavedChanges().then((unsavedChanges) => {
         console.log("Unsaved changes: 213 ", unsavedChanges);
         debugger; // Should hit here if executed
         if (unsavedChanges) {
           e.preventDefault();
+        console.log("window.location.pathname ", window.location.pathname);
+        console.log("currentPath.current ", currentPath.current);
           pendingLocation.current = window.location.pathname;
           window.history.pushState(null, '', currentPath.current);
           setIsModalOpen(true);
           setIsLeavingPage(false);
         }
-     }).catch(error => console.error(error));
+    //  }).catch(error => console.error(error));
       
     };
   
@@ -283,6 +285,7 @@ export const useUnsavedChangesWarning = () => {
     handleStay,
     handleLeave,
     hasUnsavedChanges,
-    isLeavingPage
+    isLeavingPage,
+    setIsModalOpen
   };
 };

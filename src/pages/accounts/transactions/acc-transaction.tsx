@@ -57,7 +57,7 @@ import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable
 import TemplatesView from "./acc-templates";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
-import { useUserRights } from "../../../helpers/user-right-helper";
+import { useUserRights } from "../../../helpers/user-right-helper";import { Link } from "react-router-dom";
 import {
   Ellipsis,
   EllipsisVertical,
@@ -3406,13 +3406,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </h6>
         </div>
         <div className="flex items-center gap-2">
-          <ERPButton
+          {/* <ERPButton
             ref={btnSaveRef}
             title={t("close")}
             onClick={goToPreviousPage}
             className="w-24"
           // disabled={formState.formElements.pnlMasters?.disabled}
-          />
+          /> */}
+
+<Link to="/" className="w-24">
+  <ERPButton ref={btnSaveRef} title={t("close")} />
+</Link>
+
           <ERPButton
             ref={btnSaveRef}
             title={t("save")}

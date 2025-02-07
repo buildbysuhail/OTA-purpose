@@ -75,6 +75,8 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                   : cellElement.data.isGroup
                     ? { argb: 'FF2E8B57' } // Sea Green
                     : '', size: 10,
+                    style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true? "bold" : "normal",
+                    bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true?true : false,
             }
           } : undefined;
         }
@@ -125,6 +127,8 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                   : cellElement.data.isGroup
                     ? { argb: 'FF2E8B57' } // Sea Green
                     : '', size: 10,
+                    style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true? "bold" : "normal",
+                    bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true?true : false,
             }
           } : undefined;
         }
@@ -174,6 +178,8 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                   : cellElement.data.isGroup
                     ? { argb: 'FF2E8B57' } // Sea Green
                     : '', size: 10,
+                    style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true? "bold" : "normal",
+                    bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true?true : false,
             }
           } : undefined;
         }
@@ -224,6 +230,8 @@ const CashFlowBankFlowSummaryDetailedInReport: FC<CashFlowBankFlowSummaryDetaile
                   : cellElement.data.isGroup
                     ? { argb: 'FF2E8B57' } // Sea Green
                     : '', size: 10,
+                    style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true? "bold" : "normal",
+                    bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroup==true?true : false,
             }
           } : undefined;
         }

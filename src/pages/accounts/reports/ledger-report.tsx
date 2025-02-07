@@ -180,6 +180,7 @@ const LedgerReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF':'',
             font: {
               ...exportCell.font,
@@ -220,6 +221,7 @@ const LedgerReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF':'',
             font: {
               ...exportCell.font,
@@ -265,6 +267,7 @@ const LedgerReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: filter?.showSeparateColorForDebitBalance == true && cellElement?.data?.balance >= 0 ? '#129151' :cellElement.data.particulars === "Total Pending Cheque Amt" ?'#0000FF': '#FF0000',
             font: {
               ...exportCell.font,
@@ -325,7 +328,7 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <button className="flex items-center bg-gray-100 p-0 rounded-md"></button>
                 <ErpDevGrid
-                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                  remoteOperations={false}
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"

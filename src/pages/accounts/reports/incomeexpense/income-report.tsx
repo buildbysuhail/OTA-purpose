@@ -59,7 +59,9 @@ const IncomeReport = () => {
             font: {
               ...exportCell.font,
               color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 15,
+              size: 10,
+              style: cellElement.data.accGroupName === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.accGroupName === "TOTAL" ? true : false,
             }
           } : undefined;
         }
@@ -101,11 +103,14 @@ const IncomeReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.accGroupName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
               color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 15,
+              size: 10,
+              style: cellElement.data.accGroupName === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.accGroupName === "TOTAL" ? true : false,
             },
           };
         }
@@ -139,11 +144,14 @@ const IncomeReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.accGroupName === "TOTAL" ? '#DC143C' : '',
             font: {
               ...exportCell.font,
               color: cellElement.data.accGroupName === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 15,
+              size: 10,
+              style: cellElement.data.accGroupName === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.accGroupName === "TOTAL" ? true : false,
             },
           };
         }
@@ -177,12 +185,14 @@ const IncomeReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor:  '#FF0000',
             font: {
               ...exportCell.font,
               color: { argb: 'FFFF0000' },
-              size: 15,
-              Bold: true
+              size: 10,
+              style: "bold",
+              bold:  true,
             },
           };
         }

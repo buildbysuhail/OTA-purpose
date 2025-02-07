@@ -20,7 +20,7 @@ const DayBookDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
       format: 'MMMM dd, yyyy',
       showInPdf:true,
     },
@@ -141,6 +141,7 @@ const DayBookDetailed = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -184,6 +185,7 @@ const DayBookDetailed = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -228,6 +230,7 @@ const DayBookDetailed = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor:  '#FF0000' ,
             font: {
               ...exportCell.font,

@@ -723,9 +723,9 @@ const PostDatedCheques = () => {
           >
             <div className="w-full mx-auto flex justify-between items-center">
               {/* Left section - Radio buttons */}
-              {/* {userSession.countryId == Countries.India &&
+              {/* {userSession.countryId == Countries.India && */}
               <div className="flex items-center space-x-2 ml-[14.5rem]">
-              <ERPRadio
+              {/* <ERPRadio
                 id="bankChange"
                 name="bankChangeType"
                 checked={formState.bankChangeType === "change"}
@@ -738,9 +738,9 @@ const PostDatedCheques = () => {
                 checked={formState.bankChangeType === "commission"}
                 onChange={() => handleBankChangeTypeChange("commission")}
                 label={t("bank_commission")}
-              />
+              /> */}
             </div>
-} */}
+{/* } */}
               {/* Center section - Total input */}
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">

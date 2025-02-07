@@ -203,9 +203,10 @@ const PostDatedCheques = () => {
         VoucherType: newVoucherType
       }).toString();
       // Step 2: Filter modified items that are also in selectedRows
+      debugger;
       const filteredItems = modifiedItems
         .filter((item: any) =>
-          selectedKeys.includes(item.accTransactionDetailID)
+          item.cleared == true || item.bounced == true
         ) // ✅ Fixed ID casing
         .map((it: any) => ({
           ...it,
@@ -225,7 +226,7 @@ const PostDatedCheques = () => {
       }
 
       // Step 3: Call API with only filtered modified items
-      const res = await api.postAsync(Urls.bankReconciliation, 
+      const res = await api.postAsync(Urls.pdc, 
         {
           PDCOutputDto:filteredItems,
           IsPayment: formState.paymentType === 'payment',

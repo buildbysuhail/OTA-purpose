@@ -13,6 +13,7 @@ export const useUnsavedChangesWarning = () => {
   const [isLeavingPage, setIsLeavingPage] = useState(false);
   const pendingLocation = useRef<string | null>(null);
   const currentPath = useRef(location.pathname);
+  const previousPath = useRef<string>(document.referrer || "/")
   const isInitialMount = useRef(true);
   const navigationAttempted = useRef(false);
   const lastNavigationTime = useRef(Date.now());
@@ -216,8 +217,8 @@ export const useUnsavedChangesWarning = () => {
           e.preventDefault();
         console.log("window.location.pathname ", window.location.pathname);
         console.log("currentPath.current ", currentPath.current);
-          pendingLocation.current = window.location.pathname;
-          window.history.pushState(null, '', currentPath.current);
+          pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+          window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
           setIsModalOpen(true);
           setIsLeavingPage(false);
         }

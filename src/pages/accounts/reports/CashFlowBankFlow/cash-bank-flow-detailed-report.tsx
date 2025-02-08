@@ -98,7 +98,9 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             font: {
               ...exportCell.font,
               color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
-              size: 15,
+              size: 10,
+              style: cellElement.data?.particulars==="TOTAL"? "bold" : "normal",
+              bold: cellElement.data?.particulars==="TOTAL"?true : false,
             }
           } : undefined;
         }
@@ -136,11 +138,14 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             text:cellInfo.value,
             bold: true,
             alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
             textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
             font: {
               ...exportCell.font,
               color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
-              size: 15,
+              size: 10,
+              style: cellElement.data?.particulars==="TOTAL"? "bold" : "normal",
+              bold: cellElement.data?.particulars==="TOTAL"?true : false,
             }
           } : undefined;
         }
@@ -178,11 +183,14 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             text:cellInfo.value,
             bold: true,
             alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
             textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
             font: {
               ...exportCell.font,
               color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
-              size: 15,
+              size: 10,
+              style: cellElement.data?.particulars==="TOTAL"? "bold" : "normal",
+              bold: cellElement.data?.particulars==="TOTAL"?true : false,
             }
           } : undefined;
         }
@@ -218,11 +226,14 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             text:cellInfo.value,
             bold: true,
             alignment: "right",
+            alignmentExcel:{ horizontal: 'right' },
             textColor: cellElement.data?.particulars==="TOTAL"?'#DC143C': '',
             font: {
               ...exportCell.font,
               color:cellElement.data?.particulars==="TOTAL"?{ argb: 'FFFF0000' }: '',
-              size: 15,
+              size: 10,
+              style: cellElement.data?.particulars==="TOTAL"? "bold" : "normal",
+              bold: cellElement.data?.particulars==="TOTAL"?true : false,
             }
           } : undefined;
         }

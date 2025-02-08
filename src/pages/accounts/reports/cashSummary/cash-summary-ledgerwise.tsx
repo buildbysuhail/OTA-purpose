@@ -53,7 +53,9 @@ const CashSummaryLedgerwise = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? true : false,
             }
           } : undefined;
         }
@@ -87,11 +89,14 @@ const CashSummaryLedgerwise = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? true : false,
             },
           };
         }
@@ -125,11 +130,14 @@ const CashSummaryLedgerwise = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
-              size: 15,
+              size: 10,
+              style: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? true : false,
             },
           };
         }
@@ -163,12 +171,14 @@ const CashSummaryLedgerwise = () => {
                  text: value,
                  bold: true,
                  alignment: "right",
+                 alignmentExcel: { horizontal: 'right' },
                  textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.particulars==="Opening Balance"? '#FF0000' : '',
                  font: {
                    ...exportCell.font,
                    color:cellElement.data.particulars === "TOTAL" ||cellElement.data.particulars==="Opening Balance"? { argb: 'FFFF0000' }:"",
-                   size: 15,
-                   Bold:true
+                   size: 10,
+                   style: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? "bold" : "normal",
+                   bold: cellElement.data.particulars === "TOTAL"|| cellElement.data.particulars==="Opening Balance"? true : false,
                  },
                };
              }

@@ -78,6 +78,8 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
               : cellElement.data.isGroupCashIN 
               ? { argb: 'FF2E8B57' } // Sea Green
               : '',     size: 10,
+              style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true? "bold" : "normal",
+              bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true?true : false,
             }
           } : undefined;
         }
@@ -126,6 +128,8 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
               : cellElement.data.isGroupCashIN 
               ? { argb: 'FF2E8B57' } // Sea Green
               : '',     size: 10,
+              style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true? "bold" : "normal",
+              bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true?true : false,
             }
           } : undefined;
         }
@@ -173,6 +177,8 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
               : cellElement.data.isGroupCashOut 
               ? { argb: 'FF2E8B57' } // Sea Green
               : '',     size: 10,
+              style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true? "bold" : "normal",
+              bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true?true : false,
             }
           } : undefined;
         }
@@ -222,6 +228,8 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
               : cellElement.data.isGroupCashOut 
               ? { argb: 'FF2E8B57' } // Sea Green
               : '',     size: 10,
+              style: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true? "bold" : "normal",
+              bold: cellElement.data?.ledgerNameIN == "TOTAL" ||cellElement.data.ledgerNameIN == "NET FLOW"||cellElement.data.isGroupCashIN==true?true : false,
             }
           } : undefined;
         }

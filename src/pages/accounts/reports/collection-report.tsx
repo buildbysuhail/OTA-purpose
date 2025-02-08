@@ -90,6 +90,9 @@ const CollectionReport = () => {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
               size: 10,
+              style:
+              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
@@ -139,11 +142,15 @@ const CollectionReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup===true? '#FF0000' :'',
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? { argb: 'FFFF0000' }:"",
               size: 10,
+              style:
+              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }

@@ -26,7 +26,7 @@ const CashSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -47,20 +47,22 @@ const CashSummary = () => {
             text: cellInfo.value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' : '',
+            textColor: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' }:"",
-              size: 15,
+              color: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' } : "",
+              size: 12,
+              style: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? "bold" : "normal",
+              bold: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? true : false,
             }
           } : undefined;
         }
         else {
-          return (  <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
+          return (<span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
             {cellElement.data.party}
           </span>)
         }
-          },
+      },
     },
     {
       dataField: "billed",
@@ -68,7 +70,7 @@ const CashSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.billed;
@@ -77,30 +79,33 @@ const CashSummary = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * parseFloat(balance)) 
-              : getFormattedValue(parseFloat(balance) ) ;
+                ? getFormattedValue(-1 * parseFloat(balance))
+                : getFormattedValue(parseFloat(balance));
 
           return {
             ...exportCell,
             text: value,
             bold: true,
             alignment: "right",
-            textColor: cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' :'',
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.party === "OPENING BALANCE" ||cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? { argb: 'FFFF0000' } : "",
               ...exportCell.font,
               // AlignRight:true,
-              size: 15,
+              size: 12,
+              style: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? "bold" : "normal",
+              bold: cellElement.data.party === "OPENING BALANCE" || cellElement.data.party === "CLOSING BALANCE" ? true : false,
             },
           };
         }
         else {
-          return(  <span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
-            {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.billed)) : getFormattedValue( parseFloat(cellElement.data.billed))}`}
+          return (<span className={`${cellElement.data.party === "OPENING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : cellElement.data.party === "CLOSING BALANCE" ? 'font-bold text-[#DC143C] text-lg' : ''}`}>
+            {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1 * parseFloat(cellElement.data.billed)) : getFormattedValue(parseFloat(cellElement.data.billed))}`}
           </span>)
-      
-          }}
+
+        }
+      }
     },
   ];
   return (

@@ -44,7 +44,7 @@ const BillwiseProfitGlobal = () => {
             ...exportCell,
             text: cellInfo.value,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            // alignmentExcel:{ horizontal: 'right' },
             textColor: '#0000FF',
             font: {
               ...exportCell.font,
@@ -84,7 +84,7 @@ const BillwiseProfitGlobal = () => {
             text: cellInfo.value,
             bold: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ?true:false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            // alignmentExcel:{ horizontal: 'right' },
             textColor: cellElement.data.productName === "Grand Total" || cellElement.data.productName === "Disc+AddAmt" ? '#FF0000' : '',
             font: {
               ...exportCell.font,

@@ -162,6 +162,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor:
               cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
             font: {
@@ -231,6 +232,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor:
               cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
             font: {
@@ -297,6 +299,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? "#FF0000" : "",
             font: {
               ...exportCell.font,

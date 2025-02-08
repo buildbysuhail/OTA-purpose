@@ -101,6 +101,7 @@ const CashBookSummary = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -143,6 +144,7 @@ const CashBookSummary = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
@@ -175,14 +177,13 @@ const CashBookSummary = () => {
           const value =
             balance == null
               ? ""
-              : balance < 0
-                ? getFormattedValue(-1 * balance)
-                : getFormattedValue(balance);
+              : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -195,7 +196,7 @@ const CashBookSummary = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+            {`${cellElement.data?.balance == null ? '' : getFormattedValue(cellElement.data.balance)}`}
           </span>)
         }
       },

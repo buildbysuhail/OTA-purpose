@@ -279,5 +279,8 @@
   "cleared": "مصفى",
   "bounced": "مرتجع",
   "bounce_date": "تاريخ الارتداد",
-  "acc_trans_master_id": "معرّف العملية الرئيسية"
+  "acc_trans_master_id": "معرّف العملية الرئيسية",
+  
+  "excel": "إكسل",
+  "status": "الحالة"
 }

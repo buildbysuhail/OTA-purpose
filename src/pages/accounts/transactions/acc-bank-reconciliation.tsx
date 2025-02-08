@@ -8,7 +8,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
-import { Printer, X } from "lucide-react";
+import { X } from "lucide-react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
@@ -31,7 +31,7 @@ const api = new APIClient();
 const BankReconciliation = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-     const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
 
   const [data, setData] = useState<any>();
   const [key, setKey] = useState<number>(100000);
@@ -80,23 +80,18 @@ const BankReconciliation = () => {
             bankDate: transaction.bankDate == null ?
               dateChangeState === "today"
                 ? moment().format("DD/MM/YYYY")
-                : transaction.chequeDate: transaction.bankDate,
+                : transaction.chequeDate : transaction.bankDate,
           };
         }
         return transaction;
       });
-      
       console.log("123");
-
       setData(updatedTransactions);
-
-
       setSelectedKeys(selectedKeys);
     } else {
       setSelectedKeys([]);
     }
   };
-
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
@@ -109,7 +104,6 @@ const BankReconciliation = () => {
         });
         return;
       }
-
       // Update the data
       const updatedTransactions = data.map((transaction: any) => {
         if (selectedKeys.includes(transaction.id)) {
@@ -123,9 +117,7 @@ const BankReconciliation = () => {
         }
         return transaction;
       });
-      
       console.log("123");
-
       setData(updatedTransactions);
     } catch (error) {
       console.log(error);
@@ -137,7 +129,6 @@ const BankReconciliation = () => {
   const handleShow = async () => {
     setLoading((prev) => ({ ...prev, show: true }));
     try {
-      
       const _data = await api.getAsync(
         Urls.bankReconciliation,
         `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
@@ -146,7 +137,6 @@ const BankReconciliation = () => {
         ...row,
         id: index + 1,
       }));
-      
       console.log("1234");
       setData(rows);
       setPrevData(rows);
@@ -160,7 +150,7 @@ const BankReconciliation = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-    
+
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => {
@@ -169,7 +159,7 @@ const BankReconciliation = () => {
         );
         return prevItem && prevItem.bankDate !== item.bankDate; // ✅ Only return changed items
       });
-      
+
       // Step 2: Filter modified items that are also in selectedRows
       const filteredItems = modifiedItems
         .filter((item: any) =>
@@ -193,9 +183,8 @@ const BankReconciliation = () => {
       }
 
       // Step 3: Call API with only filtered modified items 
-      
-      const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
 
+      const res = await api.postAsync(Urls.bankReconciliation, filteredItems);
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
@@ -219,6 +208,7 @@ const BankReconciliation = () => {
       setLoading((prev) => ({ ...prev, print: false }));
     }
   };
+
   const handleSetPending = async (cellInfo: any, __data: any) => {
     setLoading((prev) => ({ ...prev, print: true }));
     const _data = cellInfo.data;
@@ -246,10 +236,7 @@ const BankReconciliation = () => {
         text: t("change_the_transaction_to_pending"),
         title: t("changing_to_pending"),
         onConfirm: () => {
-          
-
           setLoading((prev) => ({ ...prev, print: true })); // Set loading inside onConfirm
-
           try {
             const res = api
               .putAsync(Urls.bankReconciliation, {
@@ -268,24 +255,17 @@ const BankReconciliation = () => {
                   }
                   return item;
                 });
-
-                
                 console.log("123wewe"); // Debugging log
-
                 // Update the state to trigger a re-render of the grid
                 setData(updatedData); // Pass the array directly, not as an object
-                
-
                 // setKey((prev: number) => {
                 //   return prev+1
                 // });
               });
-
             // cellInfo.component.repaint();
             // handleResponse(res, () => {
             //   
             //   // Find and update the correct item in `data` array
-
             // });
           } catch (error) {
             console.error("Error updating transaction:", error);
@@ -307,10 +287,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       visible: false
     },
-
     {
       dataField: "id",
       caption: t("slNo"),
@@ -321,14 +300,9 @@ const BankReconciliation = () => {
       width: 30,
       visible: true,
       cellRender: (cellInfo: any) => (
-        <span
-        >
-          {cellInfo.data.isSummary == true ?'':cellInfo.data.id}
-        </span>
+        <span>{cellInfo.data.isSummary == true ? '' : cellInfo.data.id}</span>
       ),
     },
-    
-
     {
       dataField: "transactionDate",
       caption: t("date"),
@@ -336,10 +310,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
-      format: "dd/MMM/yyyy", // Correct format for DevExtreme
+      width: 100,
+      format: "dd/MMM/yyyy",
     },
-
     {
       dataField: "voucherNumber",
       caption: t("v_no"),
@@ -347,9 +320,8 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "voucherType",
       caption: t("v_type"),
@@ -357,9 +329,8 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "particulars",
       caption: t("particulars"),
@@ -367,17 +338,13 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       cellRender: (cellInfo: any) => (
-        <span
-          className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
-            }`}
-        >
+        <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""}`}>
           {cellInfo.data.particulars}
         </span>
       ),
     },
-
     {
       dataField: "bankDate",
       caption: t("bank_date"),
@@ -385,11 +352,10 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       allowEditing: true,
       format: "dd/MM/yyyy",
     },
-
     {
       dataField: "debit",
       caption: t("debit"),
@@ -397,17 +363,13 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       cellRender: (cellInfo: any) => (
-        <span
-          className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"
-            }`}
-        >
-          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.debit) : getFormattedValue(cellInfo.data.debit, false,4)}
+        <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"}`}>
+          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.debit) : getFormattedValue(cellInfo.data.debit, false, 4)}
         </span>
       ),
     },
-
     {
       dataField: "credit",
       caption: t("credit"),
@@ -415,17 +377,13 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       cellRender: (cellInfo: any) => (
-        <span
-          className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"
-            }`}
-        >
-          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.credit) : getFormattedValue(cellInfo.data.credit, false,4)}
+        <span className={`${cellInfo.data.isSummary == true ? "text-red font-bold text-right" : "text-right"}`}>
+          {cellInfo.data.isSummary == true ? getFormattedValue(cellInfo.data.credit) : getFormattedValue(cellInfo.data.credit, false, 4)}
         </span>
       ),
     },
-
     {
       dataField: "narration",
       caption: t("narration"),
@@ -433,9 +391,8 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "voucherPrefix",
       caption: t("v_prefix"),
@@ -443,9 +400,8 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "referenceNumber",
       caption: t("ref_num"),
@@ -453,9 +409,8 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "referenceDate",
       caption: t("refer_date"),
@@ -463,10 +418,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       format: "dd/MMM/yyyy",
     },
-
     {
       dataField: "chequeNumber",
       caption: t("cheque_number"),
@@ -474,19 +428,17 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "checkStatus",
-      caption: t("check_status"),
+      caption: t("status"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
-
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
@@ -494,10 +446,9 @@ const BankReconciliation = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
       format: "dd/MMM/yyyy",
     },
-
     {
       dataField: "",
       caption: t("change_to_pending"),
@@ -505,16 +456,14 @@ const BankReconciliation = () => {
       allowSorting: false,
       allowSearch: false,
       allowFiltering: false,
-      minWidth: 100,
+      width: 100,
       cellRender: (cellInfo: any) => (
         !cellInfo.data.isSummary ?
-          (<a
-            onClick={() => handleSetPending(cellInfo, data)}
-            title={t("set_pending")}
-            className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200"
-          >
-            {t("set_pending")}
-          </a>) : null
+          (
+            <a onClick={() => handleSetPending(cellInfo, data)} title={t("set_pending")} className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200">
+              {t("set_pending")}
+            </a>
+          ) : null
       ),
     },
   ];
@@ -620,7 +569,7 @@ const BankReconciliation = () => {
             </div>
 
             <ErpDevGrid
-            showTotalCount={false}
+              showTotalCount={false}
               key={key}
               ref={dataGridRef}
               gridHeader=" "

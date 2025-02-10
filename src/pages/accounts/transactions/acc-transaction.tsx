@@ -57,7 +57,7 @@ import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable
 import TemplatesView from "./acc-templates";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
-import { useUserRights } from "../../../helpers/user-right-helper";
+import { useUserRights } from "../../../helpers/user-right-helper";import { Link } from "react-router-dom";
 import {
   Ellipsis,
   EllipsisVertical,
@@ -169,7 +169,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
-    debugger;
+    
     if (selectedIndexes.length > 0) {
       handleRowClick({
         row: formState?.transaction?.details[selectedIndexes[0]],
@@ -270,28 +270,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [financialYearID]);
   useEffect(() => {
+    debugger;
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
           transactionType: transactionType,
           formCode: formCode,
-          title:
-            formType == undefined || formType.trim() == ""
-              ? title
-              : title + "[" + formType + "]",
+         
         },
       })
     );
   }, [
-    dispatch,
-    formType,
-    title,
-    formCode,
-    voucherType,
-    voucherPrefix,
-    formType,
-    drCr,
-    transactionType
+    voucherType
   ]);
 
   useEffect(() => {
@@ -480,7 +470,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-      debugger;
+      
       console.log('masterAccountID = -2;');
 
       let masterAccountID = -2;
@@ -493,7 +483,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           voucherPrefix ?? "",
           false
         );
-        debugger;
+        
         employeeID = userSession.employeeId ?? 0;
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
@@ -502,11 +492,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ? userSession?.counterwiseCashLedgerId
               : applicationSettings.accountsSettings?.defaultCashAcc;
         }
-        debugger;
+        
         if (voucherType == "JV" || voucherType == "MJV") {
           masterAccountID = 0;
         }
-        debugger;
+        
         if (userSession.dbIdValue === "543140180640") {
           if (voucherType === "CP" || voucherType === "CR") {
             let userCashLedgerID = 0;
@@ -521,7 +511,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
         }
       }
-      debugger;
+      
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -544,6 +534,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           formElements: {
             ...initialFormElements,
           },
+          transactionType: transactionType??"",
           formCode: formCode ?? "",
           title:
             (formType == undefined || formType.trim() == ""
@@ -563,7 +554,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-        debugger;
+        
         _formState = await loadAccTransVoucher(
           false,
           voucherNo,
@@ -578,7 +569,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       //   `${Urls.ledgerDataForTransaction}?LedgerId=${_formState.row.ledgerID}&DrCr=${_formState.transaction.master.drCr}`
       // );
       // _formState.row.ledgerCode = ledgerData.ledgerCode;
-      debugger;
+      
       let fieldsToUpdate = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
@@ -921,10 +912,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       _formState.formElements = fieldsToUpdate;
-      debugger;
+      
       setAccTransVoucher(_formState, true);
       focusLedgerCode();
-      debugger;
+      
     };
 
     initializeFormElements();
@@ -1440,7 +1431,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
-                    {t(formState.title)}
+                    {t(formState.title)}asas
+                    {formState.transactionType}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>
@@ -2437,7 +2429,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     label={t(formState.formElements.costCentreID.label)}
                     data={formState.row}
                     onSelectItem={(e) => {
-                      debugger;
+                      
                       dispatch(
                         accFormStateRowHandleFieldChange({
                           fields: {
@@ -2636,7 +2628,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
-              onClickByRootState={(e: any, state: RootState) => { debugger; onSelectionChanged(e, state, true) }}
+              onClickByRootState={(e: any, state: RootState) => {  onSelectionChanged(e, state, true) }}
               showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
@@ -3406,13 +3398,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </h6>
         </div>
         <div className="flex items-center gap-2">
-          <ERPButton
+          {/* <ERPButton
             ref={btnSaveRef}
             title={t("close")}
             onClick={goToPreviousPage}
             className="w-24"
           // disabled={formState.formElements.pnlMasters?.disabled}
-          />
+          /> */}
+
+<Link to="/" className="w-24">
+  <ERPButton ref={btnSaveRef} title={t("close")} />
+</Link>
+
           <ERPButton
             ref={btnSaveRef}
             title={t("save")}

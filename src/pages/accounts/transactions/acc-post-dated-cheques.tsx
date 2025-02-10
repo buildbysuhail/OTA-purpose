@@ -7,7 +7,7 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTranslation } from "react-i18next";
-import { FileSpreadsheet, X } from "lucide-react";
+import { X } from "lucide-react";
 import Urls from "../../../redux/urls";
 import { APIClient } from "../../../helpers/api-client";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
@@ -41,7 +41,7 @@ interface LoadingState {
 const api = new APIClient();
 const PostDatedCheques = () => {
   const [total, setTotal] = useState<number>();
-       const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   const [data, setData] = useState<any[]>([])
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
@@ -68,9 +68,7 @@ const PostDatedCheques = () => {
   });
   const [__key, set__key] = useState<number>(10);
   const { t } = useTranslation("transaction");
-
   const btnSaveRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
     setFormState((prev: any) => {
       return {
@@ -103,7 +101,7 @@ const PostDatedCheques = () => {
   };
 
   const handleBankDateTypeChange = (type: "today" | "cheque") => {
-    set__key((pre: number) => pre+10);
+    set__key((pre: number) => pre + 10);
     setFormState((prev) => ({ ...prev, bankDateType: type }));
   };
 
@@ -186,7 +184,7 @@ const PostDatedCheques = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-    debugger;
+
     try {
       // Step 1: Find modified rows (where bankDate has changed)
       const modifiedItems = data.filter((item: any) => item.date != null);
@@ -203,7 +201,7 @@ const PostDatedCheques = () => {
         VoucherType: newVoucherType
       }).toString();
       // Step 2: Filter modified items that are also in selectedRows
-      debugger;
+
       const filteredItems = modifiedItems
         .filter((item: any) =>
           item.cleared == true || item.bounced == true
@@ -226,12 +224,12 @@ const PostDatedCheques = () => {
       }
 
       // Step 3: Call API with only filtered modified items
-      const res = await api.postAsync(Urls.pdc, 
+      const res = await api.postAsync(Urls.pdc,
         {
-          PDCOutputDto:filteredItems,
+          PDCOutputDto: filteredItems,
           IsPayment: formState.paymentType === 'payment',
           IsBankCharge: formState.bankChangeType == "change",
-          BankLedgerID: formState.isBank ? formState.selectedBankId:0
+          BankLedgerID: formState.isBank ? formState.selectedBankId : 0
         });
 
       handleResponse(res, () => {
@@ -271,32 +269,32 @@ const PostDatedCheques = () => {
 
   const handleCheckboxChange = useCallback((row: any, field: "Cleared" | "Bounced", checked: boolean) => {
     const dfd = formState.bankDateType;
-    debugger;
-      setData((prevData) => {
-        const updatedData = prevData.map((item: any) => {
-          if (item.id === row.id) {
-            const updatedRow = { ...item, [field.toLowerCase()]: checked };
-            console.log("Current bankDateType:", formState.bankDateType);
-            if (field === "Cleared" && checked) {
-              updatedRow.bounced = false;
-              updatedRow.cleared = true;
-              updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
-            } else if (field === "Bounced" && checked) {
-              updatedRow.cleared = false;
-              updatedRow.bounced = true;
-              updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
-            } else {
-              if (!updatedRow.cleared && !updatedRow.bounced) {
-                updatedRow.date = null;
-              }
+
+    setData((prevData) => {
+      const updatedData = prevData.map((item: any) => {
+        if (item.id === row.id) {
+          const updatedRow = { ...item, [field.toLowerCase()]: checked };
+          console.log("Current bankDateType:", formState.bankDateType);
+          if (field === "Cleared" && checked) {
+            updatedRow.bounced = false;
+            updatedRow.cleared = true;
+            updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
+          } else if (field === "Bounced" && checked) {
+            updatedRow.cleared = false;
+            updatedRow.bounced = true;
+            updatedRow.date = formState.bankDateType === "today" ? new Date() : new Date(item.chequeDate);
+          } else {
+            if (!updatedRow.cleared && !updatedRow.bounced) {
+              updatedRow.date = null;
             }
-            return updatedRow;
           }
-          return item;
-        });
-        return updatedData;
+          return updatedRow;
+        }
+        return item;
       });
-    }, [formState.bankDateType]);
+      return updatedData;
+    });
+  }, [formState.bankDateType]);
 
   const ValidateCheques = (data: any[]): Promise<boolean> => {
     return new Promise(async (resolve) => {
@@ -326,7 +324,6 @@ const PostDatedCheques = () => {
           });
         }
       }
-
       // All cheques are valid
       resolve(true);
     });
@@ -366,8 +363,6 @@ const PostDatedCheques = () => {
           },
         });
       }
-
-      // All validations passed
       resolve(true);
     });
   };
@@ -382,7 +377,6 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowFiltering: true,
           width: 100,
-          // allowEditing: true,
           cellRender: (cellInfo: any) => (
             <input
               type="checkbox"
@@ -399,7 +393,6 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowFiltering: true,
           width: 100,
-          // allowEditing: true,
           cellRender: (cellInfo: any) => (
             <input
               type="checkbox"
@@ -416,7 +409,7 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowEditing: true,
           allowFiltering: true,
-          minWidth: 200,
+          width: 100,
         },
         {
           dataField: "ledgerName",
@@ -425,8 +418,16 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          minWidth: 200,
-
+          width: 100,
+        },
+        {
+          dataField: "relatedLedger",
+          caption: t("related_ledger"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,
         },
         {
           dataField: "bankCharge",
@@ -436,17 +437,7 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowEditing: true,
           allowFiltering: true,
-          width: 150,
-
-        },
-        {
-          dataField: "relatedLedger",
-          caption: t("relatedLedger"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,  
-          minWidth: 200,
+          width: 100,
         },
         {
           dataField: "chequeNumber",
@@ -455,7 +446,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
         },
         {
           dataField: "chequeBounceDate",
@@ -464,7 +455,16 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
+        },
+        {
+          dataField: "accTransactionMasterID",
+          caption: t("acc_transaction_master_id"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,
         },
         {
           dataField: "amount",
@@ -473,13 +473,19 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
           cellRender: (cellInfo: any) => (
-            <span
-            >
-              {getFormattedValue(cellInfo.data.amount)}
-            </span>
+            <span>{getFormattedValue(cellInfo.data.amount)}</span>
           ),
+        },
+        {
+          dataField: "accTransactionDetailID",
+          caption: t("acc_transaction_detail_id"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 100,
         },
         {
           dataField: "bankCharge",
@@ -489,7 +495,7 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowEditing: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
         },
         {
           dataField: "chequeDate",
@@ -498,7 +504,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
         },
         {
           dataField: "ledgerID",
@@ -507,7 +513,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
+          width: 100,
         },
         {
           dataField: "relatedLedgerID",
@@ -516,28 +522,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 150,
-        },
-       
-        {
-          dataField: "accTransactionMasterID",
-          caption: t("acc_transaction_master_id"),
-          dataType: "string",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          minWidth: 200,
-        },
-       
-        {
-          dataField: "accTransactionDetailID",
-          caption: t("acc_transaction_detail_id"),
-          dataType: "number",
-          allowSorting: true,
-          allowSearch: true,
-          allowFiltering: true,
-          minWidth: 200,
-
+          width: 100,
         },
       ];
       // Filter columns based on the `visible` property
@@ -553,7 +538,7 @@ const PostDatedCheques = () => {
           return column.dataField !== "bankCharge";
         }
       });
-    }, [t, userSession.countryId,formState.bankDateType]);
+    }, [t, userSession.countryId, formState.bankDateType]);
 
 
   return (
@@ -568,7 +553,7 @@ const PostDatedCheques = () => {
           </div>
 
           <div className="flex items-center justify-end space-x-4 p-1 w-full">
-          
+
             <div className="group relative inline-flex flex-col items-center" title={t("close")}>
               <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={goToPreviousPage}>
                 <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -604,6 +589,7 @@ const PostDatedCheques = () => {
                     <ERPButton
                       title={t("show")}
                       onClick={handleShow}
+                      loading={loading.show}
                       variant="primary"
                       className="ml-auto"
                     />
@@ -656,33 +642,33 @@ const PostDatedCheques = () => {
                     />
                   </div>
 
- 
+
                   {/* Bank Account Section */}
-                  {userSession.countryId == Countries.India && 
-                  <div className="flex items-center gap-4">
-                    <ERPCheckbox
-                      id="bankCheckbox"
-                      name="bankCheckbox"
-                      checked={formState.isBank}
-                      onChange={(e) => handleBankCheckboxChange(e.target.checked)}
-                      label={t("bank")}
-                    />
-                    <ERPDataCombobox
-                    disabled={!formState.isBank}
-                      id="BankAC"
-                      label={t("bank_a/c")}
-                      field={{
-                        id: "BankAC",
-                        required: true,
-                        getListUrl: Urls.data_BankAccounts,
-                        valueKey: "id",
-                        labelKey: "name",
-                      }}
-                      value={formState.selectedBankId}
-                      onChange={(e) => handleBankSelection(e?.value ?? null)}
-                    />
-                  </div>
-}
+                  {userSession.countryId == Countries.India &&
+                    <div className="flex items-center gap-4">
+                      <ERPCheckbox
+                        id="bankCheckbox"
+                        name="bankCheckbox"
+                        checked={formState.isBank}
+                        onChange={(e) => handleBankCheckboxChange(e.target.checked)}
+                        label={t("bank")}
+                      />
+                      <ERPDataCombobox
+                        disabled={!formState.isBank}
+                        id="BankAC"
+                        label={t("bank_a/c")}
+                        field={{
+                          id: "BankAC",
+                          required: true,
+                          getListUrl: Urls.data_BankAccounts,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        value={formState.selectedBankId}
+                        onChange={(e) => handleBankSelection(e?.value ?? null)}
+                      />
+                    </div>
+                  }
                 </div>
               </div>
             </div>
@@ -691,7 +677,7 @@ const PostDatedCheques = () => {
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
 
-            showTotalCount={false}
+              showTotalCount={false}
               key={`${__key}_grd`}
               data={data}
               columns={columns}
@@ -704,8 +690,8 @@ const PostDatedCheques = () => {
               pageSize={40}
               remoteOperations={false}
               editMode="cell"
-              allowEditing={{allow: true, config:{edit: true}}}
-              
+              allowEditing={{ allow: true, config: { edit: true } }}
+
             />
 
           </div>
@@ -721,7 +707,7 @@ const PostDatedCheques = () => {
               {/* Left section - Radio buttons */}
               {/* {userSession.countryId == Countries.India && */}
               <div className="flex items-center space-x-2 ml-[14.5rem]">
-              {/* <ERPRadio
+                {/* <ERPRadio
                 id="bankChange"
                 name="bankChangeType"
                 checked={formState.bankChangeType === "change"}
@@ -735,13 +721,13 @@ const PostDatedCheques = () => {
                 onChange={() => handleBankChangeTypeChange("commission")}
                 label={t("bank_commission")}
               /> */}
-            </div>
-{/* } */}
+              </div>
+              {/* } */}
               {/* Center section - Total input */}
               <div className="hidden md:block mr-2">
                 <h6 className="font-semibold whitespace-nowrap text-[20px] ">
                   {" "}
-                  <span className="!font-medium !text-gray-600">{t("total")}: {getFormattedValue(total??0)}</span>
+                  <span className="!font-medium !text-gray-600">{t("total")}: {getFormattedValue(total ?? 0)}</span>
                 </h6>
               </div>
 

@@ -78,7 +78,9 @@ const CashFlowReport = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data?.month==="TOTAL"?{ argb: 'FFFF0000' }: '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.month === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.month === "TOTAL" ?true : false,
             }
           } : undefined;
         }
@@ -114,11 +116,14 @@ const CashFlowReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
               color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
-              size: 15,
+              size: 10,
+              style: cellElement.data.month === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.month === "TOTAL" ?true : false,
             },
           };
         }
@@ -152,11 +157,14 @@ const CashFlowReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
             font: {
               color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style: cellElement.data.month === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.month === "TOTAL" ?true : false,
             },
           };
         }
@@ -188,11 +196,14 @@ const CashFlowReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.month === "TOTAL" ? '#FF0000' : '',
             font: {
               color:cellElement.data.month === "TOTAL" ? { argb: 'FFFF0000' }:'',
               ...exportCell.font,
-              size: 15,
+              size: 10,
+              style: cellElement.data.month === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.month === "TOTAL" ?true : false,
             },
           };
         }

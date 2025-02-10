@@ -60,6 +60,7 @@ import AutoClicker from "./Nodevwatermark";
 import { setSoftwareDate } from "./redux/slices/client-session/reducer";
 import moment from "moment";
 import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
+import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -104,7 +105,7 @@ function App() {
 
   
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  useUnsavedChangesWarning();
+  const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -268,6 +269,14 @@ function App() {
           cancelButtonText="Cancel"
           onConfirm={() => dispatch(onCloseWithUnsavedChange({warn: false, succeeded: true, canceled: false}))}
           // onCancel={() =>dispatch(onCloseWithUnsavedChange({warn: false, succeeded: false, canceled: true}))}
+        />
+      )}
+      {isModalOpen && (
+        <UnsavedChangesModal
+          isOpen={isModalOpen}
+          onClose={handleStay}
+          onStay={handleStay}
+          onLeave={handleLeave}
         />
       )}
     </Fragment>

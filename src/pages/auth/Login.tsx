@@ -76,7 +76,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError("");
-      debugger;
+      
       if (login.isOk == true) {
         let ass = localStorage.getItem("as");
     let appSettings: ApplicationSettingsType;

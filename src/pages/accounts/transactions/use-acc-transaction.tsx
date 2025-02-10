@@ -145,7 +145,7 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCombo = () => {
-    debugger;
+    
     if (ledgerIdRef.current) {
       ledgerIdRef.current.select();
       ledgerIdRef.current.focus();
@@ -361,7 +361,7 @@ export const useAccTransaction = (
         },
       };
     }
-    debugger;
+    
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
@@ -383,7 +383,7 @@ export const useAccTransaction = (
     };
     voucher.row = { ...AccTransactionRowInitialData };
     // Handle master data
-    debugger;
+    
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster = {
@@ -432,7 +432,7 @@ export const useAccTransaction = (
             break;
   
           case "JV":
-            debugger;
+            
            
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
@@ -444,7 +444,7 @@ export const useAccTransaction = (
         }
       }
 
-      debugger;
+      
       let BillwiseaccTransactionDetailID = 0;
       voucher.transaction.details = voucher.transaction.details.map(
         (detail, index) => {
@@ -872,10 +872,10 @@ export const useAccTransaction = (
         },
       })
     );
-    debugger;
+    
     const valid = validate()
     if (valid == true) {
-      debugger;
+      
 
       const params: AccTransactionData = {
         master: attachMaster(),
@@ -1098,7 +1098,7 @@ export const useAccTransaction = (
             })
           );
         } else {
-          debugger;
+          
           if (
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
@@ -1293,7 +1293,7 @@ export const useAccTransaction = (
       // Check PDC validation first
       if (row?.accTransactionDetailID) {
         const isPDCValid = await validatePDC(row?.accTransactionDetailID);
-        debugger;
+        
         if (isPDCValid) {
           ERPAlert.show({
             title: t("warning"),

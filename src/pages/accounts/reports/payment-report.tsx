@@ -87,6 +87,9 @@ const PaymentReport = () => {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
               size: 10,
+              style:
+              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
@@ -136,11 +139,15 @@ const PaymentReport = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' :'',
             font: {
               ...exportCell.font,
               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
               size: 10,
+              style:
+              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }

@@ -54,7 +54,7 @@ export const Header = ({ data, template, currentBranch, docIDKey, currency }: { 
 
   const orgNameFontColor = headerState?.OrganizationFontColor || "#000";
   const orgNameFontSize = headerState?.OrganizationFontSize || 12;
-  debugger;
+  
   const fontStyles = {
     color,
     fontSize,

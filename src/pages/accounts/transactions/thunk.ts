@@ -32,7 +32,7 @@ export const deleteAccVoucher = createAsyncThunk<ResponseModel<string>, deleteAc
   'deleteAccVoucher',
   async (input, { rejectWithValue }) => {
     try {
-      debugger;
+      
       const response = await api.delete(
         `${Urls.acc_transaction_base}${input.transactionType}/${input.accTransactionMasterID}`
       );

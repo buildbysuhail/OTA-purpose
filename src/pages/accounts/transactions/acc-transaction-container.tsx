@@ -37,12 +37,20 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     voucherNo: number;
   }>({ voucherPrefix: "", formType: formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
+  const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
-
-  const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
-  const goBack = () => {
-    navigate(-1); // Goes back to the previous page
+  const goBack = async () => {
+    debugger;
+    const has = await hasUnsavedChanges();
+    if (has) {
+      setIsModalOpen(true);
+    } else {
+      navigate(-1);
+    }
   };
+  // const goBack = () => {
+  //   navigate(-1); // Goes back to the previous page
+  // };
   const initializeVoucher = async () => {
     try {
       setReadyToShowVoucher(true);
@@ -89,7 +97,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   }, [voucherType]);
 
   const onRowDblClick = useCallback(async (_event: any) => {
-    debugger;
+    
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,
@@ -137,14 +145,6 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
             transactionType={transactionType}
           />
         )
-      )}
-      {isModalOpen && (
-        <UnsavedChangesModal
-          isOpen={isModalOpen}
-          onClose={handleStay}
-          onStay={handleStay}
-          onLeave={handleLeave}
-        />
       )}
     </>
   );

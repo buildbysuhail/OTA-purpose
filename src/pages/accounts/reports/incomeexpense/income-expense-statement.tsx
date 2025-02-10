@@ -50,7 +50,9 @@ const IncomExpenseStatement = () => {
             font: {
               ...exportCell.font,
               color: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ? "bold" : "normal",
+              bold: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ? true : false,
             }
           } : undefined;
         }
@@ -116,7 +118,9 @@ const IncomExpenseStatement = () => {
             font: {
               ...exportCell.font,
               color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? "bold" : "normal",
+              bold: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? true : false,
             }
           } : undefined;
         }
@@ -168,11 +172,14 @@ const IncomExpenseStatement = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
             font: {
               ...exportCell.font,
               color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? "bold" : "normal",
+              bold: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? true : false,
             },
           };
         }
@@ -206,11 +213,14 @@ const IncomExpenseStatement = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
             font: {
               ...exportCell.font,
               color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? "bold" : "normal",
+              bold: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? true : false,
             },
           };
         }
@@ -244,11 +254,14 @@ const IncomExpenseStatement = () => {
             text: value,
             bold: true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data?.accGroupName==="LOSS"?'#DC143C': cellElement.data.isGroup?'#2E8B57' :cellElement.data.isSubGroup? '#DC143C':'',
             font: {
               ...exportCell.font,
               color:cellElement.data?.accGroupName==="LOSS"?{ argb: 'FFFF0000' }: cellElement.data.isGroup ? { argb: 'FF2E8B57' } : cellElement.data.isSubGroup ? { argb: 'FFFF0000' } : '',
-              size: 15,
+              size: 10,
+              style: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? "bold" : "normal",
+              bold: cellElement.data.isGroup==true||cellElement.data.isSubGroup==true ||cellElement.data?.accGroupName==="LOSS"? true : false,
             },
           };
         }

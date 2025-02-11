@@ -207,7 +207,7 @@ const ERPModal = React.memo(
                       isOpen ? "-opened" : "closed"
                     } transform dark:bg-dark-bg bg-white text-left align-middle shadow-xl transition-all  ${
                       isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
-                    } ${isRemoveSomething ? "px-0" : "px-4"}`}
+                    } ${isRemoveSomething ? "px-0" : "px-0"}`}
                     style={{
                       height: isMaximized ? `${modalHeight}px` : "auto",
                       maxHeight: `${modalHeight}px`,
@@ -218,7 +218,7 @@ const ERPModal = React.memo(
                   >
                     <DialogTitle
                       as="h3"
-                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-between text-lg dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 bg-white"
+                      className="place-items-center px-4 bg-[#f6f6f6] h-[40px] rounded-t-md sticky min-w-full top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 "
                       style={{ flex: "0 0 auto" }} // Prevent header from shrinking
                     >
                       <div className="flex items-center dark:text-dark-text">
@@ -243,23 +243,23 @@ const ERPModal = React.memo(
                             aria-label={isMaximized ? "Restore" : "Maximize"}
                           >
                             {isMaximized ? (
-                              <Minimize2 size={18} />
+                              <Minimize2 size={15} />
                             ) : (
-                              <Maximize2 size={18} />
+                              <Maximize2 size={15} />
                             )}
                           </button>
                         ) : null}
                         <button
-                          className="p-2 dark:hover:!text-dark-hover-text hover:bg-gray-200 rounded-full"
+                          className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full"
                           onClick={handleClose}
                           aria-label="Close"
                         >
-                          <X size={18} />
+                          <X size={15} />
                         </button>
                       </div>
                     </DialogTitle>
 
-                    <div className="flex flex-col justify-between flex-grow ">
+                    <div className={`flex flex-col justify-between flex-grow ${isRemoveSomething ? "px-0" : "px-4"} `}>
                       <ERPScrollArea
                         maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
                         className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto "

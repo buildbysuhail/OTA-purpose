@@ -83,6 +83,7 @@ import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 import VoucherType from "../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
 import { customJsonParse } from "../../../utilities/jsonConverter";
+import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 interface BilledItem {
   id?: number;
   name: string;
@@ -1783,7 +1784,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           labelInfo={
                             // <div>
                                 <button className="pe-3">
-                                  {/* <VoucherNumberDetailsSidebar displayType="link" /> */}
+                                  <VoucherNumberDetailsSidebar displayType="link" />
                                 </button>
                             // </div>
                           }

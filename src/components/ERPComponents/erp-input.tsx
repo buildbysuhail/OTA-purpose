@@ -553,6 +553,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         },
         sx: {
           ...sizeStyles.mui,
+          '& .MuiInputBase-input.Mui-disabled': {
+            '-webkit-text-fill-color': '#606060 !important',
+            color: '#606060 !important',
+          },
+          '& .Mui-disabled input': {
+            '-webkit-text-fill-color': '#606060 !important',
+            color: '#606060 !important',
+          },
           "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
             appearance: "none",
           },
@@ -675,7 +683,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   height,
                   fontSize,
                   fontWeight: boldInput ? 700 : fontWeight,
-                  color,
+                  color: disabled ? '#606060 !important' : color,
                   borderColor: borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
@@ -691,7 +699,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   }),
                 }}
 
-                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed " : ""}`}
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""}`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();

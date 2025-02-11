@@ -82,6 +82,7 @@ import moment from "moment";
 import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 import VoucherType from "../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
+import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 interface BilledItem {
   id?: number;
   name: string;
@@ -1776,6 +1777,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           disabled={
                             formState.formElements.voucherNumber?.disabled ||
                             formState.formElements.pnlMasters?.disabled
+                          }
+                          labelInfo={
+                            // <div>
+                                <button className="pe-3">
+                                  <VoucherNumberDetailsSidebar displayType="link" />
+                                </button>
+                            // </div>
                           }
                         />
                       </>

@@ -2,7 +2,6 @@ import "devextreme/dist/css/dx.light.css";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import {
-  Outlet,
   Route,
   Routes,
   useLocation,
@@ -12,7 +11,6 @@ import Loader from "./components/common/loader/loader";
 import Switcher from "./components/common/switcher/switcher";
 import Layout from "./components/common/layout/layout";
 import Login from "./pages/auth/Login";
-import Cookies from "js-cookie";
 import usFlag from "./assets/images/flags/us_flag.png";
 import { useAppDispatch, useAppSelector } from "./utilities/hooks/useAppDispatch";
 import "./i18n/config";
@@ -30,32 +28,25 @@ import { customJsonParse, modelToBase64 } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
 import {
   AppState,
-  initialThemeData,
   languagesData,
-  Theme,
 } from "./redux/slices/app/types";
-import Settings from "./pages/settings/AllSettings/Settings";
 import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
 import ReportsLayout from "./components/common/layout/reports-layout";
 import TemplateDesignerLayout from "./components/common/layout/template-designer-layout";
 import { Device } from "@capacitor/device";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
 import { RootState } from "./redux/store";
 import MobileFooter from "./pages/dashboards/crm/mobile-footer";
-import { getApplicationSettings } from "./redux/slices/app/thunk";
 import RPosLayout from "./components/common/layout/rpos-layout";
 import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
 import ERPAlert from "./components/ERPComponents/erp-sweet-alert";
 import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
 import { appInitialState } from "./redux/slices/app/reducer";
-import { UserRight } from "./pages/settings/userManagement/data";
 import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
-import ERPAttachment from "./components/ERPComponents/erp-attachment";
-import { ApplicationSettingsType } from "./pages/settings/system/application-settings-types/application-settings-types";
 import AutoClicker from "./Nodevwatermark";
 import { setSoftwareDate } from "./redux/slices/client-session/reducer";
 import moment from "moment";
@@ -82,6 +73,19 @@ function App() {
  
   }, []);
   
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settings = await api.getAsync(Urls.application_setting);
+        localStorage.setItem("as", modelToBase64(settings));
+        dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
+      } catch (error) {
+        console.error("Error fetching application settings:", error);
+      }
+    };
+  
+    fetchSettings();
+  }, []);
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
     try {

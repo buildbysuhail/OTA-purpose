@@ -12,7 +12,7 @@ import { RootState } from "../redux/store";
 import { BranchSelectDto, UserModel } from "../redux/slices/user-session/reducer";
 import ErpAvatar from "../components/ERPComponents/erp-avatar";
 import Cookies from "js-cookie";
-import { customJsonParse } from "../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../utilities/jsonConverter";
 import { AppState, languagesData, Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
 import { CircularProgress } from "@mui/material";
@@ -75,6 +75,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       
       syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);  
       const settings = await api.getAsync(Urls.application_setting);
+          localStorage.setItem('as', modelToBase64(settings))
       dispatch(setApplicationSettings(
         {
           ...settings,

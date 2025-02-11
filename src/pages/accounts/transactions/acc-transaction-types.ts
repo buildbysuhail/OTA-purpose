@@ -532,7 +532,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   discount: { visible: true, disabled: false, label: "discount" },
   chequeNumber: { visible: true, disabled: false, label: "cheque_number" },
   bankDate: { visible: false, disabled: false, label: "bank_date" },
-  nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
+  nameOnCheque: { visible: true, disabled: false, label: "name_on_cheque" },
   bankName: { visible: true, disabled: false, label: "bank_name" },
   projectId: { visible: false, disabled: false, label: "project" },
   costCentreID: { visible: false, disabled: false, label: "cost_centre" },

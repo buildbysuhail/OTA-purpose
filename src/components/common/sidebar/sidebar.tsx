@@ -215,7 +215,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       updateAppState({ ...theme, iconOverlay: "open" });
     }
   }
-  function Outhover() {
+
+  function Outhover(){
     const theme = appState;
     if (
       (theme.toggled == "icon-overlay-close" ||
@@ -535,6 +536,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     }
     return null; // Object not found
   }
+
   function setMenuAncestorsActive(targetObject: any) {
     const parent = getParentObject(menuitems, targetObject);
     const theme = appState;
@@ -1006,7 +1008,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         </aside>
       </Fragment>
     );
-  }, [menuitems]);
+  }, [menuitems,t]);
   return renderNavItems;
 });
 

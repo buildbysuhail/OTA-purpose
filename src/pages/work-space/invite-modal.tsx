@@ -21,7 +21,7 @@ interface UserForm {
     userTypeCode: string;
     counterID: number;
     employeeID: number;
-    maxDiscPercAllowed: string;
+    maxDiscPercAllowed: number|null;
     passkey: string;
     Passwd: string;
     confrimPassword: string;
@@ -44,7 +44,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 }) => {
     const [mode, setMode] = useState<'new' | 'existing'>('new');
     const [isLoading, setIsLoading] = useState(false);
-    const [existingUser, setExistingUser] = useState<number>(0);
+    const [existingUser, setExistingUser] = useState<string>('');
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
 
 
@@ -58,7 +58,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
         userTypeCode: '',
         counterID: 0,
         employeeID: 0,
-        maxDiscPercAllowed: '',
+        maxDiscPercAllowed: null,
         passkey: ''
     });
 
@@ -70,7 +70,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
         userTypeCode: '',
         counterID: 0,
         employeeID: 0,
-        maxDiscPercAllowed: '',
+        maxDiscPercAllowed: null,
         passkey: '',
         Passwd: '',
         confrimPassword: '',
@@ -101,8 +101,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
         try {
             console.log("handlleUserSelect");
             
-            
-            const hygu = parseInt(userData.value)
+            debugger;
+            const hygu = userData.value
             setExistingUser(hygu);
 
         } catch (error) {
@@ -122,7 +122,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                 userTypeCode: '',
                 counterID: 0,
                 employeeID: 0,
-                maxDiscPercAllowed: '',
+                maxDiscPercAllowed: null,
                 passkey: ''
             });
         } else {
@@ -134,7 +134,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                 userTypeCode: '',
                 counterID: 0,
                 employeeID: 0,
-                maxDiscPercAllowed: '',
+                maxDiscPercAllowed: null,
                 passkey: '',
                 Passwd: '',
                 confrimPassword: '',
@@ -145,25 +145,38 @@ const InviteModal: React.FC<InviteModalProps> = ({
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await apiClient.getAsync(`${Urls.Users}${existingUser}`);
-                if (response?.success) {
-                    setExistingUserForm(response);
-                }
+                const response = await apiClient.getAsync(`${Urls.Users}${existingUser}`)     
+                const userData = {
+                    userName: response?.userName || '',
+                    email: response?.email || '',
+                    phoneNumber: response?.phoneNumber || '',
+                    displayName: response?.displayName || '',
+                    userTypeCode: response?.userTypeCode || '',
+                    counterID: response?.counterID || 0,
+                    employeeID: response?.employeeID || 0,
+                    maxDiscPercAllowed: response?.maxDiscPercAllowed || null,
+                    passkey: response?.passkey || '',
+                    Passwd: '',
+                    confrimPassword: '',
+                };
+                    setExistingUserForm(userData);   
+               
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
             }
         };
-
+     if(existingUser){
         fetchUserData();
+     }
+        
     }, [existingUser]);
-
 
     const handleInvite = async () => {
         setIsLoading(true);
         try {
             const response: ResponseModelWithValidation<any, any> = await dispatch(
                 postAction({
-                    apiUrl: Urls.user,
+                    apiUrl: Urls.invite_link,
                     data: {
                         ...formData,
                         mode
@@ -194,8 +207,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
             closeModal={handleClose}
             title={mode === 'new' ? 'Invite New User' : 'Invite Existing User'}
             content={<div className="space-y-4">
-                <div className="flex space-x-4 mb-6 ml-2">
-                    safva{existingUser}
+                <div className="flex space-x-4 mb-6 ml-2 gap-4">
+                    {existingUser}
                     <ERPRadio
                         id="newUser"
                         name="mode"
@@ -223,13 +236,12 @@ const InviteModal: React.FC<InviteModalProps> = ({
                             id: 'existingUser',
                             required: true,
                             getListUrl: Urls.data_users,
-                            valueKey: 'id',
+                            valueKey: 'name',
                             labelKey: 'name',
                         }}
-                        value={parseInt(existingUser.toString() )}
+                        value={existingUser}
                         label={t('select_user')}
                         required={true}
-
                         data={formData}
                         onSelectItem={(data: any) => {
                             handlleUserSelect(data);
@@ -242,6 +254,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         value={formData.userName}
                         label={t('username')}
                         placeholder={t('username')}
+                        // disabled={mode === 'existing'}
                         required={true}
                         onChange={(e: any) => handleFieldChange('userName', e.target.value)}
                         id={'userName'}
@@ -275,6 +288,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         onChange={(e: any) => handleFieldChange('email', e.target.value)}
                         label={t('email')}
                         type="email"
+                        // disabled={mode === 'existing'}
                         placeholder={t('email')}
                         required={true}
                         id={'email'}
@@ -285,6 +299,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         onChange={(e: any) => handleFieldChange('phoneNumber', e.target.value)}
                         label={t('mobile')}
                         placeholder={t('mobile')}
+                        // disabled={mode === 'existing'}
                         required={false}
                         id={'phoneNumber'}
                     />
@@ -294,6 +309,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         onChange={(e: any) => handleFieldChange('displayName', e.target.value)}
                         label={t('name')}
                         placeholder={t('name')}
+                        // disabled={mode === 'existing'}
                         required={true}
                         id={'displayName'}
                     />
@@ -309,6 +325,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                             labelKey: 'name',
                         }}
                         data={formData}
+                        // disabled={mode === 'existing'}
                         label={t('usertype')}
                         required={true}
                         onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
@@ -328,6 +345,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 
                             data={formData}
                             label={t('counter')}
+                            // disabled={mode === 'existing'}
                             required={true}
                             onChangeData={(data: any) => handleFieldChange('counterID', data.counterID)}
                         />
@@ -345,17 +363,19 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         }}
                         data={formData}
                         label={t('employee')}
+                        // disabled={mode === 'existing'}
                         required={true}
                         onChangeData={(data: any) => handleFieldChange('employeeID', data.employeeID)}
                     />
 
                     <ERPInput
                         value={formData.maxDiscPercAllowed}
-                        onChange={(e: any) => handleFieldChange('maxDiscPercAllowed', e.target.value)}
+                        onChange={(e: any) => handleFieldChange('maxDiscPercAllowed',  parseInt(e.target.value))}
                         label={t('max_dis%')}
                         type="number"
                         min={0}
                         placeholder={t('max_dis%')}
+                        // disabled={mode === 'existing'}
                         required={false}
                         id={'maxDiscPercAllowed'}
                     />
@@ -372,15 +392,12 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         variant="secondary"
                         onClick={handleClose}
                     />
-                    <ERPButton
-                        title="Add"
-                        variant="secondary"
-                    />
+                  
                     <ERPButton
                         title="Invite"
                         variant="primary"
                         onClick={handleInvite}
-                        disabled={isLoading || !formData.email}
+                        disabled={isLoading}
                     />
                 </div>
             </div>}

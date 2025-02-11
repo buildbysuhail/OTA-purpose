@@ -175,7 +175,7 @@ export const AccountLedgerManage = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("drCr", data.drCr)
                     }
-                    label="DrCr"
+                    label={t("drcr")}
                     enableClearOption={false}
                     options={[
                       { value: "Dr", label: t("Dr") },

@@ -1,4 +1,5 @@
 {
+   "id": "المعرف",
    "users": "المستخدمون",
    "si_no": "الرقم التسلسلي",
    "user": "المستخدم",
@@ -36,5 +37,8 @@
    "select_all_edit": "تحديد الكل للتعديل",
    "select_all_export": "تحديد الكل للتصدير",
    "select_all_delete": "تحديد الكل للحذف",
-   "inherit_rights_from_usertype": "وراثة الحقوق من نوع المستخدم"
+   "inherit_rights_from_usertype": "وراثة الحقوق من نوع المستخدم",
+
+   "save": "حفظ",
+  "close": "إغلاق"
 }

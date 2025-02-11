@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/20/solid";
-
 import { ApplicationSettingsIds, ApplicationSettingsTypes } from "./application-settings-categories";
 import ERPSettingsFormMain from "./application-settings-main";
 import ApplicationSettingsAccounts from "./application-settings-accounts";
@@ -16,7 +14,6 @@ import BackupSettingsForm from "./application-settings-backup";
 import TaxSettingsForm from "./appllication-settings-tax";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
-import { ApplicationSettingsInitialState } from "../../../redux/slices/app/application-settings-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 interface SearchCount {

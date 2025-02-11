@@ -8,12 +8,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
-import {
-  initialPartiesData,
-  initialProjectOrJobData,
-  PartiesData,
-  ProjectOrJob,
-} from "./parties-manage-type";
+import { initialPartiesData, initialProjectOrJobData, PartiesData, ProjectOrJob } from "./parties-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
@@ -35,14 +30,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const rootState = useRootState();
     const dispatch = useDispatch();
     const userSession = useSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useSelector(
-      (state: RootState) => state.ApplicationSettings
-    );
+    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isIndianCompany = userSession.countryId === Countries.India;
     const [isTCSApplicable, setIsTCSApplicable] = useState(false);
-    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(
-      initialProjectOrJobData.data
-    );
+    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(initialProjectOrJobData.data);
     const [image, setImage] = useState<string>("#");
 
     const {
@@ -127,41 +118,37 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       ERPToast.show("Download started...", "success");
       try {
         const url = `${Urls.acc_attachmentInfo_download}?fileKey=${encodeURIComponent(fileData)}`;
-    
         const res = await api.getNativeAsync(url, undefined, {
           responseType: "blob", // Ensure the response is treated as a binary blob
         });
-        
+
         if (res && res instanceof Blob) {
           // Create a blob URL from the response data
           const blobUrl = URL.createObjectURL(res);
-    
           // Create a link element
           const link = document.createElement("a");
           link.href = blobUrl;
-    
           // Set the file name
           // If you have a way to get the file name from the server response, use that instead
           const suggestedFileName = "downloaded_file";
           link.setAttribute("download", suggestedFileName);
-    
           // Append to the document, click, and remove
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-    
           // Revoke the blob URL to free up resources
           URL.revokeObjectURL(blobUrl);
         } else {
           throw new Error("Invalid response from server");
         }
-    
+
       } catch (error) {
         console.error("Error downloading file:", error);
         ERPToast.show("Download failed.", "error");
       } finally {
         setFileLoading(false);
-      }};
+      }
+    };
 
     return (
       <div className="w-full bordered-tab relative">
@@ -297,7 +284,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("cstNumber", data.cstNumber)
               }
             />
-             <ERPInput
+            <ERPInput
               {...getFieldProps("creditDays", "int")}
               min={0}
               label={t("credit_days")}
@@ -305,7 +292,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               placeholder={t("credit_days")}
               required={false}
               onChangeData={(data: any) =>
-                handleFieldChange("creditDays",  parseInt(data.creditDays))
+                handleFieldChange("creditDays", parseInt(data.creditDays))
               }
             />
             <ERPInput
@@ -321,7 +308,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             />
             <div className="flex gap-4">
               <ERPInput
-                {...getFieldProps("opBalance","int")}
+                {...getFieldProps("opBalance", "int")}
                 min={0}
                 disabled={isEdit}
                 label={t("op_balance")}
@@ -343,7 +330,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("drCr", data.drCr)
                   }
-                  label="DrCr"
+                  label={t("drcr")}
                   enableClearOption={false}
                   options={[
                     { value: "Dr", label: t("Dr") },
@@ -352,7 +339,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 />
               </div>
             </div>
-
             <ERPCheckbox
               {...getFieldProps("billwiseBillApplicable")}
               label={t("bill_wise_applicable")}
@@ -445,36 +431,15 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Composite", label: "Composite" },
                     { value: "Unregistered", label: "Unregistered" },
                     { value: "Unregistered+RCM", label: "Unregistered+RCM" },
-                    {
-                      value: "Foreign non-Resident Taxpayer",
-                      label: "Foreign non-Resident Taxpayer",
-                    },
-                    {
-                      value: "Input Service distributor",
-                      label: "Input Service distributor",
-                    },
+                    { value: "Foreign non-Resident Taxpayer", label: "Foreign non-Resident Taxpayer", },
+                    { value: "Input Service distributor", label: "Input Service distributor", },
                     { value: "Tax Deductor", label: "Tax Deductor" },
-                    {
-                      value: "E-commerce Operator",
-                      label: "E-commerce Operator",
-                    },
-                    {
-                      value: "Government Departments",
-                      label: "Government Departments",
-                    },
-                    {
-                      value: "SEZ supplies with payment",
-                      label: "SEZ supplies with payment",
-                    },
-                    {
-                      value: "SEZ supplies without payment",
-                      label: "SEZ supplies without payment",
-                    },
+                    { value: "E-commerce Operator", label: "E-commerce Operator", },
+                    { value: "Government Departments", label: "Government Departments", },
+                    { value: "SEZ supplies with payment", label: "SEZ supplies with payment", },
+                    { value: "SEZ supplies without payment", label: "SEZ supplies without payment", },
                     { value: "Deemed Export", label: "Deemed Export" },
-                    {
-                      value: "Intra-State supplies attracting IGST",
-                      label: "Intra-State supplies attracting IGST",
-                    },
+                    { value: "Intra-State supplies attracting IGST", label: "Intra-State supplies attracting IGST", },
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
                 />
@@ -491,15 +456,16 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         </div>
 
         <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label="Address" value="address" className="dark:text-dark-text" />
-          <Tab label="Bank" value="bank" className="dark:text-dark-text"  />
-          <Tab label="Details" value="details" className="dark:text-dark-text" />
-          <Tab label="More" value="more" className="dark:text-dark-text" />
+          <Tab label={t("address")} value="address" className="dark:text-dark-text" />
+          <Tab label={t("bank")} value="bank" className="dark:text-dark-text" />
+          <Tab label={t("details")} value="details" className="dark:text-dark-text" />
+          <Tab label={t("more")} value="more" className="dark:text-dark-text" />
           {/* <Tab label="Project/Job" value="project_job" /> */}
           {userSession.countryId != Countries.India &&
             applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
-            true && <Tab label="Other" value="other_details" className="dark:text-dark-text" />}
+            true && <Tab label={t("other")} value="other_details" className="dark:text-dark-text" />}
         </Tabs>
+
         <div className="pt-4 mb-[71px]">
           {activeTab === "address" && (
             <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
@@ -615,7 +581,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               <div className="flex align-center gap-3">
                 <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
                   <h6 className=" dark:!border-dark-border border-b pb-2 mb-2 text-sm font-bold">
-                    Bank 1
+                    {t("bank_1")}
                   </h6>
                   <div className="flex flex-col gap-3">
                     <ERPInput
@@ -650,7 +616,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
 
                 <div className="w-1/2 dark:!border-dark-border border rounded-lg p-4">
                   <h6 className="dark:!border-dark-border  border-b pb-2 mb-2 text-sm font-bold">
-                    Bank 2
+                    {t("bank_2")}
                   </h6>
                   <div className="flex flex-col gap-3">
                     <ERPInput
@@ -739,17 +705,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   {formState?.data?.document1Key && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm dark:text-dark-text  text-gray-700">
-                        Uploaded file:
+                        {t("uploaded_file")}
                       </span>
-                      <a
-                        href="#"
-                        onClick={() =>
-                          handleDownload(formState?.data?.document1Key)
-                        }
-                        download
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
-                        Download
+                      <a href="#" onClick={() => handleDownload(formState?.data?.document1Key)} download className="text-blue-600 hover:text-blue-800 underline">
+                        {t("download")}
                       </a>
                     </div>
                   )}
@@ -773,20 +732,13 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     }}
                     className="border rounded-lg p-2"
                   />
-                 {formState?.data?.document2Key && (
+                  {formState?.data?.document2Key && (
                     <div className="flex items-center gap-2">
                       <span className="text-sm dark:text-dark-text  text-gray-700">
-                        Uploaded file:
+                        {t("uploaded_file")}
                       </span>
-                      <a
-                        href="#"
-                        onClick={() =>
-                          handleDownload(formState?.data?.document2Key)
-                        }
-                        download
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
-                        Download
+                      <a href="#" onClick={() => handleDownload(formState?.data?.document2Key)} download className="text-blue-600 hover:text-blue-800 underline">
+                        {t("download")}
                       </a>
                     </div>
                   )}
@@ -831,7 +783,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         labelKey: "name",
                       }}
                       onChange={(data: any) => {
-
                         handleFieldChange({
                           stateName:
                             data !== null && data !== undefined
@@ -977,7 +928,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       apiUrl="/Subscription/Profile/UploadUserImage"
                       onImageSuccess={onImageSuccess}
                       useCircle
-                    ></ErpCropper>
+                    />
                   </div>
                 </div>
               </div>

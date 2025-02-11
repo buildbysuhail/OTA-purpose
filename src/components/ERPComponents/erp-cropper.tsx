@@ -1,29 +1,16 @@
 import React, { useState, useRef } from "react";
-
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  Crop,
-  PixelCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
-
+import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop, convertToPixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-
-const TO_RADIANS = Math.PI / 180;
-
-import { useEffect, DependencyList } from "react";
+import { useEffect } from "react";
 import ERPFileUploadButton from "./erp-file-upload-button";
 import ERPModal from "./erp-modal";
-import ERPSubmitButton from "./erp-submit-button";
 import ERPButton from "./erp-button";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { handleResponse } from "../../utilities/HandleResponse";
-import { ResponseModel } from "../../base/response-model";
-import { onSuccess } from "redux-axios-middleware";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { postAction } from "../../redux/slices/app-thunks";
+import { useTranslation } from "react-i18next";
 
+const TO_RADIANS = Math.PI / 180;
 export function useDebounceEffect(
   fn: () => void,
   waitTime: number,
@@ -33,7 +20,6 @@ export function useDebounceEffect(
     const t = setTimeout(() => {
       fn.apply(undefined, deps);
     }, waitTime);
-
     return () => {
       clearTimeout(t);
     };
@@ -61,20 +47,22 @@ function centerAspectCrop(
     mediaHeight
   );
 }
+
 type ERPCropperProps = {
   closeModal?: any;
   apiUrl: string;
   useCircle?: boolean;
   onImageSuccess: (str: string) => void;
 };
+
 const ERPCropper: React.FC<ERPCropperProps> = ({
   closeModal,
   apiUrl,
   useCircle = false,
-  onImageSuccess = () => {}
+  onImageSuccess = () => { }
 }) => {
   const dispatch = useAppDispatch();
-
+  const { t } = useTranslation('main');
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -85,40 +73,32 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [aspect, setAspect] = useState<number>(1 / 1);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const onSubmit = async () => {
     setIsLoading(true);
-
     const blob = await createCropImage();
     const base64String = await convertBlobToBase64(blob);
-    
     let res = await dispatch(
       postAction({ apiUrl: apiUrl, data: { base64: base64String } }) as any
     );
-    
     setIsLoading(false);
-    
     handleResponse(res, () => {
       setIsOpen(false);
       setImgSrc("");
-
       onImageSuccess(res.payload.item);
       setIsOpen(false);
     });
   };
+
   function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
-    
     if (e.target.files && e.target.files.length > 0) {
       setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        
         setImgSrc(reader.result?.toString() ?? "");
         let img = reader.result?.toString() ?? "";
         let img2 = reader.result?.toString();
-
         if (img2 != undefined && img2 != null && img2 != "") {
           setIsOpen(true);
           setImgSrc(img2);
@@ -146,7 +126,6 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
     // are looking at on screen, remove scaleX + scaleY
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
-
     const offscreen = new OffscreenCanvas(
       completedCrop.width * scaleX,
       completedCrop.height * scaleY
@@ -176,17 +155,16 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
   }
   async function onDownloadCropClick() {
     const blob = await createCropImage();
-
     if (blobUrlRef.current) {
       URL.revokeObjectURL(blobUrlRef.current);
     }
     blobUrlRef.current = URL.createObjectURL(blob);
-
     if (hiddenAnchorRef.current) {
       hiddenAnchorRef.current.href = blobUrlRef.current;
       hiddenAnchorRef.current.click();
     }
   }
+
   async function convertBlobToBase64(blob: any) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -206,12 +184,10 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
                 crop={crop}
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                 onComplete={(c) => setCompletedCrop(c)}
-                aspect={aspect}
-                
-              >
+                aspect={aspect}>
                 <img
                   ref={imgRef}
-                  alt="Crop me"
+                  alt={t("crop_me")}
                   src={imgSrc}
                   style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
                   onLoad={onImageLoad}
@@ -236,22 +212,13 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
                   />
                 </div>
                 <div>
-                  <button onClick={onDownloadCropClick}>Download Crop</button>
+                  <button onClick={onDownloadCropClick}>{t("download_crop")}</button>
                   <div style={{ fontSize: 12, color: "#666" }}>
-                    If you get a security error when downloading try opening the
-                    Preview in a new tab (icon near top right).
+                    {t("security_error_when_downloading")}
                   </div>
-                  <a
-                    href="#hidden"
-                    ref={hiddenAnchorRef}
-                    download
-                    style={{
-                      position: "absolute",
-                      top: "-200vh",
-                      visibility: "hidden",
-                    }}
-                  >
-                    Hidden download
+                  <a href="#hidden" ref={hiddenAnchorRef} download
+                    style={{ position: "absolute", top: "-200vh", visibility: "hidden" }}>
+                    {t("hidden_download")}
                   </a>
                 </div>
               </>
@@ -264,8 +231,9 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
             className="primary"
             loading={isLoading}
             onClick={onSubmit}
-            title="Save"
-          ></ERPButton>
+            title={t("save")}
+          />
+
           <ERPButton
             type="reset"
             className="secondary"
@@ -274,8 +242,8 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
               setImgSrc("");
             }}
             disabled={isLoading}
-            title="Cancel"
-          ></ERPButton>
+            title={t("cancel")}
+          />
         </div>
       </div>
     );
@@ -307,7 +275,6 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
       setAspect(1 / 1);
     } else {
       setAspect(16 / 9);
-
       if (imgRef.current) {
         const { width, height } = imgRef.current;
         const newCrop = centerAspectCrop(width, height, 16 / 9);
@@ -323,14 +290,14 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
       <div className="Crop-Controls">
         {(imgSrc == undefined || imgSrc != null || imgSrc != "") && (
           <ERPFileUploadButton
-          buttonText="Upload Image"
+            buttonText={t("upload_image")}
             handleFileChange={onSelectFile}
-          ></ERPFileUploadButton>
+          />
         )}
         {imgSrc != undefined && imgSrc != null && imgSrc != "" && (
           <ERPModal
             isOpen={isOpen}
-            title="Crop Image"
+            title={t("crop_image")}
             isForm={true}
             closeModal={() => {
               setIsOpen(false);
@@ -384,7 +351,6 @@ export async function canvasPreview(
   if (!ctx) {
     throw new Error("No 2d context");
   }
-
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
   // devicePixelRatio slightly increases sharpness on retina devices
@@ -393,22 +359,17 @@ export async function canvasPreview(
   // true to the images natural size.
   const pixelRatio = window.devicePixelRatio;
   // const pixelRatio = 1
-
   canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
-
   ctx.scale(pixelRatio, pixelRatio);
   ctx.imageSmoothingQuality = "high";
-
   const cropX = crop.x * scaleX;
   const cropY = crop.y * scaleY;
-
   const rotateRads = rotate * TO_RADIANS;
   const centerX = image.naturalWidth / 2;
   const centerY = image.naturalHeight / 2;
 
   ctx.save();
-
   // 5) Move the crop origin to the canvas origin (0,0)
   ctx.translate(-cropX, -cropY);
   // 4) Move the origin to the center of the original position

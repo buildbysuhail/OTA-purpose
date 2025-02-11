@@ -8,17 +8,8 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
-import {
-  initialUserTypePrivilegeManageData,
-  UserRightData,
-  UserTypePrivilegeManageData,
-} from "./rights-interface";
-import {
-  TreeList,
-  Selection,
-  Column,
-  TreeListTypes,
-} from "devextreme-react/tree-list";
+import { initialUserTypePrivilegeManageData, UserRightData, UserTypePrivilegeManageData } from "./rights-interface";
+import { TreeList, Selection, Column, TreeListTypes } from "devextreme-react/tree-list";
 import { UserRight, userRights } from "./data";
 import dxTreeList from "devextreme/ui/tree_list";
 
@@ -43,36 +34,32 @@ interface DynamicFormProps {
   onCancel: () => void;
 }
 interface UserTypePrivilegeManageProps {
-  isMaximized?: boolean; 
-  modalHeight?:any
+  isMaximized?: boolean;
+  modalHeight?: any
 }
 const api = new APIClient();
-const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:UserTypePrivilegeManageProps) => {
+const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized }: UserTypePrivilegeManageProps) => {
   const expandedRowKeys = [1, 2, 10];
-  const [postData, setPostData] = useState<UserTypePrivilegeManageData>(
-    initialUserTypePrivilegeManageData
-  );
+  const [postData, setPostData] = useState<UserTypePrivilegeManageData>(initialUserTypePrivilegeManageData);
   const gridRef = useRef<dxTreeList>(null);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
   const [cloning, setCloning] = useState<boolean>(false);
-  const [inherit_rights_from_usertype, set_inherit_rights_from_usertype] =
-    useState<boolean>(false);
+  const [inherit_rights_from_usertype, set_inherit_rights_from_usertype] = useState<boolean>(false);
   const [userTypeForClone, setUserTypeForClone] = useState<string>("");
   const [userRightTypes, setUserRightTypes] = useState<any>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [recursive, setRecursive] = useState(false);
   const [selectionMode, setSelectionMode] = useState("all");
-
   const [treeHeight, setTreeHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
   useEffect(() => {
-    let gridHeightMobile = modalHeight - 50; 
-    let gridHeightWindows = modalHeight - 180; 
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
     setTreeHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized,modalHeight]);
+  }, [isMaximized, modalHeight]);
 
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
@@ -117,7 +104,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
       // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
     };
     const selectedPermissionIds = permissionMap[permission] || [];
-
     // Ensure that prevKeys is an array before proceeding
     setSelectedRowKeys((prevKeys: number[]) => {
       if (!Array.isArray(prevKeys)) {
@@ -236,15 +222,15 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
   };
   const getSelectedKeys = () => {
     return gridRef.current
-    ?.instance()
-    ?.getSelectedRowsData(selectionMode)
-    ?.map((x) => x.id) ?? []
+      ?.instance()
+      ?.getSelectedRowsData(selectionMode)
+      ?.map((x) => x.id) ?? []
   }
   const selectedKeys =
-      gridRef.current
-        ?.instance()
-        ?.getSelectedRowsData(selectionMode)
-        ?.map((x) => x.id) ?? [];
+    gridRef.current
+      ?.instance()
+      ?.getSelectedRowsData(selectionMode)
+      ?.map((x) => x.id) ?? [];
   useEffect(() => {
     // Calculate initial selected keys and set state
     const initialSelectedKeys = calculateInitialSelectedKeys(
@@ -256,11 +242,11 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
 
   const onSelectionChanged = useCallback(
     (e: TreeListTypes.SelectionChangedEvent) => {
-      
+
       const selectedData =
         e.component?.getSelectedRowsData(selectionMode)?.map((x) => x.id) ?? [];
       setSelectedRowKeys(selectedData);
-      
+
       if (e.currentSelectedRowKeys.length == 1) {
         const key = e.currentSelectedRowKeys[0];
         const parent = userRights.find((x) => x.id == key)?.headId;
@@ -288,16 +274,15 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
   const dispatch = useDispatch();
   const hasAnyMissingParent = (node: any): boolean => {
     const keys = getSelectedKeys();
-    if(keys.find(x => x == node.id) == undefined) {
+    if (keys.find(x => x == node.id) == undefined) {
       return true;
     }
     const parentNode = userRights.find(x => x.id == node.headId);
-    if(parentNode != undefined)
-    {
+    if (parentNode != undefined) {
       const hasMissing = hasAnyMissingParent(parentNode);
       return hasMissing;
     }
-    else{
+    else {
       return false
     }
   }
@@ -316,7 +301,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
       treeNodeIndex: number;
     }[] = [];
 
-    
+
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRights);
     // Map to aggregate data by formCode
@@ -324,18 +309,18 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
       string,
       { userTypeCode: string; userRights: string; treeNodeIndex: number }
     >();
-     
+
 
     immediateParentsOfEndNodes.forEach((parent) => {
       const childNodes = userRights.filter(
         (child) => child.headId === parent.id
       );
-      
+
       const hasMissing = hasAnyMissingParent(parent);
       const keys = getSelectedKeys();
       let parentUserRights = keys.find(x => x == parent.id) != undefined && !hasMissing ? "S" : "";
       let hasSelectedRights = false;
-      if(parentUserRights == "S") {
+      if (parentUserRights == "S") {
         childNodes.forEach((child) => {
           if (keys.includes(child.id)) {
             hasSelectedRights = true;
@@ -343,7 +328,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
           }
         });
       }
-       
+
 
       if (hasSelectedRights) {
         const formCode = parent.formCode;
@@ -503,13 +488,13 @@ const UserTypePrivilegeManage: React.FC = React.memo(({modalHeight,isMaximized}:
           validation={postData.validations.userType}
           data={postData?.data}
           defaultData={postData?.data}
-          // value={
-          //   postData != undefined &&
-          //     postData?.data != undefined &&
-          //     postData?.data?.userType != undefined
-          //     ? postData?.data?.userType
-          //     : 0
-          // }
+        // value={
+        //   postData != undefined &&
+        //     postData?.data != undefined &&
+        //     postData?.data?.userType != undefined
+        //     ? postData?.data?.userType
+        //     : 0
+        // }
         />
         {/* Checkbox options */}
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5">

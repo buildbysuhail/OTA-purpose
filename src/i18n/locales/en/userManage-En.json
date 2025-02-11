@@ -1,4 +1,5 @@
 {
+    "id":"Id",
     "users": "Users",
     "si_no": "SiNo",
     "user": "User",
@@ -36,5 +37,8 @@
     "select_all_edit": "Select All Edit",
     "select_all_export": "Select All Export",
     "select_all_delete": "Select All Delete",
-    "inherit_rights_from_usertype": "Inherit Rights From UserType"
+    "inherit_rights_from_usertype": "Inherit Rights From UserType",
+
+    "save":"Save",
+    "close":"Close"
 }

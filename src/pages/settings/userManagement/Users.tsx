@@ -13,7 +13,7 @@ import { UserManage } from "./user-manage";
 const Users = () => {
   const MemoizedUsersManage = useMemo(() => React.memo(UserManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation("userManage");
+  const { t } = useTranslation('userManage');
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {

@@ -83,7 +83,7 @@ const Templates = ({ }) => {
   }
 
   /* ########################################################################################### */
-
+  
   const setDefaultTemplate = async (id: any) => {
     const res = await api.patch(`${Urls.templates}${id}`,{});
     handleResponse(res, async () => {

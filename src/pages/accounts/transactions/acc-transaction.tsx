@@ -82,6 +82,7 @@ import moment from "moment";
 import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 import VoucherType from "../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
+import { customJsonParse } from "../../../utilities/jsonConverter";
 interface BilledItem {
   id?: number;
   name: string;
@@ -915,13 +916,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       
       setAccTransVoucher(_formState, true);
       focusLedgerCode();
-      
+       // Fetch templates asynchronously
     };
-
+  
+    
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
+
   }, [voucherType, voucherPrefix]);
 
   // useEffect(() => {
@@ -1519,7 +1522,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        printVoucher(setIsPrintModalOpen);
+                        printVoucher(setIsPrintModalOpen,voucherType);
                       }}
                     >
                       <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />

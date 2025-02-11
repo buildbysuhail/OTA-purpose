@@ -22,6 +22,7 @@ import { calculateTotal, clearEntryControl } from "./functions";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import moment from "moment";
 import { modelToBase64Unicode } from "../../../utilities/jsonConverter";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -161,6 +162,20 @@ const accTransactionSlice = createSlice({
       });
     },
 
+ // Inside the createSlice, update the reducer
+      acctemplatesData: (
+        state,
+        action: PayloadAction<TemplateState>
+      ) => {
+        if (!state.templatesData) {
+          state.templatesData = [];
+        }
+        
+        // Only add the template if it doesn't already exist
+        if (!state.templatesData.some(template => template.templateGroup === action.payload.templateGroup)) {
+          state.templatesData.push(action.payload);
+        }
+      },
     // Update a specific field in the transaction object
     accFormStateTransactionUpdate: (
       state,
@@ -645,6 +660,7 @@ const accTransactionSlice = createSlice({
 
 export const {
   accFormStateSet,
+  acctemplatesData,
   accFormStateHandleFieldChange,
   accFormStateTransactionUpdate,
   accFormStateTransactionMasterHandleFieldChange,

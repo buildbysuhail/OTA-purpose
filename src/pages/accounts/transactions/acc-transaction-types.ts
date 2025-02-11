@@ -1,5 +1,6 @@
 import { inputBox } from "../../../redux/slices/app/types";
 import moment from "moment";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 
 // AccTransaction interface
 export interface AccTransactionProps {
@@ -491,6 +492,7 @@ export interface AccTransactionFormState {
   amountInWords: string,
   template?: any,
   templates?: [],
+  templatesData?: TemplateState[]
   userConfig?: AccUserConfig;
   formElements: FormElementsState
 }
@@ -647,6 +649,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formElements: initialFormElements,
   saving: false,
   store: undefined,
+  templatesData: [],
   transactionType: "",
   prev: ""
 }

@@ -266,7 +266,7 @@ const InvoiceDesigner = () => {
       backgroundImageFooter: tmpTemplate.background_image_footer ?? "",
       signatureImage: tmpTemplate.signature_image ?? "",
       branchId: 0,
-      id:templateData.activeTemplate?.id
+      id:templateData.activeTemplate?.id == null ? 0 : templateData.activeTemplate?.id
     };
     await dispatch(setTemplate(activeTemplate));
 

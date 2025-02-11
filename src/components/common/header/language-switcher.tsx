@@ -15,9 +15,10 @@ import usFlag from "../../../assets/images/flags/us_flag.png";
 interface HeaderProps {className?: string}
 
 const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
-    const [languages, setLanguages] = useState<Locale[]>(languagesData);
+ 
+  const [languages, setLanguages] = useState<Locale[]>(languagesData);
   
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [reloading, setReloading] = useState(false);
@@ -28,9 +29,9 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
     
     language.rtl ? switcherdata.Rtl(updateAppState, appState): switcherdata.Ltr(updateAppState, appState);
     changeLanguage(language.code);
-
+    navigate(0);
   };
-  const { i18n } = useTranslation();
+
 
   const changeLanguage = (currentData: string) => {
     const locale = (languagesData.find((l) => l.code === currentData))?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
@@ -39,6 +40,7 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
     dispatch(setLocale(locale));
     setLanguage(dispatch,locale);
   };
+
 const setLocaleInStorage = (locale: Locale) => {
   let upt = localStorage.getItem("up");
   let utt = localStorage.getItem("ut");

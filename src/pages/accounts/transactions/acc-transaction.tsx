@@ -1783,7 +1783,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           labelInfo={
                             // <div>
                                 <button className="pe-3">
-                                  <VoucherNumberDetailsSidebar displayType="link" />
+                                  {/* <VoucherNumberDetailsSidebar displayType="link" /> */}
                                 </button>
                             // </div>
                           }

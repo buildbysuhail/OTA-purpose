@@ -1431,8 +1431,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
-                    {t(formState.title)}asas
-                    {formState.transactionType}
+                    {t(formState.title)}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>

@@ -291,13 +291,13 @@ const BalanceSheetPDFTemplate: React.FC<{ data: any[], filter: any, getFormatted
 
           <View style={styles.tableRow}>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
+              <Text>Total</Text>
             </View>
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(liabilityTotal)}</Text>
             </View>
             <View style={[{ flex: 1, padding: 5, }, styles.total]}>
-              <Text>total</Text>
+              <Text>Total</Text>
             </View>
             <View style={[{ flex: 2, padding: 5, }, styles.amount, styles.total]}>
               <Text>{getFormattedValue(assetTotal)}</Text>

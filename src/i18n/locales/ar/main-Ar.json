@@ -177,5 +177,24 @@
   "stock_count": "جرد المخزون",
   "accountant": "المحاسب",
   "reports": "التقارير",
-  "rpos": "نقاط البيع"
+  "rpos": "نقاط البيع",
+
+  "customize_columns": "تخصيص الأعمدة",
+  "close": "إغلاق",
+  "search": "بحث",
+  "column": "عمود",
+  "width": "العرض",
+  "read_only": "للقراءة فقط",
+  "pdf": "قوات الدفاع الشعبي",
+  "pdf_orientation": "اتجاه قوات الدفاع الشعبي",
+  "portrait": "عمودي",
+  "landscape": "أفقي",
+  "save": "حفظ",
+
+  "crop_me": "اقصّني",
+  "download_crop": "تنزيل المقتصة",
+  "security_error_when_downloading": "إذا ظهرت لك رسالة خطأ أمني عند التنزيل، حاول فتح المعاينة في تبويب جديد (الأيقونة بالقرب من أعلى اليمين).",
+  "hidden_download": "تنزيل مخفي",
+  "upload_image": "تحميل الصورة",
+  "crop_image": "قص الصورة"
 }

@@ -7,19 +7,12 @@ import Urls from "../../../../../../redux/urls";
 import ERPRadio from "../../../../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
 import { DataGrid, LoadPanel, Toolbar } from "devextreme-react";
-import {
-  Column,
-  ColumnFixing,
-  FilterRow,
-  Paging,
-  Scrolling,
-  SearchPanel,
-} from "devextreme-react/cjs/tree-list";
+import { Column, ColumnFixing, FilterRow, Paging, Scrolling, SearchPanel } from "devextreme-react/cjs/tree-list";
 import { APIClient } from "../../../../../../helpers/api-client";
 import { handleResponse } from "../../../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
-import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface LedgerInf {
   customer: boolean;
@@ -30,8 +23,8 @@ const initialState: LedgerInf = {
   customer: true,
   supplier: false,
 };
-const api = new APIClient();
 
+const api = new APIClient();
 const CustomerSupplierLedger = () => {
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
@@ -49,9 +42,9 @@ const CustomerSupplierLedger = () => {
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation('masters')
   const handleLoad = async () => {
     setLoading(true);
-    
     const partyType = gridType.customer ? "Cust" : "Supp";
     const result: any = await api.get(`${Urls.cust_supp_ledger}?PartyType=${partyType}`);
     setStore(result);
@@ -63,7 +56,7 @@ const CustomerSupplierLedger = () => {
       const updatedStore = [...prevStore];
       updatedStore[rowIndex] = {
         ...updatedStore[rowIndex],
-        show: !updatedStore[rowIndex].show, 
+        show: !updatedStore[rowIndex].show,
       };
       return updatedStore;
     });
@@ -78,15 +71,18 @@ const CustomerSupplierLedger = () => {
 
     const payload = store?.filter((x: any) => x.show == true)?.map((item: any) => ({
       ledgerID: item.ledgerID,
-    showInSuppliers: gridType.customer,
-     showInCustomers : gridType.supplier,
+      showInSuppliers: gridType.customer,
+      showInCustomers: gridType.supplier,
     }));
+
     try {
       const response: any = await api.post(
         `${Urls.cust_supp_ledger}`,
-        {showInSuppliers: gridType.customer,
-          showInCustomers : gridType.supplier,
-          custSuppLedgerInputItems: payload}
+        {
+          showInSuppliers: gridType.customer,
+          showInCustomers: gridType.supplier,
+          custSuppLedgerInputItems: payload
+        }
       );
       handleResponse(response);
     } catch (error) {
@@ -95,8 +91,9 @@ const CustomerSupplierLedger = () => {
     setIsSaving(false);
   };
   const handleClose = () => {
-    navigate("/settings"); 
-  }; 
+    navigate("/settings");
+  };
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
@@ -113,7 +110,7 @@ const CustomerSupplierLedger = () => {
                     onChange={() => {
                       setGridType({ customer: true, supplier: false });
                     }}
-                    label="Customer"
+                    label={t("customer")}
                   />
                   <ERPRadio
                     id="supplier"
@@ -123,12 +120,12 @@ const CustomerSupplierLedger = () => {
                     onChange={() => {
                       setGridType({ customer: false, supplier: true });
                     }}
-                    label="supplier"
+                    label={t("supplier")}
                   />
                 </div>
 
                 <ERPButton
-                  title="Show"
+                  title={t("show")}
                   variant="primary"
                   disabled={loading}
                   loading={loading}
@@ -149,13 +146,12 @@ const CustomerSupplierLedger = () => {
                   showRowLines={true}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
-                  // hoverStateEnabled={true}
+                // hoverStateEnabled={true}
                 >
                   <FilterRow visible={true} />
                   <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
-                 
-                  <Scrolling mode="virtual"/>
+                  <Scrolling mode="virtual" />
                   <Paging defaultPageSize={100} />
                   <LoadPanel visible={loading} />
 
@@ -165,7 +161,7 @@ const CustomerSupplierLedger = () => {
                     allowEditing={false}
                     allowFiltering={true}
                     dataField="ledgerName"
-                    caption="Name"
+                    caption={t("name")}
                     dataType="string"
                     minWidth={200}
                   />
@@ -177,7 +173,7 @@ const CustomerSupplierLedger = () => {
                     allowEditing={false}
                     allowFiltering={true}
                     dataField="address1"
-                    caption="Address"
+                    caption={t("address")}
                     dataType="string"
                   />
 
@@ -190,8 +186,8 @@ const CustomerSupplierLedger = () => {
                     dataField="show"
                     caption={
                       gridType.customer
-                        ? "Show In Suppliers"
-                        : "Show In Customers"
+                        ? t("show_in_suppliers")
+                        : t("show_in_customers")
                     }
                     dataType="boolean"
                     cellRender={(cellData) => (
@@ -204,18 +200,16 @@ const CustomerSupplierLedger = () => {
                       />
                     )}
                   />
-
-                  <Toolbar></Toolbar>
                 </DataGrid>
                 <div className="flex justify-end items-center space-x-4 m-3">
                   <ERPButton
-                    title="Close"
+                    title={t("close")}
                     variant="secondary"
                     onClick={handleClose}
                     type="button"
                   />
                   <ERPButton
-                    title="Save"
+                    title={t("save")}
                     variant="primary"
                     disabled={isSaving}
                     loading={isSaving}

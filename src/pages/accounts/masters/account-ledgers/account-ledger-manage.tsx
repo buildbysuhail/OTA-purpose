@@ -62,6 +62,7 @@ export const AccountLedgerManage = () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);
       if (res) {
+        handleFieldChange("ledgerCode", res.toString())
         handleFieldChange({
           ledgerCode: res.toString(),
           accGroupID: rootState.PopupData.accountLedger.data.groupId,
@@ -73,6 +74,7 @@ export const AccountLedgerManage = () => {
           rootState.PopupData.accountLedger.data.groupId != undefined &&
           rootState.PopupData.accountLedger.data.groupId != null
         ) {
+          handleFieldChange("accGroupID", rootState.PopupData.accountLedger.data.groupId);
           handleFieldChange(
             "accGroupID",
             rootState.PopupData.accountLedger.data.groupId
@@ -173,7 +175,7 @@ export const AccountLedgerManage = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("drCr", data.drCr)
                     }
-                    label="DrCr"
+                    label={t("drcr")}
                     enableClearOption={false}
                     options={[
                       { value: "Dr", label: t("Dr") },

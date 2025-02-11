@@ -180,7 +180,7 @@ const BalanceSheetVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getF
                    {item?.groupName || " "}
                  </Text>
               ))}
-              <Text style={styles.total}>total</Text>
+              <Text style={styles.total}>Total</Text>
              {liabilities?.map((item: any, index: number) => (
                 <Text
                 style={[
@@ -199,7 +199,7 @@ const BalanceSheetVerticalPDFTemplate: React.FC<{ data: any[], filter: any, getF
               </Text>
             ))}
             
-              <Text style={styles.total}>total</Text>
+              <Text style={styles.total}>Total</Text>
            
               </View>
               <View style={[styles.tableCell,styles.amount]}>

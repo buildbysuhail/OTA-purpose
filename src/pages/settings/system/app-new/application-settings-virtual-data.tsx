@@ -15,50 +15,50 @@ export interface SettingGroup {
 export const settingGroups: SettingGroup[] = [
   {
     id: 'main',
-    label: 'Main Settings',
+    label: 'main_settings',
     settings: [
-      { key: 'mainGeneral', label: 'General' },
-      { key: 'mainBackup', label: 'Backup' },
-      { key: 'mainPrinting', label: 'Printing' },
-      { key: 'mainMultiBranch', label: 'Multi Branch' },
-      { key: 'mainCRM', label: 'CRM' },
+      { key: 'mainGeneral', label: 'general' },
+      { key: 'mainBackup', label: 'backup' },
+      { key: 'mainPrinting', label: 'printing' },
+      { key: 'mainMultiBranch', label: 'multi_branch' },
+      { key: 'mainCRM', label: 'crm' },
 
     ]
   },
   {
     id: 'accounts',
-    label: 'Accounts Settings',
+    label: 'accounts_settings',
     settings: [
-      { key: 'accountsGeneral', label: 'General' },
-      { key: 'accountsHR', label: 'HR' },
-      { key: 'accountsEInvoiceGCC', label: 'KSA E-Invoice' }
+      { key: 'accountsGeneral', label: 'general' },
+      { key: 'accountsHR', label: 'hr' },
+      { key: 'accountsEInvoiceGCC', label: 'ksa_e-invoice' }
     ]
   },
   {
     id: 'inventory',
-    label: 'Inventory Settings',
+    label: 'inventory_settings',
     settings: [
-      { key: 'inventoryGeneral', label: 'General' },
-      { key: 'inventoryProducts', label: 'Products' },
-      { key: 'inventoryGSTSettings', label: 'GST Settings' }, 
-      { key: 'inventoryTaxSettings', label: 'Taxes' },
-      { key: 'inventoryPurchase', label: 'Purchase' },
+      { key: 'inventoryGeneral', label: 'general' },
+      { key: 'inventoryProducts', label: 'products' },
+      { key: 'inventoryGSTSettings', label: 'gst_settings' }, 
+      { key: 'inventoryTaxSettings', label: 'taxes' },
+      { key: 'inventoryPurchase', label: 'purchase' },
       {
         key: 'inventorySales',
-        label: 'Sales',
+        label: 'sales',
         subSettings: [
-          { key: 'inventorySalesGeneral', label: 'General' },
-          { key: 'inventorySalesPOS', label: 'POS' },
-          { key: 'inventorySalesCounter', label: 'Counter' }
+          { key: 'inventorySalesGeneral', label: 'general' },
+          { key: 'inventorySalesPOS', label: 'pos' },
+          { key: 'inventorySalesCounter', label: 'counter' }
         ]
       },
-      { key: 'inventoryPPOS', label: 'PPOS' },
-      { key: 'inventorySchemesPromotions', label: 'Schemes & Promotions' }
+      { key: 'inventoryPPOS', label: 'ppos' },
+      { key: 'inventorySchemesPromotions', label: 'schemes_&_promotions' }
     ]
   },
   {
     id: 'miscellaneous',
-    label: 'Miscellaneous',
+    label: 'miscellaneous',
     settings: []
   }
 ]

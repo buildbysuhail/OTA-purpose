@@ -9,15 +9,11 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { MoreVertical } from "lucide-react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import {
-  toggleAccountGroupPopup,
-  toggleAccountLedgerPopup,
-} from "../../../../redux/slices/popup-reducer";
+import { toggleAccountGroupPopup, toggleAccountLedgerPopup } from "../../../../redux/slices/popup-reducer";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { AccountGroupManage } from "../account-groups/account-group-manage";
 import { AccountLedgerManage } from "../account-ledgers/account-ledger-manage";
-import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 const api = new APIClient();
@@ -26,13 +22,13 @@ const OptionsColumn = ({ data }: { data: any }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
-  const rootState = useRootState();
+  const { t } = useTranslation('masters');
+
   const toggleMenu = () => {
     setMenuVisible((prev) => !prev);
   };
 
   const closeMenu = () => setMenuVisible(false);
-
   const handleOutsideClick = (e: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
       closeMenu();
@@ -50,20 +46,18 @@ const OptionsColumn = ({ data }: { data: any }) => {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
   const handleDelete = async (data: any) => {
     setIsDeleting(true);
     try {
       ERPAlert.show({
         icon: "warning",
-        title: "Are you sure you want to delete",
+        title: t("are_you_sure_you_want_to_delete"),
         onConfirm: async () => {
           const res = await api.delete(
-            `${data.isGroup == 1 ? Urls.account_group : Urls.account_ledger}${
-              data.id
+            `${data.isGroup == 1 ? Urls.account_group : Urls.account_ledger}${data.id
             }`
           );
-          handleResponse(res, () => {});
+          handleResponse(res, () => { });
         },
       });
     } catch (error) {
@@ -75,65 +69,51 @@ const OptionsColumn = ({ data }: { data: any }) => {
 
   return (
     <div ref={menuRef} className="absolute">
-      {(data.isAddable || data.isEditable || data.isDeletable ) && (
-      <button
-        className="dark:hover:bg-dark-hover-bg hover:bg-gray-100 p-1 rounded transition-colors"
-        onClick={toggleMenu}
-      >
-        <MoreVertical size={18} className="dark:text-dark-text dark:hover:text-dark-hover-text text-gray-500" />
-      </button>
+      {(data.isAddable || data.isEditable || data.isDeletable) && (
+        <button className="dark:hover:bg-dark-hover-bg hover:bg-gray-100 p-1 rounded transition-colors" onClick={toggleMenu}>
+          <MoreVertical size={18} className="dark:text-dark-text dark:hover:text-dark-hover-text text-gray-500" />
+        </button>
       )}
 
       {menuVisible && (
         <div className="absolute top-0 right-0 mt-[1.6rem] w-40 dark:bg-dark-bg dark:border-dark-border dark:text-dark-text bg-white border border-gray-300 rounded shadow-md z-50 transition-all duration-300 ease-in-out ">
           {data.isAddable && (
             <>
-              <button
-                className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
-                onClick={(e) => {
-                  dispatch(
-                    toggleAccountGroupPopup({ isOpen: true, key: null, data:{groupId: data.id} })
-                  );
-                }}
-              >
-                Add Group
+              <button className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100" onClick={() => {
+                dispatch(toggleAccountGroupPopup({ isOpen: true, key: null, data: { groupId: data.id } }));
+              }}>
+                {t("add_group")}
               </button>
 
               <button
                 className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
-                onClick={(e) => {
-                  dispatch(
-                    toggleAccountLedgerPopup({ isOpen: true, key: null, data:{groupId: data.id} })
-                  );
-                }}
-              >
-                Add Ledger
+                onClick={() => { dispatch(toggleAccountLedgerPopup({ isOpen: true, key: null, data: { groupId: data.id } })); }}>
+                {t("add_ledger")}
               </button>
             </>
           )}
+
           {data.isEditable && (
             <button
               className="block w-full px-4 py-2 text-left dark:hover:bg-dark-hover-bg hover:bg-gray-100"
               onClick={() =>
                 data.isGroup
                   ? dispatch(
-                      toggleAccountGroupPopup({ isOpen: true, key: data.id })
-                    )
+                    toggleAccountGroupPopup({ isOpen: true, key: data.id })
+                  )
                   : dispatch(
-                      toggleAccountLedgerPopup({ isOpen: true, key: data.id })
-                    )
-              }
-            >
-              Edit
+                    toggleAccountLedgerPopup({ isOpen: true, key: data.id })
+                  )
+              }>
+              {t("edit")}
             </button>
           )}
 
           {data.isDeletable && (
             <button
               className="block w-full px-4 py-2 text-left hover:bg-red-100 text-red-600"
-              onClick={() => handleDelete(data)}
-            >
-              Delete
+              onClick={() => handleDelete(data)}>
+              {t("delete")}
             </button>
           )}
         </div>
@@ -152,9 +132,11 @@ const ChartOfAccounts: React.FC = React.memo(() => {
   );
   const dispatch = useAppDispatch();
   const rootState = useRootState();
+
   useEffect(() => {
     loadAccountStructure();
   }, []);
+
   const loadAccountStructure = async () => {
     setLoading(true);
     try {
@@ -199,18 +181,20 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                   checked={showbalance}
                   // data={setShowbalance}
                   label={t("show_balance")}
-                  onChange={(e) => setShowbalance(!showbalance)}
+                  onChange={() => setShowbalance(!showbalance)}
                 />
                 <ERPButton
                   className="ml-10"
-                  title="Refresh"
+                  title={t("refresh")}
                   variant="primary"
                   onClick={loadAccountStructure}
                 />
               </div>
+
               {loading ? (
-                <div>Loading...</div>
+                <div>{t("loading")}</div>
               ) : data.length > 0 ? (
+
                 <div className="grid grid-cols-1 gap-3">
                   <div className="flex items-start justify-between relative">
                     {" "}
@@ -228,21 +212,38 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                       scrolling={{ mode: "virtual" }} // Specify virtual scrolling mode
                     >
                       <Selection mode="single" />
+
                       <Column
                         dataField="accountGroup"
-                        caption="Account Group"
+                        caption={t("account_group")}
                       />
-                      <Column dataField="aliasName" caption="Alias Name" width={200}/>
-                      { showbalance &&
-                      <Column dataField="balance" caption="Balance" width={150} />
-}
-                      <Column dataField="createdUser" caption="Created User" width={100} />
+
+                      <Column
+                        dataField="aliasName"
+                        caption={t("alias_name")}
+                        width={200}
+                      />
+
+                      {showbalance &&
+                        <Column
+                          dataField="balance"
+                          caption={t("balance")}
+                          width={150} />
+                      }
+
+                      <Column
+                        dataField="createdUser"
+                        caption={t("created_user")}
+                        width={100}
+                      />
+
                       <Column
                         dataField="createdDate"
-                        caption="Created Date"
+                        caption={t("created_date")}
                         dataType="date"
                         width={100}
                       />
+
                       <Column
                         width={60}
                         cellRender={(rowData) => (
@@ -250,12 +251,12 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                         )}
                         caption=""
                       />
-                      {/* <Column dataField="code" /> */}
+
                     </TreeList>
                   </div>
                 </div>
               ) : (
-                <div>No data available</div>
+                <div>{t("no_data_available")}</div>
               )}
 
               <ERPModal
@@ -270,6 +271,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                 }}
                 content={<AccountGroupManage />}
               />
+
               <ERPModal
                 isOpen={rootState.PopupData.accountLedger.isOpen || false}
                 title={t("acc_ledger")}
@@ -291,6 +293,3 @@ const ChartOfAccounts: React.FC = React.memo(() => {
 });
 
 export default ChartOfAccounts;
-function loadAccountStructure() {
-  throw new Error("Function not implemented.");
-}

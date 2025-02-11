@@ -287,5 +287,10 @@
 
     "save_settings":"حفظ الإعدادات",
     "show_party_balance_in_sales": "إظهار رصيد الطرف في المبيعات",
-    "allow_sales_detailed_edit": "السماح بتعديل مفصل للمبيعات"
+    "allow_sales_detailed_edit": "السماح بتعديل مفصل للمبيعات",
+
+    "main_settings": "الإعدادات الرئيسية",
+    "accounts_settings": "إعدادات الحسابات",
+    "inventory_settings": "إعدادات المخزون",
+    "taxes": "الضرائب"
 }

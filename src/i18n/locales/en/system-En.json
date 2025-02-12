@@ -56,7 +56,7 @@
     "name":"Name",
 
     "financial_year": "Financial Year",
-    "si_no": "SiNo",
+    "si_no": "Sl.No",
     "id": "Id",
     "from_date": "From Date",
     "to_date": "To Date",
@@ -148,7 +148,7 @@
 
     "base_currency": "Base Currency",
     "add_currency": "Add Currency",
-    "SiNo": "S.No",
+    "SiNo": "Sl.No",
     "to_currency": "To Currency",
     "rate": "Rate",
     "rate_date": "Rate Date",

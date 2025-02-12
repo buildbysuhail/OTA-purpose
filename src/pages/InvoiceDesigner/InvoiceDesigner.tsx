@@ -60,6 +60,7 @@ import 'pdfjs-dist/build/pdf.worker';
 import AccDetailsDesigner from "./Designer/accDetailsDesigner";
 import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
 import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-universal";
+import AdvancedPayment from "./DownloadPreview/advanced-payment";
 interface DesignSectionType {
   id: number;
   name: string;
@@ -368,7 +369,7 @@ const InvoiceDesigner = () => {
   const templateKindComponentMap = {
     premium: AccountTransactionsTemplate,
     standard: AccountTransactionsVoucher,
-    universal:AccountTransactionsUniversal
+    universal:AccountTransactionsUniversal,
     // Add more template kinds here as needed
   };
   return (
@@ -456,6 +457,30 @@ const InvoiceDesigner = () => {
               <button
                 title="Save Template"
                 onClick={manageSaveTemplate}
+                className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+              >
+                <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
+                <span className="text-sm">Save</span>
+                {loading && (
+                  <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>
+                )}
+              </button>
+            </div>
+          ):["AP", "cheque"].includes(templateGroup) ? (
+            <div>
+              <button
+                title="Save Template"
+                onClick={() => {
+                 
+                    manageSaveAccTemplate(
+                      <AdvancedPayment
+                        template={templateData.activeTemplate}
+                        data={DummyVoucherData}
+                        currentBranch={currentBranch}
+                        userSession={userSession}
+                      />
+                    );
+                }}
                 className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
               >
                 <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
@@ -604,6 +629,21 @@ const InvoiceDesigner = () => {
           </PDFViewer>
         </>
       )}
+
+     {["AP","cheque"].includes(templateGroup) && (
+       <PDFViewer
+        className="pdf-viewer"
+        width="100%"
+        height="auto"
+        style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}
+      >
+        <AdvancedPayment
+        template={templateData.activeTemplate}
+        data={DummyVoucherData}
+        currentBranch={currentBranch}
+        />
+       </PDFViewer>
+      )} 
 
       {["SI", "SR"].includes(templateGroup) && (
         <InvoicePreview

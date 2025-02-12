@@ -18,10 +18,13 @@ const toggleTransactionPopup = (payload: {
 });
 
 
-const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: string,title?: string}> = ({
+const AccTransactionGrid: React.FC<{voucherType?: string
+  , transactionType?: string
+  ,title?: string ,addTitle?: string}> = ({
   voucherType,
   transactionType,
   title,
+  addTitle,
 }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('transaction');
@@ -266,7 +269,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
                 method={ActionType.GET}
                 // postData={{voucherType: voucherType, transactionType: transactionType}} 
                 gridHeader={t(`${title}`)}
-                gridId="transaction-grid"
+                gridId={`${addTitle??"transactions"} Transactions`}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
                 allowExport={true}

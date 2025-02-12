@@ -9,18 +9,6 @@ export const initialState: ledgerData = {};
 const dataContainerSlice = createSlice({
   name: "dataContainer",
   initialState,
-  // reducers: {
-  //   setData: (
-  //     state, 
-  //     action: PayloadAction<{key: keyof(ledgerData), value: any}>
-  //   ) => {
-  //     return {
-  //       ...state,
-  //       [action.payload.key]: action.payload.value
-  //     };
-  //   },
-
-  // },
   reducers: {
     setData: (state, action: PayloadAction<{ key:  keyof(ledgerData); value: any }>) => {
       state[action.payload.key] = action.payload.value;

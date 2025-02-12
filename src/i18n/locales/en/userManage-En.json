@@ -1,7 +1,7 @@
 {
     "id":"Id",
     "users": "Users",
-    "si_no": "SiNo",
+    "si_no": "Sl.No",
     "user": "User",
     "password": "Password",
     "counter": "Counter",

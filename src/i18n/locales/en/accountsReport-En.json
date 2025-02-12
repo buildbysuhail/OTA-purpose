@@ -68,7 +68,7 @@
     "modified_date_to":"Modified Date To",
     "edited":"Edited",
     "deleted":"Deleted",
-    "si_no": "S.No",
+    "si_no": "Sl.No",
     "transaction_date": "Transaction Date",
     "modified_date": "Modified Date",
     "time": "Time",
@@ -309,7 +309,7 @@
     "stdSprice":"Std S Price",
     "stdPprice":"Std P Price",
 
-    "SiNo": "S.No",
+    "SiNo": "Sl.No",
     "voucherType":"Voucher Type",
     "voucherNo":"Voucher No",
     "inwardQty":"Inward Qty",

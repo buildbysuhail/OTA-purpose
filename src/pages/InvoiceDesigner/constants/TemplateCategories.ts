@@ -272,7 +272,16 @@ export const TemplateTypes: {
     name: "Request For Quotation",
     template_group_id: VoucherType.RequestForQuotation,
   },
-
+  {
+    id: 54,
+    name: "Advanced Payment",
+    template_group_id: "AP",
+  },
+  {
+    id: 55,
+    name: "Cheque",
+    template_group_id: "cheque"
+  },
   
 ];
 

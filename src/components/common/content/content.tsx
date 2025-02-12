@@ -489,6 +489,7 @@ const Content: FC<ContentProps> = () => {
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         title={route.listTitle}
+                        addTitle={route.title}
                       />
                     </RouteGuard>
                   }

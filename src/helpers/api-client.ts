@@ -46,6 +46,7 @@ class APIClient {
   /**
    * Fetches data from the given URL
    */
+  
   get = (url: string, queryString: string = ""): Promise<any> => {
     setAuthorization();
     let response: Promise<any>;
@@ -55,8 +56,11 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string, force: boolean = false): Promise<any> => {
     try {
+      // if(url.includes('/Accounts/Data/AccLedgers/') && !force) {
+         
+      // }
       setAuthorization(token);
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
       const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);

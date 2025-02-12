@@ -354,7 +354,7 @@ const Urls = {
   grid_preference_reset: "/Core/GridPreference/Reset/",
   //Templates
   templates: "/Core/Template/",
-  default_template:"/Core/GetDeaultTemplate/",
+  default_template:"Core/Template/Default",
   crm_templates: "/Core/Template/CRM/",
 
   // Tax Treatments

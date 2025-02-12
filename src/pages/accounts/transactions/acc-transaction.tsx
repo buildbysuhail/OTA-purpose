@@ -1753,6 +1753,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           label={t(formState.formElements.voucherNumber.label)}
                           value={formState.transaction.master.voucherNumber}
                           type="number"
+                          required={true}
                           showCustomNumberChanger={true}
                           className="max-w-[200px]"
                           onChange={async (e: any) => {
@@ -2052,6 +2053,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         id="transactionDate"
                         label={t(formState.formElements.transactionDate.label)}
                         className="lg:max-w-[300px]"
+                        required={true}
                         value={
                           new Date(formState.transaction.master.transactionDate)
                         }
@@ -2194,6 +2196,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="ledgerCode"
                     className=""
+                    required={true}
                     label={t(formState.formElements.ledgerCode.label)}
                     value={formState.row.ledgerCode}
                     ref={ledgerCodeRef}
@@ -2222,6 +2225,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       ref={ledgerIdRef}
                       triggerEffect={triggerEffect}
                       id="ledgerID"
+                      required={true}
                       className="w-full"
                       label={t(formState.formElements.ledgerID.label)}
                       data={formState.row}
@@ -2286,6 +2290,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     boldInput={true}
                     label={t(formState.formElements.amount.label)}
                     type="number"
+                    required={true}
                     min={0}
                     value={formState.row.amount}
                     onKeyDown={(e) => {
@@ -2339,8 +2344,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     }
                   />
                 )}
-                <div className="xl:w-[170px] lg:w-[250px]">
-                  {formState.formElements.discount.visible && !formState.row.hasDiscount && (
+                <div className="xl:w-[170px] lg:w-[250px] mt-2">
+                  {formState.formElements.discount.visible && (
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="hasDiscount"
@@ -2361,14 +2366,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   )}
 
-                  {formState.formElements.discount.visible && formState.row.hasDiscount && (
+                  {formState.formElements.discount.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="discount"
                       type="number"
                       min={0}
-                      className=""
-                      label={t("discount")}
+                      className="!m-0"
+                      label=" "
                       value={formState.row.discount}
                       onChange={(e) =>
                         dispatch(
@@ -2378,6 +2383,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         )
                       }
                       disabled={
+                        formState.row.hasDiscount != true ||
                         formState.formElements.discount?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
@@ -2491,13 +2497,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPButton
                       ref={btnAddRef}
                       title={t(formState.formElements.btnAdd.label)}
+                      className="mt-4"
                       variant="primary"
                       loading={formState.rowProcessing}
                       type="button"
                       onClick={() => addOrEditRow()}
                       onKeyDown={(e) => {
                         console.log(`Key:${e.key}`);
-
                         if (e.key == "Enter") {
                           addOrEditRow();
                         }

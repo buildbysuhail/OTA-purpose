@@ -74,7 +74,7 @@ const loadTemplateId = useCallback(async(template: TemplateState) => {
                     <div
                       key={`ti_${temp?.id}`}
                       tabIndex={0}
-                      onClick={() => { }}
+                      // onClick={() => { }}
                       className=" relative dark:border-dark-border hover:ring-0 hover:shadow-xl cursor-pointer 100px  w-auto min-w-[140px]  aspect-[2.3/3] border border-accent/30 rounded"
                     >
                       <div className="relative group">

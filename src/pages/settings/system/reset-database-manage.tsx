@@ -99,19 +99,20 @@ const ResetDbManage: React.FC = React.memo(() => {
   useEffect(() => {
     loadTransactions();
   }, []);
+
   const loadTransactions = async () => {
     const res: any[] = await api.getAsync(Urls.reset_data_base);
     const updatedVouchers = res?.map((tr) => ({
       ...tr, // Spread existing properties
       checked: false, // Add new `checked` property
     }));
-    
+
     setAllTransactions(updatedVouchers);
   };
   const { t } = useTranslation("system");
 
   const handleSubmit = useCallback(async () => {
-    
+
     const masters = Object.keys(master)
       .filter((key) => master[key]) // Filter only the true values
       .map((key) => ({ tableTypeCode: key }));
@@ -136,17 +137,17 @@ const ResetDbManage: React.FC = React.memo(() => {
         dispatch(toggleResetDataBasePopup({ isOpen: false }));
       },
       () => {
-        
+
         setPostData((prevData: any) => ({
           ...prevData,
           validations: response.validations,
         }));
       }
     );
-  }, [postData?.data, master,master]);
+  }, [postData?.data, master, master]);
 
   const onClose = useCallback(() => {
-    dispatch(toggleResetDataBasePopup({ isOpen: false, key: null,reload: false }));
+    dispatch(toggleResetDataBasePopup({ isOpen: false, key: null, reload: false }));
   }, []);
 
   return (
@@ -170,7 +171,6 @@ const ResetDbManage: React.FC = React.memo(() => {
               }));
             }}
           />
-
           <ERPDateInput
             type="date"
             id="to"
@@ -208,10 +208,9 @@ const ResetDbManage: React.FC = React.memo(() => {
 
         <div className="flex justify-start  gap-5 mb-4">
           {/* deme text area */}
-
           <div className="relative">
             <label className="block text-sm font-medium dark:!text-dark-text text-gray-700 p-3 sticky top-0 dark:!bg-dark-bg-header bg-white z-10">
-             {t("transaction_forms")}
+              {t("transaction_forms")}
             </label>
             <div className="overflow-x-auto border dark:!border-dark-border border-gray-400  rounded w-auto max-w-[550px] h-auto max-h-[260px] dark-scrollbar"
             // style={{

@@ -29,11 +29,11 @@ export const useAccPrint = () => {
 const {hasRight} = useUserRights();
 
 
-const handleDirectPrint = async () => {
+const handleDirectPrint = async (template:any) => {
   try {
     // Generate the PDF for the selected template
     const pdfDocument = renderSelectedTemplate({
-      template: formState.template,
+      template: template,
       data: formState.transaction,
       currentBranch: currentBranch,
       userSession: userSession,
@@ -77,12 +77,6 @@ const handleDirectPrint = async () => {
 
   const fetchDefaultTemplates = async (voucherType:any) => {
       try {
-        const existingTemplate = formState.templatesData?.find(
-          (template: any) => template.templateGroup === voucherType
-        );
-        if(existingTemplate){
-          dispatch(accFormStateHandleFieldChange({fields:{template:existingTemplate}}));
-        }else{
           const res = await api.getAsync(
             `${Urls.default_template}?template_group=${voucherType}`
           );
@@ -103,8 +97,12 @@ const handleDirectPrint = async () => {
             templateType: res.templateType,
             thumbImage: res.thumbImage as string | undefined,
           };
+         
           dispatch(acctemplatesData(_template));
-        }
+          // const template = formState.templatesData?.find(item=>item.templateGroup===voucherType) 
+          dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
+          return _template;
+     
         
      
       } catch (error) {
@@ -114,8 +112,7 @@ const handleDirectPrint = async () => {
 
   const printVoucher = async (setIsPrintModalOpen?:any,voucherType?:any,voucher?: AccTransactionFormState) => {
    voucher = voucher == undefined ? formState : voucher
-   await fetchDefaultTemplates(voucherType)
-  // Check if template is null, undefined, or an empty object
+     // Check if template is null, undefined, or an empty object
   // if (!formState?.template || Object.keys(formState.template).length === 0) {
   //   ERPAlert.show({
   //     title: "Warning",
@@ -124,15 +121,31 @@ const handleDirectPrint = async () => {
   //   });
   //   return; 
   // }
-
+  
+   const existingTemplate = formState.templatesData?.find(
+    (template: any) => template.templateGroup === voucherType
+  );
+  let template = formState.template;
+ 
+    if(formState.template== undefined || formState.template ==null)
+    {
+      if(existingTemplate){
+        dispatch(accFormStateHandleFieldChange({fields:{template:existingTemplate}}));
+        template = existingTemplate
+      } else{
+        template = await fetchDefaultTemplates(voucherType)
+      }
+    }
+ 
+ 
   // If template is valid, proceed with printing
   if (formState.printPreview) {
     setIsPrintModalOpen(true);
   } else {
-    await handleDirectPrint();
+    await handleDirectPrint(template);
   }
- 
   };
+
    const printPaymentReceiptAdvice = (voucher?: AccTransactionFormState) => {
     voucher = voucher == undefined ? formState : voucher
 

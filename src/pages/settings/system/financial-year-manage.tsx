@@ -10,7 +10,6 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { ActionType } from "../../../redux/types";
 
 export interface FinancialYearData {
   dateFrom: Date;

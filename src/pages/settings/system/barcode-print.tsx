@@ -206,7 +206,7 @@ const BarcodePrint: React.FC = () => {
   };
 
   const barcodeFormSubmit = useCallback(async () => {
-    
+
     setBarcodeFormLoading(true);
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
@@ -377,7 +377,6 @@ const BarcodePrint: React.FC = () => {
                       data={barcodeForm.data}
                       validation={barcodeForm?.validations?.formBcode}
                       onChangeData={(data: any) => {
-                        
                         setBarcodeForm((prev: any) => ({
                           ...prev,
                           data: data,
@@ -452,7 +451,7 @@ const BarcodePrint: React.FC = () => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-3 xxl:grid-cols-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-2">
                       {[{ key: "si", label: t("sales") }, { key: "pi", label: t("purchase") }, { key: "bti", label: t("bti") }, { key: "bto", label: t("bto") }, { key: "os", label: t("os") }].map((_item, index) => (
-                        <div  key={`type-${_item.key.toLowerCase()}-${index}`}  className="flex items-center space-x-2">
+                        <div key={`type-${_item.key.toLowerCase()}-${index}`} className="flex items-center space-x-2">
                           <ERPRadio
                             id={`type-${_item.key.toLowerCase()}-${index}`}
                             name="vType"
@@ -598,7 +597,7 @@ const BarcodePrint: React.FC = () => {
                     <ERPInput
                       key={num}
                       id={`note${num}`}
-                      label={`Note ${num}`}
+                      label={t("note") + ` ${num}`}
                       type="text"
                       value={barcodeDesc?.data ? barcodeDesc?.data[`note${num}` as any] : null}
                       customSize="sm"
@@ -736,8 +735,8 @@ const BarcodePrint: React.FC = () => {
           closeModal={() => {
             setShowPrint(false);
           }}
-          content={<DownloadBarcodePreview template={template} data={data}/>}>
-        </ERPModal>
+          content={<DownloadBarcodePreview template={template} data={data} />}
+        />
       }
     </Fragment>
   );

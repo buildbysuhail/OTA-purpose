@@ -28,7 +28,7 @@ export const CounterManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<CounterData>({
     url: Urls.Counter,
-    onClose:useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -39,7 +39,7 @@ export const CounterManage: React.FC = React.memo(() => {
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCounterPopup({ isOpen: false, key: null,reload: false }));
+    dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: false }));
   }, []);
 
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -101,13 +101,12 @@ export const CounterManage: React.FC = React.memo(() => {
               handleFieldChange("vrPrefix", data.vrPrefix);
             }}
           />
-        } 
+        }
         <ERPCheckbox
           {...getFieldProps('maintainShift')}
           label={t("maintain_shift")}
           onChangeData={(data: any) => handleFieldChange('maintainShift', data.maintainShift)}
         />
-
       </div>
       <ERPFormButtons
         onClear={handleClear}

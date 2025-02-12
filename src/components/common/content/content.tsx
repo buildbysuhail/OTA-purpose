@@ -488,6 +488,7 @@ const Content: FC<ContentProps> = () => {
                       <AccTransactionGrid
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
+                        title={route.listTitle}
                       />
                     </RouteGuard>
                   }

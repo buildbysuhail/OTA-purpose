@@ -171,6 +171,7 @@ interface ERPDevGridProps {
   condition?: any;
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
+  gridAddButtonLink?: string;
   gridAddButtonIcon?: string | "";
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
@@ -474,6 +475,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       filterText = "",
       hideGridAddButton = false,
       gridAddButtonType = "link",
+      gridAddButtonLink = "#",
       gridAddButtonIcon = "ri-add-line",
       gridAddButtonText = "Add",
       heightToAdjustOnMobile = 200,
@@ -1648,7 +1650,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   <div>
                     {gridAddButtonType == "link" && (
                       <Link
-                        to="#"
+                        to={gridAddButtonLink}
                         className="ti-btn-primary-full ti-btn ti-btn-full "
                       >
                         Add<i className="ri-user-add-line"></i>

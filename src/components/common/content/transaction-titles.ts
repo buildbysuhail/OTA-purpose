@@ -17,3 +17,22 @@ export enum TransactionTitles {
   BankReconciliation = "bank_reconciliation",
   PostDatedCheques = "post_dated_cheques",
 }
+export enum TransactionListTitles {
+  CashPayment = "cash_payment",
+  CashReceipt = "cash_receipt",
+  CashPaymentEstimate = "cash_payment_estimate",
+  CashReceiptEstimate = "cash_receipt_estimate",
+  BankPayment = "bank_payment",
+  BankReceipt = "bank_receipt",
+  ChequePayment = "cheque_payment",
+  ChequeReceipt = "cheque_receipt",
+  OpeningBalance = "opening_balance",
+  JournalEntry = "journal_entry",
+  MultiJournalEntry = "multi_journal_entry",
+  JournalEntrySpecial = "journal_entry_special",
+  DebitNote = "debit_note",
+  CreditNote = "credit_note",
+  TaxOnExpensePayment = "tax_on_expense_payment",
+  BankReconciliation = "bank_reconciliation",
+  PostDatedCheques = "post_dated_cheques",
+}

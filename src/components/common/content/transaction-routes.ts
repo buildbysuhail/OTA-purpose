@@ -1,7 +1,7 @@
 import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
-import { TransactionTitles } from "./transaction-titles";
+import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
 }
@@ -13,6 +13,7 @@ export interface TransactionRoute {
   transactionType: string;
   formType: string;
   title: string;
+  listTitle: string;
   drCr: string;
   shortKey?: string;
   shortKeyList?:string;
@@ -27,6 +28,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "CashPayment",
     formType: "",
     title: TransactionTitles.CashPayment,
+    listTitle: TransactionListTitles.CashPayment,
     drCr: "Dr",
     shortKey:"ctrl+alt+c"
   },
@@ -38,6 +40,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "CashReceipt",
     formType: "",
     title: TransactionTitles.CashReceipt,
+    listTitle: TransactionListTitles.CashReceipt,
     drCr: "Cr",
     shortKey: "ctrl+alt+r"
   },
@@ -73,6 +76,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "BankPayment",
     formType: "",
     title: TransactionTitles.BankPayment,
+    listTitle: TransactionListTitles.BankPayment,
     drCr: "Dr",
     shortKey: "ctrl+alt+b"
   },
@@ -84,6 +88,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "BankReceipt",
     formType: "",
     title: TransactionTitles.BankReceipt,
+    listTitle: TransactionListTitles.BankReceipt,
     drCr: "Cr",
     shortKey: "ctrl+alt+k"
   },
@@ -95,6 +100,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "ChequePayment",
     formType: "",
     title: TransactionTitles.ChequePayment,
+    listTitle: TransactionListTitles.ChequePayment,
     drCr: "Dr",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
@@ -106,6 +112,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "ChequeReceipt",
     formType: "",
     title: TransactionTitles.ChequeReceipt,
+    listTitle: TransactionListTitles.ChequeReceipt,
     drCr: "Cr",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
   },
@@ -117,6 +124,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "OpeningBalance",
     formType: "",
     title: TransactionTitles.OpeningBalance,
+    listTitle: TransactionListTitles.OpeningBalance,
     drCr: "",
     shortKey: "ctrl+alt+o"
   },
@@ -128,6 +136,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "JournalEntry",
     formType: "",
     title: TransactionTitles.JournalEntry,
+    listTitle: TransactionListTitles.JournalEntry,
     drCr: "",
     shortKey: "ctrl+alt+j"
   },
@@ -139,6 +148,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "MultiJournalEntry",
     formType: "",
     title: TransactionTitles.MultiJournalEntry,
+    listTitle: TransactionListTitles.MultiJournalEntry,
     drCr: "",
     shortKey: "ctrl+alt+m"
   },
@@ -162,6 +172,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "DebitNote",
     formType: "",
     title: TransactionTitles.DebitNote,
+    listTitle: TransactionListTitles.DebitNote,
     drCr: "Dr",
     shortKey: "ctrl+alt+d"
   },
@@ -173,6 +184,7 @@ export const transactionRoutes: TransactionRoute[] = [
     transactionType: "CreditNote",
     formType: "",
     title: TransactionTitles.CreditNote,
+    listTitle: TransactionListTitles.CreditNote,
     drCr: "Cr",
     shortKey: "ctrl+alt+n"
   },
@@ -185,6 +197,7 @@ export const transactionRoutes: TransactionRoute[] = [
     formType: "VAT",
     title: TransactionTitles.TaxOnExpensePayment,
     drCr: "Dr",
+    listTitle: TransactionListTitles.TaxOnExpensePayment,
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
   },
   // {

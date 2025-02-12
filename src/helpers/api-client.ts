@@ -55,7 +55,7 @@ class APIClient {
   get = (url: string, queryString: string = ""): Promise<any> => {
     setAuthorization();
     let response: Promise<any>;
-    response =
+    response = 
       queryString !== ""
         ? axios.get(`${url}?${queryString}`)
         : axios.get(`${url}`);

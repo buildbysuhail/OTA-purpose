@@ -1,29 +1,22 @@
 import { useEffect, useState } from "react";
-import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 import { TemplateState } from "./Designer/interfaces";
-import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
-import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
-import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
+import { DummyVoucherData } from "./constants/DummyData";
 import { TemplateTypes } from "./constants/TemplateCategories";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-import PSModel from "../../components/common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import { t } from "i18next";
-import { Url } from "devextreme-react/cjs/chart";
 import { useTranslation } from "react-i18next";
-import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 import VoucherType from "../../enums/voucher-types";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
@@ -50,12 +43,12 @@ const Templates = ({ }) => {
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(
     (searchParams?.get("template_group")! as VoucherType | string) ?? "SI"
   );
-  const [accountVoucher,setAccountVoucher]=useState(DummyVoucherData)
+  const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
   /* ########################################################################################### */
   const [maxSidePage, setMaxSidePage] = useState<number>(500);
 
   useEffect(() => {
-    let wh= window.innerHeight; 
+    let wh = window.innerHeight;
     setMaxSidePage(wh);
   }, []);
 
@@ -83,9 +76,9 @@ const Templates = ({ }) => {
   }
 
   /* ########################################################################################### */
-  
+
   const setDefaultTemplate = async (id: any) => {
-    const res = await api.patch(`${Urls.templates}${id}`,{});
+    const res = await api.patch(`${Urls.templates}${id}`, {});
     handleResponse(res, async () => {
       await getTemplates();
     });
@@ -123,7 +116,6 @@ const Templates = ({ }) => {
   };
 
   useEffect(() => {
-  
     setTempData([]);
     getTemplates();
   }, [templateGroup]);
@@ -134,24 +126,19 @@ const Templates = ({ }) => {
       {showTemplateListing ? (
         <div className="flex h-full overflow-hidden text-black dark:text-white dark:!bg-dark-bg bg-white dark:bg-body_dark ">
           <ERPScrollArea className={`overflow-y-auto overflow-x-hidden md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-full `}
-          maxHeight={`${maxSidePage-60}px`}>
-            <h1 className=" font-medium text-xl p-5 mb-5">{t("templates")}</h1>
-                 
-                {/* className={`  flex h-auto  flex-col gap-1`}> */}
+            maxHeight={`${maxSidePage - 60}px`}>
+            <h1 className="font-medium text-xl p-5 mb-5">{t("templates")}</h1>
+
+            {/* className={`  flex h-auto  flex-col gap-1`}> */}
             <div className="flex flex-col overflow-auto pb-24 h-full">
               {TemplateTypes.map((template, index) => (
                 <div
                   key={`tt_${index}`}
                   tabIndex={0}
-                  onClick={() => {
-                    setSearchParams({ template_group: template?.template_group_id });
-                    setTemplateGroup(template?.template_group_id);
-                  }}
-                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? "dark:bg-dark-text dark:text-dark-hover-text  bg-gray-100" : "hover:bg-gray-50 dark:hover:bg-dark-hover-bg"
-                    }`}
-                >
+                  onClick={() => { setSearchParams({ template_group: template?.template_group_id }); setTemplateGroup(template?.template_group_id) }}
+                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("template_group") === template?.template_group_id ? "dark:bg-dark-text dark:text-dark-hover-text  bg-gray-100" : "hover:bg-gray-50 dark:hover:bg-dark-hover-bg"}`}>
                   <div>
-                    <h1 className=" text-sm">{template.name}</h1>
+                    <h1 className="text-sm">{t(template.name)}</h1>
                   </div>
                 </div>
               ))}
@@ -175,19 +162,17 @@ const Templates = ({ }) => {
                     <div className="md:w-[140px] lg:w-[200px] aspect-[2.3/3] shimmer bg-gray-200 rounded text-xs flex justify-center items-center h-full"></div>
                   </>
                 )}
-
                 {tempData?.map((temp: any) => {
                   return (
                     <div
                       key={`ti_${temp?.id}`}
                       tabIndex={0}
                       onClick={() => { }}
-                      className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded"
-                    >
+                      className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded">
                       <div className="relative group">
                         <img
                           src={temp?.thumbImage}
-                          style={{ objectFit: 'scale-down' }} 
+                          style={{ objectFit: 'scale-down' }}
                           alt=""
                           className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
                         />
@@ -207,7 +192,6 @@ const Templates = ({ }) => {
                       <div className="px-2 py-3">
                         <h1 className="font-medium text-xs capitalize break-words truncate" title={temp?.templateName}>
                           {temp?.templateName}
-                          
                         </h1>
                         <div className="flex text-xs justify-between mt-1">
                           {temp?.isCurrent ? (
@@ -224,7 +208,7 @@ const Templates = ({ }) => {
                                 className="w-3 text-accent cursor-pointer"
                                 // onClick={() => navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)}
                                 // onClick={() => navigate(`/label-designer/${temp?.id}`)}
-                                onClick={() => templateGroup == "barcode" ?  navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`,{ state: { templateKind: temp?.templateKind }})}
+                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`) : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, { state: { templateKind: temp?.templateKind } })}
                               />
                             </div>
                             <div>
@@ -325,26 +309,28 @@ interface ChooseTemplateProps {
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { t } = useTranslation("system")
   const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
     let cc: TemplateState = customJsonParse(res.content)
-    
+
     const propertiesState = {
       ...cc.propertiesState,
-      templateName: "Untitled Template " + (length + 1)
+      templateName: t("untitled_template") + (length + 1)
     };
+
     const _template = {
       ...cc,
       id: null,
       templateName: "",
       propertiesState: propertiesState
     }
-    dispatch(  setTemplate( _template ));
-      const state = template?.templateKind ? { templateKind: template.templateKind } : {};
-       templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : 
-       navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
+
+    dispatch(setTemplate(_template));
+    const state = template?.templateKind ? { templateKind: template.templateKind } : {};
+    templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) :
+      navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state });
   };
 
   return (
@@ -363,20 +349,19 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
             ?.map((template: TemplateState, index: number) => {
-              
+
               const paperSize = template?.propertiesState?.pageSize;
               const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
               return (
                 <div
                   key={`ti_${index}`}
                   tabIndex={0}
-                  className=" relative hover:ring-2 hover:shadow-md  100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border rounded border-gray-400"
-                >
+                  className=" relative hover:ring-2 hover:shadow-md  100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border rounded border-gray-400">
                   <div className=" relative">
                     <img
                       src={template?.thumbImage ?? thumbImage}
                       alt=""
-                      style={{ objectFit: 'scale-down' }} 
+                      style={{ objectFit: 'scale-down' }}
                       className="antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2]"
                     />
                     <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
@@ -385,8 +370,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     <h1 className="font-medium text-xs capitalize break-words">{template?.templateKind}</h1>
                     <div
                       className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
-                      onClick={() => handleChooseTemplate(template)}
-                    >
+                      onClick={() => handleChooseTemplate(template)}>
                       {t("use_this")}
                     </div>
                   </div>

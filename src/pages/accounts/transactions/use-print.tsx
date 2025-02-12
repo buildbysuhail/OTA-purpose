@@ -8,11 +8,14 @@ import { printCheque_AccTransaction } from "./acc-print-trans-service";
 import { AccTransactionData, AccTransactionFormState } from "./acc-transaction-types";
 import { logUserAction } from "../../../redux/slices/user-action/thunk";
 import { useDispatch } from "react-redux";
-import { accFormStateHandleFieldChange } from "./reducer";
+import { accFormStateHandleFieldChange, acctemplatesData } from "./reducer";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { customJsonParse } from "../../../utilities/jsonConverter";
+import Urls from "../../../redux/urls";
 const api = new APIClient();
 export const useAccPrint = () => {
   const currentBranch = useCurrentBranch();
@@ -64,26 +67,63 @@ const handleDirectPrint = async () => {
     });
   } catch (error) {
     console.error("Error printing voucher:", error);
-   ERPAlert.show({
-          title: "Warning",
-          text: "An error occurred while printing. Please try again.",
-          icon: "warning",
-        });
+  //  ERPAlert.show({
+  //         title: "Warning",
+  //         text: "An error occurred while printing. Please try again.",
+  //         icon: "warning",
+  //       });
   }
 };
 
+  const fetchDefaultTemplates = async (voucherType:any) => {
+      try {
+        const existingTemplate = formState.templatesData?.find(
+          (template: any) => template.templateGroup === voucherType
+        );
+        if(existingTemplate){
+          dispatch(accFormStateHandleFieldChange({fields:{template:existingTemplate}}));
+        }else{
+          const res = await api.getAsync(
+            `${Urls.default_template}?template_group=${voucherType}`
+          );
+          const cc: TemplateState = customJsonParse(res.content);
+          const _template = {
+            ...cc,
+            id: res.id,
+            background_image: res?.payload?.data?.background_image as string | undefined,
+            background_image_header: res?.payload?.data?.background_image_header as string | undefined,
+            background_image_footer: res?.payload?.data?.background_image_footer as string | undefined,
+            signature_image: res?.payload?.data?.signature_image as string | undefined,
+            branchId: res.branchId,
+            content: res.content,
+            isCurrent: res.isCurrent,
+            templateGroup: res.templateGroup,
+            templateKind: res.templateKind,
+            templateName: res.templateName,
+            templateType: res.templateType,
+            thumbImage: res.thumbImage as string | undefined,
+          };
+          dispatch(acctemplatesData(_template));
+        }
+        
+     
+      } catch (error) {
+        console.error("Error fetching Default templates:", error);
+      }
+    };
 
-  const printVoucher = async (setIsPrintModalOpen?:any,voucher?: AccTransactionFormState) => {
+  const printVoucher = async (setIsPrintModalOpen?:any,voucherType?:any,voucher?: AccTransactionFormState) => {
    voucher = voucher == undefined ? formState : voucher
+   await fetchDefaultTemplates(voucherType)
   // Check if template is null, undefined, or an empty object
-  if (!formState?.template || Object.keys(formState.template).length === 0) {
-    ERPAlert.show({
-      title: "Warning",
-      text: "Please Select Your Template!!!",
-      icon: "warning",
-    });
-    return; // Exit the function early if no template is selected
-  }
+  // if (!formState?.template || Object.keys(formState.template).length === 0) {
+  //   ERPAlert.show({
+  //     title: "Warning",
+  //     text: "Please Select Your Template!!!",
+  //     icon: "warning",
+  //   });
+  //   return; 
+  // }
 
   // If template is valid, proceed with printing
   if (formState.printPreview) {

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, SetStateAction } from "react";
 import { settingGroups } from "./application-settings-virtual-data";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
@@ -61,16 +60,8 @@ const LayoutToggle = ({
             checked={isCompactView}
             onChange={handleToggle}
           />
-          <div
-            className={`w-10 h-4 rounded-full shadow-inner transition-colors ${
-              isCompactView ? "bg-gray-300" : "bg-gray-300"
-            }`}
-          ></div>
-          <div
-            className={`dot absolute -left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-              isCompactView ? "translate-x-full" : ""
-            }`}
-          ></div>
+          <div className={`w-10 h-4 rounded-full shadow-inner transition-colors ${isCompactView ? "bg-gray-300" : "bg-gray-300"}`}></div>
+          <div className={`dot absolute -left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full shadow transition-transform ${isCompactView ? "translate-x-full" : ""}`}></div>
         </div>
       </label>
     </div>
@@ -142,7 +133,7 @@ export default function SettingsPage() {
   ) => {
     let targetElement: HTMLElement | null = null;
     if (subItemsCatKey) {
-      
+
       targetElement = subItemsCatRef.current[subItemsCatKey];
       setActiveSubCatItem(subItemsCatKey);
       setBlinkSection(subItemsCatKey);
@@ -314,7 +305,7 @@ export default function SettingsPage() {
                   userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key];
-              
+
               if (
                 subElement ||
                 (setting.subSettings != undefined &&
@@ -331,7 +322,7 @@ export default function SettingsPage() {
                   scrollPosition < subOffsetTop + subOffsetHeight
                 ) {
                   if (setting.key.includes("inventory")) {
-                    
+
                   }
                   setActiveSubItem(setting.key);
                   setBlinkSection(setting.key);
@@ -402,9 +393,8 @@ export default function SettingsPage() {
         )}
       </button>
       <aside
-        className={`fixed z-20 dark:!bg-dark-bg dark:border-dark-border  dark:!bg-dark-bg bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 ltr:border-r rtl:border-l `}
+        className={`fixed z-20 dark:!bg-dark-bg dark:border-dark-border  dark:!bg-dark-bg bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 ltr:border-r rtl:border-l `}
       >
         <div className="md:hidden flex justify-end p-4">
           <button
@@ -422,14 +412,13 @@ export default function SettingsPage() {
             <div key={item.id}>
               <button
                 className={`  relative flex items-center w-full px-3 md:px-4 py-1.5 mt-1 md:mt-2 duration-200 border-r-4 text-left
-                  ${
-                    item.id === activeSection
-                      ? "bg-gray-300 border-primary dark:text-black text-primary"
-                      : "border-transparent hover:bg-gray-200 hover:!text-dark-hover-text hover:border-gray-400"
+                  ${item.id === activeSection
+                    ? "bg-gray-300 border-primary dark:text-black text-primary"
+                    : "border-transparent hover:bg-gray-200 hover:!text-dark-hover-text hover:border-gray-400"
                   }`}
                 onClick={() => scrollToSection(item.id)}
               >
-                <span className="mx-4 md:mx-2 text-sm">{item.label}</span>
+                <span className="mx-4 md:mx-2 text-sm">{t(item.label)}</span>
               </button>
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
@@ -447,36 +436,31 @@ export default function SettingsPage() {
                       <>
                         <button
                           key={set.key}
-                          className={`w-full px-3 md:px-4 dark:!dark-label  py-1.5 text-left text-sm ${
-                            set.key === activeSubItem
-                              ? "bg-gray-300 border-primary dark:text-dark-hover-text text-primary"
-                              : "border-transparent hover:bg-gray-200 hover:!text-dark-hover-text"
-                          }  `}
+                          className={`w-full px-3 md:px-4 dark:!dark-label py-1.5 text-left text-sm ${set.key === activeSubItem
+                            ? 'bg-gray-300 border-primary dark:text-dark-hover-text text-primary'
+                            : 'border-transparent hover:bg-gray-200 hover:!text-dark-hover-text'
+                            }`}
                           onClick={() => scrollToSection(item.id, set.key)}
                         >
-                          {
+                          {t(
                             settingGroups
                               .find((group) => group.id === item.id)
-                              ?.settings.find(
-                                (setting) => setting.key === set.key
-                              )?.label
-                          }
+                              ?.settings.find((setting) => setting.key === set.key)
+                              ?.label || ''
+                          )}
                         </button>
                         {set.key === activeSubItem && (
                           <div className="ml-4 mt-1 space-y-1">
                             {set?.subSettings?.map((subCat) => (
                               <button
                                 key={subCat.key}
-                                className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${
-                                  subCat.key === activeSubCatItem
-                                    ? "bg-gray-300 border-primary text-primary"
-                                    : "border-transparent hover:bg-gray-200"
-                                }  `}
-                                onClick={() =>
-                                  scrollToSection(item.id, set.key, subCat.key)
-                                }
+                                className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${subCat.key === activeSubCatItem
+                                  ? 'bg-gray-300 border-primary text-primary'
+                                  : 'border-transparent hover:bg-gray-200'
+                                  }`}
+                                onClick={() => scrollToSection(item.id, set.key, subCat.key)}
                               >
-                                {subCat?.label}
+                                {t(subCat?.label)}
                               </button>
                             ))}
                           </div>

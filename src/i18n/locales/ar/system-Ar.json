@@ -225,5 +225,8 @@
    " counter_id": "معرف العداد",
    "save": "حفظ",
    "close": "إغلاق",
-   "this_system_code": "رمز النظام هذا :"
+   "this_system_code": "رمز النظام هذا :",
+
+   "cancel": "إلغاء",
+   "import": "استيراد"
 }

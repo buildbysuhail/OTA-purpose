@@ -225,5 +225,8 @@
     "counter_id": "counter ID",
     "save": "Save",
     "close": "Close",
-    "this_system_code":"This System Code :"
+    "this_system_code":"This System Code :",
+
+    "cancel":"Cancel",
+    "import":"Import"
 }

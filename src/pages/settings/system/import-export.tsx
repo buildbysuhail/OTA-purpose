@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleImportExportPopup, } from "../../../redux/slices/popup-reducer";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
@@ -33,7 +32,6 @@ const ImportExportManage: React.FC = React.memo(() => {
   const initialData = {
     data: {
       file: "",
-
     },
     validations: {
       filePath: "",
@@ -43,7 +41,6 @@ const ImportExportManage: React.FC = React.memo(() => {
   const [formFile, setFormFile] = useState<FormData>();
   const [importExport, setImportExport] = useState<any>(initialImportExportData);
   const dispatch = useDispatch();
-
   const onSubmit = async () => {
     setLoading(true);
     const res = await api.post(Urls.import_privilegeCards_Excel, formFile, {
@@ -53,6 +50,7 @@ const ImportExportManage: React.FC = React.memo(() => {
     setLoading(false);
     handleResponse(res, () => { }, () => { })
   };
+
   const onClose = useCallback(async () => {
     dispatch(toggleImportExportPopup({ isOpen: false }));
   }, []);
@@ -71,10 +69,7 @@ const ImportExportManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
         <div>
-          <label
-            htmlFor="fileInput"
-            className="block text-sm font-medium dark:!text-dark-text text-gray-700"
-          >
+          <label htmlFor="fileInput" className="block text-sm font-medium dark:!text-dark-text text-gray-700">
             {t("file_path")}
           </label>
           <input
@@ -138,14 +133,14 @@ const ImportExportManage: React.FC = React.memo(() => {
           />
         </div>
       </div>
+
       <div className="w-full p-2 flex justify-end">
         <ERPButton
           type="reset"
           title={t("cancel")}
           variant="secondary"
           onClick={onClose}
-        // disabled={emailLoading}
-        ></ERPButton>
+        />
         <ERPButton
           type="button"
           disabled={loading}
@@ -153,7 +148,7 @@ const ImportExportManage: React.FC = React.memo(() => {
           onClick={onSubmit}
           loading={loading}
           title={t("import")}
-        ></ERPButton>
+        />
       </div>
     </div>
   );

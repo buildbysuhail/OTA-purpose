@@ -238,7 +238,7 @@ const ERPModal = React.memo(
                       <div className="flex items-center space-x-2">
                         {isMaximize ? (
                           <button
-                            className="p-2 dark:hover:!text-dark-hover-text hover:bg-gray-200 rounded-full"
+                            className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
                             onClick={() => setIsMaximized(!isMaximized)}
                             aria-label={isMaximized ? "Restore" : "Maximize"}
                           >

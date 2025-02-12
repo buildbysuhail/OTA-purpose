@@ -287,5 +287,10 @@
 
   "save_settings": "Save Settings",
   "show_party_balance_in_sales": "Show Party Balance In Sales",
-  "allow_sales_detailed_edit": "Allow Sales Detailed Edit"
+  "allow_sales_detailed_edit": "Allow Sales Detailed Edit",
+
+  "main_settings":"Main settings",
+  "accounts_settings":"Accounts settings",
+  "inventory_settings":"Inventory settings",
+  "taxes":"Taxes"
 }

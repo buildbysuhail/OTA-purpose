@@ -16,7 +16,7 @@ import DataGrid, { Column, Scrolling, RemoteOperations, Paging, KeyboardNavigati
 import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
 interface PartiesProps {
   type: string;
-  gridId:string;
+  gridId: string;
 }
 export const getInitialImportExportData = (type: string) => ({
   data: {
@@ -57,7 +57,7 @@ interface PartiesForImport {
   obDate?: Date | null;
 }
 const api = new APIClient();
-const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) => {
+const Parties: React.FC<PartiesProps> = ({ type = 'Cust', gridId = 'grd_cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const [totalCount, setTotalCount] = useState(0);
   const [failedCount, setFailedCount] = useState(0);
@@ -71,7 +71,6 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
   const [gridHeight, setGridHeight] = useState(500);
 
   useEffect(() => {
-
     const wh = window.innerHeight;
     setGridHeight(wh - 400);
   }, []);
@@ -79,18 +78,17 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       const validFileTypes = ['application/vnd.ms-excel', 'application/pdf'];
       if (!validFileTypes.includes(file.type)) {
         setShowValidation(true);
         return;
       }
-
       let formData = new FormData();
       formData.append('file', file, file.name);
       setFormFile(formData);
     }
   };
+
   const onCellPrepared = (e: any) => {
     if (e.rowType === 'data' && e.column.dataField === "siNo" && (e.data.isValid === false || e.data.IsValid === false)) {
       e.cellElement.style.cssText = "background-color:#ffd0d0";
@@ -98,9 +96,9 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       //e.cellElement.style.backgroundColor = 'red';
     }
   }
+
   const onSubmit = useCallback(async () => {
     try {
-      
       const res = await api.postAsync(Urls.import_parties, failedCount > 0 && succeededCount > 0 ? store.filter((row: any) => row.isValid === true) : store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
@@ -110,7 +108,6 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       setLoading(false);
     }
     setLoading(true);
-
   }, [store]);
 
   const onChooseTemplate = async () => {
@@ -126,11 +123,9 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       const link = document.createElement('a');
       link.href = url;
       link.download = "Parties.xlsx";
-
       // Trigger download
       document.body.appendChild(link);
       link.click();
-
       // Cleanup
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
@@ -149,7 +144,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
         'Content-Type': 'multipart/form-data',
         'Accept': 'application/json',
       });
-      
+
       setStore(res.items);
       setTotalCount(res.items.length);
       setFailedCount(res.items?.filter((row: any) => row.isValid != true).length || 0);
@@ -168,15 +163,12 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
   const rootState = useRootState();
   const renderCell = (cellData: any, validation: string) => {
     return (
-      <div
-        className={validation ? 'grid-error-cell' : ''}
-        title={validation ? validation : ''} // Add validation message as tooltip
-      >
+      <div className={validation ? 'grid-error-cell' : ''} title={validation ? validation : ''} >
         {cellData.value}
       </div>
     );
   };
-  const columns: DevGridColumn[] =( [
+  const columns: DevGridColumn[] = ([
     {
       dataField: "siNo",
       caption: t("SiNo"),
@@ -186,7 +178,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowFiltering: true,
       width: 50,
       isLocked: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -205,7 +197,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "party",
@@ -214,7 +206,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledger",
@@ -224,7 +216,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "displayName",
@@ -234,7 +226,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "address",
@@ -244,7 +236,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
     // {
     //   dataField: "ifsc",
@@ -263,7 +255,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "mobilePhone",
@@ -273,7 +265,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "workPhone",
@@ -283,7 +275,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "contactPhone",
@@ -293,7 +285,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "faxNumber",
@@ -303,7 +295,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "webURL",
@@ -313,7 +305,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "email",
@@ -323,7 +315,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "startDate",
@@ -333,7 +325,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "expiryDate",
@@ -343,7 +335,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "creditDays",
@@ -353,7 +345,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "creditAmount",
@@ -363,7 +355,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "priceCategoryName",
@@ -373,7 +365,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "taxNumber",
@@ -383,7 +375,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "cstNumber",
@@ -393,7 +385,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "userName",
@@ -439,7 +431,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "buildingNumber",
@@ -449,7 +441,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "plotIdentificationNumber",
@@ -459,7 +451,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "postalCode",
@@ -469,7 +461,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "citySubDivision",
@@ -479,7 +471,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "country",
@@ -489,7 +481,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "countrySubEntity",
@@ -499,7 +491,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "idType",
@@ -509,7 +501,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "idNumber",
@@ -519,7 +511,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "parentRoute",
@@ -529,9 +521,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
-
     {
       dataField: "actions",
       caption: t("actions"),
@@ -556,7 +547,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
               );
             },
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
+            confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
             url: Urls?.parties, key: cellElement?.data?.id
           }}
         />
@@ -567,6 +558,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
   useEffect(() => {
     dispatch(toggleParties({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -576,16 +568,16 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={type === "Cust" ? [...columns] : [...columns,
-                    {
-                      dataField: "routeName",
-                      caption: t("route_name"),
-                      dataType: "string",
-                      allowSorting: true,
-                      allowSearch: true,
-                      allowFiltering: true,
-                      width: 100,
-                      showInPdf:true,
-                    }]}
+                  {
+                    dataField: "routeName",
+                    caption: t("route_name"),
+                    dataType: "string",
+                    allowSorting: true,
+                    allowSearch: true,
+                    allowFiltering: true,
+                    width: 100,
+                    showInPdf: true,
+                  }]}
                   gridHeader={type === 'Cust' ? t("customers") : t("suppliers")}
                   dataUrl={`${Urls.parties}type/${type}`}
                   gridId={gridId}
@@ -620,7 +612,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
         width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleParties({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleParties({ isOpen: false, key: null, reload: false }));
         }}
         content={
           <div className="h-[700px] overflow-y-auto">
@@ -633,8 +625,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
         isOpen={showValidation}
         closeButton="LeftArrow"
         hasSubmit={false}
-        closeTitle="Close"
-        title="Add Items"
+        closeTitle={t("close")}
+        title={t("add_items")}
         width="w-full"
         isFullHeight={true}
         closeModal={() => setShowValidation(false)}
@@ -644,22 +636,23 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-blue">{totalCount}</div>
-                  <span className="text-sm font-medium text-gray">Total Count</span>
+                  <span className="text-sm font-medium text-gray">{t("total_count")}</span>
                 </div>
                 <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-green">{succeededCount}</div>
-                  <span className="text-sm font-medium text-gray">Succeed</span>
+                  <span className="text-sm font-medium text-gray">{t("succeed")}</span>
                 </div>
                 <div className="flex flex-col items-center p-3 dark:bg-dark-bg-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
                   <div className="text-2xl font-bold text-red">{failedCount}</div>
-                  <span className="text-sm font-medium text-gray">Failure</span>
+                  <span className="text-sm font-medium text-gray">{t("failure")}</span>
                 </div>
+
                 <ERPButton
                   type="button"
                   variant="primary"
                   disabled={succeededCount == 0}
                   onClick={onSubmit}
-                  title={succeededCount == totalCount ? "Save": "Ignore and Save" }
+                  title={succeededCount == totalCount ? t("save") : t("ignore_and_save")}
                 />
               </div>
               {/* Buttons Section */}
@@ -668,13 +661,13 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                   type="button"
                   variant="secondary"
                   onClick={onChooseTemplate}
-                  title="Choose Template"
+                  title={t("choose_template")}
                   className="me-3"
                 />
                 <ERPFileUploadButton
-                  buttonText="Select Excel"
+                  buttonText={t("select_excel")}
                   handleFileChange={onSelectExcel}
-                ></ERPFileUploadButton>
+                />
               </div>
             </div>
 
@@ -701,7 +694,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="siNo"
-                  caption=""
+                  caption={t("SiNo")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -711,7 +704,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="ledgerID"
-                  caption="LedgerID"
+                  caption={t("ledger_ID")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -722,7 +715,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="partyCode"
-                  caption="Party Code"
+                  caption={t("party_code")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -733,7 +726,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="partyName"
-                  caption="Party Name"
+                  caption={t("party_name")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -744,7 +737,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="displayName"
-                  caption="Display Name"
+                  caption={t("display_name")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -755,7 +748,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="address1"
-                  caption="Address 1"
+                  caption={t("address_1")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -766,7 +759,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="address2"
-                  caption="Address 2"
+                  caption={t("address_2")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -777,7 +770,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="address3"
-                  caption="Address 3"
+                  caption={t("address_3")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -788,7 +781,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="address4"
-                  caption="Address 4"
+                  caption={t("address_4")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -799,7 +792,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="officePhone"
-                  caption="Office Phone"
+                  caption={t("office_phone")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -810,7 +803,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="mobilePhone"
-                  caption="Mobile Phone"
+                  caption={t("mobile_phone")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -821,7 +814,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="faxNumber"
-                  caption="Fax Number"
+                  caption={t("fax_number")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -832,7 +825,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="email"
-                  caption="Email"
+                  caption={t("email")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -843,7 +836,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="billwiseBillApplicable"
-                  caption="Billwise Bill Applicable"
+                  caption={t("billwise_bill_applicable")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -854,7 +847,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="creditDays"
-                  caption="Credit Days"
+                  caption={t("credit_days")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -865,7 +858,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="creditAmount"
-                  caption="Credit Amount"
+                  caption={t("credit_amount")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -876,7 +869,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="taxNumber"
-                  caption="Tax Number"
+                  caption={t("tax_number")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -887,7 +880,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="cstNumber"
-                  caption="CST Number"
+                  caption={t("cst_number")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -898,7 +891,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="partyType"
-                  caption="Party Type"
+                  caption={t("party_type")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -909,7 +902,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="startDate"
-                  caption="Start Date"
+                  caption={t("start_date")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -920,7 +913,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="expiryDate"
-                  caption="Expiry Date"
+                  caption={t("expiry_date")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -931,7 +924,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="isActive"
-                  caption="Is Active"
+                  caption={t("is_active")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -942,7 +935,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="opBalance"
-                  caption="Op Balance"
+                  caption={t("op_balance")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -953,7 +946,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="drCr"
-                  caption="Dr Cr"
+                  caption={t("drcr")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}
@@ -964,7 +957,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
                 />
                 <Column
                   dataField="obDate"
-                  caption="Ob Date"
+                  caption={t("ob_date")}
                   dataType="string"
                   allowSorting={true}
                   allowSearch={true}

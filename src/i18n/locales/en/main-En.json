@@ -177,5 +177,24 @@
     "stock_count":"Stock count",
     "accountant":"Accountant",
     "reports":"Reports",
-    "rpos":"RPOS"
+    "rpos":"RPOS",
+
+    "customize_columns":"Customize columns",
+    "close":"Close",
+    "search":"Search",
+    "column":"Column",
+    "width":"Width",
+    "read_only":"Read only",
+    "pdf":"PDF",
+    "pdf_orientation":"Pdf orientation",
+    "portrait":"Portrait",
+    "landscape":"Landscape",
+    "save":"Save",
+
+    "crop_me":"Crop me",
+    "download_crop":"Download crop",
+    "security_error_when_downloading":"If you get a security error when downloading try opening the preview in a new tab (icon near top right).",
+    "hidden_download":"Hidden download",
+    "upload_image":"Upload image",
+    "crop_image":"Crop image"
 }

@@ -6,7 +6,6 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { ActionType } from "../../../../redux/types";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccountGroupData, initialAccountGroup } from "./account-group-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -33,7 +32,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
   const handleTranslation = async () => {
     try {
-      
+
       const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${'en'}&tl=${'ar'}&dt=t&q=${encodeURIComponent(formState.data.accGroupName)}`);
       if (!response.ok) {
         //throw new Error(HTTP error! status: ${response.status});
@@ -185,7 +184,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onClick={handleTranslation}
           className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500"
         >
-          Translate to Arabic
+          {t("translate_to_arabic")}
         </a>
       </div>
       {/* Link that triggers the modal */}

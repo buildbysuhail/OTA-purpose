@@ -8,11 +8,12 @@ import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference 
 import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
+import { useTranslation } from "react-i18next";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
-  ShowGridPreferenceChooserInRow?:boolean
+  ShowGridPreferenceChooserInRow?: boolean
 }
 const api = new APIClient();
 
@@ -25,17 +26,18 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
-
   const [searchCols, setSearchCols] = useState<String>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
 
   /* ########################################################################################### */
 
-  const onChange = (e: any) => {
+  const { t } = useTranslation('main');
 
+  const onChange = (e: any) => {
     onApplyPreferences(e);
   };
+
   const handleDragStart = (e: any) => {
     dragItem.current = e.target.id;
   };
@@ -46,10 +48,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleDropping = (e: any) => {
-
     let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
     let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
-    
     setPreferences((prevPreferences: any) => {
       return {
         ...prevPreferences,
@@ -69,9 +69,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
-    
     setPreferences(getInitialPreference(gridId, columns));
-
   }, [gridId, columns, onApplyPreferences]);
 
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
@@ -101,6 +99,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
       };
     });
   };
+
   const handleColumnPreferenceChange = (
     dataField: string,
     key: string, // Ensure `key` is a valid property of `ColumnPreference`
@@ -109,7 +108,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
     setPreferences((prevPreferences: any) => {
       if (!prevPreferences) return prevPreferences;
-
       const updatedColumnPreferences = prevPreferences.columnPreferences.map(
         (column: ColumnPreference) => {
           if (column.dataField === dataField) {
@@ -131,7 +129,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleApplyPreferences = async () => {
-    
     const preference = JSON.stringify(preferences)
     // Save preferences to localStorage
     localStorage.setItem(
@@ -159,15 +156,15 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   return (
     <Fragment>
       <button onClick={() => setIsOpen(true)} className={`ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] `}>
-        <i className={`${ShowGridPreferenceChooserInRow ? "text-[8px]":""} ri-apps-line`}></i>
+        <i className={`${ShowGridPreferenceChooserInRow ? "text-[8px]" : ""} ri-apps-line`}></i>
       </button>
       <ERPModal
         isForm
         isFullHeight={true}
         isOpen={isOpen}
         hasSubmit={false}
-        closeTitle="Close"
-        title={"Customize Columns"}
+        closeTitle={t("close")}
+        title={t("customize_columns")}
         width="!w-[80rem] !max-w-[60rem]"
         closeModal={() => setIsOpen(false)}
         content={(<div className="flex flex-col gap-1">
@@ -176,16 +173,16 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             className="mb-3"
             id="search_cols"
             value={searchCols}
-            placeholder="Search"
+            placeholder={t("search")}
             onChange={(e: any) => setSearchCols(e?.target?.value)}
             prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
           <div className="grid-preference-form">
             <div className="header-row dark:bg-dark-bg-header dark:text-dark-text bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-5 gap-2 items-center">
-              <span className="col-span-2">Column</span>
-              <span>Width</span>
-              <span>Read Only</span>
-              <span>PDF</span>
+              <span className="col-span-2">{t("column")}</span>
+              <span>{t("width")}</span>
+              <span>{t("read_only")}</span>
+              <span>{t("pdf")}</span>
             </div>
             {
               (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null) && preferences?.columnPreferences?.filter((item: any) => item.caption?.toLowerCase()
@@ -199,9 +196,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                     draggable
                     onDragStart={handleDragStart}
                     onDragEnter={handleDragEnd}
-                    onDragEnd={handleDropping}
-                  >
-
+                    onDragEnd={handleDropping}>
                     <div className={` dark:bg-dark-bg-header dark:text-dark-text bg-[#F9F9FB]  w-full px-1 rounded grid grid-cols-5 !items-center pl-4`}>
                       <label className="col-span-2 items-center py-1 capitalize text-sm dark:text-dark-text text-slate-800 cursor-move">
                         ⋮⋮
@@ -213,7 +208,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                             </div>
                           </div>
                         ) : (
-
                           <>
                             <input
                               type="checkbox"
@@ -247,23 +241,18 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                         onChange={(e) => handleColumnPreferenceChange(column.dataField, 'showInPdf', e.target.checked)}
                         disabled={column.isLocked}
                       />
-
-
                     </div>
                   </div>
                 );
-
               })
             }
-
-
           </div>
           <div className="m-2 p-1 ">
-              <p className="switcher-style-head">
-                  Pdf Orientation
-              </p>
+            <p className="switcher-style-head">
+              {t("pdf_orientation")}
+            </p>
             <div className="flex items-center gap-5 my-2 pl-5">
-                <div className="flex items-center">
+              <div className="flex items-center">
                 <input
                   type="radio"
                   name="portrait"
@@ -272,17 +261,14 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                   checked={preferences.orientation === "portrait"}
                   onChange={(e) => {
                     setPreferences((previous) => ({
-                    ...previous,
-                      orientation: "portrait" 
+                      ...previous,
+                      orientation: "portrait"
                     }))
                   }}
                 />
 
-                <label
-                  htmlFor="portrait"
-                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                >
-                  Portrait
+                <label htmlFor="portrait" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
+                  {t("portrait")}
                 </label>
               </div>
 
@@ -295,40 +281,34 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                   checked={preferences.orientation === "landscape"}
                   onChange={(e) => {
                     setPreferences((previous) => ({
-                    ...previous,
-                      orientation: "landscape" 
+                      ...previous,
+                      orientation: "landscape"
                     }))
                   }}
                 />
 
-                <label
-                  htmlFor="landscape"
-                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                >
-                  Landscape
+                <label htmlFor="landscape" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">
+                  {t("landscape")}
                 </label>
               </div>
-              
             </div>
           </div>
-     
         </div>
         )}
+
         footer={(
-          <div className="flex justify-end space-x-2 gap-4 py-5 dark:!border-dark-border border-t">  
+          <div className="flex justify-end space-x-2 gap-4 py-5 dark:!border-dark-border border-t">
             <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
-              Cancel
+              {t("cancel")}
             </ERPSubmitButton>
             <ERPSubmitButton type="button" className=" max-w-[115px]"
               variant="primary"
               onClick={handleApplyPreferences}>
-              Save
+              {t("save")}
             </ERPSubmitButton>
           </div>
         )}
       />
-
-
     </Fragment>
   );
 };

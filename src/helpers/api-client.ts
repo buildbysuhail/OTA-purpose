@@ -64,6 +64,17 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
+  filterLedgers = (ledgers: any[], queryString: string): any[] => {
+    if (!queryString) return ledgers;
+  
+    const queryParams = new URLSearchParams(queryString);
+    return ledgers.filter((ledger: any) =>
+      Array.from(queryParams.entries()).every(([key, value]) =>
+        ledger[key] !== undefined && String(ledger[key]) === value
+      )
+    );
+  };
+  
   getAsync = async (
     url: string,
     queryString: string = "",
@@ -78,7 +89,7 @@ class APIClient {
 let _qry = queryString;
       if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
         if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {
-          return reduxState.ledgers;
+          return this.filterLedgers(reduxState.ledgers, queryString);
         }
         _qry = "";
       }
@@ -88,15 +99,15 @@ let _qry = queryString;
       const response = config
         ? await axios.get(fullUrl, config)
         : await axios.get(fullUrl);
-      const _res =
+      let _res =
         response?.status !== undefined && response?.status !== null
           ? response?.data
           : response;
       if (url.includes("/Accounts/Data/AccLedgers/")) {
         dispatch?.(setData({ key: "ledgers", value: _res }));
-        _res = _Res
+        _res = this.filterLedgers(_res, queryString);
       }
-      return _res?.data;
+      return _res;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {

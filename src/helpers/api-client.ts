@@ -10,8 +10,7 @@ import { RootState } from "../redux/store";
 import { useDispatch } from "react-redux";
 import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
-const ledgerData =useAppSelector((state: RootState) => state.Data); 
-const dispatch = useDispatch();
+
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
 axios.defaults.baseURL = Urls.baseUrl;
@@ -62,11 +61,11 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string, force: boolean = false): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string, force: boolean = false,reduxState:any = undefined,dispatch:any=undefined): Promise<any> => {
     try {
       if(url.includes('/Accounts/Data/AccLedgers/') && !force){
-        if(ledgerData.ledgers !== undefined || ledgerData.ledgers !== null ){
-          return ledgerData.ledgers
+        if(reduxState.ledgers !== undefined || reduxState.ledgers !== null ){
+          return reduxState.ledgers
         }
       }else{
         setAuthorization(token);

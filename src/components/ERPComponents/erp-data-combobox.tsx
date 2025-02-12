@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { inputBox } from "../../redux/slices/app/types";
+import { useDispatch } from "react-redux";
 
 interface Option {
   value: any;
@@ -385,7 +386,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
-
+    const reduxState =  useAppSelector(
+      (state: RootState) => state.Data?.ledgers
+    );
+   const dispatch = useDispatch();
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     const inputBoxState = localInputBox || appState?.inputBox;
 
@@ -634,7 +638,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             field?.getListUrlDynamic != undefined
               ? field.getListUrlDynamic(data)
               : field?.getListUrl ?? "",
-            params
+            params,
+              undefined, // config (if not needed, keep it as undefined)
+              undefined, // token (if not needed, keep it as undefined)
+              false, // force (default value)
+              reduxState, // Pass reduxState here
+              dispatch //
           ));
         const labelKey = field?.labelKey ?? "label";
         const valueKey = field?.valueKey ?? "value";

@@ -5,8 +5,14 @@ import Cookies from "js-cookie";
 import * as jwt_decode from "jwt-decode";
 import ErrorManager from "../utilities/ErrorManager";
 import Urls from "../redux/urls";
+import { useAppSelector } from "../utilities/hooks/useAppDispatch";
+import { RootState } from "../redux/store";
+import { useDispatch } from "react-redux";
+import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
-
+const ledgerData =useAppSelector((state: RootState) => state.Data); 
+const dispatch = useDispatch();
+//  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
 axios.defaults.baseURL = Urls.baseUrl;
 // content type
@@ -58,18 +64,27 @@ class APIClient {
   };
   getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string, force: boolean = false): Promise<any> => {
     try {
-      // if(url.includes('/Accounts/Data/AccLedgers/') && !force) {
-         
+      if(url.includes('/Accounts/Data/AccLedgers/') && !force){
+        if(ledgerData.ledgers !== undefined || ledgerData.ledgers !== null ){
+          return ledgerData.ledgers
+        }
+      }else{
+        setAuthorization(token);
+        const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
+        const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
+        if (response?.status != undefined && response?.status != null) {
+          if(url.includes('/Accounts/Data/AccLedgers/')){
+            dispatch(setData({ key: "ledgers", value: response?.data }));
+          }
+          return response?.data;
+        }
+        else {
+          return response
+        }
+      }
+      // if(url.includes('/Accounts/Data/AccLedgers/') && !force) {   
       // }
-      setAuthorization(token);
-      const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
-      const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
-      if (response?.status != undefined && response?.status != null) {
-        return response?.data;
-      }
-      else {
-        return response
-      }
+    
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Handle Axios specific errors

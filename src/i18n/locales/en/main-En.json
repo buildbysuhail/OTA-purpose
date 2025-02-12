@@ -196,5 +196,7 @@
     "security_error_when_downloading":"If you get a security error when downloading try opening the preview in a new tab (icon near top right).",
     "hidden_download":"Hidden download",
     "upload_image":"Upload image",
-    "crop_image":"Crop image"
+    "crop_image":"Crop image",
+
+    "select":"Select"
 }

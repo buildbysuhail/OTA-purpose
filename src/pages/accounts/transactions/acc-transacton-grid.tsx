@@ -107,7 +107,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       {
         dataField: "referenceNumber",
         caption: t("ref_no"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -133,7 +133,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       {
         dataField: "totalDebit",
         caption: t("debit"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -143,7 +143,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       {
         dataField: "totalCredit",
         caption: t("credit"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -153,7 +153,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string, transactionType?: stri
       {
         dataField: "discount",
         caption: t("discount"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,

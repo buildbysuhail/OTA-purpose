@@ -150,7 +150,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             ></img>
           </div>
           <div>
-            <div className="text-sm dark:text-dark-text text-black">{ledgerData?.partyName}</div>
+            <div className="text-sm dark:text-dark-text text-black text-left">{ledgerData?.partyName}</div>
             <div className="flex items-center gap-1">
               <span className="font-medium">{ledgerData?.partyCategory}</span>
               {/* <h6 className="text-sm text-gray-600">{customerName.user}</h6> */}
@@ -169,7 +169,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 dark:border-dark-border border-b mb-6">
+      {/* <div className="flex gap-6 dark:border-dark-border border-b mb-6">
         <button
           className={`px-1 py-2 text-sm ${
             activeTab === "details"
@@ -190,7 +190,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
         >
           {t("activity_log")}
         </button>
-      </div>
+      </div> */}
 
       {activeTab === "details" ? (
         <div className="space-y-6">
@@ -449,7 +449,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
       ) : (
         // <p>test</p>
         <div className="max-w-2xl mx-auto p-4 space-y-1">
-          {activities.map((activity) => {
+          {/* {activities.map((activity) => {
             const config = getActivityConfig(activity.type);
             return (
               <div
@@ -476,7 +476,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
                 </div>
               </div>
             );
-          })}
+          })} */}
         </div>
       )}
     </div>

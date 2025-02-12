@@ -387,7 +387,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       (state: RootState) => state.AppState.appState
     );
     const reduxState =  useAppSelector(
-      (state: RootState) => state.Data?.ledgers
+      (state: RootState) => state.Data
     );
    const dispatch = useDispatch();
     // Use localInputBox if provided, otherwise fall back to global inputBox state

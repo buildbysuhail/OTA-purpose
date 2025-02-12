@@ -68,9 +68,15 @@ class APIClient {
     if (!queryString) return ledgers;
   
     const queryParams = new URLSearchParams(queryString);
+  
+    // If ledgerType is "All", return all ledgers
+    if (queryParams.get("ledgerType") === "All") {
+      return ledgers;
+    }
+  
     return ledgers.filter((ledger: any) =>
       Array.from(queryParams.entries()).every(([key, value]) =>
-        ledger[key] !== undefined && String(ledger[key]) === value
+        ledger[key == "ledgerID" ? "id": key] !== undefined && String(ledger[key == "ledgerID" ? "id": key]) === value
       )
     );
   };
@@ -88,6 +94,7 @@ class APIClient {
       debugger;
 let _qry = queryString;
       if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
+        debugger;
         if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {
           return this.filterLedgers(reduxState.ledgers, queryString);
         }
@@ -104,7 +111,8 @@ let _qry = queryString;
           ? response?.data
           : response;
       if (url.includes("/Accounts/Data/AccLedgers/")) {
-        dispatch?.(setData({ key: "ledgers", value: _res }));
+        debugger;
+        dispatch(setData({ key: "ledgers", value: _res }));
         _res = this.filterLedgers(_res, queryString);
       }
       return _res;

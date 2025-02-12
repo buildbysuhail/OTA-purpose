@@ -14,7 +14,9 @@ export const calculateTotal = (state: AccTransactionFormState): number => {
   debugger;
   return state.transaction.master.voucherType !== "MJV"
     ? state.transaction.details.reduce(
-        (sum, detail) => sum + ((Number(detail.amount) || 0)-(detail.hasDiscount ? Number(detail.discount??0) : 0)),
+        (sum, detail) => sum + ((Number(detail.amount) || 0)
+        // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
+      ),
         0
       )
     : state.transaction.details.reduce(

@@ -75,25 +75,28 @@ class APIClient {
   ): Promise<any> => {
     try {
       debugger;
-  
+let _qry = queryString;
       if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
         if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {
           return reduxState.ledgers;
         }
+        _qry = "";
       }
-  
+
       setAuthorization(token);
-      const fullUrl = queryString ? `${url}?${queryString}` : url;
-      const response = config ? await axios.get(fullUrl, config) : await axios.get(fullUrl);
-  
-      if (response?.status !== undefined && response?.status !== null) {
-        if (url.includes("/Accounts/Data/AccLedgers/")) {
-          dispatch?.(setData({ key: "ledgers", value: response?.data }));
-        }
-        return response?.data;
+      const fullUrl = _qry ? `${url}?${_qry}` : url;
+      const response = config
+        ? await axios.get(fullUrl, config)
+        : await axios.get(fullUrl);
+      const _res =
+        response?.status !== undefined && response?.status !== null
+          ? response?.data
+          : response;
+      if (url.includes("/Accounts/Data/AccLedgers/")) {
+        dispatch?.(setData({ key: "ledgers", value: _res }));
+        _res = _Res
       }
-  
-      return response;
+      return _res?.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {

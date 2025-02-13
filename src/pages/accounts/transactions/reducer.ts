@@ -341,7 +341,6 @@ const accTransactionSlice = createSlice({
     ) => {
       const index = action.payload.index;
       if (index >= 0 && index < state.transaction.details.length) {
-        state.transaction.master.totalAmount = calculateTotal(state);
         state = clearEntryControl(
           state,
           action.payload.applicationSettings?.accountsSettings
@@ -349,6 +348,8 @@ const accTransactionSlice = createSlice({
         );
         state.previousNarration = "";
         state.transaction.details.splice(index, 1);
+        
+        state.transaction.master.totalAmount = calculateTotal(state);
         state.transaction.details = state.transaction.details.map(
           (x, index) => ({
             ...x,

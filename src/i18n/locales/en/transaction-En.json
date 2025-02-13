@@ -194,7 +194,7 @@
   "show_reconciled": "Show reconciled",
   "modify": "Modify",
   "demo_expired": "Demo expired please activate",
-  "transaction_warning": "Transaction Date validation failed(Check Financial Year period)",
+  "transaction_warning": "Transaction Date validation failed",
   "invalid_transaction": "Invalid Transaction Amount",
   "zero_transaction": "Zero transaction amount not allowed",
   "debit_or_credit_in_master_ledger": "Please Select Debit/Credit in Master Ledger",

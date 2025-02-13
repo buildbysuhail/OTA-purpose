@@ -810,6 +810,8 @@ export const useAccTransaction = (
       }
       element.particularsLedgerId = element.relatedLedgerID;
       element.voucherType = formState.transaction.master.voucherType;
+      element.chqDate = element.chqDate == "" ? moment().local().toISOString() : element.chqDate;
+      element.bankDate = element.bankDate == "" ? moment().local().toISOString() : element.bankDate;
       updatedDetails.push(element);
     }
     return updatedDetails;
@@ -822,7 +824,10 @@ export const useAccTransaction = (
       : 0;
     // master.bankDate = new Date().toISOString();
     master.checkBouncedDate = moment().local().toISOString();
-    master.dueDate = master.transactionDate;
+    master.prevTransDate = master.transactionDate == "" ? moment().local().toISOString() : master.prevTransDate;
+    master.referenceDate = master.referenceDate == "" ? moment().local().toISOString() : master.referenceDate;;
+    master.transactionDate =master.transactionDate == "" ? moment().local().toISOString() : master.transactionDate;;
+    master.dueDate =master.transactionDate == "" ? moment().local().toISOString() : master.transactionDate;;
     const totalAmount = master.totalAmount || 0;
 
     if (master.drCr === "Cr") {

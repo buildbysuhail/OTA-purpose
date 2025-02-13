@@ -10,6 +10,7 @@ import { RootState } from "../redux/store";
 import { useDispatch } from "react-redux";
 import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
+import {decryptAES} from '../utilities/Utils'
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
@@ -64,22 +65,46 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  filterLedgers = (ledgers: any[], queryString: string): any[] => {
-    if (!queryString) return ledgers;
-  
-    const queryParams = new URLSearchParams(queryString);
-  
-    // If ledgerType is "All", return all ledgers
-    if (queryParams.get("ledgerType") === "All") {
-      return ledgers;
-    }
-  
-    return ledgers.filter((ledger: any) =>
-      Array.from(queryParams.entries()).every(([key, value]) =>
-        ledger[key == "ledgerID" ? "id": key] !== undefined && String(ledger[key == "ledgerID" ? "id": key]) === value
-      )
+ 
+
+  filterLedgers = async (ledgers: any[], queryString: string): Promise<any[]> => {
+    // Decrypt all names asynchronously
+    const decryptedLedgers = await Promise.all(
+        ledgers.map(async (x) => ({
+            ...x,
+            name: await decryptAES(x.name),
+        }))
     );
-  };
+
+    if (!queryString) return decryptedLedgers;
+
+    const queryParams = new URLSearchParams(queryString);
+
+    // Return all ledgers if ledgerType is "All"
+    if (queryParams.get("ledgerType") === "All") {
+        return decryptedLedgers;
+    }
+    else {
+      debugger;
+    }
+    
+    return decryptedLedgers.filter((ledger) => {
+      
+        for (const [key, value] of queryParams.entries()) {
+          
+            if (key === "ledgerID") {
+                if (ledger.id === undefined || String(ledger.id) !== value) {
+                    return false;
+                }
+            } else if (key === "ledgerType") {
+                if (ledger.ledgerType === undefined || String(ledger.ledgerType) !== value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    });
+};
   
   getAsync = async (
     url: string,
@@ -91,9 +116,11 @@ class APIClient {
     dispatch: any = undefined
   ): Promise<any> => {
     try {
-      debugger;
-let _qry = queryString;
+      console.log(queryString);
+      
+let _qry = queryString.toString();
       if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
+        
         debugger;
         if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {
           return this.filterLedgers(reduxState.ledgers, queryString);
@@ -111,7 +138,7 @@ let _qry = queryString;
           ? response?.data
           : response;
       if (url.includes("/Accounts/Data/AccLedgers/")) {
-        debugger;
+        
         dispatch(setData({ key: "ledgers", value: _res }));
         _res = this.filterLedgers(_res, queryString);
       }

@@ -40,7 +40,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
   const goBack = async () => {
-    debugger;
+    
     const has = await hasUnsavedChanges();
     if (has) {
       setIsModalOpen(true);

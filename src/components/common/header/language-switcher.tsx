@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { initialUserSessionData, UserModel } from "../../../redux/slices/user-session/reducer";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import usFlag from "../../../assets/images/flags/us_flag.png";
+import { changeLanguage } from "../../../utilities/languageUtils";
 
 interface HeaderProps {className?: string}
 
@@ -28,48 +29,11 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
   const handleLanguageSelect = (language: Locale) => {
     
     language.rtl ? switcherdata.Rtl(updateAppState, appState): switcherdata.Ltr(updateAppState, appState);
-    changeLanguage(language.code);
+    changeLanguage(language.code, dispatch, i18n);
     navigate(0);
   };
 
 
-  const changeLanguage = (currentData: string) => {
-    const locale = (languagesData.find((l) => l.code === currentData))?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
-    setLocaleInStorage(locale);
-    i18n.changeLanguage(locale?.code);
-    dispatch(setLocale(locale));
-    setLanguage(dispatch,locale);
-  };
-
-const setLocaleInStorage = (locale: Locale) => {
-  let upt = localStorage.getItem("up");
-  let utt = localStorage.getItem("ut");
-  
-  let userProfileDetails: UserModel = initialUserSessionData;
-  try {
-  if(upt != undefined && upt != null && upt != '' ) {
-    userProfileDetails = customJsonParse(atob(upt));
-  }  
-  } catch (error) {
-    
-  }
-  
-  let userThemes: Theme = initialThemeData;
-  try {
-  if(utt != undefined && utt != null && utt != '' ) {
-    userThemes = customJsonParse(atob(utt));
-  }  
-  } catch (error) {
-    
-  }
-  
-  userProfileDetails.language = locale.code;
-  userThemes.direction = locale.rtl ? "rtl" : "ltr";
-  
-  localStorage.setItem("up", modelToBase64(userProfileDetails));
-  localStorage.setItem("ut", modelToBase64(userThemes));
-
-}
   return (
     <div  className={`header-element py-[1rem] md:px-[0.65rem] px-2 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-left] ${className || ''}`}>
     <button id="dropdown-flag" type="button"

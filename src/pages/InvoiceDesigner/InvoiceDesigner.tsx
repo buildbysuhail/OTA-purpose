@@ -261,7 +261,7 @@ const InvoiceDesigner = () => {
       templateName: tmpTemplate.propertiesState?.templateName ?? "",
       thumbImage: dataUrl,
       content: JSON.stringify(tmpTemplate),
-      isCurrent: false,
+      isCurrent: tmpTemplate.isCurrent??false,
       backgroundImage: tmpTemplate.background_image ?? "",
       backgroundImageHeader: tmpTemplate.background_image_header ?? "",
       backgroundImageFooter: tmpTemplate.background_image_footer ?? "",

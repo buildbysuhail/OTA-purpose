@@ -7,6 +7,7 @@ import urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../redux/types";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -27,6 +28,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
   addTitle,
 }) => {
   const dispatch = useAppDispatch();
+    const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('transaction');
 
   const columns: DevGridColumn[] = useMemo(
@@ -133,26 +135,26 @@ const AccTransactionGrid: React.FC<{voucherType?: string
             : "";
         },
       },
-      {
-        dataField: "totalDebit",
-        caption: t("debit"),
-        dataType: "number",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
-      {
-        dataField: "totalCredit",
-        caption: t("credit"),
-        dataType: "number",
-        allowSorting: true,
-        allowFiltering: true,
-        allowSearch: true,
-        alignment: "left",
-        showInPdf: true,
-      },
+      // {
+      //   dataField: "totalDebit",
+      //   caption: t("debit"),
+      //   dataType: "number",
+      //   allowSorting: true,
+      //   allowFiltering: true,
+      //   allowSearch: true,
+      //   alignment: "left",
+      //   showInPdf: true,
+      // },
+      // {
+      //   dataField: "totalCredit",
+      //   caption: t("credit"),
+      //   dataType: "number",
+      //   allowSorting: true,
+      //   allowFiltering: true,
+      //   allowSearch: true,
+      //   alignment: "left",
+      //   showInPdf: true,
+      // },
       // {
       //   dataField: "discount",
       //   caption: t("discount"),
@@ -173,10 +175,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "right",
         showInPdf: true,
         cellRender: (cellInfo: any) =>
-          `${cellInfo.value?.toLocaleString("en-UK", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`,
+          `${getFormattedValue(cellInfo.value)
+          }`,
       },
       {
         dataField: "commonNarration",

@@ -827,7 +827,6 @@ export const useAccTransaction = (
     master.checkBouncedDate = moment().local().toISOString();
     master.prevTransDate = master.transactionDate == "" ? moment().local().toISOString() : master.prevTransDate;
     master.referenceDate = master.referenceDate == "" ? moment().local().toISOString() : master.referenceDate;;
-    master.transactionDate =master.transactionDate == "" ? moment().local().toISOString() : master.transactionDate;;
     master.dueDate =master.transactionDate == "" ? moment().local().toISOString() : master.transactionDate;;
     const totalAmount = master.totalAmount || 0;
 
@@ -883,9 +882,11 @@ export const useAccTransaction = (
     const valid = validate()
     if (valid == true) {
       
-
-      const params: AccTransactionData = {
-        master: attachMaster(),
+const master = attachMaster();
+      const params = {
+        master: {...master,      
+    transactionDate: master.transactionDate == "" ? null : master.transactionDate
+        },
         details: attachDetails(),
         attachments: [...formState.transaction.attachments],
       };

@@ -774,6 +774,8 @@ export const decryptAES = async (encryptedText: string): Promise<string> => {
   );
 
   const encryptedBytes = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+  const subtleCrypto = window.crypto?.subtle || null;
+if (!subtleCrypto) throw new Error("Web Crypto API not available");
   const decryptedBuffer = await crypto.subtle.decrypt(
       { name: "AES-CBC", iv },
       cryptoKey,

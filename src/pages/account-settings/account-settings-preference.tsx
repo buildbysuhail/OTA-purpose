@@ -17,6 +17,8 @@ import {
   AppState,
   initialThemeData,
   inputBox,
+  languagesData,
+  Locale,
   Theme,
 } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
@@ -46,6 +48,8 @@ import MUIERPDataCombobox from "../../components/ERPComponents/erp-data-combobox
 import { ERPScrollArea } from "../../components/ERPComponents/erp-scrollbar";
 import InputBoxStyling from "../../components/ERPComponents/erp-inputboxStyle-preference";
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
+import { changeLanguage } from "../../utilities/languageUtils";
+import { useTranslation } from "react-i18next";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -53,20 +57,9 @@ interface UserLanguage {
 
 const api = new APIClient();
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
-  let api = new APIClient();
-  const [demo, setDemo] = useState({
-    inputBox: "",
-    dateBox: "",
-    selectBox: "",
-    radioButton: false,
-    checkBox: false,
-  });
+
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
-  const [languages, setLanguages] = useState<any[]>([
-    { value: "ar", label: "العربية" },
-    { value: "en", label: "English" },
-  ]);
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
@@ -95,11 +88,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     },
   };
   const dispatch = useDispatch();
-
+ const { t, i18n } = useTranslation();
   const userLanguageRName = reducerNameFromUrl(
     Urls.updateLanguage,
     ActionType.POST
   );
+  
   let userLanguage = useAppSelector((state: any) => state?.[userLanguageRName]);
   let userLanguageAction = reduxManager.getTypedThunk(userLanguageRName);
   const updateLanguage = async () => {
@@ -107,7 +101,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       const response = await dispatch(
         userLanguageAction({ data: { language }, params: "userId=123" }) as any
       ).unwrap();
-      handleResponse(response, () => {});
+      handleResponse(response, () => {changeLanguage(response.item, dispatch, i18n)});
     } catch (error) {
       console.error("Error updating language:", error);
     }
@@ -281,16 +275,27 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                 </div>
                 <div className="box-body">
                   <div className="items-start mb-6">
-                    <ERPSelect
-                      id="language"
-                      options={languages}
-                      handleChange={(id: any, value: any) => {
-                        setLanguage(value.value);
-                      }}
-                      value={language}
-                      defaultValue={language}
-                      label="Language"
-                    />
+                 
+              <ERPDataCombobox
+              field={{
+                id: "language",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              id="language"
+              label="Language"
+              value={language}
+              onChange={(e) => {
+                setLanguage(e?.value );
+              }}
+              options={[
+                { value: "ar", label: "العربية" },
+                { value: "en", label: "English" },
+              ]}
+            />
+            
+
+
                     <div className="w-full p-2 flex justify-end space-x-2">
                       <ERPButton
                         title="Reset"

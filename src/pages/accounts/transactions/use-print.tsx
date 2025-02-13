@@ -100,7 +100,9 @@ const handleDirectPrint = async (template:any) => {
          
           dispatch(acctemplatesData(_template));
           // const template = formState.templatesData?.find(item=>item.templateGroup===voucherType) 
-          dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
+          if(voucherType !== "AP"){
+            dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
+          } 
           return _template;
      
         
@@ -146,9 +148,19 @@ const handleDirectPrint = async (template:any) => {
   }
   };
 
-   const printPaymentReceiptAdvice = (voucher?: AccTransactionFormState) => {
+   const printPaymentReceiptAdvice = async(voucher?: AccTransactionFormState,voucherType?:any) => {
     voucher = voucher == undefined ? formState : voucher
+    const existingTemplate = voucher.templatesData?.find(
+      (template: any) => template.templateGroup === voucherType
+    );
 
+    let template;
+      if(existingTemplate){
+        template = existingTemplate
+      } else{
+        template = await fetchDefaultTemplates(voucherType)
+      }
+    await handleDirectPrint(template);
    };
     const printCheque = async (voucher?: AccTransactionFormState) => {
       try {

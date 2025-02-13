@@ -782,14 +782,15 @@ export const useAccTransaction = (
           break;
 
         case "OB":
+          debugger;
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
             element.ledgerID = element.ledgerID; // Keep original ledger ID
           } else {
+            element.relatedLedgerID = element.ledgerID;
             element.ledgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
-            element.relatedLedgerID = element.ledgerID;
           }
           break;
 

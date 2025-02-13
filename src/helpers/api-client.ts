@@ -72,7 +72,7 @@ class APIClient {
     const decryptedLedgers = await Promise.all(
         ledgers.map(async (x) => ({
             ...x,
-            name: await decryptAES(x.name),
+            // name: await decryptAES(x.name),
         }))
     );
 
@@ -81,7 +81,9 @@ class APIClient {
     const queryParams = new URLSearchParams(queryString);
 
     // Return all ledgers if ledgerType is "All"
-    if (queryParams.get("ledgerType") === "All") {
+    console.log(`${queryParams.get("ledgerType")}: queryParams.get("ledgerType")`);
+    
+    if ((queryParams.get("ledgerType") as any) == 0) {
         return decryptedLedgers;
     }
     else {
@@ -89,21 +91,23 @@ class APIClient {
     }
     
     return decryptedLedgers.filter((ledger) => {
-      
-        for (const [key, value] of queryParams.entries()) {
-          
-            if (key === "ledgerID") {
-                if (ledger.id === undefined || String(ledger.id) !== value) {
-                    return false;
-                }
-            } else if (key === "ledgerType") {
-                if (ledger.ledgerType === undefined || String(ledger.ledgerType) !== value) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    });
+      for (const [key, value] of queryParams.entries()) {
+          if (key === "ledgerID") {
+              if (ledger.id === undefined || String(ledger.id) !== value) {
+                  return false;
+              }
+          } else if (key === "ledgerType") {
+              const ledgerTypes: number[] = Array.isArray(ledger.ledgerType) ? ledger.ledgerType : [];
+              const valueAsNumber = Number(value);
+              
+              if (!ledgerTypes.includes(valueAsNumber)) {
+                  return false;
+              }
+          }
+      }
+      return true;
+  });
+  
 };
   
   getAsync = async (

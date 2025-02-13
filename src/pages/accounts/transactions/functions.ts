@@ -11,7 +11,7 @@ import { isEqual } from "lodash";
 import { modelToBase64, modelToBase64Unicode } from "../../../utilities/jsonConverter";
 
 export const calculateTotal = (state: AccTransactionFormState): number => {
-  debugger;
+  
   return state.transaction.master.voucherType !== "MJV"
     ? state.transaction.details.reduce(
         (sum, detail) => sum + ((Number(detail.amount) || 0)

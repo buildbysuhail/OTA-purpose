@@ -759,3 +759,26 @@ export const isEnterKey = (key: string | number) => {
     key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
   );
 };
+export const decryptAES = async (encryptedText: string): Promise<string> => {
+  const keyStr = "G7d!mZr@QpL2xY#bVw9%kF6^TnM0sC3J"; // Must match C# key
+  const ivStr = "A1b2C3d4E5f6G7h8"; // Must match C# IV
+  const key = new TextEncoder().encode(keyStr);
+  const iv = new TextEncoder().encode(ivStr);
+
+  const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      key,
+      { name: "AES-CBC" },
+      false,
+      ["decrypt"]
+  );
+
+  const encryptedBytes = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+  const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-CBC", iv },
+      cryptoKey,
+      encryptedBytes
+  );
+
+  return new TextDecoder().decode(decryptedBuffer);
+}

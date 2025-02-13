@@ -812,6 +812,7 @@ export const useAccTransaction = (
       element.voucherType = formState.transaction.master.voucherType;
       element.chqDate = element.chqDate == "" ? moment().local().toISOString() : element.chqDate;
       element.bankDate = element.bankDate == "" ? moment().local().toISOString() : element.bankDate;
+      element.checkBouncedDate = element.checkBouncedDate == "" ? moment().local().toISOString() : element.checkBouncedDate;
       updatedDetails.push(element);
     }
     return updatedDetails;

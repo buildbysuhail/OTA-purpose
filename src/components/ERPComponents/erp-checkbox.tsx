@@ -125,7 +125,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
     return (
       <div className={className}>
         <label
-          className={`inline-flex items-center ${
+          className={`inline-flex items-center ${inputBoxState.bold? "font-bold":"font-normal"} ${
             disabled ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >

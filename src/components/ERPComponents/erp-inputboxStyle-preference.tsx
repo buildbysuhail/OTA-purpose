@@ -33,6 +33,21 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
   return (
     <div className="flex flex-col">
       {/* Live Demo Section */}
+  <div className={`${isInputBgColor ? "pt-3":""}`}>
+     <ERPCheckbox
+          localInputBox={inputBox}
+            id="bold"
+            customSize="sm"
+            name="bold"
+            checked={inputBox?.bold }
+            onChange={(e) => {         
+            onInputBoxChange("bold", e.target.checked);
+            }}
+            label="Bold"
+       />
+     </div>
+    
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start switcher-style">
         <ERPInput
           id="inputBox"

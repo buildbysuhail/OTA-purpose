@@ -76,7 +76,7 @@ const BalanceSheetRow: React.FC<{
                   : "normal",
             }}
           >
-            {`${item.transType == "L"
+            {`${item.transType == "L" && item.groupName!="TOTAL"
                 ? item.title == "M"
                   ? getFormattedValue(item.total)
                   : item.total > 0

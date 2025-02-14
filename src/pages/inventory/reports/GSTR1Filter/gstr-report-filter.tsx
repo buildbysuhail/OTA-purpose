@@ -38,7 +38,7 @@ const GstrReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: an
       label={t("Ledger Code")}
       field={{
         id: "ledgerID",
-        getListUrl: Urls.data_acc_ledgers_Code,
+        getListUrl: Urls.data_acc_ledgers,
         params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
         valueKey: "id",
         labelKey: "name",

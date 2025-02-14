@@ -45,7 +45,7 @@ const LedgerReportFilter = ({
         label={t("ledger_code")}
         field={{
           id: "ledgerID",
-          getListUrl: Urls.data_acc_ledgers_Code,
+          getListUrl: Urls.data_acc_ledgers,
           params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
           valueKey: "id",
           labelKey: "alias",

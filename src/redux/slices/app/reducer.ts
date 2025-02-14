@@ -58,6 +58,7 @@ export const appInitialState: AppState = {
     adjustD: 0,
     marginTop: 0,
     marginBottom: 0,
+    bold:false
   },
   locale: { code: 'en', name: 'English', rtl: false, flag: usFlag },
 }

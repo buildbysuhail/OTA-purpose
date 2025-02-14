@@ -151,6 +151,7 @@ export interface inputBox {
   focusForeColor: string,
   focusBgColor: string,
   defaultBgColor?: string;
+  bold?:boolean;
 }
 export interface AppInitialState {
   // mode: string;

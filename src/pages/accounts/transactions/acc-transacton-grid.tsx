@@ -1,5 +1,5 @@
 import { formatDate } from "devextreme/localization";
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -9,6 +9,7 @@ import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
+import { useLocation } from "react-router-dom";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -284,7 +285,9 @@ debugger;
     ],
     [t, dispatch]
   );
-
+  useEffect(() => {
+    setReload(true);
+  }, [location.pathname]); 
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

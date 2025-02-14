@@ -71,16 +71,7 @@ const IncomExpenseStatement = () => {
       allowFiltering: true,
       width: 80,
       showInPdf:true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return cellElement.data.ledgerID > 0 ? (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="ledgerID"
-          ></DrillDownCellTemplate>
-        ) : (
-          cellElement.value
-        );
-      },
+     
     },
     {
       dataField: "accGroupName",
@@ -147,6 +138,16 @@ const IncomExpenseStatement = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf:true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return cellElement.data.ledgerName !== ""||cellElement.data.ledgerName !==null ? (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="ledgerName"
+          ></DrillDownCellTemplate>
+        ) : (
+          cellElement.value
+        );
+      },
     },
     {
       dataField: "debit",
@@ -309,7 +310,7 @@ const IncomExpenseStatement = () => {
                     title: t("cash_book_monthwise"),
                     isForm: true,
                     width: "max-w-[1500px]",
-                    drillDownCells: "ledgerID",
+                    drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     
                     enableFn: (data: any) => data.ledgerID<=0 ? false  : true

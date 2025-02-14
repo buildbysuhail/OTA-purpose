@@ -409,7 +409,7 @@ const PostDatedCheques = () => {
           allowSearch: true,
           allowEditing: true,
           allowFiltering: true,
-          width: 100,
+          width: 150,
         },
         {
           dataField: "ledgerName",
@@ -418,7 +418,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 100,
+         
         },
         {
           dataField: "relatedLedger",
@@ -427,7 +427,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
-          width: 100,
+          width: 200,
         },
         {
           dataField: "bankCharge",
@@ -463,6 +463,7 @@ const PostDatedCheques = () => {
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
+          visible:false,
           allowFiltering: true,
           width: 100,
         },
@@ -484,6 +485,7 @@ const PostDatedCheques = () => {
           dataType: "number",
           allowSorting: true,
           allowSearch: true,
+          visible:false,
           allowFiltering: true,
           width: 100,
         },
@@ -513,6 +515,7 @@ const PostDatedCheques = () => {
           allowSorting: true,
           allowSearch: true,
           allowFiltering: true,
+          visible:false,
           width: 100,
         },
         {
@@ -520,6 +523,7 @@ const PostDatedCheques = () => {
           caption: t("related_ledger_id"),
           dataType: "number",
           allowSorting: true,
+          visible:false,
           allowSearch: true,
           allowFiltering: true,
           width: 100,

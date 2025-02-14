@@ -309,6 +309,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       const commonMuiStyles = {
         margin: "0",
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+        fontWeight: boldInput || inputBoxState?.bold ? 700:400,
         color:
           appState?.mode == "dark"
             ? "#ffffff"
@@ -486,8 +487,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height: `${inputBoxState?.inputHeight ?? 3}rem`,
                 fontSize: `${inputBoxState?.fontSize ?? 16}px`,
-                fontWeight: inputBoxState?.fontWeight ?? 500,
                 ...commonMuiStyles,
+                fontWeight: boldInput || inputBoxState?.bold  ? 700: inputBoxState?.fontWeight ?? 500,
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
@@ -878,7 +879,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 style={{
                   height,
                   fontSize,
-                  fontWeight: boldInput ? 700 : fontWeight,
+                  fontWeight: boldInput || inputBoxState?.bold ? 700 : fontWeight,
                   color: disabled ? "#606060 !important" : color,
                   borderColor: borderStyles,
                   outline: "none",

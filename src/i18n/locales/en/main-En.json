@@ -118,6 +118,8 @@
     "expense_report_detailed":"Expense Report Detailed",
     "cash_flow":"Cash Flow",
     "bank_flow":"Bank Flow",
+    "income_expense_statement":"Income Expense Statement",
+    "bank_statement":"Bank Statement",
 
     "cash_payment":"Cash Payment",
     "cash_receipt":"Cash Receipt",

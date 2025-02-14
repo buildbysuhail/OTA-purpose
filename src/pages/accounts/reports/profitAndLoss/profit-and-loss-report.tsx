@@ -123,7 +123,7 @@ const HorizontalProfitAndLoss: React.FC<{
   const income = data?.filter((item: any) => item?.transType == "I");
   return (
     <div className="relative">
-      <div className="grid grid-cols-2 gap-4 dark:bg-dark-bg bg-white">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           {/* <h3 className="text-lg font-bold mb-2">{t("expense")}</h3> */}
           <table className="w-full text-left border-collapse dark:bg-dark-bg bg-white">
@@ -577,7 +577,7 @@ const ProfitAndLossReport = () => {
                 }} /* Ensures consistent dimensions */
               >
                 <div
-                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-0" : "rotate-90"
+                  className={`transition-transform duration-500 ${isVerticalView ? "rotate-180" : "rotate-90"
                     }`}
                 >
                   <RectangleVertical />
@@ -771,16 +771,14 @@ const ProfitAndLossReport = () => {
                 setIsOpenDetails={setIsOpenDetails}
               />
             ) : (
-              <table className="w-full text-left border-collapse dark:bg-dark-bg bg-white">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className={"dark:bg-dark-bg-header bg-white"}>
+                  <tr className="dark:bg-dark-bg-header bg-gray-400">
                     <th className="py-2 ps-2">{t("account")}</th>
-                    <th className="font-bold py-2 text-end pe-2 ">
-                      {t("total")}
-                    </th>
+                    <th className="py-2 text-end pe-2">{t("total")}</th>
                   </tr>
                 </thead>
-                <tbody className="dark:bg-dark-bg bg-white">
+                <tbody>
                   {data?.map((item, index) => (
                     <ProfitAndLossRow
                       key={index}

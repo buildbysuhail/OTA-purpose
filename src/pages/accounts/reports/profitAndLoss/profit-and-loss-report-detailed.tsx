@@ -618,7 +618,8 @@ const ProfitAndLossDetailedReport = () => {
               >
                 <div
                   className={`transition-transform duration-500 ${
-                    isVerticalView ? "rotate-0" : "rotate-90"
+                    
+                    isVerticalView ? "rotate-180" : "rotate-90"
                   }`}
                 >
                   <RectangleVertical />

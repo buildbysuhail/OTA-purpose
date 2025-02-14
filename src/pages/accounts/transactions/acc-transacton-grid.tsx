@@ -1,5 +1,5 @@
 import { formatDate } from "devextreme/localization";
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -31,6 +32,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
     const { getFormattedValue } = useNumberFormat();
   const { t } = useTranslation('transaction');
 
+  const [reload, setReload] = useState<boolean>(true)
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -210,6 +212,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
           return (
             <ERPGridActions
               view={{
+                visible: false,
                 type: "popup",
                 action: () =>
                   dispatch(
@@ -223,29 +226,56 @@ const AccTransactionGrid: React.FC<{voucherType?: string
               edit={{
                 type: "popup",
                 action: () =>
-                  dispatch(
-                    toggleTransactionPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.accTransactionDetailID,
-                      reload: false,
-                    })
-                  ),
+                {
+                  const row = cellElement.data;
+                  const transactionMasterID = parseInt(row.accTransactionMasterID || "0", 10);
+                          
+                          const vchtype = row.voucherType;
+                          const voucherform = row.formType;
+                  
+                         
+                          const prefix = row.voucherPrefix;
+                          const vchno = row.voucherNumber;
+                          const financialYearID = parseInt(row.financialYearID || "0", 10);
+                  
+                          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+                  
+                          let transactionData = {};
+                          if (parseInt(vchno, 10) > 0) {
+                            transactionData = {
+                              transactionMasterID,
+                              formType: voucherform,
+                              voucherPrefix: prefix,
+                              voucherType: vchtype,
+                              financialYearID,
+                              voucherNo: parseInt(vchno, 10),
+                              formCode: tr?.formCode,
+                              transactionType: tr?.transactionType,
+                              transactionBase: tr?.transactionBase,
+                              title: tr?.title,
+                              drCr: tr?.drCr,
+                            };
+                          } 
+                  const url = new URL(`${window.location.origin}${TransactionBase.Accounts}/${transactionType}`);
+debugger;
+                  // Append all parameters from the `params` object
+                  Object.entries(transactionData).forEach(([key, value]) => {
+                    url.searchParams.append(key, String(value));
+                  });
+    
+                  // Open the URL in a new tab
+                  window.open(url.toString(), "_blank");
+                }
               }}
               delete={{
                 onSuccess: () => {
-                  dispatch(
-                    toggleTransactionPopup({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
+                  setReload(true);
                 },
                 confirmationRequired: true,
                 confirmationMessage:
                   "Are you sure you want to delete this transaction?",
-                url: "/api/transactions",
-                key: cellElement?.data?.accTransactionDetailID,
+                url: `/Accounts/${transactionType}/`,
+                key: cellElement?.data?.accTransactionMasterID,
               }}
             />
           );
@@ -273,6 +303,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
                 allowExport={true}
+                reload={reload}
+                changeReload={() => {setReload(false)}}
               />
             </div>
           </div>

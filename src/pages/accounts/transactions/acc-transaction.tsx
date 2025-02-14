@@ -118,7 +118,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   financialYearID,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-
+debugger;
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -1779,8 +1779,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             }
                           }}
                           disabled={
-                            formState.formElements.voucherNumber?.disabled ||
-                            formState.formElements.pnlMasters?.disabled
+                            formState.formElements.voucherNumber?.disabled 
+                            // ||
+                            // formState.formElements.pnlMasters?.disabled
                           }
                           labelInfo={
                             // <div>
@@ -2300,7 +2301,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { amount: parseFloat(e.target?.value) },
+                          fields: { amount: e.target?.value != "" ? parseFloat(e.target?.value): "" },
                         })
                       )
                     }

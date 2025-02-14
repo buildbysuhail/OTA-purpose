@@ -3,6 +3,7 @@ import moment from "moment";
 
 export interface ledgerData {
   ledgers?: any[];
+  costCentres?:any[];
 }
 // export const initialState : login  =  {loading: false, token: ""};
 export const initialState: ledgerData = {};

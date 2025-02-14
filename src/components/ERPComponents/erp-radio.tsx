@@ -164,7 +164,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
             className={`form-check-label ${labelClassName} ${
               _customSize == "sm" ? "-translate-y-[2.5px]" : "-translate-y-[1px]"
             } 
-              capitalize rtl:text-right select-none
+              capitalize rtl:text-right select-none ${inputBoxState.bold? "font-bold":"font-normal"}
               ${disabled ? "text-gray-400" : "dark:!text-dark-text text-gray-900"}`}
           >
             {iLabel}

@@ -629,6 +629,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
       marginBottom: 0,
       focusForeColor: "128, 128, 128",
       focusBgColor: "255, 255, 255",
+      bold:true
     }
   },
   isBahamdoonPOSReceipt: false,

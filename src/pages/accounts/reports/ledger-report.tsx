@@ -113,6 +113,14 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 150,
     },
+      {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
     {
       dataField: "particulars",
       caption: t("account"),

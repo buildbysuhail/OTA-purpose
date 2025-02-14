@@ -16,17 +16,52 @@ import UnsavedChangesModal from "./unsavedChangesModal";
 import { useNavigate } from "react-router-dom";
 
 const api = new APIClient();
-const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
-  voucherType,
-  formType,
-  formCode,
-  title,
-  drCr,
-  transactionType,
-}) => {
+const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
+
+  const [searchParams] = useSearchParams();
+    const getParamOrProp = <T extends string | number>(
+      key: keyof AccTransactionProps,
+      isNumber: boolean = false
+    ): T | "" => {
+      const paramValue = searchParams.get(key as string);
+      if (paramValue !== null) {
+        return isNumber ? (Number(paramValue) as T) : (paramValue as T);
+      }
+      return (props[key] as T) ?? "";
+    };
+  
+    // State initialization
+    const [input, setInput] = useState({
+      voucherType: getParamOrProp<string>("voucherType"),
+      transactionType: getParamOrProp<string>("transactionType"),
+      formCode: getParamOrProp<string>("formCode"),
+      voucherPrefix: getParamOrProp<string>("voucherPrefix"),
+      formType: getParamOrProp<string>("formType"),
+      title: getParamOrProp<string>("title"),
+      drCr: getParamOrProp<string>("drCr"),
+      voucherNo: getParamOrProp<number>("voucherNo", true)||undefined,
+      transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || undefined,
+      financialYearID: getParamOrProp<number>("financialYearID", true) || undefined,
+    });
+  
+    // Sync state when query parameters or props change
+    useEffect(() => {
+      setInput({
+        voucherType: getParamOrProp<string>("voucherType"),
+        transactionType: getParamOrProp<string>("transactionType"),
+        formCode: getParamOrProp<string>("formCode"),
+        voucherPrefix: getParamOrProp<string>("voucherPrefix"),
+        formType: getParamOrProp<string>("formType"),
+        title: getParamOrProp<string>("title"),
+        drCr: getParamOrProp<string>("drCr"),
+        voucherNo: getParamOrProp<number>("voucherNo", true) || undefined,
+        transactionMasterID: getParamOrProp<number>("transactionMasterID", true) || undefined,
+        financialYearID: getParamOrProp<number>("financialYearID", true) || undefined,
+      });
+    }, [searchParams, props]); // Runs when query params or props change
+
   const { t } = useTranslation("transaction");
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const [searchParams] = useSearchParams();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [openVoucherSelector, setOpenVoucherSelector] = useState<boolean>(false);
   const [store, setStore] = useState<{ data: any; totalCount: number }>();
@@ -35,7 +70,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     voucherPrefix: string;
     formType: string;
     voucherNo: number;
-  }>({ voucherPrefix: "", formType: formType ?? "", voucherNo: 1 });
+  }>({ voucherPrefix: "", formType: input.formType ?? "", voucherNo: 1 });
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<boolean>(false);
   const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
@@ -60,11 +95,12 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
   };
 
   useEffect(() => {
-    if (isChooseVoucherEnabled(title ?? "", userSession)) {
+    debugger;
+    if (isChooseVoucherEnabled(input.title ?? "", userSession) && (input.voucherNo ==  undefined ||  input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {
           const res = await api.getAsync(
-            `${Urls.voucher_selector}${voucherType}`
+            `${Urls.voucher_selector}${input.voucherType}`
           );
 
           if (
@@ -82,6 +118,9 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
 
               await initializeVoucher(); // Call initializeVoucher here
             }
+            else{
+              setReadyToShowVoucher(true);
+            }
           } else {
             setStore(res);
             setOpenVoucherSelector(true);
@@ -94,7 +133,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
     } else {
       initializeVoucher(); // Call initializeVoucher here
     }
-  }, [voucherType]);
+  }, [input.voucherType]);
 
   const onRowDblClick = useCallback(async (_event: any) => {
     
@@ -136,13 +175,15 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = ({
       ) : (
         readyToShowVoucher && formState?.userConfig && (
           <AccTransactionForm
-            voucherType={voucherType}
-            voucherPrefix={data.voucherPrefix}
-            formType={data.formType}
-            formCode={formCode}
-            title={title}
-            drCr={drCr}
-            transactionType={transactionType}
+            voucherType={input.voucherType}
+            voucherPrefix={input.voucherNo != undefined && input.voucherNo > 0 ? input.voucherPrefix : data?.voucherPrefix}
+            formType={input.voucherNo != undefined && input.voucherNo > 0 ? input.formType : data?.formType}
+            formCode={input.formCode}
+            title={input.title}
+            drCr={input.drCr}
+            voucherNo={input.voucherNo}
+            transactionMasterID={input.transactionMasterID}
+            transactionType={input.transactionType}
           />
         )
       )}

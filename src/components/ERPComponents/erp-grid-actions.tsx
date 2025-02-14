@@ -146,7 +146,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
 
   return (
     <div className="action-field">
-      {renderActionButton("view", view)}
+      {view?.visible != false ? renderActionButton("view", view): null}
       {edit?.visible != false ? renderActionButton("edit", edit): null}
       {deleteAction.visible != false ? renderActionButton("delete", deleteAction): null}
     </div>

@@ -91,6 +91,7 @@ export const useAccTransaction = (
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
+  const dataContainer = useAppSelector((state: RootState) => state.Data);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
@@ -1226,11 +1227,14 @@ const master = attachMaster();
       formState.formElements.amount.disabled = false;
     }
     formState.formElements.btnAdd;
-
+debugger;
+const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x => x.value == formState.row.costCentreID)?.name: "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {
           ...formState.row,
+          costCentreName: formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x => x.id == formState.row.costCentreID)?.name: "",
+          // ledgerName: formState.row.ledgerID > 0 ? ledgerData?.find(x => x.value == formState.row.ledgerID)?.name: "",
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
             billwiseDetails != undefined

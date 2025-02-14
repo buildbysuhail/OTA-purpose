@@ -666,6 +666,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } else {
           setShowFilter(false);
         }
+        debugger;
         if (_reload !== undefined && _reload !== true) {
           // Return the current store without reloading
           setStore(currentStore);

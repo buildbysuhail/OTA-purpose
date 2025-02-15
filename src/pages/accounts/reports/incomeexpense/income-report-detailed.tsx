@@ -10,6 +10,7 @@ import { ActionType } from "../../../../redux/types";
 import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import IncomeReportFilter from "./income-report-filter";
+import moment from "moment";
 
 const IncomeReportDetailed = () => {
   const dispatch = useAppDispatch();
@@ -97,6 +98,7 @@ const IncomeReportDetailed = () => {
       width: 100,
       allowFiltering: true,
       showInPdf:true,
+      format:"dd-MMM-yyyy",
     },
 
     {

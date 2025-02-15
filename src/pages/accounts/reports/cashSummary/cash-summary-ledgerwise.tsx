@@ -29,6 +29,7 @@ const CashSummaryLedgerwise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,

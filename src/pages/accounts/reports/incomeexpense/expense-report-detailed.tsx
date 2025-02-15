@@ -11,6 +11,7 @@ import CollectionReportFilter, { IncomeReportFilterInitialState } from "./income
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import IncomeReportFilter from "./income-report-filter";
 import ExpenseReportFilter, { ExpenseReportFilterInitialState } from "./expense-report-filter";
+import moment from "moment";
 
 const ExpenseReportDetailed = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accGroupName",
@@ -79,7 +80,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -88,7 +89,7 @@ const ExpenseReportDetailed = () => {
       // width: 100,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -97,7 +98,8 @@ const ExpenseReportDetailed = () => {
       width: 80,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
+      format:"dd-MMM-yyyy",
     },
 
     {
@@ -107,7 +109,7 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       width: 100,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -115,7 +117,7 @@ const ExpenseReportDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "debit",
@@ -223,13 +225,13 @@ const ExpenseReportDetailed = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor:  '#FF0000',
+            textColor: '#FF0000',
             font: {
               ...exportCell.font,
               color: { argb: 'FFFF0000' },
               size: 10,
-              style:  "bold",
-              bold: true ,
+              style: "bold",
+              bold: true,
             },
           };
         }
@@ -280,7 +282,7 @@ const ExpenseReportDetailed = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                 remoteOperations={{ paging: false, filtering: false, sorting: false }}
+                  remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   allowGrouping={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 && , Sales Route : [salesRouteName]} {costCentreID > 0 && , Cost Centre : [costCentreName]}"

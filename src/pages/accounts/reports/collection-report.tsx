@@ -10,6 +10,7 @@ import { ActionType } from "../../../redux/types";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { GroupItem, Summary } from "devextreme-react/cjs/data-grid";
+import moment from "moment";
 interface CollectionReport {
   from: Date
 }
@@ -37,8 +38,10 @@ const CollectionReport = () => {
       allowSorting:false,
       allowFiltering: true,
       width: 100,
+      format:"dd-MMM-yyyy",
       // groupIndex: 0,
       showInPdf:true,
+      
     },
     {
       dataField: "vchNo",

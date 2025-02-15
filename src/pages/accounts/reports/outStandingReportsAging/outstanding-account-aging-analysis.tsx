@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
+import moment from "moment";
 
 interface OutstandingAccountAgingAnalysisProps {
   postData?: any;
@@ -18,24 +19,24 @@ interface OutstandingAccountAgingAnalysisProps {
   isMaximized?: boolean;
   modalHeight?: any;
 }
-const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData,isMaximized,modalHeight }) => {
-// const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
+const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> = ({ postData, contentProps, rowData, isMaximized, modalHeight }) => {
+  // const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
-    const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
   const rootState = useRootState();
 
-    const [gridHeight, setGridHeight] = useState<{
-      mobile: number;
-      windows: number;
-    }>({ mobile: 500, windows: 500 });
-  
-    useEffect(() => {
-      let gridHeightMobile = modalHeight - 50;
-      let gridHeightWindows = modalHeight - 180;
-      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-    }, [isMaximized, modalHeight]);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  useEffect(() => {
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = modalHeight - 180;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [isMaximized, modalHeight]);
 
   const columns: DevGridColumn[] = [
     {
@@ -45,7 +46,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -53,12 +54,20 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-      width:100
+      showInPdf: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+      }
     },
     {
       dataField: "form",
-      caption:  t("form"),
+      caption: t("form"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -94,18 +103,19 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
           } : undefined;
         }
         else {
-          return (<span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-  {cellElement.data.form}
-  </span>)
-}}
+          return (<span className={`${cellElement.data.form === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.form}
+          </span>)
+        }
+      }
     },
-     {
+    {
       dataField: "voucherNumber",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "billTotal",
@@ -114,7 +124,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -147,10 +157,11 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
           } : undefined;
         }
         else {
-          return (  <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C] ' : ''}`}>
-  {cellElement.data.billTotal}
-  </span>)
-        }}
+          return (<span className={`${cellElement.data.form === "TOTAL" ? 'font-bold text-[#DC143C] ' : ''}`}>
+            {cellElement.data.billTotal}
+          </span>)
+        }
+      }
     },
     {
       dataField: "period",
@@ -160,7 +171,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowFiltering: true,
       width: 150,
       // groupIndex:0,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "balance",
@@ -169,7 +180,7 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -202,40 +213,41 @@ const  OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps>
           } : undefined;
         }
         else {
-          return (<span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
-  </span>)
-        }}
+          return (<span className={`${cellElement.data.form === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+          </span>)
+        }
+      }
     },
   ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                rowData={rowData}
-                remoteOperations={{ paging: false, filtering: false, sorting: false }}
-                // allowGrouping={true}
-                // groupPanelVisible={true}
-                  heightToAdjustOnWindowsInModal={gridHeight.windows}
-                  columns={columns}
-                  filterText=" for {___ (ledgername)} {**** as of (asonDate)}"
-                  postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
-                  gridHeader={t("account_aging_analysis")}
-                  dataUrl= {Urls.acc_reports_aging_analysis}
-                  method={ActionType.POST}
-                  gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              rowData={rowData}
+              remoteOperations={{ paging: false, filtering: false, sorting: false }}
+              // allowGrouping={true}
+              // groupPanelVisible={true}
+              heightToAdjustOnWindowsInModal={gridHeight.windows}
+              columns={columns}
+              filterText=" for {___ (ledgername)} {**** as of (asonDate)}"
+              postData={mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
+              gridHeader={t("account_aging_analysis")}
+              dataUrl={Urls.acc_reports_aging_analysis}
+              method={ActionType.POST}
+              gridId="grd_cost_centre"
+              popupAction={toggleCostCentrePopup}
+              // allowEditing={false}
+              hideGridAddButton={true}
+              // gridAddButtonType="popup"
+              reload={true}
+            ></ErpDevGrid>
           </div>
-      
+        </div>
+      </div>
+
     </Fragment>
   );
 };

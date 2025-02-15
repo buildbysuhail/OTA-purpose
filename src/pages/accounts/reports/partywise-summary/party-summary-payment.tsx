@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
+import moment from "moment";
 
 const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,14 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 180,
       showInPdf: true,
+        cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                        }
     },
     {
       dataField: "form",

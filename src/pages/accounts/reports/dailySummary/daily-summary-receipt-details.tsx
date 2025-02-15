@@ -9,11 +9,12 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { DailySummaryFilter } from "./daily-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
+import moment from "moment";
+const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-     const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<DailySummaryReceiptDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -32,6 +33,14 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+      }
     },
     {
       dataField: "voucherPrefix",
@@ -50,7 +59,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
     },
     {
       dataField: "voucherNumber",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -79,31 +88,32 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
 
           return {
             ...exportCell,
             text: cellInfo.value,
-            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.ledgerName
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.ledgerName
               }`}
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "amount",
@@ -124,27 +134,28 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.amount == null 
-            ? '0'
+          return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.amount == null
+              ? '0'
               : getFormattedValue(cellElement.data.amount)
               }`}
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balanceAmount",
@@ -168,33 +179,34 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
           const value =
             balance == null
               ? ""
-              :cellElement.data.ledgerName === "TOTAL"? getFormattedValue(parseFloat(balance)):getFormattedValue(parseFloat(balance),false,4);
+              : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(parseFloat(balance)) : getFormattedValue(parseFloat(balance), false, 4);
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+            bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.ledgerName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.ledgerName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.ledgerName === "TOTAL" ?true:false,
+              style: cellElement.data.ledgerName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgerName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-        return (
-          <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data.ledgerName === "TOTAL"?  
-                 getFormattedValue(parseFloat(cellElement.data?.balance)):getFormattedValue(parseFloat(cellElement.data?.balance),false,4) 
+          return (
+            <span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+              {`${cellElement.data.ledgerName === "TOTAL" ?
+                getFormattedValue(parseFloat(cellElement.data?.balance)) : getFormattedValue(parseFloat(cellElement.data?.balance), false, 4)
                 }`}
-          </span>
-        )
-      }}
+            </span>
+          )
+        }
+      }
     },
     {
       dataField: "ledger_Balance",
@@ -220,7 +232,7 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
-     {
+    {
       dataField: "signature",
       caption: t("signature"),
       dataType: "string",
@@ -233,25 +245,25 @@ const DailySummaryReceiptDetails : React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-         
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                 heightToAdjustOnWindows={275}
-                 remoteOperations={{filtering:true,paging:true,sorting:true}}
-                  columns={columns}
-                  gridHeader={t("daily_summary_receipt_details")}
-                  dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
-                  method={ActionType.POST}
-                  postData={filter}
-                  gridId="grd_daily_summary_receipt_details"
-                  popupAction={toggleCostCentrePopup}
-                  hideGridAddButton={true}
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              heightToAdjustOnWindows={275}
+              remoteOperations={{ filtering: true, paging: true, sorting: true }}
+              columns={columns}
+              gridHeader={t("daily_summary_receipt_details")}
+              dataUrl={Urls.acc_reports_daily_summary_receipt_details}
+              method={ActionType.POST}
+              postData={filter}
+              gridId="grd_daily_summary_receipt_details"
+              popupAction={toggleCostCentrePopup}
+              hideGridAddButton={true}
+              reload={true}
+            ></ErpDevGrid>
           </div>
-      
+        </div>
+      </div>
+
     </Fragment>
   );
 };

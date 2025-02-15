@@ -11,6 +11,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "../cashBook/cash-book-report-filter";
 import CashBookDayWise from "../cashBook/cash-book-daywise";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
+import moment from "moment";
 interface CashFlowBankFlowDetailedProps {
   postData?: any;
   groupName?: string;
@@ -47,6 +48,14 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true, 
       width: 100,
       showInPdf:true,
+       cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                          return moment(cellElement.data.transactionDate, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+                        }
     },
     {
       dataField: "vchNo",

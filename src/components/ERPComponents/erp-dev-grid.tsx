@@ -118,7 +118,7 @@ interface ERPDevGridProps {
   showBorders?: boolean;
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
-  ShowGridPreferenceChooserInRow?: boolean;
+  GridPreferenceChooserAccTrance?: boolean;
   showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
@@ -435,7 +435,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
-      ShowGridPreferenceChooserInRow = false,
+      GridPreferenceChooserAccTrance = false,
       showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
@@ -1457,32 +1457,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       )
     }, [summaryItems, columns,])
 
-    const renderCustomHeader = useCallback(
-      (data: any) => {
-        return (
-          <div className="relative w-full h-full"
-          // style={{ position: "relative", height: "100%", width: "100%" }}
-          >
-          <span>{data.column.caption}</span>
-          {ShowGridPreferenceChooserInRow && (
-            <div  className={`absolute rtl:-right-3 ltr:-left-3 -top-5`}
-            // style={{ position: "absolute", left: 0, top: 0, zIndex: 1 }}
-            >
-              <GridPreferenceChooser
-                columns={columns}
-                gridId={gridId}
-                onApplyPreferences={onApplyPreferences}
-                ShowGridPreferenceChooserInRow={ShowGridPreferenceChooserInRow}
-              />
-            </div>
-          )}
-        </div>
-        );
-      },
-      [ShowGridPreferenceChooserInRow, columns, gridId, onApplyPreferences]
-    );
-    const firstVisibleColumnIndex = gridCols.findIndex(col => col.visible)
-    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(ShowGridPreferenceChooserInRow);
+    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
         <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${className}`}>
@@ -1501,7 +1476,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             columnAutoWidth={columnAutoWidth}
             onRowPrepared={handleRowPrepared}
             onToolbarPreparing={(e) => {
-              setIsPreferenceChooserVisible(ShowGridPreferenceChooserInRow);
+              setIsPreferenceChooserVisible(GridPreferenceChooserAccTrance);
             }}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
@@ -1605,7 +1580,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 columns={columns}
                 gridId={gridId}
                 onApplyPreferences={onApplyPreferences}
-                ShowGridPreferenceChooserInRow={ShowGridPreferenceChooserInRow}
+                GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
               />
               
               </Item> 

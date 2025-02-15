@@ -14,7 +14,7 @@ interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
-  ShowGridPreferenceChooserInRow?: boolean
+  GridPreferenceChooserAccTrance?: boolean
 }
 const api = new APIClient();
 
@@ -22,7 +22,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   gridId,
   columns,
   onApplyPreferences,
-  ShowGridPreferenceChooserInRow
+  GridPreferenceChooserAccTrance
 }) => {
 
   const dragItem = useRef(null);
@@ -156,7 +156,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
-      {ShowGridPreferenceChooserInRow ?(
+      {GridPreferenceChooserAccTrance ?(
               <button onClick={() => setIsOpen(true)} 
                  className=""
                >

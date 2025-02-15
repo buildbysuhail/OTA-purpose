@@ -2630,7 +2630,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
-              ShowGridPreferenceChooserInRow
+              GridPreferenceChooserAccTrance
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}

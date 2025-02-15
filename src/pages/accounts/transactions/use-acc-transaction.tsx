@@ -849,7 +849,12 @@ debugger;
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
-    const master = { ...formState.transaction.master };
+    const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction)
+    const master = { ...formState.transaction.master, 
+      particulars: (formState.transaction.master.voucherType != "MJV" && formState.transaction.master.voucherType != "OB" )
+      ? dataContainer.ledgers?.find(x => x.id == formState.masterAccountID)?.name??""
+      : formState.transaction.master.voucherType == "OB" ?  dataContainer.ledgers?.find(x => x.id == applicationSettings.accountsSettings.defaultSuspenseAcc)?.name??""
+      : formState.transaction.master.voucherType == "MJV" ? dataContainer.ledgers?.find(x => x.id == firstCreditLedgerID)?.name??"" : ""};
 
     master.accTransactionMasterID = formState.isEdit
       ? master.accTransactionMasterID

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import QuickCreate from './quick-create';
 import MobileFooter from './mobile-footer';
+import ERPModalResizable from '../../../components/ERPComponents/erp-modal-resizle';
 
 interface CrmProps { }
 class ItemSummaryCard {total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>();monthVariation: number=0; for:string=""; branchData:ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches:string[] = new Array<string>;}
@@ -106,6 +107,7 @@ const Crm: FC<CrmProps> = () => {
           </button> */}
         </div>
       </div>
+      <ERPModalResizable></ERPModalResizable>
       <div className="grid grid-cols-12 gap-x-6 px-4">
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">

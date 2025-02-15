@@ -95,7 +95,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   };
 
   useEffect(() => {
-    debugger;
+    
     if (isChooseVoucherEnabled(input.title ?? "", userSession) && (input.voucherNo ==  undefined ||  input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {

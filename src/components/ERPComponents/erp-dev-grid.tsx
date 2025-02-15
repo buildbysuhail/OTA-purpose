@@ -372,7 +372,7 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0
+        (prev <= 0 || (loadOptions.skip ?? 0) == 0)
             ? result.dataRowCount != undefined && result.dataRowCount != null
               ? result.dataRowCount
               : result.totalCount
@@ -669,7 +669,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } else {
           setShowFilter(false);
         }
-        debugger;
+        
         if (_reload !== undefined && _reload !== true) {
           // Return the current store without reloading
           setStore(currentStore);
@@ -1304,7 +1304,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           if (dynamicProps?.isTransactionScreen) {
             const params = handleInvoke(event.data);
             if (params) {
-              debugger;
+              
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object

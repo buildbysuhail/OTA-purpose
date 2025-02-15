@@ -179,7 +179,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [initial, setInitial] = useState<Option | null>(initialValue);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      debugger;
+      
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
       if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
@@ -620,6 +620,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "up",
                         } as any;
+                        
                         handleChange(event);
                       }
                     }}
@@ -655,6 +656,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "down",
                         } as any;
+                        
                         handleChange(event);
                       }
                     }}
@@ -979,7 +981,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         const event = {
                           isCustomNumberChangerEvent: true,
                           target: { value: newValue.toString() },
+                          mode: "up",
                         } as any;
+                        
                         handleChange(event);
                       }
                     }}
@@ -1013,7 +1017,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         const event = {
                           isCustomNumberChangerEvent: true,
                           target: { value: newValue.toString() },
+                          mode: "down",
                         } as any;
+                        
                         handleChange(event);
                       }
                     }}

@@ -496,6 +496,8 @@ export interface AccTransactionFormState {
   templatesData?: TemplateState[]
   userConfig?: AccUserConfig;
   formElements: FormElementsState
+  openUnsavedPrompt?: boolean
+  tmpVoucherNo?: number
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {
@@ -595,6 +597,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   printCheque: false,
   keepNarration: false,
   amountInWords: 'Zero Only',
+  openUnsavedPrompt: false,
   userConfig: {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,

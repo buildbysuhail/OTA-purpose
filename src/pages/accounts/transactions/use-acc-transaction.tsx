@@ -206,7 +206,8 @@ export const useAccTransaction = (
     manualInvoiceNumber?: string,
     accTransactionMasterID?: number,
     mode?: "increment" | "decrement" | undefined,
-    skipPrompt?: boolean | false
+    skipPrompt?: boolean | false,
+    setVoucherNo?: boolean | false
   ) => {
 
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
@@ -215,26 +216,53 @@ export const useAccTransaction = (
     });
 
     if (_s_isDirty && skipPrompt != true) {
-      alert("changed");
-      if (mode == "increment" || mode == "decrement") {
-        const _voucherNumber =
-          mode == "increment"
-            ? parseFloat(
-              formState.transaction.master.voucherNumber.toString()
-            ) - 1
-            : parseFloat(
-              formState.transaction.master.voucherNumber.toString()
-            ) + 1;
+    
+      // if (mode == "increment" || mode == "decrement") {
+      //   // const _voucherNumber =
+      //   //   mode == "increment"
+      //   //     ? parseFloat(
+      //   //       formState.transaction.master.voucherNumber.toString()
+      //   //     ) - 1
+      //   //     : parseFloat(
+      //   //       formState.transaction.master.voucherNumber.toString()
+      //   //     ) + 1;
+      debugger;
+       dispatch(
+          accFormStateHandleFieldChange({
+            fields: {
+              openUnsavedPrompt: true,
+              tmpVoucherNo: voucherNumber
+            },
+          })
+        ); 
+        // dispatch(
+        //   accFormStateTransactionMasterHandleFieldChange({
+        //     fields: {
+        //       voucherNumber: voucherNumber,
+        //     },
+        //   })
+        // );
+      // }
+      return false;
+    }
+    debugger;
+    if(setVoucherNo) {
+      
+      // dispatch(
+      //   accFormStateHandleFieldChange({
+      //     fields: {
+      //       openUnsavedPrompt: false,
+      //     },
+      //   })
+      // );
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
-              voucherNumber: _voucherNumber,
+              voucherNumber: voucherNumber,
             },
           })
         );
       }
-      return false;
-    }
     let _formState = await loadAccTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -246,7 +274,7 @@ export const useAccTransaction = (
     );
 
 
-
+debugger;
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -266,7 +294,7 @@ export const useAccTransaction = (
       },
       pnlMasters: {
         ..._formState.formElements.pnlMasters,
-        disabled: true,
+        disabled: _formState.transaction.master.accTransactionMasterID > 0,
       },
       btnSave: {
         ..._formState.formElements.btnSave,
@@ -327,6 +355,7 @@ export const useAccTransaction = (
     let voucher: AccTransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
+        openUnsavedPrompt: false
       })
     );
     const _voucherNumber =
@@ -348,6 +377,7 @@ export const useAccTransaction = (
       `${Urls.acc_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
+    debugger;
 
     if (vch == null || vch?.master == null) {
       vch = {
@@ -783,7 +813,7 @@ export const useAccTransaction = (
           break;
 
         case "OB":
-          debugger;
+          
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
@@ -819,7 +849,7 @@ export const useAccTransaction = (
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
-    const master = { ...formState.transaction.master };
+    const master = { ...formState.transaction.master, particulars: dataContainer.ledgers?.find(x => x.id == formState.masterAccountID)?.name??""};
 
     master.accTransactionMasterID = formState.isEdit
       ? master.accTransactionMasterID
@@ -1230,7 +1260,7 @@ const master = attachMaster();
       formState.formElements.amount.disabled = false;
     }
     formState.formElements.btnAdd;
-debugger;
+
 const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x => x.value == formState.row.costCentreID)?.name: "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
@@ -1779,9 +1809,9 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       },
     });
   };
-  const handleLoadByRefNo = useCallback(() => {
+  const handleLoadByRefNo = useCallback(async() => {
     if (formState.transaction.master.referenceNumber) {
-      loadAndSetAccTransVoucher(
+      await loadAndSetAccTransVoucher(
         true,
         undefined,
         undefined,

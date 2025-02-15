@@ -707,7 +707,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         fieldKey === "currency";
       const final =
         _selected || _default || _exceptional || initialValue || null;
-debugger;
+
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
         setInitial(null);

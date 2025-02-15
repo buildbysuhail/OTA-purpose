@@ -84,6 +84,7 @@ import VoucherType from "../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
+import UnsavedChangesModal from "./unsavedChangesModal";
 interface BilledItem {
   id?: number;
   name: string;
@@ -118,7 +119,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   financialYearID,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-  debugger;
+
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -272,7 +273,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [financialYearID]);
   useEffect(() => {
-    debugger;
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -1766,11 +1767,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           showCustomNumberChanger={true}
                           className="max-w-[200px]"
                           onChange={async (e: any) => {
+                            
                             if (e.isCustomNumberChangerEvent == true) {
                               const ret = await loadAndSetAccTransVoucher(
                                 false,
-                                e.target?.value
-                                , undefined, undefined, undefined, undefined, undefined, undefined, false
+                                parseFloat(e.target?.value)
+                                , undefined, undefined, undefined, undefined, undefined, e.mode == "down"
+                                ? "decrement"
+                                : e.mode == "up"
+                                  ? "increment"
+                                  : undefined, false
                               );
                               // if(ret) {
                               //   dispatch(
@@ -3493,6 +3499,36 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         setIsOpen={setIsAttachmentOpen}
         children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
       ></ERPResizableSidebar>
+       {formState.openUnsavedPrompt == true && (
+        <UnsavedChangesModal
+          isOpen={formState.openUnsavedPrompt == true}
+          onClose={() => { dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                openUnsavedPrompt: false,
+              },
+            })
+          ); }}
+          onStay={() => {
+            dispatch(
+              accFormStateHandleFieldChange({
+                fields: {
+                  openUnsavedPrompt: false,
+                },
+              })
+            );
+          }}
+          onLeave={async() => {
+           
+            const ret = await loadAndSetAccTransVoucher(
+              false,
+              formState.tmpVoucherNo
+              , undefined, undefined, undefined, undefined,
+               undefined, undefined, true,true
+            );
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -57,15 +57,14 @@ const ProfitAndLossRow: React.FC<{
   return (
     <tr>
       <td
-        className={`py-2 ${
-          item.title == "M"
+        className={`py-2 ${item.title == "M"
             ? "text-[#8B4513]"
             : item.title == "L"
-            ? ""
-            : item.groupName == "TOTAL"
-            ? "text-sm font-bold text-[#f00]"
-            : ""
-        }`}
+              ? ""
+              : item.groupName == "TOTAL"
+                ? "text-sm font-bold text-[#f00]"
+                : ""
+          }`}
         style={{
           paddingLeft:
             item.title == "M" ? "0px" : item.title == "G" ? "20px" : "10px",
@@ -81,28 +80,31 @@ const ProfitAndLossRow: React.FC<{
           <a
             href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${
-              item.title == "M"
+            className={`py-2 hover:text-[#1d4ed8] ${item.title == "M"
                 ? "text-[#8B4513]"
                 : item.title == "L"
-                ? ""
-                : item.groupName == "TOTAL"
-                ? "text-sm font-bold text-[#f00]"
-                : ""
-            }`}
+                  ? ""
+                  : item.groupName == "TOTAL"
+                    ? "text-sm font-bold text-[#f00]"
+                    : ""
+              }`}
             style={{
               paddingRight:
                 item.title == "M"
                   ? "0px"
                   : item.title == ""
-                  ? "20px"
-                  : item.title == "L"
-                  ? "20px"
-                  : "20px",
+                    ? "20px"
+                    : item.title == "L"
+                      ? "20px"
+                      : "20px",
               fontWeight: item.title == "M" ? "bold" : "normal",
             }}
           >
-            {getFormattedValue(item.total)}
+            { item.total < 0
+              ? "(-)" +getFormattedValue(-1*item.total)
+              :parseFloat(getFormattedValue(item.total)) === 0
+              ? ''
+              : getFormattedValue(item.total)}
           </a>
         </td>
       )}
@@ -352,28 +354,12 @@ const ProfitAndLossReport = () => {
     for (let i = 0; i < maxLength; i++) {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
-
-        worksheet.getCell(`B${currentRow}`).value = getFormattedValue(
-          expense[i].total
-        );
-
-        // income[i].transType == "I"
-        //     ? income[i].title == "M"
-        //       ? getFormattedValue(liabilities[i].total)
-        //       : liabilities[i].total > 0
-        //       ? "(-)" +getFormattedValue(liabilities[i].total)
-        //       : liabilities[i].total === 0
-        //       ? getFormattedValue(0)
-        //       : getFormattedValue(-1 * liabilities[i].total)
-
-        //     : liabilities[i].title == "M"
-        //     ? getFormattedValue(liabilities[i].total)
-        //     : liabilities[i].total < 0
-        //     ? "(-)" + getFormattedValue(-1 * liabilities[i].total)
-        //     : liabilities[i].total === 0
-        //     ? getFormattedValue(0)
-        //     : getFormattedValue(liabilities[i].total);
-
+        worksheet.getCell(`B${currentRow}`).value =   expense[i].total < 0
+        ? "(-)" +getFormattedValue(-1*expense[i].total)
+        : parseFloat(getFormattedValue(expense[i].total)) === 0
+        ? ''
+        : getFormattedValue(expense[i].total);
+   
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
             bold: true,
@@ -412,25 +398,17 @@ const ProfitAndLossReport = () => {
       if (income[i]) {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
 
-        worksheet.getCell(`D${currentRow}`).value = getFormattedValue(
-          income[i].total
-        );
-        // assets[i].transType == "E"
-        // ? assets[i].title == "M"
-        //   ?getFormattedValue(assets[i].total)
-        //   : assets[i].total > 0
-        //   ? "(-)" +getFormattedValue(assets[i].total)
-        //   : assets[i].total === 0
-        //   ? getFormattedValue(0)
-        //   : getFormattedValue(-1 * assets[i].total)
+        worksheet.getCell(`D${currentRow}`).value = income[i].total < 0
+        ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
+        : parseFloat(getFormattedValue(income[i].total)) === 0
+        ? ''
+        : getFormattedValue(income[i].total);
 
-        // : assets[i].title == "M"
-        // ?getFormattedValue(assets[i].total)
-        // : assets[i].total < 0
-        // ? "(-)" + getFormattedValue(-1 * assets[i].total)
-        // : assets[i].total === 0
-        // ? getFormattedValue(0)
-        // : getFormattedValue(assets[i].total);
+        // income[i].total < 0
+        // ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
+        // : income[i].total === 0
+        // ? ''
+        // : getFormattedValue(income[i].total);
 
         if (income[i].title === "M") {
           worksheet.getCell(`C${currentRow}`).font = {
@@ -565,7 +543,7 @@ const ProfitAndLossReport = () => {
           </div>
 
           <div className="flex items-center ms-auto space-x-4">
-          <div
+            <div
               className={`flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-all duration-300 ease-in-out ${isVerticalView ? "h-12 w-[220px]" : "h-12 w-[215px]"
                 }`}
             >
@@ -665,59 +643,59 @@ const ProfitAndLossReport = () => {
                   <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
                     <ul className="space-y-1">
                       <li>
-                       <button
-                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      onClick={handleExport}
-                    >
-                 
-                      <FileUp className="pe-2" />
-                      <span>{t("export_to_excel")}</span>
-                    </button>
+                        <button
+                          className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                          onClick={handleExport}
+                        >
+
+                          <FileUp className="pe-2" />
+                          <span>{t("export_to_excel")}</span>
+                        </button>
                       </li>
 
-                      
+
                       <li>
-                          <BlobProvider
-                            document={
-                              !isVerticalView ? (
-                                <ProfitAndLossPDFTemplate
-                                  userSession={userSession}
-                                  getFormattedValue={getFormattedValue}
-                                  filter={filter}
-                                  data={data}
-                                />):(
-                                  <ProfitAndLossVerticalPDFTemplate
-                                  userSession={userSession}
-                                  getFormattedValue={getFormattedValue}
-                                  filter={filter}
-                                  data={data}
-                                />
-                                  
-                                )
-                            }
-                          >
-                            {({ blob, loading }) => (
-                              <button
-                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                disabled={loading} // Disable the button while loading
-                                onClick={async () => {
-                                  if (blob) {
-                                    // Create a download link and trigger the download
-                                    const url = URL.createObjectURL(blob);
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = 'BalanceSheet.pdf';
-                                    a.click();
-                                    URL.revokeObjectURL(url); // Clean up the URL object
-                                  }
-                                }}
-                              >
-                                <FileText className="pe-2" />
-                                <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
-                              </button>
-                            )}
-                          </BlobProvider>
-                        </li>
+                        <BlobProvider
+                          document={
+                            !isVerticalView ? (
+                              <ProfitAndLossPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />) : (
+                              <ProfitAndLossVerticalPDFTemplate
+                                userSession={userSession}
+                                getFormattedValue={getFormattedValue}
+                                filter={filter}
+                                data={data}
+                              />
+
+                            )
+                          }
+                        >
+                          {({ blob, loading }) => (
+                            <button
+                              className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                              disabled={loading} // Disable the button while loading
+                              onClick={async () => {
+                                if (blob) {
+                                  // Create a download link and trigger the download
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download =!isVerticalView? "ProfitAndLoss.pdf":"ProfitAndLossVertical.pdf";
+                                  a.click();
+                                  URL.revokeObjectURL(url); // Clean up the URL object
+                                }
+                              }}
+                            >
+                              <FileText className="pe-2" />
+                              <span>{loading ? 'Loading document...' : t('export_to_pdf')}</span>
+                            </button>
+                          )}
+                        </BlobProvider>
+                      </li>
                     </ul>
                   </nav>
                 </div>
@@ -827,8 +805,8 @@ const ProfitAndLossReport = () => {
                     isOpenDetails.key === 19
                       ? 23
                       : isOpenDetails.key === 10
-                      ? 26
-                      : 0,
+                        ? 26
+                        : 0,
                   dateFrom: filter.fromDate,
                   asOnDate: filter.toDate,
                   isDateForm: true,
@@ -840,22 +818,22 @@ const ProfitAndLossReport = () => {
           postData={
             isOpenDetails.key == -500
               ? {
-                  fromDate: filter.fromDate,
-                  toDate: filter.toDate,
-                  valuationUsing: filter.valuationUsing,
-                }
+                fromDate: filter.fromDate,
+                toDate: filter.toDate,
+                valuationUsing: filter.valuationUsing,
+              }
               : {
-                  accGroupID: isOpenDetails.key,
-                  expAccGroupID:
-                    isOpenDetails.key === 19
-                      ? 23
-                      : isOpenDetails.key === 10
+                accGroupID: isOpenDetails.key,
+                expAccGroupID:
+                  isOpenDetails.key === 19
+                    ? 23
+                    : isOpenDetails.key === 10
                       ? 26
                       : 0,
-                  dateFrom: filter.fromDate,
-                  asOnDate: filter.toDate,
-                  isDateForm: true,
-                }
+                dateFrom: filter.fromDate,
+                asOnDate: filter.toDate,
+                isDateForm: true,
+              }
           }
         />
       )}

@@ -565,7 +565,6 @@ $dark-grid-selection: #000000;
     background-color: red !important;
   }
 
-
   // .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused)>td {
   //   background-color: #51ff00 !important ;
   // }
@@ -645,67 +644,17 @@ $dark-grid-selection: #000000;
     }
   }
 
-  // Mixin for conditional styling based on renderActionButton
-  // @mixin actionButtonStyles($renderActionButton) {
-  //   @if $renderActionButton == true {
-  //     .dx-datagrid-action:last-child,
-  //     .dx-datagrid-action:nth-last-child(1) {
-  //       border-right: none;
-  //       &::after {
-  //         display: none;
-  //       }
-  //     }
-  //   } @else {
-  //     .dx-datagrid-action:nth-last-child(2) {
-  //       border-right: none;
-  //       &::after {
-  //         display: none;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // // Use the mixin with a variable
-  // $renderActionButton: true; // Change this to false to test different styles
-  // @include actionButtonStyles($renderActionButton);
-
-  // Custom Checkbox Styling
-  // .dx-checkbox {
-  //   .dx-checkbox-icon {
-  //     border-color: #4a90e2;
-  //     background-color: #ffffff;
-  //   }
-
-  //   &.dx-checkbox-checked .dx-checkbox-icon {
-  //     background-color: #4a90e2; // Checkbox fill color
-  //     border-color: #4a90e2;
-  //   }
-  // }
-
-  // Badge Styling
-  // .badge {
-  //   &.bg-success {
-  //     background-color: #28a745; // Green for "Active"
-  //     color: white;
-  //     border-radius: 12px;
-  //     padding: 4px 12px;
-  //   }
-  // }
-
   // Toolbar Styling
   .dx-toolbar {
     background-color: #ffffff;
     // border-bottom: 1px solid #e0e6f5;
 
-    .dx-toolbar-before {
-      display: flex;
-      align-items: center;
-    }
-
+    .dx-toolbar-before,
     .dx-toolbar-after {
       display: flex;
       align-items: center;
     }
+
     .dx-toolbar-before {
       justify-content: flex-start; /* Align to the left */
     }
@@ -769,5 +718,14 @@ $dark-grid-selection: #000000;
         background-color: #28a745;
       }
     }
+  }
+}
+
+
+// Conditional Toolbar Styling
+.toolbar-expanded {
+  .dx-toolbar .dx-toolbar-items-container {
+    height: 0px !important;
+    overflow: visible !important;
   }
 }

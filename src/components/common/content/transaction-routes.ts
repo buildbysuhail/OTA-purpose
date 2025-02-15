@@ -20,7 +20,7 @@ export interface TransactionRoute {
   drCr: string;
   shortKey?: string;
   shortKeyList?: string;
-  icon?: React.ElementType; // Changed to React.ElementType to accept Lucide icons
+  icon?: any; // Changed to React.ElementType to accept Lucide icons
   visibleFn?: (userSession: UserModel) => boolean;
 }
 
@@ -36,7 +36,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.CashPayment,
     drCr: "Dr",
     shortKey: "ctrl+alt+c",
-    icon: Wallet // Using Wallet icon from lucide-react
+    icon: Wallet 
   },
   {
     transactionBase: TransactionBase.Accounts,

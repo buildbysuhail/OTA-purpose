@@ -180,9 +180,9 @@ const LedgerReport = () => {
           const value =
             balance == null
               ? ""
-              : balance < 0
-              ? getFormattedValue(-1 * balance)
-              : getFormattedValue(balance);
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(balance)
+              : getFormattedValue(balance,false,3);
           return {
             ...exportCell,
             text: value,
@@ -201,7 +201,7 @@ const LedgerReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-            {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+            {`${ cellElement.data?.debit == null ? '' : cellElement.data.particulars === "TOTAL"? getFormattedValue(cellElement.data.debit) : getFormattedValue(cellElement.data.debit,false,3)}`}
           </span>)
         }
       }
@@ -217,13 +217,13 @@ const LedgerReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
-          const isDebit = balance >= 0;
+          // const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""
-              : balance < 0
-              ? getFormattedValue(-1 * balance)
-              : getFormattedValue(balance);
+              : cellElement.data.particulars === "TOTAL"
+              ? getFormattedValue(balance)
+              : getFormattedValue(balance,false,3);
           return {
             ...exportCell,
             text: value,
@@ -242,7 +242,7 @@ const LedgerReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
-            {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+            {`${cellElement.data?.credit == null ? '' : cellElement.data.particulars === "TOTAL" ? getFormattedValue(cellElement.data.credit) : getFormattedValue(cellElement.data.credit,false,3)}`}
           </span>)
         }
       },
@@ -268,8 +268,8 @@ const LedgerReport = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) + " Cr"
-                : getFormattedValue(balance) + " Dr";
+                ? getFormattedValue(-1 * balance,false,3) + " Cr"
+                : getFormattedValue(balance,false,3) + " Dr";
           return {
             ...exportCell,
             text: value,
@@ -293,8 +293,8 @@ const LedgerReport = () => {
             {`${cellElement.data?.balance == null
               ? ''
               : cellElement.data.balance < 0
-                ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-                : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+                ? getFormattedValue(-1 * cellElement.data.balance,false,3) + ' Cr'
+                : getFormattedValue(cellElement.data.balance,false,3) + ' Dr'}`}
           </span>)
         }
       }

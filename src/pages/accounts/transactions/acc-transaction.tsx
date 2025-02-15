@@ -2345,7 +2345,7 @@ debugger;
                     }
                   />
                 )}
-                <div className="xl:w-[170px] lg:w-[250px] mt-2">
+                <div className="xl:w-[170px] lg:w-[250px]">
                   {formState.formElements.discount.visible && (
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2373,7 +2373,7 @@ debugger;
                       id="discount"
                       type="number"
                       min={0}
-                      className="!m-0"
+                      // className="!m-0"
                       label=" "
                       value={formState.row.discount}
                       onChange={(e) =>
@@ -2495,10 +2495,12 @@ debugger;
                       />
                     )}
                   {formState.formElements.btnAdd.visible == true && (
+                    <>
+                    <span></span>
                     <ERPButton
                       ref={btnAddRef}
                       title={t(formState.formElements.btnAdd.label)}
-                      className="mt-4"
+                      // className="mt-4"
                       variant="primary"
                       loading={formState.rowProcessing}
                       type="button"
@@ -2517,6 +2519,7 @@ debugger;
 
                       }
                     />
+                    </>
                   )}
                 </div>
               </div>

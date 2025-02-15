@@ -388,6 +388,7 @@ export const MENUITEMS = [
         selected: false,
         title: route.title,
         rights: route.formCode,
+        icon: route.icon,
       })),
       {
         path: `${import.meta.env.BASE_URL

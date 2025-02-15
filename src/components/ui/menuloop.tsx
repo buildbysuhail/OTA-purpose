@@ -49,7 +49,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                   <li className={`${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
                     {firstlevel.type === "link" ?
                       <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
-                        {firstlevel.icon}
+                        {firstlevel.icon && <firstlevel.icon />}
                         <span className="relative flex items-center">
                           <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap"
                             title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
@@ -59,6 +59,9 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                             <span className=" fixed ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
                               <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
                                 <CirclePlus />
+                                {/* <i className="side-menu__icon">
+                                  <route.icon />
+                                </i> */}
                               </Link>
                             </span>
                           }

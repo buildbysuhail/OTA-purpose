@@ -886,6 +886,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       const commonMuiStyles = {
         paddingBottom: _variant === "filled" ? "1rem" : "0",
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+        fontWeight:inputBoxState?.bold ? 700:400,
         color:
           appState?.mode == "dark"
             ? "#ffffff"
@@ -1064,8 +1065,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               "& .MuiInputBase-root": {
                 height: `${inputBoxState?.inputHeight ?? 3}rem`,
                 fontSize: `${inputBoxState?.fontSize ?? 16}px`,
-                fontWeight: inputBoxState?.fontWeight ?? 500,
                 ...commonMuiStyles,
+                fontWeight:inputBoxState?.bold ? 700: inputBoxState?.fontWeight ?? 500,
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
@@ -1405,7 +1406,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 style={{
                   height,
                   fontSize,
-                  fontWeight,
+                  fontWeight:inputBoxState?.bold ? 700 : fontWeight,
                   color,
                   borderColor: borderStyles,
                   outline: "none",

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { NotificationsChannel } from "../../../enums/notification-chanal";
+import { useTranslation } from "react-i18next";
 
 interface MenuItem {
   id: number;
@@ -48,6 +49,8 @@ export default function Component() {
     setIsSidebarOpen(false);
   };
 
+  const { t } = useTranslation('integration');
+
   const WhatsAppDemo = ({ message }: { message: string }) => (
     <div className="bg-gray p-2 sm:p-4 rounded-lg w-full max-w-full sm:max-w-sm">
       <div className="bg-white rounded-lg shadow-lg border overflow-hidden max-w-full sm:max-w-xs mx-auto">
@@ -55,7 +58,7 @@ export default function Component() {
           <div className="flex items-center">
             <i className="ti ti-chevron-left mr-1 sm:mr-2 text-[12px] sm:text-[15px] text-white"></i>
             <div className="w-8 h-8 bg-[#dee2e6] rounded-full mr-2"></div>
-            <span className="font-semibold text-sm text-white">Customer</span>
+            <span className="font-semibold text-sm text-white">{t("customer")}</span>
           </div>
           <div className="flex items-center text-white">
             <i className="ti ti-phone mr-4 sm:mr-4 text-[12px] sm:text-[15px]"></i>
@@ -66,7 +69,7 @@ export default function Component() {
 
         <div className="dark:!bg-dark-bg bg-[#dcebdc] p-2 sm:p-4 overflow-y-auto flex flex-col justify-end min-h-[150px] sm:min-h-[200px]">
           <div className="dark:!bg-dark-bg-card bg-white rounded-lg p-2 max-w-[85%] sm:max-w-[80%] ml-auto mb-2 shadow">
-            <p className="text-xs sm:text-sm">{message || "No message available"}</p>
+            <p className="text-xs sm:text-sm">{message || t("no_message_available")}</p>
             <p className="text-right text-[10px] sm:text-xs text-gray mt-1">{currentTime}</p>
           </div>
         </div>
@@ -74,7 +77,7 @@ export default function Component() {
         <div className=" dark:!bg-dark-bg bg-gray border border-t dark:!border-dark-border  px-2 sm:px-4 py-1 sm:py-2 flex items-center">
           <input
             type="text"
-            placeholder="Type a message"
+            placeholder={t("type_a_message")}
             className="dark:!bg-dark-bg-card bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
             readOnly
           />
@@ -84,8 +87,7 @@ export default function Component() {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-4 h-4 text-center !display-revert"
-            >
+              className="w-4 h-4 text-center !display-revert">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -109,10 +111,10 @@ export default function Component() {
       <div className="flex flex-col justify-between md:flex-row h-full p-3 md:p-6">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{selectedMenu}</h2>
-          <p className="mb-2 md:mb-4">{selectedItem.content || "No Message Available"}</p>
+          <p className="mb-2 md:mb-4">{selectedItem.content || t("no_message_available")}</p>
         </div>
         <div>
-          <WhatsAppDemo message={selectedItem.content || "No message available"} />
+          <WhatsAppDemo message={selectedItem.content || t("no_message_available")} />
         </div>
       </div>
     );
@@ -145,8 +147,8 @@ export default function Component() {
                   <button
                     key={item.id}
                     className={`flex items-center w-full px-3 md:px-4 py-1.5 mt-1 md:mt-2 duration-200 border-r-4 text-left ${selectedMenu === item.transactionName
-                        ? "bg-gray border-green text-green"
-                        : "border-transparent hover:bg-gray hover:border-gray"
+                      ? "bg-gray border-green text-green"
+                      : "border-transparent hover:bg-gray hover:border-gray"
                       }`}
                     onClick={(e) => handleMenuClick(e, item.transactionName)}
                   >
@@ -154,7 +156,7 @@ export default function Component() {
                   </button>
                 ))
               ) : (
-                <p className="px-4 py-1.5 text-xs">No items available</p>
+                <p className="px-4 py-1.5 text-xs">{t("no_items_available")}</p>
               )}
             </nav>
           </div>

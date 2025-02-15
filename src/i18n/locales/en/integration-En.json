@@ -24,5 +24,10 @@
     "connect_with_twilio": "Connect With Twilio",
 
     "whatsapp_integrations": "Whatsapp Integrations",
-    "email_integrations": "Email Integrations"
+    "email_integrations": "Email Integrations",
+
+    "type_a_message": "Type a message",
+    "no_message_available": "No message available",
+    "no_items_available": "No items available",
+    "customer":"Customer"
 }

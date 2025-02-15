@@ -118,6 +118,8 @@
    "expense_report_detailed":"تقرير المصروفات مفصل",
    "cash_flow":"التدفق النقدي",
    "bank_flow":"تدفق البنك",
+   "income_expense_statement" : "كشف الإيرادات والمصروفات",
+   "bank_statement":"كشف حساب بنكي",
 
    "cash_payment": "الدفع النقدي",
    "cash_receipt": "الإيصال النقدي",

@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleDayClosePopup } from "../../../redux/slices/popup-reducer";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../redux/urls";
@@ -55,7 +54,7 @@ const DayCloseManage = () => {
     handleClose
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
-    onClose:useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })),
       [dispatch]
     ),
@@ -64,8 +63,6 @@ const DayCloseManage = () => {
     loadDataRequired: false,
     initialData: initialDayCloseData
   });
-
-
 
   const { t } = useTranslation("system");
 
@@ -79,7 +76,7 @@ const DayCloseManage = () => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("passWord", data.passWord)}
         />
-         <ERPDateInput
+        <ERPDateInput
           {...getFieldProps("closedDate")}
           label={t("from")}
           required={true}
@@ -88,7 +85,7 @@ const DayCloseManage = () => {
         <div className="flex justify-around items-center">
           <ERPCheckbox
             {...getFieldProps("isSales")}
-            label={t("Sales")}
+            label={t("sales")}
             onChangeData={(data: any) => handleFieldChange("isSales", data.isSales)}
           />
           <ERPCheckbox

@@ -1,19 +1,9 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import Urls from "../../../redux/urls";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ErpInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
@@ -26,18 +16,18 @@ interface CounterData {
   systemName: string;
   systemCode: string;
   counterId: number | null;
- 
 }
+
 const api = new APIClient();
 interface CounterSettingsProps {
   token?: string;
-  isFromLogin?:boolean
+  isFromLogin?: boolean
   onSuccess?: () => void;
   isMaximized?: boolean;
   modalHeight?: any
 }
 
-const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, onSuccess,isMaximized,modalHeight}) => {
+const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, onSuccess, isMaximized, modalHeight }) => {
   const initData: CounterData = {
     systemName: "",
     systemCode: "",
@@ -50,17 +40,15 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const navigate = useNavigate();
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
 
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightMobile =isFromLogin ? modalHeight - 100: wh - 50;
-    let gridHeightWindows =isFromLogin ?  modalHeight - 540 : wh - 480;
+    let gridHeightMobile = isFromLogin ? modalHeight - 100 : wh - 50;
+    let gridHeightWindows = isFromLogin ? modalHeight - 540 : wh - 480;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
+
   useEffect(() => {
     loadCounterData();
     setReload(true);
@@ -100,9 +88,9 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
         response,
         () => {
           setReload(true);
-          if(isFromLogin && onSuccess) onSuccess();
+          if (isFromLogin && onSuccess) onSuccess();
         },
-        () => {}
+        () => { }
       );
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -208,7 +196,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 id="counterId"
                 data={counterData}
                 value={counterData?.counterId}
-                label={t("counterID")}
+                label={t("counter_id")}
                 field={{
                   id: "counterId",
                   getListUrl: Urls.data_counters,
@@ -268,7 +256,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 reload={reload}
                 pageSize={40}
                 allowSearching
-              ></ErpDevGrid>
+              />
             </div>
             <div className="flex justify-center items-center mt-2 space-x-2">
               <strong>{t("this_system_code")}</strong>

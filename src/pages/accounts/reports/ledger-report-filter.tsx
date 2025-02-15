@@ -99,7 +99,7 @@ const LedgerReportFilter = ({
       />
 
       {/* Cost Centre Section */}
-      {/* <ERPDataCombobox
+      <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
         field={{
@@ -114,7 +114,7 @@ const LedgerReportFilter = ({
             CostCenterName: data.label,
           })
         }
-      /> */}
+      />
 
       {applicationSettings.accountsSettings?.allowSalesCounter == true && (
         <ERPDataCombobox
@@ -159,11 +159,11 @@ const LedgerReportFilter = ({
       {/* Checkboxes Grid */}
       <div className="col-span-2 grid grid-cols-2 gap-4">
         {/* All Checkbox */}
-        {/* <ERPCheckbox
+        <ERPCheckbox
           {...getFieldProps("showAll")}
           label={t("all")}
           onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
-        /> */}
+        />
 
         <ERPCheckbox
           {...getFieldProps("showSummary")}

@@ -384,6 +384,8 @@
     "out_amount": "المبلغ الصادر",
     "cash_flow_report_summary": "ملخص تقرير التدفق النقدي",
     "bank_flow_report_summary": "ملخص تقرير التدفق البنكي",
-    "show_summary": "عرض الملخص"
-
+    "show_summary": "عرض الملخص",
+    "income_expense_statement" : "كشف الإيرادات والمصروفات",
+     "bank_statement":"كشف حساب بنكي"
 }
+    

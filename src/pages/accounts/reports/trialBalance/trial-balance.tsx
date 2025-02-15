@@ -115,7 +115,7 @@ const TrialBalance = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
@@ -154,7 +154,7 @@ const TrialBalance = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 150,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {

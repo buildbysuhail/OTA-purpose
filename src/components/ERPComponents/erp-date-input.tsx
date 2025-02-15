@@ -160,6 +160,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       const commonMuiStyles = {
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
         color: appState?.mode == "dark" ? "#ffffff" : `rgb(${inputBoxState?.fontColor})`,
+        fontWeight:inputBoxState?.bold ? 700:400,
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: appState?.mode == "dark" ? "#ffffff1a" : `rgb(${inputBoxState?.borderColor})`,
         },
@@ -283,8 +284,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             "& .MuiInputBase-root": {
               height: `${inputBoxState?.inputHeight ?? 3}rem`,
               fontSize: `${inputBoxState?.fontSize ?? 16}px`,
-              fontWeight: inputBoxState?.fontWeight ?? 500,
               ...commonMuiStyles,
+              fontWeight:inputBoxState?.bold ? 700: inputBoxState?.fontWeight ?? 500,
             },
             "& .MuiInputLabel-root": {
               fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,

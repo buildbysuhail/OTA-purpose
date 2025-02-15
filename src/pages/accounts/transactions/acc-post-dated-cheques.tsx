@@ -17,6 +17,7 @@ import moment from "moment";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { LedgerType } from "../../../enums/ledger-types";
 
 interface FormState {
   paymentType: "payment" | "receipt";
@@ -674,7 +675,8 @@ const PostDatedCheques = () => {
                         field={{
                           id: "BankAC",
                           required: true,
-                          getListUrl: Urls.data_BankAccounts,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerType=${LedgerType.BankAccount}`,
                           valueKey: "id",
                           labelKey: "name",
                         }}

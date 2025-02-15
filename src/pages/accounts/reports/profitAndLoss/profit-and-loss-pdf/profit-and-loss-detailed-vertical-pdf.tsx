@@ -200,21 +200,12 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
                   styles.darkTextnum :styles.blueTextNum    
                 ]}
                >
-                 {item.transType === "L"
-                   ? item.title === "M"
-                     ? getFormattedValue(item.total)
-                     : item.total > 0
-                       ? "(-)" + getFormattedValue(item.total)
-                       : item.total === 0
-                         ? getFormattedValue(0)
-                         : getFormattedValue(-1 * item.total)
-                   : item.title === "M"
-                     ? getFormattedValue(item.total)
-                     : item.total < 0
-                       ? "(-)" + getFormattedValue(-1 * item.total)
-                       : item.total === 0
-                         ? getFormattedValue(0)
-                         : getFormattedValue(item.total)}
+                  {item.total < 0
+                          ? "(-)" + getFormattedValue(-1*item.total)
+                          :parseFloat(getFormattedValue(item.total)) === 0
+                          ? ' '
+                          : getFormattedValue(item.total)
+                      }
                </Text>
              ))}
          <Text style={[styles.total,styles.amount]}>{getFormattedValue(incomeTotal)}</Text>
@@ -226,21 +217,12 @@ const ProfitAndLossDetailedVerticalPDFTemplate: React.FC<{ data: any[], filter: 
                     styles.darkTextnum :styles.blueTextNum    
                   ]}
                 >
-                  {item.transType === "L"
-                    ? item.title === "M"
-                      ? getFormattedValue(item.total)
-                      : item.total > 0
-                        ? "(-)" + getFormattedValue(item.total)
-                        : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(-1 * item.total)
-                    : item.title === "M"
-                      ? getFormattedValue(item.total)
-                      : item.total < 0
-                        ? "(-)" + getFormattedValue(-1 * item.total)
-                        : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(item.total)}
+                   {item.total < 0
+                          ? "(-)" + getFormattedValue(-1*item.total)
+                          :parseFloat(getFormattedValue(item.total)) === 0
+                          ? ' '
+                          : getFormattedValue(item.total)
+                      }
                 </Text>
             ))}
             <Text style={[styles.total,styles.amount]}>{getFormattedValue(expenseTotal)}</Text>

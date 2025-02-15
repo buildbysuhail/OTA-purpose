@@ -145,11 +145,11 @@ const ProfitAndLossPDFTemplate: React.FC<{
   const assetTotal =
     data?.find(
       (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
-    )?.total || 0;
+    )?.total || '';
   const liabilityTotal =
     data?.find(
       (item: any) => item?.transType === "L" && item?.groupName === "TOTAL"
-    )?.total || 0;
+    )?.total || '';
 
   return (
     <Document>
@@ -266,21 +266,12 @@ const ProfitAndLossPDFTemplate: React.FC<{
                           : styles.darkTextnum,
                       ]}
                     >
-                      {item.transType === "L"
-                        ? item.title === "M"
-                          ? getFormattedValue(item.total)
-                          : item.total > 0
-                          ? "(-)" + getFormattedValue(item.total)
-                          : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(-1 * item.total)
-                        : item.title === "M"
-                        ? getFormattedValue(item.total)
-                        : item.total < 0
-                        ? "(-)" + getFormattedValue(-1 * item.total)
-                        : item.total === 0
-                        ? getFormattedValue(0)
-                        : getFormattedValue(item.total)}
+                      {item.total < 0
+                          ? "(-)" + getFormattedValue(-1*item.total)
+                          :parseFloat(getFormattedValue(item.total)) === 0
+                          ? ''
+                          : getFormattedValue(item.total)
+                      }
                     </Text>
                   </View>
                 </View>
@@ -331,21 +322,12 @@ const ProfitAndLossPDFTemplate: React.FC<{
                           : styles.darkTextnum,
                       ]}
                     >
-                      {item.transType === "L"
-                        ? item.title === "M"
-                          ? getFormattedValue(item.total)
-                          : item.total > 0
-                          ? "(-)" + getFormattedValue(item.total)
-                          : item.total === 0
-                          ? getFormattedValue(0)
-                          : getFormattedValue(-1 * item.total)
-                        : item.title === "M"
-                        ? getFormattedValue(item.total)
-                        : item.total < 0
-                        ? "(-)" + getFormattedValue(-1 * item.total)
-                        : item.total === 0
-                        ? getFormattedValue(0)
-                        : getFormattedValue(item.total)}
+                     {item.total < 0
+                          ? "(-)" + getFormattedValue(-1*item.total)
+                          :parseFloat(getFormattedValue(item.total)) === 0
+                          ? ''
+                          : getFormattedValue(item.total)
+                      }
                     </Text>
                   </View>
                 </View>

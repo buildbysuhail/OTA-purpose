@@ -107,7 +107,11 @@ const ProfitAndLossRow: React.FC<{
             }}
             // className="text-[#3b82f6] hover:text-[#1d4ed8]"
           >
-            {getFormattedValue(item.total)}
+           { item.total < 0
+              ? "(-)" +getFormattedValue(-1*item.total)
+              :parseFloat(getFormattedValue(item.total)) === 0
+              ? ''
+              : getFormattedValue(item.total)}
           </a>
         </td>
       )}
@@ -381,9 +385,12 @@ const ProfitAndLossDetailedReport = () => {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
 
-        worksheet.getCell(`B${currentRow}`).value = getFormattedValue(
-          expense[i].total
-        );
+        worksheet.getCell(`B${currentRow}`).value =  expense[i].total < 0
+        ? "(-)" +getFormattedValue(-1*expense[i].total)
+        : parseFloat(getFormattedValue(expense[i].total)) === 0
+        ? ''
+        : getFormattedValue(expense[i].total);
+        
 
         if (expense[i].title === "M") {
           worksheet.getCell(`A${currentRow}`).font = {
@@ -437,9 +444,11 @@ const ProfitAndLossDetailedReport = () => {
       if (income[i]) {
         worksheet.getCell(`C${currentRow}`).value = income[i].groupName;
 
-        worksheet.getCell(`D${currentRow}`).value = getFormattedValue(
-          income[i].total
-        );
+        worksheet.getCell(`D${currentRow}`).value = income[i].total < 0
+        ? `(-)${getFormattedValue(Math.abs(income[i].total))}`
+        : parseFloat(getFormattedValue(income[i].total)) === 0
+        ? ''
+        : getFormattedValue(income[i].total);
         // assets[i].transType == "E"
         // ? assets[i].title == "M"
         //   ?getFormattedValue(assets[i].total)
@@ -742,7 +751,7 @@ const ProfitAndLossDetailedReport = () => {
                                   const url = URL.createObjectURL(blob);
                                   const a = document.createElement("a");
                                   a.href = url;
-                                  a.download = "ProfitAndLoss.pdf";
+                                  a.download =!isVerticalView? "ProfitAndLossDetailed.pdf":"ProfitAndLossDetailedVertical.pdf";
                                   a.click();
                                   URL.revokeObjectURL(url);
                                 }

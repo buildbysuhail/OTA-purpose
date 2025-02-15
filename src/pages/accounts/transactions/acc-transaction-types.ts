@@ -425,6 +425,7 @@ export interface BillwiseData {
 export interface AccUserConfig {
   maxWidth?: any;
   gridMaxWidth?: any;
+  gridHeight?: any;
   keepNarrationForJV?: boolean;
   clearDetailsAfterSaveAccounts?: boolean;
   mnuShowConfirmationForEditOnAccounts?: boolean;
@@ -602,13 +603,13 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     alignment: "center",
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
-    maxWidth: " ",
+    maxWidth: "",
     outerPageBg: "",
     innerPageBg: "",
     inputBoxStyle: {
       inputStyle: "normal",
-      inputSize: "md",
-      checkButtonInputSize: "md",
+      inputSize: "sm",
+      checkButtonInputSize: "sm",
       inputHeight: 0,
       fontSize: 14,
       fontWeight: 400,
@@ -625,8 +626,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
       adjustB: 0,
       adjustC: 0,
       adjustD: 0,
-      marginTop: 0,
-      marginBottom: 0,
+      marginTop: 8,
+      marginBottom: 6,
       focusForeColor: "128, 128, 128",
       focusBgColor: "255, 255, 255",
       bold:true

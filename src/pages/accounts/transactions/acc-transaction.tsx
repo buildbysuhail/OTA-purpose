@@ -1396,6 +1396,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   // const toggleMenu = () => {
   //   setIsMenuOpen(!isMenuOpen);
   // };
+  const isChequeSectionVisible = 
+  formState.formElements.nameOnCheque.visible ||
+  formState.formElements.bankName.visible ||
+  formState.formElements.chequeNumber.visible ||
+  formState.formElements.bankDate.visible;
+
+
+
 
   return (
     <div className="relative">
@@ -2631,6 +2639,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
               GridPreferenceChooserAccTrance
+              heightToAdjustOnWindows={formState.userConfig?.gridHeight ?? (isChequeSectionVisible ? 650 : 600)}
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}

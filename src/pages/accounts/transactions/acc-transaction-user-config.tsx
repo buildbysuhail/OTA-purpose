@@ -223,7 +223,7 @@ export const AccTransactionUserConfig = () => {
                   id="maxWidth"
                   label={t("max_width")}
                   placeholder={t("max_width_eg")}
-                  type="text"
+                  type="number"
                   className="w-full"
                   data={formState.userConfig}
                   value={formState?.userConfig?.maxWidth}
@@ -235,7 +235,7 @@ export const AccTransactionUserConfig = () => {
                   id="gridMaxWidth"
                   label={t("grid_max_width")}
                   placeholder={t("max_width_eg")}
-                  type="text"
+                  type="number"
                   className="w-full"
                   data={formState.userConfig}
                   value={formState?.userConfig?.gridMaxWidth}
@@ -243,7 +243,21 @@ export const AccTransactionUserConfig = () => {
                     handleFieldChange("gridMaxWidth", e.gridMaxWidth)
                   }
                 />
+                 <ERPInput
+                  id="gridHeight"
+                  label={t("grid_height")}
+                  placeholder={t("grid_height_eg")}
+                  type="number"
+                  className="w-full"
+                  data={formState.userConfig}
+                  value={formState?.userConfig?.gridHeight}
+                  onChangeData={(e: { gridHeight: any }) =>
+                    handleFieldChange("gridHeight", e.gridHeight)
+                  }
+                />
               </div>
+
+        
 
               <div>
                 <ERPButton

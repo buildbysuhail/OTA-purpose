@@ -1486,6 +1486,13 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
           );
           focusAmount();
         } else {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: {
+                ledgerID: null,
+              },
+            })
+          );
           focusLedgerCombo();
         }
       } catch (error) {

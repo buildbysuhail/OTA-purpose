@@ -402,5 +402,7 @@
     "currency_symbol":"Currency symbol",
     "account_summary_label":"Account summary label",
     "invoiced_amount":"Invoiced amount",
-    "amount_paid":"Amount paid"
+    "amount_paid":"Amount paid",
+
+    "....loading":"....Loading"
 }

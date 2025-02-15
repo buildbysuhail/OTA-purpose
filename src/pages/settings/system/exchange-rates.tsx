@@ -1,57 +1,52 @@
-import React, {  Fragment,  useCallback,  useEffect,  useMemo,  useState,} from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState, } from "react";
 import Urls from "../../../redux/urls";
-import {  toggleCurrencyMasterPopup,} from "../../../redux/slices/popup-reducer";
+import { toggleCurrencyMasterPopup, } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-// import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
-import { Toolbar, Item, Editing, Column, Lookup, Scrolling, RemoteOperations, Paging, KeyboardNavigation, DataGridTypes} from "devextreme-react/cjs/data-grid";
+import { Toolbar, Item, Editing, Column, Lookup, Scrolling, RemoteOperations, Paging, KeyboardNavigation, DataGridTypes } from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import "./exchange-rates.css";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
 import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
+
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
 interface ExchangeRatesProps {
-  isMaximized?: boolean; 
-  modalHeight?:any
+  isMaximized?: boolean;
+  modalHeight?: any
 }
-const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
-  
+const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
+
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
-
-  const [postData, setPostData] = useState<{ baseCurrency: number }>({
-    baseCurrency: 0,
-  });
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
+  const [postData, setPostData] = useState<{ baseCurrency: number }>({ baseCurrency: 0, });
   const [store, setStore] = useState<any>([]);
   const [currencies, setCurrencies] = useState<any>([]);
   const [postDataLoading, setPostDataLoading] = useState(false);
+
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
   }
+
   const loadCurrencies = useCallback(async () => {
     const result: any = await api.getAsync(`${Urls.data_currencies}`);
     setCurrencies(result);
   }, []);
-  const load = async (baseCurrency?: number) => {
-    const result: any = await api.getAsync(
-      `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
-    );
 
+  const load = async (baseCurrency?: number) => {
+    const result: any = await api.getAsync(`${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`);
     updateStore(result?.data);
   };
+
   const updateStore = (inputData: any) => {
     let data = inputData;
     const length = data?.length ?? 0;
@@ -69,19 +64,17 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
     }
     setStore(data);
   };
+
   const handleSubmit = async () => {
     setPostDataLoading(true);
     try {
       const dataToSubmit = store.filter(
         (row: any) => row.toCurrency !== null && row.rate !== null
       );
-
       const result: any = await api.post(`${Urls.currencyExchange}`, {
         currencyId: postData.baseCurrency,
-
         data: dataToSubmit,
       });
-
       setStore(result?.data);
       setPostDataLoading(false);
     } catch (error) {
@@ -90,6 +83,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
       setPostDataLoading(false);
     }
   };
+
   useEffect(() => {
     try {
       load();
@@ -97,14 +91,13 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
     } catch (error) {
       setStore([]);
     }
-
   }, []);
-  
+
   useEffect(() => {
-    let gridHeightMobile = modalHeight - 50; 
-    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250; 
+    let gridHeightMobile = modalHeight - 50;
+    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized,modalHeight]);
+  }, [isMaximized, modalHeight]);
 
   const handleDelete = async (id: any, rowIndex: number) => {
     if (id === 0 || id === null) {
@@ -114,7 +107,6 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
       setStore(newStore);
     } else {
       // If exchRateID exists, proceed with API call for deletion
-
       try {
         const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`);
         handleResponse(Delete);
@@ -125,45 +117,40 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
       }
     }
   };
+
   const ChartCell = (cellData: any) => {
     return (
       <div className="chart-cell">
-        <i
-          className="ri-delete-bin-5-line delete-icon cursor-pointer"
-          onClick={() =>
-            handleDelete(cellData.data.exchRateID, cellData.rowIndex)
-          }
-        ></i>
+        <i className="ri-delete-bin-5-line delete-icon cursor-pointer"
+          onClick={() => handleDelete(cellData.data.exchRateID, cellData.rowIndex)}>
+        </i>
       </div>
     );
   };
 
-  const [enterKeyAction, setEnterKeyAction] =
-    useState<DataGridTypes.EnterKeyAction>("startEdit");
-  const [enterKeyDirection, setEnterKeyDirection] =
-    useState<DataGridTypes.EnterKeyDirection>("row");
-
+  const [enterKeyAction, setEnterKeyAction] = useState<DataGridTypes.EnterKeyAction>("startEdit");
+  const [enterKeyDirection, setEnterKeyDirection] = useState<DataGridTypes.EnterKeyDirection>("row");
   const enterKeyActionChanged = useCallback(
     (e: SelectBoxTypes.ValueChangedEvent) => {
       setEnterKeyAction(e.value);
-    },
-    []
+    }, []
   );
 
   const enterKeyDirectionChanged = useCallback(
     (e: SelectBoxTypes.ValueChangedEvent) => {
       setEnterKeyDirection(e.value);
-    },
-    []
+    }, []
   );
 
   const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
     e.isHighlighted = true;
   };
+
   const MemoizedCurrencyMasterManage = useMemo(
     () => React.memo(CurrencyMasterManage),
     []
   );
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -198,7 +185,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
                     filtering={false}
                     sorting={false}
                     paging={false}
-                  ></RemoteOperations>
+                  />
                   <Column
                     dataField="exchRateID"
                     caption={t("SiNo")}
@@ -254,7 +241,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
                   />
                   <Column
                     allowEditing={false}
-                    caption="Action"
+                    caption={t("action")}
                     width={80}
                     cellRender={ChartCell}
                   />
@@ -291,14 +278,8 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
                       />
                     </Item>
                     <Item location="after">
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null }));
-                        }}
-                        className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6]"
-                      >
+                      <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null })) }}
+                        className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6]">
                         {t("add_currency")}
                       </a>
                     </Item>
@@ -314,7 +295,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
                   onClick={handleSubmit}
                   loading={postDataLoading}
                   title={t("save")}
-                ></ERPButton>
+                />
               </div>
             </div>
           </div>
@@ -337,7 +318,7 @@ const ExchangeRates = ({modalHeight,isMaximized}:ExchangeRatesProps) => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedCurrencyMasterManage />}
       />

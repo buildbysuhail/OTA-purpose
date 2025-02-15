@@ -24,5 +24,10 @@
     "connect_with_twilio": "اتصل بتويلو",
 
     "whatsapp_integrations": "تكاملات واتساب",
-    "email_integrations": "تكاملات البريد الإلكتروني"
+    "email_integrations": "تكاملات البريد الإلكتروني",
+
+    "type_a_message": "اكتب رسالة",
+    "no_message_available": "لا توجد رسالة متاحة",
+    "no_items_available": "لا توجد عناصر متاحة",
+    "customer": "عميل"
 }

@@ -372,7 +372,7 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0
+        (prev <= 0 || (loadOptions.skip ?? 0) == 0)
             ? result.dataRowCount != undefined && result.dataRowCount != null
               ? result.dataRowCount
               : result.totalCount

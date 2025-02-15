@@ -849,7 +849,7 @@ debugger;
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
-    const master = { ...formState.transaction.master };
+    const master = { ...formState.transaction.master, particulars: dataContainer.ledgers?.find(x => x.id == formState.masterAccountID)?.name??""};
 
     master.accTransactionMasterID = formState.isEdit
       ? master.accTransactionMasterID

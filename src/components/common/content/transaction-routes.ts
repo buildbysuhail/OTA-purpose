@@ -2,9 +2,12 @@ import VoucherType from "../../../enums/voucher-types";
 import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
+import { Wallet, CreditCard, FileText } from "lucide-react"; // Import icons from lucide-react
+
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
 }
+
 export interface TransactionRoute {
   formCode: string;
   transactionBase: TransactionBase;
@@ -16,9 +19,11 @@ export interface TransactionRoute {
   listTitle: string;
   drCr: string;
   shortKey?: string;
-  shortKeyList?:string;
+  shortKeyList?: string;
+  icon?: React.ElementType; // Changed to React.ElementType to accept Lucide icons
   visibleFn?: (userSession: UserModel) => boolean;
 }
+
 export const transactionRoutes: TransactionRoute[] = [
   {
     transactionBase: TransactionBase.Accounts,
@@ -30,7 +35,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.CashPayment,
     listTitle: TransactionListTitles.CashPayment,
     drCr: "Dr",
-    shortKey:"ctrl+alt+c"
+    shortKey: "ctrl+alt+c",
+    icon: Wallet // Using Wallet icon from lucide-react
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -42,32 +48,9 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.CashReceipt,
     listTitle: TransactionListTitles.CashReceipt,
     drCr: "Cr",
-    shortKey: "ctrl+alt+r"
+    shortKey: "ctrl+alt+r",
+    icon: CreditCard 
   },
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "CPE",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.CashPaymentEstimate,
-  //   transactionType: "CashPaymentEstimate",
-  //   formType: "",
-  //   title: TransactionTitles.CashPaymentEstimate,
-  //   drCr: "Dr",
-  //   shortKey: "ctrl+alt+shift+c",
-  //   visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-  // },
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "CRE",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.CashReceiptEstimate,
-  //   transactionType: "CashReceiptEstimate",
-  //   formType: "",
-  //   title: TransactionTitles.CashReceiptEstimate,
-  //   drCr: "Cr",
-  //   shortKey: "ctrl+alt+shift+r",
-  //   visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-  // },
   {
     transactionBase: TransactionBase.Accounts,
     formCode: "BP",
@@ -78,7 +61,8 @@ export const transactionRoutes: TransactionRoute[] = [
     title: TransactionTitles.BankPayment,
     listTitle: TransactionListTitles.BankPayment,
     drCr: "Dr",
-    shortKey: "ctrl+alt+b"
+    shortKey: "ctrl+alt+b",
+    icon: FileText 
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -152,18 +136,6 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "",
     shortKey: "ctrl+alt+m"
   },
-
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "JVSP",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.JournalVoucherSpecial,
-  //   transactionType: "JournalEntrySpecial",
-  //   formType: "",
-  //   title: TransactionTitles.JournalEntrySpecial,
-  //   drCr: "",
-  //   visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
-  // },
   {
     transactionBase: TransactionBase.Accounts,
     formCode: "DN",
@@ -200,41 +172,22 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.TaxOnExpensePayment,
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
   },
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "BRC",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.BankReconciliation,
-  //   transactionType: "BankReconciliation",
-  //   formType: "",
-  //   title: TransactionTitles.BankReconciliation,
-  //   drCr: "",
-  // },
-  // {
-  //   transactionBase: TransactionBase.Accounts,
-  //   formCode: "PDC",
-  //   action: UserAction.Show,
-  //   voucherType: VoucherType.PostDatedCheques,
-  //   transactionType: "PDC",
-  //   formType: "",
-  //   title: TransactionTitles.PostDatedCheques,
-  //   drCr: "",
-  // },
 ];
 
-export const exludedRoutes=[
-  {title:TransactionTitles.ChequePayment,countries:[Countries.Saudi]},
-  {title:TransactionTitles.ChequeReceipt,countries:[Countries.Saudi]},
-]
+export const exludedRoutes = [
+  {title: TransactionTitles.ChequePayment, countries: [Countries.Saudi]},
+  {title: TransactionTitles.ChequeReceipt, countries: [Countries.Saudi]},
+];
+
 export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [
-  {title:TransactionTitles.CashPayment,countries:[Countries.Saudi]},
-  {title:TransactionTitles.CashReceipt,countries:[Countries.Saudi]},
-  {title:TransactionTitles.BankPayment,countries:[Countries.Saudi]},
-  {title:TransactionTitles.BankReceipt,countries:[Countries.Saudi]},
-  {title:TransactionTitles.OpeningBalance,countries:[Countries.Saudi]},
-  {title:TransactionTitles.JournalEntry,countries:[Countries.Saudi]},
-  {title:TransactionTitles.DebitNote,countries:[Countries.Saudi]},
-  {title:TransactionTitles.CreditNote,countries:[Countries.Saudi]},
-  {title:TransactionTitles.MultiJournalEntry,countries:[Countries.Saudi]},
-].find(x => userSession.countryId != undefined &&  x.title == title && 
-  (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId)!= undefined)) )
+  {title: TransactionTitles.CashPayment, countries: [Countries.Saudi]},
+  {title: TransactionTitles.CashReceipt, countries: [Countries.Saudi]},
+  {title: TransactionTitles.BankPayment, countries: [Countries.Saudi]},
+  {title: TransactionTitles.BankReceipt, countries: [Countries.Saudi]},
+  {title: TransactionTitles.OpeningBalance, countries: [Countries.Saudi]},
+  {title: TransactionTitles.JournalEntry, countries: [Countries.Saudi]},
+  {title: TransactionTitles.DebitNote, countries: [Countries.Saudi]},
+  {title: TransactionTitles.CreditNote, countries: [Countries.Saudi]},
+  {title: TransactionTitles.MultiJournalEntry, countries: [Countries.Saudi]},
+].find(x => userSession.countryId != undefined && x.title == title && 
+  (x.countries == undefined || (x.countries != undefined && x.countries.find(x => x == userSession.countryId) != undefined)));

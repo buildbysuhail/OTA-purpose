@@ -59,6 +59,9 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                             <span className=" fixed ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
                               <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
                                 <CirclePlus />
+                                {/* <i className="side-menu__icon">
+                                  <route.icon />
+                                </i> */}
                               </Link>
                             </span>
                           }

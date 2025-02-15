@@ -9,6 +9,7 @@ import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
+import moment from "moment";
 
 interface DayBookBillwiseProps {
   postData?: any;
@@ -51,6 +52,14 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+      }
     },
     {
       dataField: "form",
@@ -90,39 +99,38 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
+                ? getFormattedValue(-1 * balance) + " Cr"
+                : getFormattedValue(balance) + " Dr";
           return exportCell != undefined
             ? {
-                ...exportCell,
-                text: cellInfo.value,
-                bold: true,
-                alignment: "right",
-                textColor:
-                  cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
-                font: {
-                  ...exportCell.font,
-                  color:
-                    cellElement.data.particulars === "TOTAL"
-                      ? { argb: "FFFF0000" }
-                      : "",
-                  size: 10,
-                  style:
-                    cellElement.data.particulars === "TOTAL"
-                      ? "bold"
-                      : "normal",
-                  bold: cellElement.data.particulars === "TOTAL" ? true : false,
-                },
-              }
+              ...exportCell,
+              text: cellInfo.value,
+              bold: true,
+              alignment: "right",
+              textColor:
+                cellElement.data.particulars === "TOTAL" ? "#FF0000" : "",
+              font: {
+                ...exportCell.font,
+                color:
+                  cellElement.data.particulars === "TOTAL"
+                    ? { argb: "FFFF0000" }
+                    : "",
+                size: 10,
+                style:
+                  cellElement.data.particulars === "TOTAL"
+                    ? "bold"
+                    : "normal",
+                bold: cellElement.data.particulars === "TOTAL" ? true : false,
+              },
+            }
             : undefined;
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
+              className={`${cellElement.data.particulars === "TOTAL"
                   ? "font-bold text-[#DC143C]"
                   : ""
-              }`}
+                }`}
             >
               {cellElement.data.particulars}
             </span>
@@ -151,12 +159,12 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             balance == null
               ? ""
               : balance < 0
-              ? cellElement.data.particulars === "TOTAL"
-                ? getFormattedValue(-1 * balance)
-                : -1 * balance
-              : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(balance)
-              : balance;
+                ? cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(-1 * balance)
+                  : -1 * balance
+                : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(balance)
+                  : balance;
           return {
             ...exportCell,
             text: value,
@@ -180,21 +188,19 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
+              className={`${cellElement.data.particulars === "TOTAL"
                   ? "font-bold text-[#DC143C]"
                   : ""
-              }`}
+                }`}
             >
-              {`${
-                cellElement.data?.debit == null
+              {`${cellElement.data?.debit == null
                   ? "0"
                   : cellElement.data.debit < 0
-                  ? -1 * cellElement.data.debit
-                  : cellElement.data.particulars === "TOTAL"
-                  ? getFormattedValue(cellElement.data.debit)
-                  : cellElement.data.debit
-              }`}
+                    ? -1 * cellElement.data.debit
+                    : cellElement.data.particulars === "TOTAL"
+                      ? getFormattedValue(cellElement.data.debit)
+                      : cellElement.data.debit
+                }`}
             </span>
           );
         }
@@ -221,12 +227,12 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             balance == null
               ? ""
               : balance < 0
-              ? cellElement.data.particulars === "TOTAL"
-                ? getFormattedValue(-1 * balance)
-                : -1 * balance
-              : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(balance)
-              : balance;
+                ? cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(-1 * balance)
+                  : -1 * balance
+                : cellElement.data.particulars === "TOTAL"
+                  ? getFormattedValue(balance)
+                  : balance;
           return {
             ...exportCell,
             text: value,
@@ -250,21 +256,19 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
+              className={`${cellElement.data.particulars === "TOTAL"
                   ? "font-bold text-[#DC143C]"
                   : ""
-              }`}
+                }`}
             >
-              {`${
-                cellElement.data?.credit == null
+              {`${cellElement.data?.credit == null
                   ? "0"
                   : cellElement.data.credit < 0
-                  ? -1 * cellElement.data.credit
-                  : cellElement.data.particulars === "TOTAL"
-                  ? getFormattedValue(cellElement.data.credit)
-                  : cellElement.data.credit
-              }`}
+                    ? -1 * cellElement.data.credit
+                    : cellElement.data.particulars === "TOTAL"
+                      ? getFormattedValue(cellElement.data.credit)
+                      : cellElement.data.credit
+                }`}
             </span>
           );
         }
@@ -292,8 +296,8 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance)
-              : getFormattedValue(balance);
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
           return {
             ...exportCell,
             text: value,
@@ -316,27 +320,24 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
         } else {
           return (
             <span
-              className={`${
-                cellElement.data.particulars === "TOTAL"
+              className={`${cellElement.data.particulars === "TOTAL"
                   ? "font-bold text-[#DC143C]"
                   : ""
-              }`}
+                }`}
             >
-              {`${
-                cellElement.data?.balance == 0 ||
-                cellElement.data?.balance == null
+              {`${cellElement.data?.balance == 0 ||
+                  cellElement.data?.balance == null
                   ? ""
                   : cellElement.data.balance < 0
-                  ? getFormattedValue(-1 * cellElement.data.balance)
-                  : getFormattedValue(cellElement.data.balance)
-              } ${
-                cellElement.data?.balance == 0 ||
-                cellElement.data?.balance == null
+                    ? getFormattedValue(-1 * cellElement.data.balance)
+                    : getFormattedValue(cellElement.data.balance)
+                } ${cellElement.data?.balance == 0 ||
+                  cellElement.data?.balance == null
                   ? ""
                   : cellElement.data?.balance >= 0
-                  ? "Dr"
-                  : "Cr"
-              }`}
+                    ? "Dr"
+                    : "Cr"
+                }`}
             </span>
           );
         }

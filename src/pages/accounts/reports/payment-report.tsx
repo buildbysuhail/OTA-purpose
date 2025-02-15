@@ -12,6 +12,7 @@ import { ActionType } from "../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 interface PaymentReport {
   from: Date
@@ -36,6 +37,7 @@ const PaymentReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf:true,
+       format:"dd-MMM-yyyy"
     },
     {
       dataField: "vchNo",
@@ -131,8 +133,8 @@ const PaymentReport = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) + " Cr"
-              : getFormattedValue(balance) + " Dr";
+              ? getFormattedValue(-1 * balance) 
+              : getFormattedValue(balance) ;
 
           return {
             ...exportCell,
@@ -154,8 +156,7 @@ const PaymentReport = () => {
         else {
           return(<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ?
-               getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 ||
-                cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr'}`}
+               getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
           </span>)
                }}
     },

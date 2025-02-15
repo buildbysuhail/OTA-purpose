@@ -9,6 +9,7 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import AccTransactionForm from "../../transactions/acc-transaction";
+import moment from "moment";
 
 interface CashBookDetailedProps {
   postData: any;
@@ -51,6 +52,14 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf:true,
+        cellRender: (
+                    cellElement: any,
+                    cellInfo: any,
+                    filter: any,
+                    exportCell: any
+                  ) => {
+                     return  (cellElement.data.transactionDate==null||cellElement.data.transactionDate==""?"":moment(cellElement.data.transactionDate, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                  }
     },
     {
       dataField: "vchNo",

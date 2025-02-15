@@ -9,6 +9,7 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../cashSummary/cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 const DailySummaryGlobal = () => {
   const { getFormattedValue } = useNumberFormat()
@@ -60,7 +61,7 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'font-bold text-[#2E8B57]' : ''}`}>
-            {cellElement.data.date}
+                {moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")}
           </span>
           )
         }

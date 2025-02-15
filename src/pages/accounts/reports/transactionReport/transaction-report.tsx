@@ -10,6 +10,7 @@ import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { FastForward } from "lucide-react";
+import moment from "moment";
 
 interface TransactionReport {
   from: Date
@@ -29,6 +30,14 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
+        cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                        }
     },
     {
       dataField: "vchNo",

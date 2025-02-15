@@ -8,6 +8,7 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 interface AccountsHistoryPopupProps {
   contentProps?: any;
@@ -51,6 +52,14 @@ const AccountsHistoryPopup = ({
       allowFiltering: true,
       width: 70,
       showInPdf: true,
+        cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                        }
     },
     {
       dataField: "form",

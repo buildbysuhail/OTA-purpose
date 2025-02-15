@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
+import moment from "moment";
 
 const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
 
@@ -23,6 +24,14 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 180,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+      }
     },
     {
       dataField: "form",
@@ -165,24 +174,24 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-         
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                 heightToAdjustOnWindows={280}
-                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
-                  columns={columns}
-                  gridHeader={t("party_summary_collection_report")}
-                  dataUrl={Urls.acc_reports_party_summary_collections}
-                  method={ActionType.POST}
-                  postData={filter}
-                  gridId="grd_party_summary_basic_collection"
-                  popupAction={toggleCostCentrePopup}
-                  hideGridAddButton={true}
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              heightToAdjustOnWindows={280}
+              remoteOperations={{ filtering: false, paging: false, sorting: false }}
+              columns={columns}
+              gridHeader={t("party_summary_collection_report")}
+              dataUrl={Urls.acc_reports_party_summary_collections}
+              method={ActionType.POST}
+              postData={filter}
+              gridId="grd_party_summary_basic_collection"
+              popupAction={toggleCostCentrePopup}
+              hideGridAddButton={true}
+              reload={true}
+            ></ErpDevGrid>
           </div>
+        </div>
+      </div>
 
     </Fragment>
   );

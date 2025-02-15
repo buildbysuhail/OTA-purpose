@@ -15,6 +15,7 @@ import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
 import { Bold } from "lucide-react";
 import AccTransactionForm from "../transactions/acc-transaction";
+import moment from "moment";
 
 interface LedgerReport {
   from: Date;
@@ -60,7 +61,16 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-    },
+       cellRender: (
+              cellElement: any,
+              cellInfo: any,
+              filter: any,
+              exportCell: any
+            ) => {
+              return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+            }
+          },
+    
     {
       dataField: "form",
       caption: t("form"),

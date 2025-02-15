@@ -29,7 +29,7 @@ const DayBookDetailed = () => {
         filter: any,
         exportCell: any
       ) => {
-        return moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
       }
     },
     {

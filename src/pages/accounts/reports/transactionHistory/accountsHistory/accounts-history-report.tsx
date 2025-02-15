@@ -13,6 +13,7 @@ import TransactrionHistoryReportFilter, {
 } from "../transaction-history-report-filter";
 import AccountsHistoryPopup from "./accounts-history-popup";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 
 const AccountsHistoryReport = () => {
@@ -39,6 +40,14 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 130,
       showInPdf: true,
+        cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                        }
     },
     {
       dataField: "modifiedDate",

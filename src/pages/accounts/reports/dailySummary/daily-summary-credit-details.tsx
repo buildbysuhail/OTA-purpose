@@ -9,11 +9,12 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { DailySummaryFilter } from "./daily-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
 }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-    const { getFormattedValue } = useNumberFormat()
+  const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -32,6 +33,14 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 50,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+      }
     },
     {
       dataField: "voucherPrefix",
@@ -50,7 +59,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
     },
     {
       dataField: "voucherNumber",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -79,30 +88,31 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
 
           return {
             ...exportCell,
             text: cellInfo.value,
-            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            bold: cellElement.data.partyName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+              style: cellElement.data.partyName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.partyName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.partyName }`}
-        </span>)
-        }}
+          return (<span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.partyName}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "total",
@@ -121,28 +131,29 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
               : getFormattedValue(balance);
           return {
             ...exportCell,
-            text:value,
-            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            text: value,
+            bold: cellElement.data.partyName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+              style: cellElement.data.partyName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.partyName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return (  <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.total == null 
-            ? '0'
+          return (<span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.total == null
+              ? '0'
               : getFormattedValue(cellElement.data.total)
               }`}
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "receivedAmount",
@@ -161,28 +172,29 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
               : getFormattedValue(balance);
           return {
             ...exportCell,
-            text:value,
-            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            text: value,
+            bold: cellElement.data.partyName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+              style: cellElement.data.partyName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.partyName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.receivedAmount == null 
-            ? '0'
+          return (<span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.receivedAmount == null
+              ? '0'
               : getFormattedValue(cellElement.data.receivedAmount)
               }`}
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balance",
@@ -201,28 +213,29 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
               : getFormattedValue(balance);
           return {
             ...exportCell,
-            text:value,
-            bold: cellElement.data.partyName === "TOTAL" ?true:false,
+            text: value,
+            bold: cellElement.data.partyName === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.partyName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.partyName === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.partyName === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.partyName === "TOTAL" ?true:false,
+              style: cellElement.data.partyName === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.partyName === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.balance == null 
-            ? '0'
+          return (<span className={`${cellElement.data.partyName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.balance == null
+              ? '0'
               : getFormattedValue(cellElement.data.balance)
               }`}
-        </span>)
-}}
+          </span>)
+        }
+      }
     },
     {
       dataField: "ledgerBalance",
@@ -257,7 +270,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
-     {
+    {
       dataField: "signature",
       caption: t("signature"),
       dataType: "string",
@@ -265,7 +278,7 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 150,
     },
-{
+    {
       dataField: "cashDiscount",
       caption: t("cash_discount"),
       dataType: "number",
@@ -278,27 +291,27 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-         
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                 heightToAdjustOnWindows={275}
-                 remoteOperations={{filtering:true,paging:true,sorting:true}}
-                  columns={columns}
-                  gridHeader={t("daily_summary_sales_credit_details")}
-                  dataUrl= {Urls.acc_reports_daily_summary_credit_details}
-                  method={ActionType.POST}
-                  gridId="grd_daily_summary_credit_details"
-                  popupAction={toggleCostCentrePopup}
-                  postData={filter}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+              heightToAdjustOnWindows={275}
+              remoteOperations={{ filtering: true, paging: true, sorting: true }}
+              columns={columns}
+              gridHeader={t("daily_summary_sales_credit_details")}
+              dataUrl={Urls.acc_reports_daily_summary_credit_details}
+              method={ActionType.POST}
+              gridId="grd_daily_summary_credit_details"
+              popupAction={toggleCostCentrePopup}
+              postData={filter}
+              hideGridAddButton={true}
+              // gridAddButtonType="popup"
+              reload={true}
+            ></ErpDevGrid>
           </div>
-   
-      
+        </div>
+      </div>
+
+
     </Fragment>
   );
 };

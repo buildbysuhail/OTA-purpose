@@ -14,6 +14,7 @@ import TransactrionHistoryReportFilter, {
 import InventoryHistoryDetails from "./inventory-history-details";
 import InventoryHistoryPopup from "./inventory-history-popup";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 const InventoryHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -43,6 +44,14 @@ const InventoryHistoryReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
+        cellRender: (
+                          cellElement: any,
+                          cellInfo: any,
+                          filter: any,
+                          exportCell: any
+                        ) => {
+                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                        }
     },
     {
       dataField: "modifiedDate",

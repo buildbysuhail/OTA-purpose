@@ -15,6 +15,7 @@ import moment from "moment";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { LedgerType } from "../../../enums/ledger-types";
 
 interface FormState {
   showReconciled: boolean;
@@ -537,8 +538,9 @@ const BankReconciliation = () => {
                       field={{
                         id: "selectedBankId",
                         required: true,
-                        getListUrl: Urls.data_BankAccounts,
+                        getListUrl: Urls.data_acc_ledgers,
                         valueKey: "id",
+                        params: `ledgerType=${LedgerType.BankAccount}`,
                         labelKey: "name",
                       }}
                       value={formState.selectedBankId}

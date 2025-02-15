@@ -183,7 +183,7 @@ const PostDatedCheques = () => {
   };
 
   const handleSave = async () => {
-    debugger;
+    
     setLoading((prev) => ({ ...prev, save: true }));
 
     try {

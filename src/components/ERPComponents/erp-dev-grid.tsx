@@ -69,7 +69,7 @@ import { RootState } from "../../redux/store";
 import { UserModel } from "../../redux/slices/user-session/reducer";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
-import { Printer } from "lucide-react";
+import { Ellipsis, Printer } from "lucide-react";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -118,7 +118,7 @@ interface ERPDevGridProps {
   showBorders?: boolean;
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
-  ShowGridPreferenceChooserInRow?: boolean;
+  GridPreferenceChooserAccTrance?: boolean;
   showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
@@ -156,6 +156,7 @@ interface ERPDevGridProps {
   onCellClick?: (e: any) => void;
   onRowDblClick?: (e: any) => void;
   onRowPrepared?: (e: any) => void;
+  onToolbarPreparing?: (e: any) => void;
   onSelectionChanged?: (e: any) => void;
   onSelectionChangedByRootState?: (e: any, state: RootState) => void;
   onClickByRootState?: (e: any, state: RootState) => void;
@@ -371,7 +372,7 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          prev <= 0
+        (prev <= 0 || (loadOptions.skip ?? 0) == 0)
             ? result.dataRowCount != undefined && result.dataRowCount != null
               ? result.dataRowCount
               : result.totalCount
@@ -434,7 +435,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showBorders = true,
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
-      ShowGridPreferenceChooserInRow = false,
+      GridPreferenceChooserAccTrance = false,
       showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
@@ -461,6 +462,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onCellClick,
       onRowDblClick,
       onRowPrepared,
+      onToolbarPreparing,
       onSelectionChanged,
       onSelectionChangedByRootState,
       onClickByRootState,
@@ -541,6 +543,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
+    const appState = useAppSelector((state: RootState) => state?.AppState?.appState);
     const userSession = useAppSelector(
       (state: RootState) => state.UserSession as any
     );
@@ -666,7 +669,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         } else {
           setShowFilter(false);
         }
-        debugger;
+        
         if (_reload !== undefined && _reload !== true) {
           // Return the current store without reloading
           setStore(currentStore);
@@ -1301,7 +1304,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           if (dynamicProps?.isTransactionScreen) {
             const params = handleInvoke(event.data);
             if (params) {
-              debugger;
+              
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object
@@ -1454,37 +1457,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       )
     }, [summaryItems, columns,])
 
-    const renderCustomHeader = useCallback(
-      (data: any) => {
-        return (
-          <div className="relative w-full h-full"
-          // style={{ position: "relative", height: "100%", width: "100%" }}
-          >
-          <span>{data.column.caption}</span>
-          {ShowGridPreferenceChooserInRow && (
-            <div  className={`absolute rtl:-right-3 ltr:-left-3 -top-5`}
-            // style={{ position: "absolute", left: 0, top: 0, zIndex: 1 }}
-            >
-              <GridPreferenceChooser
-                columns={columns}
-                gridId={gridId}
-                onApplyPreferences={onApplyPreferences}
-                ShowGridPreferenceChooserInRow={ShowGridPreferenceChooserInRow}
-              />
-            </div>
-          )}
-        </div>
-        );
-      },
-      [ShowGridPreferenceChooserInRow, columns, gridId, onApplyPreferences]
-    );
-    const firstVisibleColumnIndex = gridCols.findIndex(col => col.visible)
-    
+    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${className}`}>
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${className}`}>
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
+            rtlEnabled={appState?.dir === "rtl"}
             ref={gridRef}
             onInitialized={onGridReady}
             dataSource={memoizedStore}
@@ -1496,6 +1475,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             allowColumnResizing={allowColumnResizing}
             columnAutoWidth={columnAutoWidth}
             onRowPrepared={handleRowPrepared}
+            onToolbarPreparing={(e) => {
+              setIsPreferenceChooserVisible(GridPreferenceChooserAccTrance);
+            }}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
             onRowClick={(e) => onClickByRootState != undefined ? onClickByRootState(e, rootState) : onRowClick && onRowClick(e)}
@@ -1589,6 +1571,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   </div>
                 </Item>
               )}
+            {isPreferenceChooserVisible &&(
+              <Item 
+              key={appState?.dir} 
+              location="before"
+              >
+                <GridPreferenceChooser
+                columns={columns}
+                gridId={gridId}
+                onApplyPreferences={onApplyPreferences}
+                GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
+              />
+              
+              </Item> 
+            )}
+
+           
               {enableScrollButton && (
                 <Item>
                   <div
@@ -1604,6 +1602,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   </div>
                 </Item>
               )}
+                
               {!hideDefaultSearchPanel && <Item name="searchPanel" />}
               {!hideDefaultExportButton && allowExport && (
                 <Item name="exportButton" />
@@ -1636,7 +1635,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   />
                 </Item>
               )}
-              {ShowGridPreferenceChooser && !ShowGridPreferenceChooserInRow &&(
+              {ShowGridPreferenceChooser && !isPreferenceChooserVisible &&(
                 <Item>
                   <GridPreferenceChooser
                     columns={columns}
@@ -1698,7 +1697,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     ? column.captionDynamic(filter)
                     : column.caption
                 }
-                headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
+                // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
                 groupIndex={column.groupIndex}
                 format={column.format}
                 dataType={column.dataType}

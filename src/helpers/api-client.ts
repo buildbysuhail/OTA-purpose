@@ -85,7 +85,7 @@ class APIClient {
       return decryptedLedgers;
   }
   else {
-    debugger;
+    
   }
     
   return decryptedLedgers.filter((ledger) => {

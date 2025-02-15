@@ -222,7 +222,7 @@
    "pc_name": "اسم الكمبيوتر",
    "system_code": "رمز النظام",
    "last_logged_date": "آخر تاريخ تسجيل دخول",
-   " counter_id": "معرف العداد",
+   "counter_id": "معرف العداد",
    "save": "حفظ",
    "close": "إغلاق",
    "this_system_code": "رمز النظام هذا :",
@@ -402,5 +402,7 @@
   "currency_symbol": "رمز العملة",
   "account_summary_label": "تسمية ملخص الحساب",
   "invoiced_amount": "المبلغ المفوتر",
-  "amount_paid": "المبلغ المدفوع"
+  "amount_paid": "المبلغ المدفوع",
+
+  "....loading": "....جار التحميل"
 }

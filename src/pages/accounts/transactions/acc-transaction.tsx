@@ -1443,9 +1443,10 @@ debugger;
                   {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("load_details")}
+                    title="Load Details"
                   >
                     <button
+                     disabled={formState.formElements.pnlMasters.disabled}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         loadTemporaryRows();
@@ -2345,7 +2346,7 @@ debugger;
                     }
                   />
                 )}
-                <div className="xl:w-[170px] lg:w-[250px] mt-2">
+                <div className="xl:w-[170px] lg:w-[250px]">
                   {formState.formElements.discount.visible && (
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2373,7 +2374,7 @@ debugger;
                       id="discount"
                       type="number"
                       min={0}
-                      className="!m-0"
+                      // className="!m-0"
                       label=" "
                       value={formState.row.discount}
                       onChange={(e) =>
@@ -2495,10 +2496,12 @@ debugger;
                       />
                     )}
                   {formState.formElements.btnAdd.visible == true && (
+                    <>
+                    <span></span>
                     <ERPButton
                       ref={btnAddRef}
                       title={t(formState.formElements.btnAdd.label)}
-                      className="mt-4"
+                      // className="mt-4"
                       variant="primary"
                       loading={formState.rowProcessing}
                       type="button"
@@ -2517,6 +2520,7 @@ debugger;
 
                       }
                     />
+                    </>
                   )}
                 </div>
               </div>
@@ -2627,6 +2631,7 @@ debugger;
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
+            ShowGridPreferenceChooserInRow
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}

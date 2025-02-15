@@ -1177,9 +1177,12 @@ const master = attachMaster();
             return false;
           }
         },
+        onCancel: () => {
+          focusLedgerCode();
+          return false;
+        }
       });
-      focusLedgerCode();
-      return false;
+     
     }
 
     if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
@@ -1483,6 +1486,13 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
           );
           focusAmount();
         } else {
+          dispatch(
+            accFormStateRowHandleFieldChange({
+              fields: {
+                ledgerID: null,
+              },
+            })
+          );
           focusLedgerCombo();
         }
       } catch (error) {

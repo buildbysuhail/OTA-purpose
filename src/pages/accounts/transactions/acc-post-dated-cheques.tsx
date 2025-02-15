@@ -183,6 +183,7 @@ const PostDatedCheques = () => {
   };
 
   const handleSave = async () => {
+    debugger;
     setLoading((prev) => ({ ...prev, save: true }));
 
     try {
@@ -211,6 +212,12 @@ const PostDatedCheques = () => {
           ledgerID: formState.selectedBankId,
           bankDate: it.bankDate
             ? moment(it.bankDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+            : null, // ✅ Corrected format,
+            chequeBounceDate: it.chequeBounceDate
+            ? moment(it.chequeBounceDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+            : null, // ✅ Corrected format,
+            chequeDate: it.chequeDate
+            ? moment(it.chequeDate, "DD/MM/YYYY").format("YYYY-MM-DD")
             : null, // ✅ Corrected format
         }));
 
@@ -238,7 +245,10 @@ const PostDatedCheques = () => {
           text: t("changes_saved_successfully"),
           title: t("success"),
         });
-      });
+        setData((prev: any) => {
+          return data. filter(x => x.cleared != true && x.bounced != true);
+        })
+      },undefined,false);
     } catch (error) {
       console.error("Error saving changes:", error);
     } finally {

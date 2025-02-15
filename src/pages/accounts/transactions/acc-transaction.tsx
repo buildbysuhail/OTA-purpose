@@ -1443,9 +1443,10 @@ debugger;
                   {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("load_details")}
+                    title="Load Details"
                   >
                     <button
+                     disabled={formState.formElements.pnlMasters.disabled}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         loadTemporaryRows();
@@ -2627,6 +2628,7 @@ debugger;
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
+            ShowGridPreferenceChooserInRow
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}

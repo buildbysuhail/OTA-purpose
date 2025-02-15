@@ -1486,7 +1486,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             ref={gridRef}
-            // rtlEnabled={true}
             onInitialized={onGridReady}
             dataSource={memoizedStore}
             height={gridHeight.windows}

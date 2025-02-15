@@ -1177,9 +1177,12 @@ const master = attachMaster();
             return false;
           }
         },
+        onCancel: () => {
+          focusLedgerCode();
+          return false;
+        }
       });
-      focusLedgerCode();
-      return false;
+     
     }
 
     if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {

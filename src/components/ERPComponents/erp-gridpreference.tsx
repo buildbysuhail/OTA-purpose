@@ -9,6 +9,7 @@ import { getInitialPreference } from "../../utilities/dx-grid-preference-updater
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import { useTranslation } from "react-i18next";
+import { Ellipsis } from "lucide-react";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
@@ -155,9 +156,18 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
+      {ShowGridPreferenceChooserInRow ?(
+              <button onClick={() => setIsOpen(true)} 
+                 className=""
+               >
+                 <Ellipsis className="text-[#0ea5e9]"/>
+               </button> 
+      ):(
       <button onClick={() => setIsOpen(true)} className={`ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] `}>
-        <i className={`${ShowGridPreferenceChooserInRow ? "text-[8px]" : ""} ri-apps-line`}></i>
+        <i className={`ri-apps-line`}></i>
       </button>
+      )}
+      
       <ERPModal
         isForm
         isFullHeight={true}

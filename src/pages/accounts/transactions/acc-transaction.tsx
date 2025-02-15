@@ -2627,6 +2627,7 @@ debugger;
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
+            ShowGridPreferenceChooserInRow
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}

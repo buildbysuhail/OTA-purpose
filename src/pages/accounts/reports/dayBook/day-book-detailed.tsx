@@ -9,6 +9,7 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 const DayBookDetailed = () => {
   const { t } = useTranslation('accountsReport');
@@ -21,8 +22,15 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      format: 'MMMM dd, yyyy',
       showInPdf:true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+      }
     },
     {
       dataField: "form",

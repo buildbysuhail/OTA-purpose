@@ -120,6 +120,7 @@ class APIClient {
     try {
       console.log(queryString);
       let _qry = queryString.toString();
+      debugger;
       if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
         
         if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {

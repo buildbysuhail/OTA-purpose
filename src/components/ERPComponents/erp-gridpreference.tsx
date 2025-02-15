@@ -177,7 +177,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         title={t("customize_columns")}
         width="!w-[80rem] !max-w-[60rem]"
         closeModal={() => setIsOpen(false)}
-        content={(<div className="flex flex-col gap-1">
+        content={(<div className="flex flex-col gap-1 mb-[42px]">
           <ERPInput
             noLabel
             className="mb-3"
@@ -307,8 +307,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         )}
 
         footer={(
-          <div className="flex justify-end space-x-2 gap-4 py-5 dark:!border-dark-border border-t">
-            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
+        <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
               {t("cancel")}
             </ERPSubmitButton>
             <ERPSubmitButton type="button" className=" max-w-[115px]"

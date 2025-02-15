@@ -1,10 +1,4 @@
-import {
-  Keyboard,
-  RefreshCw,
-  AlertTriangle,
-  Edit2,
-  CheckCircle,
-} from "lucide-react";
+import { Keyboard, RefreshCw, AlertTriangle, Edit2, CheckCircle } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 interface ShortcutConfig {
@@ -193,10 +187,9 @@ const ShortcutSettings: React.FC<ShortcutSettingsProps> = ({
         {success && (
           <div
             className={`flex items-center justify-center w-fit mx-auto gap-3 bg-[#f0fdf4] text-[#166534] p-3 rounded-md border border-[#bbf7d0] transition-all duration-300 
-              ${
-                isVisible
-                  ? "translate-y-0 opacity-100"
-                  : "-translate-y-full opacity-0"
+              ${isVisible
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-full opacity-0"
               }
             `}
           >

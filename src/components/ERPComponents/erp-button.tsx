@@ -3,6 +3,8 @@ import { useEffect, useState, useRef, KeyboardEvent, forwardRef } from "react";
 import { handleNavigation } from "../../utilities/shortKeys";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
+import { inputBox } from "../../redux/slices/app/types";
+import React from "react";
 
 type StatusType = {
   label: string;
@@ -10,6 +12,7 @@ type StatusType = {
 };
 
 type ERPButtonProps = {
+   localInputBox?: inputBox;
   title?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -46,6 +49,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       skip = false,
       jumpTo,
       jumpTarget,
+      localInputBox,
       ...props
     },
     ref
@@ -54,6 +58,9 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
     const [isFocused, setIsFocused] = useState(false);
 
     const appState = useAppSelector((state: RootState) => state.AppState?.appState) || {};
+       const inputBoxState = React.useMemo(() => {
+          return localInputBox || appState?.inputBox;
+        }, [localInputBox, appState?.inputBox]);
     // const buttonRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
       if (variant === "status" && status) {
@@ -121,8 +128,10 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-target={jumpTarget}
         style={{
           backgroundColor: isFocused 
-          ? `rgb(${appState?.inputBox?.focusBgColor || '255, 255, 255'})` 
+          ? `rgb(${inputBoxState?.focusBgColor || '255, 255, 255'})` 
           : undefined,
+          marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
+          marginTop: `${inputBoxState?.marginTop ?? 0}px`,
         }}
         className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 

@@ -2499,6 +2499,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {applicationSettings.accountsSettings
                     ?.maintainBillwiseAccount == true && (
                       <ERPButton
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                         title={t(formState.formElements.btnBillWise.label)}
                         variant="secondary"
                         onClick={showBillwise}
@@ -2512,6 +2513,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {formState.formElements.btnAdd.visible == true && (
                     <>
                       <ERPButton
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                         ref={btnAddRef}
                         title={t(formState.formElements.btnAdd.label)}
                         // className="mt-4"
@@ -3030,12 +3032,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             </div>
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
+              localInputBox={formState?.userConfig?.inputBoxStyle}
                 title={t("save_&_new")}
                 onClick={() => { }}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
+              localInputBox={formState?.userConfig?.inputBoxStyle}
                 title={t("save")}
                 onClick={() => { }}
                 variant="primary"
@@ -3267,12 +3271,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div></div>
               <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   title={t("save_&_new")}
                   onClick={() => { }}
                   variant="secondary"
                   className="flex-1 !m-0 !rounded-none"
                 />
                 <ERPButton
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   title={t("save")}
                   onClick={() => { }}
                   variant="primary"
@@ -3357,6 +3363,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
             {(voucherType == "BP" || voucherType == "CQP") && (
               <ERPButton
+              localInputBox={formState?.userConfig?.inputBoxStyle}
                 title={t("print_cheque")}
                 variant="secondary"
                 onClick={() => {
@@ -3443,10 +3450,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           /> */}
 
           <Link to="/" className="w-24">
-            <ERPButton ref={btnSaveRef} title={t("close")} />
+            <ERPButton ref={btnSaveRef} title={t("close")} localInputBox={formState?.userConfig?.inputBoxStyle}/>
           </Link>
 
           <ERPButton
+          localInputBox={formState?.userConfig?.inputBoxStyle}
             ref={btnSaveRef}
             title={t("save")}
             jumpTarget="save"

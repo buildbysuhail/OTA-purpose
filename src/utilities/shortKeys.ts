@@ -1,9 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  TransactionRoute,
-  transactionRoutes,
-} from "../components/common/content/transaction-routes";
-import { useNavigate } from "react-router-dom";
+import { TransactionRoute, transactionRoutes } from "../components/common/content/transaction-routes";
 
 interface ShortcutConfig {
   event: string;
@@ -220,19 +216,19 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 let isInitialized = false;
 
-// export const initializeShortKeys = () => {
-//   if (!isInitialized) {
-//     document.addEventListener("keydown", handleKeyPress);
-//     isInitialized = true;
-//   }
-// };
+export const initializeShortKeys = () => {
+  if (!isInitialized) {
+    document.addEventListener("keydown", handleKeyPress);
+    isInitialized = true;
+  }
+};
 
-// export const cleanupShortKeys = () => {
-//   if (isInitialized) {
-//     document.removeEventListener("keydown", handleKeyPress);
-//     isInitialized = false;
-//   }
-// };
+export const cleanupShortKeys = () => {
+  if (isInitialized) {
+    document.removeEventListener("keydown", handleKeyPress);
+    isInitialized = false;
+  }
+};
 
 export const getFocusableElements = () => {
   return Array.from(
@@ -289,16 +285,16 @@ export const useSearchInputFocus = () => {
       }
     };
 
-  //   document.addEventListener("keydown", handleShortcut);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleShortcut);
-  //   };
+    document.addEventListener("keydown", handleShortcut);
+    return () => {
+      document.removeEventListener("keydown", handleShortcut);
+    };
   }, []);
 
   return searchInputRef;
 };
 
-// initializeShortKeys();
+initializeShortKeys();
 
 export { ShortKeyEvents };
 export default shortKeys;

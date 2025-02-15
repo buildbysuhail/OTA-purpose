@@ -57,7 +57,7 @@ import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable
 import TemplatesView from "./acc-templates";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
-import { useUserRights } from "../../../helpers/user-right-helper";import { Link } from "react-router-dom";
+import { useUserRights } from "../../../helpers/user-right-helper"; import { Link } from "react-router-dom";
 import {
   Ellipsis,
   EllipsisVertical,
@@ -118,7 +118,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   financialYearID,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-debugger;
+  debugger;
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -171,7 +171,7 @@ debugger;
     const selectedIndexes = e.component
       .getSelectedRowKeys()
       .map((key: any) => e.component.getRowIndexByKey(key));
-    
+
     if (selectedIndexes.length > 0) {
       handleRowClick({
         row: formState?.transaction?.details[selectedIndexes[0]],
@@ -278,7 +278,7 @@ debugger;
         fields: {
           transactionType: transactionType,
           formCode: formCode,
-         
+
         },
       })
     );
@@ -345,7 +345,7 @@ debugger;
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
-            ledgerID > 0 ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`): 0,
+            ledgerID > 0 ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`) : 0,
             api.getAsync(
               `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
             ),
@@ -439,7 +439,7 @@ debugger;
     const loadLedgerData = async () => {
       const ledgerBalance = formState.masterAccountID > 0 ? await api.getAsync(
         `${Urls.get_ledger_balance}${formState.masterAccountID ?? 0}`
-      ): 0;
+      ) : 0;
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -472,7 +472,7 @@ debugger;
         clientSession.softwareDate,
         "DD/MM/YYYY"
       ).local();
-      
+
       console.log('masterAccountID = -2;');
 
       let masterAccountID = -2;
@@ -485,7 +485,7 @@ debugger;
           voucherPrefix ?? "",
           false
         );
-        
+
         employeeID = userSession.employeeId ?? 0;
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
@@ -494,11 +494,11 @@ debugger;
               ? userSession?.counterwiseCashLedgerId
               : applicationSettings.accountsSettings?.defaultCashAcc;
         }
-        
+
         if (voucherType == "JV" || voucherType == "MJV") {
           masterAccountID = 0;
         }
-        
+
         if (userSession.dbIdValue === "543140180640") {
           if (voucherType === "CP" || voucherType === "CR") {
             let userCashLedgerID = 0;
@@ -513,7 +513,7 @@ debugger;
           }
         }
       }
-      
+
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -536,7 +536,7 @@ debugger;
           formElements: {
             ...initialFormElements,
           },
-          transactionType: transactionType??"",
+          transactionType: transactionType ?? "",
           formCode: formCode ?? "",
           title:
             (formType == undefined || formType.trim() == ""
@@ -556,7 +556,7 @@ debugger;
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
-        
+
         _formState = await loadAccTransVoucher(
           false,
           voucherNo,
@@ -571,7 +571,7 @@ debugger;
       //   `${Urls.ledgerDataForTransaction}?LedgerId=${_formState.row.ledgerID}&DrCr=${_formState.transaction.master.drCr}`
       // );
       // _formState.row.ledgerCode = ledgerData.ledgerCode;
-      
+
       let fieldsToUpdate = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
@@ -914,13 +914,13 @@ debugger;
         }
       }
       _formState.formElements = fieldsToUpdate;
-      
+
       setAccTransVoucher(_formState, true);
       focusLedgerCode();
-       // Fetch templates asynchronously
+      // Fetch templates asynchronously
     };
-  
-    
+
+
     initializeFormElements();
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
@@ -1446,7 +1446,7 @@ debugger;
                     title="Load Details"
                   >
                     <button
-                     disabled={formState.formElements.pnlMasters.disabled}
+                      disabled={formState.formElements.pnlMasters.disabled}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
                         loadTemporaryRows();
@@ -1523,7 +1523,7 @@ debugger;
                       disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled != true)}
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                       onClick={() => {
-                        printVoucher(setIsPrintModalOpen,voucherType);
+                        printVoucher(setIsPrintModalOpen, voucherType);
                       }}
                     >
                       <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -1601,7 +1601,7 @@ debugger;
                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
                                 onClick={(e) => {
                                   // Prevent default link behavior
-                                  printPaymentReceiptAdvice(formState,"AP");
+                                  printPaymentReceiptAdvice(formState, "AP");
                                 }}
                               >
                                 <Printer className="h-4 w-4" />
@@ -1715,7 +1715,7 @@ debugger;
               borderBottom: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? 'none' : '1px solid #ccc',
             }}
           >
-            <div  className="grid grid-cols-2 gap-8 !mt-[35px]">
+            <div className="grid grid-cols-2 gap-8 !mt-[35px]">
               <div className="">
                 <div className="grid grid-cols-1 leading-none lg:w-3/4">
                   <div className="flex items-center gap-2">
@@ -1780,15 +1780,15 @@ debugger;
                             }
                           }}
                           disabled={
-                            formState.formElements.voucherNumber?.disabled 
+                            formState.formElements.voucherNumber?.disabled
                             // ||
                             // formState.formElements.pnlMasters?.disabled
                           }
                           labelInfo={
                             // <div>
-                                <button className="pe-3">
-                                  <VoucherNumberDetailsSidebar displayType="link" />
-                                </button>
+                            <button className="pe-3">
+                              <VoucherNumberDetailsSidebar displayType="link" />
+                            </button>
                             // </div>
                           }
                         />
@@ -2302,7 +2302,7 @@ debugger;
                     onChange={(e) =>
                       dispatch(
                         accFormStateRowHandleFieldChange({
-                          fields: { amount: e.target?.value != "" ? parseFloat(e.target?.value): "" },
+                          fields: { amount: e.target?.value != "" ? parseFloat(e.target?.value) : "" },
                         })
                       )
                     }
@@ -2375,7 +2375,7 @@ debugger;
                       type="number"
                       min={0}
                       // className="!m-0"
-                      label=" "
+                      noLabel
                       value={formState.row.discount}
                       onChange={(e) =>
                         dispatch(
@@ -2447,7 +2447,7 @@ debugger;
                     label={t(formState.formElements.costCentreID.label)}
                     data={formState.row}
                     onSelectItem={(e) => {
-                      
+
                       dispatch(
                         accFormStateRowHandleFieldChange({
                           fields: {
@@ -2497,29 +2497,28 @@ debugger;
                     )}
                   {formState.formElements.btnAdd.visible == true && (
                     <>
-                    <span></span>
-                    <ERPButton
-                      ref={btnAddRef}
-                      title={t(formState.formElements.btnAdd.label)}
-                      // className="mt-4"
-                      variant="primary"
-                      loading={formState.rowProcessing}
-                      type="button"
-                      onClick={() => addOrEditRow()}
-                      onKeyDown={(e) => {
-                        console.log(`Key:${e.key}`);
-                        if (e.key == "Enter") {
-                          addOrEditRow();
-                        }
-                      }}
-                      disabled={
-                        formState.formElements.btnAdd.disabled == true ||
-                        formState.ledgerBillWiseLoading ||
-                        formState.ledgerIsBillWiseAdjustExistLoading ||
-                        formState.formElements.pnlMasters?.disabled
+                      <ERPButton
+                        ref={btnAddRef}
+                        title={t(formState.formElements.btnAdd.label)}
+                        // className="mt-4"
+                        variant="primary"
+                        loading={formState.rowProcessing}
+                        type="button"
+                        onClick={() => addOrEditRow()}
+                        onKeyDown={(e) => {
+                          console.log(`Key:${e.key}`);
+                          if (e.key == "Enter") {
+                            addOrEditRow();
+                          }
+                        }}
+                        disabled={
+                          formState.formElements.btnAdd.disabled == true ||
+                          formState.ledgerBillWiseLoading ||
+                          formState.ledgerIsBillWiseAdjustExistLoading ||
+                          formState.formElements.pnlMasters?.disabled
 
-                      }
-                    />
+                        }
+                      />
                     </>
                   )}
                 </div>
@@ -2626,12 +2625,12 @@ debugger;
               borderRadius: formState.userConfig?.gridMaxWidth && formState.userConfig?.gridMaxWidth !== '100%' ? '10px' : 'none',
               borderTopLeftRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
               borderTopRightRadius: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? '0' : '10px',
-              borderTop: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth  ? 'none' : '0',
+              borderTop: formState.userConfig?.maxWidth === formState.userConfig?.gridMaxWidth ? 'none' : '0',
             }}
           >
             {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
             <ErpDevGrid
-            ShowGridPreferenceChooserInRow
+              ShowGridPreferenceChooserInRow
               summaryItems={summaryItems}
               ref={erpGridRef}
               key={"slNo"}
@@ -2650,7 +2649,7 @@ debugger;
               remoteOperations={false}
               data={formState.transaction.details}
               gridId={`${gridCode}-grid`}
-              onClickByRootState={(e: any, state: RootState) => {  onSelectionChanged(e, state, true) }}
+              onClickByRootState={(e: any, state: RootState) => { onSelectionChanged(e, state, true) }}
               showTotalCount={false}
               onKeyDown={(e) => handleKeyDown("grid", e)}
               onSelectionChangedByRootState={(e: any, state: RootState) =>
@@ -3428,9 +3427,9 @@ debugger;
           // disabled={formState.formElements.pnlMasters?.disabled}
           /> */}
 
-<Link to="/" className="w-24">
-  <ERPButton ref={btnSaveRef} title={t("close")} />
-</Link>
+          <Link to="/" className="w-24">
+            <ERPButton ref={btnSaveRef} title={t("close")} />
+          </Link>
 
           <ERPButton
             ref={btnSaveRef}

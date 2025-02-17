@@ -1439,7 +1439,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
       return (
-        <Summary recalculateWhileEditing={true}>
+        <Summary recalculateWhileEditing={true} skipEmptyValues={false} >
           {summaryItems?.map((config: SummaryConfig, index: number) => {
             return (
               <TotalItem
@@ -1506,6 +1506,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             hoverStateEnabled={hoverStateEnabled}
             {...props} // Spread additional props to DataGrid
           >
+             {MemoizedSummary}
             <ColumnFixing enabled={true} />
             <Scrolling mode={scrollingMode} showScrollbar="always" />
             {allowPaging && (
@@ -1745,7 +1746,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               />
             ))}
 
-            {MemoizedSummary}
+           
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
           {showTotalCount == true && (

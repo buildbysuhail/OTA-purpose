@@ -382,11 +382,12 @@ export const useAccTransaction = (
     debugger;
 
     if (vch == null || vch?.master == null) {
+      // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
         ...accTransactionInitialData,
         master: {
           ...accTransactionInitialData.master,
-          voucherNumber: voucherNumber,
+          voucherNumber: _voucherNumber,
           voucherType: voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix:
             voucherPrefix ?? formState.transaction.master.voucherPrefix,

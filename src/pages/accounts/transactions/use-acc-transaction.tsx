@@ -1,6 +1,4 @@
-import {
-  useCallback,
-} from "react";
+import { useCallback } from "react";
 
 // import { handleResponse } from '../HandleResponse';
 import {
@@ -29,10 +27,7 @@ import {
   accFormStateClearBillWiseInDetails,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
-import {
-  deleteAccVoucher,
-  unlockAccTransactionMaster,
-} from "./thunk";
+import { deleteAccVoucher, unlockAccTransactionMaster } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import {
@@ -45,10 +40,7 @@ import {
   AccUserConfig,
   BillwiseData,
 } from "./acc-transaction-types";
-import {
-  isEnterKey,
-  isNullOrUndefinedOrZero,
-} from "../../../utilities/Utils";
+import { isEnterKey, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import {
   calculateTotal,
@@ -87,7 +79,9 @@ export const useAccTransaction = (
   narrationRef?: any,
   voucherNumberRef?: any,
   chequeNumberRef?: any,
-  remarksRef?: any
+  remarksRef?: any,
+  partyNameRef?: any,
+  taxableAmountRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -146,7 +140,6 @@ export const useAccTransaction = (
     }
   };
   const focusLedgerCombo = () => {
-    
     if (ledgerIdRef.current) {
       ledgerIdRef.current.select();
       ledgerIdRef.current.focus();
@@ -182,6 +175,19 @@ export const useAccTransaction = (
       remarksRef.current.focus();
     }
   };
+  const focusTaxableAmount = () => {
+    debugger;
+    if (taxableAmountRef.current) {
+      taxableAmountRef.current.select();
+      taxableAmountRef.current.focus();
+    }
+  };
+  const focusPartName = () => {
+    if (partyNameRef.current) {
+      partyNameRef.current.select();
+      partyNameRef.current.focus();
+    }
+  };
 
   const { hasRight, hasBlockedRight } = useUserRights();
   const fetchUserConfig = async () => {
@@ -209,14 +215,12 @@ export const useAccTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
-
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });
 
     if (_s_isDirty && skipPrompt != true) {
-    
       // if (mode == "increment" || mode == "decrement") {
       //   // const _voucherNumber =
       //   //   mode == "increment"
@@ -227,27 +231,26 @@ export const useAccTransaction = (
       //   //       formState.transaction.master.voucherNumber.toString()
       //   //     ) + 1;
       debugger;
-       dispatch(
-          accFormStateHandleFieldChange({
-            fields: {
-              openUnsavedPrompt: true,
-              tmpVoucherNo: voucherNumber
-            },
-          })
-        ); 
-        // dispatch(
-        //   accFormStateTransactionMasterHandleFieldChange({
-        //     fields: {
-        //       voucherNumber: voucherNumber,
-        //     },
-        //   })
-        // );
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            openUnsavedPrompt: true,
+            tmpVoucherNo: voucherNumber,
+          },
+        })
+      );
+      // dispatch(
+      //   accFormStateTransactionMasterHandleFieldChange({
+      //     fields: {
+      //       voucherNumber: voucherNumber,
+      //     },
+      //   })
+      // );
       // }
       return false;
     }
     debugger;
-    if(setVoucherNo) {
-      
+    if (setVoucherNo) {
       // dispatch(
       //   accFormStateHandleFieldChange({
       //     fields: {
@@ -255,14 +258,14 @@ export const useAccTransaction = (
       //     },
       //   })
       // );
-        dispatch(
-          accFormStateTransactionMasterHandleFieldChange({
-            fields: {
-              voucherNumber: voucherNumber,
-            },
-          })
-        );
-      }
+      dispatch(
+        accFormStateTransactionMasterHandleFieldChange({
+          fields: {
+            voucherNumber: voucherNumber,
+          },
+        })
+      );
+    }
     let _formState = await loadAccTransVoucher(
       usingManualInvNumber,
       voucherNumber,
@@ -273,8 +276,7 @@ export const useAccTransaction = (
       accTransactionMasterID
     );
 
-
-debugger;
+    debugger;
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -326,8 +328,8 @@ debugger;
         (userConfig?.presetCostenterId ?? 0 > 0
           ? userConfig?.presetCostenterId
           : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-            ? 0
-            : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
+          ? 0
+          : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
       _formState.userConfig = userConfig;
     }
     _formState.prev = modelToBase64Unicode({
@@ -342,7 +344,7 @@ debugger;
       })
     );
   };
-  const { t } = useTranslation('transaction');
+  const { t } = useTranslation("transaction");
   const loadAccTransVoucher = async (
     usingManualInvNumber: boolean = false,
     voucherNumber?: number,
@@ -355,7 +357,7 @@ debugger;
     let voucher: AccTransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
-        openUnsavedPrompt: false
+        openUnsavedPrompt: false,
       })
     );
     const _voucherNumber =
@@ -392,12 +394,12 @@ debugger;
         },
       };
     }
-    
+
     // clearControlForNew();
     await undoEditMode(
       formState.isEdit,
       accTransactionMasterID ??
-      formState.transaction.master.accTransactionMasterID
+        formState.transaction.master.accTransactionMasterID
     );
 
     // voucher.formElements.btnAdd = {
@@ -414,7 +416,7 @@ debugger;
     };
     voucher.row = { ...AccTransactionRowInitialData };
     // Handle master data
-    
+
     voucher.transaction = vch;
     if (vch?.master) {
       const updatedMaster = {
@@ -430,7 +432,6 @@ debugger;
     //   voucher.formElements.lnkUnlockVoucher.visible = true;
     // }
     if (vch?.details) {
-
       if (voucher.transaction.details?.length > 0) {
         voucher.total = voucher.transaction.details.reduce((total, detail) => {
           const amount =
@@ -439,10 +440,10 @@ debugger;
               : detail.debit;
           return total + (amount || 0);
         }, 0);
-  
+
         // Set master account ID based on voucher type
         const firstDetail = voucher.transaction.details[0];
-  
+
         switch (voucher.transaction.master.voucherType) {
           case "CP":
           case "BP":
@@ -452,7 +453,7 @@ debugger;
           case "PBP":
             voucher.masterAccountID = firstDetail.relatedLedgerID;
             break;
-  
+
           case "CR":
           case "BR":
           case "DN":
@@ -461,21 +462,18 @@ debugger;
           case "PBR":
             voucher.masterAccountID = firstDetail.ledgerID;
             break;
-  
+
           case "JV":
-            
-           
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
                 ? firstDetail.ledgerID
                 : firstDetail.relatedLedgerID;
-                // voucher.transaction.master.drCr =
-                // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
+            // voucher.transaction.master.drCr =
+            // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
             break;
         }
       }
 
-      
       let BillwiseaccTransactionDetailID = 0;
       voucher.transaction.details = voucher.transaction.details.map(
         (detail, index) => {
@@ -525,7 +523,10 @@ debugger;
 
             case "JV":
               BillwiseaccTransactionDetailID++;
-              if (voucher.transaction.master.drCr === "Dr" || voucher.transaction.master.drCr === "Debit") {
+              if (
+                voucher.transaction.master.drCr === "Dr" ||
+                voucher.transaction.master.drCr === "Debit"
+              ) {
                 return {
                   ...baseDetail,
                   ledgerCode: detail.relatedLedgerCode,
@@ -560,7 +561,7 @@ debugger;
     // Handle attachments
 
     // Calculate total amount
-   
+
     voucher.transactionLoading = false;
 
     voucher.transaction.master.totalAmount = calculateTotal(voucher);
@@ -594,8 +595,10 @@ debugger;
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${
+        voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
+        isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -612,7 +615,6 @@ debugger;
   };
 
   const validate = (): boolean => {
-
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
       const demoExpiryDate = new Date(clientSession.demoExpiryDate);
@@ -625,13 +627,26 @@ debugger;
 
       const daysUntilExpiry = Math.floor(
         (demoExpiryDate.getTime() - transactionDate.getTime()) /
-        (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24)
       );
       const daysSinceSoftwareDate = Math.floor(
         (transactionDate.getTime() - softwareDate.getTime()) /
-        (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24)
       );
-
+      if (["TXP"].includes(formState.transaction.master.voucherType)) {
+        if (applicationSettings.accountsSettings.allowUserwiseCounter == true) {
+          if (
+            clientSession.counterShiftId == undefined ||
+            clientSession.counterShiftId == 0
+          ) {
+            ERPAlert.show({
+              icon: "warning",
+              title: t("please_open_counter_for_transaction"),
+            });
+            return false;
+          }
+        }
+      }
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
         dispatch(
           updateFormElement({
@@ -666,7 +681,7 @@ debugger;
     if (!validateTransDate.valid) {
       ERPAlert.show({
         icon: "warning",
-        title:t("transaction_warning"),
+        title: t("transaction_warning"),
         text: validateTransDate.message,
       });
       return false;
@@ -726,14 +741,13 @@ debugger;
         ERPAlert.show({
           icon: "warning",
           title: t("debit/credit"),
-          text: t("total_debit_and_credit")
+          text: t("total_debit_and_credit"),
         });
         return false;
       }
     }
 
     return true;
-
   };
   const getFirstDebitCreditLedgerIDs = (transaction: any) => {
     let firstDebitLedgerID = 0;
@@ -770,13 +784,15 @@ debugger;
     let debtorID = 0,
       arra = 0,
       detailID = 0;
-    const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction);
+    const { firstDebitLedgerID, firstCreditLedgerID } =
+      getFirstDebitCreditLedgerIDs(formState.transaction);
 
     for (let index = 0; index < details.length; index++) {
       const element: AccTransactionRow = details[index];
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
+
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
       element.currencyID = 1;
@@ -813,7 +829,6 @@ debugger;
           break;
 
         case "OB":
-          
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
@@ -837,33 +852,87 @@ debugger;
             element.credit = element.amount;
             element.debit = 0;
           }
+        case "CPT":
+        case "BPT":
+        case "CNT":
+        case "EXP":
+        case "TXP":
+          element.relatedLedgerID = formState.masterAccountID;
+        case "CRT":
+        case "BRT":
+        case "DNT":
+        case "INC":
+          element.relatedLedgerID = element.ledgerID;
+          element.ledgerID = formState.masterAccountID;
           break;
       }
       element.particularsLedgerId = element.relatedLedgerID;
       element.voucherType = formState.transaction.master.voucherType;
-      element.chqDate = element.chqDate == "" ? moment().local().toISOString() : element.chqDate;
-      element.bankDate = element.bankDate == "" ? moment().local().toISOString() : element.bankDate;
-      element.checkBouncedDate = element.checkBouncedDate == "" ? moment().local().toISOString() : element.checkBouncedDate;
+      element.chqDate =
+        element.chqDate == ""
+          ? moment().local().toISOString()
+          : element.chqDate;
+      element.bankDate =
+        element.bankDate == ""
+          ? moment().local().toISOString()
+          : element.bankDate;
+      element.checkBouncedDate =
+        element.checkBouncedDate == ""
+          ? moment().local().toISOString()
+          : element.checkBouncedDate;
+
+      if (
+        billWiseExcludedTransactions.includes(
+          formState.transaction.master.voucherType
+        )
+      ) {
+        element.billwiseDetails = "";
+        element.checkStatus = "P";
+      }
+
       updatedDetails.push(element);
     }
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
-    const { firstDebitLedgerID, firstCreditLedgerID } = getFirstDebitCreditLedgerIDs(formState.transaction)
-    const master = { ...formState.transaction.master, 
-      particulars: (formState.transaction.master.voucherType != "MJV" && formState.transaction.master.voucherType != "OB" )
-      ? dataContainer.ledgers?.find(x => x.id == formState.masterAccountID)?.name??""
-      : formState.transaction.master.voucherType == "OB" ?  dataContainer.ledgers?.find(x => x.id == applicationSettings.accountsSettings.defaultSuspenseAcc)?.name??""
-      : formState.transaction.master.voucherType == "MJV" ? dataContainer.ledgers?.find(x => x.id == firstCreditLedgerID)?.name??"" : ""};
+    const { firstDebitLedgerID, firstCreditLedgerID } =
+      getFirstDebitCreditLedgerIDs(formState.transaction);
+    const master = {
+      ...formState.transaction.master,
+      particulars:
+        formState.transaction.master.voucherType != "MJV" &&
+        formState.transaction.master.voucherType != "OB"
+          ? dataContainer.ledgers?.find(
+              (x) => x.id == formState.masterAccountID
+            )?.name ?? ""
+          : formState.transaction.master.voucherType == "OB"
+          ? dataContainer.ledgers?.find(
+              (x) =>
+                x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
+            )?.name ?? ""
+          : formState.transaction.master.voucherType == "MJV"
+          ? dataContainer.ledgers?.find((x) => x.id == firstCreditLedgerID)
+              ?.name ?? ""
+          : "",
+    };
 
     master.accTransactionMasterID = formState.isEdit
       ? master.accTransactionMasterID
       : 0;
     // master.bankDate = new Date().toISOString();
     master.checkBouncedDate = moment().local().toISOString();
-    master.prevTransDate = master.transactionDate == "" ? moment().local().toISOString() : master.prevTransDate;
-    master.referenceDate = master.referenceDate == "" ? moment().local().toISOString() : master.referenceDate;;
-    master.dueDate =master.transactionDate == "" ? moment().local().toISOString() : master.transactionDate;;
+    master.prevTransDate =
+      master.transactionDate == ""
+        ? moment().local().toISOString()
+        : master.prevTransDate;
+    master.referenceDate =
+      master.referenceDate == ""
+        ? moment().local().toISOString()
+        : master.referenceDate;
+    master.dueDate =
+      master.transactionDate == ""
+        ? moment().local().toISOString()
+        : master.transactionDate;
     const totalAmount = master.totalAmount || 0;
 
     if (master.drCr === "Cr") {
@@ -892,21 +961,18 @@ debugger;
 
         title: t("are_you_sure_to_modify"),
         onCancel() {
-
           return false;
         },
-        onConfirm: async () => { // Make this an async function
+        onConfirm: async () => {
+          // Make this an async function
           await save();
         },
       });
+    } else {
+      await save();
     }
-    else {
-      await save()
-    }
-  }
+  };
   const save = async () => {
-
-
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -914,27 +980,29 @@ debugger;
         },
       })
     );
-    
-    const valid = validate()
+
+    const valid = validate();
     if (valid == true) {
-      
-const master = attachMaster();
+      const master = attachMaster();
       const params = {
-        master: {...master,      
-    transactionDate: master.transactionDate == "" ? null : master.transactionDate
+        master: {
+          ...master,
+          transactionDate:
+            master.transactionDate == "" ? null : master.transactionDate,
         },
         details: attachDetails(),
         attachments: [...formState.transaction.attachments],
       };
-      const saveRes = formState.transaction.master.accTransactionMasterID > 0
-        ? await api.putAsync(
-          `${Urls.acc_transaction_base}${transactionType}`,
-          params
-        )
-        : await api.postAsync(
-          `${Urls.acc_transaction_base}${transactionType}`,
-          params
-        );
+      const saveRes =
+        formState.transaction.master.accTransactionMasterID > 0
+          ? await api.putAsync(
+              `${Urls.acc_transaction_base}${transactionType}`,
+              params
+            )
+          : await api.postAsync(
+              `${Urls.acc_transaction_base}${transactionType}`,
+              params
+            );
       if (saveRes.isOk == true) {
         dispatch(
           accFormStateTransactionUpdate({
@@ -1062,9 +1130,7 @@ const master = attachMaster();
     // Force reload combobox data
     dispatch(
       updateFormElement({
-        fields: {
-
-        },
+        fields: {},
       })
     );
   };
@@ -1080,7 +1146,6 @@ const master = attachMaster();
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr;
@@ -1142,13 +1207,10 @@ const master = attachMaster();
             })
           );
         } else {
-          
           if (
             formState.formElements.amount.disabled == false &&
             formState.IsBillwiseTransAdjustmentExists == true
           ) {
-
-
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -1215,9 +1277,8 @@ const master = attachMaster();
         onCancel: () => {
           focusLedgerCode();
           return false;
-        }
+        },
       });
-     
     }
 
     if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
@@ -1236,11 +1297,14 @@ const master = attachMaster();
 
       return false;
     }
-    if (!["OB", "MJV"].includes(formState.transaction.master.voucherType) && isNullOrUndefinedOrZero(formState.masterAccountID)) {
+    if (
+      !["OB", "MJV"].includes(formState.transaction.master.voucherType) &&
+      isNullOrUndefinedOrZero(formState.masterAccountID)
+    ) {
       ERPAlert.show({
         icon: "info",
         // title: t("select_master_account"),
-        title: "Please Select " + formState.formElements.masterAccount.label ,
+        title: "Please Select " + formState.formElements.masterAccount.label,
       });
       focusMasterAccount();
       return false;
@@ -1257,21 +1321,30 @@ const master = attachMaster();
       return false;
     }
     if (
-      formState.formElements.costCentreID.visible == false
-      && (applicationSettings.accountsSettings.maintainBillwiseAccount == true 
-          || applicationSettings.accountsSettings.billwiseMandatory == true
-      )
+      formState.formElements.costCentreID.visible == false &&
+      (applicationSettings.accountsSettings.maintainBillwiseAccount == true ||
+        applicationSettings.accountsSettings.billwiseMandatory == true)
     ) {
       formState.formElements.amount.disabled = false;
     }
     formState.formElements.btnAdd;
 
-const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x => x.value == formState.row.costCentreID)?.name: "";
+    const sdsd =
+      formState.row.costCentreID > 0
+        ? dataContainer.costCentres?.find(
+            (x) => x.value == formState.row.costCentreID
+          )?.name
+        : "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {
           ...formState.row,
-          costCentreName: formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x => x.id == formState.row.costCentreID)?.name: "",
+          costCentreName:
+            formState.row.costCentreID > 0
+              ? dataContainer.costCentres?.find(
+                  (x) => x.id == formState.row.costCentreID
+                )?.name
+              : "",
           // ledgerName: formState.row.ledgerID > 0 ? ledgerData?.find(x => x.value == formState.row.ledgerID)?.name: "",
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
@@ -1323,7 +1396,8 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       };
 
       const response = await api.getAsync(
-        `${Urls.validate_cheque_status}`, `detailId=${accTransactionDetailsId}`,
+        `${Urls.validate_cheque_status}`,
+        `detailId=${accTransactionDetailsId}`
       );
 
       return response;
@@ -1331,7 +1405,8 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       ERPAlert.show({
         type: "error",
         title: t("error"),
-        text: error instanceof Error ? error.message : t("failed_to_validate_PDC"),
+        text:
+          error instanceof Error ? error.message : t("failed_to_validate_PDC"),
       });
       return true; // Maintain original behavior of returning true on error
     }
@@ -1344,7 +1419,7 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       // Check PDC validation first
       if (row?.accTransactionDetailID) {
         const isPDCValid = await validatePDC(row?.accTransactionDetailID);
-        
+
         if (isPDCValid) {
           ERPAlert.show({
             title: t("warning"),
@@ -1387,7 +1462,7 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
             row: {
               ...row,
               // amount: row.amountFC?.toString() || row.amount?.toString() || "0",
-            }
+            },
           },
         })
       );
@@ -1445,12 +1520,19 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       handleDrCrKeyDown(key);
     } else if (field === "costCentre") {
       if (key == "Enter") {
-        focusBtnAdd();
+        if (formState.isTaxOnExpense) {
+          focusPartName()
+        } else {
+          focusBtnAdd();
+        }
       }
-    } else if (field === "voucherNumber") {
+    } else if (field === "invoiceDate") {
+      if (key == "Enter") {
+        focusTaxableAmount();
+      }
+    }  else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
-
       handleNarrationKeyDown(key);
     } else if (field === "employee") {
       handleEmployeeKeyDown(key);
@@ -1504,10 +1586,11 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode == undefined ||
+          `${Urls.get_ledgerId_by_code}${
+            formState.row.ledgerCode == undefined ||
             formState.row.ledgerCode === ""
-            ? 0
-            : formState.row.ledgerCode
+              ? 0
+              : formState.row.ledgerCode
           }`
         );
 
@@ -1537,7 +1620,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
   };
 
   const handleLedgerIdKeyDown = async (id: any) => {
-
     if (id > 0) {
       setTimeout(() => {
         focusAmount();
@@ -1559,7 +1641,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
 
   // DrCr keydown handler
   const handleDrCrKeyDown = (e: any) => {
-
     if (
       e === "Enter" &&
       (formState.row.drCr == "Dr" || formState.row.drCr == "Cr")
@@ -1610,7 +1691,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       ) {
         focusCostCenterRef();
       } else {
-
         focusBtnAdd();
       }
 
@@ -1634,7 +1714,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
 
     if (e == "ArrowDown" || e == "ArrowUp" || e == "Enter") {
       if (currentNumber > 0) {
-
         await loadAndSetAccTransVoucher(
           undefined,
           undefined,
@@ -1646,8 +1725,8 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-              ? "increment"
-              : undefined,
+            ? "increment"
+            : undefined,
           true
         );
       }
@@ -1814,7 +1893,7 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       },
     });
   };
-  const handleLoadByRefNo = useCallback(async() => {
+  const handleLoadByRefNo = useCallback(async () => {
     if (formState.transaction.master.referenceNumber) {
       await loadAndSetAccTransVoucher(
         true,
@@ -1936,17 +2015,19 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       })
     );
     const billwise = await api.getAsync(
-      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID
-      }&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${formState.row.accTransactionDetailID ?? 0
+      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
+        formState.row.ledgerID
+      }&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${
+        formState.row.accTransactionDetailID ?? 0
       }`
     );
     if (formState.row.accTransactionDetailID ?? 0 > 0) {
       billwise.map((x: BillwiseData) => {
         return {
           ...x,
-          balanceAfter: x.balance - x.billwiseAmount
-        }
-      })
+          balanceAfter: x.balance - x.billwiseAmount,
+        };
+      });
     }
     setTimeout(() => {
       dispatch(
@@ -1959,7 +2040,25 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
       );
     }, 0);
   };
+  const billWiseExcludedTransactions = [
+    "TXP",
+    "CPT",
+    "BPT",
+    "CNT",
+    "EXP",
+    "CRT",
+    "BRT",
+    "DNT",
+    "INC",
+  ];
   const showBillwise = async () => {
+    if (
+      billWiseExcludedTransactions.includes(
+        formState.transaction.master.voucherType
+      )
+    ) {
+      return false;
+    }
     if (formState.row.ledgerID && formState.ledgerData != null) {
       const isBillwiseApplicable = await isLedgerBillwiseApplicable(
         formState.transaction.master.voucherType === "CN" ||
@@ -1968,7 +2067,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
           : formState.row.ledgerID
       );
       if (isBillwiseApplicable == true) {
-
         let _drCr;
         switch (formState.transaction.master.voucherType) {
           case "CP":
@@ -2101,5 +2199,6 @@ const sdsd = formState.row.costCentreID > 0 ? dataContainer.costCentres?.find(x 
     focusCostCenterRef,
     focusLedgerCode,
     showBillwise,
+    billWiseExcludedTransactions,
   };
 };

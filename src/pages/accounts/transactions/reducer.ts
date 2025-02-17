@@ -91,6 +91,15 @@ const accTransactionSlice = createSlice({
       state.row.chequeNumber = "";
       // state.masterAccountID = 0;
       state.row.costCentreID = defaultCostCenterID;
+
+      state.row.partyName = "";
+      state.row.taxNo = "";
+      state.row.taxAmount = 0;
+      state.row.taxInvoiceNo = "";
+      state.row.taxPerc = 0;
+      state.row.taxableAmount = 0;
+      state.row.invoiceDate = moment().local().toISOString();
+
       state.transaction.details = [];
       state.isEdit = false;
       state.isRowEdit = false;
@@ -267,7 +276,7 @@ const accTransactionSlice = createSlice({
         ...data,
         chqDate: data.chqDate ? new Date(data.chqDate).toISOString() : "",
         bankDate: data.bankDate ? new Date(data.bankDate).toISOString() : "",
-        amount: amount,
+        amount: state.isTaxOnExpense && (data.incentives??0) > 0 ? data.incentives: data.amount,
         amountFC: data.amount,
         drCr: state.row.drCr,
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,

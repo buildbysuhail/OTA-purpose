@@ -171,7 +171,8 @@ const handleDirectPrint = async (template:any) => {
           const nameOnCheque = detail.nameOnCheque || detail.ledgerName;
           
           // Call your print service
-          await printCheque_AccTransaction();
+          
+          // await printCheque_AccTransaction(formState.masterAccountName, formState.row.nameOnCheque, formState.row.amount, formState.row.bankDate, formState.row.narration, formState.printPreview);;
   
           // Log user action
           await logUserAction({

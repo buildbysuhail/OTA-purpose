@@ -299,6 +299,14 @@ export interface AccTransactionRow {
 
   firstCreditLedgerId?: number;
   firstDebitLedgerId?: number;
+  //TaxOnExpense
+  invoiceDate: string;
+  partyName?: string;
+  taxNo?: string;
+  taxInvoiceNo?: string;
+  taxPerc?: number;
+  taxableAmount?: number;
+  taxAmount?: number;
 }
 export const AccTransactionMasterInitialData: AccTransactionMaster = {
   accTransactionMasterID: 0,
@@ -393,7 +401,14 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   accGroupName: "",
   exchangeRate: 1,
   relatedLedgerCode: "",
-  particulars: ""
+  particulars: "",
+  invoiceDate: moment().local().toISOString(),
+  partyName: "",
+  taxNo: "",
+  taxInvoiceNo: "",
+  taxPerc: 0,
+  taxableAmount: 0,
+  taxAmount: 0,
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: AccTransactionMasterInitialData,
@@ -497,7 +512,9 @@ export interface AccTransactionFormState {
   userConfig?: AccUserConfig;
   formElements: FormElementsState
   openUnsavedPrompt?: boolean
+  isTaxOnExpense?: boolean
   tmpVoucherNo?: number
+  billWiseRemarks?: string
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {

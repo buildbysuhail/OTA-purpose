@@ -5,6 +5,7 @@ export interface ClientSessionModel {
   isDemoVersion: boolean;
   demoExpiryDate: string;
   softwareDate: string;
+  counterShiftId?: number;
 }
 // export const initialState : login  =  {loading: false, token: ""};
 export const initialState: ClientSessionModel = {

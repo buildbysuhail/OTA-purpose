@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal-resizable-draggable"; // Try changing import if needed
+import './sssdsd.css'
 
 interface ERPModalProps {
   initWidth?: number;
@@ -20,7 +21,7 @@ const ERPModalResizable: React.FC<ERPModalProps> = React.memo(({ initWidth = 800
         initWidth={initWidth}
         initHeight={initHeight}
         onFocus={() => console.log("Modal is clicked")}
-        className="my-modal-custom-class"
+        className=""
         onRequestClose={closeModal}
         isOpen={modalIsOpen}
         {...({} as any)} // Temporary workaround if TypeScript still complains

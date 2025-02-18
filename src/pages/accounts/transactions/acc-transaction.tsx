@@ -169,8 +169,18 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const taxableAmountRef = useRef<HTMLInputElement>(null);
   const partyNameRef = useRef<HTMLInputElement>(null);
   const refNoRef = useRef<HTMLInputElement>(null);
+  const taxNoRef = useRef<HTMLInputElement>(null);
 
   const [showValidation, setShowValidation] = useState(false);
+  const focusTaxNoField = ()=>{
+    debugger;
+      setTimeout(() => {
+    if(taxNoRef.current) {
+      taxNoRef.current.select()
+      taxNoRef.current.focus();
+    }
+    }, 0);
+  }
   const onSelectionChanged = (
     e: any,
     state: RootState,
@@ -2788,25 +2798,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         />
 
                         <button
+                        data-skip={true}
                           onClick={() => {
                             dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }));
-                            setIsPartySelectionModalOpen(true);
                           }}
                           className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors">
                           <Search className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                         </button>
 
-                        {isPartySelectionModalOpen && (
+                        {formState.showPartySelection && (
                           <ERPModal
-                            isOpen={isPartySelectionModalOpen}
-                            closeModal={() => setIsPartySelectionModalOpen(false)}
+                            isOpen={formState.showPartySelection}
+                            closeModal={() => dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: false }, }))}
                             width="w-full max-w-[600px]"
                             title="Party Selection"
-                            content={<PartySelectionModal />}
+                            content={<PartySelectionModal focusTaxNoField={focusTaxNoField}/>}
                           />
                         )}
                       </div>
                       <ERPInput
+                      ref={taxNoRef}
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="taxNo"
                         label={t("tax_no")}

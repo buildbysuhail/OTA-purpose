@@ -40,7 +40,7 @@ import {
   AccUserConfig,
   BillwiseData,
 } from "./acc-transaction-types";
-import { isEnterKey, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
+import { isEnterKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import {
   calculateTotal,
@@ -1549,6 +1549,12 @@ export const useAccTransaction = (
       handleEmployeeKeyDown(key);
     } else if (field === "ledgerID") {
       handleLedgerIdKeyDown(key);
+    }  else if (field === "btnPartySearch") {
+      if(key == "Enter") {
+        if(isNullOrUndefinedOrEmpty(formState.row.partyName)) {
+          dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }))
+        }
+      }
     } else if (field === "bankDate") {
       if (isEnterKey(key)) {
         dispatch(

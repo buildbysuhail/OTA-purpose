@@ -347,6 +347,7 @@ const Urls = {
   acc_transaction_is_bill_wise_trans_adjustment_exists:
     "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
   acc_transaction_grid: "/Accounts/CashPayment/List Page",
+  acc_transaction_parties_tax_on_expense: "/Accounts/TXPayment/SearchParty/",
 
   // Accounts End
   //Grid Preference

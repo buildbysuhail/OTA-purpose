@@ -1,5 +1,7 @@
+import { Landmark } from "lucide-react";
 import { transactionRoutes } from "../../content/transaction-routes";
 import { TransactionTitles } from "../../content/transaction-titles";
+import { BanknotesIcon } from "@heroicons/react/24/outline";
 
 export const MENUITEMS = [
   {
@@ -15,8 +17,7 @@ export const MENUITEMS = [
     badge: "",
     path: `${import.meta.env.BASE_URL}#`,
     badgetxt: "12",
-    class:
-      "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     // children: [
     //   {
     //     path: `${import.meta.env.BASE_URL}dashboards/crm`,
@@ -375,14 +376,11 @@ export const MENUITEMS = [
     badge: "",
     badgetxt: "",
     rights: "",
-    class:
-      "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
       ...transactionRoutes.map((route) => ({
-        path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType
-          }List`,
-        addPath: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType
-          }`,
+        path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}List`,
+        addPath: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}`,
         type: "link",
         active: false,
         selected: false,
@@ -391,26 +389,25 @@ export const MENUITEMS = [
         icon: route.icon,
       })),
       {
-        path: `${import.meta.env.BASE_URL
-          }accounts/transactions/BankReconciliation`,
+        path: `${import.meta.env.BASE_URL}accounts/transactions/BankReconciliation`,
         type: "link",
         active: false,
         selected: false,
         title: TransactionTitles.BankReconciliation,
         rights: "BRC",
+        icon: Landmark
       },
       {
-        path: `${import.meta.env.BASE_URL
-          }accounts/transactions/PostDatedCheques`,
+        path: `${import.meta.env.BASE_URL}accounts/transactions/PostDatedCheques`,
         type: "link",
         active: false,
         selected: false,
         title: TransactionTitles.PostDatedCheques,
         rights: "PDC",
+        icon: BanknotesIcon
       },
     ],
   },
-
   {
     icon: <i className="side-menu__icon ri-line-chart-line"></i>,
     type: "link",
@@ -421,8 +418,7 @@ export const MENUITEMS = [
     path: "/reports",
     badge: "",
     badgetxt: "",
-    class:
-      "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+    class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
   },
   // {
   //   icon: <i className="side-menu__icon ri-restaurant-2-fill"></i>,

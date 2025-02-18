@@ -1,23 +1,10 @@
+import { ChatBubbleLeftEllipsisIcon, ClipboardDocumentListIcon, CommandLineIcon, CreditCardIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
 import {
-  CheckBadgeIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-import {
-  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleChartOfAccounts, toggleCommandsPopup, toggleCompanyProfileIndiaPopup, toggleCompanyProfilePopup,
-  toggleDayClosePopup,
-  toggleDeleteInactiveTransactionPopup,
-  toggleExchangeRatesPopup,
-  toggleHeaderFooterPopup,
-  toggleHideAccLedger,
-  toggleImportExportPopup,
-  toggleRefreshAllBranches,
-  toggleResetBranchDataForSync,
-  toggleResetDataBasePopup,
-  toggleSpecialSchemes,
-  toggleTestPopup,
-  toggleUserActionPopup,
-  toggleUserTypePrivilegePopup
+  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfileIndiaPopup, toggleCompanyProfilePopup,
+  toggleDayClosePopup, toggleDeleteInactiveTransactionPopup, toggleExchangeRatesPopup, toggleHeaderFooterPopup, toggleHideAccLedger, toggleImportExportPopup, toggleRefreshAllBranches,
+  toggleResetBranchDataForSync, toggleResetDataBasePopup, toggleTestPopup, toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
+import { Barcode, BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartBar, ChartNoAxesCombined, CircleDollarSign, CircleUserRound, ClipboardMinus, Cog, Component, Crown, CrownIcon, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MonitorCog, QrCode, RefreshCw, Repeat2, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
 
 export const SettingsMenuItems = [
   // {
@@ -25,7 +12,7 @@ export const SettingsMenuItems = [
   //   showWorkspaceMiniCard: true,
   // },
   {
-    icon: (<CheckBadgeIcon className="side-menu__icon" />),
+    icon: (<Crown className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',
     active: false,
@@ -36,21 +23,21 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 2,
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-group`, type: 'link', active: false, selected: false, title: 'acc_group' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-ledger`, type: 'link', active: false, selected: false, title: 'acc_ledger' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/currency-master`, type: 'link', active: false, selected: false, title: 'currency' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/branch-ledgers`, type: 'link', active: false, selected: false, title: 'branch_ledger' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customers`, type: 'link', active: false, selected: false, title: 'customers' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/suppliers`, type: 'link', active: false, selected: false, title: 'suppliers' },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-group`, type: 'link', active: false, selected: false, title: 'acc_group', icon: UserGroupIcon },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/account-ledger`, type: 'link', active: false, selected: false, title: 'acc_ledger', icon: BookOpenText },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/currency-master`, type: 'link', active: false, selected: false, title: 'currency', icon: CircleDollarSign },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter', icon: ClipboardDocumentListIcon },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/branch-ledgers`, type: 'link', active: false, selected: false, title: 'branch_ledger', icon: GitBranchPlus },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts', icon: ChartNoAxesCombined },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category', icon: Component },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customers`, type: 'link', active: false, selected: false, title: 'customers', icon: UserRoundCheck },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/suppliers`, type: 'link', active: false, selected: false, title: 'suppliers', icon: Truck },
       // { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'bank_card' },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards', icon: IdCard },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger', icon: Handshake },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'bank_card', icon: CreditCardIcon },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'upi' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'qr_pay' },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'qr_pay', icon: QrCode },
       { action: toggleHideAccLedger, type: 'popup', active: false, selected: false, title: 'hide_account_ledger' },
     ]
   },
@@ -84,7 +71,7 @@ export const SettingsMenuItems = [
   //   ]
   // },
   {
-    icon: (<UserIcon className="side-menu__icon" />),
+    icon: (<UsersIcon className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',
     active: false,
@@ -94,13 +81,13 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'users' },
-      { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'usertype' },
+      { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'users', icon: UsersRound },
+      { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'usertype', icon: UserRound },
       { action: toggleUserTypePrivilegePopup, type: 'popup', active: false, selected: false, title: 'user_type_privilege' },
     ]
   },
   {
-    icon: (<UserIcon className="side-menu__icon" />),
+    icon: (<UserCog className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',
     active: false,
@@ -113,13 +100,13 @@ export const SettingsMenuItems = [
       { action: toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile_others' },
       { action: toggleCompanyProfileIndiaPopup, type: 'popup', active: false, selected: false, title: 'company_profile_india' },
       { action: toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branches' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branches', icon: GitMerge },
       { action: toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },
       { action: toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'bank_pos_settings' },
     ]
   },
   {
-    icon: (<UserIcon className="side-menu__icon" />),
+    icon: (<MonitorCog className="side-menu__icon side-menu" />),
     type: 'sub',
     Name: '',
     active: false,
@@ -132,31 +119,32 @@ export const SettingsMenuItems = [
     children: [
       // { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings' },
       // { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings-new?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings_new' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings', icon: FolderCog },
       { action: toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
       { action: toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'counters' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'financial_year' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'vouchers' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'counters', icon: Calculator },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'financial_year', icon: CalendarDays },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'vouchers', icon: Ticket },
       { action: toggleBarcodePrintPopup, type: 'popup', active: false, selected: false, title: 'barcode_print' },
-      { path: `${import.meta.env.BASE_URL}settings/_/templates`, type: 'link', active: false, selected: false, title: 'invoice_designer' },
+      { path: `${import.meta.env.BASE_URL}settings/_/templates`, type: 'link', active: false, selected: false, title: 'invoice_designer', icon: LayoutTemplate },
       { action: toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'commands' },
       // { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'user_action_report' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/reminders`, type: 'link', active: false, selected: false, title: 'reminders' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/user-actions`, type: 'link', active: false, selected: false, title: 'user_action_report' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/reminders`, type: 'link', active: false, selected: false, title: 'reminders', icon: BellRing },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/user-actions`, type: 'link', active: false, selected: false, title: 'user_action_report', icon: ClipboardMinus },
       { action: toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
       { action: toggleRefreshAllBranches, type: 'popup', active: false, selected: false, title: 'refresh_all_branches' },
       { action: toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
       { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications', icon: RotateCcw },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'notification_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'notification_settings', icon: BellDot },
       { action: toggleHeaderFooterPopup, type: 'popup', active: false, selected: false, title: 'headers_&_footers' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/counter-settings`, type: 'link', active: false, selected: false, title: 'counter_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/counter-settings`, type: 'link', active: false, selected: false, title: 'counter_settings', icon: Cog },
     ]
   },
   {
-    icon: (<UserIcon className="side-menu__icon" />),
+    // icon: (className="side-menu__icon side-menu"),
+    icon: <i className="las la-cogs side-menu__icon side-menu"></i>,
     type: 'sub',
     Name: '',
     active: false,
@@ -166,14 +154,14 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration', icon: ChatBubbleLeftEllipsisIcon },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration', icon: Mail },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/account_group_test`, type: 'link', active: false, selected: false, title: 'Account Group test' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/shortkeys_settings`, type: 'link', active: false, selected: false, title: 'Shortkeys Settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/shortkeys_settings`, type: 'link', active: false, selected: false, title: 'Shortkeys Settings', icon: Layers2 },
       { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 
     ]

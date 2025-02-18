@@ -321,3 +321,8 @@
   .secondaryBorder {
     @apply border border-stone-200 shadow-sm;
   }
+
+  .side-menu{
+    fill: transparent !important;
+    border-radius: 0 !important;
+  }

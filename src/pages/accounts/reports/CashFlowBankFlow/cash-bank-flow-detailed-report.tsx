@@ -113,7 +113,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "debit",
-      caption: t("inFlowhj"),
+      caption: t("inFlow"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -132,11 +132,11 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
             balance == null|| balance==0
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * parseFloat(balance) ) 
+              ? getFormattedValue(-1 *balance) 
                 : getFormattedValue(balance);
           return exportCell != undefined ? {
             ...exportCell,
-            text:cellInfo.value,
+            text:value,
             bold: true,
             alignment: "right",
             alignmentExcel:{ horizontal: 'right' },
@@ -177,11 +177,11 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
           balance == null|| balance==0
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * parseFloat(balance) ) 
-                : getFormattedValue(balance);
+              ? getFormattedValue(-1 * balance)  
+              : getFormattedValue(balance);
           return exportCell != undefined ? {
             ...exportCell,
-            text:cellInfo.value,
+            text:value,
             bold: true,
             alignment: "right",
             alignmentExcel:{ horizontal: 'right' },
@@ -221,10 +221,10 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
           const value =
             balance == null
               ? ""
-              :getFormattedValue(parseFloat(balance) ) ;
+              :getFormattedValue(balance) ;
           return exportCell != undefined ? {
             ...exportCell,
-            text:cellInfo.value,
+            text:value,
             bold: true,
             alignment: "right",
             alignmentExcel:{ horizontal: 'right' },

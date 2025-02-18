@@ -133,7 +133,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
         exportCell: any
       ) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.particulars;
+          const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
             balance == null
@@ -223,7 +223,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
         exportCell: any
       ) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.credit;
+          const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
           const value =
             balance == null

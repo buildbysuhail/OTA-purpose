@@ -77,6 +77,14 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 250,
       showInPdf: true,
+      //  cellRender: (
+      //                           cellElement: any,
+      //                           cellInfo: any,
+      //                           filter: any,
+      //                           exportCell: any
+      //                         ) => {
+      //                            return  (cellElement.data.amount==null||cellElement.data.amount==0?"":getFormattedValue(amount)) ; // Ensures proper formatting
+      //                         }
     },
     {
       dataField: "discount",

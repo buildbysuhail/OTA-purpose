@@ -40,14 +40,7 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 130,
       showInPdf: true,
-        cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                        }
+       format:"dd-MMM-yyyy"
     },
     {
       dataField: "modifiedDate",
@@ -57,15 +50,16 @@ const AccountsHistoryReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
+        format:"dd-MMM-yyyy"
     },
-    // {
-    //   dataField: "timeStamp",
-    //   caption: t("time"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 120,
-    // },
+    {
+      dataField: "timeStamp",
+      caption: t("time"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
     {
       dataField: "vchNo",
       caption: t("voucher_no"),

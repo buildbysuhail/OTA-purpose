@@ -58,7 +58,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                         {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
                           <span className=" fixed ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
                             <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
-                            <CirclePlus className="hover:text-[#ffffffa1] hover:w-[26px] hover:h-[26px]" />
+                            <CirclePlus className="text-[#ffffffa1]  hover:text-white hover:w-[26px] hover:h-[26px]" />
                               {/* <i className="side-menu__icon">
                                 <route.icon />
                               </i> */}

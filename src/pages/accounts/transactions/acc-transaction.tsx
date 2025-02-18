@@ -87,6 +87,7 @@ import HistorySidebar from "./historySidebar";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 import UnsavedChangesModal from "./unsavedChangesModal";
+import PartySelectionModal from "./party-selection-modal";
 interface BilledItem {
   id?: number;
   name: string;
@@ -376,7 +377,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             })
           );
 
-        
+
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -1324,6 +1325,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
+  const [isPartySelectionModalOpen, setIsPartySelectionModalOpen] = useState(false);
 
   const handleHistoryClick = async () => {
     try {
@@ -2784,25 +2786,31 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             formState.formElements.pnlMasters?.disabled
                           }
                         />
+                        
                         <button
-                        onClick={
-                          () => {
-                            dispatch(
-                              accFormStateHandleFieldChange({
-                                fields: { showPartySelection: true },
-                              })
-                            );
-                          }
-                        }
-                         className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors">
+                          onClick={() => {
+                            dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }));
+                            setIsPartySelectionModalOpen(true);
+                          }}
+                          className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors">
                           <Search className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                         </button>
+
+                        {isPartySelectionModalOpen && (
+                          <ERPModal
+                            isOpen={isPartySelectionModalOpen}
+                            closeModal={() => setIsPartySelectionModalOpen(false)}
+                            width="w-full max-w-[600px]"
+                            title="Party Selection"
+                            content={<PartySelectionModal />}
+                          />
+                        )}
                       </div>
                       <ERPInput
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="taxNo"
                         label={t("tax_no")}
-                        className="max-w-[110px]"
+                        className="max-w-[150px]"
                         value={formState.row.taxNo}
                         onChange={(e) =>
                           dispatch(
@@ -2877,7 +2885,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         id="taxPerc"
                         type="number"
                         label={t("tax%")}
-                        className="max-w-[150px]"
+                        className="max-w-[65px]"
                         value={formState.row.taxPerc}
                         onChange={(e) => {
                           const taxPerc = e.target?.value != "" ? parseFloat(e.target?.value) : 0
@@ -2900,7 +2908,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         id="taxAmount"
                         type="number"
                         label={t("tax_amount")}
-                        className="max-w-[150px]"
+                        className="max-w-[100px]"
                         value={formState.row.taxAmount}
                         onChange={(e) =>
                           dispatch(

@@ -200,5 +200,6 @@
   "upload_image": "تحميل الصورة",
   "crop_image": "قص الصورة",
 
-  "select": "اختر"
+  "select": "اختر",
+  "shortkey_settings": "إعدادات الاختصارات"
 }

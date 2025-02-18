@@ -1,19 +1,5 @@
-import React, {
-  forwardRef,
-  memo,
-  KeyboardEvent,
-  useEffect,
-  useState,
-  cloneElement,
-} from "react";
-import {
-  TextField,
-  InputAdornment,
-  TextFieldProps,
-  Theme,
-  SxProps,
-  Typography,
-} from "@mui/material";
+import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement, } from "react";
+import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, Typography } from "@mui/material";
 import { setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
@@ -23,9 +9,7 @@ import { inputBox } from "../../redux/slices/app/types";
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) =>
-  validation != undefined && validation != null && validation != "" ? (
-    <div className="text-red text-xs">{validation}</div>
-  ) : null;
+  validation != undefined && validation != null && validation != "" ? (<div className="text-red text-xs">{validation}</div>) : null;
 
 type ERPInputBaseProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -151,7 +135,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
-
     const inputBoxState = React.useMemo(() => {
       return localInputBox || appState?.inputBox;
     }, [localInputBox, appState?.inputBox]);
@@ -165,21 +148,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         input.setAttribute("autocorrect", "off");
       });
     }, []);
-    const [_customSize, setCustomSize] = useState(
-      customSize ? customSize : inputBoxState?.inputSize
-    );
+    const [_customSize, setCustomSize] = useState(customSize ? customSize : inputBoxState?.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
-    const [_variant, set_variant] = useState<
-      "filled" | "outlined" | "standard" | undefined
-    >(variant === "normal" ? undefined : variant);
+    const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(variant === "normal" ? undefined : variant);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
       if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
@@ -189,16 +166,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         const value = e.target.value;
         if (/^\d*$/.test(value)) {
           onChangeData &&
+            data &&
+            onChangeData(setNestedValue(data, id, e.target?.value));
+          onChange && onChange(e);
+        }
+      }
+      else {
+        onChangeData &&
           data &&
           onChangeData(setNestedValue(data, id, e.target?.value));
         onChange && onChange(e);
-        }
-      }
-      else{
-      onChangeData &&
-        data &&
-        onChangeData(setNestedValue(data, id, e.target?.value));
-      onChange && onChange(e);
       }
     };
 
@@ -213,12 +190,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         ? isFocused == true || isHovered == true
           ? "#ffffff"
           : "#ffffff1a"
-        : `${
-            isFocused || isHovered
-              ? `rgb(${inputBoxState?.borderFocus})`
-              : `rgb(${inputBoxState?.borderColor})`
-          } `
+        : `${isFocused || isHovered
+          ? `rgb(${inputBoxState?.borderFocus})`
+          : `rgb(${inputBoxState?.borderColor})`
+        } `
     );
+
     const [bgColor, setBgColor] = useState<string>(
       appState.mode == "dark"
         ? isFocused == true
@@ -241,8 +218,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         bgCol = isFocused
           ? `rgb(${inputBoxState?.focusBgColor})`
           : inputBoxState?.inputBgColor
-          ? `rgb(${inputBoxState?.inputBgColor})`
-          : "";
+            ? `rgb(${inputBoxState?.inputBgColor})`
+            : "";
       }
       setBorderStyles(border);
       setBgColor(bgCol);
@@ -278,11 +255,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       if (!text) return null;
       return text.includes("/n")
         ? text.split("/n").map((line, index) => (
-            <React.Fragment key={index}>
-              {line}
-              <br />
-            </React.Fragment>
-          ))
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))
         : text;
     }
 
@@ -309,7 +286,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       const commonMuiStyles = {
         margin: "0",
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-        fontWeight: boldInput || inputBoxState?.bold ? 700:400,
+        fontWeight: boldInput || inputBoxState?.bold ? 700 : 400,
         color:
           appState?.mode == "dark"
             ? "#ffffff"
@@ -345,16 +322,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               : `rgb(${inputBoxState?.borderFocus})`,
         },
         "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
-          {
-            borderBottomColor:
-              appState?.mode == "dark"
-                ? "#ffffff"
-                : `rgb(${inputBoxState?.borderFocus})`,
-          },
+        {
+          borderBottomColor:
+            appState?.mode == "dark"
+              ? "#ffffff"
+              : `rgb(${inputBoxState?.borderFocus})`,
+        },
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
-          {
-            padding: "0 0.75rem",
-          },
+        {
+          padding: "0 0.75rem",
+        },
       };
 
       switch (_customSize) {
@@ -372,22 +349,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
                     : inputBoxState?.labelColor
-                    ? `rgb(${inputBoxState?.labelColor})`
-                    : "rgb(84,84,84)",
+                      ? `rgb(${inputBoxState?.labelColor})`
+                      : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
                     ? "translate(8px, 14px) scale(1)"
                     : _variant === "standard"
-                    ? "translate(0, 10px) scale(1)"
-                    : "translate(8px, 10px) scale(1)",
+                      ? "translate(0, 10px) scale(1)"
+                      : "translate(8px, 10px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
                     ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.90)"
-                    : "translate(13px, -6px) scale(0.80)",
+                      ? "translate(0, -6px) scale(0.90)"
+                      : "translate(13px, -6px) scale(0.80)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -413,22 +390,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
                     : inputBoxState?.labelColor
-                    ? `rgb(${inputBoxState?.labelColor})`
-                    : "rgb(84,84,84)",
+                      ? `rgb(${inputBoxState?.labelColor})`
+                      : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
                     ? "translate(10px, 18px) scale(1)"
                     : _variant === "standard"
-                    ? "translate(0, 13px) scale(1)"
-                    : "translate(10px, 13px) scale(1)",
+                      ? "translate(0, 13px) scale(1)"
+                      : "translate(10px, 13px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
                     ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.90)"
-                    : "translate(12px, -8px) scale(0.90)",
+                      ? "translate(0, -6px) scale(0.90)"
+                      : "translate(12px, -8px) scale(0.90)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -454,22 +431,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
                     : inputBoxState?.labelColor
-                    ? `rgb(${inputBoxState?.labelColor})`
-                    : "rgb(84,84,84)",
+                      ? `rgb(${inputBoxState?.labelColor})`
+                      : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
                     ? "translate(10px, 21px) scale(1)"
                     : _variant === "standard"
-                    ? "translate(0, 15px) scale(1)"
-                    : "translate(10px, 15px) scale(1)",
+                      ? "translate(0, 15px) scale(1)"
+                      : "translate(10px, 15px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
                     ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
-                    ? "translate(1px,-6px) scale(0.90)"
-                    : "translate(15px, -9px) scale(0.90)",
+                      ? "translate(1px,-6px) scale(0.90)"
+                      : "translate(15px, -9px) scale(0.90)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -488,7 +465,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 height: `${inputBoxState?.inputHeight ?? 3}rem`,
                 fontSize: `${inputBoxState?.fontSize ?? 16}px`,
                 ...commonMuiStyles,
-                fontWeight: boldInput || inputBoxState?.bold  ? 700: inputBoxState?.fontWeight ?? 500,
+                fontWeight: boldInput || inputBoxState?.bold ? 700 : inputBoxState?.fontWeight ?? 500,
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
@@ -496,33 +473,27 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   appState?.mode === "dark"
                     ? "rgb(225,224,224)"
                     : inputBoxState?.labelColor
-                    ? `rgb(${inputBoxState?.labelColor})`
-                    : "rgb(84,84,84)",
+                      ? `rgb(${inputBoxState?.labelColor})`
+                      : "rgb(84,84,84)",
                 transform:
                   _variant === "filled"
-                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                        inputBoxState?.adjustB ?? 20
-                      }px) scale(1)`
+                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 20
+                    }px) scale(1)`
                     : _variant === "standard"
-                    ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                        inputBoxState?.adjustB ?? 15
+                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 15
                       }px) scale(1)`
-                    : `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                        inputBoxState?.adjustB ?? 12
+                      : `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 12
                       }px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? `translate(${inputBoxState?.adjustC ?? 8}px, ${
-                        inputBoxState?.adjustD ?? -1
-                      }px) scale(0.88)`
+                    ? `translate(${inputBoxState?.adjustC ?? 8}px, ${inputBoxState?.adjustD ?? -1
+                    }px) scale(0.88)`
                     : _variant === "standard"
-                    ? `translate(${inputBoxState?.adjustC ?? 1}px, ${
-                        inputBoxState?.adjustD ?? -6
+                      ? `translate(${inputBoxState?.adjustC ?? 1}px, ${inputBoxState?.adjustD ?? -6
                       }px) scale(0.88)`
-                    : `translate(${inputBoxState?.adjustC ?? 15}px, ${
-                        inputBoxState?.adjustD ?? -9
+                      : `translate(${inputBoxState?.adjustC ?? 15}px, ${inputBoxState?.adjustD ?? -9
                       }px) scale(0.88)`,
               },
             } as SxProps<Theme>,
@@ -548,7 +519,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       value: value === undefined ? "" : value,
       defaultValue,
       onChange: handleChange,
-      onFocus,
+      onFocus: (e: React.FocusEvent<HTMLInputElement, Element>) => {
+        setIsFocused(true);
+        e.target.select(); // Select the text when the input gains focus
+        onFocus && onFocus(e);
+      },
       onBlur,
       pattern: type == "number" ? "[0-9]*" : undefined,
       type:
@@ -587,23 +562,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   style={{
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                          borderTopLeftRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                          borderBottomLeftRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                        }
+                      }
                       : {
-                          borderTopRightRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                          borderBottomRightRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                        }),
-                  }}
-                >
+                      }),
+                  }}>
                   <button
                     type="button"
                     className="flex items-center justify-center h-1/2 w-6 focus:outline-none"
@@ -620,24 +590,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "up",
                         } as any;
-                        
+
                         handleChange(event);
                       }
                     }}
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderTopLeftRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }
+                        }
                         : {
-                            borderTopRightRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }),
-                    }}
-                  >
+                        }),
+                    }}>
                     <ChevronUp className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
                   </button>
                   <button
@@ -656,24 +623,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "down",
                         } as any;
-                        
+
                         handleChange(event);
                       }
                     }}
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderBottomLeftRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }
+                        }
                         : {
-                            borderBottomRightRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }),
-                    }}
-                  >
+                        }),
+                    }}>
                     <ChevronDown className="h-3 w-3 text-black hover:text-gray-500 transition-transform duration-200" />
                   </button>
                 </div>
@@ -706,9 +670,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             color: "#606060 !important",
           },
           "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-            {
-              appearance: "none",
-            },
+          {
+            appearance: "none",
+          },
           "& input[type=number]": {
             appearance: "textfield",
           },
@@ -727,8 +691,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           style={{
             marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
-          }}
-        >
+          }}>
           <TextField {...muiProps} />
           {validation != undefined &&
             validation != null &&
@@ -748,81 +711,73 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     if (_useMUI == undefined || _useMUI == false) {
       return (
         <div
-          className={`${className} ${
-            labelDirection === "vertical"
-              ? "flex flex-col space-y-1"
-              : "flex items-center space-x-2"
-          }`}
+          className={`${className} ${labelDirection === "vertical"
+            ? "flex flex-col space-y-1"
+            : "flex items-center space-x-2"
+            }`}
           style={{
             marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
             marginTop: `${inputBoxState?.marginTop ?? 0}px`,
-          }}
-        >
+          }}>
           {!noLabel && (
             <div className="flex justify-between">
               <label
-                className={`capitalize text-left rtl:text-right dark:!text-dark-label ${
-                  appState?.mode == "dark"
-                    ? "#000"
-                    : `rgb(${inputBoxState?.labelColor})`
-                } ${labelClassName}`}
+                className={`capitalize text-left rtl:text-right dark:!text-dark-label ${appState?.mode == "dark"
+                  ? "#000"
+                  : `rgb(${inputBoxState?.labelColor})`
+                  } ${labelClassName}`}
                 style={{
                   fontSize: _customSize
                     ? _customSize === "sm"
                       ? "12px"
                       : _customSize === "md"
-                      ? "14px"
-                      : _customSize === "lg"
-                      ? "16px"
-                      : `${inputBoxState?.labelFontSize}px`
+                        ? "14px"
+                        : _customSize === "lg"
+                          ? "16px"
+                          : `${inputBoxState?.labelFontSize}px`
                     : "14px",
                   color:
                     appState?.mode === "dark"
                       ? "rgb(225,224,224)"
                       : inputBoxState?.labelColor
-                      ? `rgb(${inputBoxState?.labelColor})`
-                      : "rgb(84,84,84)",
+                        ? `rgb(${inputBoxState?.labelColor})`
+                        : "rgb(84,84,84)",
                   transform:
                     _customSize === "customize"
-                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                          inputBoxState?.adjustB ?? 10
-                        }px) scale(1)`
+                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 10
+                      }px) scale(1)`
                       : ``,
-                }}
-              >
+                }} >
                 {`${iLabel} ${labelDirection === "horizontal" ? ":" : ""}`}
                 <span className="dark:text-red text-red">
                   {required && !noLabel && "*"}
                 </span>
               </label>
               <label
-                className={`capitalize block text-right rtl:text-left ${
-                  appState?.mode == "dark" ? "form-label" : ""
-                }`}
+                className={`capitalize block text-right rtl:text-left ${appState?.mode == "dark" ? "form-label" : ""
+                  }`}
                 style={{
                   fontSize: _customSize
                     ? _customSize === "sm"
                       ? "12px"
                       : _customSize === "md"
-                      ? "14px"
-                      : _customSize === "lg"
-                      ? "16px"
-                      : `${inputBoxState?.labelFontSize}px`
+                        ? "14px"
+                        : _customSize === "lg"
+                          ? "16px"
+                          : `${inputBoxState?.labelFontSize}px`
                     : "14px",
                   color:
                     appState?.mode === "dark"
                       ? "rgb(225,224,224)"
                       : inputBoxState?.labelColor
-                      ? `rgb(${inputBoxState?.labelColor})`
-                      : "rgb(84,84,84)",
+                        ? `rgb(${inputBoxState?.labelColor})`
+                        : "rgb(84,84,84)",
                   transform:
                     _customSize === "customize"
-                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                          inputBoxState?.adjustB ?? 10
-                        }px) scale(1)`
+                      ? `translate(${inputBoxState?.adjustA ?? 10}px, ${inputBoxState?.adjustB ?? 10
+                      }px) scale(1)`
                       : ``,
-                }}
-              >
+                }}  >
                 {labelInfo &&
                   cloneElement(
                     labelInfo,
@@ -832,28 +787,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             </div>
           )}
 
-          <div
-            className={`flex ${
-              labelDirection === "vertical" ? "" : "basis-2/3"
-            }`}
-          >
+          <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`} >
             {prefix && (
               <div
                 onClick={onClickPrefix}
-                className={`${
-                  onClickPrefix && "cursor-pointer"
-                } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100 ${
-                  disabled ? "border-dashed" : ""
-                }`}
-                style={{
-                  height,
-                  fontSize,
-                  fontWeight,
-                  color,
-                  borderColor: borderStyles,
-                  backgroundColor: bgColor,
-                }}
-              >
+                className={`${onClickPrefix && "cursor-pointer"
+                  } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border dark:!bg-dark-bg-card bg-slate-100 ${disabled ? "border-dashed" : ""
+                  }`}
+                style={{ height, fontSize, fontWeight, color, borderColor: borderStyles, backgroundColor: bgColor, }}>
                 {prefix}
               </div>
             )}
@@ -866,12 +807,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onFocus={(e) => {
+                  e.target.select();
                   setIsFocused(true);
-
                   e.target.setAttribute("autocomplete", "off");
                   e.target.setAttribute("readonly", "true");
                   setTimeout(() => e.target.removeAttribute("readonly"), 100);
-
                   onFocus && onFocus(e);
                 }}
                 onBlur={(e) => {
@@ -886,22 +826,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   borderColor: borderStyles,
                   outline: "none",
                   transition: "border-color 0.2s ease-in-out",
-                  borderTopLeftRadius: `${
-                    !prefix ? inputBoxState?.borderRadius : 0
-                  }px`,
-                  borderBottomLeftRadius: `${
-                    !prefix ? inputBoxState?.borderRadius : 0
-                  }px`,
-                  borderTopRightRadius: `${
-                    !suffix && type !== "number"
-                      ? inputBoxState?.borderRadius
-                      : 0
-                  }px`,
-                  borderBottomRightRadius: `${
-                    !suffix && type !== "number"
-                      ? inputBoxState?.borderRadius
-                      : 0
-                  }px`,
+                  borderTopLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0
+                    }px`,
+                  borderBottomLeftRadius: `${!prefix ? inputBoxState?.borderRadius : 0
+                    }px`,
+                  borderTopRightRadius: `${!suffix && type !== "number"
+                    ? inputBoxState?.borderRadius
+                    : 0
+                    }px`,
+                  borderBottomRightRadius: `${!suffix && type !== "number"
+                    ? inputBoxState?.borderRadius
+                    : 0
+                    }px`,
                   backgroundColor: bgColor,
                   textAlign: type === "number" ? "right" : "left",
                   paddingRight:
@@ -910,12 +846,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       : undefined,
                   ...(!prefix &&
                     !suffix && {
-                      borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-                    }),
+                    borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
+                  }),
                 }}
-                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                  disabled ? "border-dashed !#606060" : ""
-                }`}
+                className={`form-control ${inputClassName} dark:!bg-dark-bg-card placeholder:capitalize [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${disabled ? "border-dashed !#606060" : ""
+                  }`}
                 onWheel={(e) => {
                   if (type === "number") {
                     e.preventDefault();
@@ -950,23 +885,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     //     : "#f9f9f9",
                     ...(document.documentElement.dir === "rtl"
                       ? {
-                          borderTopLeftRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                          borderBottomLeftRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                        }
+                      }
                       : {
-                          borderTopRightRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                          borderBottomRightRadius: `${
-                            inputBoxState?.borderRadius ?? 5
+                        borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
                           }px`,
-                        }),
-                  }}
-                >
+                      }),
+                  }}>
                   <button
                     type="button"
                     className="flex items-center justify-center h-1/2 w-6 dark:bg-dark-combo-dd dark:hover:bg-dark-hover-bg bg-[#f9f9f9] hover:bg-gray-100 focus:outline-none"
@@ -983,24 +913,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "up",
                         } as any;
-                        
+
                         handleChange(event);
                       }
                     }}
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderTopLeftRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderTopLeftRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }
+                        }
                         : {
-                            borderTopRightRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderTopRightRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }),
-                    }}
-                  >
+                        }),
+                    }}>
                     <ChevronUp className="h-4 w-4 text-gray-400 hover:text-gray-500 transition-transform duration-200" />
                   </button>
                   <button
@@ -1019,24 +946,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "down",
                         } as any;
-                        
+
                         handleChange(event);
                       }
                     }}
                     style={{
                       ...(document.documentElement.dir === "rtl"
                         ? {
-                            borderBottomLeftRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderBottomLeftRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }
+                        }
                         : {
-                            borderBottomRightRadius: `${
-                              inputBoxState?.borderRadius ?? 5
+                          borderBottomRightRadius: `${inputBoxState?.borderRadius ?? 5
                             }px`,
-                          }),
-                    }}
-                  >
+                        }),
+                    }}>
                     <ChevronDown className="h-4 w-4  text-gray-400 hover:text-gray-500 transition-transform duration-200" />
                   </button>
                 </div>
@@ -1045,11 +969,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {suffix && (
               <div
                 onClick={onClickSuffix}
-                className={`border border-gray-400 ${
-                  onClickSuffix && "cursor-pointer"
-                } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100 ${
-                  disabled ? "border-dashed" : ""
-                }`}
+                className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
+                  } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100 ${disabled ? "border-dashed" : ""
+                  }`}
                 style={{
                   height,
                   fontSize,
@@ -1058,8 +980,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   backgroundColor: isFocused
                     ? `rgb(${inputBoxState?.focusBgColor})`
                     : `rgb(${inputBoxState?.defaultBgColor})`,
-                }}
-              >
+                }}>
                 {suffix}
               </div>
             )}

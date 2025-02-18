@@ -1,11 +1,11 @@
-import { ChatBubbleLeftEllipsisIcon, ClipboardDocumentListIcon, CommandLineIcon, CreditCardIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftEllipsisIcon, ClipboardDocumentListIcon, CreditCardIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
 import {
   toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfileIndiaPopup, toggleCompanyProfilePopup,
   toggleDayClosePopup, toggleDeleteInactiveTransactionPopup, toggleExchangeRatesPopup, toggleHeaderFooterPopup, toggleHideAccLedger, toggleImportExportPopup, toggleRefreshAllBranches,
   toggleResetBranchDataForSync, toggleResetDataBasePopup, toggleTestPopup, toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
-import { Barcode, BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartBar, ChartNoAxesCombined, CircleDollarSign, CircleUserRound, ClipboardMinus, Cog, Component, Crown, CrownIcon, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MonitorCog, QrCode, RefreshCw, Repeat2, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
-
+import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
   // {
   //   menutitle: 'Settings',
@@ -132,7 +132,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/reminders`, type: 'link', active: false, selected: false, title: 'reminders', icon: BellRing },
       { path: `${import.meta.env.BASE_URL}settings/_/system/user-actions`, type: 'link', active: false, selected: false, title: 'user_action_report', icon: ClipboardMinus },
       { action: toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
-      { action: toggleRefreshAllBranches, type: 'popup', active: false, selected: false, title: 'refresh_all_branches' },
+      { action: toggleRefreshAllBranches, type: 'popup', active: false, selected: false, title: 'refresh_all_branches', icon: RefreshCw },
       { action: toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
       { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications', icon: RotateCcw },
@@ -155,14 +155,14 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration', icon: ChatBubbleLeftEllipsisIcon },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration', icon: FaWhatsapp },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration', icon: Mail },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/account_group_test`, type: 'link', active: false, selected: false, title: 'Account Group test' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/shortkeys_settings`, type: 'link', active: false, selected: false, title: 'Shortkeys Settings', icon: Layers2 },
-      { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/integration/test-input-button`, type: 'link', active: false, selected: false, title: 'Test Input Button' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/integration/account_group_test`, type: 'link', active: false, selected: false, title: 'Account Group test' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/shortkeys_settings`, type: 'link', active: false, selected: false, title: 'shortkey_settings', icon: Layers2 },
+      // { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 
     ]
   },

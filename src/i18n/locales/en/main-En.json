@@ -200,5 +200,6 @@
     "upload_image":"Upload image",
     "crop_image":"Crop image",
 
-    "select":"Select"
+    "select":"Select",
+    "shortkey_settings":"Shortkey settings"
 }

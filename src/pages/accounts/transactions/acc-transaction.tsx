@@ -2786,7 +2786,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             formState.formElements.pnlMasters?.disabled
                           }
                         />
-                        
+
                         <button
                           onClick={() => {
                             dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }));

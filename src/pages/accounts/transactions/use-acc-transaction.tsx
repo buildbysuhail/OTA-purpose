@@ -185,7 +185,7 @@ export const useAccTransaction = (
     }
   };
   const focusTaxableAmount = () => {
-    debugger;
+    
     if (taxableAmountRef.current) {
       taxableAmountRef.current?.select();
       taxableAmountRef.current?.focus();
@@ -239,7 +239,7 @@ export const useAccTransaction = (
       //   //     : parseFloat(
       //   //       formState.transaction.master.voucherNumber.toString()
       //   //     ) + 1;
-      debugger;
+      
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -258,7 +258,7 @@ export const useAccTransaction = (
       // }
       return false;
     }
-    debugger;
+    
     if (setVoucherNo) {
       // dispatch(
       //   accFormStateHandleFieldChange({
@@ -285,7 +285,7 @@ export const useAccTransaction = (
       accTransactionMasterID
     );
 
-    debugger;
+    
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -388,7 +388,7 @@ export const useAccTransaction = (
       `${Urls.acc_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
-    debugger;
+    
 
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
@@ -1156,7 +1156,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr;

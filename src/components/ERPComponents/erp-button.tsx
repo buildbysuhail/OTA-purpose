@@ -127,7 +127,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         onFocus={(e) => setIsFocused(true)}
         onBlur={(e) => setIsFocused(false)}
         onKeyDown={(e) => {
-          debugger;
+          
           if (disableEnterNavigation) {
             if (onKeyDown) {
               console.log(e);

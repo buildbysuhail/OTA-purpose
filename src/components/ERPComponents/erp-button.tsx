@@ -15,9 +15,11 @@ type ERPButtonProps = {
    localInputBox?: inputBox;
   title?: string;
   disabled?: boolean;
+  disableEnterNavigation?: boolean;
   loading?: boolean;
   startIcon?: React.ReactNode;
   onClick?: () => void;
+  onKeyDown?: (e: any) => void;
   className?: string;
   customVariant?: string;
   variant?: "primary" | "secondary" | "custom" | "status";
@@ -39,6 +41,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       loading,
       startIcon,
       onClick,
+      onKeyDown,
       className = "",
       customVariant,
       variant = "secondary",
@@ -49,6 +52,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
       skip = false,
       jumpTo,
       jumpTarget,
+      disableEnterNavigation = false,
       localInputBox,
       ...props
     },
@@ -122,7 +126,18 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         onClick={onClick}
         onFocus={(e) => setIsFocused(true)}
         onBlur={(e) => setIsFocused(false)}
-        onKeyDown={handleNavigation}
+        onKeyDown={(e) => {
+          debugger;
+          if (disableEnterNavigation) {
+            if (onKeyDown) {
+              console.log(e);
+              
+              onKeyDown(e);
+            }
+          } else {
+            // handleNavigation(null);
+          }
+        }}
         data-skip={skip}
         data-jump-to={jumpTo}
         data-jump-target={jumpTarget}

@@ -164,6 +164,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const narrationRef = useRef<HTMLInputElement>(null); // Example for a textarea
   const erpGridRef = useRef<any>(null); // Reference to ERPDevGrid
   const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
+  const taxableAmountRef = useRef<HTMLInputElement>(null);
+  const partyNameRef = useRef<HTMLInputElement>(null);
+  const refNoRef = useRef<HTMLInputElement>(null);
 
   const [showValidation, setShowValidation] = useState(false);
   const onSelectionChanged = (
@@ -237,7 +240,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
+    focusRefNo,
     showBillwise,
+    billWiseExcludedTransactions
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -251,7 +256,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     narrationRef,
     voucherNumberRef,
     chequeNumberRef,
-    remarksRef
+    remarksRef,    
+    partyNameRef,
+    taxableAmountRef,
+    refNoRef
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -389,6 +397,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             accFormStateRowHandleFieldChange({
               fields: {
                 ledgerCode: ledgerData?.ledgerCode,
+                partyName: formState.isTaxOnExpense && ledgerData != null ? ledgerData.partyName : "",
+                taxNo: formState.isTaxOnExpense && ledgerData != null ? ledgerData.taxNo : ""
               },
             })
           );
@@ -582,10 +592,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           transactionMasterID
         );
       }
-      // const ledgerData = await api.getAsync(
-      //   `${Urls.ledgerDataForTransaction}?LedgerId=${_formState.row.ledgerID}&DrCr=${_formState.transaction.master.drCr}`
-      // );
-      // _formState.row.ledgerCode = ledgerData.ledgerCode;
+      _formState.isTaxOnExpense = ["TXP",
+        "CPT",
+        "BPT",
+        "CNT",
+        "EXP",
+        "CRT",
+        "BRT",
+        "DNT",
+        "INC"].includes(_formState.transaction.master.voucherType);
 
       let fieldsToUpdate = {
         ...initialFormElements,
@@ -932,11 +947,61 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           };
           break;
         }
+        case "TXP": {
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...fieldsToUpdate.masterAccount,
+              label: t("cash_bank_account"),
+              visible: true,
+              accLedgerType: LedgerType.Cash_Bank_Suppliers_Customers,
+            },
+            employee: {
+              ...fieldsToUpdate.employee,
+              label: t("paid_by"),
+            },
+            narration: {
+              ...fieldsToUpdate.narration,
+            },
+            discount: {
+              ...fieldsToUpdate.discount,
+              visible: true,
+            },
+            costCentreID: {
+              ...fieldsToUpdate.costCentreID,
+              visible: true,
+              // applicationSettings?.accountsSettings?.maintainCostCenter ===
+              // true,
+            },
+            bankName: {
+              ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: false,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
+          };
+          break;
+        }
       }
       _formState.formElements = fieldsToUpdate;
 
       setAccTransVoucher(_formState, true);
+      if(_formState.isTaxOnExpense) {
+
+      focusRefNo();
+      } else {
       focusLedgerCode();
+      }
       // Fetch templates asynchronously
     };
 
@@ -2107,6 +2172,7 @@ const [key, setKey] = useState<string>("key");
                       <>
                         <div>
                           <ERPInput
+                          ref={refNoRef}
                             localInputBox={formState?.userConfig?.inputBoxStyle}
                             id="referenceNumber"
                             label={t(
@@ -2601,50 +2667,25 @@ const [key, setKey] = useState<string>("key");
                 )}
 
                 {formState.transaction?.master?.isLocked !== undefined &&
-                  formState.transaction?.master?.isLocked == true &&
+                  formState.transaction?.master?.isLocked == true && formState.isTaxOnExpense != true &&
                   (userSession.userTypeCode == "CA" ||
                     userSession.userTypeCode == "BA") && <>{t("unlock")}</>}
                 <div className="flex items-center gap-2 mt-4">
                   {applicationSettings.accountsSettings
-                    ?.maintainBillwiseAccount == true && (
-                    <ERPButton
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      title={t(formState.formElements.btnBillWise.label)}
-                      variant="secondary"
-                      onClick={showBillwise}
-                      disabled={
-                        formState.ledgerBillWiseLoading ||
-                        formState.formElements.btnBillWise.disabled == true ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                  {formState.formElements.btnAdd.visible == true && (
-                    <>
+                    ?.maintainBillwiseAccount == true && billWiseExcludedTransactions.includes(formState.transaction.master.voucherType) == false && (
                       <ERPButton
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        ref={btnAddRef}
-                        title={t(formState.formElements.btnAdd.label)}
-                        // className="mt-4"
-                        variant="primary"
-                        loading={formState.rowProcessing}
-                        type="button"
-                        onClick={() => addOrEditRow()}
-                        onKeyDown={(e) => {
-                          console.log(`Key:${e.key}`);
-                          if (e.key == "Enter") {
-                            addOrEditRow();
-                          }
-                        }}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                        title={t(formState.formElements.btnBillWise.label)}
+                        variant="secondary"
+                        onClick={showBillwise}
                         disabled={
-                          formState.formElements.btnAdd.disabled == true ||
                           formState.ledgerBillWiseLoading ||
-                          formState.ledgerIsBillWiseAdjustExistLoading ||
+                          formState.formElements.btnBillWise.disabled == true ||
                           formState.formElements.pnlMasters?.disabled
                         }
                       />
-                    </>
-                  )}
+                    )}
+                  
                 </div>
               </div>
             </div>
@@ -2730,6 +2771,165 @@ const [key, setKey] = useState<string>("key");
                         handleKeyDown(e, "bankDate");
                       }}
                     />
+                  )}
+                  {["TXP"].includes(formState.transaction.master.voucherType) && (
+                    <>
+                      <ERPInput
+                      ref={partyNameRef}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="partyName"
+                      label={t("party_name")}
+                      value={formState.row.partyName}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { partyName: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                      <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="taxNo"
+                      label={t("tax_no")}
+                      value={formState.row.taxNo}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { taxNo: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                      <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="taxInvoiceNo"
+                      label={t("tax_invoice_no")}
+                      value={formState.row.taxInvoiceNo}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { taxInvoiceNo: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                    <ERPDateInput
+                      localInputBox={formState.userConfig?.inputBoxStyle}
+                      id="invoiceDate"
+                      label={t("invoice_date")}
+                      value={new Date(formState.row.invoiceDate)}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { invoiceDate: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                      disableEnterNavigation
+                      onKeyDown={(e) => {
+                        debugger;
+                        handleKeyDown(e, "invoiceDate");
+                      }}
+                    />
+                      <ERPInput
+                    ref={taxableAmountRef}
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="taxableAmount"
+                      type="number"
+                      label={t("taxable_amount")}
+                      value={formState.row.taxableAmount}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { taxableAmount: e.target?.value != "" ? parseFloat(e.target?.value) : "" },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                      <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="taxPerc"
+                      type="number"
+                      label={t("tax%")}
+                      value={formState.row.taxPerc}
+                      onChange={(e) =>
+                      {
+                        const taxPerc = e.target?.value != "" ? parseFloat(e.target?.value) : 0
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { taxPerc: e.target?.value != "" ? parseFloat(e.target?.value) : "",
+                              taxAmount:(formState.row.taxableAmount??0)*(taxPerc/100)
+                             },
+                          })
+                        )
+                      }
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                      <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="taxAmount"
+                      type="number"
+                      label={t("tax_amount")}
+                      value={formState.row.taxAmount}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { taxAmount: e.target?.value != "" ? parseFloat(e.target?.value) : "" },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                    </>
+                   )}
+                   {formState.formElements.btnAdd.visible == true && (
+                    <>
+                      <ERPButton
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                        ref={btnAddRef}
+                        title={t(formState.formElements.btnAdd.label)}
+                        // className="mt-4"
+                        variant="primary"
+                        loading={formState.rowProcessing}
+                        type="button"
+                        onClick={() => addOrEditRow()}
+                        disableEnterNavigation
+                        onKeyDown={(e) => {
+                          debugger;
+                          if (e.key == "Enter") {
+                            addOrEditRow();
+                          }
+                        }}
+                        disabled={
+                          formState.formElements.btnAdd.disabled == true ||
+                          formState.ledgerBillWiseLoading ||
+                          formState.ledgerIsBillWiseAdjustExistLoading ||
+                          formState.formElements.pnlMasters?.disabled
+
+                        }
+                      />
+                    </>
                   )}
                 </>
               </div>

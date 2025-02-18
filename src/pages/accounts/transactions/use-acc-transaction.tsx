@@ -81,7 +81,8 @@ export const useAccTransaction = (
   chequeNumberRef?: any,
   remarksRef?: any,
   partyNameRef?: any,
-  taxableAmountRef?: any
+  taxableAmountRef?: any,
+  refNoRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -136,6 +137,14 @@ export const useAccTransaction = (
       setTimeout(() => {
         ledgerCodeRef.current.select();
         ledgerCodeRef.current.focus();
+      }, 0);
+    }
+  };
+  const focusRefNo = () => {
+    if (refNoRef.current) {
+      setTimeout(() => {
+        refNoRef.current.select();
+        refNoRef.current.focus();
       }, 0);
     }
   };
@@ -1188,7 +1197,7 @@ export const useAccTransaction = (
         if (formState.isRowEdit != true) {
           if (
             (billwiseDetails == undefined || billwiseDetails == null) &&
-            formState.row.billwiseDetails == ""
+            formState.row.billwiseDetails == "" && !formState.isTaxOnExpense
           ) {
             if (formState.IsBillwiseTransAdjustmentExists) {
               dispatch(
@@ -2199,6 +2208,7 @@ export const useAccTransaction = (
     billwiseChanged,
     focusCostCenterRef,
     focusLedgerCode,
+    focusRefNo,
     showBillwise,
     billWiseExcludedTransactions,
   };

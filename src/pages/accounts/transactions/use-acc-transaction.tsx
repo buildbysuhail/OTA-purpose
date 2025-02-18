@@ -104,97 +104,97 @@ export const useAccTransaction = (
   // };
   const focusBtnSave = () => {
     if (btnSaveRef.current) {
-      btnSaveRef.current.focus();
+      btnSaveRef.current?.focus();
     }
   };
   const focusBtnAdd = () => {
     if (btnAddRef.current) {
-      btnAddRef.current.focus();
+      btnAddRef.current?.focus();
     }
   };
   const focusAmount = () => {
     if (amountRef.current) {
-      amountRef.current.select();
-      amountRef.current.focus();
+      amountRef.current?.select();
+      amountRef.current?.focus();
     }
   };
   const focusMasterAccount = () => {
     if (masterAccountRef.current) {
-      masterAccountRef.current.select();
-      masterAccountRef.current.focus();
+      masterAccountRef.current?.select();
+      masterAccountRef.current?.focus();
     }
   };
   const focusCostCenterRef = () => {
     if (costCenterRef.current) {
       setTimeout(() => {
-        costCenterRef.current.select();
-        costCenterRef.current.focus();
+        costCenterRef.current?.select();
+        costCenterRef.current?.focus();
       }, 0);
     }
   };
   const focusLedgerCode = () => {
     if (ledgerCodeRef.current) {
       setTimeout(() => {
-        ledgerCodeRef.current.select();
-        ledgerCodeRef.current.focus();
+        ledgerCodeRef.current?.select();
+        ledgerCodeRef.current?.focus();
       }, 0);
     }
   };
   const focusRefNo = () => {
     if (refNoRef.current) {
       setTimeout(() => {
-        refNoRef.current.select();
-        refNoRef.current.focus();
+        refNoRef.current?.select();
+        refNoRef.current?.focus();
       }, 0);
     }
   };
   const focusLedgerCombo = () => {
     if (ledgerIdRef.current) {
-      ledgerIdRef.current.select();
-      ledgerIdRef.current.focus();
+      ledgerIdRef.current?.select();
+      ledgerIdRef.current?.focus();
     }
   };
   const focusNarration = () => {
     if (narrationRef.current) {
-      narrationRef.current.select();
-      narrationRef.current.focus();
+      narrationRef.current?.select();
+      narrationRef.current?.focus();
     }
   };
   const focusDrCr = () => {
     if (drCrRef.current) {
-      drCrRef.current.select();
-      drCrRef.current.focus();
+      drCrRef.current?.select();
+      drCrRef.current?.focus();
     }
   };
   const focusVoucherNumber = () => {
     if (voucherNumberRef.current) {
-      voucherNumberRef.current.select();
-      voucherNumberRef.current.focus();
+      voucherNumberRef.current?.select();
+      voucherNumberRef.current?.focus();
     }
   };
   const focusChequeNumber = () => {
     if (chequeNumberRef.current) {
-      chequeNumberRef.current.select();
-      chequeNumberRef.current.focus();
+      chequeNumberRef.current?.select();
+      chequeNumberRef.current?.focus();
     }
   };
   const focusRemarks = () => {
     if (remarksRef.current) {
-      remarksRef.current.select();
-      remarksRef.current.focus();
+      remarksRef.current?.select();
+      remarksRef.current?.focus();
     }
   };
   const focusTaxableAmount = () => {
     debugger;
     if (taxableAmountRef.current) {
-      taxableAmountRef.current.select();
-      taxableAmountRef.current.focus();
+      taxableAmountRef.current?.select();
+      taxableAmountRef.current?.focus();
     }
   };
   const focusPartName = () => {
     if (partyNameRef.current) {
-      partyNameRef.current.select();
-      partyNameRef.current.focus();
+      partyNameRef.current?.select();
+      partyNameRef.current?.focus();
     }
   };
 
@@ -1156,6 +1156,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr;

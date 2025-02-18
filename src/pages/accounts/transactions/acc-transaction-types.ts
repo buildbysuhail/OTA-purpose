@@ -474,6 +474,7 @@ export interface AccTransactionFormState {
   billwiseData: BillwiseData[];
   billwiseDrCr: string;
   showbillwise: boolean;
+  showPartySelection: boolean;
   showSaveDialog: boolean;
   accTransDetailsID: number; // AccTransDetailsID
   accTransDetailsIDCr: number; // AccTransDetailsIDCr
@@ -650,7 +651,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
       marginBottom: 6,
       focusForeColor: "128, 128, 128",
       focusBgColor: "255, 255, 255",
-      bold:true
+      bold: true
     }
   },
   isBahamdoonPOSReceipt: false,
@@ -673,7 +674,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   store: undefined,
   templatesData: [],
   transactionType: "",
-  prev: ""
+  prev: "",
+  showPartySelection: false
 }
 export interface PrintTransProps {
   masterAccount: string;

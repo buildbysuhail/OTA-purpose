@@ -376,14 +376,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             })
           );
 
-          dispatch(
-            accFormStateRowHandleFieldChange({
-              fields: {
-                ledgerCode: ledgerData?.ledgerCode,
-                ledgerName: ledgerData?.partyName,
-              },
-            })
-          );
+        
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -398,8 +391,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             accFormStateRowHandleFieldChange({
               fields: {
                 ledgerCode: ledgerData?.ledgerCode,
+                ledgerName: ledgerData?.partyName,
                 partyName: formState.isTaxOnExpense && ledgerData != null ? ledgerData.partyName : "",
-                taxNo: formState.isTaxOnExpense && ledgerData != null ? ledgerData.taxNo : ""
+                taxNo: formState.isTaxOnExpense && ledgerData != null ? ledgerData.taxNumber : ""
               },
             })
           );
@@ -2790,7 +2784,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             formState.formElements.pnlMasters?.disabled
                           }
                         />
-                        <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors">
+                        <button
+                        onClick={
+                          () => {
+                            dispatch(
+                              accFormStateHandleFieldChange({
+                                fields: { showPartySelection: true },
+                              })
+                            );
+                          }
+                        }
+                         className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors">
                           <Search className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                         </button>
                       </div>

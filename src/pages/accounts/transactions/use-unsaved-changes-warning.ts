@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { customJsonParse, modelToBase64 } from '../../../utilities/jsonConverter';
+import { customJsonParse, modelToBase64, modelToBase64Unicode } from '../../../utilities/jsonConverter';
 import { AccTransactionData, AccTransactionRow } from './acc-transaction-types';
 import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 import { useDispatch } from 'react-redux';
@@ -68,7 +68,7 @@ export const useUnsavedChangesWarning = () => {
   
       if (!_prevState || Object.keys(_prevState).length !== 2) return false;
   
-      const base64 = await modelToBase64(currentStateCompare);
+      const base64 = await modelToBase64Unicode(currentStateCompare);
       const isEqual = _formState.prev === base64;
       console.log(`isEqual fgfgdf: ${isEqual}`);
       

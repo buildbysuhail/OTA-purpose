@@ -23,6 +23,7 @@ const IncomExpenseStatement = () => {
       caption: t('accGroupID'),
       dataType: "number",
       allowSearch: true,
+      visible: false,
       allowFiltering: true,
       width: 80,
       showInPdf:true,
@@ -67,6 +68,7 @@ const IncomExpenseStatement = () => {
       dataField: "ledgerID",
       caption: t('ledgerID'),
       dataType: "number",
+      visible: false,
       allowSearch: true,
       allowFiltering: true,
       width: 80,
@@ -163,7 +165,7 @@ const IncomExpenseStatement = () => {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+            balance == null ||balance==0
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * balance)
@@ -204,7 +206,7 @@ const IncomExpenseStatement = () => {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+          balance == null ||balance==0
               ? ""
               : balance < 0
                 ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(-1*balance):getFormattedValue(balance)
@@ -245,7 +247,7 @@ const IncomExpenseStatement = () => {
           const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+          balance == null ||balance==0
               ? ""
               : balance < 0
                 ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(balance)+'Cr' :getFormattedValue(-1*balance)+'Cr'
@@ -270,7 +272,7 @@ const IncomExpenseStatement = () => {
           return ( <span
             className={`${cellElement.data?.accGroupName==="LOSS"?'font-bold text-[#DC143C]': cellElement.data.isGroup?'font-bold text-[#2E8B57]' :cellElement.data.isSubGroup? 'font-bold text-[#DC143C]':''}`}
             >
-              {`${cellElement.data?.balance == null 
+              {`${cellElement.data?.balance == null ||cellElement.data?.balance == 0
                 ? ''
                 : cellElement.data.balance < 0
                   ?cellElement.data?.accGroupName==="LOSS"? getFormattedValue(parseFloat(cellElement.data.balance) ) + ' Cr':getFormattedValue(-1 * parseFloat(cellElement.data.balance) ) + ' Cr'

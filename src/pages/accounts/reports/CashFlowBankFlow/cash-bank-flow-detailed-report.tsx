@@ -38,7 +38,6 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
         let gridHeightWindows = modalHeight - 180; 
         setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
       }, [isMaximized,modalHeight]);
-  
   const columns: DevGridColumn[] = [
     {
       dataField: "transactionDate",
@@ -48,14 +47,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
       allowFiltering: true, 
       width: 100,
       showInPdf:true,
-       cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                          return moment(cellElement.data.transactionDate, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
-                        }
+      format:"dd-MMM-yyyy"
     },
     {
       dataField: "vchNo",
@@ -121,7 +113,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
     },
     {
       dataField: "debit",
-      caption: t("inFlow"),
+      caption: t("inFlowhj"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -137,10 +129,10 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+            balance == null|| balance==0
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+              ? getFormattedValue(-1 * parseFloat(balance) ) 
                 : getFormattedValue(balance);
           return exportCell != undefined ? {
             ...exportCell,
@@ -182,10 +174,10 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+          balance == null|| balance==0
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance) 
+                ? getFormattedValue(-1 * parseFloat(balance) ) 
                 : getFormattedValue(balance);
           return exportCell != undefined ? {
             ...exportCell,
@@ -229,7 +221,7 @@ const CashBankFlowDetailedReport: FC<CashFlowBankFlowDetailedProps> = ({ postDat
           const value =
             balance == null
               ? ""
-              :getFormattedValue(balance) ;
+              :getFormattedValue(parseFloat(balance) ) ;
           return exportCell != undefined ? {
             ...exportCell,
             text:cellInfo.value,

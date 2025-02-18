@@ -104,7 +104,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null
+            balance == null||balance==0
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * balance)
@@ -149,7 +149,6 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
               : balance < 0
                 ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
-
           return {
             ...exportCell,
             text: value,
@@ -167,7 +166,6 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
           return (<span className={`${cellElement.data.ledgerName === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
           </span>)
-
         }
       }
     },
@@ -207,7 +205,6 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
           return (<span className={`${cellElement.data.isGroup == true ? 'font-bold text-[#2E8B57]' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-[#DC143C] text-lg' : ''}`}>
             {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1 * cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr'}`}
           </span>)
-
         }
       }
     },

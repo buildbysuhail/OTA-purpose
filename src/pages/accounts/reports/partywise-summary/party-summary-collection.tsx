@@ -9,12 +9,14 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { PartySummaryFilter } from "./party-summary-master";
 import moment from "moment";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
+    const { getFormattedValue } = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -24,14 +26,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 180,
       showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-      }
+     format:"dd-MMM-yyyy"
     },
     {
       dataField: "form",
@@ -77,6 +72,34 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 250,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.amount;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              : cellElement.data.particulars == "TOTAL"?
+              getFormattedValue(cellElement.data.amount,false,2)
+              : getFormattedValue(cellElement.data.amount)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+        return (cellElement.data.amount == null? "" :cellElement.data.particulars == "TOTAL"?getFormattedValue(cellElement.data.amount,false,2): getFormattedValue(cellElement.data.amount)); // Ensures proper formatting
+      }}
     },
     {
       dataField: "discount",
@@ -86,6 +109,34 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
       allowFiltering: true,
       width: 250,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.amount;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              : cellElement.data.particulars == "TOTAL"?
+              getFormattedValue(cellElement.data.discount,false,2)
+              : getFormattedValue(cellElement.data.discount,false,4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+        return (cellElement.data.amount == null? "" :cellElement.data.particulars == "TOTAL"?getFormattedValue(cellElement.data.discount,false,2): getFormattedValue(cellElement.data.discount,false,4)); // Ensures proper formatting
+        }}
     },
     {
       dataField: "narration",

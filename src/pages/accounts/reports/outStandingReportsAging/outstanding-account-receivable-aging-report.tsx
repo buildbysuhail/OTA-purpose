@@ -83,10 +83,47 @@ const OutstandingAccountReceivableAgingReport = () => {
     {
       dataField: "debit",
       caption: t('debit'),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.debit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+            {`${ cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -95,6 +132,43 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.credit;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? ""
+              : balance < 0
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            bold: cellElement.data.ledgername === "TOTAL" ? true : '',
+            alignment: "right",
+            textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
+            font: {
+              ...exportCell.font,
+              // color: isDebit ? "#129151" : "#DC143C",
+              color: cellElement.data.ledgername === "TOTAL" ? { argb: 'FFFF0000' } : "",
+              size: 10,
+              style: cellElement.data.ledgername === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.ledgername === "TOTAL" ? true : false,
+            }
+          } : undefined;
+        }
+        else {
+          return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
+            {`${ cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "balance",
@@ -106,7 +180,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.debit;
+          const balance = cellElement.data?.balance;
           const isDebit = balance >= 0;
           const value =
             balance == null
@@ -131,7 +205,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={'font-bold text-[#DC143C]'}>
-            {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
+            {`${cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
           </span>)
         }
       }
@@ -178,7 +252,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period1 == 0 || cellElement.data?.period1 == null ? '' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
+            {`${ cellElement.data?.period1 == null ? '' : cellElement.data.period1 < 0 ? getFormattedValue(-1 * cellElement.data.period1) : getFormattedValue(cellElement.data.period1)}`}
           </span>)
         }
       }
@@ -225,7 +299,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period2 == 0 || cellElement.data?.period2 == null ? '' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
+            {`${cellElement.data?.period2 == null ? '' : cellElement.data.period2 < 0 ? getFormattedValue(-1 * cellElement.data.period2) : getFormattedValue(cellElement.data.period2)}`}
           </span>)
         }
       }
@@ -272,7 +346,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period3 == 0 || cellElement.data?.period3 == null ? '' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
+            {`${ cellElement.data?.period3 == null ? '' : cellElement.data.period3 < 0 ? getFormattedValue(-1 * cellElement.data.period3) : getFormattedValue(cellElement.data.period3)}`}
           </span>)
         }
       }
@@ -319,7 +393,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period4 == 0 || cellElement.data?.period4 == null ? '' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
+            {`${cellElement.data?.period4 == null ? '' : cellElement.data.period4 < 0 ? getFormattedValue(-1 * cellElement.data.period4) : getFormattedValue(cellElement.data.period4)}`}
           </span>)
         }
       }
@@ -366,7 +440,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period5 == 0 || cellElement.data?.period5 == null ? '' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
+            {`${cellElement.data?.period5 == null ? '' : cellElement.data.period5 < 0 ? getFormattedValue(-1 * cellElement.data.period5) : getFormattedValue(cellElement.data.period5)}`}
           </span>)
         }
       }
@@ -413,7 +487,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : '0'}`}>
-            {`${cellElement.data?.period6 == 0 || cellElement.data?.period6 == null ? '' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
+            {`${cellElement.data?.period6 == null ? '' : cellElement.data.period6 < 0 ? getFormattedValue(-1 * cellElement.data.period6) : getFormattedValue(cellElement.data.period6)}`}
           </span>)
         }
       }
@@ -459,7 +533,7 @@ const OutstandingAccountReceivableAgingReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.ledgername === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.period7 == 0 || cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
+            {`${cellElement.data?.period7 == null ? '0' : cellElement.data.period7 < 0 ? getFormattedValue(-1 * cellElement.data.period7) : getFormattedValue(cellElement.data.period7)}`}
           </span>)
         }
       }

@@ -44,14 +44,7 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-        cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                        }
+       format:"dd-MMM-yyyy"
     },
     {
       dataField: "ledgerName",
@@ -155,7 +148,7 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
               ? ""
               : balance < 0
                 ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
-                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(balance, false, 4)
           return exportCell != undefined ? {
             ...exportCell,
             text: value,
@@ -194,6 +187,33 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
       allowFiltering: true,
       width: 150,
       showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.unitPrice;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              :  getFormattedValue(balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return(getFormattedValue(cellElement.data?.unitPrice,false,4))
+        }
+      }
     },
     {
       dataField: "grossValue",
@@ -202,6 +222,33 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.grossValue;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              :  getFormattedValue(balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return(getFormattedValue(cellElement.data?.grossValue,false,4))
+        }
+      }
     },
     {
       dataField: "rateWithTax",
@@ -210,6 +257,33 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.rateWithTax;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              :  getFormattedValue(balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return(getFormattedValue(cellElement.data?.rateWithTax,false,4))
+        }
+      }
     },
     {
       dataField: "netValue",
@@ -233,7 +307,7 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
               ? ""
               : balance < 0
                 ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
-                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(balance, false, 4)
           return exportCell != undefined ? {
             ...exportCell,
             text: value,
@@ -263,6 +337,33 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.totalVatAmount;
+          const isDebit = balance >= 0; 
+          const value =
+            balance == null
+              ? ""
+              :  getFormattedValue(balance, false, 4)
+          return exportCell != undefined ? {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            font: {
+              ...exportCell.font,
+              size: 10,
+            }
+          } : undefined;
+        }
+        else {
+          return(getFormattedValue(cellElement.data?.totalVatAmount,false,4))
+        }
+      }
     },
     {
       dataField: "netAmount",
@@ -286,7 +387,7 @@ const PartySummaryPurchaseOrder: React.FC<PartySummaryFilter> = ({ filter }) => 
               ? ""
               : balance < 0
                 ? cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
-                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(balance, false, 4)
           return exportCell != undefined ? {
             ...exportCell,
             text: value,

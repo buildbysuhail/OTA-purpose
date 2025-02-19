@@ -51,7 +51,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                       <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
                       {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
                       <span className="relative flex items-center">
-                        <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2"
+                        <div className="w-[148px] overflow-hidden text-ellipsis whitespace-nowrap ml-2 side-menu__label"
                           title={t(firstlevel.title).length > 20 ? t(firstlevel.title) : undefined}>
                           {t(firstlevel.title)}
                         </div>

@@ -35,10 +35,9 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 
 
 export const ReportsMenuItems = [
-  // {
-  //   menutitle: 'Settings',
-  //   showWorkspaceMiniCard: true,
-  // },
+  {
+    menutitle: 'Reports',
+  },
   {
     icon: (<CircleUser className="side-menu__icon side-menu" />),
     type: 'sub',
@@ -124,8 +123,8 @@ export const ReportsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     columns: 1,
     children: [
-      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report',icon:RiFileListLine  },
-      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report',icon:HiOutlineDocumentText  },
+      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report', icon: RiFileListLine },
+      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report', icon: HiOutlineDocumentText },
     ]
   },
 ];

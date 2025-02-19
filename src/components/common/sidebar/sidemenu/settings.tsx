@@ -7,10 +7,9 @@ import {
 import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesCombined, CircleDollarSign, ClipboardMinus, Cog, Component, Crown, FolderCog, GitBranchPlus, GitMerge, Handshake, IdCard, Layers2, LayoutTemplate, Mail, MessageCircle, MonitorCog, QrCode, RefreshCw, RotateCcw, Ticket, Truck, UserCog, UserRound, UserRoundCheck, UsersRound } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
-  // {
-  //   menutitle: 'Settings',
-  //   showWorkspaceMiniCard: true,
-  // },
+  {
+    menutitle: 'Settings',
+  },
   {
     icon: (<Crown className="side-menu__icon side-menu" />),
     type: 'sub',

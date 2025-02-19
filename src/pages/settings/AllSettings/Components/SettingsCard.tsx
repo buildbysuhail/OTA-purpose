@@ -1,10 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
@@ -16,86 +13,80 @@ interface SettingsCardProps {
 
 const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
-  let applicationSettings = useAppSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const columns = Math.max(1, data.columns || 1);
   const [items, setItems] = useState<any>(data.children || []);
   const [distributedItems, setDistributedItems] = useState<any>([]);
-
   // const distributeItems = useMemo(() => {
-  //   
-
   //   return result;
   // }, [userSession?.userTypeCode, userSession?.countryId, applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory]);
 
   useEffect(() => {
-   
     if (
       !isNullOrUndefinedOrEmpty(applicationSettings?.miscellaneousSettings) &&
       !isNullOrUndefinedOrEmpty(userSession?.userTypeCode) &&
       !isNullOrUndefinedOrEmpty(userSession?.countryId)
     ) {
-    let st = items;
-    if (userSession.userTypeCode === "BA") {
-      st = st?.filter((x: any) => x.title !== "branches");
-      setItems(st);
-    }
-    if (userSession.userTypeCode === "CA") {
-      st = st?.filter((x: any) => x.title !== "branch_info");
-      setItems(st);
-    }
+      let st = items;
+      if (userSession.userTypeCode === "BA") {
+        st = st?.filter((x: any) => x.title !== "branches");
+        setItems(st);
+      }
+      if (userSession.userTypeCode === "CA") {
+        st = st?.filter((x: any) => x.title !== "branch_info");
+        setItems(st);
+      }
 
-    const result: any = Array.from({ length: columns }, () => []);
-    const itemsPerColumn = Math.ceil(st.length / columns);
-    // console.log(st);
+      const result: any = Array.from({ length: columns }, () => []);
+      const itemsPerColumn = Math.ceil(st.length / columns);
+      // console.log(st);
 
-    st?.forEach((item: any, index: any) => {
-      const columnIndex = Math.floor(index / itemsPerColumn);
-      item.disabled = false;
-      item.visible = true;
-      if (item.title === "refresh_all_branches") {
-        if (
-          userSession.userTypeCode !== "CA" &&
-          applicationSettings?.miscellaneousSettings
-            ?.maintainAllBranchWithCommonInventory != true
-        ) {
-          item.disabled = true;
+      st?.forEach((item: any, index: any) => {
+        const columnIndex = Math.floor(index / itemsPerColumn);
+        item.disabled = false;
+        item.visible = true;
+        if (item.title === "refresh_all_branches") {
+          if (
+            userSession.userTypeCode !== "CA" &&
+            applicationSettings?.miscellaneousSettings
+              ?.maintainAllBranchWithCommonInventory != true
+          ) {
+            item.disabled = true;
+          }
         }
-      }
 
-      if (
-        item.title === "company_profile_india" &&
-        userSession.countryId != Countries.India
-      ) {
-        item.visible = false;
-      }
+        if (
+          item.title === "company_profile_india" &&
+          userSession.countryId != Countries.India
+        ) {
+          item.visible = false;
+        }
 
-      if (
-        item.title === "hide_account_ledger" &&
-        userSession.countryId == Countries.India
-      ) {
-        item.visible = false;
-      }
-      if (
-        item.title === "company_profile_others" &&
-        userSession.countryId == Countries.India
-      ) {
-        item.visible = false;
-      }
-      if (item.title === "upi" && userSession.countryId != Countries.India) {
-        item.visible = false;
-      }
-      if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
-        item.visible = false;
-      }
-      result[columnIndex]?.push(item);
-    });
-    setDistributedItems(result);
-  }
+        if (
+          item.title === "hide_account_ledger" &&
+          userSession.countryId == Countries.India
+        ) {
+          item.visible = false;
+        }
+        if (
+          item.title === "company_profile_others" &&
+          userSession.countryId == Countries.India
+        ) {
+          item.visible = false;
+        }
+        if (item.title === "upi" && userSession.countryId != Countries.India) {
+          item.visible = false;
+        }
+        if (item.title === "qr_pay" && userSession.countryId == Countries.India) {
+          item.visible = false;
+        }
+        result[columnIndex]?.push(item);
+      });
+      setDistributedItems(result);
+    }
   }, [
     applicationSettings?.miscellaneousSettings,
     userSession?.userTypeCode,
@@ -105,13 +96,13 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   //  const appState = useAppSelector(
   //     (state: RootState) => state.AppState.appState
   //   );
-
+  if (!data.children || !data.children.length) {
+    return null;
+  }
   return (
     <div className={` w-auto bg-gray-50 dark:!bg-dark-bg-card dark:!border-dark-border  rounded-lg p-5 border flex flex-grow `}>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-2 items-center">
-          <p className={`text-sm font-medium dark:text-dark-text  text-black  `}>{t(data?.title)}</p>
-        </div>
+        <div className="flex gap-2 items-center">  <p className={`text-sm font-medium dark:text-dark-text  text-black  `}>{t(data?.title)}</p> </div>
         <div className={`grid grid-cols-${data?.columns ? data?.columns : 1}`}>
           {distributedItems.map((columnItems: any, idx: number) => (
             <div className="flex flex-col" key={`QQEO39_${idx}`}>
@@ -130,13 +121,12 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
                           route?.path && route?.type === "link"
                             ? navigate(route?.path)
                             : route?.action && route?.type === "popup"
-                            ? dispatch(route?.action({ isOpen: true }))
-                            : ERPToast.showWith(
+                              ? dispatch(route?.action({ isOpen: true }))
+                              : ERPToast.showWith(
                                 "This Feature is under development. Please try later!",
                                 "warning"
                               );
-                        }}
-                      >
+                        }}>
                         {t(route?.title)}
                       </p>
                     )}

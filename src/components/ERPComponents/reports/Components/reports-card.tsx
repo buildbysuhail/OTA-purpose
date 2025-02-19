@@ -1,5 +1,3 @@
-import React from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
@@ -7,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const ReportsCard = ({ data }: any) => {
   const navigate = useNavigate();
-  const {t}=useTranslation();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const columns = Math.max(1, data.columns || 1);
   const children = data.children || [];
@@ -20,11 +18,14 @@ const ReportsCard = ({ data }: any) => {
       const columnIndex = Math.floor(index / itemsPerColumn);
       result[columnIndex].push(item);
     });
-
     return result;
   };
 
   const distributedItems = distributeItems();
+
+  if (!data.children || !data.children.length) {
+    return null;
+  }
   return (
     <div className="w-auto dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow shadow-lg">
       {/* <div className="w-auto backdrop-blur-md bg-white/30 dark:bg-dark-bg-card/30 dark:border-dark-border border-white/20 rounded-lg p-5 border flex flex-grow shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"></div> */}
@@ -34,27 +35,25 @@ const ReportsCard = ({ data }: any) => {
           <p className=" dark:!text-dark-text text-sm font-medium">{t(data?.title)}</p>
         </div>
         <div className={`grid grid-cols-${data?.columns ? data?.columns : 1} gap-24`}>
-        {distributedItems.map((columnItems: any, idx: number) => {
+          {distributedItems.map((columnItems: any, idx: number) => {
             return (
-               
-        <div className="flex flex-col " key={`QQEO39_${idx}`}>
-          {columnItems.map((route: any, routeIdx: number) => {
+              <div className="flex flex-col " key={`QQEO39_${idx}`}>
+                {columnItems.map((route: any, routeIdx: number) => {
                   return (
                     <p
                       className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black "
                       onClick={() => {
                         // dispatch({ type: "minimize", minimize: false });
-                        route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action({isOpen: true})) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+                        route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action({ isOpen: true })) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
                       }}
-                      key={`JPKNE84_${routeIdx}`}
-                    >
+                      key={`JPKNE84_${routeIdx}`}>
                       {t(route?.title)}
                     </p>
                   );
                 })}
               </div>
-              )
-            }
+            )
+          }
           )}
         </div>
       </div>

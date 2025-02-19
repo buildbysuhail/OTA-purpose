@@ -88,6 +88,7 @@ import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter
 import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 import UnsavedChangesModal from "./unsavedChangesModal";
 import PartySelectionModal from "./party-selection-modal";
+import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
 interface BilledItem {
   id?: number;
   name: string;
@@ -120,6 +121,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   transactionType,
   transactionMasterID,
   financialYearID,
+  isTeller = false,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
 
@@ -284,6 +286,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     let gridHeightWindows = wh - 800;
     setGridHeight(gridHeightWindows);
   }, [window.innerHeight]);
+  useEffect(() => {
+    dispatch(
+      accFormStateHandleFieldChange({fields:{masterAccountActive: isTeller}}))
+  }, [isTeller]);
   useEffect(() => {
     dispatch(
       updateFormElement({
@@ -621,13 +627,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
         masterAccount: {
           ...initialFormElements.masterAccount,
-          disabled:
-            (_formState.transaction.master.voucherType ==
-              VoucherType.CashPayment ||
-              _formState.transaction.master.voucherType ==
-              VoucherType.CashReceipt) &&
-            userSession?.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings?.allowSalesCounter,
+          disabled: 
+          (_formState.transaction.master.voucherType ==
+            VoucherType.CashPayment ||
+            _formState.transaction.master.voucherType ==
+            VoucherType.CashReceipt) &&
+          userSession?.counterwiseCashLedgerId > 0 &&
+          applicationSettings.accountsSettings?.allowSalesCounter
+          && userSession?.counterAssignedCashLedgerId > 0
+          ?
+          userSession.countryId == Countries.India 
+          ?
+          formState.masterAccountActive == true ? false : true
+          : true
+          : false
+            
         },
         discount: { ...initialFormElements.discount, visible: true },
         projectId: {
@@ -999,8 +1013,33 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
       }
-      _formState.formElements = fieldsToUpdate;
+      let fnlFormElmns = {...fieldsToUpdate};
+      if(_formState.transaction.master.voucherType == "BP" || _formState.transaction.master.voucherType == "BR" && userSession.countryId == Countries.India) {
+        fnlFormElmns =
+        {
+          ...fieldsToUpdate,
+          bankName: {
+            ...fieldsToUpdate.bankDate,
+            visible: false,
+          },
+          nameOnCheque: {
+            ...fieldsToUpdate.bankDate,
+            visible: false,
+          },
+          chequeNumber: {
+            ...fieldsToUpdate.chequeNumber,
+            visible: false,
+          },
+          bankDate: {
+            ...fieldsToUpdate.bankDate,
+            visible: false,
+          },
+        }
+      }
+      
+      _formState.formElements = fnlFormElmns;
 
+      
       setAccTransVoucher(_formState, true);
       if (_formState.isTaxOnExpense) {
 
@@ -1906,7 +1945,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           value={formState.transaction.master.voucherNumber}
                           type="number"
                           required={true}
-                          showCustomNumberChanger={true}
+                          showCustomNumberChanger={formState.formElements.voucherNumberUpDownBtns.visible = true}
                           className="max-w-[200px]"
                           onChange={async (e: any) => {
                             if (e.isCustomNumberChangerEvent == true) {

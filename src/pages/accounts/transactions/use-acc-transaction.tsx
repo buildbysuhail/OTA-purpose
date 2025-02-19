@@ -40,7 +40,11 @@ import {
   AccUserConfig,
   BillwiseData,
 } from "./acc-transaction-types";
-import { isEnterKey, isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../utilities/Utils";
+import {
+  isEnterKey,
+  isNullOrUndefinedOrEmpty,
+  isNullOrUndefinedOrZero,
+} from "../../../utilities/Utils";
 import { ApplicationSettingsType } from "../../settings/system/application-settings-types/application-settings-types";
 import {
   calculateTotal,
@@ -185,7 +189,6 @@ export const useAccTransaction = (
     }
   };
   const focusTaxableAmount = () => {
-    
     if (taxableAmountRef.current) {
       taxableAmountRef.current?.select();
       taxableAmountRef.current?.focus();
@@ -239,7 +242,7 @@ export const useAccTransaction = (
       //   //     : parseFloat(
       //   //       formState.transaction.master.voucherNumber.toString()
       //   //     ) + 1;
-      
+
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -258,7 +261,7 @@ export const useAccTransaction = (
       // }
       return false;
     }
-    
+
     if (setVoucherNo) {
       // dispatch(
       //   accFormStateHandleFieldChange({
@@ -285,7 +288,6 @@ export const useAccTransaction = (
       accTransactionMasterID
     );
 
-    
     _formState.formElements = {
       ..._formState.formElements,
       btnAdd: {
@@ -341,6 +343,126 @@ export const useAccTransaction = (
           : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
       _formState.userConfig = userConfig;
     }
+
+    if (
+      userSession.dbIdValue.trim() == "BAHAMDOON" &&
+      formState.isBahamdoonPOSReceipt != true
+    ) {
+      _formState.row.ledgerCode = "2768";
+      _formState.isBahamdoonPOSReceipt = true;
+
+      _formState.transaction.master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
+
+      // Handle ledger selection based on voucher type
+      if (_formState.transaction.master.voucherType === "BR") {
+        _formState.masterAccountID =
+          applicationSettings.accountsSettings.defaultCreditCardAcc > 0
+            ? applicationSettings.accountsSettings.defaultCreditCardAcc
+            : applicationSettings.accountsSettings.defaultBankAcc;
+      } else if (_formState.transaction.master.voucherType === "CR") {
+        _formState.masterAccountID =
+          userSession.counterwiseCashLedgerId > 0 &&
+          applicationSettings.accountsSettings.allowSalesCounter
+            ? userSession.counterwiseCashLedgerId
+            : applicationSettings.accountsSettings.defaultCashAcc;
+      }
+
+      // Fetch Ledger ID
+      let id = dataContainer?.ledgers?.find(
+        (x) => x.alias == _formState.row.ledgerCode
+      )?.id;
+      if (!(id > 0)) {
+        const sds = await api.getAsync(Urls.data_acc_ledgers);
+        id = sds?.find((x: any) => x.alias == _formState.row.ledgerCode)?.id;
+      }
+
+      if (id > 0) {
+        _formState.row.ledgerID = id;
+      } else {
+        ERPAlert.show({
+          title: "",
+          text: `Ledger Code: ${_formState.row.ledgerCode} Not found.`,
+          icon: "error",
+        });
+        return false;
+      }
+
+      (_formState.printOnSave = true),
+        // Disable UI elements after setting values
+        (_formState.formElements = {
+          ..._formState.formElements,
+          voucherPrefix: {
+            ..._formState.formElements.voucherPrefix,
+            disabled: true,
+          },
+          ..._formState.formElements,
+          voucherNumber: {
+            ..._formState.formElements.voucherNumber,
+            disabled: true,
+          },
+          voucherNumberUpDownBtns: {
+            ..._formState.formElements.voucherNumberUpDownBtns,
+            visible: false,
+          },
+          transactionDate: {
+            ..._formState.formElements.transactionDate,
+            disabled: true,
+          },
+          ledgerCode: {
+            ..._formState.formElements.ledgerCode,
+            disabled: true,
+          },
+          remarks: {
+            ..._formState.formElements.remarks,
+            disabled: true,
+          },
+          commonNarration: {
+            ..._formState.formElements.commonNarration,
+            disabled: true,
+          },
+          masterAccount: {
+            ..._formState.formElements.masterAccount,
+            disabled: true,
+          },
+          ledgerID: {
+            ..._formState.formElements.ledgerID,
+            disabled: true,
+          },
+          referenceDate: {
+            ..._formState.formElements.referenceDate,
+            disabled: true,
+          },
+          btnBillWise: {
+            ..._formState.formElements.btnBillWise,
+            disabled: true,
+          },
+          employee: {
+            ..._formState.formElements.employee,
+            disabled: true,
+          },
+          projectId: {
+            ..._formState.formElements.projectId,
+            disabled: true,
+          },
+          hasDiscount: {
+            ..._formState.formElements.hasDiscount,
+            disabled: true,
+          },
+          chequeNumber: {
+            ..._formState.formElements.chequeNumber,
+            disabled: true,
+          },
+          bankDate: {
+            ..._formState.formElements.bankDate,
+            disabled: true,
+          },
+          linkEdit: {
+            ..._formState.formElements.linkEdit,
+            visible: false,
+          },
+        });
+    }
+
     _formState.prev = modelToBase64Unicode({
       transaction: { ..._formState.transaction },
       row: { ..._formState.row },
@@ -388,7 +510,6 @@ export const useAccTransaction = (
       `${Urls.acc_transaction_base}${transactionType}`,
       new URLSearchParams(params).toString()
     );
-    
 
     if (vch == null || vch?.master == null) {
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
@@ -711,7 +832,8 @@ export const useAccTransaction = (
     }
 
     if (
-      formState.transaction.master.voucherType == "JV" &&
+      (formState.transaction.master.voucherType == "JV" ||
+        formState.transaction.master.voucherType == "JVSP") &&
       (formState.transaction.master.drCr == "" ||
         formState.transaction.master.drCr == null)
     ) {
@@ -815,6 +937,7 @@ export const useAccTransaction = (
         case "CN":
         case "SV":
         case "CQP":
+        case "CQE":
           element.ledgerID = element.ledgerID; // Preserve original ledgerID
           element.relatedLedgerID = formState.masterAccountID;
           break;
@@ -824,11 +947,13 @@ export const useAccTransaction = (
         case "DN":
         case "PV":
         case "CQR":
+        case "CRE":
           element.relatedLedgerID = element.ledgerID;
           element.ledgerID = formState.masterAccountID;
           break;
 
-        case "JV":
+          case "JV":
+            case "JVSP":
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID = element.ledgerID;
             element.ledgerID = formState.masterAccountID;
@@ -955,7 +1080,11 @@ export const useAccTransaction = (
       master.totalDebit = master.totalCredit = totalAmount;
     }
 
-    if (master.voucherType === "JV" || master.voucherType === "MJV") {
+    if (
+      master.voucherType === "JV" ||
+      master.voucherType === "MJV" ||
+      master.voucherType === "JVSP"
+    ) {
       master.totalDebit = master.totalCredit = totalAmount;
     }
     // dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
@@ -1156,7 +1285,6 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr;
@@ -1198,7 +1326,8 @@ export const useAccTransaction = (
         if (formState.isRowEdit != true) {
           if (
             (billwiseDetails == undefined || billwiseDetails == null) &&
-            formState.row.billwiseDetails == "" && !formState.isTaxOnExpense
+            formState.row.billwiseDetails == "" &&
+            !formState.isTaxOnExpense
           ) {
             if (formState.IsBillwiseTransAdjustmentExists) {
               dispatch(
@@ -1351,11 +1480,14 @@ export const useAccTransaction = (
         row: {
           ...formState.row,
           costCentreName: costCentreName,
-          ledgerName: formState.row.ledgerName == undefined || formState.row.ledgerName == null || formState.row.ledgerName == ""
-          ? dataContainer.ledgers?.find(
-              (x) => x.id == formState.row.ledgerID
-            )?.name
-          : formState.row.ledgerName,
+          ledgerName:
+            formState.row.ledgerName == undefined ||
+            formState.row.ledgerName == null ||
+            formState.row.ledgerName == ""
+              ? dataContainer.ledgers?.find(
+                  (x) => x.id == formState.row.ledgerID
+                )?.name
+              : formState.row.ledgerName,
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
             billwiseDetails != undefined
@@ -1531,7 +1663,7 @@ export const useAccTransaction = (
     } else if (field === "costCentre") {
       if (key == "Enter") {
         if (formState.isTaxOnExpense) {
-          focusPartName()
+          focusPartName();
         } else {
           focusBtnAdd();
         }
@@ -1540,7 +1672,7 @@ export const useAccTransaction = (
       if (key == "Enter") {
         focusTaxableAmount();
       }
-    }  else if (field === "voucherNumber") {
+    } else if (field === "voucherNumber") {
       handleVoucherNumberKeyUp(key);
     } else if (field === "narration") {
       handleNarrationKeyDown(key);
@@ -1548,10 +1680,14 @@ export const useAccTransaction = (
       handleEmployeeKeyDown(key);
     } else if (field === "ledgerID") {
       handleLedgerIdKeyDown(key);
-    }  else if (field === "btnPartySearch") {
-      if(key == "Enter") {
-        if(isNullOrUndefinedOrEmpty(formState.row.partyName)) {
-          dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }))
+    } else if (field === "btnPartySearch") {
+      if (key == "Enter") {
+        if (isNullOrUndefinedOrEmpty(formState.row.partyName)) {
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: { showPartySelection: true },
+            })
+          );
         }
       }
     } else if (field === "bankDate") {

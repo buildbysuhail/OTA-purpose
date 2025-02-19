@@ -245,29 +245,23 @@ const BankReconciliation = () => {
                 accTransactionDetailID: _data.accTransactionDetailID,
               })
               .then((res: any) => {
-                const updatedData = __data.map((item: any) => {
-                  if (
-                    item.accTransactionDetailID === _data.accTransactionDetailID
-                  ) {
-                    return {
-                      ...item,
-                      checkStatus: "p", // Update the status to pending
-                    };
-                  }
-                  return item;
-                });
-                console.log("123wewe"); // Debugging log
-                // Update the state to trigger a re-render of the grid
-                setData(updatedData); // Pass the array directly, not as an object
-                // setKey((prev: number) => {
-                //   return prev+1
-                // });
+                setData((prev: any) => {
+                  const updatedData = prev?.map((item: any) => {
+                    if (
+                      item.accTransactionDetailID === _data.accTransactionDetailID
+                    ) {
+                      return {
+                        ...item,
+                        checkStatus: "p", // Update the status to pending
+                      };
+                    }
+                    return item;
+                  });
+                  return updatedData;
+                })
+                // dataGridRef.current?.instance().repaint()
               });
-            // cellInfo.component.repaint();
-            // handleResponse(res, () => {
-            //   
-            //   // Find and update the correct item in `data` array
-            // });
+            
           } catch (error) {
             console.error("Error updating transaction:", error);
           } finally {

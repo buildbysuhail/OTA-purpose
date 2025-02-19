@@ -5,7 +5,6 @@ import { useAppDispatch } from './useAppDispatch';
 
 export const useAppState = () => {
   const dispatch = useAppDispatch();
-  const entireState = useSelector((state: RootState) => state);
   const appState = useSelector((state: RootState) => state.AppState?.appState);
   
   const updateAppState = (newState: (typeof appState)) => {

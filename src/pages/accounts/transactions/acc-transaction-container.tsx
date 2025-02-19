@@ -75,8 +75,20 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   const [readyToShowVoucher, setReadyToShowVoucher] = useState<{ready: boolean, input: any, data: any}>({ready: false, input: null, data: null});
   const  {hasUnsavedChanges, setIsModalOpen} = useUnsavedChangesWarning();
   const dispatch = useDispatch();
+  const [prevState, setPrevState] = useState({
+    voucherType: undefined as string | undefined,
+    transactionType: undefined as string | undefined,
+    formCode: undefined as string | undefined,
+    voucherPrefix: undefined as string | undefined,
+    formType: undefined as string | undefined,
+    title: undefined as string | undefined,
+    drCr: undefined as string | undefined,
+    voucherNo: undefined as number | undefined,
+    transactionMasterID: undefined as number | undefined,
+    financialYearID: undefined as number | undefined,
+  });
+
   const goBack = async () => {
-    
     const has = await hasUnsavedChanges();
     if (has) {
       setIsModalOpen(true);
@@ -96,7 +108,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   };
 
   useEffect(() => {
-    debugger
+    debugger;
     const _input = {
       voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
       transactionType: getParamOrProp<string>("transactionType") || props.transactionType,
@@ -109,13 +121,23 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
       financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
     }
-    if (isChooseVoucherEnabled(input.title ?? "", userSession) && (input.voucherNo ==  undefined ||  input.voucherNo <= 0)) {
+    let isDirty =false;
+    Object.keys(_input).forEach((key) => {
+      if (_input[key as keyof typeof _input] !== prevState[key as keyof typeof prevState]) {
+        console.log(`Value changed for ${key}:`, prevState[key as keyof typeof prevState], "→", _input[key as keyof typeof _input]);
+        isDirty =true;
+      }
+    });
+    if(isDirty) {
+    debugger;
+    if (isChooseVoucherEnabled(_input.title ?? "", userSession) && (_input.voucherNo ==  undefined ||  _input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {
           const res = await api.getAsync(
-            `${Urls.voucher_selector}${input.voucherType}`
+            `${Urls.voucher_selector}${_input.voucherType}`
           );
 
+          debugger;
           if (
             res == undefined ||
             res == null ||
@@ -133,8 +155,8 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
                 _input,
                 {
                   formType: res[0].formType,
-                voucherNo: res[0].lastVNo,
-                voucherPrefix: res[0].lastPrefix
+                  voucherNo: res[0].lastVNo,
+                  voucherPrefix: res[0].lastPrefix
                 }
               ); // Call initializeVoucher here
             }
@@ -162,10 +184,12 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
         voucherPrefix: _input.voucherPrefix
         })
     }
+    setPrevState(_input);
+  }
   }, [searchParams, props]);
 
   const onRowDblClick = useCallback(async (_event: any) => {
-    
+    debugger;
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,

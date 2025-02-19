@@ -710,7 +710,7 @@ const Header: FC<HeaderProps> = () => {
                 </Button>
               </div>
               <LanguageSwitcher></LanguageSwitcher>
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown  [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              {/* <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown  [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-notification"
                   type="button"
@@ -819,7 +819,7 @@ const Header: FC<HeaderProps> = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* <div className="header-element header-apps  py-[1rem]  dark:text-[#8c9097] dark:text-white/50  md:px-[0.65rem]  px-2 hs-dropdown ti-dropdown  [--placement:bottom-left]">
                 <Link
                   to={"/settings"}

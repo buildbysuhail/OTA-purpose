@@ -196,7 +196,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       voucherNo: _event.data.lastVNo,
       voucherPrefix: _event.data.lastPrefix,
     }));
-    await initializeVoucher({
+    const asd = {
       voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
       transactionType: getParamOrProp<string>("transactionType") || props.transactionType,
       formCode: getParamOrProp<string>("formCode") || props.formCode,
@@ -207,11 +207,13 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       voucherNo: getParamOrProp<number>("voucherNo", true)  || props.voucherNo || 0,
       transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
       financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
-    },{formType: _event.data.formType,
+    };
+    const asf = {formType: _event.data.formType,
       voucherNo: _event.data.lastVNo,
-      voucherPrefix: _event.data.lastPrefix}); // Call initializeVoucher here
+      voucherPrefix: _event.data.lastPrefix}
+    await initializeVoucher(asd,asf); // Call initializeVoucher here
     setOpenVoucherSelector(false);
-  }, []);
+  }, [searchParams, props]);
 
   return (
     <>

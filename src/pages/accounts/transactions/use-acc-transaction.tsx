@@ -1340,23 +1340,22 @@ export const useAccTransaction = (
     }
     formState.formElements.btnAdd;
 
-    const sdsd =
+    const costCentreName =
       formState.row.costCentreID > 0
         ? dataContainer.costCentres?.find(
-            (x) => x.value == formState.row.costCentreID
+            (x) => x.id == formState.row.costCentreID
           )?.name
         : "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
         row: {
           ...formState.row,
-          costCentreName:
-            formState.row.costCentreID > 0
-              ? dataContainer.costCentres?.find(
-                  (x) => x.id == formState.row.costCentreID
-                )?.name
-              : "",
-          // ledgerName: formState.row.ledgerID > 0 ? ledgerData?.find(x => x.value == formState.row.ledgerID)?.name: "",
+          costCentreName: costCentreName,
+          ledgerName: formState.row.ledgerName == undefined || formState.row.ledgerName == null || formState.row.ledgerName == ""
+          ? dataContainer.ledgers?.find(
+              (x) => x.id == formState.row.ledgerID
+            )?.name
+          : formState.row.ledgerName,
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
             billwiseDetails != undefined

@@ -36,7 +36,7 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 
 export const ReportsMenuItems = [
   {
-    menutitle: 'Reports',
+    menutitle: 'reports',
   },
   {
     icon: (<CircleUser className="side-menu__icon side-menu" />),

@@ -8,7 +8,7 @@ import { BellDot, BellRing, BookOpenText, Calculator, CalendarDays, ChartNoAxesC
 import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
   {
-    menutitle: 'Settings',
+    menutitle: 'settings',
   },
   {
     icon: (<Crown className="side-menu__icon side-menu" />),

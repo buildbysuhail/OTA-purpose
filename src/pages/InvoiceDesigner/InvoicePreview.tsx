@@ -2,45 +2,31 @@ import { Fragment, useEffect, useState } from "react";
 import { Popover } from "@headlessui/react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {
-  Cog6ToothIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, EllipsisHorizontalIcon, } from "@heroicons/react/24/outline";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import { PrinterIcon } from "@heroicons/react/24/solid";
-
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
-
 import DownloadStandardPreview from "./DownloadPreview/StandardPreview/DownloadPreview";
 import DownloadRetailPreview from "./DownloadPreview/RetailPreview/DownloadPreview";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import DNPSTemplate from "./DownloadPreview/DeliveryNote_PackingSlip";
 import { TemplateState } from "./Designer/interfaces";
-import {
-  getAmountInWords,
-  getCurrentCurrencySymbol,
-} from "../../utilities/Utils";
+import { getAmountInWords, getCurrentCurrencySymbol, } from "../../utilities/Utils";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
-import {
-  isTaxApplicable,
-  taxListFinder,
-  taxListFinderInclusive,
-} from "../../utilities/ERPUtils";
+import { isTaxApplicable, taxListFinder, taxListFinderInclusive, } from "../../utilities/ERPUtils";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPPopover from "../../components/ERPComponents/erp-popover";
 import ERPSideView from "../../components/ERPComponents/erp-side-view";
 import ERPChangeTemplateSidebar from "../../components/ERPComponents/erp-change-template-sidebar";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
 import VoucherType from "../../enums/voucher-types";
+import { useTranslation } from "react-i18next";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -74,39 +60,24 @@ const InvoicePreview = ({
   showOptions = true,
   endpointUrl,
 }: InvoicePreviewProps) => {
-  
+
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const currencySymbol = getCurrentCurrencySymbol();
-
   const userProfile = useAppSelector((state: RootState) => state?.UserSession);
   const hasPermissionToUpdateProfile = true;
   const hasPermissionForTemplates = true;
-
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showChangeTemplate, setShowChangeTemplate] = useState(false);
   const [associatedTempInfo, setAssociatedTempInfo] = useState<any>([]);
   const [templatesInfo, setTemplatesInfo] = useState<any>({ loading: true });
   const [voucherType, setVoucherType] = useState<PDFVoucherTypes>("normal");
-
-  const templateWrap = useSelector(
-    (state: any) => state?.Template
-  ) as TemplateReducerState;
-
+  const templateWrap = useSelector((state: any) => state?.Template) as TemplateReducerState;
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
-  const gstTreatmentList = useSelector(
-    (state: any) => state?.[gstTreatmentReducerName]
-  )?.data?.results;
-
-
-  const totalAmountInwords = getAmountInWords(
-    isNaN(+data?.total_price) ? 0 : +data?.total_price,
-    currencySymbol || ""
-  );
-
+  const gstTreatmentList = useSelector((state: any) => state?.[gstTreatmentReducerName])?.data?.results;
+  const totalAmountInwords = getAmountInWords(isNaN(+data?.total_price) ? 0 : +data?.total_price, currencySymbol || "");
   /* ########################################################################################### */
   const getTemplateInfo = (): { content?: TemplateState } => {
     // checking  :  if  voucher wise templpate Id available
@@ -148,15 +119,12 @@ const InvoicePreview = ({
   /* ########################################################################################### */
   const [templateData, setTemplateData] = useState<TemplateState | undefined>();
   useEffect(() => {
-    
+
     setTemplateData(pathname?.includes("/invoice_designer/")
       ? templateWrap?.activeTemplate
       : getTemplateInfo().content);
-  },[templateWrap?.activeTemplate]);
-  
-
+  }, [templateWrap?.activeTemplate]);
   /* ########################################################################################### */
-
   let paperWidth;
   const backgroundColor = templateData?.propertiesState?.bg_color || "#fff";
   const paperSize = templateData?.propertiesState?.pageSize || "A4";
@@ -180,11 +148,8 @@ const InvoicePreview = ({
     default:
       paperWidth = "w-[500px]";
   }
-
   /* ####################################################################### */
-
   const tableSummary = useSelector((state: any) => state.ERPTableSummary);
-
   const hasTax = isTaxApplicable(
     pathname,
     data,
@@ -192,7 +157,6 @@ const InvoicePreview = ({
     data?.items,
     data
   );
-
   const updatedTableData = data?.items?.map((item: any) => ({
     ...item,
     tax_split: item?.item_tax_category?.tax_split?.map((split: any) => ({
@@ -205,10 +169,10 @@ const InvoicePreview = ({
   if (data?.is_tax == "inclusive") {
     taxInfo = hasTax
       ? taxListFinderInclusive(
-          updatedTableData,
-          tableSummary,
-          data?.discount_type
-        )
+        updatedTableData,
+        tableSummary,
+        data?.discount_type
+      )
       : [];
   } else {
     taxInfo = hasTax
@@ -217,55 +181,44 @@ const InvoicePreview = ({
   }
 
   /* ####################################################################### */
-
+  const { t } = useTranslation('system')
   const MoreOptions = () => {
     return (
       <div className="bg-white absolute right-0 top-0 text-xs w-[170px] flex flex-col border rounded-md shadow-lg">
-        {hasPermissionForTemplates && (
-          <Popover.Button
-            className=" p-2 w-full rounded-t hover:bg-accent hover:text-white text-left"
-            onClick={() =>
-              navigate(`/templates?template_group=${templateGroupId}`)
-            }
-          >
-            Edit Template
-          </Popover.Button>
-        )}
-        {hasPermissionToUpdateProfile && (
-          <Popover.Button
-            className={`p-2 border-t  ${
-              templateGroupId !== "sales_invoice" && "rounded-b"
-            } hover:bg-accent hover:text-white text-left`}
-            onClick={() => navigate("/settings/organization")}
-          >
-            Update Logo & Address
-          </Popover.Button>
-        )}
-       
-
-        {templateGroupId === "sales_invoice" && (
-          <>
-            <Popover.Button
-              className={`p-2 cursor-pointer border-t hover:bg-accent hover:text-white text-left`}
-              onClick={() => {
-                setVoucherType("deliveryNote");
-                setShowPrintModal(true);
-              }}
-            >
-              <div>Print Delivery Note</div>
+        {
+          hasPermissionForTemplates && (
+            <Popover.Button className=" p-2 w-full rounded-t hover:bg-accent hover:text-white text-left"
+              onClick={() => navigate(`/templates?template_group=${templateGroupId}`)}>
+              {t("edit_template")}
             </Popover.Button>
+          )
+        }
 
-            <Popover.Button
-              className={`p-2 cursor-pointer border-t rounded-b hover:bg-accent hover:text-white text-left`}
-              onClick={() => {
-                setVoucherType("packingSlip");
-                setShowPrintModal(true);
-              }}
-            >
-              <div>Print Packing Slip</div>
+        {
+          hasPermissionToUpdateProfile && (
+            <Popover.Button className={`p-2 border-t  ${templateGroupId !== "sales_invoice" && "rounded-b"} hover:bg-accent hover:text-white text-left`}
+              onClick={() => navigate("/settings/organization")}>
+              {t("update_logo_&_address")}
             </Popover.Button>
-          </>
-        )}
+          )
+        }
+
+        {
+          templateGroupId === "sales_invoice" && (
+            <>
+              <Popover.Button className={`p-2 cursor-pointer border-t hover:bg-accent hover:text-white text-left`}
+                onClick={() => { setVoucherType("deliveryNote"); setShowPrintModal(true); }}>
+                <div>{t("print_delivery_note")}</div>
+              </Popover.Button>
+
+              <Popover.Button
+                className={`p-2 cursor-pointer border-t rounded-b hover:bg-accent hover:text-white text-left`}
+                onClick={() => { setVoucherType("packingSlip"); setShowPrintModal(true); }}>
+                <div>{t("print_packing_slip")}</div>
+              </Popover.Button>
+            </>
+          )
+        }
       </div>
     );
   };
@@ -282,7 +235,8 @@ const InvoicePreview = ({
           totalAmountInwords={totalAmountInwords}
         />
       );
-    } else
+    }
+    else
       return (
         <DownloadStandardPreview
           data={data}
@@ -315,7 +269,6 @@ const InvoicePreview = ({
       </div>
     );
   };
-
   /* ####################################################################### */
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -356,7 +309,6 @@ const InvoicePreview = ({
     }, 2000);
   }, []);
   useEffect(() => {
-    
     setGeneralBackGroundStyle((previous: any) => ({
       ...previous,
       backgroundImage: templateData?.background_image
@@ -385,46 +337,35 @@ const InvoicePreview = ({
     <Fragment>
       {!templatesInfo?.loading ? (
         <div className=" relative flex flex-col items-center bg-[#f9f9fb] overflow-auto p-7 print:p-0 h-full w-full">
-          safvan
-          <div
-            id="invoicePreview"
-            style={generalBackGroundStyle}
-            className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
-          >
+          <div id="invoicePreview" style={generalBackGroundStyle} className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`} >
             {
-            paperSize === "3Inch" || paperSize === "4Inch" ? (
-              <RetailPreviewWrapper
-                data={data}
-                docIDKey={docIDKey}
-                docTitle={docTitle}
-                template={templateData}
-                currency={currencySymbol || undefined}
-                templateGroupId={templateGroupId}
-              />
-            ) : (
-              <StandardPreviewWrapper
-                data={data}
-                docIDKey={docIDKey}
-                docTitle={docTitle}
-                template={templateData}
-                currency={currencySymbol || undefined}
-                templateGroupId={templateGroupId}
-              />
-            )
+              paperSize === "3Inch" || paperSize === "4Inch" ? (
+                <RetailPreviewWrapper
+                  data={data}
+                  docIDKey={docIDKey}
+                  docTitle={docTitle}
+                  template={templateData}
+                  currency={currencySymbol || undefined}
+                  templateGroupId={templateGroupId}
+                />
+              ) : (
+                <StandardPreviewWrapper
+                  data={data}
+                  docIDKey={docIDKey}
+                  docTitle={docTitle}
+                  template={templateData}
+                  currency={currencySymbol || undefined}
+                  templateGroupId={templateGroupId}
+                />
+              )
             }
           </div>
           {showOptions && (
             <div className="absolute flex flex-col top-3 right-3 ">
-              {/*  Print Option */}
-
               <div
-                title="Print Invoice"
-                onClick={() => {
-                  setVoucherType("normal");
-                  setShowPrintModal(true);
-                }}
-                className=" text-gray-700 hover:text-accent print:hidden cursor-pointer  rounded-t-lg border border-b-0 p-2 bg-white"
-              >
+                title={t("print_invoice")}
+                onClick={() => { setVoucherType("normal"); setShowPrintModal(true); }}
+                className=" text-gray-700 hover:text-accent print:hidden cursor-pointer  rounded-t-lg border border-b-0 p-2 bg-white">
                 <PrinterIcon className=" w-4 h-4 " />
               </div>
 
@@ -432,10 +373,7 @@ const InvoicePreview = ({
 
               <PDFDownloadLink
                 document={<DownloadPreviewTemplate />}
-                fileName={`${
-                  data?.[docIDKey || "sales_invoice_no"] || "voucher"
-                }.pdf`}
-              >
+                fileName={`${data?.[docIDKey || "sales_invoice_no"] || "voucher"}.pdf`}>
                 {/* {({ blob, url, loading, error }) => (
                   <div
                     title="Download Invoice"
@@ -446,40 +384,43 @@ const InvoicePreview = ({
                     {!loading && <ArrowDownTrayIcon className=" w-4 h-4" />}
                   </div>
                 )} */}
+
               </PDFDownloadLink>
 
               {/* ######################################################################### */}
 
               {/* ######################## Change Template Option  ######################## */}
 
-              {!pathname?.includes("/invoice_designer/") && (
-                <button
-                  title="Change Template"
-                  onClick={() => setShowChangeTemplate(true)}
-                  className=" text-gray-700 hover:text-accent  print:hidden cursor-pointer border p-2 bg-white "
-                >
-                  <Cog6ToothIcon className=" w-4 h-4" />
-                </button>
-              )}
+              {
+                !pathname?.includes("/invoice_designer/") && (
+                  <button
+                    title={t("change_template")}
+                    onClick={() => setShowChangeTemplate(true)}
+                    className=" text-gray-700 hover:text-accent  print:hidden cursor-pointer border p-2 bg-white ">
+                    <Cog6ToothIcon className=" w-4 h-4" />
+                  </button>
+                )
+              }
 
               {/* ######################################################################### */}
 
-              {!pathname?.includes("/invoice_designer/") && (
-                <ERPPopover popoverList={MoreOptions()} className="relative">
-                  <button
-                    title="More"
-                    className=" text-gray-700 hover:text-accent  print:hidden cursor-pointer  rounded-b-lg border border-t-0 p-2 -mt-2 bg-white"
-                  >
-                    <EllipsisHorizontalIcon className=" w-4 h-4" />
-                  </button>
-                </ERPPopover>
-              )}
+              {
+                !pathname?.includes("/invoice_designer/") && (
+                  <ERPPopover popoverList={MoreOptions()} className="relative">
+                    <button
+                      title={t("more")}
+                      className=" text-gray-700 hover:text-accent  print:hidden cursor-pointer  rounded-b-lg border border-t-0 p-2 -mt-2 bg-white">
+                      <EllipsisHorizontalIcon className=" w-4 h-4" />
+                    </button>
+                  </ERPPopover>
+                )
+              }
 
               <ERPSideView
-                title="Model"
+                title={t("model")}
                 show={showChangeTemplate}
-                onClose={() => setShowChangeTemplate(false)}
-              >
+                onClose={() => setShowChangeTemplate(false)}>
+
                 <ERPChangeTemplateSidebar
                   data={data}
                   templateId={templateGroupId}
@@ -491,7 +432,7 @@ const InvoicePreview = ({
 
               <ERPModal
                 isForm={true}
-                title={`Print`}
+                title={t('print')}
                 content={printModal(voucherType)}
                 className="!min-w-max"
                 isOpen={showPrintModal}

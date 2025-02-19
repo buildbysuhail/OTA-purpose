@@ -201,5 +201,8 @@
     "crop_image":"Crop image",
 
     "select":"Select",
-    "shortkey_settings":"Shortkey settings"
+    "shortkey_settings":"Shortkey settings",
+
+    "main":"Main",
+    "settings":"Settings"
 }

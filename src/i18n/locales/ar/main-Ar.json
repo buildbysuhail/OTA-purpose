@@ -201,5 +201,8 @@
   "crop_image": "قص الصورة",
 
   "select": "اختر",
-  "shortkey_settings": "إعدادات الاختصارات"
+  "shortkey_settings": "إعدادات الاختصارات",
+
+  "main": "الرئيسية",
+  "settings": "الإعدادات"
 }

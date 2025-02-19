@@ -14,6 +14,7 @@ export interface AccTransactionProps {
   voucherNo?: number;
   transactionMasterID?: number,
   financialYearID?: number,
+  isTeller: boolean | false,
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;
@@ -516,6 +517,7 @@ export interface AccTransactionFormState {
   isTaxOnExpense?: boolean
   tmpVoucherNo?: number
   billWiseRemarks?: string
+  masterAccountActive?: boolean
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {
@@ -525,6 +527,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   },
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
   voucherNumber: { visible: true, disabled: false, label: "voucher_number" },
+  voucherNumberUpDownBtns: { visible: true, disabled: false, label: "voucher_number" },
   btnDown: { visible: true, disabled: false, label: "" },
   transactionDate: {
     visible: true,

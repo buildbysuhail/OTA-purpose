@@ -174,7 +174,6 @@ const CollectionReport = () => {
                 <ErpDevGrid
                     remoteOperations={{filtering:false,paging:false,sorting:false}}
                   // allowGrouping={true}
-                  
                   // groupPanelVisible={true}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
@@ -187,6 +186,8 @@ const CollectionReport = () => {
                   showFilterInitially={true}
                   filterContent={<CollectionReportFilter />}
                   filterInitialData={CollectionReportFilterInitialState}
+                  filterHeight={400}
+                  filterWidth={650}
                   onFilterChanged = {(filter: any) => {setFilter(filter)}}
                   hideGridAddButton={true}
                   reload={true}

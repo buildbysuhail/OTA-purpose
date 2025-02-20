@@ -200,7 +200,8 @@ const Users = () => {
       <ERPModal
         isOpen={rootState.PopupData.user.isOpen || false}
         title={t("users")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={430}
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserPopup({ isOpen: false, key: null,reload: false }));

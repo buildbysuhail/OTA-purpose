@@ -149,7 +149,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.companyProfile.isOpen || false}
         title={t("company_profile")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={470}
         isForm
         closeModal={() => {
           dispatch(toggleCompanyProfilePopup({ isOpen: false }));
@@ -263,7 +264,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.exchangeRates.isOpen || false}
         title={t("exchange_rates")}
-        width="w-full max-w-[1000px]"
+        width={800}
+        height={700}
         isForm={true}
         closeModal={() => {
           dispatch(toggleExchangeRatesPopup({ isOpen: false }));

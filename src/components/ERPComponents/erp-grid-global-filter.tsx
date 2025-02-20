@@ -11,7 +11,8 @@ import { useTranslation } from "react-i18next";
 
 interface ErpGridGlobalFilterProps {
   gridId: string;
-  width?: string;
+  width?: number;
+  height?: number;
   initialData: any;
   validations: any;
   title: string
@@ -24,7 +25,8 @@ interface ErpGridGlobalFilterProps {
 
 const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   gridId,
-  width = "w-full max-w-[1000px] min-w-[300px]",
+  width ,
+  height,
   content,
   initialData,
   validations,
@@ -129,6 +131,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
         isOpen={isOpen}
         hasSubmit={false}
         width={width}
+        height={height}
         closeTitle={t("close")}
         title={title}
         closeModal={() => setIsOpen(false)}
@@ -143,8 +146,8 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
           })
         }
         footer={
-          <div className=" flex justify-end space-x-2 gap-4 py-5 dark:!border-dark-border border-t ">
-           
+          <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
+       
             <ERPSubmitButton
               type="button"
               // onClick={onClose}

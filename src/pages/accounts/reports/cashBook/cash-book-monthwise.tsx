@@ -42,7 +42,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 180;
+    let gridHeightWindows = modalHeight - 130;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -278,7 +278,7 @@ const CashBookMonthWise: FC<CashBookMonthWiseProps> = ({ postData, contentProps,
                     content: <CashBookDayWise postData={{ ...mergeObjectsRemovingIdenticalKeys(postData, contentProps) }} />,
                     title: t("acc_group_dayview"),
                     isForm: false,
-                    width: "max-w-[1500px]",
+                    width: 1300,
                     drillDownCells: "month",
                     bodyProps: "year,monthNum",
                   }}

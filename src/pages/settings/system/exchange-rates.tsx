@@ -95,7 +95,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = isMaximized ? modalHeight - 230 : modalHeight - 250;
+    let gridHeightWindows =  modalHeight - 150;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -301,27 +301,19 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
           </div>
         </div>
       </div>
-      {/* <ERPModal
-        closeButton="Button"
-        isOpen={rootState.PopupData.currencyExchange.isOpen || false}
-        title={t("currencies")}
-        width="w-full max-w-[600px]"
-        isForm={true}
-        closeModal={() => {
-          dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
-        }}
-        content={<CurrencyExchangeManage />}
-      /> */}
+      
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}
-        width="w-full max-w-[600px]"
+        width={700}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedCurrencyMasterManage />}
       />
+    
     </Fragment>
   );
 };

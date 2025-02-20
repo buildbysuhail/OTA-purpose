@@ -6,11 +6,9 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
 import DayBookBillWise from "./day-book-billwise";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
-import { Filter } from "lucide-react";
 // interface DayBookSummary {
 //   from: Date
 // }
@@ -229,7 +227,8 @@ const DayBookSummary = () => {
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
-                  filterWidth={300}
+                  filterWidth={333}
+                  filterHeight={230}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}
@@ -243,15 +242,15 @@ const DayBookSummary = () => {
                     content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
                     isForm: false,
-                    width:1000,
-                    height:800,
+                    width: 1000,
+                    height: 800,
                     drillDownCells: "voucherType",
                     bodyProps: "voucherType",
                     // enableFn: (data: any) => data?.voucherType != ""
                     //dateFrom,dateTo,costCenterID,
                   }}
                   postData={filter}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

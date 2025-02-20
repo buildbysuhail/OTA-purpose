@@ -643,7 +643,8 @@ const TrialBalancePeriodwise = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterWidth="100"
+                  filterHeight={420}
+                  filterWidth={430}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TrialBalancePeriodwiseReportFilter />}
@@ -654,7 +655,6 @@ const TrialBalancePeriodwise = () => {
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "max-w-[1000px]",
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.isGroup == false && data?.ledgerName != "TOTAL"

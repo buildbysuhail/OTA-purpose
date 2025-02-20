@@ -747,7 +747,6 @@ const BillwiseProfitGlobal = () => {
                   hideGridAddButton={true}
                   reload={true}
                   enablefilter={true}
-                  filterWidth="200"
                   showFilterInitially={true}
                   filterContent={<BillwiseProfitReportFilter />}
                   filterInitialData={BillwiseProfitReportFilterInitialState}

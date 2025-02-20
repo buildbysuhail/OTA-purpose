@@ -248,7 +248,8 @@ const OutstandingAccountReceivableReport = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterWidth="150"
+                 filterHeight={340}
+                 filterWidth={390}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<OutstandingReceivableReportFilter />}

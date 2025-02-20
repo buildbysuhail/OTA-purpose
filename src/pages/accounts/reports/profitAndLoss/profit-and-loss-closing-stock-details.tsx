@@ -26,7 +26,7 @@ const ProfitAndLossClosingStockDetails: FC<ProfitAndLossClosingStockProps> = ({ 
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 170;
+    let gridHeightWindows = modalHeight - 140;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 

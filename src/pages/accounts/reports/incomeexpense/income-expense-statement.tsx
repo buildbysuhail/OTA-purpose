@@ -300,7 +300,8 @@ const IncomExpenseStatement = () => {
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="100"
+                  filterWidth={335}
+                  filterHeight={230}
                   filterContent={<IncomeExpenseStatementFilter />}
                   onFilterChanged = {(filter: any) => { setFilter(filter)}}
                   filterInitialData={IncomeExpenseStatementFilterInitialState}
@@ -311,7 +312,7 @@ const IncomExpenseStatement = () => {
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "max-w-[1500px]",
+                    width: 1500,
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     

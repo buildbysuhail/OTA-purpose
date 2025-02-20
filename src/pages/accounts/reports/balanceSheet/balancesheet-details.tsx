@@ -35,7 +35,7 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
   
     useEffect(() => {
       let gridHeightMobile = modalHeight - 50;
-      let gridHeightWindows = modalHeight - 180;
+      let gridHeightWindows = modalHeight - 140;
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [isMaximized, modalHeight]);
 
@@ -140,7 +140,8 @@ const BalancesheetDetails: FC<BalancesheetDetailsProps> = ({ postData, groupName
                     content: <CashBookMonthWise postData={filter} />,
                     title: t("acc_group_monthview"),
                     isForm: true,
-                    width: "max-w-[1000px]",
+                    width: 1000,
+                    height:800,
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID,",
                     enableFn: (data: any) => data?.ledgerName != "TOTAL"

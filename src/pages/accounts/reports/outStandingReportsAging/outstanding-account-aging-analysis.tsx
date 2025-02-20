@@ -34,7 +34,7 @@ const OutstandingAccountAgingAnalysis: FC<OutstandingAccountAgingAnalysisProps> 
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 180;
+    let gridHeightWindows = modalHeight - 135;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 

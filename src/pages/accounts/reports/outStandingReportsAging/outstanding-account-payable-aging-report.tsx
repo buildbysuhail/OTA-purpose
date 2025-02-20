@@ -565,7 +565,8 @@ const OutstandingAccountPayableAgingReport = () => {
                   hideGridAddButton={true}
                   reload={true}
                   enablefilter={true}
-                  filterWidth="100"
+                  filterHeight={510}
+                  filterWidth={600}
                   showFilterInitially={true}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
                   filterContent={<OutstandingAgingReportFilter />}
@@ -575,7 +576,7 @@ const OutstandingAccountPayableAgingReport = () => {
                     content: <OutstandingAccountAgingAnalysis />,
                     title: t("account_aging_analysis"),
                     isForm: true,
-                    width: "max-w-[1000px]",
+                    
                     drillDownCells: "ledgername",
                     bodyProps: "ledgerID",
                     //asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,

@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import { AlignRight } from "lucide-react";
 interface CashSummary {
   from: Date
 }
@@ -126,11 +125,12 @@ const CashSummary = () => {
                   hideGridAddButton={true}
                   reload={true}
                   enablefilter={true}
-                  filterWidth="100"
+                  filterWidth={335}
+                  filterHeight={160}
                   showFilterInitially={true}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

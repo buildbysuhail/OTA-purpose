@@ -3,14 +3,12 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
-import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
-import { GroupItem, Summary } from "devextreme-react/cjs/data-grid";
-import moment from "moment";
 interface CollectionReport {
   from: Date
 }
@@ -35,13 +33,13 @@ const CollectionReport = () => {
       caption: t('date'),
       dataType: "date",
       allowSearch: true,
-      allowSorting:false,
+      allowSorting: false,
       allowFiltering: true,
       width: 100,
-      format:"dd-MMM-yyyy",
+      format: "dd-MMM-yyyy",
       // groupIndex: 0,
-      showInPdf:true,
-      
+      showInPdf: true,
+
     },
     {
       dataField: "vchNo",
@@ -50,7 +48,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 125,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -59,7 +57,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -67,7 +65,7 @@ const CollectionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -91,19 +89,20 @@ const CollectionReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
               style:
-              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
-            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {cellElement.data.particulars}
           </span>)
-          }}
+        }
+      }
     },
     {
       dataField: "refNo",
@@ -128,7 +127,7 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.amount;
@@ -137,8 +136,8 @@ const CollectionReport = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) 
-              : getFormattedValue(balance) ;
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
 
           return {
             ...exportCell,
@@ -146,22 +145,24 @@ const CollectionReport = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup===true? '#FF0000' :'',
+            textColor: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup === true ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup === true ? { argb: 'FFFF0000' } : "",
               size: 10,
               style:
-              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
-            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
-        else { return(  <span className={`${cellElement.data.particulars === "TOTAL"|| cellElement.data.isGroup===true? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} `}
-        </span>)
-      
-        }}
+        else {
+          return (<span className={`${cellElement.data.particulars === "TOTAL" || cellElement.data.isGroup === true ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} `}
+          </span>)
+
+        }
+      }
     },
   ];
   return (
@@ -172,7 +173,7 @@ const CollectionReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                    remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   // allowGrouping={true}
                   // groupPanelVisible={true}
                   columns={columns}
@@ -188,12 +189,12 @@ const CollectionReport = () => {
                   filterInitialData={CollectionReportFilterInitialState}
                   filterHeight={400}
                   filterWidth={650}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   hideGridAddButton={true}
                   reload={true}
                   // summaryItems={summaryItems}
                   showSummary={false}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

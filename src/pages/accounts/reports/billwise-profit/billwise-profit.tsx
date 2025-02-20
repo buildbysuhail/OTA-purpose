@@ -611,7 +611,8 @@ const BillwiseProfit = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="200"
+                  filterHeight={630}
+                  filterWidth={850}
                   filterContent={<BillwiseProfitReportFilter />}
                   filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>

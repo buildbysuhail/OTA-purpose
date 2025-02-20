@@ -24,7 +24,7 @@ const UserTypes = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "userTypeCode",
@@ -33,7 +33,7 @@ const UserTypes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -42,7 +42,7 @@ const UserTypes = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
@@ -56,8 +56,8 @@ const UserTypes = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode,reload: false }) }}
-            edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode,reload: false }) }}
+            view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode, reload: false }) }}
             delete={{
               onSuccess: () => {
                 dispatch(
@@ -111,7 +111,8 @@ const UserTypes = () => {
       <ERPModal
         isOpen={rootState.PopupData.userType.isOpen || false}
         title={t("usertype")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={350}
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserTypePopup({ isOpen: false }));

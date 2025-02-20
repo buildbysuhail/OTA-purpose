@@ -609,7 +609,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust', gridId = 'grd_cust' })
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
         title={type === 'Cust' ? t("customer") : t("supplier")}
-        width="w-full max-w-[1400px]"
+        width={1400}
+        height={760}
         isForm={true}
         closeModal={() => {
           dispatch(toggleParties({ isOpen: false, key: null, reload: false }));
@@ -627,7 +628,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust', gridId = 'grd_cust' })
         hasSubmit={false}
         closeTitle={t("close")}
         title={t("add_items")}
-        width="w-full"
+        width={1400}
+        height={710}
         isFullHeight={true}
         closeModal={() => setShowValidation(false)}
         content={

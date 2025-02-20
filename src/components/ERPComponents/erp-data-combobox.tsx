@@ -386,10 +386,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
-    const reduxState =  useAppSelector(
+    const reduxState = useAppSelector(
       (state: RootState) => state.Data
     );
-   const dispatch = useDispatch();
+    const dispatch = useDispatch();
     // Use localInputBox if provided, otherwise fall back to global inputBox state
     const inputBoxState = localInputBox || appState?.inputBox;
 
@@ -639,11 +639,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               ? field.getListUrlDynamic(data)
               : field?.getListUrl ?? "",
             params,
-              undefined, // config (if not needed, keep it as undefined)
-              undefined, // token (if not needed, keep it as undefined)
-              false, // force (default value)
-              reduxState, // Pass reduxState here
-              dispatch //
+            undefined, // config (if not needed, keep it as undefined)
+            undefined, // token (if not needed, keep it as undefined)
+            false, // force (default value)
+            reduxState, // Pass reduxState here
+            dispatch //
           ));
         const labelKey = field?.labelKey ?? "label";
         const valueKey = field?.valueKey ?? "value";
@@ -886,7 +886,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       const commonMuiStyles = {
         paddingBottom: _variant === "filled" ? "1rem" : "0",
         borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
-        fontWeight:inputBoxState?.bold ? 700:400,
+        fontWeight: inputBoxState?.bold ? 700 : 400,
         color:
           appState?.mode == "dark"
             ? "#ffffff"
@@ -1066,7 +1066,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 height: `${inputBoxState?.inputHeight ?? 3}rem`,
                 fontSize: `${inputBoxState?.fontSize ?? 16}px`,
                 ...commonMuiStyles,
-                fontWeight:inputBoxState?.bold ? 700: inputBoxState?.fontWeight ?? 500,
+                fontWeight: inputBoxState?.bold ? 700 : inputBoxState?.fontWeight ?? 500,
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${inputBoxState?.labelFontSize ?? 14}px`,
@@ -1406,7 +1406,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 style={{
                   height,
                   fontSize,
-                  fontWeight:inputBoxState?.bold ? 700 : fontWeight,
+                  fontWeight: inputBoxState?.bold ? 700 : fontWeight,
                   color,
                   borderColor: borderStyles,
                   outline: "none",
@@ -1533,11 +1533,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 >
                   {loading ? (
                     <div className="relative cursor-default select-none py-2 px-4 dark:!text-dark-text text-gray-700 text-center animate-pulse">
-                      Loading...
+                      {t("loading...")}
                     </div>
                   ) : filteredItems?.length === 0 ? (
                     <div className="relative cursor-default select-none py-2 px-4 dark:!text-dark-text text-gray-700">
-                      No data found
+                      {t("no_data_found")}
                     </div>
                   ) : (
                     <ComboboxList

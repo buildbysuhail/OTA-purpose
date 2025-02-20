@@ -25,7 +25,7 @@ const AccountLedgerType = () => {
       allowFiltering: true,
       width: 70,
       isLocked: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -46,7 +46,7 @@ const AccountLedgerType = () => {
       allowFiltering: true,
       width: 100,
       visible: false,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledger",
@@ -55,7 +55,7 @@ const AccountLedgerType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "accountGroup",
@@ -65,7 +65,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "aliasName",
@@ -75,7 +75,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "remarks",
@@ -85,7 +85,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "isDeletable",
@@ -159,7 +159,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "isActive",
@@ -169,7 +169,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "isCostCentreApplicable",
@@ -179,7 +179,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "isCommon",
@@ -189,7 +189,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "arabicName",
@@ -199,7 +199,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "actions",
@@ -263,7 +263,8 @@ const AccountLedgerType = () => {
       <ERPModal
         isOpen={rootState.PopupData.accountLedger.isOpen || false}
         title={t("acc_ledger")}
-        width="w-full max-w-[700px]"
+        width={700}
+        height={450}
         isForm={true}
         closeModal={() => { dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedAccountLedgerManage />}

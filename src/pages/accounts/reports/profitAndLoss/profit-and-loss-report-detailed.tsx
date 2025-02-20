@@ -655,7 +655,8 @@ const ProfitAndLossDetailedReport = () => {
 
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
-                width="w-full max-w-[500px]"
+                width={400}
+                height={300}
                 gridId="gridPandL_detailed"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
@@ -864,9 +865,10 @@ const ProfitAndLossDetailedReport = () => {
             }
             width={
               isOpenDetails.key == -500
-                ? "w-full max-w-[500px]"
-                : "max-w-[1200px]"
+                ? 500
+                : 1200
             }
+            height={800}
             isForm={true}
             closeModal={() => {
               setIsOpenDetails({ isOpen: false, key: 0, item: undefined });

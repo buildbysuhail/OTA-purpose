@@ -323,7 +323,8 @@ const TrialBalance = () => {
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
-                  filterWidth="100"
+                  filterHeight={350}
+                  filterWidth={380}
                   // rowVisibleFn = {(filter: any,data: any) => filter?.showSummaryOnly != true || (filter?.showSummaryOnly == true && data?.isGroup == true)}
                   customFilterItems={[{
                     keyField: "showSummaryOnly",
@@ -341,7 +342,7 @@ const TrialBalance = () => {
                     />,
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "max-w-[1000px]",
+                 
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID",
                     origin: "trialBalance",

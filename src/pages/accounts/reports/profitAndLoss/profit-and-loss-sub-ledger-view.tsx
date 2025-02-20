@@ -35,7 +35,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 170;
+    let gridHeightWindows = modalHeight - 130;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -194,7 +194,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
                     ),
                     title: t("cash_book_monthwise"),
                     isForm: true,
-                    width: "max-w-[1200px]",
+                    width: 1200,
                     drillDownCells: "ledgerName,",
                     bodyProps: "ledgerID",
                     enableFn: (data: any) => data?.ledgerID != 0,

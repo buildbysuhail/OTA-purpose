@@ -249,7 +249,8 @@ const OutstandingAccountPayableReport = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="150"
+                  filterHeight={340}
+                  filterWidth={390}
                   filterContent={<OutstandingPayableReportFilter />}
                   filterInitialData={OutstandingPayableReportFilterInitialState}>
                 </ErpDevGrid>

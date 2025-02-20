@@ -21,6 +21,7 @@ import {
   accTransactionInitialData,
   AccTransactionMasterInitialData,
   AccTransactionProps,
+  AccTransactionRow,
   AccTransactionRowInitialData,
   initialFormElements,
 } from "./acc-transaction-types";
@@ -256,7 +257,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     focusLedgerCode,
     focusRefNo,
     showBillwise,
-    billWiseExcludedTransactions
+    billWiseExcludedTransactions,
+    getDrCr
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -349,11 +351,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       );
 
       try {
+        const _drcr = getDrCr(formState.transaction.master.voucherType)
         const ledgerID = formState.row.ledgerID;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-
+let formElmns = {
+  ...formState.formElements 
+}
         if (!isNullOrUndefinedOrZero(ledgerID)) {
           if (
             billwiseMandatory &&
@@ -361,8 +366,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               (isRowEdit && !formState.formElements.amount.disabled))
           ) {
             const IsBillwiseTransAdjustmentExists = await api.getAsync(
-              `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=0`
+              `${Urls.acc_transaction_is_bill_wise_trans_adjustment_exists}?LedgerId=${ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=0`
             );
+            formElmns = {
+              ...formElmns,
+              amount: {
+                ...formElmns.amount,
+                disabled: (formState.transaction.master.voucherType == "CQP" || formState.transaction.master.voucherType == "CQR") && IsBillwiseTransAdjustmentExists ? true: false // Update visibility based on ledgerData
+              },
+            },
             dispatch(
               accFormStateHandleFieldChange({
                 fields: {
@@ -378,12 +390,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
               : 0,
             api.getAsync(
-              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${formState.transaction.master.drCr}`
+              `${Urls.ledgerDataForTransaction}?LedgerId=${ledgerID}&DrCr=${_drcr}`
             ),
           ]);
           dispatch(
             updateFormElement({
               fields: {
+                ...formElmns,
                 costCentreID: {
                   visible:
                     applicationSettings?.accountsSettings?.maintainCostCenter ||
@@ -484,6 +497,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     };
     loadLedgerData();
   }, [formState.masterAccountID]);
+  
   useEffect(() => {
     const initializeFormElements = async () => {
       const isForeignCurrencyVisible =
@@ -546,7 +560,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
         }
       }
-
+const prevNation = formState.row.narration;
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -580,6 +594,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               : t(title) + "[" + formType + "]") ?? "",
           row: {
             ...AccTransactionRowInitialData,
+            narration: (voucherType == "JV" || voucherType == "JVSP")
+            && formState?.userConfig?.keepNarrationForJV ? prevNation : "",
             bankDate: ["CR", "CP"].includes(voucher.master.voucherType)
               ? moment.utc("2000-01-01").startOf("day").toISOString()
               : moment().local().toISOString(),
@@ -655,7 +671,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       } as any;
       switch (voucherType) {
         case "CR":
-        case "CP": {
+          case "CP":
+            case "CPE":
+              case "CRE": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -665,7 +683,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             employee: {
               ...fieldsToUpdate.employee,
-              label: voucherType === "CR" ? t("collected_by") : t("paid_by"),
+              label: (voucherType === "CR" || voucherType === "CRE")  ? t("collected_by") : t("paid_by"),
             },
             narration: {
               ...fieldsToUpdate.narration,
@@ -697,6 +715,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               visible: false,
             },
           };
+          
           break;
         }
 
@@ -730,7 +749,51 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
 
-        case "BR":
+        case "BR":{
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...fieldsToUpdate.masterAccount,
+              label: t("bank_account"),
+              accLedgerType: LedgerType.BankAccount,
+            },
+            employee: {
+              ...fieldsToUpdate.employee,
+              label: t("collected_by"),
+            },
+            narration: {
+              ...fieldsToUpdate.narration,
+            },
+            discount: {
+              ...fieldsToUpdate.discount,
+              visible: true,
+            },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: !clientSession.isAppGlobal,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: !clientSession.isAppGlobal,
+            },
+            bankName: {
+              ...fieldsToUpdate.bankName,
+              visible: !clientSession.isAppGlobal,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.nameOnCheque,
+              visible: !clientSession.isAppGlobal,
+            },
+            gridColumns: {
+              ...fieldsToUpdate.gridColumns,
+              showChqNo: !clientSession.isAppGlobal,
+              showChqDate: !clientSession.isAppGlobal,
+              showNameOnCheque: !clientSession.isAppGlobal,
+              showBankName: !clientSession.isAppGlobal,
+            },
+          };
+          break;
+        }
         case "CQR": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
@@ -758,23 +821,89 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...fieldsToUpdate.bankDate,
               visible: true,
             },
+            paymentType: {
+              ...fieldsToUpdate.paymentType,
+              visible: true,
+            },
+            bankCharge: {
+              ...fieldsToUpdate.bankCharge,
+              visible: true,
+            },
+            chequeStatus: {
+              ...fieldsToUpdate.chequeStatus,
+              visible: true,
+            },
+            bankName: {
+              ...fieldsToUpdate.bankName,
+              visible: true,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.nameOnCheque,
+              visible: true,
+            },
             gridColumns: {
               ...fieldsToUpdate.gridColumns,
               showChqNo: true,
               showChqDate: true,
+              showNameOnCheque: true,
+              showBankName: true,
+              showChequeStatus: true,
+              showPaymentType: true,
             },
-          };
-
-          if (voucherType === "CQR") {
-            fieldsToUpdate.ledger = {
+            ledger: {
               ...fieldsToUpdate.ledger,
               selectedIndex: -1,
-            };
-          }
+            }
+          };
+
           break;
         }
 
-        case "BP":
+        case "BP":{
+          fieldsToUpdate = {
+            ...fieldsToUpdate,
+            masterAccount: {
+              ...fieldsToUpdate.masterAccount,
+              label: t("bank_account"),
+              accLedgerType: LedgerType.BankAccount,
+            },
+            employee: {
+              ...fieldsToUpdate.employee,
+              label: t("paid_by"),
+            },
+            narration: {
+              ...fieldsToUpdate.narration,
+            },
+            discount: {
+              ...fieldsToUpdate.discount,
+              visible: true,
+            },
+            chequeNumber: {
+              ...fieldsToUpdate.chequeNumber,
+              visible: !clientSession.isAppGlobal,
+            },
+            bankDate: {
+              ...fieldsToUpdate.bankDate,
+              visible: !clientSession.isAppGlobal,
+            },
+            bankName: {
+              ...fieldsToUpdate.bankName,
+              visible: !clientSession.isAppGlobal,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.nameOnCheque,
+              visible: !clientSession.isAppGlobal,
+            },
+            gridColumns: {
+              ...fieldsToUpdate.gridColumns,
+              showChqNo: !clientSession.isAppGlobal,
+              showChqDate: !clientSession.isAppGlobal,
+              showNameOnCheque: !clientSession.isAppGlobal,
+              showBankName: !clientSession.isAppGlobal,
+            },
+          };
+          break;
+        }
         case "CQP": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
@@ -802,18 +931,39 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ...fieldsToUpdate.bankDate,
               visible: true,
             },
+            bankName: {
+              ...fieldsToUpdate.bankName,
+              visible: true,
+            },
+            nameOnCheque: {
+              ...fieldsToUpdate.nameOnCheque,
+              visible: true,
+            },
+            paymentType: {
+              ...fieldsToUpdate.paymentType,
+              visible: true,
+            },
+            bankCharge: {
+              ...fieldsToUpdate.bankCharge,
+              visible: true,
+            },
+            chequeStatus: {
+              ...fieldsToUpdate.chequeStatus,
+              visible: true,
+            },
             gridColumns: {
               ...fieldsToUpdate.gridColumns,
               showChqNo: true,
               showChqDate: true,
+              showNameOnCheque: true,
+              showBankName: true,
+              showChequeStatus: true,
+              showPaymentType: true,
             },
-          };
-
-          if (voucherType === "CQP") {
-            fieldsToUpdate.ledger = {
+            ledger: {
               ...fieldsToUpdate.ledger,
-            };
-          }
+            }
+          };
           break;
         }
 
@@ -845,7 +995,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
 
-        case "JV": {
+        case "JV":
+        case "JVSP": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -1014,27 +1165,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       let fnlFormElmns = {...fieldsToUpdate};
-      if(_formState.transaction.master.voucherType == "BP" || _formState.transaction.master.voucherType == "BR" && userSession.countryId == Countries.India) {
-        fnlFormElmns =
-        {
-          ...fieldsToUpdate,
-          bankName: {
-            ...fieldsToUpdate.bankDate,
-            visible: false,
-          },
-          nameOnCheque: {
-            ...fieldsToUpdate.bankDate,
-            visible: false,
-          },
-          chequeNumber: {
-            ...fieldsToUpdate.chequeNumber,
-            visible: false,
-          },
-          bankDate: {
-            ...fieldsToUpdate.bankDate,
-            visible: false,
-          },
-        }
+      if((_formState.transaction.master.voucherType == "BP" 
+        || _formState.transaction.master.voucherType == "BR")
+        
+        && userSession.countryId == Countries.India) {
+        // fnlFormElmns =
+        // {
+        //   ...fieldsToUpdate,
+        //   bankName: {
+        //     ...fieldsToUpdate.bankDate,
+        //     visible: false,
+        //   },
+        //   nameOnCheque: {
+        //     ...fieldsToUpdate.bankDate,
+        //     visible: false,
+        //   },
+        //   chequeNumber: {
+        //     ...fieldsToUpdate.chequeNumber,
+        //     visible: false,
+        //   },
+        //   bankDate: {
+        //     ...fieldsToUpdate.bankDate,
+        //     visible: false,
+        //   },
+        // }
       }
       
       _formState.formElements = fnlFormElmns;
@@ -1232,7 +1386,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         visible: true,
       },
       {
-        dataField: "checkStatus",
+        dataField: "chequeStatus",
         caption: t("check_status"),
         visible: false,
       },
@@ -1250,6 +1404,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {
         dataField: "bankName",
         caption: t("bank_name"),
+        visible: false,
+      },
+      {
+        dataField: "chequeStatus",
+        caption: t("cheque_status"),
+        visible: false,
+      },
+      {
+        dataField: "bankCharge",
+        caption: t("bank_charge"),
         visible: false,
       },
       {
@@ -1316,6 +1480,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       if (column.dataField === "drCr" && gridColumns?.showDrCr !== true) return false;
       if (column.dataField === "chequeNo" && gridColumns?.showChqNo !== true) return false;
       if (column.dataField === "chequeDate" && gridColumns?.showChqDate !== true) return false;
+      if (column.dataField === "bankName" && gridColumns?.showBankName !== true) return false;
+      if (column.dataField === "nameOnCheque" && gridColumns?.showNameOnCheque !== true) return false;
+      if (column.dataField === "chequeStatus" && gridColumns?.showChequeStatus !== true) return false;
+      if (column.dataField === "paymentType" && gridColumns?.showPaymentType !== true) return false;
       if (column.dataField === "debit" && gridColumns?.showDebitColumn !== true) return false;
       if (column.dataField === "credit" && gridColumns?.showCreditColumn !== true) return false;
       return true;
@@ -1945,7 +2113,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           value={formState.transaction.master.voucherNumber}
                           type="number"
                           required={true}
-                          showCustomNumberChanger={formState.formElements.voucherNumberUpDownBtns.visible = true}
+                          showCustomNumberChanger={formState.formElements.voucherNumberUpDownBtns.visible == true}
                           className="max-w-[200px]"
                           onChange={async (e: any) => {
                             if (e.isCustomNumberChangerEvent == true) {
@@ -2787,6 +2955,63 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                       disabled={
                         formState.formElements.chequeNumber?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
+                  {formState.formElements.chequeStatus.visible && (
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="chequeStatus"
+                      label={t(formState.formElements.chequeStatus.label)}
+                      value={formState.row.chequeStatus}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { chequeStatus: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.chequeStatus?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                    />
+                  )}
+                  {formState.formElements.bankCharge.visible && (
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="bankCharge"
+                      label={t(formState.formElements.bankCharge.label)}
+                      value={formState.row.bankCharge}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { bankCharge: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.bankCharge?.disabled ||
+                        formState.formElements.bankCharge?.disabled
+                      }
+                    />
+                  )}
+                  {formState.formElements.paymentType.visible && (
+                    <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="paymentType"
+                      label={t(formState.formElements.paymentType.label)}
+                      value={formState.row.paymentType}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { paymentType: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.paymentType?.disabled ||
                         formState.formElements.pnlMasters?.disabled
                       }
                     />

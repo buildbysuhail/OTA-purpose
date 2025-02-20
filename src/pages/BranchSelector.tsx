@@ -22,6 +22,7 @@ import { APIClient } from "../helpers/api-client";
 import Urls from "../redux/urls";
 import ERPModal from "../components/ERPComponents/erp-modal";
 import CounterSettings from "./settings/system/counter-settings";
+import { ClientSessionModel } from "../redux/slices/client-session/reducer";
 
 interface ChildComponentProps {
   onLoadingChange: (isLoading: boolean) => void;
@@ -63,6 +64,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
      
       localStorage.setItem("token", response.item.token); 
       localStorage.setItem("up", response.item.userProfileDetails); 
+      localStorage.setItem("cs", response.item.clientSessions);
       localStorage.setItem("ut", response.item.userThemes); 
       localStorage.setItem("ur", response.item.userRights);
       const _userRights = atob(response.item.userRights);
@@ -72,8 +74,9 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const _userThemes = atob(response.item.userThemes);
       const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
-      
-      syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);  
+        const clientSession: ClientSessionModel = 
+                customJsonParse(response.item.clientSessions);
+      syncAppStates(dispatch,userThemes,clientSession, userProfileDetails,userRights, locale);  
       const settings = await api.getAsync(Urls.application_setting);
           localStorage.setItem('as', modelToBase64(settings))
       dispatch(setApplicationSettings(

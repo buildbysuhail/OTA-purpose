@@ -581,7 +581,8 @@ export const useAccTransaction = (
           case "CN":
           case "CQP":
           case "SV":
-          case "PBP":
+            case "PBP":
+              case "CPE":
             voucher.masterAccountID = firstDetail.relatedLedgerID;
             break;
 
@@ -591,10 +592,12 @@ export const useAccTransaction = (
           case "CQR":
           case "PV":
           case "PBR":
+          case "CRE":
             voucher.masterAccountID = firstDetail.ledgerID;
             break;
 
-          case "JV":
+            case "JV":
+              case "JVSP":
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
                 ? firstDetail.ledgerID
@@ -631,6 +634,7 @@ export const useAccTransaction = (
             case "CQP":
             case "SV":
             case "PBP":
+              case "CPE":
               return {
                 ...baseDetail,
                 ledgerCode: detail.ledgerCode,
@@ -644,6 +648,7 @@ export const useAccTransaction = (
             case "CQR":
             case "PV":
             case "PBR":
+              case "CRE":
               BillwiseaccTransactionDetailID++;
               return {
                 ...baseDetail,
@@ -652,7 +657,8 @@ export const useAccTransaction = (
                 ledgerID: detail.relatedLedgerID,
               };
 
-            case "JV":
+              case "JV":
+                case "SP":
               BillwiseaccTransactionDetailID++;
               if (
                 voucher.transaction.master.drCr === "Dr" ||
@@ -764,20 +770,7 @@ export const useAccTransaction = (
         (transactionDate.getTime() - softwareDate.getTime()) /
           (1000 * 60 * 60 * 24)
       );
-      if (["TXP"].includes(formState.transaction.master.voucherType)) {
-        if (applicationSettings.accountsSettings.allowUserwiseCounter == true) {
-          if (
-            clientSession.counterShiftId == undefined ||
-            clientSession.counterShiftId == 0
-          ) {
-            ERPAlert.show({
-              icon: "warning",
-              title: t("please_open_counter_for_transaction"),
-            });
-            return false;
-          }
-        }
-      }
+
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
         dispatch(
           updateFormElement({
@@ -795,7 +788,20 @@ export const useAccTransaction = (
         return false;
       }
     }
-
+    if (["TXP"].includes(formState.transaction.master.voucherType)) {
+      if (applicationSettings.accountsSettings.allowUserwiseCounter == true) {
+        if (
+          clientSession.counterShiftId == undefined ||
+          clientSession.counterShiftId == 0
+        ) {
+          ERPAlert.show({
+            icon: "warning",
+            title: t("please_open_counter_for_transaction"),
+          });
+          return false;
+        }
+      }
+    }
     const isvld = finalSave();
     return isvld;
   };
@@ -878,8 +884,45 @@ export const useAccTransaction = (
         return false;
       }
     }
+    if (!validateStatus(formState.transaction.details)) {
+      ERPAlert.show({
+        icon: "warning",
+        title: t("debit/credit"),
+        text: t("Contains multiple statuses, only a single status Cleared is accepted. Ensure all statuses are the same"),
+      });
+      return false;
+    }
 
     return true;
+  };
+  const validateStatus = (accounts: AccTransactionRow[]): boolean => {
+    try {
+      let hasC = false;
+      let hasB = false;
+      let hasP = false;
+
+      for (const row of accounts) {
+        if (!row.ledgerID) {
+          break;
+        }
+
+        const checkStatus = row.chequeStatus;
+
+        if (checkStatus === "C") hasC = true;
+        else if (checkStatus === "B") hasB = true;
+        else if (checkStatus === "P") hasP = true;
+      }
+
+      if (hasC && hasP) {
+        return false;
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error("Error validating status:", error);
+      alert(error.message);
+      return false;
+    }
   };
   const getFirstDebitCreditLedgerIDs = (transaction: any) => {
     let firstDebitLedgerID = 0;
@@ -952,8 +995,8 @@ export const useAccTransaction = (
           element.ledgerID = formState.masterAccountID;
           break;
 
-          case "JV":
-            case "JVSP":
+        case "JV":
+        case "JVSP":
           if (formState.row.drCr === "Dr") {
             element.relatedLedgerID = element.ledgerID;
             element.ledgerID = formState.masterAccountID;
@@ -1022,7 +1065,7 @@ export const useAccTransaction = (
         )
       ) {
         element.billwiseDetails = "";
-        element.checkStatus = "P";
+        element.chequeStatus = "P";
       }
 
       updatedDetails.push(element);
@@ -1287,42 +1330,8 @@ export const useAccTransaction = (
   ) => {
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
-        let _drCr;
-        switch (formState.transaction.master.voucherType) {
-          case "CP":
-          case "BP":
-          case "DN":
-          case "CQP":
-          case "SV":
-          case "SRV":
-          case "PBP":
-            _drCr = "Dr";
-            break;
-          case "CR":
-          case "BR":
-          case "CN":
-          case "CQR":
-          case "PV":
-          case "PBR":
-            _drCr = "Cr";
-
-            break;
-          case "OB":
-          case "MJV":
-            if (formState.row.drCr == "Dr") {
-              _drCr = "Dr";
-            } else {
-              _drCr = "Cr";
-            }
-            break;
-          case "JV":
-            if (formState.transaction.master.drCr == "Dr") {
-              _drCr = "Cr";
-            } else {
-              _drCr = "Dr";
-            }
-            break;
-        }
+        let _drCr = getDrCr(formState.transaction.master.voucherType);
+        
         if (formState.isRowEdit != true) {
           if (
             (billwiseDetails == undefined || billwiseDetails == null) &&
@@ -1555,6 +1564,44 @@ export const useAccTransaction = (
   };
   interface RowClickHandlerParams {
     row: AccTransactionRow;
+  }
+  const getDrCr = (voucherType: string) => {
+    switch (voucherType) {
+      case "CP":
+        case "CPE":
+      case "BP":
+      case "DN":
+      case "CQP":
+      case "SV":
+      case "SRV":
+      case "PBP":
+        return "Dr";
+        case "CR":
+          case "CRE":
+      case "BR":
+      case "CN":
+      case "CQR":
+      case "PV":
+      case "PBR":
+        return "Cr";
+
+        break;
+      case "OB":
+      case "MJV":
+        if (formState.row.drCr == "Dr") {
+          return "Dr";
+        } else {
+          return "Cr";
+        }
+        break;
+        case "JV":
+          case "JVSP":
+        if (formState.transaction.master.drCr == "Dr") {
+          return "Cr";
+        } else {
+          return "Dr";
+        }
+    }
   }
   const handleRowClick = async ({ row }: RowClickHandlerParams) => {
     try {
@@ -1947,6 +1994,26 @@ export const useAccTransaction = (
       return;
     }
 
+    if (clientSession.isAppGlobal && (formState.transaction.master.voucherType === "CQP" || formState.transaction.master.voucherType === "CQR")) {
+      const isCleared = formState.transaction.details.filter(x => x.chequeStatus == "C").length > 0
+      const isBounced = formState.transaction.details.filter(x => x.chequeStatus == "B").length > 0
+      if (isCleared) {
+        ERPAlert.show({
+          title: t("warning"),
+          text: t("Cleared PDC Cannot be Modified"),
+          icon: "warning",
+        });
+        return false;
+      } else if (isBounced) {
+        ERPAlert.show({
+          title: t("warning"),
+          text: t("Bounced PDC Cannot be Modified"),
+          icon: "warning",
+        });
+        return false;
+      }
+    }
+
     try {
       const result = await api.postAsync(
         Urls.get_and_set_transaction_edit_mode,
@@ -2001,6 +2068,25 @@ export const useAccTransaction = (
         icon: "warning",
       });
       return;
+    }
+    if (clientSession.isAppGlobal && (formState.transaction.master.voucherType === "CQP" || formState.transaction.master.voucherType === "CQR")) {
+      const isCleared = formState.transaction.details.filter(x => x.chequeStatus == "C").length > 0
+      const isBounced = formState.transaction.details.filter(x => x.chequeStatus == "B").length > 0
+      if (isCleared) {
+        ERPAlert.show({
+          title: t("warning"),
+          text: t("Cleared PDC Cannot be Modified"),
+          icon: "warning",
+        });
+        return false;
+      } else if (isBounced) {
+        ERPAlert.show({
+          title: t("warning"),
+          text: t("Bounced PDC Cannot be Modified"),
+          icon: "warning",
+        });
+        return false;
+      }
     }
 
     ERPAlert.show({
@@ -2166,10 +2252,11 @@ export const useAccTransaction = (
         },
       })
     );
+    const _drcr = getDrCr(formState.transaction.master.voucherType)
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
         formState.row.ledgerID
-      }&DrCr=${formState.transaction.master.drCr}&AccTransactionDetailID=${
+      }&DrCr=${_drcr}&AccTransactionDetailID=${
         formState.row.accTransactionDetailID ?? 0
       }`
     );
@@ -2353,5 +2440,6 @@ export const useAccTransaction = (
     focusRefNo,
     showBillwise,
     billWiseExcludedTransactions,
+    getDrCr
   };
 };

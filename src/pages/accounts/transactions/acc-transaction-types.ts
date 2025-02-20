@@ -139,7 +139,7 @@ export interface AccTransactionMaster {
   randomKey: number;
   onlineTrans: string;
   isEdit: boolean;
-  checkStatus: string;
+  chequeStatus: string;
   checkBouncedDate: string;
   drCr: string;
   isSalesView: boolean;
@@ -188,7 +188,7 @@ export interface AccTransactionMasterValidations {
   randomKey: string;
   onlineTrans: string;
   isEdit: string;
-  checkStatus: string;
+  chequeStatus: string;
   checkBouncedDate: string;
   drCr: string;
   isSalesView: string;
@@ -237,7 +237,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
   randomKey: "",
   onlineTrans: "",
   isEdit: "",
-  checkStatus: "",
+  chequeStatus: "",
   checkBouncedDate: "",
   drCr: "",
   isSalesView: "",
@@ -285,7 +285,9 @@ export interface AccTransactionRow {
   isDr: boolean;
   isDisplay: boolean;
   voucherType: string;
-  checkStatus: string;
+  chequeStatus: string;
+  paymentType: string;
+  bankCharge?: number;
   checkBouncedDate: string;
   billwiseData: BillwiseData[];
   billwiseDetails: string;
@@ -346,7 +348,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster = {
   randomKey: 0,
   onlineTrans: "",
   isEdit: false,
-  checkStatus: "",
+  chequeStatus: "",
   checkBouncedDate: moment.utc("2000-01-01").startOf("day").toISOString(),
   drCr: "Dr",
   isSalesView: false,
@@ -379,7 +381,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   isDr: true,
   isDisplay: false,
   voucherType: "",
-  checkStatus: "",
+  chequeStatus: "",
   checkBouncedDate: moment.utc("2000-01-01").startOf("day").toISOString(), // January 1, 2000
   billwiseData: [],
   branchId: 0,
@@ -410,6 +412,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   taxPerc: 0,
   taxableAmount: 0,
   taxAmount: 0,
+  paymentType: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: AccTransactionMasterInitialData,
@@ -557,6 +560,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   hasDiscount: { visible: true, disabled: false, label: "discount" },
   discount: { visible: true, disabled: false, label: "discount" },
   chequeNumber: { visible: true, disabled: false, label: "cheque_number" },
+  paymentType: { visible: false, disabled: false, label: "payment_ype" },
+  chequeStatus: { visible: false, disabled: false, label: "check_status" },
+  bankCharge: { visible: false, disabled: false, label: "bank_charge" },
   bankDate: { visible: false, disabled: false, label: "bank_date" },
   nameOnCheque: { visible: true, disabled: false, label: "name_on_cheque" },
   bankName: { visible: true, disabled: false, label: "bank_name" },

@@ -48,7 +48,7 @@ import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import AutoClicker from "./Nodevwatermark";
-import { setSoftwareDate } from "./redux/slices/client-session/reducer";
+import { ClientSessionModel, setSoftwareDate } from "./redux/slices/client-session/reducer";
 import moment from "moment";
 import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
@@ -116,6 +116,7 @@ function App() {
     let upt = localStorage.getItem("up");
     let urr = localStorage.getItem("ur");
     let utt = localStorage.getItem("ut");
+    let css = localStorage.getItem("cs");
    
   
   
@@ -143,8 +144,15 @@ function App() {
     let locale = languagesData.find(
       (l) => l.code == userProfileDetails.language
     ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-    
-    syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
+    let clientSession: ClientSessionModel = {
+      demoExpiryDate: moment().add(1,"years").toISOString(),
+      isAppGlobal: false,isDemoVersion: true,softwareDate:moment().local().toISOString(),counterShiftId: 0
+    };
+    if (css != undefined && css != null && css != "") {
+ clientSession =
+                customJsonParse(css);
+    }
+    syncAppStates(dispatch, userThemes, clientSession,userProfileDetails,userRights, locale);
     const language = userProfileDetails?.language;
 
     if (!token && pathname !== "/shared-view") {

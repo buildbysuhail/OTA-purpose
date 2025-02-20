@@ -7,6 +7,7 @@ import { AppDispatch } from "../../redux/store";
 import { UserRight } from "../settings/userManagement/data";
 import { setUserRights, UserTypeRights } from "../../redux/slices/user-rights/reducer";
 import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
+import { ClientSessionModel, setClientSession } from "../../redux/slices/client-session/reducer";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
   
@@ -16,12 +17,13 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   localStorage.removeItem(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
-export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
+export const syncAppStates = async (dispatch: AppDispatch, res: AppState, clientSession: ClientSessionModel, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
 
   dispatch(setUserBranches(userSession.branches));
   dispatch(setUserSession({...userSession, branches:[]}));
   dispatch(setUserBranches(userSession.branches));
   dispatch(setUserRights(userRights));
+  dispatch(setClientSession(clientSession));
 
   setLanguage(dispatch, locale);
 

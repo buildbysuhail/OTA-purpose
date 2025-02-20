@@ -35,6 +35,7 @@ import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import polo from "../../assets/images/brand-logos/polo_logo.png";
 import ConfettiEffect from "./confetti-effect";
+import { ClientSessionModel } from "../../redux/slices/client-session/reducer";
 
 const api = new APIClient()
 const Login = () => {
@@ -103,11 +104,14 @@ const Login = () => {
         localStorage.removeItem("_token");
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
+        localStorage.setItem("cs", login.item.clientSessions);
         localStorage.setItem("ut", login.item.userThemes);
         localStorage.setItem("ur", login.item.useRights);
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel =
           customJsonParse(_userProfileDetails);
+        const clientSession: ClientSessionModel =
+          customJsonParse(login.item.clientSessions);
         const _userRights = atob(login.item.userRights);
         const userRights: UserTypeRights[] = customJsonParse(_userRights);
         const _userThemes = atob(login.item.userThemes);
@@ -123,6 +127,7 @@ const Login = () => {
         syncAppStates(
           dispatch,
           userThemes,
+          clientSession,
           userProfileDetails,
           userRights,
           locale 

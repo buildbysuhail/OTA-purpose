@@ -65,7 +65,7 @@ const accTransactionSlice = createSlice({
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailID = 0;
       state.previousNarration = "";
-      state.row.checkStatus = "P";
+      state.row.chequeStatus = "P";
       state.transaction.master.currencyRate = 1;
       state.row.currencyID = 0;
       state.transaction.master.referenceNumber = "";
@@ -89,6 +89,9 @@ const accTransactionSlice = createSlice({
       state.row.hasDiscount = false;
       state.row.nameOnCheque = "";
       state.row.chequeNumber = "";
+
+      state.row.bankCharge = 0;
+      state.row.paymentType ="";
       // state.masterAccountID = 0;
       state.row.costCentreID = defaultCostCenterID;
 

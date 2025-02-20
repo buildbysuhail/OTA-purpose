@@ -225,8 +225,9 @@ interface ERPDevGridProps {
   changeReload?: (action: boolean) => void;
   showFilterInitially?: boolean;
   childPopupProps?: {
-    title: string;
-    width: string;
+    title:string;
+    width?: number;
+    height?:number;
     isForm: boolean;
     content: any;
     drillDownCells: string;

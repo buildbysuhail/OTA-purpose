@@ -94,6 +94,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           }}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
+
         <ERPInput
           {...getFieldProps("arabicName")}
           label={t("name_in_arabic")}
@@ -103,6 +104,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             handleFieldChange("arabicName", data.arabicName)
           }
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
@@ -113,6 +115,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           }
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("parentGroupID")}
           field={{
@@ -128,6 +131,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
           label={t("group_under")}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
@@ -138,7 +142,9 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           }
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
-        {formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 &&
+
+        {
+          formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 &&
           <ERPInput
             {...getFieldProps("reasonForModification")}
             label={t("reason_for_edit")}
@@ -152,7 +158,9 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             }
           />
         }
-        {1 != 1 &&
+
+        {
+          1 != 1 &&
           <>
             <ERPCheckbox
               {...getFieldProps("isEditable")}
@@ -171,19 +179,11 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           </>
         }
         <div className="flex items-center">
-          <a
-            href="#"
-            onClick={handleGroupOrder}
-            className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500"
-          >
+          <a href="#" onClick={handleGroupOrder} className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500">
             {t("group_order")}
           </a>
         </div>
-        <a
-          href="#"
-          onClick={handleTranslation}
-          className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500"
-        >
+        <a href="#" onClick={handleTranslation} className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500">
           {t("translate_to_arabic")}
         </a>
       </div>
@@ -206,7 +206,8 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           dispatch(toggleGroupOrder({ isOpen: false }));
         }}
 
-        width="!w-[80rem] !max-w-[60rem]"
+        width={1000}
+        height={700}
         content={<AccountGroupOrderContent formData={formData} setFormData={setFormData} />}
         footer={<AccountGroupOrderFooter onSubmit={onSubmit} />}
       />

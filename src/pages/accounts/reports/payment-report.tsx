@@ -2,17 +2,13 @@ import { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
-import moment from "moment";
 
 interface PaymentReport {
   from: Date
@@ -36,8 +32,8 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
-       format:"dd-MMM-yyyy"
+      showInPdf: true,
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "vchNo",
@@ -46,7 +42,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -55,7 +51,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "particulars",
@@ -63,7 +59,7 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -87,19 +83,20 @@ const PaymentReport = () => {
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
               style:
-              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
-            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-      return (  <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-        {cellElement.data.particulars}
-      </span>)
-        }}
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.particulars}
+          </span>)
+        }
+      }
     },
     {
       dataField: "refNo",
@@ -124,7 +121,7 @@ const PaymentReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.amount;
@@ -133,8 +130,8 @@ const PaymentReport = () => {
             balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance) 
-              : getFormattedValue(balance) ;
+                ? getFormattedValue(-1 * balance)
+                : getFormattedValue(balance);
 
           return {
             ...exportCell,
@@ -142,23 +139,24 @@ const PaymentReport = () => {
             bold: true,
             alignment: "right",
             alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' :'',
+            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
               style:
-              cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
-            bold: cellElement.data.particulars === "TOTAL" ? true : false,
+                cellElement.data.particulars === "TOTAL" ? "bold" : "normal",
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return(<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ?
-               getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
+              getFormattedValue(-1 * cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
           </span>)
-               }}
+        }
+      }
     },
   ];
   return (
@@ -169,10 +167,11 @@ const PaymentReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                    remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {salesRouteID > 0 &&, Sales Route : [salesRouteName]} {employeeID > 0 && , Employee : [employeeName]}"
                   gridHeader={t("payment_report")}
+                  filterWidth={650}
                   dataUrl={Urls.acc_reports_payment}
                   method={ActionType.POST}
                   gridId="grd_payment_report"
@@ -181,7 +180,7 @@ const PaymentReport = () => {
                   showFilterInitially={true}
                   filterContent={<PaymentReportFilter />}
                   filterInitialData={PaymentReportFilterInitialState}
-                  onFilterChanged = {(filter: any) => {setFilter(filter)}}
+                  onFilterChanged={(filter: any) => { setFilter(filter) }}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

@@ -214,7 +214,8 @@ const SystemVoucher = () => {
         isOpen={rootState.PopupData.voucher.isOpen || false}
         title={t("voucher")}
         isForm={true}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={350}
         closeModal={() => { dispatch(toggleVoucherPopup({ isOpen: false, key: null,reload: false })); }}
         content={<MemoizedVoucherManage />}
       />

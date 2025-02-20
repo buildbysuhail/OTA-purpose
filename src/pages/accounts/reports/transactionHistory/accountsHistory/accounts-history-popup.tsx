@@ -239,7 +239,7 @@ const AccountsHistoryPopup = ({
                     content: <AccountsHistoryPopup />,
                     title: t("accounts_transaction_history_popup"),
                     isForm: false,
-                    width: "max-w-[1500px]",
+                    width: 1500,
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID",
                     enableFn: (data: any) => data.oldAccTransactionMasterID > 0

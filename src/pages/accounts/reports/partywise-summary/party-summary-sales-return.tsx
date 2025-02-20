@@ -150,6 +150,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -199,6 +200,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
           return exportCell != undefined ? {
             ...exportCell,
             text: value,
+            alignmentExcel: { horizontal: 'right' },
             alignment: "right",
             font: {
               ...exportCell.font,
@@ -235,6 +237,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -270,6 +273,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -309,6 +313,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -350,6 +355,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -389,6 +395,7 @@ const PartySummarySalesReturn: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold: cellElement.data.ledgerName === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,

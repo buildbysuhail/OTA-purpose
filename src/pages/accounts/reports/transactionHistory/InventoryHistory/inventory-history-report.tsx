@@ -44,7 +44,7 @@ const InventoryHistoryReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-        format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "modifiedDate",
@@ -54,7 +54,7 @@ const InventoryHistoryReport = () => {
       allowFiltering: true,
       width: 150,
       showInPdf: true,
-        format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "timeStamp",
@@ -106,11 +106,11 @@ const InventoryHistoryReport = () => {
           const balance = cellElement.data?.grandTotal;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -130,8 +130,8 @@ const InventoryHistoryReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.grandTotal == null 
-              ? '':getFormattedValue(cellElement.data.grandTotal,false,4) }`}
+            {`${cellElement.data?.grandTotal == null
+              ? '' : getFormattedValue(cellElement.data.grandTotal, false, 4)}`}
           </span>)
         }
       }
@@ -158,11 +158,11 @@ const InventoryHistoryReport = () => {
           const balance = cellElement.data?.cashReceived;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ? getFormattedValue(-1 * balance,false,4) 
-              : getFormattedValue(balance,false,4) ;
+                ? getFormattedValue(-1 * balance, false, 4)
+                : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -182,8 +182,8 @@ const InventoryHistoryReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.cashReceived == null 
-              ? '':getFormattedValue(cellElement.data.cashReceived,false,4) }`}
+            {`${cellElement.data?.cashReceived == null
+              ? '' : getFormattedValue(cellElement.data.cashReceived, false, 4)}`}
           </span>)
         }
       }
@@ -210,8 +210,8 @@ const InventoryHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
-      showInPdf:false,
+      visible: false,
+      showInPdf: false,
       width: 200,
     },
     {
@@ -248,7 +248,8 @@ const InventoryHistoryReport = () => {
                   filterInitialData={
                     TransactrionHistoryReportFilterInitialState
                   }
-                  filterWidth="150"
+                  filterWidth={335}
+                  filterHeight={270}
                   hideGridAddButton={true}
                   reload={true}
                   childPopupPropsDynamic={(dataField: string) => ({
@@ -256,7 +257,7 @@ const InventoryHistoryReport = () => {
                       dataField == "vchNo"
                         ? t(`inventory_transaction_history_popup`)
                         : t(`productsDetailedReportTransaction`),
-                    width: "max-w-[1500px]",
+                    width: 1500,
                     isForm: false,
                     content:
                       dataField == "vchNo" ? (

@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
-import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import BankStatementReportFilter, { BankStatementReportFilterInitialState } from "./bank-statement-report-filter";
 import moment from "moment";
@@ -20,8 +19,8 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      visible:false,
-      showInPdf:true,
+      visible: false,
+      showInPdf: true,
     },
     {
       dataField: "date",
@@ -32,15 +31,15 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 100,
       // format: 'MM , dd, yyyy',
-      showInPdf:true,
-        cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                        }
+      showInPdf: true,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+      }
     },
     {
       dataField: "bankDate",
@@ -49,7 +48,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "form",
@@ -58,7 +57,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "vchNo",
@@ -67,7 +66,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "ledger",
@@ -85,7 +84,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       // width: 200,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -104,24 +103,25 @@ const BankStatementReport = () => {
           return exportCell != undefined ? {
             ...exportCell,
             text: cellInfo.value,
-            bold:cellElement.data.particulars === "TOTAL" ? true:'',
+            bold: cellElement.data.particulars === "TOTAL" ? true : '',
             alignment: "right",
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
               // color: isDebit ? "#129151" : "#DC143C",
-               color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:"",
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
               size: 10,
-              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             }
           } : undefined;
         }
         else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {cellElement.data.particulars}
-        </span>)
-        }}
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {cellElement.data.particulars}
+          </span>)
+        }
+      }
     },
     {
       dataField: "debit",
@@ -130,43 +130,44 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==''
+            balance == null || balance == ''
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * parseFloat(balance) )
+                ? getFormattedValue(-1 * parseFloat(balance))
                 : getFormattedValue(parseFloat(balance));
 
           return {
             ...exportCell,
             text: value,
-            bold: cellElement.data.particulars === "TOTAL" ?true:false,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
               size: 10,
-              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-          {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
-            ? ''
-            : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(parseFloat(cellElement.data.debit))
-              : cellElement.data.debit}`}
-        </span>)
-        }}
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+            {`${cellElement.data?.debit == null || cellElement.data?.debit == 0
+              ? ''
+              : cellElement.data.particulars === "TOTAL"
+                ? getFormattedValue(parseFloat(cellElement.data.debit))
+                : cellElement.data.debit}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "credit",
@@ -175,44 +176,44 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null||balance==""
+            balance == null || balance == ""
               ? ""
               : balance < 0
                 ? getFormattedValue(-1 * parseFloat(balance))
-                : getFormattedValue(parseFloat(balance) );
+                : getFormattedValue(parseFloat(balance));
           return {
             ...exportCell,
-            
+
             text: value,
 
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
-              color:cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' }:'',
+              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : '',
               ...exportCell.font,
               size: 10,
-              style:cellElement.data.particulars === "TOTAL" ?'bold':'normal',
-              bold: cellElement.data.particulars === "TOTAL" ?true:false,
+              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+              bold: cellElement.data.particulars === "TOTAL" ? true : false,
             },
           };
         }
         else {
-          return ( <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
             {`${cellElement.data?.credit == null || cellElement.data?.credit == 0
               ? ''
               : cellElement.data.particulars === "TOTAL"
-                ? getFormattedValue(parseFloat(cellElement.data.credit) )
+                ? getFormattedValue(parseFloat(cellElement.data.credit))
                 : cellElement.data.credit}`}
           </span>)
-            }
-          }
+        }
+      }
     },
     {
       dataField: "balance",
@@ -221,7 +222,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const balance = cellElement.data?.balance;
@@ -230,33 +231,34 @@ const BankStatementReport = () => {
             balance == null
               ? ""
               : balance < 0
-                ? getFormattedValue(-1 * balance)+' Cr'
-                : getFormattedValue(balance)+' Dr';
+                ? getFormattedValue(-1 * balance) + ' Cr'
+                : getFormattedValue(balance) + ' Dr';
           return {
             ...exportCell,
             text: value,
-            bold:cellElement.data.particulars === "TOTAL" ? true:false,
+            bold: cellElement.data.particulars === "TOTAL" ? true : false,
             alignment: "right",
-            alignmentExcel:{ horizontal: 'right' },
+            alignmentExcel: { horizontal: 'right' },
             textColor: '#FF0000',
             font: {
               ...exportCell.font,
-              color:{ argb: 'FFFF0000' },
+              color: { argb: 'FFFF0000' },
               size: 10,
-              style:'bold',
+              style: 'bold',
               bold: true,
             },
           };
         }
         else {
-          return ( <span className={`${"font-bold text-[#DC143C]"}`}>
-          {`${cellElement.data?.balance == null
-            ? '0'
-            : cellElement.data.balance < 0
-              ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
-              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
-        </span>)
-        }}
+          return (<span className={`${"font-bold text-[#DC143C]"}`}>
+            {`${cellElement.data?.balance == null
+              ? '0'
+              : cellElement.data.balance < 0
+                ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+                : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "narration",
@@ -326,7 +328,7 @@ const BankStatementReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-    },        
+    },
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
@@ -352,12 +354,13 @@ const BankStatementReport = () => {
                   gridId="grd_bank_statement"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="100"
+                  filterWidth={335}
+                  filterHeight={230}
                   filterContent={<BankStatementReportFilter />}
                   filterInitialData={BankStatementReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

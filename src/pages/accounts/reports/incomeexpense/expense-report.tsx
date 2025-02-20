@@ -247,6 +247,8 @@ const ExpenseReport = () => {
                   dataUrl={Urls.acc_reports_income_expense_report }
                   method={ActionType.POST}
                   gridId="grd_expense_report"
+                  filterWidth={650}
+                  filterHeight={320}
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}

@@ -202,7 +202,8 @@ const FinancialYear = () => {
       <ERPModal
         isOpen={rootState.PopupData.financialYear.isOpen || false}
         title={t("financial_year")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={350}
         isForm={true}
         closeModal={() => {
           dispatch(toggleFinancialYearPopup({ isOpen: false, key: null,reload: false }));

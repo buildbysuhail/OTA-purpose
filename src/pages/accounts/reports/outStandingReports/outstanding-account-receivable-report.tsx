@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import OutstandingReceivableReportFilter, { OutstandingReceivableReportFilterInitialState } from "./outstanding-receivable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 interface OutstandingAccountReceivableReport {
   from: Date
@@ -219,14 +220,15 @@ const OutstandingAccountReceivableReport = () => {
         </span>)
 }}
     },
-    {
-      dataField: "ltDate",
-      caption: t("last_transaction_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+   {
+         dataField: "ltDate",
+         caption: t("last_transaction_date"),
+         dataType: "date",
+         allowSearch: true,
+         allowFiltering: true,
+         width: 130,
+         format:"dd-MMM-yyyy"
+   }
   ];
   return (
     <Fragment>

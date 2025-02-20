@@ -1,29 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleGroupOrder } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { moveArrayElement } from "../../../../utilities/Utils";
-import { handleResponse } from "../../../../utilities/HandleResponse";
-import { formatDate } from "devextreme/localization";
 import { useTranslation } from "react-i18next";
 
 export interface GroupOrder {
-    groupName: string;
-    groupHead: string;
-    arabicName: string;
+  groupName: string;
+  groupHead: string;
+  arabicName: string;
 }
-const api = new APIClient();
 
+const api = new APIClient();
 interface AccountGroupOrderContentProps {
   formData: GroupOrder[];
   setFormData: React.Dispatch<React.SetStateAction<GroupOrder[]>>;
-  
 }
+
 interface AccountGroupOrderFooterProps {
   onSubmit: () => Promise<void>;
 }
@@ -47,35 +44,30 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
         setFormData(response);
       } else {
         console.error("Expected an array response but got:", response);
-        setFormData([]); 
+        setFormData([]);
       }
     } catch (error) {
       console.error("Error loading settings:", error);
     }
   };
-  
+
   const handleDragStart = (e: any) => {
-    
     dragItem.current = e.target.id;
   };
 
   const handleDragEnd = (e: any) => {
-    
     e.preventDefault();
     dragOverItem.current = e.currentTarget.id;
   };
 
   const handleDropping = (e: any) => {
-
-    
     let startIndex = formData?.findIndex((fld: any) => fld?.groupName === dragItem.current);
     let endIndex = formData?.findIndex((fld: any) => fld?.groupName === dragOverItem.current);
-
     setFormData(moveArrayElement(formData, startIndex, endIndex));
     dragItem.current = null;
     dragOverItem.current = null;
   };
- 
+
   return (
     <>
       <div className="px-1 py-3 flex flex-col gap-1">
@@ -94,45 +86,42 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
             <span>{t("group_head")} </span>
             <span>{t("arabic_name")} </span>
           </div>
-        
+
           {formData.length > 0 && formData?.filter((item: GroupOrder) =>
-          item.groupName?.toLowerCase().includes(searchCols.toLowerCase())
-           )?.map((column: GroupOrder, index: number) => {
-              return (
-                <div
-                  key={index}
-                  id={`${column.groupName}`}
-                  className="px-1 py-1"
-                  draggable
-                  onDragStart={handleDragStart}
-                  onDragEnter={handleDragEnd}
-                  onDragEnd={handleDropping}
-                >
-                  <div
-                    className={`dark:!bg-dark-bg-header bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-3 !items-center pl-4`}
-                  >
-                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
-                      ⋮⋮
-                      <span className="cursor-pointer pl-2">
-                        {column?.groupName}
-                      </span>
-                    </label>
+            item.groupName?.toLowerCase().includes(searchCols.toLowerCase())
+          )?.map((column: GroupOrder, index: number) => {
+            return (
+              <div
+                key={index}
+                id={`${column.groupName}`}
+                className="px-1 py-1"
+                draggable
+                onDragStart={handleDragStart}
+                onDragEnter={handleDragEnd}
+                onDragEnd={handleDropping}>
+                <div className={`dark:!bg-dark-bg-header bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-3 !items-center pl-4`}>
+                  <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
+                    ⋮⋮
+                    <span className="cursor-pointer pl-2">
+                      {column?.groupName}
+                    </span>
+                  </label>
 
-                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
-                      <span className="cursor-pointer pl-2">
-                        {column?.groupHead}
-                      </span>
-                    </label>
+                  <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
+                    <span className="cursor-pointer pl-2">
+                      {column?.groupHead}
+                    </span>
+                  </label>
 
-                    <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
-                      <span className="cursor-pointer pl-2">
-                        {column?.arabicName}
-                      </span>
-                    </label>
-                  </div>
+                  <label className="items-center py-1 capitalize text-sm dark:text-dark-text  text-slate-800 cursor-move">
+                    <span className="cursor-pointer pl-2">
+                      {column?.arabicName}
+                    </span>
+                  </label>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
@@ -144,20 +133,20 @@ export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = R
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const onClose = useCallback(() => {
-    dispatch(toggleGroupOrder({ isOpen: false, key: null,reload: false }));
+    dispatch(toggleGroupOrder({ isOpen: false, key: null, reload: false }));
   }, [dispatch]);
 
   return (
-    <div className="flex gap-10 justify-between py-3 border-t dark:!border-dark-border mt-0">
-      <ERPSubmitButton type="button" variant="primary"  onClick={onSubmit}>
+    <div className="flex gap-10 justify-between  border-t dark:!border-dark-border mt-0">
+      <ERPSubmitButton type="button" variant="primary" onClick={onSubmit}>
         {t("save")}
       </ERPSubmitButton>
+
       <ERPSubmitButton
         type="reset"
         onClick={onClose}
-        className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]"
-      >
-       {t("cancel")} 
+        className="w-28 dark:text-dark-hover-text bg-[#e5e7eb] text-[#404040]">
+        {t("cancel")}
       </ERPSubmitButton>
     </div>
   );

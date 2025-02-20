@@ -91,6 +91,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -128,6 +129,7 @@ const PartySummaryPayment: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,

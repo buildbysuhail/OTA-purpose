@@ -23,7 +23,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "costCentreName",
@@ -32,7 +32,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "shortName",
@@ -41,7 +41,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -50,7 +50,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 220,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
@@ -117,7 +117,8 @@ const CostCentre = () => {
       <ERPModal
         isOpen={rootState.PopupData.costCentre.isOpen || false}
         title={t("cost_centre")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={315}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false }));

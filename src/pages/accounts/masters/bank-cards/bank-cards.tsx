@@ -24,7 +24,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "branchID",
@@ -34,7 +34,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "ledgerID",
@@ -44,7 +44,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "bank",
@@ -54,7 +54,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "paymentType",
@@ -64,7 +64,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "paymentName",
@@ -73,7 +73,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "createdUser",
@@ -119,12 +119,12 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
-      isLocked:true,
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -132,8 +132,8 @@ const BankCards = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
-          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
           delete={{
             onSuccess: () => {
               dispatch(
@@ -186,10 +186,11 @@ const BankCards = () => {
       <ERPModal
         isOpen={rootState.PopupData.bankCard.isOpen || false}
         title={t("bank_cards")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={210}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBankCardsPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedBankCardsManage />}
       />

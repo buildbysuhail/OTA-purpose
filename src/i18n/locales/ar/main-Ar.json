@@ -209,5 +209,10 @@
   "tax_reports": "تقارير الضرائب",
   "accounts": "الحسابات",
   "inventory": "المخزون",
-  "no_data_found": "لا توجد بيانات"
+  "no_data_found": "لا توجد بيانات",
+
+  "loading": "جارٍ التحميل...",
+  "warning": "تحذير",
+  "please_select_at_least_one_column": "يرجى اختيار عمود واحد على الأقل",
+  "total_records": "إجمالي السجلات:"
 }

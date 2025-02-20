@@ -1,18 +1,22 @@
 .flexible-modal {
-  position: absolute;
+  position: absolute !important;
   z-index: 52 !important;
-  border: 1px solid #ccc;
-  background: white;
+  border: 1px solid #fafafa !important;
+  background: rgb(248, 247, 247) !important;
+
 }
+
 .flexible-modal-mask {
-  position: fixed;
-  height: 100%;
-  background: rgba(55, 55, 55, 0.6);
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
+  position: fixed !important;
+  height: 100% !important;
+  background: rgba(55, 55, 55, 0.6) !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   z-index: 48 !important;
+  pointer-events: none !important;
+  inset: 0 !important;
 }
 .flexible-modal-resizer {
   position:absolute;
@@ -24,11 +28,13 @@
   border-right: solid 2px #333;
   z-index: 49!important;
 }
-.flexible-modal-drag-area{
-  background: rgba(22, 22, 333, 0.2);
-  height: 50px;
-  position:absolute;
-  right:0;
-  top:0;
-  cursor:move;
+.flexible-modal-drag-area {
+  /* left: 0 !important;
+  right: unset !important;
+  width: 500px !important; */
+  /* background: rgba(253, 253, 253, 0.926) !important; */
+  height: 50px !important;
+  cursor: move !important;
+
+  
 }

@@ -24,7 +24,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "branchID",
@@ -33,7 +33,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "cardNumber",
@@ -42,7 +42,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "cardHolderName",
@@ -50,7 +50,7 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "address1",
@@ -59,7 +59,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "address2",
@@ -76,7 +76,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "mobile",
@@ -85,7 +85,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     // {
     //   dataField: "email",
@@ -118,7 +118,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-      showInPdf:true,
+      showInPdf: true,
     },
     // {
     //   dataField: "priceCategoryID",
@@ -135,7 +135,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "expiryDate",
@@ -144,7 +144,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "activatedDate",
@@ -153,7 +153,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     // {
     //   dataField: "createdUserID",
@@ -170,7 +170,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "actions",
@@ -183,8 +183,8 @@ const PrivilegeCard = () => {
       width: 100,
       cellRender: (cellElement: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
-          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
+          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
+          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
           delete={{
             onSuccess: () => {
               dispatch(
@@ -237,10 +237,11 @@ const PrivilegeCard = () => {
       <ERPModal
         isOpen={rootState.PopupData.privilegeCard.isOpen || false}
         title={t("privilege_card")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={380}
         isForm={true}
         closeModal={() => {
-          dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedPrivilegeCardrManage />}
       />

@@ -34,7 +34,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "currencyName",
@@ -43,7 +43,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "currencySymbol",
@@ -53,7 +53,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "subUnit",
@@ -63,7 +63,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "subUnitSymbol",
@@ -73,7 +73,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "countryName",
@@ -83,7 +83,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "countryId",
@@ -93,7 +93,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false
+      visible: false
     },
 
     {
@@ -107,8 +107,8 @@ const CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId,reload: false }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId,reload: false }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
           delete={{
 
             onSuccess: () => {
@@ -128,7 +128,7 @@ const CurrencyMaster = () => {
       ),
     },
   ];
-  
+
   useEffect(() => {
     dispatch(toggleCurrencyMasterPopup({ ...rootState, reload: true }));
   }, []);
@@ -162,10 +162,11 @@ const CurrencyMaster = () => {
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={210}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedCurrencyMasterManage />}
       />

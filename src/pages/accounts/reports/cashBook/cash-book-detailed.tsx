@@ -349,7 +349,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
                     title: t(""),
                     isForm: false,
                     isTransactionScreen:true,
-                    width: "max-w-[1000px]",
+                    width: 1000,
                     drillDownCells: "vchNo,",
                     // enableFn: (data: any) => data?.ledgerID != 0
                   }}

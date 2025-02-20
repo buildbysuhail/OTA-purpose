@@ -10,7 +10,7 @@ const DayBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center w-full gap-4">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("from")}

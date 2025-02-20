@@ -308,7 +308,7 @@ const CashBookDayWise: FC<CashBookMonthDayWiseProps> = ({ postData, contentProps
                     content: <CashBookDetailed postData={{...mergeObjectsRemovingIdenticalKeys(postData, contentProps)}}/>,
                     title: t("acc_group_detailed"),
                     isForm: false,
-                    width:"max-w-[1500px]",
+                    width:1300,
                     drillDownCells: "transactionDate",
                     bodyProps: "transactionDate",
                   }}

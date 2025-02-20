@@ -229,7 +229,7 @@ const DayBookSummary = () => {
                   gridHeader={t("day_book_summary")}
                   dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
-                  filterWidth="100"
+                  filterWidth={300}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<DayBookReportFilter />}
@@ -243,7 +243,8 @@ const DayBookSummary = () => {
                     content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
                     isForm: false,
-                    width: "max-w-[1000px]",
+                    width:1000,
+                    height:800,
                     drillDownCells: "voucherType",
                     bodyProps: "voucherType",
                     // enableFn: (data: any) => data?.voucherType != ""

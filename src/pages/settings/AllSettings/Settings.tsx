@@ -117,7 +117,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
         title={t("hide_account_ledger")}
-        width="w-full max-w-[1000px]"
+        width={1000}
+        height={800}
         isForm={true}
         closeModal={() => {
           dispatch(toggleHideAccLedger({ isOpen: false }));

@@ -94,7 +94,7 @@ const ERPModal = React.memo(
     const [previousPosition, setPreviousPosition] = useState({ x: 0, y: 0 });
     const [rndKey, setRndKey] = useState(0);
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
-
+debugger;
     const contentRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
       if (isOpen) {
@@ -338,14 +338,35 @@ const ERPModal = React.memo(
             className="overflow-y-auto overflow-x-hidden"
           >
             <div className={`px-4 pt-4`}>
-            {content && cloneElement(content, {
-              ...contentProps,
-              isMaximized,
-              modalHeight,
-              rowData,
-              origin,
-              postData: mergeObjectsRemovingIdenticalKeys(content.postData, postData),
-            })}
+            {content &&
+                          cloneElement(
+                            content,
+                            isTransactionScreen
+                              ? {
+                                  ...contentProps,
+                                  isMaximized: isMaximized,
+                                  modalHeight: modalHeight, // Pass isMaximized to the content
+                                  rowData: rowData,
+                                  origin: origin,
+                                  postData: mergeObjectsRemovingIdenticalKeys(
+                                    content.postData,
+                                    postData
+                                  ),
+                                }
+                              : {
+                                  contentProps: contentProps
+                                    ? contentProps
+                                    : {},
+                                  isMaximized: isMaximized,
+                                  modalHeight: modalHeight, // Pass isMaximized to the content
+                                  rowData: rowData,
+                                  origin: origin,
+                                  postData: mergeObjectsRemovingIdenticalKeys(
+                                    content.postData,
+                                    postData
+                                  ),
+                                }
+                          )}
             </div>
        
           </ERPScrollArea>

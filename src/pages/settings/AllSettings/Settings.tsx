@@ -207,7 +207,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.userActionReport.isOpen || false}
         title={t("user_action_report")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserActionPopup({ isOpen: false }));
@@ -295,7 +296,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.refreshAllBranches.isOpen || false}
         title={t("refresh_all_branches")}
-        width="w-full max-w-[700px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleRefreshAllBranches({ isOpen: false }));
@@ -305,8 +307,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
         title={t("headers_footers")}
-        width={700}
-
+        width={800}
+        height={500}
         isForm={true}
         closeModal={() => {
           dispatch(toggleHeaderFooterPopup({ isOpen: false }));

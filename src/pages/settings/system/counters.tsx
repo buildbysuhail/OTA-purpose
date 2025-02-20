@@ -196,7 +196,8 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
       <ERPModal
         isOpen={rootState.PopupData.counter.isOpen || false}
         title={t("counter")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={350}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCounterPopup({ isOpen: false }));

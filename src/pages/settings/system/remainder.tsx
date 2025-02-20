@@ -131,7 +131,8 @@ const Remainders = () => {
       <ERPModal
         isOpen={rootState.PopupData.reminder.isOpen || false}
         title={t("remainders")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => { dispatch(toggleRemainderPopup({ isOpen: false })); }}
         content={<MemoizedRemainderManage />}

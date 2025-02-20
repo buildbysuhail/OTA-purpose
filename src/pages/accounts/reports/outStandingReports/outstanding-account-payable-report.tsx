@@ -90,7 +90,7 @@ const OutstandingAccountPayableReport = () => {
     {
       dataField: "mobilePhone",
       caption: t("mobile_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,

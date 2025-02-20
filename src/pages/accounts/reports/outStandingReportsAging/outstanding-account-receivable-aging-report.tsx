@@ -107,6 +107,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -152,6 +153,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -239,6 +241,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -286,6 +289,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -333,6 +337,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -380,6 +385,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -427,6 +433,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -474,6 +481,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -520,6 +528,7 @@ const OutstandingAccountReceivableAgingReport = () => {
             text: value,
             bold: cellElement.data.ledgername === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.ledgername === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,

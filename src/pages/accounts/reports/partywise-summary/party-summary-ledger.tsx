@@ -100,7 +100,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: cellInfo.value,
             bold: cellElement.data.particulars === "TOTAL" ? true : '',
-            alignment: "right",
+
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -146,6 +146,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold: cellElement.data.particulars === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -191,6 +192,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold: cellElement.data.particulars === "TOTAL" ? true : '',
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
             font: {
               ...exportCell.font,
@@ -236,6 +238,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
             text: value,
             bold:  true,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             textColor:  '#FF0000' ,
             font: {
               ...exportCell.font,
@@ -260,7 +263,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "ledger",
       caption: t("ledger"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -268,7 +271,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "invTransactionID",
       caption: t("invTransaction_id"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -284,7 +287,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "branch",
       caption: t("branch"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -292,7 +295,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "chequeNumber",
       caption: t("cheque_number"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -300,7 +303,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "checkStatus",
       caption: t("check_status"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -308,7 +311,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -316,7 +319,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "costCenter",
       caption: t("cost_center"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,
@@ -324,7 +327,7 @@ const PartySummaryLedger: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "accTransactionDetailID",
       caption: t("accTransaction_detail_id"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 170,

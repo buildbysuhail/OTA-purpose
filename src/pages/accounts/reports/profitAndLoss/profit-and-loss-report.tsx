@@ -591,7 +591,7 @@ const ProfitAndLossReport = () => {
                 onClose={onCloseFilter}
                 validations={filterValidations}
                 onOpened={(status: any) => setShowFilter(status)}
-                title={"Profit and Loss"}
+                title={t("profit_and_loss")}
               />
             </button>
 

@@ -100,7 +100,7 @@
    "profit_&_loss_account": "حساب الأرباح والخسائر",
    "profit_&_loss_account_detailed": "حساب الأرباح والخسائر التفصيلي",
    "balance_sheet": "الميزانية العمومية",
-   "balance_sheet_detailed": "Balance sheet detailed",
+   "balance_sheet_detailed": "الميزانية العمومية المفصلة",
    "purchase_summary_report": "تقرير ملخص المشتريات",
    "purchase_register_report": "تقرير سجل المشتريات",
    "party_wise_report": "تقرير حسب الأطراف",
@@ -204,5 +204,10 @@
   "shortkey_settings": "إعدادات الاختصارات",
 
   "main": "الرئيسية",
-  "settings": "الإعدادات"
+  "settings": "الإعدادات",
+
+  "tax_reports": "تقارير الضرائب",
+  "accounts": "الحسابات",
+  "inventory": "المخزون",
+  "no_data_found": "لا توجد بيانات"
 }

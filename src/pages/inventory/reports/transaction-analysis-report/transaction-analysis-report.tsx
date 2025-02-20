@@ -9,12 +9,12 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 
 interface CashSummary {
-
   from: Date
 }
+
 const TransactionAnalysisReport = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -105,8 +105,8 @@ const TransactionAnalysisReport = () => {
                   enablefilter={false}
                   method={ActionType.POST}
                   reload={true}
-                  gridId="grd_cost_centre">
-                </ErpDevGrid>
+                  gridId="grd_cost_centre"
+                />
               </div>
             </div>
           </div>

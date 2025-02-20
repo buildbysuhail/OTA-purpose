@@ -664,7 +664,7 @@ const ProfitAndLossDetailedReport = () => {
                 onClose={onCloseFilter}
                 validations={filterValidations}
                 onOpened={(status: any) => setShowFilter(status)}
-                title={"Profit and Loss Detailed"}
+                title={t("profit_and_loss_detailed")}
               />
             </button>
             <button className="flex items-center dark:bg-dark-bg-card bg-gray-100 p-2 rounded-md">

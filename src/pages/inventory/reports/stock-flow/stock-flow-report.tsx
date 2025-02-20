@@ -234,7 +234,7 @@ const StockFlow = () => {
     },
     {
       dataField: "adjStk",
-      caption: t("adjustmentStock"),
+      caption: t("adjustment_stock"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -243,7 +243,7 @@ const StockFlow = () => {
     },
     {
       dataField: "adjVal",
-      caption: t("adjustmentValue"),
+      caption: t("adjustment_value"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

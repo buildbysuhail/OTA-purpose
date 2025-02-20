@@ -1,16 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { Fragment, useState } from "react";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
-import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import { CircularProgress, Tab, Tabs } from "@mui/material";
-import moment from "moment";
+import { Tab, Tabs } from "@mui/material";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { LedgerType } from "../../../../enums/ledger-types";
 import DailySummary from "./dailySummary/daily-summary";
 import DailySummaryCreditDetails from "./daily-summary-credit-details";
 import DailySummaryReceiptDetails from "./daily-summary-receipt-details";
@@ -42,22 +36,19 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
     }
   });
 
-  
   const [activeTab, setActiveTab] = useState("salesReportSummary");
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
-  };
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => { setActiveTab(newValue); };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="p-4">
+          <div className="p-4">
             <div className="flex items-center gap-4 w-full">
               <ERPDateInput
                 id="transactionDate"
                 value={filter.filter.transactionDate}
                 customSize='sm'
-                 
+
                 data={filter.filter}
                 label={t("transaction_date")}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
@@ -73,7 +64,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 id="counterID"
                 value={filter.filter.counterID}
                 customSize='sm'
-               className="w-[300px]"
+                className="w-[300px]"
                 data={filter.filter}
                 label={t("counter")}
                 field={{
@@ -92,7 +83,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                   }
                 }))}
               />
-          
+
               <ERPDataCombobox
                 id="costCentreID"
                 value={filter.filter.costCentreID}
@@ -143,7 +134,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 id="employeeID"
                 value={filter.filter.employeeID}
                 customSize='sm'
-               className="w-[300px]"
+                className="w-[300px]"
                 data={filter.filter}
                 label={t("employee")}
                 field={{
@@ -162,29 +153,29 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                   }
                 }))}
               />
-              </div>
-             
-              <div className="grid grid-cols-1 gap-3">
-                <Tabs value={activeTab} onChange={handleTabChange}>
-                  <Tab label="Sales Report Summary" value="salesReportSummary" className="dark:text-dark-text" />
-                  <Tab label="Credit Details" value="creditDetails" className="dark:text-dark-text" />
-                  <Tab label="Receipt Details" value="receiptDetails" className="dark:text-dark-text" />
-                </Tabs>
-                <div className="pt-2">
-                  {activeTab === "salesReportSummary" && (
-                    <DailySummary filter={filter.filter}></DailySummary>
-                  )}
-                  {activeTab === "creditDetails" && (
-                    <DailySummaryCreditDetails filter={filter.filter}></DailySummaryCreditDetails>
-                  )}
-                  {activeTab === "receiptDetails" && (
-                    <DailySummaryReceiptDetails filter={filter.filter}></DailySummaryReceiptDetails>
-                  )}
-                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3">
+              <Tabs value={activeTab} onChange={handleTabChange}>
+                <Tab label={t("sales_report_summary")} value="salesReportSummary" className="dark:text-dark-text" />
+                <Tab label={t("credit_details")} value="creditDetails" className="dark:text-dark-text" />
+                <Tab label={t("receipt_details")} value="receiptDetails" className="dark:text-dark-text" />
+              </Tabs>
+              <div className="pt-2">
+                {activeTab === "salesReportSummary" && (
+                  <DailySummary filter={filter.filter}></DailySummary>
+                )}
+                {activeTab === "creditDetails" && (
+                  <DailySummaryCreditDetails filter={filter.filter}></DailySummaryCreditDetails>
+                )}
+                {activeTab === "receiptDetails" && (
+                  <DailySummaryReceiptDetails filter={filter.filter}></DailySummaryReceiptDetails>
+                )}
               </div>
             </div>
           </div>
         </div>
+      </div>
     </Fragment>
   );
 };

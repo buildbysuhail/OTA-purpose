@@ -694,7 +694,7 @@ const BalanceSheet = () => {
                 onOpened={(status: any) => setShowFilter(status)}
                 onClose={onCloseFilter}
                 validations={filterValidations}
-                title={"Balance sheet"}
+                title={t("balance_sheet")}
               />
             </button>
             {/* <button className="flex items-center bg-gray-100 p-2 rounded-md">

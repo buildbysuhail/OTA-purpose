@@ -9,9 +9,9 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
 const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-    const userSession = useSelector(
-      (state: RootState) => state.UserSession
-    );
+  const userSession = useSelector(
+    (state: RootState) => state.UserSession
+  );
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -24,6 +24,7 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
           onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
           autoFocus={true}
         />
+
         <ERPDateInput
           {...getFieldProps("toDate")}
           label={t("date_to")}
@@ -31,6 +32,7 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>
+
       <ERPDataCombobox
         {...getFieldProps("accGroupID")}
         label={t("a/c_group_balance")}
@@ -42,6 +44,7 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
         }}
         onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
       />
+
       <ERPDataCombobox
         {...getFieldProps("costCentreID")}
         label={t("cost_centre")}
@@ -53,34 +56,39 @@ const TrialBalancePeriodwiseReportFilter = ({ getFieldProps, handleFieldChange }
         }}
         onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
       />
-         <ERPCheckbox
-          {...getFieldProps("showGroupSummaryOnly")}
-          label={t("show_group_summary")}
-          onChangeData={(data) =>
-            handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
-          }
-        />
-        <ERPCheckbox
-          {...getFieldProps("detailedView")}
-          label={t("detailed_view")}
-          onChangeData={(data) =>
-            handleFieldChange("detailedView", data.detailedView)
-          }
-        />
-          <ERPCheckbox
-          {...getFieldProps("excludeOpeningIncomeExpense")}
-          label={t("exclude_opening_income_&_expense")}
-          onChangeData={(data) =>
-            handleFieldChange("excludeOpeningIncomeExpense", data.excludeOpeningIncomeExpense)
-          }
-        />
 
-      {userSession.countryId==Countries.India &&
       <ERPCheckbox
-      {...getFieldProps("isExcludeZeroBalance")}
-      label={t("excludeZeroBalance")}
-      onChangeData={(data) => handleFieldChange('isExcludeZeroBalance', data.isExcludeZeroBalance)}
-    />}
+        {...getFieldProps("showGroupSummaryOnly")}
+        label={t("show_group_summary")}
+        onChangeData={(data) =>
+          handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
+        }
+      />
+
+      <ERPCheckbox
+        {...getFieldProps("detailedView")}
+        label={t("detailed_view")}
+        onChangeData={(data) =>
+          handleFieldChange("detailedView", data.detailedView)
+        }
+      />
+
+      <ERPCheckbox
+        {...getFieldProps("excludeOpeningIncomeExpense")}
+        label={t("exclude_opening_income_&_expense")}
+        onChangeData={(data) =>
+          handleFieldChange("excludeOpeningIncomeExpense", data.excludeOpeningIncomeExpense)
+        }
+      />
+
+      {
+        userSession.countryId == Countries.India &&
+        <ERPCheckbox
+          {...getFieldProps("isExcludeZeroBalance")}
+          label={t("excludeZeroBalance")}
+          onChangeData={(data) => handleFieldChange('isExcludeZeroBalance', data.isExcludeZeroBalance)}
+        />
+      }
     </div>
   );
 }
@@ -91,8 +99,8 @@ export const TrialBalancePeriodwiseReportFilterInitialState = {
   asonDate: new Date(),
   costCentreID: 0,
   isPeriodWise: true,
-  isExcludeZeroBalance:false,
-  showGroupSummaryOnly:false,
-  detailedView:false,
-  excludeOpeningIncomeExpense:false
+  isExcludeZeroBalance: false,
+  showGroupSummaryOnly: false,
+  detailedView: false,
+  excludeOpeningIncomeExpense: false
 };

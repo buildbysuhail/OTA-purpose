@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,11 +9,10 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { DailySummaryFilter } from "./daily-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import moment from "moment";
-const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
-}) => {
+
+const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter }) => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<DailySummaryReceiptDetails>({from: new Date()});
   const rootState = useRootState();
@@ -33,7 +32,7 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-    format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "voucherPrefix",
@@ -83,7 +82,6 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
               : balance < 0
                 ? getFormattedValue(-1 * balance)
                 : getFormattedValue(balance);
-
           return {
             ...exportCell,
             text: cellInfo.value,
@@ -123,7 +121,6 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
             balance == null
               ? ""
               : getFormattedValue(balance);
-
           return {
             ...exportCell,
             text: value,
@@ -173,7 +170,6 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
             balance == null
               ? ""
               : cellElement.data.ledgerName === "TOTAL" ? getFormattedValue(parseFloat(balance)) : getFormattedValue(parseFloat(balance), false, 4);
-
           return {
             ...exportCell,
             text: value,
@@ -238,7 +234,6 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
               heightToAdjustOnWindows={275}
@@ -252,7 +247,7 @@ const DailySummaryReceiptDetails: React.FC<DailySummaryFilter> = ({ filter
               popupAction={toggleCostCentrePopup}
               hideGridAddButton={true}
               reload={true}
-            ></ErpDevGrid>
+            />
           </div>
         </div>
       </div>

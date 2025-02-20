@@ -1,12 +1,15 @@
 
+import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
-const CashBookReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
+const CashBookReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const { t } = useTranslation('accountsReport');
+
   return (
     <div className="grid grid-cols-1 gap-4">
-      {/* Date Range Section */}
       <div className="flex items-center gap-4">
         <ERPDateInput
+          label={t("as_on_date")}
           {...getFieldProps("asonDate")}
           onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
         />

@@ -1,14 +1,7 @@
 import React from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Font,
-} from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import FontRegistration from "../../../../LabelDesigner/fontRegister";
+import { useTranslation } from "react-i18next";
 
 
 const styles = StyleSheet.create({
@@ -29,12 +22,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontStyle: "medium",
   },
+
   subheader2: {
     fontSize: 9,
     fontWeight: 400,
     fontFamily: "Poppins",
     fontStyle: "normal",
   },
+
   table: {
     width: "100%",
     display: "flex",
@@ -42,16 +37,19 @@ const styles = StyleSheet.create({
     gap: 4,
     marginBottom: 5,
   },
+
   subtable: {
     width: "50%",
     display: "flex",
     flexDirection: "column",
   },
+
   tableRow: {
     display: "flex",
     flexDirection: "row",
     width: "100%",
   },
+
   tableHeader: {
     width: "50%",
     backgroundColor: "#d3d3d3",
@@ -61,10 +59,12 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontStyle: "medium",
   },
+
   tableCell: {
     paddingVertical: 5,
     width: "50%",
   },
+
   total: {
     backgroundColor: "rgb(245, 243, 243)",
     color: "#f00",
@@ -74,22 +74,27 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontStyle: "medium",
   },
+
   title: {
     fontSize: 10,
     fontWeight: "bold",
   },
+
   amount: {
     textAlign: "right",
   },
+
   bold: {
     fontWeight: 700,
     fontStyle: "bold",
   },
+
   blue: {
     color: "#3b82f6",
     fontSize: 10,
     fontFamily: "Poppins",
   },
+
   red: {
     fontWeight: 700,
     fontStyle: "bold",
@@ -97,6 +102,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontSize: 10,
   },
+
   SaddleBrown: {
     fontWeight: 700,
     fontStyle: "bold",
@@ -104,6 +110,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
     fontSize: 10,
   },
+
   darkText: {
     color: "#03070f",
     fontWeight: 400,
@@ -112,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     paddingLeft: 10,
   },
+
   darkTextnum: {
     color: "#03070f",
     fontWeight: 400,
@@ -142,28 +150,15 @@ const ProfitAndLossPDFTemplate: React.FC<{
   //   (item: any) => item?.transType === "L" && item?.groupName !== "TOTAL"
   // );
 
-  const assetTotal =
-    data?.find(
-      (item: any) => item?.transType === "A" && item?.groupName === "TOTAL"
-    )?.total || '';
-  const liabilityTotal =
-    data?.find(
-      (item: any) => item?.transType === "L" && item?.groupName === "TOTAL"
-    )?.total || '';
-
+  const assetTotal = data?.find((item: any) => item?.transType === "A" && item?.groupName === "TOTAL")?.total || '';
+  const liabilityTotal = data?.find((item: any) => item?.transType === "L" && item?.groupName === "TOTAL")?.total || '';
+  const { t } = useTranslation('accountsReport')
   return (
     <Document>
       <FontRegistration />
       <Page size="A4" orientation="portrait">
         <View style={styles.page}>
           <View style={{ marginBottom: 20 }}>
-            {/*
-                <Image
-                  src={currentBranch?.logo}
-                  style={[styles.logo, { width: 80 * logoWidthRatio }]}
-                />
-              */}
-
             <Text
               style={{
                 color: "#fff",
@@ -171,8 +166,7 @@ const ProfitAndLossPDFTemplate: React.FC<{
                 fontWeight: 600,
                 fontFamily: "Poppins",
                 fontStyle: "medium",
-              }}
-            >
+              }}>
               {userSession.headerFooter?.heading7}
             </Text>
 
@@ -183,35 +177,35 @@ const ProfitAndLossPDFTemplate: React.FC<{
                 color: "#fff",
                 fontSize: 14,
                 fontStyle: "normal",
-              }}
-            >
+              }}>
               {userSession.headerFooter.heading8}
             </Text>
+
             <Text
               style={{
                 fontSize: 8,
                 fontWeight: 400,
                 fontFamily: "Poppins",
                 fontStyle: "normal",
-              }}
-            >
+              }}>
               {userSession.headerFooter.heading9}
             </Text>
+
             <View style={{ display: "flex", flexDirection: "row", gap: 0 }}>
-              <Text style={styles.subheader1}>Profit and Loss Account - </Text>
+              <Text style={styles.subheader1}>{t("profit_and_loss_account")} - </Text>
               <Text style={styles.subheader2}>
                 {/* as of {new Date(filter.asonDate).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "2-digit",
                 })} */}
-                From{" "}
+                {t("from")}{" "}
                 {new Date(filter.fromDate).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "2-digit",
                 })}{" "}
-                to{" "}
+                {t("to")}{" "}
                 {new Date(filter.toDate).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -227,55 +221,60 @@ const ProfitAndLossPDFTemplate: React.FC<{
               {/* table Head*/}
               <View style={styles.tableRow}>
                 <View style={[styles.tableHeader]}>
-                  <Text>expense</Text>
+                  <Text>{t("expense")}</Text>
                 </View>
                 <View style={[styles.tableHeader, styles.amount]}>
-                  <Text>Amount</Text>
+                  <Text>{t("amount")}</Text>
                 </View>
               </View>
 
               {/* table body*/}
-              {expense?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
-                  <View style={[styles.tableCell]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkText,
-                      ]}
-                    >
-                      {item?.groupName || " "}
-                    </Text>
+              {
+                expense?.map((item: any, index: number) => (
+                  <View key={`liability-${index}`} style={styles.tableRow}>
+                    <View style={[styles.tableCell]}>
+                      <Text
+                        style={
+                          [
+                            item.title === "M" || item.groupName === "TOTAL"
+                              ? styles.bold
+                              : {},
+                            item.title === "M"
+                              ? styles.SaddleBrown
+                              : item.groupName === "TOTAL"
+                                ? styles.red
+                                : styles.darkText,
+                          ]
+                        }>
+                        {item?.groupName || " "}
+                      </Text>
+                    </View>
+                    <View style={[styles.tableCell, styles.amount]}>
+                      <Text
+                        style={
+                          [
+                            item.title === "M" || item.groupName === "TOTAL"
+                              ? styles.bold
+                              : {},
+                            item.title === "M"
+                              ? styles.SaddleBrown
+                              : item.groupName === "TOTAL"
+                                ? styles.red
+                                : styles.darkTextnum,
+                          ]
+                        }>
+                        {
+                          item.total < 0
+                            ? "(-)" + getFormattedValue(-1 * item.total)
+                            : parseFloat(getFormattedValue(item.total)) === 0
+                              ? ''
+                              : getFormattedValue(item.total)
+                        }
+                      </Text>
+                    </View>
                   </View>
-                  <View style={[styles.tableCell, styles.amount]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkTextnum,
-                      ]}
-                    >
-                      {item.total < 0
-                          ? "(-)" + getFormattedValue(-1*item.total)
-                          :parseFloat(getFormattedValue(item.total)) === 0
-                          ? ''
-                          : getFormattedValue(item.total)
-                      }
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                ))
+              }
             </View>
 
             {/* table2 */}
@@ -283,59 +282,62 @@ const ProfitAndLossPDFTemplate: React.FC<{
               {/* table Head*/}
               <View style={styles.tableRow}>
                 <View style={[styles.tableHeader]}>
-                  <Text>income</Text>
+                  <Text>{t("income")}</Text>
                 </View>
                 <View style={[styles.tableHeader, styles.amount]}>
-                  <Text>Amount</Text>
+                  <Text>{t("amount")}</Text>
                 </View>
               </View>
 
               {/* table body*/}
-              {income?.map((item: any, index: number) => (
-                <View key={`liability-${index}`} style={styles.tableRow}>
-                  <View style={[styles.tableCell]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkText,
-                      ]}
-                    >
-                      {item?.groupName || " "}
-                    </Text>
+              {
+                income?.map((item: any, index: number) => (
+                  <View key={`liability-${index}`} style={styles.tableRow}>
+                    <View style={[styles.tableCell]}>
+                      <Text
+                        style={
+                          [
+                            item.title === "M" || item.groupName === "TOTAL"
+                              ? styles.bold
+                              : {},
+                            item.title === "M"
+                              ? styles.SaddleBrown
+                              : item.groupName === "TOTAL"
+                                ? styles.red
+                                : styles.darkText,
+                          ]
+                        }>
+                        {item?.groupName || " "}
+                      </Text>
+                    </View>
+                    <View style={[styles.tableCell, styles.amount]}>
+                      <Text
+                        style={
+                          [
+                            item.title === "M" || item.groupName === "TOTAL"
+                              ? styles.bold
+                              : {},
+                            item.title === "M"
+                              ? styles.SaddleBrown
+                              : item.groupName === "TOTAL"
+                                ? styles.red
+                                : styles.darkTextnum,
+                          ]
+                        }>
+                        {
+                          item.total < 0
+                            ? "(-)" + getFormattedValue(-1 * item.total)
+                            : parseFloat(getFormattedValue(item.total)) === 0
+                              ? ''
+                              : getFormattedValue(item.total)
+                        }
+                      </Text>
+                    </View>
                   </View>
-                  <View style={[styles.tableCell, styles.amount]}>
-                    <Text
-                      style={[
-                        item.title === "M" || item.groupName === "TOTAL"
-                          ? styles.bold
-                          : {},
-                        item.title === "M"
-                          ? styles.SaddleBrown
-                          : item.groupName === "TOTAL"
-                          ? styles.red
-                          : styles.darkTextnum,
-                      ]}
-                    >
-                     {item.total < 0
-                          ? "(-)" + getFormattedValue(-1*item.total)
-                          :parseFloat(getFormattedValue(item.total)) === 0
-                          ? ''
-                          : getFormattedValue(item.total)
-                      }
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                ))
+              }
             </View>
           </View>
-
- 
         </View>
       </Page>
     </Document>

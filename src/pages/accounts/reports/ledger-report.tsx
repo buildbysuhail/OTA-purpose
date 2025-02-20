@@ -2,19 +2,13 @@ import { Fragment, useCallback, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ErpDevGrid, {
-  DrillDownCellTemplate,
-} from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {DrillDownCellTemplate,} from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import LedgerReportFilter, {
-  LedgerReportFilterInitialState,
-} from "./ledger-report-filter";
+import LedgerReportFilter, {  LedgerReportFilterInitialState} from "./ledger-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { APIClient } from "../../../helpers/api-client";
-import { Bold } from "lucide-react";
-import AccTransactionForm from "../transactions/acc-transaction";
 import moment from "moment";
 
 interface LedgerReport {
@@ -350,7 +344,7 @@ const LedgerReport = () => {
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
-                  gridHeader="Ledger Report"
+                  gridHeader={t("ledger_report")}
                   dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}
                   enablefilter={true}

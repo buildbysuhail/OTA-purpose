@@ -204,5 +204,10 @@
     "shortkey_settings":"Shortkey settings",
 
     "main":"Main",
-    "settings":"Settings"
+    "settings":"Settings",
+
+    "tax_reports":"Tax reports",
+    "accounts":"Accounts",
+    "inventory":"Inventory",
+    "no_data_found":"No data found"
 }

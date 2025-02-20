@@ -405,7 +405,46 @@
     "show_summary":"Show Summary",
     "show_group_summary":"Show Group Summary",
     "income_expense_statement":"Income Expense Statement",
-    "bank_statement":"Bank Statement"
+    "bank_statement":"Bank Statement",
 
+    "salesman":"Salesman",
+    "bank_ledger":"Bank ledger",
+    "counter":"Counter",
+    "sales_report_summary":"Sales report summary",
+    "credit_details":"Credit details",
+    "receipt_details":"Receipt details",
 
+    "invTransaction_master_id":"Inv transaction master ID",
+    "received_amount":"Received amount",
+    "ledger_balance":"Ledger balance",
+    "credit_limit":"Credit limit",
+    "daily_summary_sales_credit_details":"Daily summary sales credit details",
+
+    "acc_transaction_masterID":"Acc transaction master ID",
+    "balance_amount":"Balance amount",
+    "daily_summary_receipt_details":"Daily summary receipt details",
+
+    "show":"Show",
+    "payments":"Payments",
+    "collections":"Collections",
+    "purchase":"Purchase",
+    "sales":"Sales",
+    "purchase_return":"Purchase return",
+    "purchase_order":"Purchase order",
+    "sales_return":"Sales return",
+    "sales_order":"Sales order",
+
+    "detailed_view":"Detailed view",
+    "exclude_opening_income_&_expense":"Exclude opening income & expense",
+    "profit_and_loss":"Profit and loss",
+    "profit_and_loss_detailed":"Profit and loss detailed",
+    "balance_sheet_detailed":"Balance sheet detailed",
+
+    "adjustment_stock":"Adjustment stock",
+    "adjustment_value":"Adjustment value",
+    "transaction_analysis_report":"Transaction analysis report",
+    "a/c_payable":"A/C Payable",
+    "a/c_receivable":"A/C Receivable",
+    "stock_flow_report":"Stock flow report",
+    "as_of":"as of"
 }

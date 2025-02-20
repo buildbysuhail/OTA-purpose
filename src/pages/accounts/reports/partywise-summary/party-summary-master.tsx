@@ -39,21 +39,23 @@ const PartySummaryMaster = ({
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<PartySummaryFilter>({
     filter: {
-      dateFrom:  moment().local().subtract(30, "days").toDate(),
+      dateFrom: moment().local().subtract(30, "days").toDate(),
       dateTo: new Date(),
       ledgerID: -1,
     },
   });
- 
+
   const [activeTab, setActiveTab] = useState("basicInfo");
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
+
   const handleShowButtonClick = () => {
     if (childRef.current) {
       childRef.current.reloadData(); // Call the exposed function in the child
     }
   };
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -128,7 +130,7 @@ const PartySummaryMaster = ({
                       className="h-[32px]"
                       onClick={handleShowButtonClick}
                       title={t("show")}
-                    ></ERPButton>
+                    />
                   </div>
                 </div>
               </div>
@@ -161,71 +163,100 @@ const PartySummaryMaster = ({
                   value={activeTab}
                   onChange={handleTabChange}
                   variant="scrollable"
-                  scrollButtons="auto"
-                >
-                  <Tab className="dark:text-dark-text"  label="Basic Info" value="basicInfo" />
-                  <Tab className="dark:text-dark-text"  label="Account Ledger" value="accountLedger" />
-                  <Tab className="dark:text-dark-text"  label="Payments" value="payments" />
-                  <Tab className="dark:text-dark-text"  label="Collections" value="collections" />
-                  <Tab className="dark:text-dark-text"  label="Purchase" value="purchase" />
-                  <Tab className="dark:text-dark-text"  label="Sales" value="sales" />
-                  <Tab className="dark:text-dark-text"  label="Purchase Return" value="purchaseReturn" />
-                  <Tab className="dark:text-dark-text"  label="Purchase Order" value="purchaseOrder" />
-                  <Tab className="dark:text-dark-text"  label="Sales Return" value="salesReturn" />
-                  <Tab className="dark:text-dark-text"  label="Sales Order" value="salesOrder" />
+                  scrollButtons="auto">
+                  <Tab className="dark:text-dark-text" label={t("basic_info")} value="basicInfo" />
+                  <Tab className="dark:text-dark-text" label={t("account_ledger")} value="accountLedger" />
+                  <Tab className="dark:text-dark-text" label={t("payments")} value="payments" />
+                  <Tab className="dark:text-dark-text" label={t("collections")} value="collections" />
+                  <Tab className="dark:text-dark-text" label={t("purchase")} value="purchase" />
+                  <Tab className="dark:text-dark-text" label={t("sales")} value="sales" />
+                  <Tab className="dark:text-dark-text" label={t("purchase_return")} value="purchaseReturn" />
+                  <Tab className="dark:text-dark-text" label={t("purchase_order")} value="purchaseOrder" />
+                  <Tab className="dark:text-dark-text" label={t("sales_return")} value="salesReturn" />
+                  <Tab className="dark:text-dark-text" label={t("sales_order")} value="salesOrder" />
                 </Tabs>
                 <div className="pt-2">
-                  {activeTab === "basicInfo" && (
-                    <PartySummaryBasicInfo
-                      filter={filter.filter}
-                      ref={childRef} // Pass the ref to the child
-                    ></PartySummaryBasicInfo>
-                  )}
-                  {activeTab === "accountLedger" && (
-                    <PartySummaryLedger
-                      filter={filter.filter}
-                    ></PartySummaryLedger>
-                  )}
-                  {activeTab === "payments" && (
-                    <PartySummaryPayment
-                      filter={filter.filter}
-                    ></PartySummaryPayment>
-                  )}
-                  {activeTab === "collections" && (
-                    <PartySummaryCollection
-                      filter={filter.filter}
-                    ></PartySummaryCollection>
-                  )}
-                  {activeTab === "purchase" && (
-                    <PartySummaryPurchase
-                      filter={filter.filter}
-                    ></PartySummaryPurchase>
-                  )}
-                  {activeTab === "sales" && (
-                    <PartySummarySales
-                      filter={filter.filter}
-                    ></PartySummarySales>
-                  )}
-                  {activeTab === "purchaseReturn" && (
-                    <PartySummaryPurchaseReturn
-                      filter={filter.filter}
-                    ></PartySummaryPurchaseReturn>
-                  )}
-                  {activeTab === "purchaseOrder" && (
-                    <PartySummaryPurchaseOrder
-                      filter={filter.filter}
-                    ></PartySummaryPurchaseOrder>
-                  )}
-                  {activeTab === "salesReturn" && (
-                    <PartySummarySalesReturn
-                      filter={filter.filter}
-                    ></PartySummarySalesReturn>
-                  )}
-                  {activeTab === "salesOrder" && (
-                    <PartySummarySalesOrder
-                      filter={filter.filter}
-                    ></PartySummarySalesOrder>
-                  )}
+                  {
+                    activeTab === "basicInfo" && (
+                      <PartySummaryBasicInfo
+                        filter={filter.filter}
+                        ref={childRef}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "accountLedger" && (
+                      <PartySummaryLedger
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "payments" && (
+                      <PartySummaryPayment
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "collections" && (
+                      <PartySummaryCollection
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "purchase" && (
+                      <PartySummaryPurchase
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "sales" && (
+                      <PartySummarySales
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "purchaseReturn" && (
+                      <PartySummaryPurchaseReturn
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "purchaseOrder" && (
+                      <PartySummaryPurchaseOrder
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "salesReturn" && (
+                      <PartySummarySalesReturn
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
+                  {
+                    activeTab === "salesOrder" && (
+                      <PartySummarySalesOrder
+                        filter={filter.filter}
+                      />
+                    )
+                  }
+
                 </div>
               </div>
             </div>

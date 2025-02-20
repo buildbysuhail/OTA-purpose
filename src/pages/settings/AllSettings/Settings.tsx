@@ -191,8 +191,9 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={t("day_close")}
-        width="w-full max-w-[600px]"
-        minHeight={400}
+        width={800}
+        height={300}
+        minHeight={300}
         isForm
         closeModal={() => {
           dispatch(toggleDayClosePopup({ isOpen: false }));
@@ -212,7 +213,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.importExport.isOpen || false}
         title={t("export_import")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleImportExportPopup({ isOpen: false }));
@@ -222,8 +224,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
-        width="w-full   max-w-[1000px]"
-
+        width={1000}
+        height={700}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
@@ -234,7 +236,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.commands.isOpen || false}
         title={t("sql_commands")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={700}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCommandsPopup({ isOpen: false }));
@@ -244,7 +247,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
         title={t("authorization_settings")}
-        width="w-full max-w-[800px]"
+        width={900}
+        height={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
@@ -254,7 +258,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title={t("barcode_print")}
-        width="w-full max-w-full"
+        width={1500}
+        height={990}
         isForm={true}
         closeModal={() => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));
@@ -275,7 +280,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
         title={t("reset_branch_data_for_sync")}
-        width="w-full max-w-[700px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetBranchDataForSync({ isOpen: false }));

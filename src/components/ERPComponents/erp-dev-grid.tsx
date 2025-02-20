@@ -1463,6 +1463,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${className}`}>
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
+            
             rtlEnabled={appState?.dir === "rtl"}
             ref={gridRef}
             onInitialized={onGridReady}
@@ -1508,7 +1509,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           >
              {MemoizedSummary}
             <ColumnFixing enabled={true} />
-            <Scrolling mode={scrollingMode} showScrollbar="always" />
+            <Scrolling mode={scrollingMode} 
+            showScrollbar="always" 
+            renderAsync={false}
+            useNative ={"auto"}
+            rowRenderingMode="virtual"
+            preloadEnabled={true}/>
             {allowPaging && (
               <Paging defaultPageSize={pageSize} pageSize={pageSize} />
             )}

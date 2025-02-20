@@ -109,7 +109,8 @@ interface ERPDevGridProps {
   filterInitialData?: any;
   enablefilter?: boolean;
   filterContent?: React.ReactNode;
-  filterWidth?: string;
+  filterWidth?: number;
+  filterHeight?: number;
   data?: any;
   postData?: any;
   method?: ActionType;
@@ -239,7 +240,8 @@ interface ERPDevGridProps {
   };
   childPopupPropsDynamic?: (data?: any) => {
     title: string;
-    width: string;
+    width?: number;
+    height?:number;
     isForm: boolean;
     content: any;
     drillDownCells: string;
@@ -428,7 +430,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       filterInitialData,
       enablefilter = false,
       filterContent = <></>,
-      filterWidth = "w-full max-w-[1000px]",
+      filterWidth = 400,
+      filterHeight=400,
       method = ActionType.GET,
       height,
       className = "",
@@ -521,7 +524,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
       childPopupProps = {
         title: "",
-        width: "mw-100",
+        width: 1000,
+        height:800,
         isForm: false,
         content: null,
         drillDownCells: "",
@@ -1627,7 +1631,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               {enablefilter == true && (
                 <Item>
                   <ErpGridGlobalFilter
-                    width={filterWidth}
+                     width={filterWidth}
+                     height={filterHeight}
                     title={gridHeader}
                     gridId={gridId}
                     validations={filterValidations}
@@ -1774,7 +1779,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             width={
               childPopupPropsDynamic
                 ? childPopupPropsDynamic(isChildOpen.key).width
-                : childPopupProps?.width ?? "max-w-[1000px]"
+                : childPopupProps?.width ?? 1000
+            }
+            height={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).height
+                : childPopupProps?.height ?? 800
             }
             isForm={
               childPopupPropsDynamic

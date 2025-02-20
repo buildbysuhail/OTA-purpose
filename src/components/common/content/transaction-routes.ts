@@ -3,6 +3,8 @@ import { UserAction } from "../../../helpers/user-right-helper";
 import { Countries, UserModel } from "../../../redux/slices/user-session/reducer";
 import { TransactionListTitles, TransactionTitles } from "./transaction-titles";
 import { Wallet, CreditCard, FileText, Receipt, Scale, NotebookPen, TextSelect, HandCoins, TrendingUp, TrendingDown } from "lucide-react"; // Import icons from lucide-react
+import { TbReceipt2 } from "react-icons/tb";
+import { TbReceipt } from "react-icons/tb";
 
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
@@ -88,6 +90,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.ChequePayment,
     drCr: "Dr",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
+    icon: TbReceipt2
   },
   {
     transactionBase: TransactionBase.Accounts,
@@ -100,6 +103,7 @@ export const transactionRoutes: TransactionRoute[] = [
     listTitle: TransactionListTitles.ChequeReceipt,
     drCr: "Cr",
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.India,
+    icon: TbReceipt
   },
   {
     transactionBase: TransactionBase.Accounts,

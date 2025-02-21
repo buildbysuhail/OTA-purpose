@@ -223,23 +223,22 @@ const ERPModal = React.memo(
   key={rndKey}
   default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
  
-       onDragStop={(_, d) => {
+      //  onDragStop={(_, d) => {
       
-        setPosition({ x: d.x, y: d.y });
-      }}
+      //   setPosition({ x: d.x, y: d.y });
+      // }}
       
-       onResize={(_, __, ref, ___, pos) => {
-         setPosition({ x: pos.x, y: pos.y });
-         setModalHeight(ref.offsetHeight);
-         setModalWidth(ref.offsetWidth);
-       }}
-       onResizeStop={(e, dir, ref, delta, pos) => {
+      //  onResize={(_, __, ref, ___, pos) => {
+      //    setPosition({ x: pos.x, y: pos.y });
+      //    setModalHeight(ref.offsetHeight);
+      //    setModalWidth(ref.offsetWidth);
+      //  }}
+      //  onResizeStop={(e, dir, ref, delta, pos) => {
        
-        setModalHeight(ref.offsetHeight);
-        setModalWidth(ref.offsetWidth);
-        setPosition(pos);
-      }}
-   
+      //   setModalHeight(ref.offsetHeight);
+      //   setModalWidth(ref.offsetWidth);
+      //   setPosition(pos);
+      // }}
       bounds="parent"
       // bounds="window"
       minWidth={minWidth}

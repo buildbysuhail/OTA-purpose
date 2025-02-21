@@ -205,6 +205,7 @@ const AccountGroupType = () => {
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <ERPGridActions
@@ -266,6 +267,7 @@ const AccountGroupType = () => {
                 dataUrl={Urls.account_group}
                 gridId="grd_acc_group"
                 popupAction={toggleAccountGroupPopup}
+                ERPGridActionsstyle={true}
                 gridAddButtonType="popup"
                 changeReload={(reload: any) => {
                   dispatch(

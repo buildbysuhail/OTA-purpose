@@ -86,7 +86,9 @@ export const useAccTransaction = (
   remarksRef?: any,
   partyNameRef?: any,
   taxableAmountRef?: any,
-  refNoRef?: any
+  refNoRef?: any,
+  discountRef?: any,
+  chequeStatusRef?: any
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -120,6 +122,14 @@ export const useAccTransaction = (
     if (amountRef.current) {
       amountRef.current?.select();
       amountRef.current?.focus();
+    }
+  };
+  const focusDiscount = () => {
+    if (discountRef.current) {
+      setTimeout(() => {
+        discountRef.current?.select();
+        discountRef.current?.focus();
+      }, 0);
     }
   };
   const focusMasterAccount = () => {
@@ -186,6 +196,13 @@ export const useAccTransaction = (
     if (remarksRef.current) {
       remarksRef.current?.select();
       remarksRef.current?.focus();
+    }
+  };
+  const focusChequeStatus = () => {
+    debugger;
+    if (chequeStatusRef.current) {
+      chequeStatusRef.current?.select();
+      chequeStatusRef.current?.focus();
     }
   };
   const focusTaxableAmount = () => {
@@ -581,8 +598,8 @@ export const useAccTransaction = (
           case "CN":
           case "CQP":
           case "SV":
-            case "PBP":
-              case "CPE":
+          case "PBP":
+          case "CPE":
             voucher.masterAccountID = firstDetail.relatedLedgerID;
             break;
 
@@ -596,8 +613,8 @@ export const useAccTransaction = (
             voucher.masterAccountID = firstDetail.ledgerID;
             break;
 
-            case "JV":
-              case "JVSP":
+          case "JV":
+          case "JVSP":
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
                 ? firstDetail.ledgerID
@@ -608,92 +625,7 @@ export const useAccTransaction = (
         }
       }
 
-      let BillwiseaccTransactionDetailID = 0;
-      voucher.transaction.details = voucher.transaction.details.map(
-        (detail, index) => {
-          const baseDetail = {
-            ...detail,
-            slNo: index + 1,
-            amountFC: detail.amount,
-            bankDate: detail.bankDate
-              ? new Date(detail.bankDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-            chqDate: detail.chqDate
-              ? new Date(detail.chqDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-            checkBouncedDate: detail.checkBouncedDate
-              ? new Date(detail.checkBouncedDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-          };
-
-          // Handle voucher type specific logic
-          switch (voucher.transaction.master.voucherType) {
-            case "CP":
-            case "BP":
-            case "CN":
-            case "CQP":
-            case "SV":
-            case "PBP":
-              case "CPE":
-              return {
-                ...baseDetail,
-                ledgerCode: detail.ledgerCode,
-                ledgerName: detail.ledgerName,
-                ledgerID: detail.ledgerID,
-              };
-
-            case "CR":
-            case "BR":
-            case "DN":
-            case "CQR":
-            case "PV":
-            case "PBR":
-              case "CRE":
-              BillwiseaccTransactionDetailID++;
-              return {
-                ...baseDetail,
-                ledgerCode: detail.relatedLedgerCode,
-                ledgerName: detail.particulars,
-                ledgerID: detail.relatedLedgerID,
-              };
-
-              case "JV":
-                case "SP":
-              BillwiseaccTransactionDetailID++;
-              if (
-                voucher.transaction.master.drCr === "Dr" ||
-                voucher.transaction.master.drCr === "Debit"
-              ) {
-                return {
-                  ...baseDetail,
-                  ledgerCode: detail.relatedLedgerCode,
-                  ledgerName: detail.particulars,
-                  ledgerID: detail.relatedLedgerID,
-                };
-              } else {
-                return {
-                  ...baseDetail,
-                  ledgerCode: detail.ledgerCode,
-                  ledgerName: detail.ledgerName,
-                  ledgerID: detail.ledgerID,
-                };
-              }
-
-            case "OB":
-            case "MJV":
-              return {
-                ...baseDetail,
-                ledgerCode: detail.ledgerCode,
-                ledgerName: detail.ledgerName,
-                ledgerID: detail.ledgerID,
-                drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
-              };
-
-            default:
-              return baseDetail;
-          }
-        }
-      );
+      voucher.transaction.details = refactorDetails(voucher.transaction);
     }
     // Handle attachments
 
@@ -705,7 +637,91 @@ export const useAccTransaction = (
 
     return voucher;
   };
+const refactorDetails = (transaction: AccTransactionData) => {
+return transaction.details.map(
+  (detail, index) => {
+    const baseDetail = {
+      ...detail,
+      slNo: index + 1,
+      amountFC: detail.amount,
+      bankDate: detail.bankDate
+        ? new Date(detail.bankDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+      chqDate: detail.chqDate
+        ? new Date(detail.chqDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+      checkBouncedDate: detail.checkBouncedDate
+        ? new Date(detail.checkBouncedDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+    };
 
+    // Handle voucher type specific logic
+    switch (transaction.master.voucherType) {
+      case "CP":
+      case "BP":
+      case "CN":
+      case "CQP":
+      case "SV":
+      case "PBP":
+      case "CPE":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.ledgerCode,
+          ledgerName: detail.ledgerName,
+          ledgerID: detail.ledgerID,
+        };
+
+      case "CR":
+      case "BR":
+      case "DN":
+      case "CQR":
+      case "PV":
+      case "PBR":
+      case "CRE":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.relatedLedgerCode,
+          ledgerName: detail.particulars,
+          ledgerID: detail.relatedLedgerID,
+        };
+
+      case "JV":
+      case "SP":
+        if (
+          transaction.master.drCr === "Dr" ||
+          transaction.master.drCr === "Debit"
+        ) {
+          return {
+            ...baseDetail,
+            ledgerCode: detail.relatedLedgerCode,
+            ledgerName: detail.particulars,
+            ledgerID: detail.relatedLedgerID,
+          };
+        } else {
+          return {
+            ...baseDetail,
+            ledgerCode: detail.ledgerCode,
+            ledgerName: detail.ledgerName,
+            ledgerID: detail.ledgerID,
+          };
+        }
+
+      case "OB":
+      case "MJV":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.ledgerCode,
+          ledgerName: detail.ledgerName,
+          ledgerID: detail.ledgerID,
+          drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
+        };
+
+      default:
+        return baseDetail;
+    }
+  }
+);
+}
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode(
     isEdit: boolean,
@@ -888,7 +904,9 @@ export const useAccTransaction = (
       ERPAlert.show({
         icon: "warning",
         title: t("debit/credit"),
-        text: t("Contains multiple statuses, only a single status Cleared is accepted. Ensure all statuses are the same"),
+        text: t(
+          "Contains multiple statuses, only a single status Cleared is accepted. Ensure all statuses are the same"
+        ),
       });
       return false;
     }
@@ -967,13 +985,14 @@ export const useAccTransaction = (
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
-
+debugger;
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
       element.currencyID = 1;
       element.exchangeRate = 1;
       element.isDisplay = true;
       element.isDr = true;
+      debugger;
       switch (formState.transaction.master.voucherType) {
         case "CP":
         case "BP":
@@ -1030,12 +1049,15 @@ export const useAccTransaction = (
             element.credit = element.amount;
             element.debit = 0;
           }
+          break;
         case "CPT":
         case "BPT":
         case "CNT":
         case "EXP":
         case "TXP":
           element.relatedLedgerID = formState.masterAccountID;
+          element.ledgerID = element.ledgerID;
+          break;
         case "CRT":
         case "BRT":
         case "DNT":
@@ -1248,7 +1270,13 @@ export const useAccTransaction = (
         dispatch(
           accFormStateTransactionUpdate({
             key: "details",
-            value: saveRes.item.details,
+            value: refactorDetails({...params,
+              master: {
+                ...params.master,
+                transactionDate: params.master.transactionDate == null ? "" : params.master.transactionDate
+              },
+              details: saveRes.item.details
+            })
           })
         );
         dispatch(
@@ -1331,7 +1359,7 @@ export const useAccTransaction = (
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);
-        
+
         if (formState.isRowEdit != true) {
           if (
             (billwiseDetails == undefined || billwiseDetails == null) &&
@@ -1568,7 +1596,7 @@ export const useAccTransaction = (
   const getDrCr = (voucherType: string) => {
     switch (voucherType) {
       case "CP":
-        case "CPE":
+      case "CPE":
       case "BP":
       case "DN":
       case "CQP":
@@ -1576,8 +1604,8 @@ export const useAccTransaction = (
       case "SRV":
       case "PBP":
         return "Dr";
-        case "CR":
-          case "CRE":
+      case "CR":
+      case "CRE":
       case "BR":
       case "CN":
       case "CQR":
@@ -1594,15 +1622,15 @@ export const useAccTransaction = (
           return "Cr";
         }
         break;
-        case "JV":
-          case "JVSP":
+      case "JV":
+      case "JVSP":
         if (formState.transaction.master.drCr == "Dr") {
           return "Cr";
         } else {
           return "Dr";
         }
     }
-  }
+  };
   const handleRowClick = async ({ row }: RowClickHandlerParams) => {
     try {
       // Check PDC validation first
@@ -1738,14 +1766,34 @@ export const useAccTransaction = (
         }
       }
     } else if (field === "bankDate") {
+      debugger;
       if (isEnterKey(key)) {
-        dispatch(
-          accFormStateHandleFieldChange({ fields: { showbillwise: true } })
-        );
+        if (
+          clientSession.isAppGlobal &&
+          ["CQP", "CQR"].includes(formState.transaction.master.voucherType)
+        ) {
+          focusChequeStatus()
+        } else {
+          dispatch(
+            accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+          );
+        }
       }
     } else if (field === "commonNarration") {
       if (isEnterKey(key)) {
-        focusLedgerCode();
+        if (
+          clientSession.isAppGlobal &&
+          (formState.transaction.master.voucherType == "CQP" ||
+            formState.transaction.master.voucherType == "CQR")
+        ) {
+          try {
+            addOrEditRow();
+          } catch (error) {
+            return false;
+          }
+        } else {
+          focusLedgerCode();
+        }
       }
     }
   };
@@ -1860,6 +1908,7 @@ export const useAccTransaction = (
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
     if (e === "Enter") {
+      debugger;
       const isChequeVoucher =
         formState.transaction.master.voucherType === "CQP" ||
         formState.transaction.master.voucherType === "CQR";
@@ -1871,7 +1920,12 @@ export const useAccTransaction = (
         applicationSettings.accountsSettings?.maintainBillwiseAccount &&
         formState.formElements.btnBillWise.visible == true
       ) {
-        if (!isPaymentReceipt || !isChequeVoucher) {
+        if (
+          (clientSession.isAppGlobal == true && !isChequeVoucher) ||
+          (clientSession.isAppGlobal != true &&
+            !isPaymentReceipt &&
+            !isChequeVoucher)
+        ) {
           // Handle billwise click
           dispatch(
             accFormStateHandleFieldChange({ fields: { showbillwise: true } })
@@ -1883,16 +1937,25 @@ export const useAccTransaction = (
         if (isChequeVoucher) {
           focusChequeNumber();
         }
-      } else if (
-        applicationSettings.accountsSettings?.maintainCostCenter &&
-        formState.formElements.costCentreID.visible == true &&
-        (formState.userConfig?.presetCostenterId ?? 0) <= 0
-      ) {
-        focusCostCenterRef();
       } else {
-        focusBtnAdd();
+        if (
+          (clientSession.isAppGlobal == true && isChequeVoucher) ||
+          (clientSession.isAppGlobal != true &&
+            (isPaymentReceipt || isChequeVoucher))
+        ) {
+          focusChequeNumber();
+        } else {
+          if (
+            applicationSettings.accountsSettings?.maintainCostCenter &&
+            formState.formElements.costCentreID.visible == true &&
+            (formState.userConfig?.presetCostenterId ?? 0) <= 0
+          ) {
+            focusCostCenterRef();
+          } else {
+            focusBtnAdd();
+          }
+        }
       }
-
       // Final check for cheque vouchers
       if (isChequeVoucher) {
         focusChequeNumber();
@@ -1994,9 +2057,17 @@ export const useAccTransaction = (
       return;
     }
 
-    if (clientSession.isAppGlobal && (formState.transaction.master.voucherType === "CQP" || formState.transaction.master.voucherType === "CQR")) {
-      const isCleared = formState.transaction.details.filter(x => x.chequeStatus == "C").length > 0
-      const isBounced = formState.transaction.details.filter(x => x.chequeStatus == "B").length > 0
+    if (
+      clientSession.isAppGlobal &&
+      (formState.transaction.master.voucherType === "CQP" ||
+        formState.transaction.master.voucherType === "CQR")
+    ) {
+      const isCleared =
+        formState.transaction.details.filter((x) => x.chequeStatus == "C")
+          .length > 0;
+      const isBounced =
+        formState.transaction.details.filter((x) => x.chequeStatus == "B")
+          .length > 0;
       if (isCleared) {
         ERPAlert.show({
           title: t("warning"),
@@ -2069,9 +2140,17 @@ export const useAccTransaction = (
       });
       return;
     }
-    if (clientSession.isAppGlobal && (formState.transaction.master.voucherType === "CQP" || formState.transaction.master.voucherType === "CQR")) {
-      const isCleared = formState.transaction.details.filter(x => x.chequeStatus == "C").length > 0
-      const isBounced = formState.transaction.details.filter(x => x.chequeStatus == "B").length > 0
+    if (
+      clientSession.isAppGlobal &&
+      (formState.transaction.master.voucherType === "CQP" ||
+        formState.transaction.master.voucherType === "CQR")
+    ) {
+      const isCleared =
+        formState.transaction.details.filter((x) => x.chequeStatus == "C")
+          .length > 0;
+      const isBounced =
+        formState.transaction.details.filter((x) => x.chequeStatus == "B")
+          .length > 0;
       if (isCleared) {
         ERPAlert.show({
           title: t("warning"),
@@ -2252,7 +2331,7 @@ export const useAccTransaction = (
         },
       })
     );
-    const _drcr = getDrCr(formState.transaction.master.voucherType)
+    const _drcr = getDrCr(formState.transaction.master.voucherType);
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
         formState.row.ledgerID
@@ -2438,8 +2517,10 @@ export const useAccTransaction = (
     focusCostCenterRef,
     focusLedgerCode,
     focusRefNo,
+    focusAmount,
+    focusDiscount,
     showBillwise,
     billWiseExcludedTransactions,
-    getDrCr
+    getDrCr,
   };
 };

@@ -28,13 +28,13 @@ const Logout = () => {
     const logout = await dispatch(
       logoutUser({ systemId: localStorage.getItem("systemId") ?? "" })
     ).unwrap();
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("ut");
-    localStorage.removeItem("up");
-    localStorage.removeItem("as");
-    localStorage.removeItem("ur");
-    localStorage.removeItem("utc");
+localStorage.clear();
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("ut");
+    // localStorage.removeItem("up");
+    // localStorage.removeItem("as");
+    // localStorage.removeItem("ur");
+    // localStorage.removeItem("utc");
     dispatch(setUserSession(initialUserSessionData));
       dispatch(setUserBranches([]));
       dispatch(setUserRights([]));

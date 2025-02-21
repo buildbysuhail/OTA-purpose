@@ -17,12 +17,15 @@ const TransactionReportFilter = ({
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
+
   const { t } = useTranslation("accountsReport");
   const api = new APIClient();
   const [allTransactions, setAllTransactions] = useState<any>();
+
   useEffect(() => {
     loadTransactions();
   }, []);
+
   const loadTransactions = async () => {
     const res: any[] = await api.getAsync(Urls.data_vouchertype);
     const updatedVouchers = res?.map((tr) => ({
@@ -31,6 +34,7 @@ const TransactionReportFilter = ({
     }));
     setAllTransactions(updatedVouchers);
   };
+
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4"> */}
@@ -39,9 +43,7 @@ const TransactionReportFilter = ({
           {...getFieldProps("dateFrom")}
           label={t("from")}
           className="max-w-[150px]"
-          onChangeData={(data: any) =>
-            handleFieldChange("dateFrom", data.dateFrom)
-          }
+          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
 
         <ERPDateInput
@@ -50,25 +52,27 @@ const TransactionReportFilter = ({
           className="max-w-[150px]"
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
-        {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-          <ERPDataCombobox
-            {...getFieldProps("salesRouteID")}
-            label={t("sales_route")}
-            className="max-w-[325px]"
-            field={{
-              id: "salesRouteID",
-              getListUrl: Urls.data_salesRoute,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) =>
-              handleFieldChange({
-                salesRouteID: data.value,
-                salesRouteName: data.name,
-              })
-            }
-          />
-        )}
+        {
+          applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+            <ERPDataCombobox
+              {...getFieldProps("salesRouteID")}
+              label={t("sales_route")}
+              className="max-w-[325px]"
+              field={{
+                id: "salesRouteID",
+                getListUrl: Urls.data_salesRoute,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onSelectItem={(data) =>
+                handleFieldChange({
+                  salesRouteID: data.value,
+                  salesRouteName: data.name,
+                })
+              }
+            />
+          )
+        }
       </div>
 
       {/* </div> */}
@@ -77,47 +81,48 @@ const TransactionReportFilter = ({
       {/* <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
             </label> */}
       <div className="overflow-auto border dark:!border-dark-border border-gray-400 rounded w-auto max-w-[1000px] h-auto max-h-[260px] dark-scrollbar ">
-        <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
-          {allTransactions && allTransactions.length > 0 && (
-            <TransactionReportfilterCheckboxes
-              onDataChange={(frmState: {
-                vTypes: string;
-                drCr: string;
-                allChecked: boolean;
-                isDr: boolean;
-                isCr: boolean;
-              }) => {
-                let updates = frmState;
-                // if (frmState.allChecked) {
+        <div className="grid grid-flow-col auto-cols-max gap-4 p-4 text-left">
+          {
+            allTransactions && allTransactions.length > 0 && (
+              <TransactionReportfilterCheckboxes
+                onDataChange={(frmState: {
+                  vTypes: string;
+                  drCr: string;
+                  allChecked: boolean;
+                  isDr: boolean;
+                  isCr: boolean;
+                }) => {
+                  let updates = frmState;
+                  // if (frmState.allChecked) {
 
-                //   updates["vTypes"] = "All";
-                //   updates["isDr"] = frmState?.isDr;
-                //   updates["isCr"] = frmState?.isCr;
-                // } else {
-                //   // const sds = allTransactions
-                //   //   ?.filter((xx: any) => xx.checked === true)
-                //   //   ?.map((tr: any) => tr.id)
-                //   //   ?.join(',');
-                //   // updates["vTypes"] = sds || '';
-                // }
-                if (frmState.isDr && frmState.isCr) {
-                  updates["drCr"] = "drCr";
-                } else if (frmState.isDr) {
-                  updates["drCr"] = "dr";
-                } else if (frmState.isCr) {
-                  updates["drCr"] = "cr";
-                } else {
-                  updates["drCr"] = "drCr";
-                }
-                // Call handleFieldChange once with all updates
-
-                handleFieldChange(updates);
-              }}
-              getFormState={getFormState}
-              allTransactions={allTransactions}
-              setAllTransactions={setAllTransactions}
-            />
-          )}
+                  //   updates["vTypes"] = "All";
+                  //   updates["isDr"] = frmState?.isDr;
+                  //   updates["isCr"] = frmState?.isCr;
+                  // } else {
+                  //   // const sds = allTransactions
+                  //   //   ?.filter((xx: any) => xx.checked === true)
+                  //   //   ?.map((tr: any) => tr.id)
+                  //   //   ?.join(',');
+                  //   // updates["vTypes"] = sds || '';
+                  // }
+                  if (frmState.isDr && frmState.isCr) {
+                    updates["drCr"] = "drCr";
+                  } else if (frmState.isDr) {
+                    updates["drCr"] = "dr";
+                  } else if (frmState.isCr) {
+                    updates["drCr"] = "cr";
+                  } else {
+                    updates["drCr"] = "drCr";
+                  }
+                  // Call handleFieldChange once with all updates
+                  handleFieldChange(updates);
+                }}
+                getFormState={getFormState}
+                allTransactions={allTransactions}
+                setAllTransactions={setAllTransactions}
+              />
+            )
+          }
         </div>
       </div>
     </div>

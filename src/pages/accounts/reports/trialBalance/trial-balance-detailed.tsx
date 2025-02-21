@@ -389,7 +389,7 @@ const TrialBalancePeriodwise = () => {
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.closingCredit;
+          const balance = cellElement.data?.closingDebit;
           const isDebit = balance >= 0;
           const value =
             balance == null

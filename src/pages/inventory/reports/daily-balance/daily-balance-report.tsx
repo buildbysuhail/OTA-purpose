@@ -39,7 +39,6 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
-
     },
     {
       dataField: "receivedAmount",
@@ -49,7 +48,6 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
-
     },
     {
       dataField: "balance",
@@ -59,7 +57,6 @@ const DailyBalanceAmount = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 200,
-
     },
   ];
   return (
@@ -78,12 +75,12 @@ const DailyBalanceAmount = () => {
                   showFilterInitially={true}
                   method={ActionType.POST}
                   filterContent={<DailyBalanceReportFilter />}
-                  filterWidth={400}
-                  filterHeight={400}
+                  filterWidth={335}
+                  filterHeight={160}
                   filterInitialData={DailyBalanceReportFilterInitialState}
                   reload={true}
                   gridId="grd_daily_balance"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

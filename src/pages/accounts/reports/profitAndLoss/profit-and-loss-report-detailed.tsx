@@ -410,7 +410,7 @@ const ProfitAndLossDetailedReport = () => {
             // indent: 2,
           };
         } 
-        else if(expense[i].title === "L") {
+        else if(expense[i].title === "L"||expense[i].title==="G") {
           worksheet.getCell(`A${currentRow}`).alignment = {
             horizontal: "left",
               indent: 2,
@@ -485,7 +485,7 @@ const ProfitAndLossDetailedReport = () => {
             // indent: 2,
           };
         }
-        else if(income[i].title === "L") {
+        else if(income[i].title === "L"||income[i].title==="G") {
           worksheet.getCell(`C${currentRow}`).alignment = {
             horizontal: "left",
               indent: 2,

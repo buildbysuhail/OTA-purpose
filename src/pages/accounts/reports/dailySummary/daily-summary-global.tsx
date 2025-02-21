@@ -61,7 +61,10 @@ const DailySummaryGlobal = () => {
         }
         else {
           return (<span className={`${cellElement.data.date === "TOTAL" ? 'font-bold text-[#DC143C]' : cellElement.data.date === "Expenses" || cellElement.data.date === "Finished Goods" ? 'font-bold text-black' : cellElement.data.date === "Indirect Expense" || cellElement.data.date === "Direct Expense" ? 'font-bold text-[#2E8B57]' : ''}`}>
-                {moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")}
+          {moment(cellElement.data.date, "DD-MM-YYYY", true).isValid() 
+    ? moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY") 
+    : cellElement.data.date}
+
           </span>
           )
         }
@@ -462,7 +465,7 @@ const DailySummaryGlobal = () => {
                   gridId="grd_daily_summary_global"
                   enablefilter={true}
                   showFilterInitially={true}
-                  // filterWidth="100"
+                  // filterWidth={100}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}

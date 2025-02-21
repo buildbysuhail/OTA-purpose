@@ -126,6 +126,7 @@ const OutstandingAgingReportFilter = ({
       <ERPCheckbox
         {...getFieldProps("loadDefaults")}
         label={t("load_defaults")}
+        className="text-left"
         onChangeData={(data: any) =>
           handleFieldChange("loadDefaults", data.loadDefaults)
         }

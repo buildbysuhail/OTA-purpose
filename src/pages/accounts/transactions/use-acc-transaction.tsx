@@ -356,8 +356,8 @@ export const useAccTransaction = (
         (userConfig?.presetCostenterId ?? 0 > 0
           ? userConfig?.presetCostenterId
           : userSession.dbIdValue == "SAMAPLASTICS12121212121"
-          ? 0
-          : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
+            ? 0
+            : applicationSettings?.accountsSettings?.defaultCostCenterID) ?? 0;
       _formState.userConfig = userConfig;
     }
 
@@ -379,7 +379,7 @@ export const useAccTransaction = (
       } else if (_formState.transaction.master.voucherType === "CR") {
         _formState.masterAccountID =
           userSession.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings.allowSalesCounter
+            applicationSettings.accountsSettings.allowSalesCounter
             ? userSession.counterwiseCashLedgerId
             : applicationSettings.accountsSettings.defaultCashAcc;
       }
@@ -547,7 +547,7 @@ export const useAccTransaction = (
     await undoEditMode(
       formState.isEdit,
       accTransactionMasterID ??
-        formState.transaction.master.accTransactionMasterID
+      formState.transaction.master.accTransactionMasterID
     );
 
     // voucher.formElements.btnAdd = {
@@ -637,91 +637,91 @@ export const useAccTransaction = (
 
     return voucher;
   };
-const refactorDetails = (transaction: AccTransactionData) => {
-return transaction.details.map(
-  (detail, index) => {
-    const baseDetail = {
-      ...detail,
-      slNo: index + 1,
-      amountFC: detail.amount,
-      bankDate: detail.bankDate
-        ? new Date(detail.bankDate).toISOString()
-        : moment.utc("2000-01-01").startOf("day").toISOString(),
-      chqDate: detail.chqDate
-        ? new Date(detail.chqDate).toISOString()
-        : moment.utc("2000-01-01").startOf("day").toISOString(),
-      checkBouncedDate: detail.checkBouncedDate
-        ? new Date(detail.checkBouncedDate).toISOString()
-        : moment.utc("2000-01-01").startOf("day").toISOString(),
-    };
-
-    // Handle voucher type specific logic
-    switch (transaction.master.voucherType) {
-      case "CP":
-      case "BP":
-      case "CN":
-      case "CQP":
-      case "SV":
-      case "PBP":
-      case "CPE":
-        return {
-          ...baseDetail,
-          ledgerCode: detail.ledgerCode,
-          ledgerName: detail.ledgerName,
-          ledgerID: detail.ledgerID,
+  const refactorDetails = (transaction: AccTransactionData) => {
+    return transaction.details.map(
+      (detail, index) => {
+        const baseDetail = {
+          ...detail,
+          slNo: index + 1,
+          amountFC: detail.amount,
+          bankDate: detail.bankDate
+            ? new Date(detail.bankDate).toISOString()
+            : moment.utc("2000-01-01").startOf("day").toISOString(),
+          chqDate: detail.chqDate
+            ? new Date(detail.chqDate).toISOString()
+            : moment.utc("2000-01-01").startOf("day").toISOString(),
+          checkBouncedDate: detail.checkBouncedDate
+            ? new Date(detail.checkBouncedDate).toISOString()
+            : moment.utc("2000-01-01").startOf("day").toISOString(),
         };
 
-      case "CR":
-      case "BR":
-      case "DN":
-      case "CQR":
-      case "PV":
-      case "PBR":
-      case "CRE":
-        return {
-          ...baseDetail,
-          ledgerCode: detail.relatedLedgerCode,
-          ledgerName: detail.particulars,
-          ledgerID: detail.relatedLedgerID,
-        };
+        // Handle voucher type specific logic
+        switch (transaction.master.voucherType) {
+          case "CP":
+          case "BP":
+          case "CN":
+          case "CQP":
+          case "SV":
+          case "PBP":
+          case "CPE":
+            return {
+              ...baseDetail,
+              ledgerCode: detail.ledgerCode,
+              ledgerName: detail.ledgerName,
+              ledgerID: detail.ledgerID,
+            };
 
-      case "JV":
-      case "SP":
-        if (
-          transaction.master.drCr === "Dr" ||
-          transaction.master.drCr === "Debit"
-        ) {
-          return {
-            ...baseDetail,
-            ledgerCode: detail.relatedLedgerCode,
-            ledgerName: detail.particulars,
-            ledgerID: detail.relatedLedgerID,
-          };
-        } else {
-          return {
-            ...baseDetail,
-            ledgerCode: detail.ledgerCode,
-            ledgerName: detail.ledgerName,
-            ledgerID: detail.ledgerID,
-          };
+          case "CR":
+          case "BR":
+          case "DN":
+          case "CQR":
+          case "PV":
+          case "PBR":
+          case "CRE":
+            return {
+              ...baseDetail,
+              ledgerCode: detail.relatedLedgerCode,
+              ledgerName: detail.particulars,
+              ledgerID: detail.relatedLedgerID,
+            };
+
+          case "JV":
+          case "SP":
+            if (
+              transaction.master.drCr === "Dr" ||
+              transaction.master.drCr === "Debit"
+            ) {
+              return {
+                ...baseDetail,
+                ledgerCode: detail.relatedLedgerCode,
+                ledgerName: detail.particulars,
+                ledgerID: detail.relatedLedgerID,
+              };
+            } else {
+              return {
+                ...baseDetail,
+                ledgerCode: detail.ledgerCode,
+                ledgerName: detail.ledgerName,
+                ledgerID: detail.ledgerID,
+              };
+            }
+
+          case "OB":
+          case "MJV":
+            return {
+              ...baseDetail,
+              ledgerCode: detail.ledgerCode,
+              ledgerName: detail.ledgerName,
+              ledgerID: detail.ledgerID,
+              drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
+            };
+
+          default:
+            return baseDetail;
         }
-
-      case "OB":
-      case "MJV":
-        return {
-          ...baseDetail,
-          ledgerCode: detail.ledgerCode,
-          ledgerName: detail.ledgerName,
-          ledgerID: detail.ledgerID,
-          drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
-        };
-
-      default:
-        return baseDetail;
-    }
+      }
+    );
   }
-);
-}
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode(
     isEdit: boolean,
@@ -748,10 +748,8 @@ return transaction.details.map(
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType ? formType : ""}&voucherType=${
-        voucherType ? voucherType : ""
-      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${
-        isVoucherPrefix ? isVoucherPrefix : false
+      `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+      }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
     );
 
@@ -780,11 +778,11 @@ return transaction.details.map(
 
       const daysUntilExpiry = Math.floor(
         (demoExpiryDate.getTime() - transactionDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
       const daysSinceSoftwareDate = Math.floor(
         (transactionDate.getTime() - softwareDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       );
 
       if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
@@ -904,13 +902,10 @@ return transaction.details.map(
       ERPAlert.show({
         icon: "warning",
         title: t("debit/credit"),
-        text: t(
-          "Contains multiple statuses, only a single status Cleared is accepted. Ensure all statuses are the same"
-        ),
+        text: t("contains_multiple_statuses"),
       });
       return false;
     }
-
     return true;
   };
   const validateStatus = (accounts: AccTransactionRow[]): boolean => {
@@ -985,7 +980,7 @@ return transaction.details.map(
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
-debugger;
+      debugger;
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
       element.currencyID = 1;
@@ -1101,19 +1096,19 @@ debugger;
       ...formState.transaction.master,
       particulars:
         formState.transaction.master.voucherType != "MJV" &&
-        formState.transaction.master.voucherType != "OB"
+          formState.transaction.master.voucherType != "OB"
           ? dataContainer.ledgers?.find(
-              (x) => x.id == formState.masterAccountID
-            )?.name ?? ""
+            (x) => x.id == formState.masterAccountID
+          )?.name ?? ""
           : formState.transaction.master.voucherType == "OB"
-          ? dataContainer.ledgers?.find(
+            ? dataContainer.ledgers?.find(
               (x) =>
                 x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
             )?.name ?? ""
-          : formState.transaction.master.voucherType == "MJV"
-          ? dataContainer.ledgers?.find((x) => x.id == firstCreditLedgerID)
-              ?.name ?? ""
-          : "",
+            : formState.transaction.master.voucherType == "MJV"
+              ? dataContainer.ledgers?.find((x) => x.id == firstCreditLedgerID)
+                ?.name ?? ""
+              : "",
     };
 
     master.accTransactionMasterID = formState.isEdit
@@ -1162,7 +1157,6 @@ debugger;
     ) {
       ERPAlert.show({
         icon: "info",
-
         title: t("are_you_sure_to_modify"),
         onCancel() {
           return false;
@@ -1186,8 +1180,16 @@ debugger;
     );
 
     const valid = validate();
+    debugger;
     if (valid == true) {
       const master = attachMaster();
+      const attachments = formState.transaction.attachments.map(x => ({
+        aType: x.aType,
+        attachmentId: x.id,
+        fileName: x.name,
+        key: x.key,
+        type: x.type
+    }));
       const params = {
         master: {
           ...master,
@@ -1195,18 +1197,19 @@ debugger;
             master.transactionDate == "" ? null : master.transactionDate,
         },
         details: attachDetails(),
-        attachments: [...formState.transaction.attachments],
+        attachments: attachments,
       };
+      debugger;
       const saveRes =
         formState.transaction.master.accTransactionMasterID > 0
           ? await api.putAsync(
-              `${Urls.acc_transaction_base}${transactionType}`,
-              params
-            )
+            `${Urls.acc_transaction_base}${transactionType}`,
+            params
+          )
           : await api.postAsync(
-              `${Urls.acc_transaction_base}${transactionType}`,
-              params
-            );
+            `${Urls.acc_transaction_base}${transactionType}`,
+            params
+          );
       if (saveRes.isOk == true) {
         dispatch(
           accFormStateTransactionUpdate({
@@ -1270,7 +1273,8 @@ debugger;
         dispatch(
           accFormStateTransactionUpdate({
             key: "details",
-            value: refactorDetails({...params,
+            value: refactorDetails({
+              ...params,
               master: {
                 ...params.master,
                 transactionDate: params.master.transactionDate == null ? "" : params.master.transactionDate
@@ -1509,8 +1513,8 @@ debugger;
     const costCentreName =
       formState.row.costCentreID > 0
         ? dataContainer.costCentres?.find(
-            (x) => x.id == formState.row.costCentreID
-          )?.name
+          (x) => x.id == formState.row.costCentreID
+        )?.name
         : "";
     dispatch(
       accFormStateTransactionDetailsRowAdd({
@@ -1519,11 +1523,11 @@ debugger;
           costCentreName: costCentreName,
           ledgerName:
             formState.row.ledgerName == undefined ||
-            formState.row.ledgerName == null ||
-            formState.row.ledgerName == ""
+              formState.row.ledgerName == null ||
+              formState.row.ledgerName == ""
               ? dataContainer.ledgers?.find(
-                  (x) => x.id == formState.row.ledgerID
-                )?.name
+                (x) => x.id == formState.row.ledgerID
+              )?.name
               : formState.row.ledgerName,
           amount: totalAmount ?? formState.row.amount,
           billwiseDetails:
@@ -1810,7 +1814,7 @@ debugger;
     }
     if (key === "d" || key === "D") {
       ERPAlert.show({
-        title: "Confirm Delete",
+        title: t("confirm_delete"),
         text: t("you_want_to_delete"),
         icon: "warning",
         confirmButtonText: t("delete_it"),
@@ -1833,11 +1837,10 @@ debugger;
     if (e === "Enter" || e === "Tab") {
       try {
         const response = await api.getAsync(
-          `${Urls.get_ledgerId_by_code}${
-            formState.row.ledgerCode == undefined ||
+          `${Urls.get_ledgerId_by_code}${formState.row.ledgerCode == undefined ||
             formState.row.ledgerCode === ""
-              ? 0
-              : formState.row.ledgerCode
+            ? 0
+            : formState.row.ledgerCode
           }`
         );
 
@@ -1987,8 +1990,8 @@ debugger;
           e == "ArrowDown"
             ? "decrement"
             : e == "ArrowUp"
-            ? "increment"
-            : undefined,
+              ? "increment"
+              : undefined,
           true
         );
       }
@@ -2042,7 +2045,7 @@ debugger;
     );
     if (!validateTransactionDateRes.valid) {
       ERPAlert.show({
-        title: "Warning",
+        title: t("warning"),
         text: validateTransactionDateRes.message,
         icon: "warning",
       });
@@ -2071,14 +2074,14 @@ debugger;
       if (isCleared) {
         ERPAlert.show({
           title: t("warning"),
-          text: t("Cleared PDC Cannot be Modified"),
+          text: t("cleared_pdc_cannot_be_modified"),
           icon: "warning",
         });
         return false;
       } else if (isBounced) {
         ERPAlert.show({
           title: t("warning"),
-          text: t("Bounced PDC Cannot be Modified"),
+          text: t("bounced_pdc_cannot_be_modified"),
           icon: "warning",
         });
         return false;
@@ -2120,7 +2123,7 @@ debugger;
       } else {
         const editInfo = result.message.split(";");
         ERPAlert.show({
-          title: "Voucher in Use",
+          title: t("voucher_in_use"),
           text: `This Voucher is already in use by ${editInfo[1]} on system ${editInfo[0]} at ${editInfo[2]}`,
           icon: "warning",
         });
@@ -2134,7 +2137,7 @@ debugger;
   const deleteAccTransVoucher = async () => {
     if (formState.transaction.master?.isLocked) {
       ERPAlert.show({
-        title: "Warning",
+        title: t("warning"),
         text: t("voucher_is_locked"),
         icon: "warning",
       });
@@ -2154,7 +2157,7 @@ debugger;
       if (isCleared) {
         ERPAlert.show({
           title: t("warning"),
-          text: t("Cleared PDC Cannot be Modified"),
+          text: t("cleared_pdc_cannot_be_modified"),
           icon: "warning",
         });
         return false;
@@ -2333,10 +2336,8 @@ debugger;
     );
     const _drcr = getDrCr(formState.transaction.master.voucherType);
     const billwise = await api.getAsync(
-      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-        formState.row.ledgerID
-      }&DrCr=${_drcr}&AccTransactionDetailID=${
-        formState.row.accTransactionDetailID ?? 0
+      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID
+      }&DrCr=${_drcr}&AccTransactionDetailID=${formState.row.accTransactionDetailID ?? 0
       }`
     );
     if (formState.row.accTransactionDetailID ?? 0 > 0) {

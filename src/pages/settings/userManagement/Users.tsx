@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
@@ -168,9 +168,7 @@ const Users = () => {
       },
     }
   ], []);
-  useEffect(() => {
-    dispatch(toggleUserPopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleUserPopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
@@ -184,15 +182,11 @@ const Users = () => {
                 gridId="grd_users"
                 popupAction={toggleUserPopup}
                 gridAddButtonType="popup"
-                changeReload={(reload: any) => {
-                  dispatch(
-                    toggleUserPopup({ ...rootState, reload: reload })
-                  );
-                }}
+                changeReload={(reload: any) => { dispatch(toggleUserPopup({ ...rootState, reload: reload })); }}
                 reload={rootState?.PopupData?.user?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
-              ></ErpDevGrid>
+              />
             </div>
           </div>
         </div>
@@ -203,9 +197,7 @@ const Users = () => {
         width={600}
         height={450}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleUserPopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleUserPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedUsersManage />}
       />
     </Fragment>

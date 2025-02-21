@@ -40,5 +40,7 @@
     "inherit_rights_from_usertype": "Inherit Rights From UserType",
 
     "save":"Save",
-    "close":"Close"
+    "close":"Close",
+
+    "load_rights":"Load rights"
 }

@@ -1,16 +1,13 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleDeleteInactiveTransactionPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import { initialDataCounter } from "../system/counters-manage-type";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { useTranslation } from "react-i18next";
-import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface DeleteInactiveTransactionManageData {
   date: string;
@@ -22,14 +19,8 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const { isEdit, formState, handleSubmit, handleClear, handleFieldChange, getFieldProps, isLoading, handleClose } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
-      onClose: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
-      onSuccess: useCallback(
-        () =>
-          dispatch(
-            toggleDeleteInactiveTransactionPopup({ isOpen: false })
-          ),
-        [dispatch]
-      ),
+      onClose: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+      onSuccess: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false })), [dispatch]),
       method: ActionType.POST,
       useApiClient: true,
       loadDataRequired: false,
@@ -55,6 +46,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("i_agree_to_delete")}
+          className="text-left"
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
       </div>

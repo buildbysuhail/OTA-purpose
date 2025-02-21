@@ -173,6 +173,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const partyNameRef = useRef<HTMLInputElement>(null);
   const refNoRef = useRef<HTMLInputElement>(null);
   const taxNoRef = useRef<HTMLInputElement>(null);
+  const discountRef = useRef<HTMLInputElement>(null);
+  const chequeStatusRef = useRef<HTMLInputElement>(null);
 
   const [showValidation, setShowValidation] = useState(false);
   const focusTaxNoField = ()=>{
@@ -256,6 +258,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     focusCostCenterRef,
     focusLedgerCode,
     focusRefNo,
+    focusAmount,
+    focusDiscount,
     showBillwise,
     billWiseExcludedTransactions,
     getDrCr
@@ -275,7 +279,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     remarksRef,
     partyNameRef,
     taxableAmountRef,
-    refNoRef
+    refNoRef,
+    discountRef,
+    chequeStatusRef
   );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
@@ -1935,7 +1941,7 @@ const prevNation = formState.row.narration;
                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
                                 onClick={(e) => {
                                   // Prevent default link behavior
-                                  printPaymentReceiptAdvice(formState, "AP");
+                                  printPaymentReceiptAdvice(formState);
                                 }}
                               >
                                 <Printer className="h-4 w-4" />
@@ -2755,11 +2761,19 @@ const prevNation = formState.row.narration;
                       label={t(formState.formElements.hasDiscount.label)}
                       checked={formState.row.hasDiscount}
                       onChange={(e) =>
+                      {
                         dispatch(
                           accFormStateRowHandleFieldChange({
                             fields: { hasDiscount: e.target.checked },
                           })
                         )
+                        if(e.target.checked) {
+                          focusDiscount();
+                        }
+                        else {
+                          focusAmount();
+                        }
+                      }
                       }
                       disabled={
                         formState.formElements.hasDiscount?.disabled ||
@@ -2770,6 +2784,7 @@ const prevNation = formState.row.narration;
 
                   {formState.formElements.discount.visible && (
                     <ERPInput
+                    ref={discountRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="discount"
                       type="number"
@@ -2942,6 +2957,8 @@ const prevNation = formState.row.narration;
                   )}
                   {formState.formElements.chequeNumber.visible && (
                     <ERPInput
+
+                    ref={chequeNumberRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="chequeNumber"
                       label={t(formState.formElements.chequeNumber.label)}
@@ -2959,8 +2976,33 @@ const prevNation = formState.row.narration;
                       }
                     />
                   )}
+                  {formState.formElements.bankDate.visible && (
+                    <ERPDateInput
+                      localInputBox={formState.userConfig?.inputBoxStyle}
+                      id="bankDate"
+                      label={t(formState.formElements.bankDate.label)}
+                      
+                      value={new Date(formState.row.bankDate)}
+                      onChange={(e) =>
+                        dispatch(
+                          accFormStateRowHandleFieldChange({
+                            fields: { bankDate: e.target?.value },
+                          })
+                        )
+                      }
+                      disabled={
+                        formState.formElements.bankDate?.disabled ||
+                        formState.formElements.pnlMasters?.disabled
+                      }
+                      disableEnterNavigation
+                      onKeyDown={(e) => {
+                        handleKeyDown(e, "bankDate");
+                      }}
+                    />
+                  )}
                   {formState.formElements.chequeStatus.visible && (
                     <ERPInput
+                    ref={chequeStatusRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="chequeStatus"
                       label={t(formState.formElements.chequeStatus.label)}
@@ -3017,29 +3059,7 @@ const prevNation = formState.row.narration;
                     />
                   )}
 
-                  {formState.formElements.bankDate.visible && (
-                    <ERPDateInput
-                      localInputBox={formState.userConfig?.inputBoxStyle}
-                      id="bankDate"
-                      label={t(formState.formElements.bankDate.label)}
-                      value={new Date(formState.row.bankDate)}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { bankDate: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.bankDate?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, "bankDate");
-                      }}
-                    />
-                  )}
+                  
                   {["TXP"].includes(formState.transaction.master.voucherType) && (
                     <>
                       <div className="flex items-center gap-1">

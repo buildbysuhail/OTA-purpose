@@ -148,8 +148,10 @@ const handleDirectPrint = async (template:any) => {
   }
   };
 
-   const printPaymentReceiptAdvice = async(voucher?: AccTransactionFormState,voucherType?:any) => {
+   const printPaymentReceiptAdvice = async(voucher?: AccTransactionFormState) => {
     voucher = voucher == undefined ? formState : voucher
+    let voucherType = ["CP","BP","CQP"].includes(formState.transaction.master.voucherType) ? "PARP"
+    : ["CR","BR","CQR"].includes(formState.transaction.master.voucherType) ? "RARP":"";
     const existingTemplate = voucher.templatesData?.find(
       (template: any) => template.templateGroup === voucherType
     );

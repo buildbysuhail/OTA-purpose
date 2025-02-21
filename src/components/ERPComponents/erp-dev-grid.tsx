@@ -1282,6 +1282,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     );
     const handleCellClick = useCallback(
       (event: any) => {
+        debugger;
         const dynamicProps = childPopupPropsDynamic
           ? childPopupPropsDynamic(event.column?.dataField)
           : childPopupProps;

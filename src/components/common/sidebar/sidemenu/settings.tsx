@@ -9,6 +9,7 @@ import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
   {
     menutitle: 'settings',
+    title:''
   },
   {
     icon: (<Crown className="side-menu__icon side-menu" />),

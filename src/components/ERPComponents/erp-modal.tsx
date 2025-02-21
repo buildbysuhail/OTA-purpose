@@ -228,11 +228,11 @@ const ERPModal = React.memo(
       //   setPosition({ x: d.x, y: d.y });
       // }}
       
-      //  onResize={(_, __, ref, ___, pos) => {
-      //    setPosition({ x: pos.x, y: pos.y });
-      //    setModalHeight(ref.offsetHeight);
-      //    setModalWidth(ref.offsetWidth);
-      //  }}
+       onResize={(_, __, ref, ___, pos) => {
+         setPosition({ x: pos.x, y: pos.y });
+         setModalHeight(ref.offsetHeight);
+         setModalWidth(ref.offsetWidth);
+       }}
       //  onResizeStop={(e, dir, ref, delta, pos) => {
        
       //   setModalHeight(ref.offsetHeight);

@@ -125,7 +125,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   isTeller = false,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-
+debugger;
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -312,33 +312,33 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, [financialYearID]);
-  useEffect(() => {
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          transactionType: transactionType,
-          formCode: formCode,
-        },
-      })
-    );
-  }, [voucherType]);
+  // useEffect(() => {
+  //   dispatch(
+  //     accFormStateHandleFieldChange({
+  //       fields: {
+  //         transactionType: transactionType,
+  //         formCode: formCode,
+  //       },
+  //     })
+  //   );
+  // }, [voucherType]);
 
-  useEffect(() => {
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: {
-          isInvoker: voucherNo && voucherNo > 0,
-          // foreignCurrency:
-          //   applicationSettings.accountsSettings
-          //     ?.maintainMultiCurrencyTransactions,
-        },
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     accFormStateHandleFieldChange({
+  //       fields: {
+  //         isInvoker: voucherNo && voucherNo > 0,
+  //         // foreignCurrency:
+  //         //   applicationSettings.accountsSettings
+  //         //     ?.maintainMultiCurrencyTransactions,
+  //       },
+  //     })
+  //   );
+  // }, []);
 
-  useEffect(() => {
-    dispatch(accFormStateHandleFieldChange({ fields: { formCode: formCode } }));
-  }, [formCode]);
+  // useEffect(() => {
+  //   dispatch(accFormStateHandleFieldChange({ fields: { formCode: formCode } }));
+  // }, [formCode]);
 
   useEffect(() => {
     billwiseChanged(formState.showbillwise);

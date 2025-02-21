@@ -22,15 +22,17 @@ export interface AccTransactionData {
   details: AccTransactionRow[];
   attachments: any[];
 }
-interface Attachments {
-  id: string;
+export interface Attachments {
+  id?: string;
+  key: string;
   name: string;
   aType: "url"| "file"| "base64";
-  type:"string";
-  isNew: false;
+  type:string;
+  isNew: boolean;
   uploaded?: boolean;
   uploading?: boolean;
   error?: string;
+  progress: number
 }
 export interface AccTransactionValidationsData {
   master: AccTransactionMasterValidations;

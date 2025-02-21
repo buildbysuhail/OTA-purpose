@@ -9,6 +9,7 @@ import {
   accTransactionInitialData,
   initialFormElements,
   FormElementState,
+  Attachments,
 } from "./acc-transaction-types";
 import { useAccTransaction } from "./use-acc-transaction";
 import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
@@ -317,6 +318,7 @@ const accTransactionSlice = createSlice({
       state.row.billwiseDetails = "";
     },
 
+
     // Update a specific row in the transaction details
     accFormStateTransactionDetailsRowUpdate: (
       state,
@@ -478,6 +480,40 @@ const accTransactionSlice = createSlice({
           console.warn(`Field ${key} does not exist in formElements.`);
         }
       });
+    },
+    accFormStateTransactionAttachmentsRowAdd: (
+      state,
+      action: PayloadAction<{
+        row: Attachments;
+      }>
+    ) => {
+      const data = action.payload.row;
+      state.transaction.attachments.push(data);
+    },
+    accFormStateTransactionAttachmentsRowUpdate: (
+      state,
+      action: PayloadAction<{
+        row: Attachments;
+      }>
+    ) => {
+      const data = action.payload.row;
+      const index = state.transaction.attachments.findIndex(
+        (x) => x.key === data.key
+      );
+      if (index !== -1) {
+        state.transaction.attachments[index] = data;
+      }
+    },
+    accFormStateTransactionAttachmentsRowRemove: (
+      state,
+      action: PayloadAction<{
+        index: number;
+      }>
+    ) => {
+      const index = action.payload.index;
+      if (index >= 0 && index < state.transaction.attachments.length) {
+        state.transaction.attachments.splice(index, 1);
+      }
     },
     enableControls: (state) => {
       state.formElements.pnlMasters.disabled = false;
@@ -645,6 +681,7 @@ const accTransactionSlice = createSlice({
         state.transaction.master.totalAmount = calculateTotal(state);
       }
     });
+    
     builder.addCase(loadAccVoucher.rejected, (state) => {
       state.transactionLoading = false;
       state.transaction = accTransactionInitialData;
@@ -693,6 +730,9 @@ export const {
   loadTempRows,
   accFormStateClearBillWiseInDetails,
   accFormStateClearDetails,
+  accFormStateTransactionAttachmentsRowAdd,
+  accFormStateTransactionAttachmentsRowUpdate,
+  accFormStateTransactionAttachmentsRowRemove
 } = accTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

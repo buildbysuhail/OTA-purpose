@@ -10,6 +10,18 @@ import React, {
   useRef,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import {
+  accFormStateHandleFieldChange,
+  accFormStateTransactionAttachmentsRowAdd,
+  accFormStateTransactionAttachmentsRowRemove,
+  accFormStateTransactionAttachmentsRowUpdate,
+} from "../../pages/accounts/transactions/reducer";
+import { Attachments } from "../../pages/accounts/transactions/acc-transaction-types";
 
 interface FileUpload {
   id: string;
@@ -21,12 +33,13 @@ interface FileUpload {
 interface ERPAttachmentProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>; // Prop for controlling sidebar visibility
 }
+const api = new APIClient();
 
 export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
-  const [files, setFiles] = useState<FileUpload[]>([]);
   const [ERPAttachmentOpen, setERPAttachmentOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-
+  const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const dispatch = useDispatch();
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
@@ -45,43 +58,58 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
     []
   );
 
-  const addFiles = (newFiles: File[]) => {
-    const newUploads = newFiles.map((file) => ({
+  const addFiles = async (newFiles: File[]) => {
+    const newUpload = {
       id: Math.random().toString(36).slice(2),
-      file,
+      file: newFiles[0],
+      name: newFiles[0].name,
       progress: 0,
-    }));
-
-    setFiles((prev) => [...prev, ...newUploads]);
-
-    // Simulate upload for each file
-    newUploads.forEach((upload) => {
-      simulateUpload(upload.id);
-    });
-  };
-
-  const simulateUpload = (fileId: string) => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 10;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        setFiles((prev) =>
-          prev.map((f) =>
-            f.id === fileId ? { ...f, progress, uploaded: true } : f
-          )
-        );
-      } else {
-        setFiles((prev) =>
-          prev.map((f) => (f.id === fileId ? { ...f, progress } : f))
-        );
+    };
+    const key= Math.random().toString(36).slice(2);
+    dispatch(
+      accFormStateTransactionAttachmentsRowAdd({
+        row: {
+          key: key,
+          name: newFiles[0].name,
+          aType: "file",
+          isNew: true,
+          type: newFiles[0].type,
+          uploading: true,
+          progress: 0,
+        },
+      })
+    );
+debugger;
+    let formData = new FormData();
+    formData.append("file", newUpload.file, newUpload.name);
+    formData.append("key", key);
+    const res = await api.post(
+      `${Urls.acc_transaction_base}${formState.transactionType}/UploadFile`,
+      formData,
+      {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
       }
-    }, 500);
+    );
+    if(res.isOk) {
+ dispatch(
+  accFormStateTransactionAttachmentsRowUpdate({
+        row: {
+          ...res.item,
+          isNew: true,
+          type: newFiles[0].type,
+          uploading: false,
+          uploaded: true,
+          progress: 100,
+        },
+      })
+    );
+    }
+    
   };
 
-  const removeFile = (fileId: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== fileId));
+  const removeFile = (index: number) => {
+    dispatch(accFormStateTransactionAttachmentsRowRemove({index: index}))
   };
 
   const formatFileSize = (bytes: number) => {
@@ -104,8 +132,15 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         <X className="h-5 w-5" />
       </button> */}
       <div className="flex items-center justify-between mb-1 sticky top-0   dark:!bg-dark-bg  h-[3rem] py-4 z-50">
-       <h6 className=" font-medium  dark:text-dark-text  capitalize">{t("attachment")}</h6>
-        <button className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700" onClick={() => { setIsOpen(false)}} >
+        <h6 className=" font-medium  dark:text-dark-text  capitalize">
+          {t("attachment")}
+        </h6>
+        <button
+          className="dark:text-dark-text text-gray-500 dark:hover:text-dark-text  hover:text-gray-700"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
           <X className="h-5 w-5" />
         </button>
       </div>
@@ -151,15 +186,17 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               className="hidden"
               onChange={handleFileSelect}
             />
-          </div> 
-          <p className="text-sm dark:text-dark-text text-gray-500">{t("or_drop")}</p>
+          </div>
+          <p className="text-sm dark:text-dark-text text-gray-500">
+            {t("or_drop")}
+          </p>
         </div>
       </div>
 
       <div className="mt-1 ">
-        {files.map((file) => (
+        {formState.transaction.attachments.map((file) => (
           <div
-            key={file.id}
+            key={file?.id}
             className="flex items-center dark:bg-dark-bg-card  bg-gray-50 rounded-lg p-3 transition-all dark:hover:bg-dark-hover-bg hover:bg-gray-300 border dark:border-dark-border border-b-[#00000024]"
           >
             <svg
@@ -178,17 +215,17 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
             </svg>
             <div className="flex-grow min-w-0 flex items-center justify-between">
               <div className="flex items-center space-x-2 overflow-hidden">
-                <p className="font-medium truncate text-sm">{file.file.name}</p>
+                <p className="font-medium truncate text-sm">{file?.file?.name}</p>
               </div>
               <div className="flex items-center space-x-2">
                 <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
-                  {formatFileSize(file.file.size)}
+                  {formatFileSize(file?.file?.size)}
                 </p>
                 <button
-                  onClick={() => removeFile(file.id)}
+                  onClick={() => removeFile(file?.id)}
                   className="h-6 w-6 flex items-center justify-center dark:text-dark-text text-gray-500 hover:text-[#ef4444]"
                 >
-                  {file.uploaded ? (
+                  {file?.uploaded ? (
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -226,14 +263,14 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               <div className="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#3b82f6] transition-all duration-300 ease-out"
-                  style={{ width: `${file.progress}%` }}
+                  style={{ width: `${file?.progress}%` }}
                 ></div>
               </div>
               <p className="text-xs font-medium text-gray-500 w-8 text-right">
-                {file.uploaded ? (
+                {file?.uploaded ? (
                   <span className="text-[#16a34a]">{t("done")}</span>
                 ) : (
-                  `${Math.round(file.progress)}%`
+                  `${Math.round(file?.progress)}%`
                 )}
               </p>
             </div>

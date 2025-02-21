@@ -80,19 +80,23 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       if (file) {
       }
     };
+
     useEffect(() => {
       const key = rootState.PopupData.parties.key;
       if (Boolean(key && key !== "0" && key !== "") == false) {
         load();
       }
     }, []);
+
     const load = async () => {
       const res = await api.getAsync(Urls.get_next_party_code);
       handleFieldChange("partyCode", res.toString());
     };
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
       setActiveTab(newValue);
     };
+
     const onImageSuccess = useMemo(() => {
       return (url: string) => {
         setImage(url);
@@ -153,7 +157,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     return (
       <div className="w-full bordered-tab relative">
         <div className="mt-[1.5rem]">
-          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center ps-1">
+          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center ps-1 text-left">
             <ERPInput
               {...getFieldProps("partyCode")}
               label={t("code")}
@@ -163,6 +167,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCode", data.partyCode)
               }
             />
+
             <ERPInput
               {...getFieldProps("partyName")}
               label={t("name")}
@@ -176,6 +181,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 });
               }}
             />
+
             <ERPInput
               {...getFieldProps("displayName")}
               label={t("display_name")}
@@ -185,6 +191,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("displayName", data.displayName)
               }
             />
+            
             <ERPInput
               {...getFieldProps("arabicName")}
               label={t("arabic_name")}

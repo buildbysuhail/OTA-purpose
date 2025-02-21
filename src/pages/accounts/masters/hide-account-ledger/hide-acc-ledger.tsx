@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { DataGrid, RemoteOperations } from "devextreme-react/data-grid";
-import { Column, FilterRow, Paging, Scrolling, SearchPanel, Toolbar, Item, } from "devextreme-react/data-grid";
+import { DataGrid } from "devextreme-react/data-grid";
+import { Column, FilterRow, Paging, Scrolling, SearchPanel, } from "devextreme-react/data-grid";
 //   import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 import { useNavigate } from "react-router-dom";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -27,14 +27,13 @@ const initialState: LedgerInf = {
   groupId: 0,
   isGroup: false,
 };
-const api = new APIClient();
 
+const api = new APIClient();
 const HideAccountLedger = () => {
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
-
   const [postData, setPostData] = useState<LedgerInf>(initialState);
   const [store, setStore] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -49,13 +48,13 @@ const HideAccountLedger = () => {
     let gridHeightWindows = wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
+
   const { t } = useTranslation("masters");
   const handleSubmit = async (isGroup: boolean) => {
     setErrorLedger("");
     setIsSaving(true);
     try {
-      if(isGroup)
-      {
+      if (isGroup) {
         if (postData.groupId && postData.groupId > 0) {
           const response: any = await api.post(`${Urls.hide_Ledger}`, {
             isGroup: isGroup,
@@ -65,17 +64,15 @@ const HideAccountLedger = () => {
           if (response.isOk != true) {
             setErrorGroup(response.messages[0]);
           }
-          
-          handleResponse(response,async()=>{
-            await initialLoadGrid(postData.userTypeCode);});
-
+          handleResponse(response, async () => {
+            await initialLoadGrid(postData.userTypeCode);
+          });
         }
-        else{
+        else {
           ERPToast.show("Please choose Group", "warning")
         }
       }
-      else
-      {
+      else {
         if (postData.ledgerId && postData.ledgerId > 0) {
           const response: any = await api.post(`${Urls.hide_Ledger}`, {
             isGroup: isGroup,
@@ -86,21 +83,19 @@ const HideAccountLedger = () => {
             setErrorGroup(response.messages[0]);
             await initialLoadGrid(postData.userTypeCode);
           }
-          handleResponse(response,async()=>{
-            await initialLoadGrid(postData.userTypeCode);});
+          handleResponse(response, async () => {
+            await initialLoadGrid(postData.userTypeCode);
+          });
         }
-        else{
+        else {
           ERPToast.show("Please choose Group", "warning")
         }
       }
     } catch (error) { }
-
     setIsSaving(false);
   };
 
-
   const initialLoadGrid = useCallback(async (userTypeCode: string) => {
-    
     if (userTypeCode != undefined && userTypeCode != null && userTypeCode != '') {
       setLoading(true);
       try {
@@ -121,7 +116,6 @@ const HideAccountLedger = () => {
         ...prev,
         userTypeCode: data.userTypeCode,
       }));
-      
       await initialLoadGrid(data.userTypeCode);
     },
     [initialLoadGrid]
@@ -143,96 +137,86 @@ const HideAccountLedger = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
-          <div className="flex flex-col gap-4 justify-start items-start my-4">
-      <ERPDataCombobox
-              //   className="w-[200px]"
-              id="userTypeCode"
-              field={{
-                id: "userTypeCode",
-                required: true,
-                getListUrl: Urls.data_user_types,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={handleUserTypeChange}
-              data={postData}
-              defaultData={postData}
-              label={t("user_type_code")}
-            />
-            <div className="flex space-x-5 ">
-            <ERPDataCombobox
-              //   className="w-[200px]"
-              id="groupId"
-              field={{
-                id: "groupId",
-                required: true,
-                getListUrl: Urls.data_acc_groups,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) => {
-                setPostData((prev) => ({
-                  ...prev,
-                  groupId: data.groupId,
-                }));
-              }}
-              data={postData}
-              defaultData={postData}
-              label={t("account_group")}
-            />
-            <ERPButton
-            className="self-end"
-                title={t("add")}
-                variant="primary"
-                disabled={isSaving}
-                loading={isSaving}
-                type="button"
-                onClick={() => handleSubmit(true)}
+            <div className="flex flex-col gap-4 justify-start items-start my-4">
+              <ERPDataCombobox
+                //   className="w-[200px]"
+                id="userTypeCode"
+                field={{
+                  id: "userTypeCode",
+                  required: true,
+                  getListUrl: Urls.data_user_types,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={handleUserTypeChange}
+                data={postData}
+                defaultData={postData}
+                label={t("user_type_code")}
               />
+              <div className="flex space-x-5 ">
+                <ERPDataCombobox
+                  //   className="w-[200px]"
+                  id="groupId"
+                  field={{
+                    id: "groupId",
+                    required: true,
+                    getListUrl: Urls.data_acc_groups,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onChangeData={(data: any) => { setPostData((prev) => ({ ...prev, groupId: data.groupId, })); }}
+                  data={postData}
+                  defaultData={postData}
+                  label={t("account_group")}
+                />
+                <ERPButton
+                  className="self-end"
+                  title={t("add")}
+                  variant="primary"
+                  disabled={isSaving}
+                  loading={isSaving}
+                  type="button"
+                  onClick={() => handleSubmit(true)}
+                />
+              </div>
+              <div className="flex space-x-5 ">
+                <ERPDataCombobox
+                  //   className="w-[200px]"
+                  id="ledgerId"
+                  field={{
+                    id: "ledgerId",
+                    required: true,
+                    getListUrl: Urls.data_acc_ledgers,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onChangeData={(data: any) => { setPostData((prev) => ({ ...prev, ledgerId: data.ledgerId, })); }}
+                  data={postData}
+                  defaultData={postData}
+                  label={t("ledger")}
+                />
+                <ERPButton
+                  className="self-end"
+                  title={t("add")}
+                  variant="primary"
+                  disabled={isSaving}
+                  loading={isSaving}
+                  type="button"
+                  onClick={() => handleSubmit(false)}
+                />
+              </div>
             </div>
-            <div className="flex space-x-5 ">
-            <ERPDataCombobox
-              //   className="w-[200px]"
-              id="ledgerId"
-              field={{
-                id: "ledgerId",
-                required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) => {
-                setPostData((prev) => ({
-                  ...prev,
-                  ledgerId: data.ledgerId,
-                }));
-              }}
-              data={postData}
-              defaultData={postData}
-              label={t("ledger")}
-            />
-            <ERPButton
-             className="self-end"
-                title={t("add")}
-                variant="primary"
-                disabled={isSaving}
-                loading={isSaving}
-                type="button"
-                onClick={() => handleSubmit(false)}
-              />
-            </div>
-      </div>
             <div className="grid grid-cols-1 gap-3">
               {
                 <div>
                   {errorGroup && errorGroup != "" &&
-                  <div className="bg-[#f78181] text-white border border-[#f54444] px-4 py-3 rounded relative" role="alert">
-                  {/* <strong className="font-bold">Error!  </strong> */}
-                  <span className="block sm:inline">{errorGroup}</span>
-                  <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => {setErrorGroup("")}}>
-                    <svg className="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-                  </span>
-                </div>
+                    <div className="bg-[#f78181] text-white border border-[#f54444] px-4 py-3 rounded relative" role="alert">
+                      {/* <strong className="font-bold">Error!  </strong> */}
+                      <span className="block sm:inline">{errorGroup}</span>
+                      <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => { setErrorGroup("") }}>
+                        <svg className="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" /></svg>
+                      </span>
+                    </div>
                   }
                 </div>
               }
@@ -245,8 +229,7 @@ const HideAccountLedger = () => {
                 showRowLines={true}
                 allowColumnResizing={true}
                 allowColumnReordering={true}
-                key="hideLedgerId"
-              >
+                key="hideLedgerId">
                 <FilterRow visible={true} />
                 <SearchPanel visible={false} />
                 <Scrolling mode="standard" />
@@ -256,7 +239,6 @@ const HideAccountLedger = () => {
                     sorting={false}
                     paging={false}
                   ></RemoteOperations> */}
-
                 <Column
                   dataField="hideLedgerID"
                   caption={t("hideLedgerID")}
@@ -308,14 +290,11 @@ const HideAccountLedger = () => {
                   width={80}
                   cellRender={(cellData) => (
                     <div className="chart-cell">
-                      <i
-                        onClick={() => handleDelete(cellData.data.hideLedgerID)}
-                        className="ri-delete-bin-5-line delete-icon cursor-pointer"
-                      ></i>
+                      <i onClick={() => handleDelete(cellData.data.hideLedgerID)} className="ri-delete-bin-5-line delete-icon cursor-pointer" ></i>
                     </div>
                   )}
                 />
-              {/* <Toolbar>
+                {/* <Toolbar>
               <Item location="before" render={renderToolbarContent} />
                 </Toolbar> */}
               </DataGrid>

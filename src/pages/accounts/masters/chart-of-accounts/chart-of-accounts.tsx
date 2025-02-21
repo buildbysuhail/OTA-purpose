@@ -262,7 +262,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
               <ERPModal
                 isOpen={rootState.PopupData.accountGroup.isOpen || false}
                 title={t("acc_group")}
-                width="w-full max-w-[600px]"
+                width={600}
                 isForm={true}
                 closeModal={() => {
                   dispatch(
@@ -275,7 +275,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
               <ERPModal
                 isOpen={rootState.PopupData.accountLedger.isOpen || false}
                 title={t("acc_ledger")}
-                width="w-full max-w-[700px]"
+                width={700}
                 isForm={true}
                 closeModal={() => {
                   dispatch(

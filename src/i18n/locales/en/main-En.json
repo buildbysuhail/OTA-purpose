@@ -214,5 +214,18 @@
     "loading":"Loading...",
     "warning":"Warning",
     "please_select_at_least_one_column":"Please select at least one column",
-    "total_records":"Total records:"
+    "total_records":"Total records:",
+
+    "view":"View",
+    "edit":"Edit",
+    "delete":"Delete",
+    "are_you_sure":"Are you sure ?",
+    "you_won't_be_able_to_revert_this":"You won't be able to revert this !",
+    "yes_delete_it":"Yes delete it !",
+
+    "unsaved_changes":"Unsaved changes",
+    "you_have_unsaved_changes":"You have unsaved changes that will be lost if you leave this page.Are you sure you want to leave this page ?",
+    "stay_on_page":"Stay on page",
+    "leave_page":"Leave page",
+    "ok":"Ok"
 }

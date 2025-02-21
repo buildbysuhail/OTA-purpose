@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import Urls from "../../../redux/urls";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
@@ -59,17 +59,9 @@ const UserTypes = () => {
             view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode, reload: false }) }}
             edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode, reload: false }) }}
             delete={{
-              onSuccess: () => {
-                dispatch(
-                  toggleUserTypePopup({
-                    isOpen: false,
-                    key: null,
-                    reload: true,
-                  })
-                );
-              },
+              onSuccess: () => { dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
               // action: () => handleDelete(cellInfo?.data?.id),
               url: Urls?.UserTypes, key: cellElement?.data?.userTypeCode
             }}
@@ -78,9 +70,7 @@ const UserTypes = () => {
       },
     }
   ], []);
-  useEffect(() => {
-    dispatch(toggleUserTypePopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleUserTypePopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 dark:!bg-dark-bg bg-[#fafafa]">
@@ -95,14 +85,10 @@ const UserTypes = () => {
                 gridId="grd_user_type"
                 popupAction={toggleUserTypePopup}
                 gridAddButtonType="popup"
-                changeReload={(reload: any) => {
-                  dispatch(
-                    toggleUserTypePopup({ ...rootState, reload: reload })
-                  );
-                }}
+                changeReload={(reload: any) => { dispatch(toggleUserTypePopup({ ...rootState, reload: reload })); }}
                 reload={rootState?.PopupData?.userType?.reload}
                 gridAddButtonIcon="ri-add-line"
-              ></ERPDevGrid>
+              />
             </div>
             {/* </div> */}
           </div>
@@ -114,9 +100,7 @@ const UserTypes = () => {
         width={600}
         height={350}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleUserTypePopup({ isOpen: false }));
-        }}
+        closeModal={() => { dispatch(toggleUserTypePopup({ isOpen: false })); }}
         content={<MemoizedUserTypeManage />}
       />
     </Fragment>

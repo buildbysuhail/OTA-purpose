@@ -9,43 +9,43 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import { initialPartyCategory, PartyCategoryData, } from "./party-category-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 
 export const PartyCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, handleClose } =
-    useFormManager<PartyCategoryData>({
-      url: Urls.account_party_category,
-      onSuccess: useCallback(
-        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true })),
-        [dispatch]
-      ),
-      onClose: useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
-      key: rootState.PopupData.partyCategory.key,
-      useApiClient: true,
-      initialData: initialPartyCategory,
-    });
+  const {
+    isEdit,
+    handleClear,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+    handleClose
+  } = useFormManager<PartyCategoryData>({
+    url: Urls.account_party_category,
+    onSuccess: useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+    key: rootState.PopupData.partyCategory.key,
+    useApiClient: true,
+    initialData: initialPartyCategory,
+  });
   const { t } = useTranslation("masters");
   return (
     <div className="w-full modal-content">
-      <div className="grid grid-cols-2 gap-3 ps-1">
+      <div className="grid grid-cols-2 gap-3 ps-1 text-left">
         <ERPInput
           {...getFieldProps("partyCategoryName")}
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => {
-            handleFieldChange("partyCategoryName", data.partyCategoryName);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("partyCategoryName", data.partyCategoryName); }}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
-          onChangeData={(data: any) =>
-            handleFieldChange("remarks", data.remarks)
-          }
+          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
         {/* <ERPDataCombobox
           {...getFieldProps("partyColor")}
@@ -62,6 +62,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         
           label={t("party_color")}
         /> */}
+
         <ERPCheckbox
           {...getFieldProps("isEdit")}
           label={t("is_editable")}

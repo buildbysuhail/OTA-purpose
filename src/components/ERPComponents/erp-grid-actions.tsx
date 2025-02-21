@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import ERPAlert from "./erp-sweet-alert";
 import ERPSweetAlert from "./erp-sweet-alert";
+import { useTranslation } from "react-i18next";
 
 type ActionType = {
   type: "link" | "popup";
@@ -29,7 +30,7 @@ const defaultActionType: ActionType = {
   type: "link",
   path: "#",
   visible: true,
-  action: () => {}
+  action: () => { }
 };
 
 const defaultDeleteAction: DeleteActionType = {
@@ -38,8 +39,8 @@ const defaultDeleteAction: DeleteActionType = {
   confirmationRequired: false,
   visible: true,
   confirmationMessage: "Are you sure you want to delete this item?",
-  action: () => {},
-  onSuccess: () => {}
+  action: () => { },
+  onSuccess: () => { }
 };
 
 type ERPGridActionsProps = {
@@ -60,7 +61,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const dispatch = useDispatch();
-
+  const { t } = useTranslation('main')
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -68,7 +69,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
         await deleteAction.action();
       } else if (deleteAction.url) {
         let res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
-        handleResponse(res, () => {deleteAction.onSuccess && deleteAction.onSuccess()});
+        handleResponse(res, () => { deleteAction.onSuccess && deleteAction.onSuccess() });
       }
     } catch (error) {
       console.error("Delete failed:", error);
@@ -85,9 +86,9 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
     };
 
     const titles = {
-      view: "View",
-      edit: "Edit",
-      delete: "Delete"
+      view: t("view"),
+      edit: t("edit"),
+      delete: t("delete")
     };
 
     if (type === "delete" || (action as ActionType).type === "popup") {
@@ -100,36 +101,32 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
             key: itemId,
             mode: type as "view" | "edit"
           };
-          
           dispatch((action as ActionType).action?.(payload) as any);
         }
       };
 
       return (
         <>
-        <button
-          onClick={handleClick}
-          disabled={type === "delete" && isDeleting}
-          className="ti-btn-link"
-          type="button"
-        >
-          {isDeleting && type === "delete" ? (
-            <CircularProgress size={20} />
-          ) : (
-            <i className={icons[type]} title={titles[type]}></i>
-          )}
-        </button>
-        {showDeleteConfirmation && (
+          <button
+            onClick={handleClick}
+            disabled={type === "delete" && isDeleting}
+            className="ti-btn-link"
+            type="button">
+            {isDeleting && type === "delete" ? (
+              <CircularProgress size={20} />
+            ) : (
+              <i className={icons[type]} title={titles[type]}></i>
+            )}
+          </button>
+
+          {showDeleteConfirmation && (
             <ERPAlert
-              title="Are you sure?"
-              text={"You won't be able to revert this!"}
+              title={t("are_you_sure")}
+              text={t("you_won't_be_able_to_revert_this")}
               icon="warning"
-              confirmButtonText="Yes, delete it!"
-              cancelButtonText="Cancel"
-              onConfirm={() => {
-                handleDelete();
-                setShowDeleteConfirmation(false);
-              }}
+              confirmButtonText={t("yes_delete_it")}
+              cancelButtonText={t("cancel")}
+              onConfirm={() => { handleDelete(); setShowDeleteConfirmation(false); }}
               onCancel={() => setShowDeleteConfirmation(false)}
             />
           )}
@@ -146,9 +143,9 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
 
   return (
     <div className="action-field">
-      {view?.visible != false ? renderActionButton("view", view): null}
-      {edit?.visible != false ? renderActionButton("edit", edit): null}
-      {deleteAction.visible != false ? renderActionButton("delete", deleteAction): null}
+      {view?.visible != false ? renderActionButton("view", view) : null}
+      {edit?.visible != false ? renderActionButton("edit", edit) : null}
+      {deleteAction.visible != false ? renderActionButton("delete", deleteAction) : null}
     </div>
   );
 };

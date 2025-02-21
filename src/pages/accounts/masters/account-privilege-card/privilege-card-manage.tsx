@@ -26,10 +26,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
-    onSuccess: useCallback(
-      () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     keyField: "privilegeCardsID",
@@ -60,6 +57,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('cardNumber', data.cardNumber)}
         />
+
         <ERPInput
           {...getFieldProps('cardHolderName')}
           label={t("card_holder_name")}
@@ -67,12 +65,14 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('cardHolderName', data.cardHolderName)}
         />
+
         <ERPInput
           {...getFieldProps('address1')}
           label={t("address1")}
           placeholder={t("address1")}
           onChangeData={(data: any) => handleFieldChange('address1', data.address1)}
         />
+
         <ERPInput
           {...getFieldProps('address2')}
           label={t("address2")}
@@ -80,18 +80,21 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange('address2', data.address2)}
         />
+
         <ERPInput
           {...getFieldProps('phone')}
           label={t("phone")}
           placeholder={t("phone")}
           onChangeData={(data: any) => handleFieldChange('phone', data.phone)}
         />
+
         <ERPInput
           {...getFieldProps('mobile')}
           label={t("mobile")}
           placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange('mobile', data.mobile)}
         />
+
         <ERPInput
           {...getFieldProps('email')}
           label={t("email")}
@@ -99,6 +102,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange('email', data.email)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("priceCategoryID")}
           field={{
@@ -111,6 +115,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("priceCategoryID", data.priceCategoryID)}
           label={t("price_category")}
         />
+
         <ERPDataCombobox
           {...getFieldProps("cardType")}
           field={{
@@ -127,6 +132,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("cardType", data.cardType)}
           label={t("card_type")}
         />
+
         <ERPInput
           {...getFieldProps('oBalance')}
           label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
@@ -134,16 +140,19 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           type="number"
           onChangeData={(data: any) => handleFieldChange('oBalance', data.oBalance)}
         />
+
         <ERPDateInput
           {...getFieldProps("activatedDate")}
           label={t("activate_date")}
           onChangeData={(data: any) => handleDateChange("activateDate", data.activateDate)}
         />
+
         <ERPDateInput
           {...getFieldProps("expiryDate")}
           label={t("expiry_date")}
           onChangeData={(data: any) => handleDateChange("expiryDate", data.expiryDate)}
         />
+
         {/* <ERPDateInput
           {...getFieldProps("dob")}
           required={false}

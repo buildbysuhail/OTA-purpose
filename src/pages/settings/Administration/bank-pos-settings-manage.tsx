@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -47,11 +46,8 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<BankPoseData>({
     url: Urls.BankPosSettings,
-    onClose:useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleBankPosPopup({ isOpen: false })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true,
     loadDataRequired: false,
@@ -72,10 +68,9 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("machine_brand")}
-          onChangeData={(data: any) =>
-            handleFieldChange("machineBrand", data.machineBrand)
-          }
+          onChangeData={(data: any) => handleFieldChange("machineBrand", data.machineBrand)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("model")}
           id="model"
@@ -89,6 +84,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
           label={t("model")}
           onChangeData={(data: any) => handleFieldChange("model", data.model)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("comPort")}
           id="comPort"
@@ -100,25 +96,21 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("com_port")}
-          onChangeData={(data: any) =>
-            handleFieldChange("comPort", data.comPort)
-          }
+          onChangeData={(data: any) => handleFieldChange("comPort", data.comPort)}
         />
+
         <ERPInput
           {...getFieldProps("geldeaWsPort")}
           label={t("geldea_ws_port")}
           placeholder={t("geldea_ws_port")}
-          onChangeData={(data: any) =>
-            handleFieldChange("geldeaWsPort", data.geldeaWsPort)
-          }
+          onChangeData={(data: any) => handleFieldChange("geldeaWsPort", data.geldeaWsPort)}
         />
+
         <ERPInput
           {...getFieldProps("gediaService")}
           label={t("gedia_service")}
           placeholder={t("gedia_service")}
-          onChangeData={(data: any) =>
-            handleFieldChange("gediaService", data.gediaService)
-          }
+          onChangeData={(data: any) => handleFieldChange("gediaService", data.gediaService)}
         />
       </div>
       <ERPFormButtons

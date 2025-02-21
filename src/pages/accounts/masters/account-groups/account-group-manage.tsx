@@ -32,7 +32,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
   const handleTranslation = async () => {
     try {
-
       const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${'en'}&tl=${'ar'}&dt=t&q=${encodeURIComponent(formState.data.accGroupName)}`);
       if (!response.ok) {
         //throw new Error(HTTP error! status: ${response.status});
@@ -45,10 +44,12 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       console.error('Fetch Error:', error);
     }
   }
+
   const handleGroupOrder = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     dispatch(toggleGroupOrder({ isOpen: true }))
   }
+
   // =============================================================
   const {
     isEdit,
@@ -61,13 +62,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     formState,
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: useCallback(
-      () =>
-        dispatch(
-          toggleAccountGroupPopup({ isOpen: false, key: null, reload: true })
-        ),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
@@ -79,8 +74,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     }
   }, [rootState.PopupData.accountGroup.data?.groupId])
   const { t } = useTranslation("masters");
-
-
   return (
     <div className="w-full modal-content">
       <div className="grid grid-cols-2 gap-3">
@@ -89,9 +82,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => {
-            handleFieldChange("accGroupName", data.accGroupName);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("accGroupName", data.accGroupName); }}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
 
@@ -100,9 +91,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("name_in_arabic")}
           placeholder={t("name_in_arabic")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("arabicName", data.arabicName)
-          }
+          onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
         />
 
         <ERPInput
@@ -110,9 +99,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("short_name")}
           placeholder={t("short_name")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("shortName", data.shortName)
-          }
+          onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true)}
         />
 
@@ -125,9 +112,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("parentGroupID", data.parentGroupID);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("parentGroupID", data.parentGroupID); }}
           disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
           label={t("group_under")}
         />
@@ -137,9 +122,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("remarks", data.remarks)
-          }
+          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
 
@@ -150,12 +133,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             label={t("reason_for_edit")}
             placeholder={t("reason_for_edit")}
             required={true}
-            onChangeData={(data: any) =>
-              handleFieldChange(
-                "reasonForModification",
-                data.reasonForModification
-              )
-            }
+            onChangeData={(data: any) => handleFieldChange("reasonForModification", data.reasonForModification)}
           />
         }
 
@@ -165,16 +143,12 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             <ERPCheckbox
               {...getFieldProps("isEditable")}
               label={t("editable")}
-              onChangeData={(data: any) =>
-                handleFieldChange("isEditable", data.isEditable)
-              }
+              onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
             />
             <ERPCheckbox
               {...getFieldProps("isDeletable")}
               label={t("deletable")}
-              onChangeData={(data: any) =>
-                handleFieldChange("isDeletable", data.isDeletable)
-              }
+              onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
             />
           </>
         }
@@ -183,9 +157,11 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             {t("group_order")}
           </a>
         </div>
-        <a href="#" onClick={handleTranslation} className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500">
-          {t("translate_to_arabic")}
-        </a>
+        <div className="text-left">
+          <a href="#" onClick={handleTranslation} className="dark:text-dark-text text-[#27272a] text-sm font-semibold underline decoration-sky-500">
+            {t("translate_to_arabic")}
+          </a>
+        </div>
       </div>
       {/* Link that triggers the modal */}
       <ERPFormButtons
@@ -202,10 +178,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         isFullHeight={true}
         isOpen={rootState.PopupData.groupOrder.isOpen ?? false}
         title="Group Order"
-        closeModal={() => {
-          dispatch(toggleGroupOrder({ isOpen: false }));
-        }}
-
+        closeModal={() => { dispatch(toggleGroupOrder({ isOpen: false })); }}
         width={1000}
         height={700}
         content={<AccountGroupOrderContent formData={formData} setFormData={setFormData} />}

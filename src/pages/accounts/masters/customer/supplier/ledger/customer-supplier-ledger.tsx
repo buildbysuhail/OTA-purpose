@@ -1,8 +1,4 @@
-import {
-  Fragment,
-  useEffect,
-  useState,
-} from "react";
+import { Fragment, useEffect, useState, } from "react";
 import Urls from "../../../../../../redux/urls";
 import ERPRadio from "../../../../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
@@ -107,9 +103,7 @@ const CustomerSupplierLedger = () => {
                     name="customer"
                     data={gridType}
                     checked={gridType.customer}
-                    onChange={() => {
-                      setGridType({ customer: true, supplier: false });
-                    }}
+                    onChange={() => { setGridType({ customer: true, supplier: false }); }}
                     label={t("customer")}
                   />
                   <ERPRadio
@@ -117,9 +111,7 @@ const CustomerSupplierLedger = () => {
                     name="supplier"
                     data={gridType}
                     checked={gridType.supplier}
-                    onChange={() => {
-                      setGridType({ customer: false, supplier: true });
-                    }}
+                    onChange={() => { setGridType({ customer: false, supplier: true }); }}
                     label={t("supplier")}
                   />
                 </div>

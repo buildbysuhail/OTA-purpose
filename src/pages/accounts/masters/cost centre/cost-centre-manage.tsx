@@ -22,14 +22,8 @@ export const CostCentreManage = () => {
     isLoading,
   } = useFormManager<CostCentreData>({
     url: Urls.cost_center,
-    onSuccess: useCallback(
-      () =>
-        dispatch(
-          toggleCostCentrePopup({ isOpen: false, key: null, reload: true })
-        ),
-      [dispatch]
-    ),
-    onClose: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     keyField: "costCentreID",
     useApiClient: true,
@@ -44,16 +38,16 @@ export const CostCentreManage = () => {
           label={t("cost_centre_name")}
           placeholder={t("enter_cost_centre_name")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("costCentreName", data.costCentreName)
-          }
+          onChangeData={(data: any) => handleFieldChange("costCentreName", data.costCentreName)}
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("enter_short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}

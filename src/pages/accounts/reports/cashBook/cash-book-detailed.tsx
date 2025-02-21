@@ -38,7 +38,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 180; 
+    let gridHeightWindows = modalHeight - 135; 
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -345,7 +345,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
                   hideGridAddButton={true}
                   reload={true}
                   childPopupProps={{
-                    content: <AccTransactionForm />,
+                    content: <AccTransactionForm isTeller={false} />,
                     title: t(""),
                     isForm: false,
                     isTransactionScreen:true,

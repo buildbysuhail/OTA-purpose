@@ -49,6 +49,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange('userTypeName', data.userTypeName) }}
         />
+
         <ERPInput
           {...getFieldProps('userTypeCode')}
           label={t("user_type_code")}
@@ -57,6 +58,7 @@ export const UserTypeManage: React.FC = React.memo(() => {
           disabled={isEdit}
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
         />
+
         <ERPInput
           {...getFieldProps('remarks')}
           label={t("remarks")}
@@ -64,12 +66,14 @@ export const UserTypeManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
+
         <div className="flex space-x-4">
           <ERPCheckbox
             {...getFieldProps('isEditable')}
             label={t("is_editable")}
             onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
           />
+
           <ERPCheckbox
             {...getFieldProps('isDeletable')}
             label={t("is_deletable")}

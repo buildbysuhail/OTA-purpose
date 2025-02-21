@@ -167,10 +167,8 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     const getAncestorIds = (parentId: number): number[] => {
       const ancestorIds: number[] = [];
       let currentParentId = parentId;
-
       while (currentParentId) {
         const parent = userRights.find((node) => node.id === currentParentId);
-
         if (parent) {
           // Move to the next parent up the hierarchy
           if (!ancestorIds.includes(parent.id)) {
@@ -181,7 +179,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
           break; // Stop if no more ancestors are found
         }
       }
-
       return ancestorIds;
     };
 
@@ -190,7 +187,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         const matchingParent = immediateParentsOfEndNodes.find(
           (parent) => parent.formCode === item.formCode
         );
-
         if (matchingParent && typeof item.userRights === "string") {
           const rightsIds = Array.from(item.userRights).map(
             (permission: string) => {
@@ -202,20 +198,16 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
               return permissionRight ? permissionRight.id : null;
             }
           );
-
           // Include matchingParent.id if it's not already in rightsIds
           if (!rightsIds.includes(matchingParent.id)) {
             rightsIds.push(matchingParent.id);
           }
-
           // Add all ancestors of the matching parent up to the root node
           const ancestorIds = getAncestorIds(matchingParent.headId);
           rightsIds.push(...ancestorIds);
-
           // Filter out null values and return
           return rightsIds.filter((id): id is number => id !== null); // Type predicate to filter null
         }
-
         return [];
       })
       .flat(); // Flatten the array
@@ -242,11 +234,9 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
 
   const onSelectionChanged = useCallback(
     (e: TreeListTypes.SelectionChangedEvent) => {
-
       const selectedData =
         e.component?.getSelectedRowsData(selectionMode)?.map((x) => x.id) ?? [];
       setSelectedRowKeys(selectedData);
-
       if (e.currentSelectedRowKeys.length == 1) {
         const key = e.currentSelectedRowKeys[0];
         const parent = userRights.find((x) => x.id == key)?.headId;
@@ -259,6 +249,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
     },
     []
   );
+
   const attachParentToSelected = (id: number, selectedData: any[]): any[] => {
     selectedData.push(id);
     const parent = userRights.find((x) => x.id == id)?.headId;
@@ -271,6 +262,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
       return selectedData;
     }
   };
+
   const dispatch = useDispatch();
   const hasAnyMissingParent = (node: any): boolean => {
     const keys = getSelectedKeys();
@@ -286,6 +278,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
       return false
     }
   }
+
   const generatePostData = async (): Promise<
     {
       userTypeCode: string;
@@ -300,8 +293,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
       userRights: string;
       treeNodeIndex: number;
     }[] = [];
-
-
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRights);
     // Map to aggregate data by formCode
@@ -310,12 +301,10 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
       { userTypeCode: string; userRights: string; treeNodeIndex: number }
     >();
 
-
     immediateParentsOfEndNodes.forEach((parent) => {
       const childNodes = userRights.filter(
         (child) => child.headId === parent.id
       );
-
       const hasMissing = hasAnyMissingParent(parent);
       const keys = getSelectedKeys();
       let parentUserRights = keys.find(x => x == parent.id) != undefined && !hasMissing ? "S" : "";
@@ -328,7 +317,6 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
           }
         });
       }
-
 
       if (hasSelectedRights) {
         const formCode = parent.formCode;
@@ -460,8 +448,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
           selectedRowKeys={selectedRowKeys}
           keyExpr="id"
           parentIdExpr="headId"
-          onSelectionChanged={onSelectionChanged}
-        >
+          onSelectionChanged={onSelectionChanged}>
           <Selection recursive={false} mode="multiple" />
           <Column dataField="fullName" caption="" />
         </TreeList>
@@ -479,12 +466,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
             labelKey: "name",
           }}
           label={t("user_type")}
-          onChangeData={(data: any) => {
-            setPostData((prev: any) => ({
-              ...prev,
-              data: data,
-            }));
-          }}
+          onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, data: data, })); }}
           validation={postData.validations.userType}
           data={postData?.data}
           defaultData={postData?.data}
@@ -497,92 +479,52 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
         // }
         />
         {/* Checkbox options */}
-        <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5 text-left">
           <ERPCheckbox
             id="showAllAdd"
             label={t("select_all_add")}
             data={postData.data}
             checked={postData.data.showAllAdd}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAllAdd: !prev.data.showAllAdd,
-                },
-              }));
-              handleSelectSpecific("A", data.showAllAdd);
-            }}
+            onChangeData={(data) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, showAllAdd: !prev.data.showAllAdd, }, })); handleSelectSpecific("A", data.showAllAdd); }}
             validation={postData.validations.showAllAdd}
           />
+
           <ERPCheckbox
             id="showAllPrint"
             label={t("select_all_print")}
             data={postData.data}
             checked={postData.data.showAllPrint}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAllPrint: !prev.data.showAllPrint,
-                },
-              }));
-              handleSelectSpecific("P", data.showAllPrint);
-            }}
+            onChangeData={(data) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, showAllPrint: !prev.data.showAllPrint, }, })); handleSelectSpecific("P", data.showAllPrint); }}
             validation={postData.validations.showAllPrint}
           />
+
           <ERPCheckbox
             id="showAllEdit"
             label={t("select_all_edit")}
             data={postData.data}
             checked={postData.data.showAllEdit}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAllEdit: !prev.data.showAllEdit,
-                },
-              }));
-              handleSelectSpecific("E", data.showAllEdit);
-            }}
+            onChangeData={(data) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, showAllEdit: !prev.data.showAllEdit, }, })); handleSelectSpecific("E", data.showAllEdit); }}
             validation={postData.validations.showAllEdit}
           />
+
           <ERPCheckbox
             id="showAllExport"
             label={t("select_all_export")}
             data={postData.data}
             checked={postData.data.showAllExport}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAllExport: !prev.data.showAllExport,
-                },
-              }));
-              handleSelectSpecific("X", data.showAllExport);
-            }}
+            onChangeData={(data) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, showAllExport: !prev.data.showAllExport, }, })); handleSelectSpecific("X", data.showAllExport); }}
             validation={postData.validations.showAllExport}
           />
+
           <ERPCheckbox
             id="showAllDelete"
             label={t("select_all_delete")}
             data={postData.data}
             checked={postData.data.showAllDelete}
-            onChangeData={(data) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  showAllDelete: !prev.data.showAllDelete,
-                },
-              }));
-              handleSelectSpecific("D", data.showAllDelete);
-            }}
+            onChangeData={(data) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, showAllDelete: !prev.data.showAllDelete, }, })); handleSelectSpecific("D", data.showAllDelete); }}
             validation={postData.validations.showAllDelete}
           />
+
           {/* <ERPCheckbox
             id="showAll"
             label={t("show_all")}
@@ -601,51 +543,51 @@ const UserTypePrivilegeManage: React.FC = React.memo(({ modalHeight, isMaximized
             validation={postData.validations.showAll}
           /> */}
         </div>
+
         <ERPCheckbox
           id="chkbc_inherit"
           label={t("inherit_rights_from_usertype")}
           data={postData.data}
           checked={inherit_rights_from_usertype}
-          onChangeData={(data) => {
-            set_inherit_rights_from_usertype(!inherit_rights_from_usertype);
-          }}
+          onChangeData={(data) => { set_inherit_rights_from_usertype(!inherit_rights_from_usertype); }}
+          className="text-left"
           validation={postData.validations.userRightType}
         />
-        {inherit_rights_from_usertype == true && (
-          <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
-            <ERPDataCombobox
-              id="userTypeForClone"
-              field={{
-                id: "userTypeForClone",
-                required: true,
-                getListUrl: Urls.data_user_types, // Adjust URL as needed
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              label={t("user_type")}
-              onChangeData={(data: any) => {
-                setUserTypeForClone(data.userTypeForClone);
-              }}
-              validation={postData.validations.userType2}
-              data={{ userTypeForClone: userTypeForClone }}
-            />
-            <ERPButton
-              title={t("load_rights")}
-              variant="secondary"
-              disabled={
-                postDataLoading ||
-                postData.data.userType == undefined ||
-                postData.data.userType == null ||
-                postData.data.userType == "" ||
-                userTypeForClone == undefined ||
-                userTypeForClone == null ||
-                userTypeForClone == ""
-              }
-              loading={postDataLoading}
-              onClick={handleClone}
-            />
-          </div>
-        )}
+        {
+          inherit_rights_from_usertype == true && (
+            <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
+              <ERPDataCombobox
+                id="userTypeForClone"
+                field={{
+                  id: "userTypeForClone",
+                  required: true,
+                  getListUrl: Urls.data_user_types, // Adjust URL as needed
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                label={t("user_type")}
+                onChangeData={(data: any) => { setUserTypeForClone(data.userTypeForClone); }}
+                validation={postData.validations.userType2}
+                data={{ userTypeForClone: userTypeForClone }}
+              />
+              <ERPButton
+                title={t("load_rights")}
+                variant="secondary"
+                disabled={
+                  postDataLoading ||
+                  postData.data.userType == undefined ||
+                  postData.data.userType == null ||
+                  postData.data.userType == "" ||
+                  userTypeForClone == undefined ||
+                  userTypeForClone == null ||
+                  userTypeForClone == ""
+                }
+                loading={postDataLoading}
+                onClick={handleClone}
+              />
+            </div>
+          )
+        }
         {/* Form Buttons */}
         <div className="flex justify-end mt-6 space-x-2">
           <ERPButton

@@ -26,7 +26,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, 
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = modalHeight - 200;
+    let gridHeightWindows = modalHeight - 90;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
   const columns: DevGridColumn[] = [
@@ -74,8 +74,6 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, 
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
@@ -93,8 +91,7 @@ const VoucherSelector: React.FC<VoucherSelectorProps> = ({ data, onRowDblClick, 
               </div>
             </div>
           </div>
-        </div>
-      </div>
+     
       
     </Fragment>
   );

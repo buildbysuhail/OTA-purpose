@@ -269,7 +269,8 @@ const StockFlow = () => {
                   filterContent={<StockFlowFilter />}
                   filterInitialData={StockFlowFilterInitialState}
                   reload={true}
-                  filterWidth="600"
+                  filterWidth={600}
+                  filterHeight={400}
                   gridId="grd_stock_flow"
                 ></ErpDevGrid>
               </div>

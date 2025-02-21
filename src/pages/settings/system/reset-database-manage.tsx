@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleResetDataBasePopup } from "../../../redux/slices/popup-reducer";
-import { ActionType } from "../../../redux/types";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useLocation } from "react-router-dom";
@@ -112,7 +108,6 @@ const ResetDbManage: React.FC = React.memo(() => {
   const { t } = useTranslation("system");
 
   const handleSubmit = useCallback(async () => {
-
     const masters = Object.keys(master)
       .filter((key) => master[key]) // Filter only the true values
       .map((key) => ({ tableTypeCode: key }));
@@ -137,7 +132,6 @@ const ResetDbManage: React.FC = React.memo(() => {
         dispatch(toggleResetDataBasePopup({ isOpen: false }));
       },
       () => {
-
         setPostData((prevData: any) => ({
           ...prevData,
           validations: response.validations,
@@ -161,15 +155,7 @@ const ResetDbManage: React.FC = React.memo(() => {
             value={postData?.data?.from}
             data={postData.data}
             validation={postData?.validations?.from}
-            onChange={(e) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  from: e.target?.value,
-                },
-              }));
-            }}
+            onChange={(e) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, from: e.target?.value, }, })) }}
           />
           <ERPDateInput
             type="date"
@@ -178,15 +164,7 @@ const ResetDbManage: React.FC = React.memo(() => {
             value={postData?.data?.to}
             data={postData.data}
             validation={postData?.validations?.to}
-            onChange={(e) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  to: e.target?.value,
-                },
-              }));
-            }}
+            onChange={(e) => { setPostData((prev: any) => ({ ...prev, data: { ...prev.data, to: e.target?.value, }, })); }}
           />
           <ERPInput
             id="password"
@@ -197,12 +175,7 @@ const ResetDbManage: React.FC = React.memo(() => {
             data={postData.data}
             value={postData.data.password}
             validation={postData?.validations?.password}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
+            onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, data: data, })); }}
           />
         </div>
 
@@ -212,19 +185,21 @@ const ResetDbManage: React.FC = React.memo(() => {
             <label className="block text-sm font-medium dark:!text-dark-text text-gray-700 p-3 sticky top-0 dark:!bg-dark-bg-header bg-white z-10">
               {t("transaction_forms")}
             </label>
-            <div className="overflow-x-auto border dark:!border-dark-border border-gray-400  rounded w-auto max-w-[550px] h-auto max-h-[260px] dark-scrollbar"
+            <div className="overflow-x-auto border dark:!border-dark-border border-gray-400  rounded w-auto max-w-[550px] h-auto max-h-[260px] dark-scrollbar text-left"
             // style={{
             //   scrollbarWidth: 'thin', // For Firefox
             //   scrollbarColor: '#888 #f1f1f1', // For Firefox
             // }}
             >
               <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
-                {allTransactions && allTransactions.length > 0 && (
-                  <TransactionFormsCheckboxes
-                    allTransactions={allTransactions}
-                    setAllTransactions={setAllTransactions}
-                  />
-                )}
+                {
+                  allTransactions && allTransactions.length > 0 && (
+                    <TransactionFormsCheckboxes
+                      allTransactions={allTransactions}
+                      setAllTransactions={setAllTransactions}
+                    />
+                  )
+                }
               </div>
             </div>
           </div>
@@ -232,7 +207,7 @@ const ResetDbManage: React.FC = React.memo(() => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
             <div className="flex flex-col gap-6">
               {/* Account Master */}
-              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("acc_masters")}
                 </label>
@@ -242,77 +217,47 @@ const ResetDbManage: React.FC = React.memo(() => {
                   label={t("currencies")}
                   data={master}
                   checked={master.CURR}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      CURR: !prev.CURR,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, CURR: !prev.CURR, })); }}
                 />
                 <ERPCheckbox
                   id="ACCGP"
                   label={t("account_group")}
                   data={master}
                   checked={master.ACCGP}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      ACCGP: !prev.ACCGP,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, ACCGP: !prev.ACCGP, })); }}
                 />
                 <ERPCheckbox
                   id="ACCLED"
                   label={t("acc_ledger")}
                   data={master}
                   checked={master.ACCLED}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      ACCLED: !prev.ACCLED,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, ACCLED: !prev.ACCLED, })); }}
                 />
                 <ERPCheckbox
                   id="PCAT"
                   label={t("party_category")}
                   data={master}
                   checked={master.PCAT}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      PCAT: !prev.PCAT,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PCAT: !prev.PCAT, })); }}
                 />
                 <ERPCheckbox
                   id="CUST"
                   label={t("customers")}
                   data={master}
                   checked={master.CUST}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      CUST: !prev.CUST,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, CUST: !prev.CUST, })); }}
                 />
                 <ERPCheckbox
                   id="SUPP"
                   label={t("suppliers")}
                   data={master}
                   checked={master.SUPP}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      SUPP: !prev.SUPP,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, SUPP: !prev.SUPP, })); }}
                 />
               </div>
 
               {/* HR Master */}
-              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
+              <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("hr_master")}
                 </label>
@@ -321,52 +266,33 @@ const ResetDbManage: React.FC = React.memo(() => {
                   label={t("designation")}
                   data={master}
                   checked={master.DESIG}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      DESIG: !prev.DESIG,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, DESIG: !prev.DESIG, })); }}
                 />
                 <ERPCheckbox
                   id="EMP"
                   label={t("employee")}
                   data={master}
                   checked={master.EMP}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      EMP: !prev.EMP,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, EMP: !prev.EMP, })); }}
                 />
                 <ERPCheckbox
                   id="JBWRK"
                   label={t("job_works")}
                   data={master}
                   checked={master.JBWRK}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      JBWRK: !prev.JBWRK,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, JBWRK: !prev.JBWRK, })); }}
                 />
                 <ERPCheckbox
                   id="DOC"
                   label={t("documents")}
                   data={master}
                   checked={master.DOC}
-                  onChangeData={(data) => {
-                    setMaster((prev: any) => ({
-                      ...prev,
-                      DOC: !prev.DOC,
-                    }));
-                  }}
+                  onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, DOC: !prev.DOC, })); }}
                 />
               </div>
             </div>
-            <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2">
+
+            <div className="border dark:!border-dark-border border-gray-200 rounded-lg rounded p-2 text-left">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("inventory_master")}
               </label>
@@ -375,173 +301,105 @@ const ResetDbManage: React.FC = React.memo(() => {
                 label={t("products")}
                 data={master}
                 checked={master.PRD}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    PRD: !prev.PRD,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PRD: !prev.PRD, })); }}
               />
               <ERPCheckbox
                 id="PDGP"
                 label={t("product_group")}
                 data={master}
                 checked={master.PDGP}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    PDGP: !prev.PDGP,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PDGP: !prev.PDGP, })); }}
               />
               <ERPCheckbox
                 id="PDCAT"
                 label={t("product_category")}
                 data={master}
                 checked={master.PDCAT}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    PDCAT: !prev.PDCAT,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PDCAT: !prev.PDCAT, })); }}
               />
               <ERPCheckbox
                 id="BRD"
                 label={t("brands")}
                 data={master}
                 checked={master.BRD}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    BRD: !prev.BRD,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, BRD: !prev.BRD, })); }}
               />
               <ERPCheckbox
                 id="PRCAT"
                 label={t("price_category")}
                 data={master}
                 checked={master.PRCAT}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    PRCAT: !prev.PRCAT,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PRCAT: !prev.PRCAT, })); }}
               />
               <ERPCheckbox
                 id="UNM"
                 label={t("unit_of_measures")}
                 data={master}
                 checked={master.UNM}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    UNM: !prev.UNM,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, UNM: !prev.UNM, })); }}
               />
               <ERPCheckbox
                 id="TXC"
                 label={t("tax_category")}
                 data={master}
                 checked={master.TXC}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    TXC: !prev.TXC,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, TXC: !prev.TXC, })); }}
               />
               <ERPCheckbox
                 id="VH"
                 label={t("warehouse")}
                 data={master}
                 checked={master.VH}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    VH: !prev.VH,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, VH: !prev.VH, })); }}
               />
               <ERPCheckbox
                 id="VEH"
                 label={t("vehicles")}
                 data={master}
                 checked={master.VEH}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    VEH: !prev.VEH,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, VEH: !prev.VEH, })); }}
               />
               <ERPCheckbox
                 id="PPR"
                 label={t("product_prices")}
                 data={master}
                 checked={master.PPR}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    PPR: !prev.PPR,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, PPR: !prev.PPR, })); }}
               />
               <ERPCheckbox
                 id="SRT"
                 label={t("sales_route")}
                 data={master}
                 checked={master.SRT}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    SRT: !prev.SRT,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, SRT: !prev.SRT, })); }}
               />
               <ERPCheckbox
                 id="SLRT"
                 label={t("salesman_route")}
                 data={master}
                 checked={master.SLRT}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    SLRT: !prev.SLRT,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, SLRT: !prev.SLRT, })); }}
               />
               <ERPCheckbox
                 id="BLM"
                 label={t("bill_of_material")}
                 data={master}
                 checked={master.BLM}
-                onChangeData={(data) => {
-                  setMaster((prev: any) => ({
-                    ...prev,
-                    BLM: !prev.BLM,
-                  }));
-                }}
+                onChangeData={(data) => { setMaster((prev: any) => ({ ...prev, BLM: !prev.BLM, })); }}
               />
             </div>
           </div>
         </div>
 
         <div className="flex justify-start items-center gap-5 ">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5 text-left">
             <ERPCheckbox
               id="selectAll"
               label={t("select_all")}
               data={postData.data}
               checked={postData.data.selectAll}
               onChangeData={(data: any) => {
-                setPostData((prev: any) => ({
-                  ...prev,
-                  data: data,
-                }));
+                setPostData((prev: any) => ({ ...prev, data: data, }));
                 const sds = allTransactions?.map((tr: any) => ({
                   ...tr, // Spread existing properties
                   checked: data.selectAll, // Add new `checked` property
@@ -554,36 +412,21 @@ const ResetDbManage: React.FC = React.memo(() => {
               label={t("update_stock")}
               data={postData.data}
               checked={postData.data.updateStock}
-              onChangeData={(data: any) => {
-                setPostData((prev: any) => ({
-                  ...prev,
-                  data: data,
-                }));
-              }}
+              onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, data: data, })); }}
             />
             <ERPCheckbox
               id="updateAccount"
               label={t("update_account")}
               data={postData.data}
               checked={postData.data.updateAccount}
-              onChangeData={(data: any) => {
-                setPostData((prev: any) => ({
-                  ...prev,
-                  data: data,
-                }));
-              }}
+              onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, data: data, })); }}
             />
             <ERPCheckbox
               id="maintainRecords"
               label={t("maintain_records")}
               data={postData.data}
               checked={postData.data.maintainRecords}
-              onChangeData={(data: any) => {
-                setPostData((prev: any) => ({
-                  ...prev,
-                  data: data,
-                }));
-              }}
+              onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, data: data, })); }}
             />
           </div>
         </div>

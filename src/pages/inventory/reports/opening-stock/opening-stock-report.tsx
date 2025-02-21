@@ -223,7 +223,8 @@ const OpeningStock = () => {
                   filterContent={<OpeningStockReportFilter />}
                   filterInitialData={OpeningStockReportFilterInitialState}
                   reload={true}
-                  filterWidth="600"
+                  filterWidth={600}
+                  filterHeight={450}
                   gridId="grd_opening_stock"
                 ></ErpDevGrid>
               </div>

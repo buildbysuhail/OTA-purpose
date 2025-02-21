@@ -84,14 +84,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
     setIsSaving(true);
     try {
       const response = await api.put(Urls.counter_settings, counterData, token);
-      handleResponse(
-        response,
-        () => {
-          setReload(true);
-          if (isFromLogin && onSuccess) onSuccess();
-        },
-        () => { }
-      );
+      handleResponse(response, () => { setReload(true); if (isFromLogin && onSuccess) onSuccess(); }, () => { });
     } catch (error) {
       console.error("Error loading settings:", error);
     } finally {
@@ -168,12 +161,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 placeholder={t("system_name")}
                 data={counterData}
                 value={counterData.systemName}
-                onChange={(e) => {
-                  setCounterData((prevTheme) => ({
-                    ...prevTheme,
-                    systemName: e.target?.value,
-                  }));
-                }}
+                onChange={(e) => { setCounterData((prevTheme) => ({ ...prevTheme, systemName: e.target?.value, })); }}
               />
               <ErpInput
                 // labelDirection="horizontal"
@@ -183,12 +171,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 placeholder={t("system_code")}
                 data={counterData}
                 value={counterData.systemCode}
-                onChange={(e) => {
-                  setCounterData((prevTheme) => ({
-                    ...prevTheme,
-                    systemCode: e.target?.value,
-                  }));
-                }}
+                onChange={(e) => { setCounterData((prevTheme) => ({ ...prevTheme, systemCode: e.target?.value, })); }}
               />
               <ERPDataCombobox
                 //  labelDirection="horizontal"
@@ -203,12 +186,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChange={(e) => {
-                  setCounterData((prevTheme) => ({
-                    ...prevTheme,
-                    counterId: e?.value ?? null,
-                  }));
-                }}
+                onChange={(e) => { setCounterData((prevTheme) => ({ ...prevTheme, counterId: e?.value ?? null, })); }}
               />
               <div className="flex items-center justify-center space-x-4">
                 <ERPButton
@@ -229,7 +207,8 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                   startIcon="ri-format-clear"
                   onClick={handleClear}
                 />
-                {token == undefined ||
+                {
+                  token == undefined ||
                   (token == "" && (
                     <ERPButton
                       title={t("close")}
@@ -240,7 +219,8 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                       startIcon="ri-file-close-line"
                       onClick={() => navigate("/settings")}
                     />
-                  ))}
+                  ))
+                }
               </div>
             </div>
 
@@ -258,6 +238,7 @@ const CounterSettings: React.FC<CounterSettingsProps> = ({ token, isFromLogin, o
                 allowSearching
               />
             </div>
+
             <div className="flex justify-center items-center mt-2 space-x-2">
               <strong>{t("this_system_code")}</strong>
               <span>{defaultSystemCode}</span>

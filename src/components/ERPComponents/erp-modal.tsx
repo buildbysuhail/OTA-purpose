@@ -36,7 +36,7 @@ type ERPModalProps = {
   isForm?: boolean;
   isButton?: boolean;
   isMaximize?: boolean;
-  initailMaximize?:boolean;
+  initialMaximize?:boolean;
   closeTitle?: string;
   className?: string;
   isFullHeight?: boolean;
@@ -69,7 +69,7 @@ const ERPModal = React.memo(
     isForm = false,
     isButton = false,
     isMaximize = true,
-    initailMaximize=false,
+    initialMaximize=false,
     onSubmitModel,
     hasSubmit = true,
     closeButton = "LeftArrow",
@@ -77,8 +77,8 @@ const ERPModal = React.memo(
     className,
     isFullHeight = false,
     isRemoveSomething = false,
-    width = 500,
-    height=500,
+    width = 600,
+    height=600,
     minHeight = 300,
     minWidth=300,
 
@@ -87,46 +87,49 @@ const ERPModal = React.memo(
     customPosition = false,
     customStyle = {},
   }: ERPModalProps) => {
-    const [isMaximized, setIsMaximized] = useState(initailMaximize);
+    const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
     const [modalWidth, setModalWidth] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [previousPosition, setPreviousPosition] = useState({ x: 0, y: 0 });
     const [rndKey, setRndKey] = useState(0);
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
-    const contentRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
       if (isOpen) {
-       
-       
-          const handlePositionUpdate = () => {
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
+        const handlePositionUpdate = () => {
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
 
+          if (isMaximized) {
+            // Set position to top-left for maximized view
+            const centeredX = (windowWidth - width) / 2;
+            const centeredY = (windowHeight - height) / 2;
+            setPreviousPosition({ x: centeredX, y: centeredY });
+            setPosition({ x: 20, y: 20 });
+          } else {
             if (width && height) {
               let newX = (windowWidth - width) / 2;
               let newY = (windowHeight - height) / 2;
 
-              // Ensure the new position is within window boundaries
               newY = Math.max(newY, 0);
               newX = Math.max(newX, 0);
 
-              // If the window height is less than modal height, center horizontally
               if (windowHeight < height) {
-                newY = 10; // Align to top
+                newY = 10;
                 newX = (windowWidth - width) / 2;
               }
 
               setPosition({ x: newX, y: newY });
-              setIsPositionCalculated(true);
             }
-          };
+          }
+          setIsPositionCalculated(true);
+        };
 
-          handlePositionUpdate();
-          setRndKey((prev) => prev + 1); 
-     
+        handlePositionUpdate();
+        setRndKey((prev) => prev + 1);
       }
-    }, [isOpen, width, height]);;
+    }, [isOpen, width, height, isMaximized]);
 
     useEffect(() => {
       const updateModalDimensions = () => {
@@ -236,16 +239,7 @@ const ERPModal = React.memo(
         setModalWidth(ref.offsetWidth);
         setPosition(pos);
       }}
-      handleStyles={{
-        top: { backgroundColor: 'white' },
-        right: { backgroundColor: 'white' },
-        bottom: { backgroundColor: 'white' },
-        left: { backgroundColor: 'white' },
-        topRight: { backgroundColor: 'white' },
-        topLeft: { backgroundColor: 'white' },
-        bottomRight: { backgroundColor: 'white' },
-        bottomLeft: { backgroundColor: 'white' },
-      }}
+   
       bounds="parent"
       // bounds="window"
       minWidth={minWidth}
@@ -253,7 +247,7 @@ const ERPModal = React.memo(
       dragGrid={[10, 10]}
       resizeGrid={[10, 10]}
       // lockAspectRatio={16 / 9}
-       className="bg-white shadow-sm rounded-sm border border-black "
+       className="bg-white shadow-sm rounded-md border "
     >
       <DialogPanel
         className={`erp-modal w-full h-full flex flex-col overflow-hidden pb-10`}
@@ -261,7 +255,7 @@ const ERPModal = React.memo(
       >
         <DialogTitle
           as="h3"
-          className="place-items-center px-4 bg-[#f6f6f6] h-[50px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900"
+          className="place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[50px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900"
           style={{ flex: "0 0 auto" }}
         >
           <div className="flex items-center dark:text-dark-text">{title}</div>
@@ -284,11 +278,7 @@ const ERPModal = React.memo(
                   if (isMaximized) {
                     // Restore to previous position
                     setPosition(previousPosition);
-                  } else {
-                    // Save current position and move to (20, 20)
-                    setPreviousPosition(position);
-                    setPosition({ x: 20, y: 20 });
-                  }
+                  } 
                   setIsMaximized(!isMaximized);
                 }}
                 aria-label={isMaximized ? "Restore" : "Maximize"}

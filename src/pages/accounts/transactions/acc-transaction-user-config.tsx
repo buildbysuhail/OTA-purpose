@@ -121,7 +121,8 @@ export const AccTransactionUserConfig = () => {
       <ERPModal
         isOpen={isOpen}
         title={t("user_config")}
-        width="w-full max-w-[1000px]"
+        width={1000}
+        height={800}
         minHeight={800}
         isForm={true}
         closeModal={() => setIsOpen(false)}

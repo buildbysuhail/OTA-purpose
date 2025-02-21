@@ -191,7 +191,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       <ERPModal
         isOpen={rootState.PopupData?.groupCategory.isOpen || false}
         title="Group Category"
-        width="w-full max-w-[600px]"
+   
         isForm={true}
         closeModal={() => {
           dispatch(toggleGroupCategory({ isOpen: false }));

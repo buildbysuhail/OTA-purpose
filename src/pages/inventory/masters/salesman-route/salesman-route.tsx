@@ -189,7 +189,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
       <ERPModal
         isOpen={rootState.PopupData.salesManRoute.isOpen || false}
         title="Sales Man Route"
-        width="w-full max-w-[900px]"
+        width={900}
         isForm={true}
         closeModal={() => {
           dispatch(toggleSalesManRoute({ isOpen: false }));

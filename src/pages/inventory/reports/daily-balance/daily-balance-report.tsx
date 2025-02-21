@@ -78,7 +78,8 @@ const DailyBalanceAmount = () => {
                   showFilterInitially={true}
                   method={ActionType.POST}
                   filterContent={<DailyBalanceReportFilter />}
-                  filterWidth="400"
+                  filterWidth={400}
+                  filterHeight={400}
                   filterInitialData={DailyBalanceReportFilterInitialState}
                   reload={true}
                   gridId="grd_daily_balance"

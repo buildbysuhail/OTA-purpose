@@ -190,7 +190,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
         hasSubmit={false}
         closeTitle="Close"
         title="Counter Settings"
-        width="w-full"
+       width={600}
         isFullHeight={true}
         closeModal={() => {
           setCounterSettings({ show: false, token: "" });

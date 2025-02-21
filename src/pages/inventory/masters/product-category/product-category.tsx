@@ -188,7 +188,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
       <ERPModal
         isOpen={rootState.PopupData.productCategory.isOpen || false}
         title={t("product_category")}
-        width="w-full max-w-[600px]"
+    
         isForm={true}
         closeModal={() => {
           dispatch(toggleProductCategory({ isOpen: false }));

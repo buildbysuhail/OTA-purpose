@@ -24,15 +24,11 @@ export const VoucherManage: React.FC = React.memo(() => {
   } = useFormManager<VoucherData>({
     url: Urls.Voucher,
     onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.voucher.key,
     useApiClient: true,
     initialData: initialDataVoucher
   });
-
   const { t } = useTranslation("system");
 
   return (
@@ -52,6 +48,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("voucherType", data.voucherType)}
         />
+
         <ERPInput
           {...getFieldProps("formType")}
           label={t("form_type")}
@@ -59,18 +56,21 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("formType", data.formType)}
         />
+
         <ERPInput
           {...getFieldProps("descriptions")}
           label={t("descriptions")}
           placeholder={t("descriptions")}
           onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
+
         <ERPInput
           {...getFieldProps("lastVoucherPrefix")}
           label={t("lastVoucher_prefix")}
           placeholder={t("lastVoucher_prefix")}
           onChangeData={(data: any) => handleFieldChange("lastVoucherPrefix", data.lastVoucherPrefix)}
         />
+
         <ERPInput
           {...getFieldProps("lastVoucherNumber")}
           label={t("lastVoucher_number")}
@@ -79,6 +79,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data.lastVoucherNumber)}
         />
+
         <div className="flex items-center">
           <ERPCheckbox
             {...getFieldProps('isDefault')}

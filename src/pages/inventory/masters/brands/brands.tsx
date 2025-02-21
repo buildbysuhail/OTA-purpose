@@ -178,7 +178,6 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
       <ERPModal
         isOpen={rootState.PopupData.brands.isOpen || false}
         title={t("brands")}
-        width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleBrands({ isOpen: false }));

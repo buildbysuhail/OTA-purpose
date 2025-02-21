@@ -401,7 +401,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     />
                 </div>
             </div>}
-            width="w-full max-w-[600px]"
+           width={600}
+           height={600}
             isButton={false}
             hasSubmit={false}
         />

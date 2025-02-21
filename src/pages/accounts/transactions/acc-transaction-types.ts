@@ -26,6 +26,7 @@ export interface Attachments {
   id?: string;
   key: string;
   name: string;
+  size: number;
   aType: "url"| "file"| "base64";
   type:string;
   isNew: boolean;
@@ -509,7 +510,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   hasDiscount: { visible: true, disabled: false, label: "discount" },
   discount: { visible: true, disabled: false, label: "discount" },
   chequeNumber: { visible: true, disabled: false, label: "cheque_number" },
-  paymentType: { visible: false, disabled: false, label: "payment_ype" },
+  paymentType: { visible: false, disabled: false, label: "payment_type" },
   chequeStatus: { visible: false, disabled: false, label: "check_status" },
   bankCharge: { visible: false, disabled: false, label: "bank_charge" },
   bankDate: { visible: false, disabled: false, label: "bank_date" },

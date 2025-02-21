@@ -17,7 +17,6 @@ export const CounterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("system");
-
   const {
     isEdit,
     handleSubmit,
@@ -29,19 +28,12 @@ export const CounterManage: React.FC = React.memo(() => {
   } = useFormManager<CounterData>({
     url: Urls.Counter,
     onClose: useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.counter.key,
     useApiClient: true,
     initialData: initialDataCounter
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: false }));
-  }, []);
-
+  const onClose = useCallback(() => { dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: false })); }, []);
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
 
   return (
@@ -56,12 +48,14 @@ export const CounterManage: React.FC = React.memo(() => {
             handleFieldChange("counterName", data.counterName);
           }}
         />
+
         <ERPInput
           {...getFieldProps("descriptions")}
           label={t("descriptions")}
           placeholder={t("descriptions")}
           onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("warehouseID")}
           id="warehouseID"
@@ -77,6 +71,7 @@ export const CounterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("cashLedgerID")}
           id="cashLedgerID"
@@ -92,7 +87,9 @@ export const CounterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("cashLedgerID", data.cashLedgerID)}
         />
-        {applicationSettings?.branchSettings?.maintainCounterWisePrefixForTransaction &&
+
+        {
+          applicationSettings?.branchSettings?.maintainCounterWisePrefixForTransaction &&
           <ERPInput
             {...getFieldProps("vrPrefix")}
             label={t("vr_prefix")}
@@ -102,11 +99,14 @@ export const CounterManage: React.FC = React.memo(() => {
             }}
           />
         }
-        <ERPCheckbox
-          {...getFieldProps('maintainShift')}
-          label={t("maintain_shift")}
-          onChangeData={(data: any) => handleFieldChange('maintainShift', data.maintainShift)}
-        />
+
+        <div className="flex items-center">
+          <ERPCheckbox
+            {...getFieldProps('maintainShift')}
+            label={t("maintain_shift")}
+            onChangeData={(data: any) => handleFieldChange('maintainShift', data.maintainShift)}
+          />
+        </div>
       </div>
       <ERPFormButtons
         onClear={handleClear}

@@ -32,25 +32,22 @@ export const initialRevertBillModificationData = {
     tType: "",
   },
 };
+
 const api = new APIClient();
 const RevertBillModifications: React.FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("system");
   const rootState = useRootState();
-    const dataGridRef = useRef<any>(null);
+  const dataGridRef = useRef<any>(null);
   const handleDelete = async (data: any) => {
     const res = await api.post(Urls.revertBillModifications, {
       transactionMasterId: data.data.invTransactionMasterID,
       remarks: '',
       transactionType: data.data.tType,
     });
-    handleResponse(res, () => {
-      
-      dispatch(
-        toggleRevertBillModifications({ ...rootState.PopupData.revertBillModifications, reload: true })
-      );
-    });
+    handleResponse(res, () => { dispatch(toggleRevertBillModifications({ ...rootState.PopupData.revertBillModifications, reload: true })); });
   };
+
   const columns: DevGridColumn[] = useMemo(
     () => [
       {
@@ -142,9 +139,9 @@ const RevertBillModifications: React.FC = () => {
     ],
     [t]
   );
-  useEffect(() => {
-    dispatch(toggleRevertBillModifications({ ...rootState, reload: true }));
-  }, []);
+
+  useEffect(() => { dispatch(toggleRevertBillModifications({ ...rootState, reload: true })); }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -159,15 +156,7 @@ const RevertBillModifications: React.FC = () => {
                   dataUrl={Urls.revertBillModifications}
                   gridId="grd_revertBillModifications"
                   popupAction={toggleRevertBillModifications}
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleRevertBillModifications(
-                        { 
-                          ...rootState.PopupData.revertBillModifications,
-                          reload: reload
-                        })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleRevertBillModifications({ ...rootState.PopupData.revertBillModifications, reload: reload })); }}
                   hideGridAddButton={true}
                   reload={rootState?.PopupData?.revertBillModifications?.reload}
                   gridAddButtonIcon="ri-history-line"
@@ -180,11 +169,9 @@ const RevertBillModifications: React.FC = () => {
       <ERPModal
         isOpen={rootState.PopupData.revertBillModifications.isOpen || false}
         title={t("revert_bill_modifications")}
-        width="w-full max-w-[600px]"
+        // width="w-full max-w-[600px]"
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleRevertBillModifications({ isOpen: false, key: null,reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleRevertBillModifications({ isOpen: false, key: null, reload: false })); }}
       />
     </Fragment>
   );

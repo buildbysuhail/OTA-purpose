@@ -495,5 +495,7 @@
   "print_invoice": "طباعة الفاتورة",
   "change_template": "تغيير القالب",
   "more": "المزيد",
-  "model": "النموذج"
+  "model": "النموذج",
+
+  "are_you_sure_you_want_to_delete_this_item": "هل أنت متأكد أنك تريد حذف هذا العنصر؟"
 }

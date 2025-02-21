@@ -7,9 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
 const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -40,34 +38,38 @@ const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange }:
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
-      {applicationSettings.mainSettings?.allowSalesRouteArea == true &&
-        <ERPDataCombobox
-          {...getFieldProps("routeID")}
-          label={t("sales_route")}
-          className="w-full"
-          field={{
-            id: "routeID",
-            getListUrl: Urls.data_salesRoute,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onSelectItem={(data) => handleFieldChange({routeID: data.value, routeName: data.routeName})}
-        />}
-        {applicationSettings.accountsSettings?.maintainCostCenter == true &&
-        <ERPDataCombobox
-          {...getFieldProps("costCentreID")}
-          label={t("cost_centre")}
-          field={{
-            id: "costCentreID",
-            getListUrl: Urls.data_costcentres,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
-        />}
+        {
+          applicationSettings.mainSettings?.allowSalesRouteArea == true &&
+          <ERPDataCombobox
+            {...getFieldProps("routeID")}
+            label={t("sales_route")}
+            className="w-full"
+            field={{
+              id: "routeID",
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onSelectItem={(data) => handleFieldChange({ routeID: data.value, routeName: data.routeName })}
+          />
+        }
+        {
+          applicationSettings.accountsSettings?.maintainCostCenter == true &&
+          <ERPDataCombobox
+            {...getFieldProps("costCentreID")}
+            label={t("cost_centre")}
+            field={{
+              id: "costCentreID",
+              getListUrl: Urls.data_costcentres,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+          />
+        }
       </div>
       {/* Report Options */}
-      <div className="space-y-2">
+      <div className="space-y-2 text-left">
         <ERPCheckbox
           {...getFieldProps("showZeroBalance")}
           label={t("show/include_zero_balance_report")}

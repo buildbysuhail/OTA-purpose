@@ -109,7 +109,7 @@ const BillwiseComponent = ({
   useEffect(() => {
     let wh = modalHeight;
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows = wh - 300;
+    let gridHeightWindows = wh - 245;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -796,7 +796,7 @@ const BillwiseComponent = ({
             </p>
           </Item>
         </Toolbar>
-        {t("drcr")}:{drCr}
+
         <ERPDevGrid
           key={`grid-${drCr}`}
           ref={dataGridRef}
@@ -877,11 +877,7 @@ const BillwiseComponent = ({
           selectionMode={"multiple"}
           allowKeyboardNavigation={true}
         >
-
-
-
           {/* Add Summary for "Amount" column */}
-
         </ERPDevGrid>
         <div className="flex h-12 justify-between mt-1">
           <div className="flex h-11 items-center  p-3 bg-gray-100 rounded-md max-w-60">

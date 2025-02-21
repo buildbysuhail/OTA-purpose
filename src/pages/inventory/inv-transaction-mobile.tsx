@@ -292,7 +292,8 @@ const InvTransactionMobile = () => {
               hasSubmit={false}
               closeTitle="Close"
               title="Add Items"
-              width="w-full"
+              width={800}
+              height={600}
               isFullHeight={true}
               closeModal={() => setIsOpen(false)}
               content={

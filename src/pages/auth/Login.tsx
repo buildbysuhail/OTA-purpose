@@ -328,8 +328,9 @@ const Login = () => {
         hasSubmit={false}
         closeTitle="Close"
         title="Counter Settings"
-        width="w-full max-w-[700px]"
-        minHeight={800}
+        width={800}
+        height={600}
+        minHeight={600}
         closeModal={() => {
           setCounterSettings({ show: false, token: "" });
         }}

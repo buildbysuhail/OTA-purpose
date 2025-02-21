@@ -183,7 +183,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
       <ERPModal
         isOpen={rootState.PopupData.taxCategory.isOpen || false}
         title={t("tax_category")}
-        width="w-full max-w-[600px]"
+   
         isForm={true}
         closeModal={() => {
           dispatch(toggleTaxCategory({ isOpen: false }));

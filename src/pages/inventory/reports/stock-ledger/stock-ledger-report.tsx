@@ -165,9 +165,10 @@ const StockLedger = () => {
                   filterContent={<StockLedgerFilter />}
                   filterInitialData={StockLedgerFilterInitialState}
                   reload={true}
-                  filterWidth="600"
+                  filterWidth={600}
+                  filterHeight={360}
                   gridId="grd_stock_ledger"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

@@ -10,9 +10,7 @@ const OutstandingPayableReportFilter = ({
   getFieldProps,
   handleFieldChange,
 }: any) => {
-  const applicationSettings = useSelector(
-    (state: RootState) => state.ApplicationSettings
-  );
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -20,9 +18,7 @@ const OutstandingPayableReportFilter = ({
       <ERPDateInput
         {...getFieldProps("asonDate")}
         label={t("as_on")}
-        onChangeData={(data: any) =>
-          handleFieldChange("asonDate", data.asonDate)
-        }
+        onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
       />
       {/* Due Period Dropdown */}
       {/* <ERPDataCombobox
@@ -44,25 +40,22 @@ const OutstandingPayableReportFilter = ({
 
       {/* Sales Route Selection */}
       <div className="flex items-center gap-2">
-        {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
-          <ERPDataCombobox
-            {...getFieldProps("routeID")}
-            label={t("sales_route")}
-            className="w-full"
-            field={{
-              id: "routeID",
-              getListUrl: Urls.data_salesRoute,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) =>
-              handleFieldChange({
-                routeID: data.value,
-                routeName: data.routeName,
-              })
-            }
-          />
-        )}
+        {
+          applicationSettings.mainSettings?.allowSalesRouteArea == true && (
+            <ERPDataCombobox
+              {...getFieldProps("routeID")}
+              label={t("sales_route")}
+              className="w-full"
+              field={{
+                id: "routeID",
+                getListUrl: Urls.data_salesRoute,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onSelectItem={(data) => handleFieldChange({ routeID: data.value, routeName: data.routeName, })}
+            />
+          )
+        }
         {applicationSettings.accountsSettings?.maintainCostCenter == true && (
           <ERPDataCombobox
             {...getFieldProps("costCentreID")}
@@ -73,20 +66,17 @@ const OutstandingPayableReportFilter = ({
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data) =>
-              handleFieldChange("costCentreID", data.costCentreID)
-            }
+            onChangeData={(data) => handleFieldChange("costCentreID", data.costCentreID)}
           />
-        )}
+        )
+        }
       </div>
       {/* Report Options */}
-      <div className="space-y-2 ps-1">
+      <div className="space-y-2 ps-1 text-left">
         <ERPCheckbox
           {...getFieldProps("showZeroBalance")}
           label={t("show/include_zero_balance_report")}
-          onChangeData={(data) =>
-            handleFieldChange("showZeroBalance", data.showZeroBalance)
-          }
+          onChangeData={(data) => handleFieldChange("showZeroBalance", data.showZeroBalance)}
         />
         <ERPCheckbox
           {...getFieldProps("payable")}
@@ -96,9 +86,7 @@ const OutstandingPayableReportFilter = ({
         <ERPCheckbox
           {...getFieldProps("receivable")}
           label={t("show_receivable")}
-          onChangeData={(data) =>
-            handleFieldChange("receivable", data.receivable)
-          }
+          onChangeData={(data) => handleFieldChange("receivable", data.receivable)}
         />
       </div>
     </div>

@@ -235,7 +235,7 @@ const MemoizedSchemesManage = useMemo(() => React.memo(SchemesManage), []);
       <ERPModal
         isOpen={rootState.PopupData.schemes.isOpen || false}
         title={t("schemes")}
-        width="w-full max-w-[600px]"
+
         isForm={true}
         closeModal={() => {
           dispatch(toggleSchemes({ isOpen: false }));

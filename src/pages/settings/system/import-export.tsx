@@ -79,22 +79,14 @@ const ImportExportManage: React.FC = React.memo(() => {
             onChange={handleFileChange}
           />
         </div>
-        <div className="flex justify-around">
+        <div className="flex items-center gap-10">
           <ERPCheckbox
             label={t("product")}
             id="product"
             data={importExport.data}
             checked={importExport.data.product}
             validation={importExport?.validations?.product}
-            onChangeData={(data: any) => {
-              setImportExport((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  product: !prev.data?.product,
-                },
-              }));
-            }}
+            onChangeData={(data: any) => { setImportExport((prev: any) => ({ ...prev, data: { ...prev.data, product: !prev.data?.product, }, })); }}
             disabled={true}
           />
 
@@ -104,15 +96,7 @@ const ImportExportManage: React.FC = React.memo(() => {
             data={importExport.data}
             checked={importExport.data.parties}
             validation={importExport?.validations?.parties}
-            onChangeData={(data: any) => {
-              setImportExport((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  parties: !prev.data.parties
-                },
-              }));
-            }}
+            onChangeData={(data: any) => { setImportExport((prev: any) => ({ ...prev, data: { ...prev.data, parties: !prev.data.parties }, })); }}
           />
 
           <ERPCheckbox
@@ -121,15 +105,7 @@ const ImportExportManage: React.FC = React.memo(() => {
             data={importExport.data}
             checked={importExport.data.privilegeCard}
             validation={importExport?.validations?.privilegeCard}
-            onChangeData={(data: any) => {
-              setImportExport((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  privilegeCard: !prev.data.privilegeCard,
-                },
-              }));
-            }}
+            onChangeData={(data: any) => { setImportExport((prev: any) => ({ ...prev, data: { ...prev.data, privilegeCard: !prev.data.privilegeCard, }, })); }}
           />
         </div>
       </div>

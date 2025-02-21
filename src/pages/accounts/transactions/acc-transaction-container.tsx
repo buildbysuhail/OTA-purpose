@@ -188,8 +188,8 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   }
   }, [searchParams, props]);
 
-  const onRowDblClick = useCallback(async (_event: any) => {
-    debugger;
+  const onRowDblClick = useCallback(async (event: any) => {
+    const _event = event.data != undefined ? event : event?.event
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,
@@ -223,8 +223,9 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
           isFullHeight
           isOpen={true}
           hasSubmit={false}
-          width="w-[900px]"
-          minHeight={800}
+          width={800}
+          height={600}
+          minHeight={600}
           closeTitle={t("close")}
           title={t("voucher_selector")}
           content={

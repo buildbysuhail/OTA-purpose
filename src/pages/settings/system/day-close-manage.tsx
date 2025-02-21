@@ -42,7 +42,6 @@ export const initialDayCloseData = {
 const DayCloseManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -55,9 +54,7 @@ const DayCloseManage = () => {
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
     onClose: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null, reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true,
     loadDataRequired: false,
@@ -76,32 +73,38 @@ const DayCloseManage = () => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("passWord", data.passWord)}
         />
+
         <ERPDateInput
           {...getFieldProps("closedDate")}
           label={t("from")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("closedDate", data.closedDate)}
         />
+
         <div className="flex justify-around items-center">
           <ERPCheckbox
             {...getFieldProps("isSales")}
             label={t("sales")}
             onChangeData={(data: any) => handleFieldChange("isSales", data.isSales)}
           />
+
           <ERPCheckbox
             {...getFieldProps("isPurchase")}
             label={t("purchase")}
             onChangeData={(data: any) => handleFieldChange("isPurchase", data.isPurchase)}
           />
+
           <ERPCheckbox
             {...getFieldProps("isAccounts")}
             label={t("accounts")}
             onChangeData={(data: any) => handleFieldChange("isAccounts", data.isAccounts)}
           />
         </div>
+
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("day_close_agreement")}
+          className="text-left"
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
       </div>

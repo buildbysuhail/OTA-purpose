@@ -1757,7 +1757,7 @@ const prevNation = formState.row.narration;
               <div className="flex items-center p-0 border dark:border-dark-border border-gray-300 rounded-b-sm mb-2 dark:bg-dark-bg bg-[#f4f4f5] me-[1px]">
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
-                    {t(formState.title)}
+                    {t(formState.title)}- {transactionType} - {formState.transactionType}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>
@@ -2020,7 +2020,8 @@ const prevNation = formState.row.narration;
                         hasSubmit={false}
                         closeTitle={t("close")}
                         title={t("MJV_excel_import")}
-                        width="w-full"
+                        width={1000}
+                        height={800}
                         isFullHeight={true}
                         closeModal={() => setShowValidation(false)}
                         content={<AccExcelImport />}
@@ -3094,7 +3095,8 @@ const prevNation = formState.row.narration;
                           <ERPModal
                             isOpen={formState.showPartySelection}
                             closeModal={() => dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: false }, }))}
-                            width="w-full max-w-[600px]"
+                            width={600}
+                            height={700}
                             title="Party Selection"
                             content={<PartySelectionModal focusTaxNoField={focusTaxNoField}/>}
                           />
@@ -3710,7 +3712,7 @@ const prevNation = formState.row.narration;
             isFullHeight={true}
             isOpen={formState.showbillwise ?? false}
             title={t("billwise")}
-            initailMaximize={
+            initialMaximize={
               formState?.userConfig?.maximizeBillwiseScreenInitially
             }
             closeModal={() => {
@@ -3721,7 +3723,8 @@ const prevNation = formState.row.narration;
               );
             }}
             onSubmit={() => { }}
-            width="!w-[80rem] !max-w-[60rem]"
+           width={1200}
+           height={800}
             content={
               <BillWisePopup
                 drCr={formState.billwiseDrCr}
@@ -3771,7 +3774,8 @@ const prevNation = formState.row.narration;
           hasSubmit={false}
           closeTitle={t("close")}
           title={t("add_ledger")}
-          width="w-full"
+          width={1000}
+          height={800}
           isFullHeight={true}
           isRemoveSomething={true}
           closeModal={() => setIsOpen(false)}

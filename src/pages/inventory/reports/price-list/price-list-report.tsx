@@ -175,13 +175,15 @@ const PriceList = () => {
                   dataUrl={Urls.inv_reports_price_list}
                   hideGridAddButton={true}
                   enablefilter={true}
+                  filterWidth={600}
+                  filterHeight={250}
                   showFilterInitially={true}
                   method={ActionType.POST}
                   filterContent={<PriceListReportFilter />}
                   filterInitialData={PriceListReportFilterInitialState}
                   reload={true}
                   gridId="grd_cost_centre"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

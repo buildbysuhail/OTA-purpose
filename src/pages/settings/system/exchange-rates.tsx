@@ -23,7 +23,6 @@ interface ExchangeRatesProps {
   modalHeight?: any
 }
 const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
-
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -95,7 +94,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
 
   useEffect(() => {
     let gridHeightMobile = modalHeight - 50;
-    let gridHeightWindows =  modalHeight - 150;
+    let gridHeightWindows = modalHeight - 150;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, [isMaximized, modalHeight]);
 
@@ -172,8 +171,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
                       e.newData.cStatus = true;
                     }
                   }}
-                  onFocusedCellChanging={onFocusedCellChanging}
-                >
+                  onFocusedCellChanging={onFocusedCellChanging}>
                   <KeyboardNavigation
                     editOnKeyPress={true}
                     enterKeyAction={"startEdit"}
@@ -204,8 +202,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
                     allowSearch={true}
                     allowFiltering={true}
                     minWidth={150}
-                    allowEditing={true}
-                  >
+                    allowEditing={true}>
                     <Lookup
                       dataSource={currencies}
                       valueExpr="name"
@@ -263,13 +260,7 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
                           valueKey: "currencyID",
                           labelKey: "currencyName",
                         }}
-                        onChangeData={(data: any) => {
-                          setPostData((prev: any) => ({
-                            ...prev,
-                            baseCurrency: data?.baseCurrency,
-                          }));
-                          load(data?.baseCurrency);
-                        }}
+                        onChangeData={(data: any) => { setPostData((prev: any) => ({ ...prev, baseCurrency: data?.baseCurrency, })); load(data?.baseCurrency); }}
                         data={postData}
                         defaultData={postData}
                         // value={postData?.baseCurrency}
@@ -301,19 +292,16 @@ const ExchangeRates = ({ modalHeight, isMaximized }: ExchangeRatesProps) => {
           </div>
         </div>
       </div>
-      
+
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}
         width={700}
         height={300}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedCurrencyMasterManage />}
       />
-    
     </Fragment>
   );
 };

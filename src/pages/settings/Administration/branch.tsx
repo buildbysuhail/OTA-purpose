@@ -266,7 +266,8 @@ const BranchGrid = () => {
         isOpen={rootState.PopupData.branchGrid.isOpen || false}
         title={t("branch")}
         isForm={true}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={600}
         closeModal={() => {
           dispatch(toggleBranchGridPopup({ isOpen: false }));
         }}

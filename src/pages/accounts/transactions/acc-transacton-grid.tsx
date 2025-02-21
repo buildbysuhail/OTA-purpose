@@ -295,8 +295,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
-              gridAddButtonType={"link"}
-              gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
+                gridAddButtonType={"link"}
+                gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
                 method={ActionType.GET}

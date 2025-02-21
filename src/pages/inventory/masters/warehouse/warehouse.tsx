@@ -203,7 +203,6 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
       <ERPModal
         isOpen={rootState.PopupData.warehouse.isOpen || false}
         title={t("warehouse")}
-        width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleWarehouse({ isOpen: false }));

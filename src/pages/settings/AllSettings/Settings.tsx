@@ -52,7 +52,6 @@ const TestPopup = lazy(() => import("../Integration/test-popup"));
 
 
 const Settings = () => {
-
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -82,10 +81,8 @@ const Settings = () => {
   }, []);
 
   useEffect(() => {
-
     if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
   }, []);
-
 
   return (
     <Fragment>
@@ -109,9 +106,7 @@ const Settings = () => {
         title="Test Popup"
         width={1000}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleTestPopup({ isOpen: false }));
-        }}
+        closeModal={() => {  dispatch(toggleTestPopup({ isOpen: false }));}}
         content={<TestPopup />}
       />
       <ERPModal
@@ -229,8 +224,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
-        width={1000}
-        height={700}
+        width={900}
+        height={620}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));

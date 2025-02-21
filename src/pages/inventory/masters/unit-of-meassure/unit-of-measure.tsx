@@ -223,7 +223,7 @@ const UnitOfMeasure = () => {
       <ERPModal
         isOpen={rootState.PopupData.unitOfMeasure.isOpen || false}
         title={t("unit_of_measure")}
-        width="w-full max-w-[600px]"
+       
         isForm={true}
         closeModal={() => {
           dispatch(toggleUnitOfMeasure({ isOpen: false }));

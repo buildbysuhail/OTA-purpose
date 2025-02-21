@@ -23,10 +23,10 @@ export const RemainderManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<RemainderData>({
     url: Urls.Remainder,
-    onClose:useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.reminder.key,
-    keyField:"remaindersID",
+    keyField: "remaindersID",
     useApiClient: true,
     initialData: initialDataRemainder
   });
@@ -40,21 +40,24 @@ export const RemainderManage: React.FC = React.memo(() => {
           label={t("remainder_name")}
           placeholder={t("remainder_name")}
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange("remainderName", data.remainderName);  }}
+          onChangeData={(data: any) => { handleFieldChange("remainderName", data.remainderName); }}
         />
+
         <ERPInput
           {...getFieldProps("descriptions")}
           label={t("descriptions")}
           placeholder={t("descriptions")}
           onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
+
         <ERPDateInput
           {...getFieldProps("remaindingDate")}
           type="date"
           id="remaindingDate"
           label={t("date_of_reminds")}
           onChangeData={(data: any) => handleFieldChange("remaindingDate", data.remaindingDate)}
-        /> 
+        />
+
         <ERPInput
           {...getFieldProps("numberOfDays")}
           type="number"

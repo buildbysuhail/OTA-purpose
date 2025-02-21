@@ -55,22 +55,26 @@ const TrialBalanceReportFilter = ({
           handleFieldChange("costCentreID", data.costCentreID)
         }
       />
-      <ERPCheckbox
+      <div className="text-left">
+        <ERPCheckbox
           {...getFieldProps("showGroupSummaryOnly")}
           label={t("show_group_summary")}
           onChangeData={(data) =>
             handleFieldChange("showGroupSummaryOnly", data.showGroupSummaryOnly)
           }
         />
-      {userSession.countryId == Countries.India && (
-        <ERPCheckbox
-          {...getFieldProps("isExcludeZeroBalance")}
-          label={t("excludeZeroBalance")}
-          onChangeData={(data) =>
-            handleFieldChange("isExcludeZeroBalance", data.isExcludeZeroBalance)
-          }
-        />
-      )}
+        {
+          userSession.countryId == Countries.India && (
+            <ERPCheckbox
+              {...getFieldProps("isExcludeZeroBalance")}
+              label={t("excludeZeroBalance")}
+              onChangeData={(data) =>
+                handleFieldChange("isExcludeZeroBalance", data.isExcludeZeroBalance)
+              }
+            />
+          )
+        }
+      </div>
       {/* <ERPCheckbox
       {...getFieldProps("isPeriodWise")}
       label={t("Period_wise")}
@@ -87,5 +91,5 @@ export const TrialBalanceReportFilterInitialState = {
   costCentreID: 0,
   isPeriodWise: false,
   isExcludeZeroBalance: false,
-  showGroupSummaryOnly:false
+  showGroupSummaryOnly: false
 };

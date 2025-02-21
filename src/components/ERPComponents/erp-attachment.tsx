@@ -55,10 +55,11 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         addFiles(selectedFiles);
       }
     },
-    []
+    [formState.transactionType]
   );
 
   const addFiles = async (newFiles: File[]) => {
+    debugger;
     const newUpload = {
       id: Math.random().toString(36).slice(2),
       file: newFiles[0],
@@ -66,17 +67,19 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
       progress: 0,
     };
     const key= Math.random().toString(36).slice(2);
+    const row: Attachments = {
+      key: key,
+      name: newFiles[0].name,
+      size: newFiles[0].size,
+      aType: "file",
+      isNew: true,
+      type: newFiles[0].type,
+      uploading: true,
+      progress: 0,
+    };
     dispatch(
       accFormStateTransactionAttachmentsRowAdd({
-        row: {
-          key: key,
-          name: newFiles[0].name,
-          aType: "file",
-          isNew: true,
-          type: newFiles[0].type,
-          uploading: true,
-          progress: 0,
-        },
+        row,
       })
     );
 debugger;
@@ -92,12 +95,13 @@ debugger;
       }
     );
     if(res.isOk) {
+      debugger;
  dispatch(
   accFormStateTransactionAttachmentsRowUpdate({
         row: {
-          ...res.item,
+          ...row,
+          id: res.item.attachmentId,
           isNew: true,
-          type: newFiles[0].type,
           uploading: false,
           uploaded: true,
           progress: 100,
@@ -215,11 +219,11 @@ debugger;
             </svg>
             <div className="flex-grow min-w-0 flex items-center justify-between">
               <div className="flex items-center space-x-2 overflow-hidden">
-                <p className="font-medium truncate text-sm">{file?.file?.name}</p>
+                <p className="font-medium truncate text-sm">{file?.name}</p>
               </div>
               <div className="flex items-center space-x-2">
                 <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
-                  {formatFileSize(file?.file?.size)}
+                  {formatFileSize(file?.size)}
                 </p>
                 <button
                   onClick={() => removeFile(file?.id)}

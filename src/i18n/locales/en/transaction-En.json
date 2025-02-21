@@ -10,7 +10,7 @@
   "billwise_details": "Billwise details",
   "acc_transaction": "Acc transaction",
   "cost_centre_id": "Cost centre id",
-  "check_status": "Check status",
+  "check_status": "Check Status",
   "amount_FC": "Amount FC",
   "debit": "Debit",
   "credit": "Credit",
@@ -193,7 +193,7 @@
   "is_cleared": "Is cleared",
   "ledger_id": "Ledger id",
   "related_ledger_id": "Related ledger id",
-  "bank_charge": "Bank charge",
+  "bank_charge": "Bank Charge",
   "post_dated_cheques": "Post Dated Cheques",
   "payment": "Payment",
   "receipt": "Receipt",
@@ -309,5 +309,10 @@
   "invoice_date":"Invoice date",
   "taxable_amount":"Taxable amount",
   "tax%":"Tax%",
-  "tax_amount":"Tax amount"
+  "tax_amount":"Tax amount",
+
+  "cleared_pdc_cannot_be_modified":"Cleared PDC cannot be modified",
+  "bounced_pdc_cannot_be_modified":"Bounced PDC cannot be modified",
+  "contains_multiple_statuses":"Contains multiple statuses, only a single status cleared is accepted. Ensure all statuses are the same",
+  "voucher_in_use":"Voucher in use"
 }

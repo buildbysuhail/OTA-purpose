@@ -180,7 +180,7 @@ const RevertBillModifications: React.FC = () => {
       <ERPModal
         isOpen={rootState.PopupData.revertBillModifications.isOpen || false}
         title={t("revert_bill_modifications")}
-        width="w-full max-w-[600px]"
+        // width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleRevertBillModifications({ isOpen: false, key: null,reload: false }));

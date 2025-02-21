@@ -223,8 +223,9 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
           isFullHeight
           isOpen={true}
           hasSubmit={false}
-          width="w-[900px]"
-          minHeight={800}
+          width={800}
+          height={600}
+          minHeight={600}
           closeTitle={t("close")}
           title={t("voucher_selector")}
           content={

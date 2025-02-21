@@ -253,7 +253,7 @@ const AccountGroupTypeTest = () => {
       <ERPModal
         isOpen={rootState.PopupData.accountGroup.isOpen || false}
         title="Account Group test"
-        width="w-full max-w-[600px]"
+        width={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,reload: false }));

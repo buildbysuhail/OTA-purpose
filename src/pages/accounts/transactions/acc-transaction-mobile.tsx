@@ -470,7 +470,8 @@ const AccTransactionMobile = () => {
               hasSubmit={false}
               closeTitle="Close"
               title="Add Ledger"
-              width="w-full"
+              width={1000}
+              height={800}
               isFullHeight={true}
               isRemoveSomething={true}
               closeModal={() => setIsOpen(false)}

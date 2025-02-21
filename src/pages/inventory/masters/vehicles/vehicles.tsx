@@ -247,7 +247,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
       <ERPModal
         isOpen={rootState.PopupData.vehicles.isOpen || false}
         title={t("vehicles")}
-        width="w-full max-w-[600px]"
+   
         isForm={true}
         closeModal={() => {
           dispatch(toggleVehicles({ isOpen: false }));

@@ -316,7 +316,7 @@ const NotificationSettings = () => {
           title={
             tooltip.channel === "sms" ? "Sms Template" : "WhatsApp  Template"
           }
-          width="w-full max-w-[600px]"
+          // width="w-full max-w-[600px]"
           isForm={true}
           closeModal={() => {
             setTooltip((prevTooltip) => ({
@@ -341,7 +341,7 @@ const NotificationSettings = () => {
         <ERPModal
           isOpen={tooltip.isOpen || false}
           title={"Email Template"}
-          width="w-full max-w-[800px]"
+          // width="w-full max-w-[800px]"
           isForm={true}
           closeModal={() => {
             setTooltip((prevTooltip) => ({

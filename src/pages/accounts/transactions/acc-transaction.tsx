@@ -4132,6 +4132,8 @@ const prevNation = formState.row.narration;
         <ERPModal
           isOpen={formState.printPreview && isPrintModalOpen}
           title={t("Template")}
+          width={1000}
+          height={700}
           isForm={true}
           closeModal={() => {
             setIsPrintModalOpen(false);

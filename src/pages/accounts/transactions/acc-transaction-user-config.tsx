@@ -359,7 +359,7 @@ export const AccTransactionUserConfig = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
               <p className="switcher-style-head ">{t("input_box_style")}:</p>
               <InputBoxStyling
                 isInputBgColor
@@ -368,7 +368,7 @@ export const AccTransactionUserConfig = () => {
               />
             </div>
 
-            <div className="w-full p-2 flex justify-end space-x-2">
+            <div className="w-full p-2 flex justify-end space-x-2 mb-3">
               <ERPButton
                 title={t("reset")}
                 onClick={resetThemeChange}

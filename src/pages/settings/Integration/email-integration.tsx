@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";
-import {
-  SMSIntegrationData,
-} from "./sms-integration-type";
+import { SMSIntegrationData } from "./sms-integration-type";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../helpers/api-client";
@@ -19,9 +17,7 @@ interface information {
 }
 const EmailIntegration = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const { t } = useTranslation("integration");
-
   const EmailTwilioConnectPopup: React.FC = () => {
     const initialState: information = {
       AccountSid: "",
@@ -45,9 +41,7 @@ const EmailIntegration = () => {
         const response: SMSIntegrationData[] = await api.getAsync(
           `${Urls.notification_provider}GetByChannel?channel=3`
         );
-
         setFormState(response);
-
         if (response.length > 0 && response[0].configJson) {
           try {
             const parsedConfig = JSON.parse(response[0].configJson);
@@ -77,13 +71,12 @@ const EmailIntegration = () => {
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       const configJson = JSON.stringify(information);
-      const requestBody={
-        provider:NotificationsProvider.FireBase,
-        channel:NotificationsChannel.Email,
-        configJson:configJson,
-        isEnable:true,
+      const requestBody = {
+        provider: NotificationsProvider.FireBase,
+        channel: NotificationsChannel.Email,
+        configJson: configJson,
+        isEnable: true,
       };
-
       try {
         const response = await api.post(
           `${Urls.notification_provider}`,
@@ -109,8 +102,7 @@ const EmailIntegration = () => {
               href="https://www.twilio.com/try-twilio"
               className="text-[#2589BD] hover:underline block mb-4"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               {t("go_to_twilio")}
             </a>
             <div className="flex items-center my-4">
@@ -128,7 +120,6 @@ const EmailIntegration = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
-
                 <ERPInput
                   id="AccountSid"
                   value={information.AccountSid}
@@ -140,6 +131,7 @@ const EmailIntegration = () => {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <ERPInput
                   id="AuthToken"
@@ -152,6 +144,7 @@ const EmailIntegration = () => {
                   }
                 />
               </div>
+
               <div className="mb-6">
                 <ERPInput
                   id="FromPhone"
@@ -183,7 +176,6 @@ const EmailIntegration = () => {
       <h1 className="text-2xl font-bold mb-4 dark:text-dark-text text-gray-800">
         {t("email_integrations")}
       </h1>
-
       <div className="flex items-center justify-between mb-4 p-4 dark:!bg-dark-bg-card bg-gray-50 rounded-lg">
         <div className="flex items-center">
           {/* <img src="/api/placeholder/40/40" alt="Twilio logo" className="mr-4 rounded" /> */}
@@ -194,10 +186,7 @@ const EmailIntegration = () => {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
-        >
+        <button onClick={() => setIsOpen(true)} className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors">
           {t("connect")}
         </button>
       </div>
@@ -225,8 +214,7 @@ const EmailIntegration = () => {
               href="https://www.twilio.com/try-twilio"
               className="text-[#2589BD] hover:underline"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               {t("sign_up_now")}
             </a>
           </li>
@@ -239,8 +227,7 @@ const EmailIntegration = () => {
               href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
               className="text-[#2589BD] hover:underline flex items-center"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               {t("read_more")}
               {/* <ExternalLink size={14} className="ml-1" /> */}
               <i className="ri-external-link-line"></i>
@@ -252,12 +239,10 @@ const EmailIntegration = () => {
       <ERPModal
         isOpen={isOpen}
         title={t("twilio")}
-        width={800}
+        width={600}
         height={600}
         isForm={true}
-        closeModal={() => {
-          setIsOpen(false);
-        }}
+        closeModal={() => { setIsOpen(false); }}
         content={<EmailTwilioConnectPopup />}
       />
     </div>

@@ -495,5 +495,7 @@
     "print_invoice":"Print invoice",
     "change_template":"Change template",
     "more":"More",
-    "model":"Model"
+    "model":"Model",
+
+    "are_you_sure_you_want_to_delete_this_item":"Are you sure you want to delete this item ?"
 }

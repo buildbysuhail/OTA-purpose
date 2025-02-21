@@ -6,45 +6,42 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
-import ERPButton from "../../../components/ERPComponents/erp-button";
 import { ActionType } from "../../../redux/types";
 import ERPFormButtons from "../../../components/ERPComponents/erp-form-buttons";
 
 export interface BranchResetData {
   date: string;
- isAgree: boolean;
+  isAgree: boolean;
 }
 export const initialBranchResetData = {
   data: {
     date: "",
-   isAgree: false,
+    isAgree: false,
   },
   validations: {
     date: "",
-   isAgree: "",
+    isAgree: "",
   },
 };
 export const BranchDataReset: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { t } = useTranslation("system");
   const { isEdit,
-     handleClear, 
-     handleSubmit, 
-     handleFieldChange, 
-     getFieldProps, 
-     isLoading,
-     handleClose 
-    } =useFormManager<BranchResetData>({
-      url: Urls.branchDataReset,
-      onClose:useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false, key: null,reload: false })), [dispatch]),
-      onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
-      method: ActionType.POST,
-      useApiClient: true,
-      loadDataRequired: false
-    });
-  const onClose = useCallback(() => {
-    dispatch(toggleResetBranchDataForSync({ isOpen: false }));
-  }, [dispatch]);
+    handleClear,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+    handleClose
+  } = useFormManager<BranchResetData>({
+    url: Urls.branchDataReset,
+    onClose: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
+    method: ActionType.POST,
+    useApiClient: true,
+    loadDataRequired: false
+  });
+  const onClose = useCallback(() => {  dispatch(toggleResetBranchDataForSync({ isOpen: false }));}, [dispatch]);
 
   return (
     <div className="w-full modal-content">
@@ -53,28 +50,29 @@ export const BranchDataReset: React.FC = React.memo(() => {
           {...getFieldProps("date")}
           label={t("reset_date_from")}
           required={true}
-          onChangeData={(data:any) => handleFieldChange("date",data.date)}
+          onChangeData={(data: any) => handleFieldChange("date", data.date)}
         />
-          <ERPCheckbox
+        <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("recover_until_sync")}
+          className="text-left"
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
       </div>
-        <ERPFormButtons
-           onClear={handleClear}
-           isLoading={isLoading}
-           onCancel={handleClose}
-           onSubmit={handleSubmit}
-         />
-          {/* <ERPButton
+      <ERPFormButtons
+        onClear={handleClear}
+        isLoading={isLoading}
+        onCancel={handleClose}
+        onSubmit={handleSubmit}
+      />
+      {/* <ERPButton
             title={t("reset")}
             variant="primary"
             className="h-10 w-24"
             loading={isLoading}
             onClick={handleSubmit}>
           </ERPButton> */}
-      
+
     </div>
   );
 });

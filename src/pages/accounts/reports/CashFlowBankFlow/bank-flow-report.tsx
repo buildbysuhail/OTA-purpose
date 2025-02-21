@@ -278,7 +278,7 @@ const BankFlowReport = () => {
                   // }}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:dataField == "showSummary"? t("bank_flow_report_summary"):t("bank_flow_report_detailed"),
-                    width: "max-w-[1500px]",
+                    width: 1500,
                     isForm: false,
                     content: 
                     dataField == "showSummary" ?

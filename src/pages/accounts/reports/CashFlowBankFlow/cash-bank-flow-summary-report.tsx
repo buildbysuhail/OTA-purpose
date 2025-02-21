@@ -35,7 +35,7 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
   
     useEffect(() => {
       let gridHeightMobile = modalHeight - 50; 
-      let gridHeightWindows = modalHeight - 180; 
+      let gridHeightWindows = modalHeight - 135; 
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [isMaximized,modalHeight]);
 
@@ -264,7 +264,7 @@ const  CashBankFlowDetailedSummaryReport: FC<CashFlowBankFlowDetailedSummaryProp
                   hideGridAddButton={true}
                   childPopupPropsDynamic={(dataField: string) => ({
                     title:origin=="cash_flow"? t("cash_flow_report_summary"):t("bank_flow_report_summary"),
-                    width: "max-w-[1500px]",
+                    width: 1500,
                     isForm: false,
                     content: 
                     dataField == "ledgerNameIN" ?

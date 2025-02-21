@@ -462,7 +462,7 @@ const DailySummaryGlobal = () => {
                   gridId="grd_daily_summary_global"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="100"
+                  // filterWidth="100"
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}

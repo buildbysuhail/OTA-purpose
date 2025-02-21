@@ -351,6 +351,8 @@ const LedgerReport = () => {
                   showFilterInitially={true}
                   method={ActionType.POST}
                   filterContent={<LedgerReportFilter />}
+                  filterHeight={430}
+                  filterWidth={650}
                   filterInitialData={LedgerReportFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   reload={true}

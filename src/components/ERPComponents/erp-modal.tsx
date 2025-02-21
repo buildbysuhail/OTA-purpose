@@ -143,30 +143,6 @@ debugger;
       window.addEventListener("resize", updateModalDimensions);
       return () => window.removeEventListener("resize", updateModalDimensions);
     }, [isMaximized, height, width]);
-// useEffect(() => {
-//   const updateModalDimensions = () => {
-//     const newHeight = isMaximized
-//       ? window.innerHeight - 50
-//       : window.innerHeight < height
-//       ? window.innerHeight-25
-//       : height;
-
-//     const newWidth = isMaximized
-//       ? window.innerWidth - 40
-//       : width;
-
-//     setModalHeight(newHeight);
-//     setModalWidth(newWidth);
-//     setRndKey((prev) => prev + 1); // Force Rnd to reset
-//   };
-
-//   updateModalDimensions();
-//   window.addEventListener("resize", updateModalDimensions);
-
-//   return () => {
-//     window.removeEventListener("resize", updateModalDimensions);
-//   };
-// }, [isMaximized, height, width]);
 
     const handleClose = () => {
       closeModal(false);

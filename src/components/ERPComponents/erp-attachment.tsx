@@ -95,6 +95,7 @@ debugger;
       }
     );
     if(res.isOk) {
+      debugger;
  dispatch(
   accFormStateTransactionAttachmentsRowUpdate({
         row: {

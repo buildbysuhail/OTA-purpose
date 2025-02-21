@@ -5,10 +5,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
-import {
-  AccountLedgerData,
-  initialAccountLedger,
-} from "./account-ledger-types";
+import { AccountLedgerData, initialAccountLedger, } from "./account-ledger-types";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
@@ -31,20 +28,8 @@ export const AccountLedgerManage = () => {
     formState,
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
-    onSuccess: useCallback(
-      () =>
-        dispatch(
-          toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true })
-        ),
-      [dispatch]
-    ),
-    onClose: useCallback(
-      () =>
-        dispatch(
-          toggleAccountLedgerPopup({ isOpen: false, key: null, reload: false })
-        ),
-      [dispatch]
-    ),
+    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.accountLedger.key,
     useApiClient: true,
     initialData: initialAccountLedger,
@@ -58,6 +43,7 @@ export const AccountLedgerManage = () => {
       load();
     }
   }, [rootState.PopupData.accountLedger.data?.groupId]);
+
   const load = async () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);
@@ -96,34 +82,29 @@ export const AccountLedgerManage = () => {
           label={t("code")}
           placeholder={t("enter_code")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("ledgerCode", data.ledgerCode)
-          }
+          onChangeData={(data: any) => handleFieldChange("ledgerCode", data.ledgerCode)}
         />
+
         <ERPInput
           {...getFieldProps("ledgerName")}
           label={t("name")}
           placeholder={t("enter_name")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("ledgerName", data.ledgerName)
-          }
+          onChangeData={(data: any) => handleFieldChange("ledgerName", data.ledgerName)}
         />
+
         <ERPInput
           {...getFieldProps("aliasName")}
           label={t("alias_name")}
           placeholder={t("enter_alias_name")}
-          onChangeData={(data: any) =>
-            handleFieldChange("aliasName", data.aliasName)
-          }
+          onChangeData={(data: any) => handleFieldChange("aliasName", data.aliasName)}
         />
+
         <ERPInput
           {...getFieldProps("arabicName")}
           label={t("name_in_arabic")}
           placeholder={t("enter_name_in_arabic")}
-          onChangeData={(data: any) =>
-            handleFieldChange("arabicName", data.arabicName)
-          }
+          onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
         />
 
         <ERPDataCombobox
@@ -135,9 +116,7 @@ export const AccountLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data.accGroupID);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("accGroupID", data.accGroupID); }}
           disabled={
             rootState.PopupData.accountLedger.data != undefined &&
             rootState.PopupData.accountLedger.data != null &&
@@ -154,14 +133,12 @@ export const AccountLedgerManage = () => {
               <>
                 <div className="">
                   <ERPInput
-                    {...getFieldProps("opBalance","decimal")}
+                    {...getFieldProps("opBalance", "decimal")}
                     label={t("opening_balance")}
                     min={0}
                     placeholder={t('opening_balance')}
                     type="number"
-                    onChangeData={(data: any) =>
-                      handleFieldChange("opBalance", parseFloat(data.opBalance))
-                    }
+                    onChangeData={(data: any) => handleFieldChange("opBalance", parseFloat(data.opBalance))}
                   />
                 </div>
                 <div className="">
@@ -172,9 +149,7 @@ export const AccountLedgerManage = () => {
                       valueKey: "value",
                       labelKey: "label",
                     }}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("drCr", data.drCr)
-                    }
+                    onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
                     label={t("drcr")}
                     enableClearOption={false}
                     options={[
@@ -188,33 +163,28 @@ export const AccountLedgerManage = () => {
           {/* </div> */}
         </div>
       </div>
+      
       <div className="flex items-center gap-3 mt-2">
         <div className="w-full">
           <ERPInput
             {...getFieldProps("remarks")}
             label={t("remarks")}
             placeholder={t("enter_remarks")}
-            onChangeData={(data: any) =>
-              handleFieldChange("remarks", data.remarks)
-            }
+            onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-4 ps-1">
+      <div className="grid grid-cols-2 gap-4 mt-4 ps-1 text-left">
         <ERPCheckbox
           {...getFieldProps("isBillwiseApplicable")}
           label={t("bill_wise_applicable")}
-          onChangeData={(data: any) =>
-            handleFieldChange("isBillwiseApplicable", data.isBillwiseApplicable)
-          }
+          onChangeData={(data: any) => handleFieldChange("isBillwiseApplicable", data.isBillwiseApplicable)}
         />
         <ERPCheckbox
           {...getFieldProps("isActive")}
           label={t("active")}
-          onChangeData={(data: any) =>
-            handleFieldChange("isActive", data.isActive)
-          }
+          onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
         />
         {/* <ERPCheckbox
           {...getFieldProps("isEditable")}
@@ -229,19 +199,12 @@ export const AccountLedgerManage = () => {
         <ERPCheckbox
           {...getFieldProps("isCostCentreApplicable")}
           label={t("cost_center_applicable")}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "isCostCentreApplicable",
-              data.isCostCentreApplicable
-            )
-          }
+          onChangeData={(data: any) => handleFieldChange("isCostCentreApplicable", data.isCostCentreApplicable)}
         />
         <ERPCheckbox
           {...getFieldProps("isCommon")}
           label={t("is_common")}
-          onChangeData={(data: any) =>
-            handleFieldChange("isCommon", data.isCommon)
-          }
+          onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
         />
       </div>
       <ERPFormButtons

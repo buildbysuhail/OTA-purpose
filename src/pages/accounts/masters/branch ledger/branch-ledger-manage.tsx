@@ -23,7 +23,7 @@ export const BranchLedgerManage = () => {
     handleClose
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
-    onClose: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     keyField: "branchLedgerID",
@@ -44,11 +44,10 @@ export const BranchLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("refBranchID", data?.refBranchID)
-          }}
+          onChangeData={(data: any) => { handleFieldChange("refBranchID", data?.refBranchID) }}
           label={t("reference_branch")}
         />
+
         <ERPDataCombobox
           {...getFieldProps("purchaseLedgerID")}
           field={{
@@ -61,11 +60,10 @@ export const BranchLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("purchaseLedgerID", data?.purchaseLedgerID)
-          }}
+          onChangeData={(data: any) => { handleFieldChange("purchaseLedgerID", data?.purchaseLedgerID) }}
           label={t("purchase_ledger")}
         />
+
         <ERPDataCombobox
           {...getFieldProps("receivableLedgerID")}
           field={{
@@ -75,11 +73,10 @@ export const BranchLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("receivableLedgerID", data?.receivableLedgerID)
-          }}
+          onChangeData={(data: any) => { handleFieldChange("receivableLedgerID", data?.receivableLedgerID) }}
           label={t("receivable_ledger")}
         />
+
         <ERPDataCombobox
           {...getFieldProps("branchPayableLedgerID")}
           field={{
@@ -92,9 +89,7 @@ export const BranchLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("branchPayableLedgerID", data?.branchPayableLedgerID)
-          }}
+          onChangeData={(data: any) => { handleFieldChange("branchPayableLedgerID", data?.branchPayableLedgerID) }}
           label={t("branch_payable_ledger")}
         />
       </div>

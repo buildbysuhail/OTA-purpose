@@ -95,7 +95,6 @@ const CurrencyMaster = () => {
       width: 100,
       visible: false
     },
-
     {
       dataField: "actions",
       caption: t("actions"),
@@ -110,18 +109,9 @@ const CurrencyMaster = () => {
           view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
           edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId, reload: false }) }}
           delete={{
-
-            onSuccess: () => {
-              dispatch(
-                toggleCurrencyMasterPopup({
-                  isOpen: false,
-                  key: null,
-                  reload: true,
-                })
-              );
-            },
+            onSuccess: () => { dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true, })) },
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
+            confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
             url: Urls?.account_currency_master, key: cellElement?.data?.currencyId
           }}
         />
@@ -129,9 +119,7 @@ const CurrencyMaster = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(toggleCurrencyMasterPopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleCurrencyMasterPopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -146,14 +134,10 @@ const CurrencyMaster = () => {
                   gridId="grd_currency_master"
                   popupAction={toggleCurrencyMasterPopup}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleCurrencyMasterPopup({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleCurrencyMasterPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.currencyMaster?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -165,9 +149,7 @@ const CurrencyMaster = () => {
         width={600}
         height={210}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedCurrencyMasterManage />}
       />
     </Fragment>

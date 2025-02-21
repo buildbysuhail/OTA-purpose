@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -137,17 +137,9 @@ const Upi = () => {
             view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
             edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
             delete={{
-              onSuccess: () => {
-                dispatch(
-                  toggleUpi({
-                    isOpen: false,
-                    key: null,
-                    reload: true,
-                  })
-                );
-              },
+              onSuccess: () => { dispatch(toggleUpi({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
               url: Urls?.account_group, key: cellElement?.data?.paymentTypeID
             }}
           />
@@ -155,9 +147,7 @@ const Upi = () => {
       },
     }
   ], []);
-  useEffect(() => {
-    dispatch(toggleUpi({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleUpi({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -172,14 +162,10 @@ const Upi = () => {
                   gridId="grd_acc_group"
                   popupAction={toggleUpi}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleUpi({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleUpi({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.upi?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -191,9 +177,7 @@ const Upi = () => {
         width={600}
         height={210}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleUpi({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleUpi({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedUpiManage />}
       />
     </Fragment>

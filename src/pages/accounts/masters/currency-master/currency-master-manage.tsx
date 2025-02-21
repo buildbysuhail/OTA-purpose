@@ -16,7 +16,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, handleClose } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
-      onClose: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+      onClose: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
       onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
       keyField: "currencyId",
@@ -37,56 +37,50 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           required={true}
-          onChangeData={(data: any) => {
-            handleFieldChange("countryID", data.countryID);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("countryID", data.countryID); }}
           label={t("country")}
         />
+
         <ERPInput
           {...getFieldProps("currencyCode")}
           label={t("currency_code")}
           placeholder={t("currency_code")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("currencyCode", data.currencyCode)
-          }
+          onChangeData={(data: any) => handleFieldChange("currencyCode", data.currencyCode)}
         />
+
         <ERPInput
           {...getFieldProps("currencyName")}
           label={t("currency_name")}
           placeholder={t("currency_name")}
           required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("currencyName", data.currencyName)
-          }
+          onChangeData={(data: any) => handleFieldChange("currencyName", data.currencyName)}
         />
+
         <ERPInput
           {...getFieldProps("currencySymbol")}
           label={t("currency_symbol")}
           placeholder={t("currency_symbol")}
           required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("currencySymbol", data.currencySymbol)
-          }
+          onChangeData={(data: any) => handleFieldChange("currencySymbol", data.currencySymbol)}
         />
+
         <ERPInput
           {...getFieldProps("subUnit")}
           label={t("sub_unit")}
           placeholder={t("sub_unit")}
           required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("subUnit", data.subUnit)
-          }
+          onChangeData={(data: any) => handleFieldChange("subUnit", data.subUnit)}
         />
+
         <ERPInput
           {...getFieldProps("subUnitSymbol")}
           label={t("sub_unit_symbol")}
           placeholder={t("sub_unit_symbol")}
           required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("subUnitSymbol", data.subUnitSymbol)
-          }
+          onChangeData={(data: any) => handleFieldChange("subUnitSymbol", data.subUnitSymbol)}
         />
+
         {/* <ERPCheckbox
           {...getFieldProps("isEdit")}
           label="isEdit"
@@ -97,6 +91,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           label="isDelete"
           onChangeData={(data: any) => handleFieldChange("isDelete", data)}
         /> */}
+
       </div>
       <ERPFormButtons
         onClear={handleClear}

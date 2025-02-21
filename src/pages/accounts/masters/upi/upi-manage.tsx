@@ -47,10 +47,7 @@ export const UpiManage: React.FC = React.memo(() => {
             valueKey: "value",
             labelKey: "label"
           }}
-          onChange={(data: any) => {
-            
-            handleFieldChange({ paymentType: data.value, paymentName: data.label })
-          }}
+          onChange={(data: any) => {  handleFieldChange({ paymentType: data.value, paymentName: data.label })}}
           label={userSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
           options={[
             { value: 'AMAZON_PAY', label: 'AMAZON PAY' },
@@ -79,12 +76,14 @@ export const UpiManage: React.FC = React.memo(() => {
             { value: 'ZOMATO', label: 'ZOMATO' }
           ]}
         />
+
         <ERPInput
           {...getFieldProps('paymentName')}
           label={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           placeholder={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           onChangeData={(data: any) => handleFieldChange('paymentName', data.paymentName)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("ledgerID")}
           field={{
@@ -94,11 +93,10 @@ export const UpiManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("ledgerID", data.ledgerID)
-          }}
+          onChangeData={(data: any) => {  handleFieldChange("ledgerID", data.ledgerID)}}
           label={t("ledger")}
         />
+        
         <ERPInput
           {...getFieldProps('remark')}
           label={t("remarks")}

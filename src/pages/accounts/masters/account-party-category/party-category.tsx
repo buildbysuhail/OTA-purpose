@@ -105,33 +105,12 @@ const PartyCategory = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{
-            type: "popup",
-            action: () =>
-              togglePartyCategoryPopup({
-                isOpen: true, key: cellElement?.data?.id, reload: false
-              }),
-          }}
-          edit={{
-            type: "popup",
-            action: () =>
-              togglePartyCategoryPopup({
-                isOpen: true,
-                key: cellElement?.data?.id, reload: false
-              }),
-          }}
+          view={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }), }}
+          edit={{ type: "popup", action: () => togglePartyCategoryPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }), }}
           delete={{
-            onSuccess: () => {
-              dispatch(
-                togglePartyCategoryPopup({
-                  isOpen: false,
-                  key: null,
-                  reload: true,
-                })
-              );
-            },
+            onSuccess: () => { dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
+            confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
             url: Urls?.account_party_category,
             key: cellElement?.data?.id,
           }}
@@ -139,9 +118,7 @@ const PartyCategory = () => {
       ),
     },
   ];
-  useEffect(() => {
-    dispatch(togglePartyCategoryPopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(togglePartyCategoryPopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -155,15 +132,11 @@ const PartyCategory = () => {
                 gridId="grd_party_category"
                 popupAction={togglePartyCategoryPopup}
                 gridAddButtonType="popup"
-                changeReload={(reload: any) => {
-                  dispatch(
-                    togglePartyCategoryPopup({ ...rootState, reload: reload })
-                  );
-                }}
+                changeReload={(reload: any) => { dispatch(togglePartyCategoryPopup({ ...rootState, reload: reload })); }}
                 reload={rootState?.PopupData?.partyCategory?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
-              ></ErpDevGrid>
+              />
             </div>
           </div>
         </div>
@@ -174,9 +147,7 @@ const PartyCategory = () => {
         width={600}
         height={180}
         isForm={true}
-        closeModal={() => {
-          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedPartyCategoryManage />}
       />
     </Fragment>

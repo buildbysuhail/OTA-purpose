@@ -1,12 +1,7 @@
 import "devextreme/dist/css/dx.light.css";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, } from "react-router-dom";
 import Loader from "./components/common/loader/loader";
 import Switcher from "./components/common/switcher/switcher";
 import Layout from "./components/common/layout/layout";
@@ -14,22 +9,15 @@ import Login from "./pages/auth/Login";
 import usFlag from "./assets/images/flags/us_flag.png";
 import { useAppDispatch, useAppSelector } from "./utilities/hooks/useAppDispatch";
 import "./i18n/config";
-
 import { APIClient } from "./helpers/api-client";
 import AccountSettingsLayout from "./components/common/layout/account-settings-layout";
 import WorkspaceSettingsLayout from "./components/common/layout/workspace-settings-layout";
 import Logout from "./pages/auth/Logout";
 import OrgSelect from "./pages/OrgSelect";
-import {
-  initialUserSessionData,
-  UserModel,
-} from "./redux/slices/user-session/reducer";
+import { initialUserSessionData, UserModel, } from "./redux/slices/user-session/reducer";
 import { customJsonParse, modelToBase64 } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
-import {
-  AppState,
-  languagesData,
-} from "./redux/slices/app/types";
+import { AppState, languagesData, } from "./redux/slices/app/types";
 import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
 import ReportsLayout from "./components/common/layout/reports-layout";
@@ -63,16 +51,12 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
-
-
   useEffect(() => {
     const sd = moment().local(); // Ensure local time is used
     const asd = sd.format("DD/MM/YYYY");
     dispatch(setSoftwareDate(asd));
-    
- 
   }, []);
-  
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -83,9 +67,9 @@ function App() {
         console.error("Error fetching application settings:", error);
       }
     };
-  
     fetchSettings();
   }, []);
+
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
     try {
@@ -95,8 +79,8 @@ function App() {
       console.error("Error getting device info:", error);
     }
   };
-
   _setDeviceInfo();
+
   // const { appState, updateAppState } = useAppState();
   let api = new APIClient();
   const dispatch = useAppDispatch();
@@ -106,8 +90,6 @@ function App() {
   const { pathname } = useLocation();
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const { i18n } = useTranslation()
-
-  
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const { isModalOpen, handleStay, handleLeave } = useUnsavedChangesWarning();
 
@@ -117,24 +99,22 @@ function App() {
     let urr = localStorage.getItem("ur");
     let utt = localStorage.getItem("ut");
     let css = localStorage.getItem("cs");
-   
-  
-  
+
     let userRights: UserTypeRights[] = [];
     try {
       if (urr != undefined && urr != null && urr != "") {
         userRights = customJsonParse(atob(urr));
       }
     } catch (error) { }
-  
-  
+
+
     let userProfileDetails: UserModel = initialUserSessionData;
     try {
       if (upt != undefined && upt != null && upt != "") {
         userProfileDetails = customJsonParse(atob(upt));
       }
     } catch (error) { }
-  
+
     let userThemes: AppState = appInitialState;
     try {
       if (utt != undefined && utt != null && utt != "") {
@@ -145,14 +125,14 @@ function App() {
       (l) => l.code == userProfileDetails.language
     ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
     let clientSession: ClientSessionModel = {
-      demoExpiryDate: moment().add(1,"years").toISOString(),
-      isAppGlobal: false,isDemoVersion: true,softwareDate:moment().local().toISOString(),counterShiftId: 0
+      demoExpiryDate: moment().add(1, "years").toISOString(),
+      isAppGlobal: false, isDemoVersion: true, softwareDate: moment().local().toISOString(), counterShiftId: 0
     };
     if (css != undefined && css != null && css != "") {
- clientSession =
-                customJsonParse(css);
+      clientSession =
+        customJsonParse(css);
     }
-    syncAppStates(dispatch, userThemes, clientSession,userProfileDetails,userRights, locale);
+    syncAppStates(dispatch, userThemes, clientSession, userProfileDetails, userRights, locale);
     const language = userProfileDetails?.language;
 
     if (!token && pathname !== "/shared-view") {
@@ -168,7 +148,7 @@ function App() {
   }, []);
 
 
- 
+
   // useEffect(() => {
   //   if (locale && i18n && typeof i18n.changeLanguage === "function") {
   //     i18n.changeLanguage(language);
@@ -198,6 +178,7 @@ function App() {
     import("preline");
   }, []);
 
+  const { t } = useTranslation('main')
   return (
     <Fragment>
       <Loader />
@@ -216,8 +197,7 @@ function App() {
           }}
         />
         <Switcher />
-        <AutoClicker/>
-
+        <AutoClicker />
         <div className="page dark:!bg-dark-bg" onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
@@ -227,72 +207,58 @@ function App() {
               <Route path="switch-organization" element={<OrgSelect />} />
               {/* <Route path="create-organization" element={<Organization />} />
                */}
-              <Route
-                path="account-settings/*"
-                element={<AccountSettingsLayout setMyClass={setMyClass} />}
-              />
-              <Route
-                path="rpos/*"
-                element={<RPosLayout setMyClass={setMyClass} />}
-              />
-
-              <Route
-                path="settings/_/*"
-                element={<SettingsLayout setMyClass={setMyClass} />}
-              />
-              <Route
-                path="reports/_/*"
-                element={<ReportsLayout setMyClass={setMyClass} />}
-              />
-              <Route
-                path="invoice_designer/*"
-                element={<TemplateDesignerLayout />}
-              />
-              <Route
-                path="workspace-settings/*"
-                element={<WorkspaceSettingsLayout setMyClass={setMyClass} />}
-              />
-              <Route path="label-designer/:id" element={<PDFBarcodeDesigner />} /> 
+              <Route path="account-settings/*" element={<AccountSettingsLayout setMyClass={setMyClass} />} />
+              <Route path="rpos/*" element={<RPosLayout setMyClass={setMyClass} />} />
+              <Route path="settings/_/*" element={<SettingsLayout setMyClass={setMyClass} />} />
+              <Route path="reports/_/*" element={<ReportsLayout setMyClass={setMyClass} />} />
+              <Route path="invoice_designer/*" element={<TemplateDesignerLayout />} />
+              <Route path="workspace-settings/*" element={<WorkspaceSettingsLayout setMyClass={setMyClass} />} />
+              <Route path="label-designer/:id" element={<PDFBarcodeDesigner />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </Suspense>
-
         </div>
       </HelmetProvider>
+
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
       {/* <div className=" w-1/4 h-full  bg-black fixed top-0 right-0">
       <ERPAttachment />
       </div> */}
+
       {deviceInfo?.isMobile && (
-        <div className="w-full h-16 bg-white fixed bottom-0 left-0">            
+        <div className="w-full h-16 bg-white fixed bottom-0 left-0">
           <MobileFooter />
         </div>
       )}
-      {withUnsavedChange.warn && (
-        <ERPAlert
-          showAnimation='animate__fadeIn'
-          hideAnimation='animate__fadeOut'
-          title="Are you sure?"
-          text="Unsaved Changes"
-          icon="warning"
-          position="center"
-          confirmButtonText="Ok"
-          cancelButtonText="Cancel"
-          onConfirm={() => dispatch(onCloseWithUnsavedChange({warn: false, succeeded: true, canceled: false}))}
+
+      {
+        withUnsavedChange.warn && (
+          <ERPAlert
+            showAnimation='animate__fadeIn'
+            hideAnimation='animate__fadeOut'
+            title={t("are_you_sure")}
+            text={t("unsaved_changes")}
+            icon="warning"
+            position="center"
+            confirmButtonText={t("ok")}
+            cancelButtonText={t("cancel")}
+            onConfirm={() => dispatch(onCloseWithUnsavedChange({ warn: false, succeeded: true, canceled: false }))}
           // onCancel={() =>dispatch(onCloseWithUnsavedChange({warn: false, succeeded: false, canceled: true}))}
-        />
-      )}
-      {isModalOpen && (
-        <UnsavedChangesModal
-          isOpen={isModalOpen}
-          onClose={handleStay}
-          onStay={handleStay}
-          onLeave={handleLeave}
-        />
-      )}
+          />
+        )
+      }
+      {
+        isModalOpen && (
+          <UnsavedChangesModal
+            isOpen={isModalOpen}
+            onClose={handleStay}
+            onStay={handleStay}
+            onLeave={handleLeave}
+          />
+        )
+      }
     </Fragment>
   );
 }
-
 export default App;

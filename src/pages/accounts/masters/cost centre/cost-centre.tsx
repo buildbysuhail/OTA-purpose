@@ -66,17 +66,9 @@ const CostCentre = () => {
           view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
           edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
           delete={{
-            onSuccess: () => {
-              dispatch(
-                toggleCostCentrePopup({
-                  isOpen: false,
-                  key: null,
-                  reload: true,
-                })
-              );
-            },
+            onSuccess: () => { dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: true, })); },
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
+            confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
             url: Urls?.cost_center,
             key: cellElement?.data?.costCentreID,
           }}
@@ -84,9 +76,7 @@ const CostCentre = () => {
       ),
     },
   ];
-  useEffect(() => {
-    dispatch(toggleCostCentrePopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleCostCentrePopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -101,14 +91,10 @@ const CostCentre = () => {
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleCostCentrePopup({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleCostCentrePopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.costCentre?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -120,9 +106,7 @@ const CostCentre = () => {
         width={600}
         height={315}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedCostCentreManage />}
       />
     </Fragment>

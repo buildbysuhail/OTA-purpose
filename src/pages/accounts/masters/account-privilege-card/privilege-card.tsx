@@ -186,17 +186,9 @@ const PrivilegeCard = () => {
           view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
           edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID, reload: false }) }}
           delete={{
-            onSuccess: () => {
-              dispatch(
-                togglePrivilegeCardPopup({
-                  isOpen: false,
-                  key: null,
-                  reload: true,
-                })
-              );
-            },
+            onSuccess: () => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true, })) },
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
+            confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
             url: Urls?.account_privilege_card,
             key: cellElement?.data?.privilegeCardsID
           }}
@@ -204,9 +196,7 @@ const PrivilegeCard = () => {
       ),
     },
   ], [t]);
-  useEffect(() => {
-    dispatch(togglePrivilegeCardPopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(togglePrivilegeCardPopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -221,14 +211,10 @@ const PrivilegeCard = () => {
                   gridId="grd_privilege_card"
                   popupAction={togglePrivilegeCardPopup}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      togglePrivilegeCardPopup({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(togglePrivilegeCardPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.privilegeCard?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -240,9 +226,7 @@ const PrivilegeCard = () => {
         width={800}
         height={380}
         isForm={true}
-        closeModal={() => {
-          dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false }));
-        }}
+        closeModal={() => { dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })) }}
         content={<MemoizedPrivilegeCardrManage />}
       />
     </Fragment>

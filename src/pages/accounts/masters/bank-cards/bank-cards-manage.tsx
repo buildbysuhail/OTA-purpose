@@ -24,7 +24,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
   } = useFormManager<BankCardsData>({
     url: Urls.bankCards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
-    onClose: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.bankCard.key,
     keyField: "paymentTypeID",
     useApiClient: true,
@@ -40,14 +40,10 @@ export const BankCardsManage: React.FC = React.memo(() => {
           {...getFieldProps("paymentType")}
           field={{
             id: "paymentType",
-
             valueKey: "value",
             labelKey: "label",
           }}
-          onChange={(data: any) => {
-            
-            handleFieldChange({ paymentType: data.value, paymentName: data.label })
-          }}
+          onChange={(data: any) => { handleFieldChange({ paymentType: data.value, paymentName: data.label }) }}
           label={t("bank_cards")}
           options={[
             { value: 'VISA', label: 'VISA' },
@@ -78,8 +74,8 @@ export const BankCardsManage: React.FC = React.memo(() => {
             { value: 'EASYSHOP_CARD', label: 'EASYSHOP CARD' },
             { value: 'PRESTIGE_CARD', label: 'PRESTIGE CARD' }
           ]}
-
         />
+
         <ERPInput
           {...getFieldProps('paymentName')}
           label={t("card_name")}
@@ -87,6 +83,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => { handleFieldChange('paymentName', data.paymentName) }}
         />
+
         <ERPDataCombobox
           {...getFieldProps("ledgerID")}
           field={{
@@ -96,11 +93,10 @@ export const BankCardsManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("ledgerID", data.ledgerID)
-          }}
+          onChangeData={(data: any) => { handleFieldChange("ledgerID", data.ledgerID) }}
           label={t("ledger")}
         />
+
         <ERPInput
           {...getFieldProps('remark')}
           label={t("remarks")}

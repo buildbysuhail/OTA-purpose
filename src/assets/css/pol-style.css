@@ -111,6 +111,48 @@
   padding: 0 3px 3px 0;
 }
 
+div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark {
+  animation: swal2-animate-error-x-mark .5s !important;
+  left: 7px !important;
+  top: -5px !important;
+}
+
+div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left] {
+  left: 0.0625em !important;
+  transform: rotate(45deg) !important;
+}
+
+div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right] {
+  right: 1em !important;
+  transform: rotate(-45deg) !important;
+}
+
+div:where(.swal2-icon).swal2-success .swal2-success-ring{
+    position: absolute !important;
+    z-index: 2 !important;
+    top: -0.25em !important;
+    left: 0.25em !important;
+    box-sizing: content-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: .25em solid rgba(165, 220, 134, .3) !important;
+    border-radius: 50% !important;
+}
+
+div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long] {
+  top: 2.375em !important;
+  right: -0.5em !important;
+  width: 2.9375em !important;
+  transform: rotate(-45deg) !important;
+}
+
+div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
+  top: 2.875em !important;
+  left: .8125em !important;
+  width: 1.5625em !important;
+  transform: rotate(45deg)!important ;
+}
+
 .react-resizable-handle-se {
   bottom: 0;
   right: 0;

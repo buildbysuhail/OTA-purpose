@@ -4,7 +4,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
-import {  useAppDispatch,  useAppSelector,} from "../../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector, } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
@@ -30,7 +30,7 @@ const AccountGroupType = () => {
         allowFiltering: true,
         width: 70,
         isLocked: true,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "id",
@@ -49,7 +49,7 @@ const AccountGroupType = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "shortName",
@@ -68,7 +68,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "remarks",
@@ -78,7 +78,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "isEditable",
@@ -88,7 +88,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "isDeletable",
@@ -98,7 +98,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf:true,
+        showInPdf: true,
       },
       {
         dataField: "isProtected",
@@ -108,7 +108,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false,
+        visible: false,
       },
       {
         dataField: "isCommon",
@@ -118,7 +118,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false,
+        visible: false,
       },
       {
         dataField: "createdUser",
@@ -164,7 +164,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        visible:false,
+        visible: false,
       },
       {
         dataField: "parentGroupId",
@@ -184,7 +184,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
-        visible:false,
+        visible: false,
       },
       {
         dataField: "displayOrder",
@@ -194,7 +194,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        visible:false,
+        visible: false,
       },
       {
         dataField: "actions",
@@ -205,6 +205,7 @@ const AccountGroupType = () => {
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any, cellInfo: any) => {
           return (
             <ERPGridActions
@@ -266,6 +267,7 @@ const AccountGroupType = () => {
                 dataUrl={Urls.account_group}
                 gridId="grd_acc_group"
                 popupAction={toggleAccountGroupPopup}
+                ERPGridActionsstyle={true}
                 gridAddButtonType="popup"
                 changeReload={(reload: any) => {
                   dispatch(
@@ -283,7 +285,8 @@ const AccountGroupType = () => {
       <ERPModal
         isOpen={rootState.PopupData.accountGroup.isOpen || false}
         title={t("acc_group")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={350}
         isForm={true}
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false }));

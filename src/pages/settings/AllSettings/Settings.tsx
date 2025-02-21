@@ -1,4 +1,4 @@
-import React, { Fragment, lazy, useEffect, useState } from "react";
+import { Fragment, lazy, useEffect, useState } from "react";
 import jwtHelper from "../../../helpers/jwt_helper";
 import Header from "./Components/Header";
 import SettingsCard from "./Components/SettingsCard";
@@ -22,7 +22,6 @@ import {
   toggleUserTypePrivilegePopup,
   toggleResetBranchDataForSync,
   toggleRefreshAllBranches,
-  toggleChartOfAccounts,
   toggleHeaderFooterPopup,
   toggleHideAccLedger,
   toggleCompanyProfileIndiaPopup,
@@ -53,7 +52,7 @@ const TestPopup = lazy(() => import("../Integration/test-popup"));
 
 
 const Settings = () => {
-  
+
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -81,9 +80,9 @@ const Settings = () => {
     // Preload the components after the initial render
     preloadComponents();
   }, []);
-  
+
   useEffect(() => {
-    
+
     if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
   }, []);
 
@@ -99,17 +98,16 @@ const Settings = () => {
         <div className="pt-8 pb-6 px-4 max-w-4xl mx-auto w-full h-full overflow-auto scrollbar-hide">
           <div className="w-full flex flex-wrap gap-4 justify-center">
             {SettingsMenuItems?.map((item: any, idx: number) => {
-            //  item.disabled = true;
-              return <SettingsCard data={item} key={`QKLJM34${idx}`}  />;
+              //  item.disabled = true;
+              return <SettingsCard data={item} key={`QKLJM34${idx}`} />;
             })}
           </div>
         </div>
       </div>
       <ERPModal
         isOpen={rootState.PopupData.testPopup.isOpen || false}
-        title= "Test Popup"
-        width="w-full max-w-[1000px]"
-       
+        title="Test Popup"
+        width={1000}
         isForm={true}
         closeModal={() => {
           dispatch(toggleTestPopup({ isOpen: false }));
@@ -118,8 +116,9 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
-        title= {t("hide_account_ledger")}
-        width="w-full max-w-[1000px]"
+        title={t("hide_account_ledger")}
+        width={1000}
+        height={800}
         isForm={true}
         closeModal={() => {
           dispatch(toggleHideAccLedger({ isOpen: false }));
@@ -129,7 +128,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}
-        width="w-full max-w-[1000px]"
+        width={1000}
+        height={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
@@ -139,7 +139,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={t("delete_in_active_transactions")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={180}
         isForm={true}
         closeModal={() => {
           dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
@@ -160,7 +161,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.companyProfileIndia.isOpen || false}
         title={t("company_profile")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={780}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false }));
@@ -170,7 +172,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.bankPos.isOpen || false}
         title={t("bank_pos_settings")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={320}
         isForm={true}
         closeModal={() => {
           dispatch(toggleBankPosPopup({ isOpen: false }));
@@ -180,7 +183,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.branch.isOpen || false}
         title={t("branch_info")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={640}
         isForm={false}
         isButton={false}
         closeModal={() => {
@@ -191,8 +195,9 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={t("day_close")}
-        width="w-full max-w-[600px]"
-        minHeight={400}
+        width={800}
+        height={300}
+        minHeight={300}
         isForm
         closeModal={() => {
           dispatch(toggleDayClosePopup({ isOpen: false }));
@@ -202,7 +207,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.userActionReport.isOpen || false}
         title={t("user_action_report")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserActionPopup({ isOpen: false }));
@@ -212,7 +218,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.importExport.isOpen || false}
         title={t("export_import")}
-        width="w-full max-w-[600px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleImportExportPopup({ isOpen: false }));
@@ -222,8 +229,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
-        width="w-full   max-w-[1000px]"
-
+        width={1000}
+        height={700}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
@@ -234,7 +241,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.commands.isOpen || false}
         title={t("sql_commands")}
-        width="w-full max-w-[800px]"
+        width={800}
+        height={700}
         isForm={true}
         closeModal={() => {
           dispatch(toggleCommandsPopup({ isOpen: false }));
@@ -244,7 +252,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
         title={t("authorization_settings")}
-        width="w-full max-w-[800px]"
+        width={900}
+        height={600}
         isForm={true}
         closeModal={() => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
@@ -254,7 +263,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title={t("barcode_print")}
-        width="w-full max-w-full"
+        width={1500}
+        height={990}
         isForm={true}
         closeModal={() => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));
@@ -275,7 +285,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
         title={t("reset_branch_data_for_sync")}
-        width="w-full max-w-[700px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetBranchDataForSync({ isOpen: false }));
@@ -285,7 +296,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.refreshAllBranches.isOpen || false}
         title={t("refresh_all_branches")}
-        width="w-full max-w-[700px]"
+        width={800}
+        height={300}
         isForm={true}
         closeModal={() => {
           dispatch(toggleRefreshAllBranches({ isOpen: false }));
@@ -295,7 +307,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
         title={t("headers_footers")}
-        width="w-full max-w-[700px]"
+        width={800}
+        height={500}
         isForm={true}
         closeModal={() => {
           dispatch(toggleHeaderFooterPopup({ isOpen: false }));

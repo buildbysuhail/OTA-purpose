@@ -41,7 +41,7 @@ const BranchLedger = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "purchaseLedger",
@@ -50,7 +50,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "refBranchID",
@@ -68,7 +68,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "receivableLedger",
@@ -77,7 +77,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "payableLedgerID",
@@ -108,8 +108,8 @@ const BranchLedger = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID,reload: false }) }}
-          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID,reload: false }) }}
+          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID, reload: false }) }}
           delete={{
             onSuccess: () => {
               dispatch(
@@ -162,10 +162,11 @@ const BranchLedger = () => {
       <ERPModal
         isOpen={rootState.PopupData.branchLedger.isOpen || false}
         title={t("branch_ledger")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={250}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedBranchLedgerManage />}
       />

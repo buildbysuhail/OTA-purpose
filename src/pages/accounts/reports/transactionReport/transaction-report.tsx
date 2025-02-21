@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import { FastForward } from "lucide-react";
 import moment from "moment";
 
 interface TransactionReport {
@@ -30,14 +29,14 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
-        cellRender: (
-                          cellElement: any,
-                          cellInfo: any,
-                          filter: any,
-                          exportCell: any
-                        ) => {
-                           return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-                        }
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        return (cellElement.data.date == null || cellElement.data.date == "" ? "" : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
+      }
     },
     {
       dataField: "vchNo",
@@ -150,11 +149,11 @@ const TransactionReport = () => {
           const balance = cellElement.data?.debit;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ?cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance,false,2 ):getFormattedValue(-1 * balance,false,4) 
-              :cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance,false,2 ):getFormattedValue(balance,false,4) ;
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(balance, false, 4);
 
           return {
             ...exportCell,
@@ -174,11 +173,11 @@ const TransactionReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.debit == null 
+            {`${cellElement.data?.debit == null
               ? ''
               : cellElement.data.particulars === "TOTAL"
-                ? getFormattedValue(cellElement.data.debit,false,2 )
-                :getFormattedValue(cellElement.data.debit,false,4) }`}
+                ? getFormattedValue(cellElement.data.debit, false, 2)
+                : getFormattedValue(cellElement.data.debit, false, 4)}`}
           </span>)
         }
       }
@@ -196,11 +195,11 @@ const TransactionReport = () => {
           const balance = cellElement.data?.credit;
           const isDebit = balance >= 0;
           const value =
-            balance == null 
+            balance == null
               ? ""
               : balance < 0
-              ?cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance,false,2 ):getFormattedValue(-1 * balance,false,4) 
-              :cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance,false,2 ):getFormattedValue(balance,false,4) ;
+                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance, false, 2) : getFormattedValue(-1 * balance, false, 4)
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance, false, 2) : getFormattedValue(balance, false, 4);
           return {
             ...exportCell,
 
@@ -220,11 +219,11 @@ const TransactionReport = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.credit == null 
+            {`${cellElement.data?.credit == null
               ? ''
               : cellElement.data.particulars === "TOTAL"
-              ? getFormattedValue(cellElement.data.credit,false,2 )
-                :getFormattedValue(cellElement.data.credit,false,4) }`}
+                ? getFormattedValue(cellElement.data.credit, false, 2)
+                : getFormattedValue(cellElement.data.credit, false, 4)}`}
           </span>)
         }
       }
@@ -251,13 +250,14 @@ const TransactionReport = () => {
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
-                  filterWidth="400"
+                  filterWidth={1000}
+                  filterHeight={440}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<TransactionReportFilter />}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   filterInitialData={TransactionReportFilterInitialState}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

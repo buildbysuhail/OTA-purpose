@@ -25,7 +25,7 @@ const PartyCategory = () => {
       alignment: "left",
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -44,7 +44,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -54,7 +54,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "createdUser",
@@ -63,7 +63,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "createdDate",
@@ -73,7 +73,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true
+      showInPdf: true
     },
     {
       dataField: "modifiedUser",
@@ -171,7 +171,8 @@ const PartyCategory = () => {
       <ERPModal
         isOpen={rootState.PopupData.partyCategory.isOpen || false}
         title={t("party_category")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={180}
         isForm={true}
         closeModal={() => {
           dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: false }));

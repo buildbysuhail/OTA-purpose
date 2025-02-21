@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import moment from "moment";
 
 interface OutstandingAccountPayableReport {
   from: Date
@@ -227,7 +228,8 @@ const OutstandingAccountPayableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-    },
+    format:"dd-MMM-yyyy"
+             },
   ];
   return (
     <Fragment>
@@ -249,7 +251,8 @@ const OutstandingAccountPayableReport = () => {
                   reload={true}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth="150"
+                  filterHeight={340}
+                  filterWidth={390}
                   filterContent={<OutstandingPayableReportFilter />}
                   filterInitialData={OutstandingPayableReportFilterInitialState}>
                 </ErpDevGrid>

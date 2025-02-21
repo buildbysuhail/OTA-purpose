@@ -240,14 +240,15 @@ const AccountsHistoryReport = () => {
                   filterInitialData={
                     TransactrionHistoryReportFilterInitialState
                   }
-                  filterWidth="150"
+                  filterWidth={335}
+                  filterHeight={270}
                   // gridAddButtonType="popup"
                   reload={true}
                   childPopupProps={{
                     content: <AccountsHistoryPopup />,
                     title: t("accounts_transaction_history_popup"),
                     isForm: true,
-                    width: "max-w-[1100px]",
+                    width: 1100,
                     drillDownCells: "vchNo",
                     bodyProps: "oldAccTransactionMasterID",
                     enableFn: (data: any) => data.oldAccTransactionMasterID > 0,

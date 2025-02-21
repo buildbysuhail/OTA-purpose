@@ -209,5 +209,10 @@
     "tax_reports":"Tax reports",
     "accounts":"Accounts",
     "inventory":"Inventory",
-    "no_data_found":"No data found"
+    "no_data_found":"No data found",
+
+    "loading":"Loading...",
+    "warning":"Warning",
+    "please_select_at_least_one_column":"Please select at least one column",
+    "total_records":"Total records:"
 }

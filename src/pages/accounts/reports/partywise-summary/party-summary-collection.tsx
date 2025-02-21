@@ -91,6 +91,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -128,6 +129,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
             ...exportCell,
             text: value,
             alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
             font: {
               ...exportCell.font,
               size: 10,
@@ -166,7 +168,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "chequeNumber",
       caption: t("cheque_number"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -174,7 +176,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "chequeDate",
       caption: t("cheque_date"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -182,7 +184,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "partyCode",
       caption: t("party_code"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -190,7 +192,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "mobilePhone",
       caption: t("mobile_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -199,7 +201,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "contactPhone",
       caption: t("contact_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,
@@ -207,7 +209,7 @@ const PartySummaryCollection: React.FC<PartySummaryFilter> = ({ filter }) => {
     {
       dataField: "faxNumber",
       caption: t("fax_number"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 300,

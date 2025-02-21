@@ -9,7 +9,6 @@ import { ActionType } from "../../../../redux/types";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 import CashBookMonthWise from "./cash-book-monthwise";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import dxColorBox from "devextreme/ui/color_box";
 
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
@@ -72,7 +71,7 @@ const CashBookSummary = () => {
             <DrillDownCellTemplate
               data={cellElement}
               field="ledgerName"
-            ></DrillDownCellTemplate>
+            />
           );
         }
       },
@@ -221,7 +220,8 @@ const CashBookSummary = () => {
                 <ErpDevGrid
                   columns={columns}
                   remoteOperations={{ paging: false, filtering: false, sorting: false }}
-                  filterWidth="100"
+                  filterWidth={100}
+                  filterHeight={160}
                   filterText="as of {asonDate}"
                   gridHeader={t("cash_book_summary")}
                   dataUrl={Urls.acc_reports_cash_book}
@@ -246,7 +246,7 @@ const CashBookSummary = () => {
                   }}
                   postData={
                     { ...filter }}
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

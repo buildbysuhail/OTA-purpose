@@ -673,7 +673,8 @@ const BalanceSheet = () => {
 
             <button className="flex items-center dark:bg-dark-bg bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
-                width="w-full max-w-[500px]"
+                width={500}
+                height={300}
                 gridId="gridBalanceSheet"
                 initialData={BalanceSheetFilterInitialState}
                 content={
@@ -876,7 +877,8 @@ const BalanceSheet = () => {
           isOpen={isOpenDetails.isOpen}
           minHeight={800}
           title={t("balance_sheet")}
-          width="w-full max-w-[1200px]"
+         width={1200}
+         height={800}
           isForm={true}
           closeModal={() => {
             setIsOpenDetails({ isOpen: false, key: 0, item: {} });

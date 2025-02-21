@@ -25,7 +25,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "branchID",
@@ -35,7 +35,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "ledgerID",
@@ -45,7 +45,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "bank",
@@ -55,7 +55,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "paymentType",
@@ -64,7 +64,7 @@ const Upi = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "paymentName",
@@ -74,7 +74,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "createdUser",
@@ -120,7 +120,7 @@ const Upi = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
@@ -134,8 +134,8 @@ const Upi = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
-            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
+            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID, reload: false }) }}
             delete={{
               onSuccess: () => {
                 dispatch(
@@ -188,10 +188,11 @@ const Upi = () => {
       <ERPModal
         isOpen={rootState.PopupData.upi.isOpen || false}
         title={rootState.UserSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
-        width="w-full max-w-[600px]"
+        width={600}
+        height={210}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUpi({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleUpi({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedUpiManage />}
       />

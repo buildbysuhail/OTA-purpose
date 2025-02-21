@@ -24,8 +24,8 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: false,
       width: 60,
-      isLocked:false,
-      showInPdf:true,
+      isLocked: false,
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -42,7 +42,7 @@ const Users = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "password",
@@ -51,7 +51,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 140,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "counter",
@@ -60,7 +60,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "userType",
@@ -69,7 +69,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "createdUser",
@@ -123,7 +123,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "maxDiscPercAllowed",
@@ -155,8 +155,8 @@ const Users = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user,reload: false }) }}
-            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user,reload: false }) }}
+            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user, reload: false }) }}
           // delete={{
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",
@@ -201,10 +201,10 @@ const Users = () => {
         isOpen={rootState.PopupData.user.isOpen || false}
         title={t("users")}
         width={600}
-        height={430}
+        height={450}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleUserPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedUsersManage />}
       />

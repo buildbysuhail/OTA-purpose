@@ -168,6 +168,7 @@ const SMSIntegration: React.FC = () => {
                 title={t("connect_with_twilio")}
                 variant="primary"
                 type="submit"
+                className="!mt-[13px]"
               />
             </form>
           </div>
@@ -251,7 +252,8 @@ const SMSIntegration: React.FC = () => {
         <ERPModal
           isOpen={isOpen}
           title={t("twilio")}
-          width="w-full max-w-[600px]"
+          width={800}
+          height={600}
           isForm={true}
           closeModal={() => {
             setIsOpen(false);

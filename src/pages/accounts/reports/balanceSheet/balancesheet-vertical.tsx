@@ -454,7 +454,8 @@ const BalancesheetVertical = () => {
                   filterContent={<BalanceSheetVerticalFilter />}
                   filterInitialData={BalanceSheetVerticalFilterInitialState}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
-                  filterWidth="100"
+                  filterHeight={300}
+                  filterWidth={400}
                   reload={true}
                   hideGridAddButton={true}
                   method={ActionType.POST}
@@ -463,7 +464,8 @@ const BalancesheetVertical = () => {
 
                   childPopupPropsDynamic={(dataField: string) => ({
                     title: dataField == "accGroupID" ? t(`balance_detailed`) : t(`monthwise_balance`),
-                    width: "w-full max-w-[1100px]",
+                    width: 1000,
+                    height:800,
                     isForm: false,
                     content:
                       dataField == "accGroupID" ?

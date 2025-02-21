@@ -360,7 +360,6 @@ const LedgerReport = () => {
                     title: "",
                     isForm: false,
                     isTransactionScreen:true,
-                    width: "",
                     drillDownCells: "vchNo,",
                   }}
                 ></ErpDevGrid>

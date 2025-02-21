@@ -120,6 +120,7 @@ interface ERPDevGridProps {
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
   GridPreferenceChooserAccTrance?: boolean;
+  ERPGridActionsstyle?: boolean;
   showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
@@ -242,6 +243,7 @@ interface ERPDevGridProps {
   childPopupPropsDynamic?: (data?: any) => {
     title: string;
     width?: number;
+    Actionswidth?: number;
     height?:number;
     isForm: boolean;
     content: any;
@@ -440,6 +442,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
       GridPreferenceChooserAccTrance = false,
+      ERPGridActionsstyle = false,
       showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
@@ -526,6 +529,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       childPopupProps = {
         title: "",
         width: 1000,
+        Actionswidth: null,
         height:800,
         isForm: false,
         content: null,
@@ -545,6 +549,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
     }));
+
+    // CSS Variable for Width
+    const gridStyle: React.CSSProperties = {
+      ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,     
+    };
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
@@ -1466,7 +1475,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${className}`}>
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`}
+         style={gridStyle} 
+         >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             

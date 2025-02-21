@@ -216,8 +216,7 @@ const ERPModal = React.memo(
            
 
             <div className={`fixed inset-0 bg-black bg-opacity-50`}>
-              <div className={`  flex min-h-full items-center justify-center text-center `}       
-              >
+  
 {isPositionCalculated && (
   <Rnd
   key={rndKey}
@@ -362,7 +361,7 @@ const ERPModal = React.memo(
 )}
                   
               </div>
-            </div>
+          
           </Dialog>
       
           </Transition>

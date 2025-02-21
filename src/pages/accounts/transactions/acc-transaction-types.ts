@@ -26,6 +26,7 @@ export interface Attachments {
   id?: string;
   key: string;
   name: string;
+  size: number;
   aType: "url"| "file"| "base64";
   type:string;
   isNew: boolean;

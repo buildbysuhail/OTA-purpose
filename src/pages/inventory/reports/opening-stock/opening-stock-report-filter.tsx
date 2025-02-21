@@ -8,7 +8,7 @@ const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
   const { t } = useTranslation('accountsReport')
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-start gap-2">
         <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isProductGroup")}
@@ -29,7 +29,7 @@ const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-start gap-2">
         <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isBrand")}
@@ -50,7 +50,7 @@ const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-start gap-2">
         <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isProduct")}
@@ -71,7 +71,7 @@ const OpeningStockReportFilter = ({ getFieldProps, handleFieldChange }: any) => 
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-start gap-2">
         <ERPCheckbox
           className="basis-1/3"
           {...getFieldProps("isProductCategory")}

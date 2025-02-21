@@ -30,7 +30,6 @@ const OpeningStock = () => {
       allowFiltering: true,
       allowSorting: true,
       minWidth: 150,
-
     },
     {
       dataField: "vType",
@@ -223,10 +222,10 @@ const OpeningStock = () => {
                   filterContent={<OpeningStockReportFilter />}
                   filterInitialData={OpeningStockReportFilterInitialState}
                   reload={true}
-                  filterWidth={600}
-                  filterHeight={450}
+                  filterWidth={480}
+                  filterHeight={340}
                   gridId="grd_opening_stock"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>

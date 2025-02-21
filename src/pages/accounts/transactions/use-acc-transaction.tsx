@@ -625,92 +625,7 @@ export const useAccTransaction = (
         }
       }
 
-      let BillwiseaccTransactionDetailID = 0;
-      voucher.transaction.details = voucher.transaction.details.map(
-        (detail, index) => {
-          const baseDetail = {
-            ...detail,
-            slNo: index + 1,
-            amountFC: detail.amount,
-            bankDate: detail.bankDate
-              ? new Date(detail.bankDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-            chqDate: detail.chqDate
-              ? new Date(detail.chqDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-            checkBouncedDate: detail.checkBouncedDate
-              ? new Date(detail.checkBouncedDate).toISOString()
-              : moment.utc("2000-01-01").startOf("day").toISOString(),
-          };
-
-          // Handle voucher type specific logic
-          switch (voucher.transaction.master.voucherType) {
-            case "CP":
-            case "BP":
-            case "CN":
-            case "CQP":
-            case "SV":
-            case "PBP":
-            case "CPE":
-              return {
-                ...baseDetail,
-                ledgerCode: detail.ledgerCode,
-                ledgerName: detail.ledgerName,
-                ledgerID: detail.ledgerID,
-              };
-
-            case "CR":
-            case "BR":
-            case "DN":
-            case "CQR":
-            case "PV":
-            case "PBR":
-            case "CRE":
-              BillwiseaccTransactionDetailID++;
-              return {
-                ...baseDetail,
-                ledgerCode: detail.relatedLedgerCode,
-                ledgerName: detail.particulars,
-                ledgerID: detail.relatedLedgerID,
-              };
-
-            case "JV":
-            case "SP":
-              BillwiseaccTransactionDetailID++;
-              if (
-                voucher.transaction.master.drCr === "Dr" ||
-                voucher.transaction.master.drCr === "Debit"
-              ) {
-                return {
-                  ...baseDetail,
-                  ledgerCode: detail.relatedLedgerCode,
-                  ledgerName: detail.particulars,
-                  ledgerID: detail.relatedLedgerID,
-                };
-              } else {
-                return {
-                  ...baseDetail,
-                  ledgerCode: detail.ledgerCode,
-                  ledgerName: detail.ledgerName,
-                  ledgerID: detail.ledgerID,
-                };
-              }
-
-            case "OB":
-            case "MJV":
-              return {
-                ...baseDetail,
-                ledgerCode: detail.ledgerCode,
-                ledgerName: detail.ledgerName,
-                ledgerID: detail.ledgerID,
-                drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
-              };
-
-            default:
-              return baseDetail;
-          }
-        }
-      );
+      voucher.transaction.details = refactorDetails(voucher.transaction);
     }
     // Handle attachments
 
@@ -722,7 +637,91 @@ export const useAccTransaction = (
 
     return voucher;
   };
+const refactorDetails = (transaction: AccTransactionData) => {
+return transaction.details.map(
+  (detail, index) => {
+    const baseDetail = {
+      ...detail,
+      slNo: index + 1,
+      amountFC: detail.amount,
+      bankDate: detail.bankDate
+        ? new Date(detail.bankDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+      chqDate: detail.chqDate
+        ? new Date(detail.chqDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+      checkBouncedDate: detail.checkBouncedDate
+        ? new Date(detail.checkBouncedDate).toISOString()
+        : moment.utc("2000-01-01").startOf("day").toISOString(),
+    };
 
+    // Handle voucher type specific logic
+    switch (transaction.master.voucherType) {
+      case "CP":
+      case "BP":
+      case "CN":
+      case "CQP":
+      case "SV":
+      case "PBP":
+      case "CPE":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.ledgerCode,
+          ledgerName: detail.ledgerName,
+          ledgerID: detail.ledgerID,
+        };
+
+      case "CR":
+      case "BR":
+      case "DN":
+      case "CQR":
+      case "PV":
+      case "PBR":
+      case "CRE":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.relatedLedgerCode,
+          ledgerName: detail.particulars,
+          ledgerID: detail.relatedLedgerID,
+        };
+
+      case "JV":
+      case "SP":
+        if (
+          transaction.master.drCr === "Dr" ||
+          transaction.master.drCr === "Debit"
+        ) {
+          return {
+            ...baseDetail,
+            ledgerCode: detail.relatedLedgerCode,
+            ledgerName: detail.particulars,
+            ledgerID: detail.relatedLedgerID,
+          };
+        } else {
+          return {
+            ...baseDetail,
+            ledgerCode: detail.ledgerCode,
+            ledgerName: detail.ledgerName,
+            ledgerID: detail.ledgerID,
+          };
+        }
+
+      case "OB":
+      case "MJV":
+        return {
+          ...baseDetail,
+          ledgerCode: detail.ledgerCode,
+          ledgerName: detail.ledgerName,
+          ledgerID: detail.ledgerID,
+          drCr: Number(detail.debit) > 0 ? "Dr" : "Cr",
+        };
+
+      default:
+        return baseDetail;
+    }
+  }
+);
+}
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode(
     isEdit: boolean,
@@ -986,7 +985,7 @@ export const useAccTransaction = (
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
-
+debugger;
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
       element.currencyID = 1;
@@ -1271,7 +1270,13 @@ export const useAccTransaction = (
         dispatch(
           accFormStateTransactionUpdate({
             key: "details",
-            value: saveRes.item.details,
+            value: refactorDetails({...params,
+              master: {
+                ...params.master,
+                transactionDate: params.master.transactionDate == null ? "" : params.master.transactionDate
+              },
+              details: saveRes.item.details
+            })
           })
         );
         dispatch(

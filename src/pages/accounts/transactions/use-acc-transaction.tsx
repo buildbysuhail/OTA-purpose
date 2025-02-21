@@ -1183,7 +1183,13 @@ export const useAccTransaction = (
     debugger;
     if (valid == true) {
       const master = attachMaster();
-      const dfdf = [...formState.transaction.attachments]
+      const attachments = formState.transaction.attachments.map(x => ({
+        aType: x.aType,
+        attachmentId: x.id,
+        fileName: x.name,
+        key: x.key,
+        type: x.type
+    }));
       const params = {
         master: {
           ...master,
@@ -1191,7 +1197,7 @@ export const useAccTransaction = (
             master.transactionDate == "" ? null : master.transactionDate,
         },
         details: attachDetails(),
-        attachments: dfdf,
+        attachments: attachments,
       };
       debugger;
       const saveRes =

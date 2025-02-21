@@ -95,10 +95,12 @@ debugger;
       }
     );
     if(res.isOk) {
+      debugger;
  dispatch(
   accFormStateTransactionAttachmentsRowUpdate({
         row: {
           ...row,
+          id: res.item.attachmentId,
           isNew: true,
           uploading: false,
           uploaded: true,

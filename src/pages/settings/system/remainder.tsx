@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useMemo } from "react";
 import Urls from "../../../redux/urls";
-
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { toggleRemainderPopup } from "../../../redux/slices/popup-reducer";
@@ -34,7 +33,7 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       isLocked: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "descriptions",
@@ -43,7 +42,7 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remaindingDate",
@@ -53,7 +52,7 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "numberOfDays",
@@ -63,12 +62,12 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
-      isLocked:false,
+      isLocked: false,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -77,20 +76,12 @@ const Remainders = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID,reload: false }) }}
-            edit={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID,reload: false }) }}
+            view={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID, reload: false }) }}
             delete={{
-              onSuccess: () => {
-                dispatch(
-                  toggleRemainderPopup({
-                    isOpen: false,
-                    key: null,
-                    reload: true,
-                  })
-                );
-              },
+              onSuccess: () => { dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
               url: Urls?.Remainder, key: cellElement?.data?.remaindersID
             }}
           />
@@ -115,14 +106,10 @@ const Remainders = () => {
                   gridId="grd_remainder"
                   popupAction={toggleRemainderPopup}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleRemainderPopup({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleRemainderPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.reminder?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid>
+                />
               </div>
             </div>
           </div>

@@ -5,11 +5,7 @@ import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { DataGrid } from "devextreme-react";
 import { useTranslation } from "react-i18next";
-import {
-  Column,
-  Scrolling,
-  RemoteOperations,
-} from "devextreme-react/data-grid";
+import { Column, Scrolling, RemoteOperations, } from "devextreme-react/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
@@ -41,16 +37,11 @@ interface DynamicFormProps {
 }
 
 const api = new APIClient();
-
 const CommandsManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation("system");
-
-  const onClose = useCallback(async () => {
-    dispatch(toggleCommandsPopup({ isOpen: false }));
-  }, []);
-
+  const onClose = useCallback(async () => { dispatch(toggleCommandsPopup({ isOpen: false })); }, []);
   const queryParams = new URLSearchParams(location.search);
   const [key, setKey] = useState<any>(queryParams.get("key"));
   const [query, setQuery] = useState("");
@@ -86,9 +77,6 @@ const CommandsManage = () => {
     setDisplayText(checked ? newValue.replace(/./g, '•') : newValue);
   };
 
-  const handleSelect = () => {
-  };
-
   const handleExecute = async () => {
     try {
       setLoading(true);
@@ -104,9 +92,7 @@ const CommandsManage = () => {
             }
           }
         },
-        () => {
-
-        }
+        () => { }
       );
     } catch (error) {
       console.error('Execute failed:', error);
@@ -156,7 +142,6 @@ const CommandsManage = () => {
               />
             </div>
           </div>
-
         </div>
 
         <div className="box custom-box">
@@ -168,8 +153,7 @@ const CommandsManage = () => {
                 showBorders={true}
                 showRowLines={true}
                 columnAutoWidth={true}
-                paging={{ pageSize: 30 }}
-              >
+                paging={{ pageSize: 30 }}>
                 <Scrolling mode="virtual" />
                 <RemoteOperations
                   filtering={false}

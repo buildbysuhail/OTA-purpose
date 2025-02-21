@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
@@ -10,7 +10,6 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { FinancialYearManage } from "./financial-year-manage";
 const FinancialYear = () => {
-
   const MemoizedFinancialYearManage = useMemo(() => React.memo(FinancialYearManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation("system");
@@ -25,7 +24,7 @@ const FinancialYear = () => {
       allowFiltering: true,
       width: 100,
       isLocked: true,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "id",
@@ -35,7 +34,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "fromDate",
@@ -44,8 +43,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      showInPdf:true,
-     
+      showInPdf: true,
     },
     {
       dataField: "toDate",
@@ -54,7 +52,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-     showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "status",
@@ -64,7 +62,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "remarks",
@@ -83,7 +81,7 @@ const FinancialYear = () => {
       allowSearch: false,
       allowFiltering: true,
       width: 170,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "createdUser",
@@ -93,7 +91,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      visible:false
+      visible: false
     },
     {
       dataField: "createdDate",
@@ -103,7 +101,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedUser",
@@ -113,7 +111,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -123,7 +121,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "openingStockValue",
@@ -133,45 +131,34 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      showInPdf:true,
+      showInPdf: true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
-      isLocked:true,
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             edit={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             delete={{
-              onSuccess: () => {
-                dispatch(
-                  toggleFinancialYearPopup({
-                    isOpen: false,
-                    key: null,
-                    reload: true,
-                  })
-                );
-              },
+              onSuccess: () => { dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.FinancialYear,key:cellElement?.data?.id
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+              url: Urls?.FinancialYear, key: cellElement?.data?.id
             }}
           />
         )
       },
     }
   ], []);
-  useEffect(() => {
-    dispatch(toggleFinancialYearPopup({ ...rootState, reload: true }));
-  }, []);
+  useEffect(() => { dispatch(toggleFinancialYearPopup({ ...rootState, reload: true })); }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -186,14 +173,10 @@ const FinancialYear = () => {
                   gridId="grd_fin_year"
                   popupAction={toggleFinancialYearPopup}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleFinancialYearPopup({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleFinancialYearPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.financialYear?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -205,9 +188,7 @@ const FinancialYear = () => {
         width={800}
         height={350}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleFinancialYearPopup({ isOpen: false, key: null,reload: false }));
-        }}
+        closeModal={() => { dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedFinancialYearManage />}
       />
     </Fragment>

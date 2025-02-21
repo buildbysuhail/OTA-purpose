@@ -18,9 +18,7 @@ interface information {
 }
 const SMSIntegration: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const { t } = useTranslation("integration");
-
   const SMSTwilioConnectPopup: React.FC = () => {
     const initialState: information = {
       AccountSid: "",
@@ -44,9 +42,7 @@ const SMSIntegration: React.FC = () => {
         const response: SMSIntegrationData[] = await api.getAsync(
           `${Urls.notification_provider}GetByChannel?channel=1`
         );
-
         setFormState(response);
-
         if (response.length > 0 && response[0].configJson) {
           try {
             const parsedConfig = JSON.parse(response[0].configJson);
@@ -74,7 +70,6 @@ const SMSIntegration: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-      
       e.preventDefault();
       const configJson = JSON.stringify(information);
       const requestBody = {
@@ -83,7 +78,6 @@ const SMSIntegration: React.FC = () => {
         configJson: configJson,
         isEnable: true,
       };
-
       try {
         const response = await api.post(
           `${Urls.notification_provider}`,
@@ -94,23 +88,15 @@ const SMSIntegration: React.FC = () => {
         console.error("Error saving settings:", error);
       }
     };
+
     return (
       <div className="w-full">
         <div className="grid grid-cols-1 sm:grid-cols-1 gap-3">
           <div className="p-4">
-            <h2 className="text-lg font-semibold mb-3">
-              {t("don't_have_an_account?")}
-            </h2>
-            <p className="mb-2">
-              {t("create_an_account")}
-            </p>
-            <a
-              href="https://www.twilio.com/try-twilio"
-              className="text-[#2589BD] hover:underline block mb-4"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-             {t("go_to_twilio")}
+            <h2 className="text-lg font-semibold mb-3">  {t("don't_have_an_account?")}</h2>
+            <p className="mb-2">  {t("create_an_account")}</p>
+            <a href="https://www.twilio.com/try-twilio" className="text-[#2589BD] hover:underline block mb-4" target="_blank" rel="noopener noreferrer">
+              {t("go_to_twilio")}
             </a>
             <div className="flex items-center my-4">
               <div className="flex-grow border-t border-gray-300"></div>
@@ -118,16 +104,11 @@ const SMSIntegration: React.FC = () => {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
-            <h2 className="text-lg font-semibold mb-3">
-              {t("have_an_account_already?")}
-            </h2>
-            <p className="mb-4">
-              {t("enter_the_following_details")}
-            </p>
+            <h2 className="text-lg font-semibold mb-3">  {t("have_an_account_already?")}</h2>
+            <p className="mb-4">  {t("enter_the_following_details")}</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
-
                 <ERPInput
                   id="AccountSid"
                   value={information.AccountSid}
@@ -139,6 +120,7 @@ const SMSIntegration: React.FC = () => {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <ERPInput
                   id="AuthToken"
@@ -146,11 +128,10 @@ const SMSIntegration: React.FC = () => {
                   data={information}
                   label={t("auth_token")}
                   placeholder={t("auth_token")}
-                  onChangeData={(data) =>
-                    handleFieldChange("AuthToken", data.AuthToken)
-                  }
+                  onChangeData={(data) => handleFieldChange("AuthToken", data.AuthToken)}
                 />
               </div>
+
               <div className="mb-6">
                 <ERPInput
                   id="FromPhone"
@@ -193,10 +174,7 @@ const SMSIntegration: React.FC = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsOpen(true)}
-            className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
-          >
+          <button onClick={() => setIsOpen(true)} className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors">
             {t("connect")}
           </button>
         </div>
@@ -215,7 +193,7 @@ const SMSIntegration: React.FC = () => {
 
         <div>
           <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
-           {t("before_you_can")}
+            {t("before_you_can")}
           </h3>
           <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
             <li className="pb-3">
@@ -224,13 +202,12 @@ const SMSIntegration: React.FC = () => {
                 href="https://www.twilio.com/try-twilio"
                 className="text-[#2589BD] hover:underline"
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 {t("sign_up_now")}
               </a>
             </li>
             <li className="pb-3">
-             {t("go_to_console")}
+              {t("go_to_console")}
             </li>
             <li className="pb-3">
               {t("have_an_active_phone_number")}{" "}
@@ -238,8 +215,7 @@ const SMSIntegration: React.FC = () => {
                 href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
                 className="text-[#2589BD] hover:underline flex items-center"
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 {t("read_more")}
                 {/* <ExternalLink size={14} className="ml-1" /> */}
                 <i className="ri-external-link-line"></i>
@@ -252,7 +228,7 @@ const SMSIntegration: React.FC = () => {
         <ERPModal
           isOpen={isOpen}
           title={t("twilio")}
-          width={800}
+          width={600}
           height={600}
           isForm={true}
           closeModal={() => {

@@ -18,9 +18,7 @@ interface information {
 }
 const WhatsappIntegration = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const { t } = useTranslation("integration");
-
   const WhatsappTwilioConnectPopup: React.FC = () => {
     const initialState: information = {
       AccountSid: "",
@@ -44,9 +42,7 @@ const WhatsappIntegration = () => {
         const response: SMSIntegrationData[] = await api.getAsync(
           `${Urls.notification_provider}GetByChannel?channel=2`
         );
-
         setFormState(response);
-
         if (response.length > 0 && response[0].configJson) {
           try {
             const parsedConfig = JSON.parse(response[0].configJson);
@@ -74,7 +70,6 @@ const WhatsappIntegration = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-      
       e.preventDefault();
       const configJson = JSON.stringify(information);
       const requestBody = {
@@ -83,7 +78,6 @@ const WhatsappIntegration = () => {
         configJson: configJson,
         isEnable: true,
       };
-
       try {
         const response = await api.post(
           `${Urls.notification_provider}`,
@@ -109,8 +103,7 @@ const WhatsappIntegration = () => {
               href="https://www.twilio.com/try-twilio"
               className="text-[#2589BD] hover:underline block mb-4"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               {t("go_to_twilio")}
             </a>
             <div className="flex items-center my-4">
@@ -128,7 +121,6 @@ const WhatsappIntegration = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
-
                 <ERPInput
                   id="AccountSid"
                   value={information.AccountSid}
@@ -140,6 +132,7 @@ const WhatsappIntegration = () => {
                   }
                 />
               </div>
+
               <div className="mb-4">
                 <ERPInput
                   id="AuthToken"
@@ -152,6 +145,7 @@ const WhatsappIntegration = () => {
                   }
                 />
               </div>
+              
               <div className="mb-6">
                 <ERPInput
                   id="FromPhone"
@@ -184,7 +178,6 @@ const WhatsappIntegration = () => {
         <h1 className="text-2xl font-bold mb-4 dark:text-dark-text text-gray-800">
           {t("whatsapp_integrations")}
         </h1>
-
         <div className="flex items-center justify-between mb-4 p-4 dark:bg-dark-bg-header bg-gray-50 rounded-lg">
           <div className="flex items-center">
             <div>
@@ -194,10 +187,7 @@ const WhatsappIntegration = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsOpen(true)}
-            className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
-          >
+          <button onClick={() => setIsOpen(true)} className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors">
             {t("connect")}
           </button>
         </div>
@@ -209,7 +199,7 @@ const WhatsappIntegration = () => {
               {t("notify_customers")}
             </li>
             <li className="pb-3">
-             {t("configure_SMS")}
+              {t("configure_SMS")}
             </li>
           </ul>
         </div>
@@ -225,8 +215,7 @@ const WhatsappIntegration = () => {
                 href="https://www.twilio.com/try-twilio"
                 className="text-[#2589BD] hover:underline"
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 {t("sign_up_now")}
               </a>
             </li>
@@ -239,8 +228,7 @@ const WhatsappIntegration = () => {
                 href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
                 className="text-[#2589BD] hover:underline flex items-center"
                 target="_blank"
-                rel="noopener noreferrer"
-              >
+                rel="noopener noreferrer">
                 {t("read_more")}
                 {/* <ExternalLink size={14} className="ml-1" /> */}
                 <i className="ri-external-link-line"></i>
@@ -253,12 +241,10 @@ const WhatsappIntegration = () => {
         <ERPModal
           isOpen={isOpen}
           title={t("twilio")}
-          width={800}
+          width={600}
           height={600}
           isForm={true}
-          closeModal={() => {
-            setIsOpen(false);
-          }}
+          closeModal={() => { setIsOpen(false); }}
           content={<WhatsappTwilioConnectPopup />}
         />
       </div>

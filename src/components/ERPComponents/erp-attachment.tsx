@@ -55,7 +55,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         addFiles(selectedFiles);
       }
     },
-    []
+    [formState.transactionType]
   );
 
   const addFiles = async (newFiles: File[]) => {

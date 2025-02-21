@@ -188,8 +188,8 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   }
   }, [searchParams, props]);
 
-  const onRowDblClick = useCallback(async (_event: any) => {
-    debugger;
+  const onRowDblClick = useCallback(async (event: any) => {
+    const _event = event.data != undefined ? event : event?.event
     setData((prev: any) => ({
       ...prev,
       formType: _event.data.formType,

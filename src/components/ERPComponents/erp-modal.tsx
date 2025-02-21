@@ -94,7 +94,6 @@ const ERPModal = React.memo(
     const [previousPosition, setPreviousPosition] = useState({ x: 0, y: 0 });
     const [rndKey, setRndKey] = useState(0);
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
-debugger;
     const contentRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
       if (isOpen) {

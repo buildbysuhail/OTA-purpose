@@ -340,7 +340,7 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <button className="flex items-center bg-gray-100 p-0 rounded-md"></button>
                 <ErpDevGrid
-                  remoteOperations={false}
+                   remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   // remoteOperations={{filtering:false,paging:false,sorting:false}}
                   filterText="of {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
@@ -365,6 +365,8 @@ const LedgerReport = () => {
                     drillDownCells: "vchNo,",
                   }}
                 ></ErpDevGrid>
+
+
               </div>
             </div>
           </div>

@@ -373,7 +373,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
       <ERPModal
         isOpen={rootState.PopupData.miscellaneousSettings.isOpen || false}
         title="Linked Server Settings"
-        width="w-full max-w-[600px]"
+        // width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleMiscellaneousSettingsPopup({ isOpen: false }));

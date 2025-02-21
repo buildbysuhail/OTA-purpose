@@ -1186,8 +1186,10 @@ debugger;
     );
 
     const valid = validate();
+    debugger;
     if (valid == true) {
       const master = attachMaster();
+      const dfdf = [...formState.transaction.attachments]
       const params = {
         master: {
           ...master,
@@ -1195,8 +1197,9 @@ debugger;
             master.transactionDate == "" ? null : master.transactionDate,
         },
         details: attachDetails(),
-        attachments: [...formState.transaction.attachments],
+        attachments: dfdf,
       };
+      debugger;
       const saveRes =
         formState.transaction.master.accTransactionMasterID > 0
           ? await api.putAsync(

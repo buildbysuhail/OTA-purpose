@@ -125,7 +125,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   isTeller = false,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-debugger;
+  debugger;
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -177,13 +177,13 @@ debugger;
   const chequeStatusRef = useRef<HTMLInputElement>(null);
 
   const [showValidation, setShowValidation] = useState(false);
-  const focusTaxNoField = ()=>{
+  const focusTaxNoField = () => {
     debugger;
-      setTimeout(() => {
-    if(taxNoRef.current) {
-      taxNoRef.current.select()
-      taxNoRef.current.focus();
-    }
+    setTimeout(() => {
+      if (taxNoRef.current) {
+        taxNoRef.current.select()
+        taxNoRef.current.focus();
+      }
     }, 0);
   }
   const onSelectionChanged = (
@@ -296,7 +296,7 @@ debugger;
   }, [window.innerHeight]);
   useEffect(() => {
     dispatch(
-      accFormStateHandleFieldChange({fields:{masterAccountActive: isTeller}}))
+      accFormStateHandleFieldChange({ fields: { masterAccountActive: isTeller } }))
   }, [isTeller]);
   useEffect(() => {
     dispatch(
@@ -362,9 +362,9 @@ debugger;
         const { billwiseMandatory } =
           applicationSettings.accountsSettings ?? {};
         const isRowEdit = formState.isRowEdit;
-let formElmns = {
-  ...formState.formElements 
-}
+        let formElmns = {
+          ...formState.formElements
+        }
         if (!isNullOrUndefinedOrZero(ledgerID)) {
           if (
             billwiseMandatory &&
@@ -378,17 +378,17 @@ let formElmns = {
               ...formElmns,
               amount: {
                 ...formElmns.amount,
-                disabled: (formState.transaction.master.voucherType == "CQP" || formState.transaction.master.voucherType == "CQR") && IsBillwiseTransAdjustmentExists ? true: false // Update visibility based on ledgerData
+                disabled: (formState.transaction.master.voucherType == "CQP" || formState.transaction.master.voucherType == "CQR") && IsBillwiseTransAdjustmentExists ? true : false // Update visibility based on ledgerData
               },
             },
-            dispatch(
-              accFormStateHandleFieldChange({
-                fields: {
-                  IsBillwiseTransAdjustmentExists,
-                  ledgerIsBillWiseAdjustExistLoading: false,
-                },
-              })
-            );
+              dispatch(
+                accFormStateHandleFieldChange({
+                  fields: {
+                    IsBillwiseTransAdjustmentExists,
+                    ledgerIsBillWiseAdjustExistLoading: false,
+                  },
+                })
+              );
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
@@ -503,7 +503,7 @@ let formElmns = {
     };
     loadLedgerData();
   }, [formState.masterAccountID]);
-  
+
   useEffect(() => {
     const initializeFormElements = async () => {
       const isForeignCurrencyVisible =
@@ -566,7 +566,7 @@ let formElmns = {
           }
         }
       }
-const prevNation = formState.row.narration;
+      const prevNation = formState.row.narration;
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -601,7 +601,7 @@ const prevNation = formState.row.narration;
           row: {
             ...AccTransactionRowInitialData,
             narration: (voucherType == "JV" || voucherType == "JVSP")
-            && formState?.userConfig?.keepNarrationForJV ? prevNation : "",
+              && formState?.userConfig?.keepNarrationForJV ? prevNation : "",
             bankDate: ["CR", "CP"].includes(voucher.master.voucherType)
               ? moment.utc("2000-01-01").startOf("day").toISOString()
               : moment().local().toISOString(),
@@ -649,21 +649,21 @@ const prevNation = formState.row.narration;
         lblGroupName: { ...initialFormElements.lblGroupName, label: "" }, // Dynamically set the label as needed
         masterAccount: {
           ...initialFormElements.masterAccount,
-          disabled: 
-          (_formState.transaction.master.voucherType ==
-            VoucherType.CashPayment ||
-            _formState.transaction.master.voucherType ==
-            VoucherType.CashReceipt) &&
-          userSession?.counterwiseCashLedgerId > 0 &&
-          applicationSettings.accountsSettings?.allowSalesCounter
-          && userSession?.counterAssignedCashLedgerId > 0
-          ?
-          userSession.countryId == Countries.India 
-          ?
-          formState.masterAccountActive == true ? false : true
-          : true
-          : false
-            
+          disabled:
+            (_formState.transaction.master.voucherType ==
+              VoucherType.CashPayment ||
+              _formState.transaction.master.voucherType ==
+              VoucherType.CashReceipt) &&
+              userSession?.counterwiseCashLedgerId > 0 &&
+              applicationSettings.accountsSettings?.allowSalesCounter
+              && userSession?.counterAssignedCashLedgerId > 0
+              ?
+              userSession.countryId == Countries.India
+                ?
+                formState.masterAccountActive == true ? false : true
+                : true
+              : false
+
         },
         discount: { ...initialFormElements.discount, visible: true },
         projectId: {
@@ -677,9 +677,9 @@ const prevNation = formState.row.narration;
       } as any;
       switch (voucherType) {
         case "CR":
-          case "CP":
-            case "CPE":
-              case "CRE": {
+        case "CP":
+        case "CPE":
+        case "CRE": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -689,7 +689,7 @@ const prevNation = formState.row.narration;
             },
             employee: {
               ...fieldsToUpdate.employee,
-              label: (voucherType === "CR" || voucherType === "CRE")  ? t("collected_by") : t("paid_by"),
+              label: (voucherType === "CR" || voucherType === "CRE") ? t("collected_by") : t("paid_by"),
             },
             narration: {
               ...fieldsToUpdate.narration,
@@ -721,7 +721,7 @@ const prevNation = formState.row.narration;
               visible: false,
             },
           };
-          
+
           break;
         }
 
@@ -755,7 +755,7 @@ const prevNation = formState.row.narration;
           break;
         }
 
-        case "BR":{
+        case "BR": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -865,7 +865,7 @@ const prevNation = formState.row.narration;
           break;
         }
 
-        case "BP":{
+        case "BP": {
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -1170,10 +1170,10 @@ const prevNation = formState.row.narration;
           break;
         }
       }
-      let fnlFormElmns = {...fieldsToUpdate};
-      if((_formState.transaction.master.voucherType == "BP" 
+      let fnlFormElmns = { ...fieldsToUpdate };
+      if ((_formState.transaction.master.voucherType == "BP"
         || _formState.transaction.master.voucherType == "BR")
-        
+
         && userSession.countryId == Countries.India) {
         // fnlFormElmns =
         // {
@@ -1196,10 +1196,10 @@ const prevNation = formState.row.narration;
         //   },
         // }
       }
-      
+
       _formState.formElements = fnlFormElmns;
 
-      
+
       setAccTransVoucher(_formState, true);
       if (_formState.isTaxOnExpense) {
 
@@ -2761,14 +2761,13 @@ const prevNation = formState.row.narration;
                       className="text-left"
                       label={t(formState.formElements.hasDiscount.label)}
                       checked={formState.row.hasDiscount}
-                      onChange={(e) =>
-                      {
+                      onChange={(e) => {
                         dispatch(
                           accFormStateRowHandleFieldChange({
                             fields: { hasDiscount: e.target.checked },
                           })
                         )
-                        if(e.target.checked) {
+                        if (e.target.checked) {
                           focusDiscount();
                         }
                         else {
@@ -2785,7 +2784,7 @@ const prevNation = formState.row.narration;
 
                   {formState.formElements.discount.visible && (
                     <ERPInput
-                    ref={discountRef}
+                      ref={discountRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="discount"
                       type="number"
@@ -2959,7 +2958,7 @@ const prevNation = formState.row.narration;
                   {formState.formElements.chequeNumber.visible && (
                     <ERPInput
 
-                    ref={chequeNumberRef}
+                      ref={chequeNumberRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="chequeNumber"
                       label={t(formState.formElements.chequeNumber.label)}
@@ -2982,7 +2981,7 @@ const prevNation = formState.row.narration;
                       localInputBox={formState.userConfig?.inputBoxStyle}
                       id="bankDate"
                       label={t(formState.formElements.bankDate.label)}
-                      
+
                       value={new Date(formState.row.bankDate)}
                       onChange={(e) =>
                         dispatch(
@@ -3003,7 +3002,7 @@ const prevNation = formState.row.narration;
                   )}
                   {formState.formElements.chequeStatus.visible && (
                     <ERPInput
-                    ref={chequeStatusRef}
+                      ref={chequeStatusRef}
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="chequeStatus"
                       label={t(formState.formElements.chequeStatus.label)}
@@ -3060,7 +3059,7 @@ const prevNation = formState.row.narration;
                     />
                   )}
 
-                  
+
                   {["TXP"].includes(formState.transaction.master.voucherType) && (
                     <>
                       <div className="flex items-center gap-1">
@@ -3083,7 +3082,7 @@ const prevNation = formState.row.narration;
                         />
 
                         <button
-                        data-skip={true}
+                          data-skip={true}
                           onClick={() => {
                             dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: true }, }));
                           }}
@@ -3098,12 +3097,12 @@ const prevNation = formState.row.narration;
                             width={600}
                             height={700}
                             title="Party Selection"
-                            content={<PartySelectionModal focusTaxNoField={focusTaxNoField}/>}
+                            content={<PartySelectionModal focusTaxNoField={focusTaxNoField} />}
                           />
                         )}
                       </div>
                       <ERPInput
-                      ref={taxNoRef}
+                        ref={taxNoRef}
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="taxNo"
                         label={t("tax_no")}
@@ -3723,8 +3722,8 @@ const prevNation = formState.row.narration;
               );
             }}
             onSubmit={() => { }}
-           width={1200}
-           height={800}
+            width={1200}
+            height={800}
             content={
               <BillWisePopup
                 drCr={formState.billwiseDrCr}
@@ -4016,14 +4015,15 @@ const prevNation = formState.row.narration;
               )}
 
             {(voucherType == "BP" || voucherType == "CQP") && (
-              <ERPButton
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                title={t("print_cheque")}
-                variant="secondary"
-                onClick={() => {
-                  /* Handle print cheque */
-                }}
-              />
+              <div>
+                <ERPButton
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  title={t("print_cheque")}
+                  variant="secondary"
+                  onClick={() => { /* Handle print cheque */ }}
+                 className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
+                />
+              </div>
             )}
 
             {formState.formElements.keepNarration.visible && (

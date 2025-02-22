@@ -1,4 +1,4 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
@@ -6,28 +6,25 @@ import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
 import "./profile.css";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/slices/app-thunks";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
+import { postAction } from "../../redux/slices/app-thunks";
 import { useLocation, useNavigate } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import ERPModal from "../../components/ERPComponents/erp-modal";
+import { useTranslation } from "react-i18next";
 
 interface WorkSpaceSettingsProps { }
-
 const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
-  const [deleteWorkspacePopupOpen, setDeleteWorkspacePopupOpen] =
-    useState<boolean>(false);
-  const [deleteWorkspaceloading, setDeleteWorkspaceloading] =
-    useState<boolean>(false);
-
+  const [deleteWorkspacePopupOpen, setDeleteWorkspacePopupOpen] = useState<boolean>(false);
+  const [deleteWorkspaceloading, setDeleteWorkspaceloading] = useState<boolean>(false);
   const [postDataDeleteWorkspace, setPostDataDeleteWorkspace] = useState<any>({
     data: { userName: "", password: "", newValue: "" },
     validations: { userName: "", password: "", newValue: "" },
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation('main');
 
   const deleteWorkspace = async () => {
     setDeleteWorkspaceloading(true);
@@ -47,9 +44,7 @@ const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
     });
   };
 
-  const deleteWorkspacePopup = async () => {
-    setDeleteWorkspacePopupOpen(true);
-  };
+  const deleteWorkspacePopup = async () => { setDeleteWorkspacePopupOpen(true); };
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   const PopUpModalEmailChange = () => {
@@ -59,107 +54,86 @@ const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
           <ERPInput
             id="userName"
             type="text"
-            placeholder="UserName"
+            placeholder={t("username")}
             required={true}
             data={postDataDeleteWorkspace?.data}
-            onChangeData={(data: any) => {
-              setPostDataDeleteWorkspace((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }));
-            }}
+            onChangeData={(data: any) => { setPostDataDeleteWorkspace((prevData: any) => ({ ...prevData, data: data, })); }}
             value={postDataDeleteWorkspace?.data?.userName}
             validation={postDataDeleteWorkspace?.validations?.userName}
           />
           <ERPInput
             id="password"
-            placeholder="Password"
+            placeholder={t("password")}
             required={true}
             value={postDataDeleteWorkspace?.data?.password}
             data={postDataDeleteWorkspace?.data}
-            onChangeData={(data: any) =>
-              setPostDataDeleteWorkspace((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }))
-            }
+            onChangeData={(data: any) => setPostDataDeleteWorkspace((prevData: any) => ({ ...prevData, data: data, }))}
             validation={postDataDeleteWorkspace?.validations?.password}
           />
           <ERPInput
             id="newValue"
             type="text"
-            placeholder="Workspace Name"
+            placeholder={t("workspace_name")}
             required={true}
             data={postDataDeleteWorkspace?.data}
-            onChangeData={(data: any) =>
-              setPostDataDeleteWorkspace((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }))
-            }
+            onChangeData={(data: any) => setPostDataDeleteWorkspace((prevData: any) => ({ ...prevData, data: data, }))}
             value={postDataDeleteWorkspace?.data?.newValue}
             validation={postDataDeleteWorkspace?.validations?.newValue}
           />
         </div>
+
         <div className="w-full p-2 flex justify-end">
           <ERPButton
             type="reset"
-            title="Cancel"
+            title={t("cancel")}
             variant="secondary"
             onClick={() => {
               setDeleteWorkspacePopupOpen(false);
               setPostDataDeleteWorkspace({});
             }}
             disabled={deleteWorkspaceloading}
-          ></ERPButton>
+          />
           <ERPButton
             type="button"
             disabled={deleteWorkspaceloading}
             variant="primary"
             onClick={deleteWorkspace}
             loading={deleteWorkspaceloading}
-            title={"Delete Workspace"
-            }
-          ></ERPButton>
+            title={t("delete_workspace")}
+          />
         </div>
       </div>
     );
   };
+
   return (
     <Fragment>
-
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12 col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
-            <div
-              id="phone-number"
-              className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""
-                } col-span-12`}
-            >
+            <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""} col-span-12`}>
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                    Delete Workspace{" "}
+                    {t("delete_workspace")}
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      This will permanently remove all associated data from your
-                      account.
+                      {t("account_deletion_warning")}
                     </p>
                   </div>
-                  <div></div>
                 </div>
+
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
                     <ERPButton
-                      title="Delete Workspace"
-                      onClick={() => {
-                        deleteWorkspacePopup();
-                      }}
+                      title={t("delete_workspace")}
+                      onClick={() => { deleteWorkspacePopup(); }}
                       variant="primary"
-                    ></ERPButton>
+                    />
                   </div>
+
                   <ERPModal
                     isOpen={deleteWorkspacePopupOpen}
-                    title={"Update Email"}
+                    title={t("update_email")}
                     isForm={true}
                     closeModal={() => {
                       setDeleteWorkspacePopupOpen(false);
@@ -177,5 +151,4 @@ const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
     </Fragment>
   );
 };
-
 export default WorkspaceSettingsSecurity;

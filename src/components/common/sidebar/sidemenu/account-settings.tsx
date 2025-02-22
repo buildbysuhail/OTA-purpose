@@ -1,8 +1,6 @@
-
-
 export const AccountSettingsMenuItems = [
   {
-    menutitle_lg: 'Account Settings',
+    menutitle_lg: 'account_settings',
     showUserMiniCard: true,
   },
   {
@@ -11,15 +9,15 @@ export const AccountSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Profile',
+    title: 'profile',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/avatar`, type: 'link', active: false, selected: false, title: 'Avatar' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/basic-information`, type: 'link', active: false, selected: false, title: 'Basic Information' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/email-address`, type: 'link', active: false, selected: false, title: 'Email Address' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/phone-number`, type: 'link', active: false, selected: false, title: 'Phone Number' }
+      { path: `${import.meta.env.BASE_URL}account-settings/profile/avatar`, type: 'link', active: false, selected: false, title: 'avatar' },
+      { path: `${import.meta.env.BASE_URL}account-settings/profile/basic-information`, type: 'link', active: false, selected: false, title: 'basic_information' },
+      { path: `${import.meta.env.BASE_URL}account-settings/profile/email-address`, type: 'link', active: false, selected: false, title: 'email_address' },
+      { path: `${import.meta.env.BASE_URL}account-settings/profile/phone-number`, type: 'link', active: false, selected: false, title: 'phone_number' }
     ]
   },
   {
@@ -28,29 +26,29 @@ export const AccountSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Security',
+    title: 'security',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       // { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
       // { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
-      { path: `${import.meta.env.BASE_URL}account-settings/security/password`, type: 'link', active: false, selected: false, title: 'Password' }
+      { path: `${import.meta.env.BASE_URL}account-settings/security/password`, type: 'link', active: false, selected: false, title: 'password' }
     ]
-  }, 
+  },
   {
     icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
     type: 'sub',
     Name: '',
     active: false,
     selected: false,
-    title: 'Preferences',
+    title: 'preferences',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}account-settings/preferences/language`, type: 'link', active: false, selected: false, title: 'Language & Typing' },
-      { path: `${import.meta.env.BASE_URL}account-settings/preferences/theme`, type: 'link', active: false, selected: false, title: 'Theme' },
+      { path: `${import.meta.env.BASE_URL}account-settings/preferences/language`, type: 'link', active: false, selected: false, title: 'language_&_typing' },
+      { path: `${import.meta.env.BASE_URL}account-settings/preferences/theme`, type: 'link', active: false, selected: false, title: 'theme' },
       // { path: `${import.meta.env.BASE_URL}account-settings/preferences/date-and-region`, type: 'link', active: false, selected: false, title: 'Date & Region' },
       // { path: `${import.meta.env.BASE_URL}account-settings/preferences/system-preferences`, type: 'link', active: false, selected: false, title: 'Other System Preference' }
     ]
@@ -62,7 +60,7 @@ export const AccountSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Sessions',
+    title: 'sessions',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
@@ -74,7 +72,7 @@ export const AccountSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Sign Out',
+    title: 'sign_out',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
@@ -87,10 +85,9 @@ export const AccountSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Workspace Settings',
+    title: 'workspace_settings',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
   },
- 
 ];

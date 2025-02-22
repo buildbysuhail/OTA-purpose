@@ -9,72 +9,63 @@ import { APIClient } from "../../helpers/api-client";
 import { useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { postAction } from "../../redux/slices/app-thunks";
+import { useTranslation } from "react-i18next";
 
-interface AccountSettingsProps {}
+interface AccountSettingsProps { }
 
 const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
- 
   const dispatch = useDispatch();
-
+  const { t } = useTranslation('main')
   const resetPassword = async () => {
-    
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.updatePassword,
         data: { password: password },
       }) as any
     ).unwrap();
-    
     handleResponse(response, () => {
       setPassword("");
     });
   };
-
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   return (
     <Fragment>
-      
       <div className="grid grid-cols-12 gap-x-6">
-      <div className="xxl:col-span-6 xl:col-span-12 col-span-12">
-        <div className="grid grid-cols-12 gap-x-6">
-          <div
-            id="phone-number"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "Password" ? "blink" : ""
-            } col-span-12`}
-          >
-            <div className="box custom-box">
-              <div className="box-header justify-between">
-                <div className="box-title">
-                Reset Password{" "}
-                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                  We recommend you to change your password often, it will make you feel better about your security!
-                  </p>
+        <div className="xxl:col-span-6 xl:col-span-12 col-span-12">
+          <div className="grid grid-cols-12 gap-x-6">
+            <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""} col-span-12`} >
+              <div className="box custom-box">
+                <div className="box-header justify-between">
+                  <div className="box-title">
+                    {t("reset_password")}
+                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                      {t("password_change_recommendation")}
+                    </p>
+                  </div>
                 </div>
-                <div></div>
-              </div>
-              <div className="box-body">
-                <div className="grid grid-cols-1 gap-3">
-                  <ERPInput
-                    id="password"
-                    placeholder="Please Enter new Password"
-                    required={true}
-                    value={password}
-                    data={{password: password}}
-                    onChangeData={(data: any) => {
-                      setPassword(data.password)}
-                    }
-                  />
-                  <div className="w-full p-2 flex justify-end">
-                    <ERPButton
-                      title="Reset"
-                      disabled={password == null || password == ""}
-                      onClick={resetPassword}
-                      variant="primary"
-                    ></ERPButton>
+
+                <div className="box-body">
+                  <div className="grid grid-cols-1 gap-3">
+                    <ERPInput
+                      id="password"
+                      label={t("password")}
+                      placeholder={t("please_enter_new_password")}
+                      required={true}
+                      value={password}
+                      data={{ password: password }}
+                      onChangeData={(data: any) => { setPassword(data.password) }}
+                    />
+                    <div className="w-full p-2 flex justify-end">
+                      <ERPButton
+                        title={t("reset")}
+                        disabled={password == null || password == ""}
+                        onClick={resetPassword}
+                        variant="primary"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -82,13 +73,7 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
           </div>
         </div>
       </div>
-        <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-
-        </div>
-      </div>
-      
     </Fragment>
   );
 };
-
 export default AccountSettingsSecurity;

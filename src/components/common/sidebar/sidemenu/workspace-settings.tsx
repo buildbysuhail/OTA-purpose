@@ -2,7 +2,7 @@
 
 export const WorkspaceSettingsMenuItems = [
   {
-    menutitle_lg: 'Workspace Settings',
+    menutitle_lg: 'workspace_settings',
     showWorkspaceMiniCard: true,
 
   },
@@ -12,15 +12,15 @@ export const WorkspaceSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Settings',
+    title: 'settings',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-logo`, type: 'link', active: false, selected: false, title: 'Workspace Logo' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-basic-information`, type: 'link', active: false, selected: false, title: 'Basic Information' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/primary-email`, type: 'link', active: false, selected: false, title: 'Primary Email Address' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/business-number`, type: 'link', active: false, selected: false, title: 'Business Phone Number' },
+      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-logo`, type: 'link', active: false, selected: false, title: 'workspace_logo' },
+      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-basic-information`, type: 'link', active: false, selected: false, title: 'basic_information' },
+      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/primary-email`, type: 'link', active: false, selected: false, title: 'primary_email_address' },
+      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/business-number`, type: 'link', active: false, selected: false, title: 'business_phone_number' },
     ]
   },
   {
@@ -29,16 +29,16 @@ export const WorkspaceSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Security',
+    title: 'security',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       // { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
       // { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/security/deleteWorkspace`, type: 'link', active: false, selected: false, title: 'Delete Workspace' }
+      { path: `${import.meta.env.BASE_URL}workspace-settings/security/deleteWorkspace`, type: 'link', active: false, selected: false, title: 'delete_workspace' }
     ]
-  }, 
+  },
   {
     icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
     type: 'link',
@@ -46,7 +46,7 @@ export const WorkspaceSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Members',
+    title: 'members',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
@@ -70,10 +70,9 @@ export const WorkspaceSettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Sign Out',
+    title: 'sign_out',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
   },
- 
 ];

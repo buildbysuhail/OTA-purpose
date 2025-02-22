@@ -1,16 +1,10 @@
-import {
-  Cog6ToothIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon, } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 import { useTranslation } from "react-i18next";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface MenuItem {
   title: string;
@@ -32,10 +26,8 @@ const Header: React.FC = () => {
   const [open, setIsOpen] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<MenuItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-
-  const handleNavigation = () => {
-    navigate("/");
-  };
+  const handleNavigation = () => { navigate("/"); };
+  const { t } = useTranslation('main')
 
   useEffect(() => {
     if (search) {
@@ -48,7 +40,6 @@ const Header: React.FC = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value.toLowerCase();
     setSearch(searchTerm);
-
     let AllRoutes: MenuItem[] = [];
 
     const extractRoutes = (menuItems: MenuItem[]) => {
@@ -62,7 +53,6 @@ const Header: React.FC = () => {
     };
 
     extractRoutes(SettingsMenuItems);
-
     let searchResult = AllRoutes.filter((item) =>
       item.title.toLowerCase().includes(searchTerm)
     );
@@ -100,16 +90,13 @@ const Header: React.FC = () => {
     if (item.path) {
       navigate(item.path);
     } else {
-      ERPToast.showWith(
-        "This Feature is under development. Please try later!",
-        "warning"
-      );
+      ERPToast.showWith(t("feature_under_development_message"), t("warning"));
     }
     setIsOpen(false);
     setSearch("");
   };
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     searchInputRef.current?.focus();
   }, []);
@@ -117,35 +104,36 @@ const Header: React.FC = () => {
   // const appState = useAppSelector(
   //   (state: RootState) => state.AppState.appState
   // );
-  
+
   return (
     <div className="py-6 px-4 flex flex-col gap-4 ">
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <Cog6ToothIcon className="w-5 aspect-square" />
-          <h3 className="text-base dark:!text-dark-text font-medium">Settings</h3>
+          <h3 className="text-base dark:!text-dark-text font-medium">{t("settings")}</h3>
         </div>
-        <div
-          className={`flex gap-1 items-center py-1 px-2 dark:bg-dark-bg-card dark:border-dark-border  bg-gray-50 rounded-md border cursor-pointer`}
-          onClick={handleNavigation}
-        >
-          <p className="text-[10px] dark:!text-dark-text">Close</p>
+
+        <div className={`flex gap-1 items-center py-1 px-2 dark:bg-dark-bg-card dark:border-dark-border  bg-gray-50 rounded-md border cursor-pointer`} onClick={handleNavigation}>
+          <p className="text-[10px] dark:!text-dark-text">{t("close")}</p>
           <XMarkIcon className="w-4 aspect-square stroke-red-600" />
         </div>
       </div>
+
       <div className="w-full relative">
-      <div className="flex h-10">
-        <div className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border  bg-slate-50 border border-r-0 rounded-md rounded-r-none`}>
-          <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
-        </div>
-        <input
-          ref={searchInputRef}
-          className={`dark:bg-dark-bg-card dark:border-dark-border custom-input`}
-          value={search}
-          onChange={handleSearch}
-          onKeyDown={handleKeyDown}
-        />
-        <style>{`
+        <div className="flex h-10">
+          <div className={`h-full p-2 dark:bg-dark-bg-card dark:border-dark-border  bg-slate-50 border border-r-0 rounded-md rounded-r-none`}>
+            <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
+          </div>
+          <input
+            ref={searchInputRef}
+            className={`dark:bg-dark-bg-card dark:border-dark-border custom-input`}
+            value={search}
+            onChange={handleSearch}
+            onKeyDown={handleKeyDown}
+          />
+
+          <style>
+            {`
         .custom-input {
           width: 100%;
           outline: none;
@@ -161,16 +149,19 @@ const Header: React.FC = () => {
           border-color: #3b82f6;
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
         }
-      `}</style>
-        {search && (
-          <XMarkIcon
-            className="w-4 aspect-square stroke-red-700 absolute right-2 top-3 cursor-pointer"
-            onClick={() => {
-              setSearch('')
-            }}
-          />
-        )}
-      </div>
+      `}
+          </style>
+
+          {
+            search && (
+              <XMarkIcon className="w-4 aspect-square stroke-red-700 absolute right-2 top-3 cursor-pointer"
+                onClick={() => {
+                  setSearch('')
+                }}
+              />
+            )
+          }
+        </div>
         <SearchResultBar
           isOpen={open}
           searchResults={searchResults}
@@ -183,19 +174,15 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-
 export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('main');
 
   // const appState = useAppSelector(
   //   (state: RootState) => state.AppState.appState
   // );
 
   return (
-    <div
-      className={`${isOpen ? "max-h-[300px]" : "h-0"
-        } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
-    >
+    <div className={`${isOpen ? "max-h-[300px]" : "h-0"} absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}>
       <div className={`flex flex-col dark:bg-dark-bg-card `}>
         {searchResults.length > 0 ? (
           searchResults.map((item, idx) => (
@@ -205,15 +192,14 @@ export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, search
                   ? "bg-primary text-white"
                   : "hover:bg-primary hover:text-white"
                   }`}
-                onClick={() => onItemClick(item)}
-              >
+                onClick={() => onItemClick(item)}>
                 {t(item.title as any)}
               </p>
             </div>
           ))
         ) : (
           <div className="w-full p-1">
-            <p className="text-xs italic text-center p-2">No Data Found</p>
+            <p className="text-xs italic text-center p-2">{t("no_data_found")}</p>
           </div>
         )}
       </div>

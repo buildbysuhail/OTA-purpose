@@ -1,32 +1,26 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import ERPAvatar from "../../components/ERPComponents/erp-avatar";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
 import ERPCropper from "../../components/ERPComponents/erp-cropper";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
-
 import { useDispatch } from "react-redux";
-import {
-  ResponseModelWithValidation,
-} from "../../base/response-model";
+import { ResponseModelWithValidation, } from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
 import { postAction } from "../../redux/slices/app-thunks";
-
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import WorkspaceSettingsApis from "./workspace-settings-apis";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
+import { useTranslation } from "react-i18next";
 
-interface WorkSpaceSettingsProps {}
+interface WorkSpaceSettingsProps { }
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   let _userSession = useAppSelector((state: RootState) => state.UserSession) as any;
@@ -48,35 +42,25 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     },
     validations: {
       registeredName: "",
-      nameInSecondLanguage:  "",
-      countryId:  "",
-      taxNumber:  "",
-      currencyId:  "",
-      industry:  "",
+      nameInSecondLanguage: "",
+      countryId: "",
+      taxNumber: "",
+      currencyId: "",
+      industry: "",
     },
   };
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
-  
   const location = useLocation();
+  const { t } = useTranslation('main')
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
- 
-  
-  
-  const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
+  const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
-
- 
- 
   const [emailLoading, setEmailLoading] = useState<boolean>(false);
   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
-
-  
   //////////////////////////////////////////////////////////////////////
-  
+
   useEffect(() => {
-    
-    
     if (
       _userSession &&
       _userSession?.companies &&
@@ -89,88 +73,81 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
         setImage(company.logo);
       }
     }
-}, [_userSession?.companies]);
+  }, [_userSession?.companies]);
+
   const getPhone = async () => {
-    
     let res = await WorkspaceSettingsApis.getPhone();
     setPhone(res);
     set_Phone(res);
   };
+
   const changePhone = useCallback(async () => {
     setPhoneChangeLoading(true);
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.changePhone_workspace, data: {phone: phone}}) as any
+      postAction({ apiUrl: Urls.changePhone_workspace, data: { phone: phone } }) as any
     ).unwrap();
-    
     setPhoneChangeLoading(false);
     handleResponse(response);
   }, [dispatch, phone]);
+
   const changeEmail = useCallback(async () => {
     setEmailLoading(true);
-    
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.updateCompanyEmail_workspace, data: {newValue: postEmail}}) as any
+      postAction({ apiUrl: Urls.updateCompanyEmail_workspace, data: { newValue: postEmail } }) as any
     ).unwrap();
-    
     setEmailLoading(false);
-    handleResponse(response, ()=> {
-      
-    setIsOpenEmailChange(false);
-    getEmail();
+    handleResponse(response, () => {
+      setIsOpenEmailChange(false);
+      getEmail();
     });
   }, [dispatch, postEmail]);
-////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
 
-const getBasicInfo = async() => {
-  let res = await WorkspaceSettingsApis.getUserBasicInfo();
+  const getBasicInfo = async () => {
+    let res = await WorkspaceSettingsApis.getUserBasicInfo();
     setBasicInfo((prevData: any) => ({
       ...prevData,
       data: res
     }))
-}
-
-const resetBasicInfo = useCallback(async () => {
-  setBasicInfo(initialBasicInfoWithValidation);
-}, [initialBasicInfoWithValidation]);
-
-const updateBasicInfo = useCallback(async () => {
-  
-  setBasicInfoLoading(true);
-  const response: ResponseModelWithValidation<any, any> = await WorkspaceSettingsApis.updateUserBasicInfo(basicInfo.data);
-  
-  setBasicInfoLoading(false);
-  
-  setBasicInfo((prevData: any) => ({
-    ...prevData,
-    validations: response.validations
-  }));
-  appDispatch(userSession());
-  if(response.isOk) {
-    // await dispatch(userSession());
   }
-  handleResponse(response, () => {
-    
-  });
-}, [dispatch, basicInfo.data, userSession]);
 
-/////////////////////////////////////////////////////////////////////
+  const resetBasicInfo = useCallback(async () => {
+    setBasicInfo(initialBasicInfoWithValidation);
+  }, [initialBasicInfoWithValidation]);
 
-/////////////////////////////////////////////////////////////////////
+  const updateBasicInfo = useCallback(async () => {
+    setBasicInfoLoading(true);
+    const response: ResponseModelWithValidation<any, any> = await WorkspaceSettingsApis.updateUserBasicInfo(basicInfo.data);
+    setBasicInfoLoading(false);
+    setBasicInfo((prevData: any) => ({
+      ...prevData,
+      validations: response.validations
+    }));
+    appDispatch(userSession());
+    if (response.isOk) {
+      // await dispatch(userSession());
+    }
+    handleResponse(response, () => {
+
+    });
+  }, [dispatch, basicInfo.data, userSession]);
+
+  /////////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////
 
   const postFormEmail = async () => {
     setEmailLoading(true);
-      
-      const response: ResponseModelWithValidation<any, any> =
-        await WorkspaceSettingsApis.verifyEmail_profile({newValue: postEmail});
-      
-        setEmailLoading(false);
-      handleResponse(response, () => {
-        setIsOpenEmailChange(false);
-      });
+    const response: ResponseModelWithValidation<any, any> =
+      await WorkspaceSettingsApis.verifyEmail_profile({ newValue: postEmail });
+    setEmailLoading(false);
+    handleResponse(response, () => {
+      setIsOpenEmailChange(false);
+    });
   };
-  
+
   const getEmail = async () => {
     let res = await WorkspaceSettingsApis.getEmail();
     setEmail(res);
@@ -178,11 +155,11 @@ const updateBasicInfo = useCallback(async () => {
 
   /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
-    
     return (url: string) => {
       appDispatch(userSession());
     };
   }, []);
+
   useEffect(() => {
     getBasicInfo();
     getEmail();
@@ -192,62 +169,49 @@ const updateBasicInfo = useCallback(async () => {
   const PopUpModalEmailChange = () => {
     return (
       <div className="w-full">
-          <div className="grid grid-cols-1 gap-3">
-           
-            <ERPInput
-              id="newValue"
-              type="newValue"
-              placeholder="New Email"
-              required={true}
-              data={{newValue:postEmail}}
-              onChangeData={(data: any) =>
-              {setPostEmail(data.newValue)}
-              }
-              value={postEmail}
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-3">
+          <ERPInput
+            id="newValue"
+            type="newValue"
+            placeholder={t("new_email")}
+            required={true}
+            data={{ newValue: postEmail }}
+            onChangeData={(data: any) => { setPostEmail(data.newValue) }}
+            value={postEmail}
+          />
+        </div>
         <div className="w-full p-2 flex justify-end">
           <ERPButton
             type="reset"
-            title="Cancel"
+            title={t("cancel")}
             variant="secondary"
-            onClick={() => {
-              setIsOpenEmailChange(false);
-            }}
+            onClick={() => { setIsOpenEmailChange(false); }}
             disabled={emailLoading}
-          ></ERPButton>
+          />
           <ERPButton
             type="button"
             disabled={emailLoading}
             variant="primary"
             onClick={changeEmail}
             loading={emailLoading}
-            title={
-              "Update"
-            }
-          ></ERPButton>
+            title={t("update")}
+          />
         </div>
       </div>
     );
   };
   return (
     <Fragment>
-      
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
-            <div
-              id="avatar"
-              className={`xxl:col-span-12 xl:col-span-12 ${
-                path === "avatar" ? "blink" : ""
-              } col-span-12`}
-            >
+            <div id="avatar" className={`xxl:col-span-12 xl:col-span-12 ${path === "avatar" ? "blink" : ""} col-span-12`}>
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                  Workspace Logo
+                    {t("workspace_logo")}
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Customize the way your Business logo will look to others. Please note that this logo will appear on documents such as Invoice, Estimates and Receipts
+                      {t("business_logo_description")}
                     </p>
                   </div>
                 </div>
@@ -256,11 +220,11 @@ const updateBasicInfo = useCallback(async () => {
                     <div className="sm:flex items-start items-center">
                       <div>
                         <span className="avatar avatar-xxl avatar-badge">
-                        <ERPAvatar
-                        variant="square"
-                          alt="Remy Sharp"
-                          src={typeof image === 'string' ? image : ''}
-                          sx={{ width: 75, height: 75 }}
+                          <ERPAvatar
+                            variant="square"
+                            alt="Remy Sharp"
+                            src={typeof image === 'string' ? image : ''}
+                            sx={{ width: 75, height: 75 }}
                           />
                         </span>
                       </div>
@@ -279,46 +243,36 @@ const updateBasicInfo = useCallback(async () => {
                       <ERPCropper
                         apiUrl="/Subscription/WorkSpace/UploadCompanyLogo"
                         onImageSuccess={onImageSuccess}
-                         useCircle={false}
-                      ></ERPCropper>
-                         {/* Maximum 5MB in size.
-JPG, PNG, or GIF formats.
-Recommended size: 300 x 300 pixels. */}
-                    {/* </div>
-                   
-                    <div> */}
-                  
+                        useCircle={false}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <div
-              id="email-address"
-              className={`xxl:col-span-12 xl:col-span-12 ${
-                path === "email-address" ? "blink" : ""
-              } col-span-12`}
-            >
+              id="email-address" className={`xxl:col-span-12 xl:col-span-12 ${path === "email-address" ? "blink" : ""} col-span-12`}>
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                  Primary Email Address
+                    {t("primary_email_address")}
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    This email address is used for all inquiries and prominently displayed on our invoices, estimates, and purchase orders.
+                      {t("inquiry_email_description")}
                     </p>
                   </div>
-                  <div></div>
                 </div>
+
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
-                  <div className="sm:flex items-start items-center">
+                    <div className="sm:flex items-start items-center">
                       <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
                         <img src={emailImage} />
                       </span>
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[.75rem]">
-                            {email?email:""}
+                            {email ? email : ""}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
@@ -328,66 +282,54 @@ Recommended size: 300 x 300 pixels. */}
                     </div>
 
                     <ERPButton
-                      title="Add Primary Email Address"
-                      onClick={() => {
-                        setIsOpenEmailChange(!isOpenEmailChange);
-                      }}
+                      title={t("add_primary_email_address")}
+                      onClick={() => { setIsOpenEmailChange(!isOpenEmailChange); }}
                       variant="primary"
-                    ></ERPButton>
+                    />
                   </div>
                 </div>
               </div>
               <ERPModal
                 isOpen={isOpenEmailChange}
-                title={"Update Email"}
+                title={t("update_email")}
                 isForm={true}
-                closeModal={() => {
-                  setIsOpenEmailChange(false);
-                }}
+                closeModal={() => { setIsOpenEmailChange(false); }}
                 content={PopUpModalEmailChange()}
               />
             </div>
-            <div
-              id="phone-number"
-              className={`xxl:col-span-12 xl:col-span-12 ${
-                path === "phone-number" ? "blink" : ""
-              } col-span-12`}
-            >
+
+            <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "phone-number" ? "blink" : ""} col-span-12`} >
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                  Business Phone Number
+                    {t("business_phone_number")}
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    View and manage the mobile number associated with your account. Please note that we do not currently support the verification of mobile numbers.
+                      {t("mobile_number_description")}
                     </p>
                   </div>
-                  <div></div>
                 </div>
+
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
-                  <ERPInput
+                    <ERPInput
                       id="phone"
-                      placeholder="Pleas Enter Phone Number"
+                      placeholder={t("please_enter_phone_number")}
                       required={true}
                       value={phone}
-                      data={{phone: phone}}
-                      onChangeData={(data: any) =>
-                      {
-                        setPhone(data.phone)
-                      }
-                      }
+                      data={{ phone: phone }}
+                      onChangeData={(data: any) => { setPhone(data.phone) }}
                     />
- <div className="w-full p-2 flex justify-end">
-                    <ERPButton
-                      title={
-                        phone != undefined && phone != null && phone != ""
-                          ? "Update"
-                          : "Add Phone"
-                      }
-                      disabled={phone == _phone}
-                      onClick={changePhone}
-                      variant="primary"
-                    ></ERPButton>
+                    <div className="w-full p-2 flex justify-end">
+                      <ERPButton
+                        title={
+                          phone != undefined && phone != null && phone != ""
+                            ? t("update")
+                            : t("add_phone")
+                        }
+                        disabled={phone == _phone}
+                        onClick={changePhone}
+                        variant="primary"
+                      />
                     </div>
                   </div>
                 </div>
@@ -395,38 +337,28 @@ Recommended size: 300 x 300 pixels. */}
             </div>
           </div>
         </div>
+
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-          <div
-            id="basic-information"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "basic-information" ? "blink" : ""
-            } col-span-12`}
-          >
+          <div id="basic-information" className={`xxl:col-span-12 xl:col-span-12 ${path === "basic-information" ? "blink" : ""} col-span-12`} >
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Basic Information
+                  {t("basic_information")}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                  Provide as much or as little information about your Business. Biz will never share or sell information or identifiable details.
+                    {t("business_info_description")}
                   </p>
                 </div>
-                <div></div>
               </div>
+
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
                   <ERPInput
                     id="registeredName"
-                    label="Business Name"
-                    placeholder="Eg: Novalabs"
+                    label={t("business_name")}
+                    placeholder={t("eg:novalabs")}
                     required={true}
                     data={basicInfo.data}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo.validations?.registeredName}
                     value={
                       basicInfo?.data?.registeredName
@@ -434,19 +366,12 @@ Recommended size: 300 x 300 pixels. */}
                         : ""
                     }
                   />
-                   <ERPInput
+                  <ERPInput
                     id="nameInSecondLanguage"
-                    label="Name in second language"
-                    placeholder="Eg: Novalabs"
+                    label={t("name_in_second_language")}
+                    placeholder={t("eg:novalabs")}
                     data={basicInfo.data}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
-                  
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo.validations?.nameInSecondLanguage}
                     value={
                       basicInfo?.data?.nameInSecondLanguage
@@ -463,40 +388,27 @@ Recommended size: 300 x 300 pixels. */}
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo.validations?.countryId}
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
-                    label="Country"
+                    label={t("country")}
                   />
-                   <ERPDataCombobox
+                  <ERPDataCombobox
                     id="currencyId"
                     field={{
                       id: "currencyId",
-                   
                       getListUrl: Urls.data_currencies,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo?.validations?.currencyId}
                     data={basicInfo?.data}
                     defaultData={basicInfo?.data}
-                    label="Business Currency"
+                    label={t("business_currency")}
                   />
-                   <ERPDataCombobox
+                  <ERPDataCombobox
                     id="industry"
                     field={{
                       id: "industry",
@@ -505,17 +417,11 @@ Recommended size: 300 x 300 pixels. */}
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo.validations?.industry}
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
-                    label="Industry"
+                    label={t("industry")}
                   />
                   {/* <ERPDataCombobox
                     id="countryCode"
@@ -558,17 +464,10 @@ Recommended size: 300 x 300 pixels. */}
                   /> */}
                   <ERPInput
                     id="taxNumber"
-                    label="Tax identification Number"
-                    placeholder="Eg: 58733"
-                  
+                    label={t("tax_identification_number")}
+                    placeholder={t("eg:58733")}
                     data={basicInfo.data}
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
+                    onChangeData={(data: any) => { setBasicInfo((prev: any) => ({ ...prev, data: data })) }}
                     validation={basicInfo.validations?.taxNumber}
                     value={
                       basicInfo?.data?.taxNumber
@@ -593,17 +492,17 @@ Recommended size: 300 x 300 pixels. */}
                   /> */}
                   <div className="w-full p-2 flex justify-end">
                     <ERPButton
-                      title="Cancel"
+                      title={t("cancel")}
                       onClick={resetBasicInfo}
                       type="reset"
-                    ></ERPButton>
+                    />
                     <ERPButton
-                      title="Save Changes"
+                      title={t("save_changes")}
                       onClick={updateBasicInfo}
                       variant="primary"
                       loading={basicInfoLoading}
                       disabled={basicInfoLoading}
-                    ></ERPButton>
+                    />
                   </div>
                 </div>
               </div>

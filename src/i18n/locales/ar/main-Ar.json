@@ -227,5 +227,29 @@
   "you_have_unsaved_changes": "لديك تغييرات غير محفوظة ستفقد إذا غادرت هذه الصفحة. هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟",
   "stay_on_page": "البقاء في الصفحة",
   "leave_page": "مغادرة الصفحة",
-  "ok": "حسنًا"
+  "ok": "حسنًا",
+  "feature_under_development_message": "هذه الميزة قيد التطوير. يرجى المحاولة لاحقًا!",
+  "scroll_to_top": "الانتقال إلى الأعلى",
+  "scroll_to_bottom": "الانتقال إلى الأسفل",
+
+  "profile": "الملف الشخصي",
+  "account_settings": "إعدادات الحساب",
+  "avatar": "الصورة الرمزية",
+  "basic_information": "المعلومات الأساسية",
+  "email_address": "عنوان البريد الإلكتروني",
+  "phone_number": "رقم الهاتف",
+  "security": "الأمان",
+  "password": "كلمة المرور",
+  "preferences": "التفضيلات",
+  "language_&_typing": "اللغة والكتابة",
+  "theme": "السمة",
+  "sessions": "الجلسات",
+  "sign_out": "تسجيل الخروج",
+  "workspace_settings": "إعدادات مساحة العمل",
+
+  "workspace_logo": "شعار مساحة العمل",
+  "primary_email_address": "البريد الإلكتروني الأساسي",
+  "business_phone_number": "رقم الهاتف التجاري",
+  "delete_workspace": "حذف مساحة العمل",
+  "members": "الأعضاء"
 }

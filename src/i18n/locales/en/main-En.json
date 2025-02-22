@@ -227,5 +227,30 @@
     "you_have_unsaved_changes":"You have unsaved changes that will be lost if you leave this page.Are you sure you want to leave this page ?",
     "stay_on_page":"Stay on page",
     "leave_page":"Leave page",
-    "ok":"Ok"
+    "ok":"Ok",
+    "feature_under_development_message":"This feature is under development. Please try later!",
+    "scroll_to_top":"Scroll to top",
+    "scroll_to_bottom":"Scroll to bottom",
+
+    "profile":"Profile",
+    "account_settings":"Account Settings",
+    "avatar":"Avatar",
+    "basic_information":"Basic Information",
+    "email_address":"Email Address",
+    "phone_number":"Phone Number",
+    "security":"Security",
+    "password":"Password",
+    "preferences":"Preferences",
+    "language_&_typing":"Language & Typing",
+    "theme":"Theme",
+    "sessions":"Sessions",
+    "sign_out":"Sign Out",
+
+    "workspace_settings":"Workspace Settings",
+    "workspace_logo":"Workspace logo",
+    "primary_email_address":"Primary Email Address",
+    "business_phone_number":"Business Phone Number",
+    "delete_workspace":"Delete Workspace",
+    "members":"Members"
+
 }

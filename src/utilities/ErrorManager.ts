@@ -7,7 +7,7 @@ const ErrorManager = {
   handle(error: any) {
     
     var msg = "";
-    if (error.toJSON().message === "Network Error") {
+    if (error?.toJSON().message === "Network Error") {
       ERPToast.show("Network Error, No Internet Connection", "error");
       // const json=JSON.stringify(error.toJSON());
       // ERPToast.show(json);

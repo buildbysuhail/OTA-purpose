@@ -86,29 +86,63 @@ debugger;
     let formData = new FormData();
     formData.append("file", newUpload.file, newUpload.name);
     formData.append("key", key);
-    const res = await api.post(
+    const res = api.post(
       `${Urls.acc_transaction_base}${formState.transactionType}/UploadFile`,
       formData,
       {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",
+      }, (progressEvent: any) => {
+
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        console.log(percentCompleted);
+        
+        dispatch(
+          accFormStateTransactionAttachmentsRowUpdate({
+                row: {
+                  ...row,
+                  id: undefined,
+                  isNew: true,
+                  uploading: true,
+                  uploaded: false,
+                  error:"",
+                  progress: percentCompleted,
+                },
+              })
+            );
+      },
+    ).then((res: any) => {
+      if(res.isOk) {
+        debugger;
+   dispatch(
+    accFormStateTransactionAttachmentsRowUpdate({
+          row: {
+            ...row,
+            id: res.item.attachmentId,
+            isNew: true,
+            uploading: false,
+            uploaded: true,
+            progress: 100,
+          },
+        })
+      );
+      } else {
+        dispatch(
+          accFormStateTransactionAttachmentsRowUpdate({
+                row: {
+                  ...row,
+                  id: res.item.attachmentId,
+                  isNew: true,
+                  uploading: false,
+                  uploaded: false,
+                  error:"failed",
+                  progress: 0,
+                },
+              })
+            );
       }
-    );
-    if(res.isOk) {
-      debugger;
- dispatch(
-  accFormStateTransactionAttachmentsRowUpdate({
-        row: {
-          ...row,
-          id: res.item.attachmentId,
-          isNew: true,
-          uploading: false,
-          uploaded: true,
-          progress: 100,
-        },
-      })
-    );
-    }
+    });
+    
     
   };
 
@@ -198,88 +232,101 @@ debugger;
       </div>
 
       <div className="mt-1 ">
-        {formState.transaction.attachments.map((file) => (
-          <div
-            key={file?.id}
-            className="flex items-center dark:bg-dark-bg-card  bg-gray-50 rounded-lg p-3 transition-all dark:hover:bg-dark-hover-bg hover:bg-gray-300 border dark:border-dark-border border-b-[#00000024]"
+      {formState.transaction.attachments.map((file) => (
+  <div
+    key={file?.id}
+    className={`flex items-center dark:bg-dark-bg-card bg-gray-50 rounded-lg p-3 transition-all hover:bg-gray-300 border ${
+      file?.error ? "" : "dark:border-dark-border border-b-[#00000024]"
+    }`}
+  >
+    <svg
+      className="w-5 h-5 text-[#3b82f6] flex-shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+      />
+    </svg>
+    <div className="flex-grow min-w-0 flex flex-col">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2 overflow-hidden">
+          <p className="font-medium truncate text-sm">{file?.name}</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
+            {formatFileSize(file?.size)}
+          </p>
+          <button
+            onClick={() => removeFile(file?.id)}
+            className="h-6 w-6 flex items-center justify-center dark:text-dark-text text-gray-500 hover:text-[#ef4444]"
           >
-            <svg
-              className="w-5 h-5 text-[#3b82f6] flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-              />
-            </svg>
-            <div className="flex-grow min-w-0 flex items-center justify-between">
-              <div className="flex items-center space-x-2 overflow-hidden">
-                <p className="font-medium truncate text-sm">{file?.name}</p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
-                  {formatFileSize(file?.size)}
-                </p>
-                <button
-                  onClick={() => removeFile(file?.id)}
-                  className="h-6 w-6 flex items-center justify-center dark:text-dark-text text-gray-500 hover:text-[#ef4444]"
-                >
-                  {file?.uploaded ? (
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 w-24 flex-shrink-0">
-              <div className="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#3b82f6] transition-all duration-300 ease-out"
-                  style={{ width: `${file?.progress}%` }}
-                ></div>
-              </div>
-              <p className="text-xs font-medium text-gray-500 w-8 text-right">
-                {file?.uploaded ? (
-                  <span className="text-[#16a34a]">{t("done")}</span>
-                ) : (
-                  `${Math.round(file?.progress)}%`
-                )}
-              </p>
-            </div>
-          </div>
-        ))}
+            {file?.uploaded ? (
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+      </div>
+      {/* Show error message if there's an error */}
+      
+    </div>
+    {file?.error ? (
+        <p className="text-xs text-red mt-1">{file.error}</p>
+      ):(
+        <div className="flex items-center space-x-2 w-24 flex-shrink-0">
+        <div className="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-300 ease-out ${
+              file?.error ? "bg-red" : "bg-[#3b82f6]"
+            }`}
+            style={{ width: `${file?.progress}%` }}
+          ></div>
+        </div>
+        <p className="text-xs font-medium text-gray-500 w-8 text-right">
+          {file?.uploaded ? (
+            <span className="text-[#16a34a]">{t("done")}</span>
+          ) : (
+            `${Math.round(file?.progress)}%`
+          )}
+        </p>
+      </div>
+      )}
+   
+  </div>
+))}
       </div>
     </div>
   );

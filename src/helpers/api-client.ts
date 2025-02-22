@@ -219,11 +219,14 @@ class APIClient {
   /**
    * Posts the given data to the URL
    */
-  post = (url: string, data: any, headers?: any): Promise<any> => {
+  post = (url: string, data: any, headers?: any, onUploadProgress?: any): Promise<any> => {
     setAuthorization();
     return headers
-      ? axios.post(url, data, { headers: headers })
-      : axios.post(url, data);
+      ? (onUploadProgress 
+          ? axios.post(url, data, { headers: headers, onUploadProgress: onUploadProgress })
+          : axios.post(url, data, { headers: headers })
+        )
+      : onUploadProgress ? axios.post(url, data, {onUploadProgress: onUploadProgress }) :axios.post(url, data);
   };
 
   postAsync = async (

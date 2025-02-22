@@ -148,158 +148,101 @@ const NotificationSettings = () => {
                         </tr>
                       </thead>
                       <tbody className=" dark:!bg-dark-bg bg-[#fafafa]">
-                        {TableBody.length > 0 ? (
-                          TableBody?.filter((item) =>
-                            item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())
-                          )?.map((item, index) => (
-                            <tr key={index} className="dark:hover:bg-dark-hover-black hover:bg-gray-100">
-                              <td>
-                                <span className="font-light text-[.875rem]">
-                                  {item.transactionName}
-                                </span>
-                              </td>
-                              {/* Email Switch */}
-                              <td className="py-2 px-4">
-                                <div className="flex justify-start items-center space-x-4">
-                                  <ERPSwitch
-                                    size="sm"
-                                    defaultValue={item.email === "1"}
-                                    value={item.email === "1"}
-                                    onChange={(e) =>
-                                      handleSwitchChange(
-                                        item.transactionCode,
-                                        "email",
-                                        e.target.checked
+                        {
+                          TableBody.length > 0 ? (
+                            TableBody?.filter((item) =>
+                              item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())
+                            )?.map((item, index) => (
+                              <tr key={index} className="dark:hover:bg-dark-hover-black hover:bg-gray-100">
+                                <td>
+                                  <span className="font-light text-[.875rem]">
+                                    {item.transactionName}
+                                  </span>
+                                </td>
+                                {/* Email Switch */}
+                                <td className="py-2 px-4 group">
+                                  <div className="flex justify-start items-center space-x-4">
+                                    <ERPSwitch
+                                      size="sm"
+                                      defaultValue={item.email === "1"}
+                                      value={item.email === "1"}
+                                      onChange={(e) => handleSwitchChange(item.transactionCode, "email", e.target.checked)}
+                                    />
+                                    {
+                                      item.email === "1" && (
+                                        <span onClick={() => toggleTooltip(item.transactionCode, "email")} className="">
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                        </span>
                                       )
                                     }
-                                  />
-                                  {item.email === "1" && (
-                                    <span
-                                      onClick={() =>
-                                        toggleTooltip(
-                                          item.transactionCode,
-                                          "email"
-                                        )
-                                      }
-                                      className=""
-                                    >
-                                      <i
-                                        title="template"
-                                        className="ri-edit-box-line text-xl  text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"
-                                      ></i>
-                                    </span>
-                                  )}
-                                </div>
-                              </td>
-                              {/* WhatsApp Switch */}
-                              <td className="py-2 px-4">
-                                <div className="flex justify-start items-center space-x-4 ">
-                                  <ERPSwitch
-                                    size="sm"
-                                    defaultValue={item.whatsapp === "1"}
-                                    value={item.whatsapp === "1"}
-                                    onChange={(e) =>
-                                      handleSwitchChange(
-                                        item.transactionCode,
-                                        "whatsapp",
-                                        e.target.checked
+                                  </div>
+                                </td>
+                                {/* WhatsApp Switch */}
+                                <td className="py-2 px-4 group">
+                                  <div className="flex justify-start items-center space-x-4 ">
+                                    <ERPSwitch
+                                      size="sm"
+                                      defaultValue={item.whatsapp === "1"}
+                                      value={item.whatsapp === "1"}
+                                      onChange={(e) => handleSwitchChange(item.transactionCode, "whatsapp", e.target.checked)}
+                                    />
+                                    {
+                                      item.whatsapp === "1" && (
+                                        <span onClick={() => toggleTooltip(item.transactionCode, "whatsapp")}>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                        </span>
                                       )
                                     }
-                                  />
-                                  {item.whatsapp === "1" && (
-                                    <span
-                                      onClick={() =>
-                                        toggleTooltip(
-                                          item.transactionCode,
-                                          "whatsapp"
-                                        )
-                                      }
-                                    >
-                                      <i
-                                        title="template"
-                                        className="ri-edit-box-line text-xl text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"
-                                      ></i>
-                                    </span>
-                                  )}
-                                </div>
-                              </td>
+                                  </div>
+                                </td>
 
-                              {/* SMS Switch */}
-                              <td className="py-2 px-4">
-                                <div className="flex justify-start items-center space-x-4 ">
-                                  <ERPSwitch
-                                    size="sm"
-                                    defaultValue={item.sms === "1"}
-                                    value={item.sms === "1"}
-                                    onChange={(e) =>
-                                      handleSwitchChange(
-                                        item.transactionCode,
-                                        "sms",
-                                        e.target.checked
+                                {/* SMS Switch */}
+                                <td className="py-2 px-4 group">
+                                  <div className="flex justify-start items-center space-x-4 ">
+                                    <ERPSwitch
+                                      size="sm"
+                                      defaultValue={item.sms === "1"}
+                                      value={item.sms === "1"}
+                                      onChange={(e) => handleSwitchChange(item.transactionCode, "sms", e.target.checked)}
+                                    />
+                                    {
+                                      item.sms === "1" && (
+                                        <span onClick={() => toggleTooltip(item.transactionCode, "sms")}>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                        </span>
                                       )
                                     }
-                                  />
-                                  {item.sms === "1" && (
-                                    <span
-                                      onClick={() =>
-                                        toggleTooltip(
-                                          item.transactionCode,
-                                          "sms"
-                                        )
-                                      }
-                                    >
-                                      <i
-                                        title="template"
-                                        className="ri-edit-box-line text-xl text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"
-                                      ></i>
-                                    </span>
-                                  )}
-                                </div>
-                              </td>
+                                  </div>
+                                </td>
 
-                              {/* In-App Notification Switch */}
-                              <td className="py-2 px-4">
-                                <div className="flex justify-start items-center space-x-4">
-                                  <ERPSwitch
-                                    size="sm"
-                                    defaultValue={
-                                      item.inAppNotification === "1"
-                                    }
-                                    value={item.inAppNotification === "1"}
-                                    onChange={(e) =>
-                                      handleSwitchChange(
-                                        item.transactionCode,
-                                        "inAppNotification",
-                                        e.target.checked
+                                {/* In-App Notification Switch */}
+                                <td className="py-2 px-4 group">
+                                  <div className="flex justify-start items-center space-x-4">
+                                    <ERPSwitch
+                                      size="sm"
+                                      defaultValue={item.inAppNotification === "1"}
+                                      value={item.inAppNotification === "1"}
+                                      onChange={(e) => handleSwitchChange(item.transactionCode, "inAppNotification", e.target.checked)}
+                                    />
+                                    {
+                                      item.inAppNotification === "1" && (
+                                        <span onClick={() => toggleTooltip(item.transactionCode, "inAppNotification")}>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                        </span>
                                       )
                                     }
-                                  />
-                                  {item.inAppNotification === "1" && (
-                                    <span
-                                      onClick={() =>
-                                        toggleTooltip(
-                                          item.transactionCode,
-                                          "inAppNotification"
-                                        )
-                                      }
-                                    >
-                                      <i
-                                        title="template"
-                                        className="ri-edit-box-line text-xl cursor-pointer text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"
-                                      ></i>
-                                    </span>
-                                  )}
-                                </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={4} className="text-center">
+                                {t("no_data_available")}
                               </td>
                             </tr>
-                          ))
-                        ) : (
-                          <tr>
-                            <td colSpan={4} className="text-center">
-                              {t("no_data_available")}
-                            </td>
-                          </tr>
-                        )}
+                          )
+                        }
                       </tbody>
                     </table>
                   </div>
@@ -310,57 +253,44 @@ const NotificationSettings = () => {
         </div>
       </div>
 
-      {(tooltip.channel === "sms" || tooltip.channel === "whatsapp") && (
-        <ERPModal
-          isOpen={tooltip.isOpen || false}
-          title={
-            tooltip.channel === "sms" ? "Sms Template" : "WhatsApp  Template"
-          }
-          // width="w-full max-w-[600px]"
-          isForm={true}
-          closeModal={() => {
-            setTooltip((prevTooltip) => ({
-              ...prevTooltip,
-              isOpen: !prevTooltip.isOpen,
-            }));
-          }}
-          content={
-            <SmsWhatsappTemplate
-              channel={tooltip.channel}
-              templateKey={tooltip.transactionCode}
-              isOpen={tooltip.isOpen}
-              closeModal={() =>
-                setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))
-              }
-            />
-          }
-        />
-      )}
+      {
+        (tooltip.channel === "sms" || tooltip.channel === "whatsapp") && (
+          <ERPModal
+            isOpen={tooltip.isOpen || false}
+            title={tooltip.channel === "sms" ? t("sms_template") : t("whatsApp_template")}
+            // width="w-full max-w-[600px]"
+            isForm={true}
+            closeModal={() => { setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: !prevTooltip.isOpen, })); }}
+            content={
+              <SmsWhatsappTemplate
+                channel={tooltip.channel}
+                templateKey={tooltip.transactionCode}
+                isOpen={tooltip.isOpen}
+                closeModal={() => setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))}
+              />
+            }
+          />
+        )
+      }
 
-      {tooltip.channel === "email" && (
-        <ERPModal
-          isOpen={tooltip.isOpen || false}
-          title={"Email Template"}
-          // width="w-full max-w-[800px]"
-          isForm={true}
-          closeModal={() => {
-            setTooltip((prevTooltip) => ({
-              ...prevTooltip,
-              isOpen: !prevTooltip.isOpen,
-            }));
-          }}
-          content={
-            <EmailTemplate
-              channel={tooltip.channel}
-              templateKey={tooltip.transactionCode}
-              isOpen={tooltip.isOpen}
-              closeModal={() =>
-                setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))
-              }
-            />
-          }
-        />
-      )}
+      {
+        tooltip.channel === "email" && (
+          <ERPModal
+            isOpen={tooltip.isOpen || false}
+            title={t("email_template")}
+            // width="w-full max-w-[800px]"
+            isForm={true}
+            closeModal={() => { setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: !prevTooltip.isOpen, })); }}
+            content={
+              <EmailTemplate
+                channel={tooltip.channel}
+                templateKey={tooltip.transactionCode}
+                isOpen={tooltip.isOpen}
+                closeModal={() => setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))}
+              />
+            }
+          />
+        )}
     </>
   );
 };

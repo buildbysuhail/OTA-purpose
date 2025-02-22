@@ -171,7 +171,7 @@ const NotificationSettings = () => {
                                     {
                                       item.email === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "email")} className="">
-                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                          <i title="template" className="ri-edit-box-line text-xl  text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )
                                     }
@@ -189,7 +189,7 @@ const NotificationSettings = () => {
                                     {
                                       item.whatsapp === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "whatsapp")}>
-                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )
                                     }
@@ -208,7 +208,7 @@ const NotificationSettings = () => {
                                     {
                                       item.sms === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "sms")}>
-                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )
                                     }
@@ -227,7 +227,7 @@ const NotificationSettings = () => {
                                     {
                                       item.inAppNotification === "1" && (
                                         <span onClick={() => toggleTooltip(item.transactionCode, "inAppNotification")}>
-                                          <i title="template" className="ri-edit-box-line text-xl text-[#cbcbcb21] group-hover:text-[#047857] duration-300"></i>
+                                          <i title="template" className="ri-edit-box-line text-xl text-[#00000017] group-hover:text-[#047857] duration-300"></i>
                                         </span>
                                       )
                                     }

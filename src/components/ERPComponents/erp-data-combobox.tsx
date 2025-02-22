@@ -9,11 +9,12 @@ import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
-import { createPortal } from "react-dom";
+import { createPortal, unstable_batchedUpdates } from "react-dom";
 import { styled } from "@mui/system";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { inputBox } from "../../redux/slices/app/types";
 import { useDispatch } from "react-redux";
+import { setData } from "../../redux/slices/data/reducer";
 
 interface Option {
   value: any;
@@ -319,6 +320,9 @@ const propsAreEqual = (
   return true;
 };
 
+// Cache map for API requests
+const apiRequestCache = new Map<string, Promise<any>>();
+
 const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   (
     {
@@ -618,33 +622,100 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       field?.freezeDataLoad,
       _reload,
       disabledApiCall,
+      reduxState.costCentres,
+      reduxState.ledgers,
     ]);
 
+    const filterLedgers = async (ledgers: any[], queryString: string): Promise<any[]> => {
+      // Decrypt all names asynchronously
+      const decryptedLedgers = await Promise.all(
+          ledgers.map(async (x) => ({
+              ...x,
+              // name: await decryptAES(x.name),
+          }))
+      );
+  
+      if (!queryString) return decryptedLedgers;
+  
+      const queryParams = new URLSearchParams(queryString);
+  
+      // Return all ledgers if ledgerType is "All"
+      if ((queryParams.get("ledgerType") as any) == 0) {
+        return decryptedLedgers;
+    }
+    else {
+      
+    }
+      
+    return decryptedLedgers.filter((ledger) => {
+      for (const [key, value] of queryParams.entries()) {
+          if (key === "ledgerID") {
+              if (ledger.id === undefined || String(ledger.id) !== value) {
+                  return false;
+              }
+          } else if (key === "ledgerType") {
+              const ledgerTypes: number[] = Array.isArray(ledger.ledgerType) ? ledger.ledgerType : [];
+              const valueAsNumber = Number(value);
+              
+              if (!ledgerTypes.includes(valueAsNumber)) {
+                  return false;
+              }
+          }
+      }
+      return true;
+  });
+  
+  };
 
+  const fetchData = useCallback(async () => {
+    let params = "";
+    if (field?.params != undefined && Object.keys(field?.params).length > 0) {
+      params = new URLSearchParams(field?.params).toString();
+    }
+    const url = field?.getListUrlDynamic?.(data) || field?.getListUrl || "";
+    const cacheKey = `${url}`;
+  
+    // 1. Check Cache for ongoing or completed API requests
+    if (apiRequestCache.has(cacheKey)) {
+      return apiRequestCache.get(cacheKey);
+    }
+  
+    // 2. Fetch Data (Cache Miss)
+    const promise = api.getAsync(url, params).then((_res) => {
+      // 3. Update Redux After Fetch
+      if (url.includes("/Accounts/Data/AccLedgers/")) {
+        console.log('Accounts/Data/AccLedgers');
+        
+        dispatch(setData({ key: "ledgers", value: _res }));
+        return filterLedgers(_res, params);
+      } else if (url.includes("/Accounts/Data/CostCentres/")) {
+        dispatch(setData({ key: "costCentres", value: _res }));
+        return _res;
+      }
+      return _res;
+    }).finally(() => {
+      apiRequestCache.delete(cacheKey);
+    });
+  
+    apiRequestCache.set(cacheKey, promise);
+    return promise;
+  }, [field?.params, field?.getListUrlDynamic, field?.getListUrl, dispatch, data]);
+  
     const loadData = async () => {
       setLoading(true);
       try {
-        let params = "";
-        if (
-          field?.params != undefined &&
-          Object.keys(field?.params).length > 0
-        ) {
-          params = new URLSearchParams(field?.params).toString();
-        }
 
-        const _items =
-          options ||
-          (await api.getAsync(
-            field?.getListUrlDynamic != undefined
-              ? field.getListUrlDynamic(data)
-              : field?.getListUrl ?? "",
-            params,
-            undefined, // config (if not needed, keep it as undefined)
-            undefined, // token (if not needed, keep it as undefined)
-            false, // force (default value)
-            reduxState, // Pass reduxState here
-            dispatch //
-          ));
+       let _items;
+
+    // Check if data is available in Redux
+    if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length) {
+      _items = await filterLedgers(reduxState.ledgers, field?.params || "");
+    } else if (field?.getListUrl?.includes("/Accounts/Data/CostCentres/") && reduxState?.costCentres?.length) {
+      _items = reduxState.costCentres;
+    } else {
+      // Fetch data if not available in Redux
+      _items = options || (await fetchData());
+    }
         const labelKey = field?.labelKey ?? "label";
         const valueKey = field?.valueKey ?? "value";
         const nameKey = field?.nameKey ?? "name";
@@ -656,8 +727,9 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         setItems(_options);
         setFilteredItems(_options);
 
+      debugger;
         // Automatically select the first option after data is loaded
-
+       
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

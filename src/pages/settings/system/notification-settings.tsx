@@ -278,7 +278,8 @@ const NotificationSettings = () => {
           <ERPModal
             isOpen={tooltip.isOpen || false}
             title={t("email_template")}
-            // width="w-full max-w-[800px]"
+            width={600}
+            height={800}
             isForm={true}
             closeModal={() => { setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: !prevTooltip.isOpen, })); }}
             content={

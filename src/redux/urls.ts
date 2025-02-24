@@ -91,10 +91,10 @@ const Urls = {
   SendEmailToken: "/Subscription/Auth/SendEmailToken",
   ValidateToken: "/Subscription/Auth/ValidateToken",
   SendSmsOtp: "/Subscription/Auth/SendSmsOtp",
-  get_login_credentials:"/Subscription/Auth/LoginCredentials/",
-  sent_token:"/Subscription/Auth/SendTokenAsync",
-  validate_token:"/Subscription/Auth/ValidateTokenAsync",
-  reset_password:"/Subscription/Auth/ResetPasswordAsync",
+  get_login_credentials: "/Subscription/Auth/LoginCredentials/",
+  sent_token: "/Subscription/Auth/SendTokenAsync",
+  validate_token: "/Subscription/Auth/ValidateTokenAsync",
+  reset_password: "/Subscription/Auth/ResetPasswordAsync",
 
   // App
   application_setting: "/Core/ApplicationSettings/",
@@ -355,7 +355,7 @@ const Urls = {
   grid_preference_reset: "/Core/GridPreference/Reset/",
   //Templates
   templates: "/Core/Template/",
-  default_template:"Core/Template/Default",
+  default_template: "Core/Template/Default",
   crm_templates: "/Core/Template/CRM/",
 
   // Tax Treatments
@@ -407,14 +407,15 @@ const Urls = {
   is_ledger_billwise_applicable:
     "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
 
-    pdc:"/Accounts/PDC/",
-    bankReconciliation:"/Accounts/BankReconciliation/",
+  pdc: "/Accounts/PDC/",
+  bankReconciliation: "/Accounts/BankReconciliation/",
 
-    //Invite
-    invite_link:"/Subscription/User/SendInviteLink",
-    accept_link:"/Subscription/User/AcceptInviteLink",
+  //Invite
+  invite_link: "/Subscription/User/SendInviteLink",
+  accept_link: "/Subscription/User/AcceptInviteLink",
 
-    demo_whatsapp_message:""
+  demo_whatsapp_message: "",
+  demo_email_message: ""
 };
 
 export default Urls;

@@ -34,7 +34,6 @@ const WhatsappIntegration = () => {
     const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
     const [information, setInformation] = useState<Information>(initialState);
     const [loading, setLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     useEffect(() => {
@@ -101,14 +100,17 @@ const WhatsappIntegration = () => {
 
     const handleSendDemoMessage = async () => {
       try {
+        const payload = {
+          provider: NotificationsProvider.TwillioWhatsapp,
+          channel: NotificationsChannel.Whatsapp,
+          configJson: JSON.stringify(information),
+          phoneNumber: information.phoneNumber,
+          message: information.message,
+          isEnable: true,
+        };
         const demoMessageResponse = await api.post(
           `${Urls.demo_whatsapp_message}`,
-          {
-            provider: NotificationsProvider.TwillioWhatsapp,
-            channel: NotificationsChannel.Whatsapp,
-            configJson: JSON.stringify(information),
-            isEnable: true,
-          }
+          payload
         );
         handleResponse(demoMessageResponse);
       } catch (error) {
@@ -203,42 +205,38 @@ const WhatsappIntegration = () => {
             </form>
 
             {isPopupOpen && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity rounded-sm ">
-                <div className="bg-white dark:bg-dark-bg rounded-lg shadow-lg max-w-md w-full p-6 relative">
-                  <div className="flex justify-between items-center border-b pb-2">
-                    <h2 className="text-lg font-semibold dark:text-dark-text">Demo Message</h2>
-                    <button
-                      onClick={() => setIsPopupOpen(false)}
-                      className="text-gray-500 hover:text-gray-700 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
+              <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 transition-all duration-300 p-4 rounded-sm">
+                <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">
+                  <div className="flex justify-between items-center border-b dark:border-gray-700 p-4">
+                    <h2 className="text-xl font-semibold dark:text-dark-text tracking-tight">{t("demo_message")}</h2>
+                    <button onClick={() => setIsPopupOpen(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
-                  <div className="flex flex-col gap-4 mt-4">
+
+                  <div className="p-6 space-y-6">
                     <ERPInput
                       id="phoneNumber"
+                      data={information}
                       label={t("phone_number")}
                       placeholder={t("phone_number")}
                       value={information.phoneNumber}
-                      onChangeData={(data: any) =>
-                        handleFieldChange("phoneNumber", data.phoneNumber)
-                      }
+                      onChangeData={(data: any) => handleFieldChange("phoneNumber", data.phoneNumber)}
                     />
-                    <div className="flex items-center">
-                      <input
-                        type="text"
+                    <div className="flex items-end gap-2">
+                      <textarea
                         placeholder={t("type_a_message")}
-                        className="dark:!bg-dark-bg-card bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
+                        className="w-full dark:bg-dark-bg-card bg-white rounded-lg px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 h-24 resize-none"
                         value={information.message}
                         onChange={(e) => handleFieldChange("message", e.target.value)}
                       />
-                      <button className="bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full" onClick={handleSendDemoMessage}>
+                      <button className="bg-[#22c55e] hover:bg-[#16a34a] text-white w-12 h-12 flex justify-center items-center rounded-full shadow-lg hover:shadow-green-500/25 transition-all duration-200 flex-shrink-0" onClick={handleSendDemoMessage}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
-                          className="w-4 h-4 text-center !display-revert">
+                          className="w-5 h-5 text-center !display-revert transform rotate-45">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"

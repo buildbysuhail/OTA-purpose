@@ -1,6 +1,6 @@
 "use client";
 
-import { Info, X } from "lucide-react";
+import { Download, Info, X } from "lucide-react";
 import React, {
   useState,
   useCallback,
@@ -22,6 +22,7 @@ import {
   accFormStateTransactionAttachmentsRowUpdate,
 } from "../../pages/accounts/transactions/reducer";
 import { Attachments } from "../../pages/accounts/transactions/acc-transaction-types";
+import axios from "axios";
 
 interface FileUpload {
   id: string;
@@ -58,6 +59,37 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
     },
     [formState.transactionType]
   );
+  const download = async (file: Attachments) => {
+    try {
+      debugger;
+      const res = await axios.get(Urls.acc_attachmentInfo_download, {
+        params: { FileKey: file.id },
+        responseType: "blob",
+      });
+  
+      // Debug headers
+      console.log("Response Headers:", res.headers);
+  
+      // Set filename
+      let filename = file.name || "downloaded-file.jpg";
+  
+      const blob = new Blob([res as any], { type: file.type || "application/octet-stream" });
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create and trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+  
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
 
   const addFiles = async (newFiles: File[]) => {
     debugger;
@@ -136,7 +168,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
               isNew: true,
               uploading: false,
               uploaded: false,
-              error: "failed",
+              error: res.message,
               progress: 0,
             },
           })
@@ -232,7 +264,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
       </div>
 
       <div className="mt-1 ">
-        {formState.transaction.attachments.map((file) => (
+        {formState.transaction.attachments.map((file,index) => (
           <div
             key={file?.id}
             className={`flex items-center dark:bg-dark-bg-card bg-gray-50 rounded-lg p-3 transition-all hover:bg-gray-300 border ${file?.error ? "" : "dark:border-dark-border border-b-[#00000024]"
@@ -259,10 +291,10 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
                 </div>
                 <div className="flex items-center space-x-2">
                   <p className="text-xs dark:text-dark-text text-gray-500 whitespace-nowrap">
-                    {formatFileSize(file?.size)}
+                    {file?.size  && formatFileSize(file?.size)}
                   </p>
                   <button
-                    onClick={() => removeFile(file?.id)}
+                    onClick={() => removeFile(index)}
                     className="h-6 w-6 flex items-center justify-center dark:text-dark-text text-gray-500 hover:text-[#ef4444]"
                   >
                     {file?.uploaded ? (
@@ -304,7 +336,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
             </div>
             {file?.error ? (
               <div className="flex items-center gap-2">
-                <p className="text-xs text-red mt-1">{file.error}</p>
+                <p className="text-xs text-red mt-1">{'failed'}</p>
                 <button onClick={() => setIsPopupOpen(true)}>
                   <Info className="w-4 h-4" />
                 </button>
@@ -316,13 +348,13 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
                       </button>
 
                       <p className="text-gray-800 text-center font-medium">
-                        It was an incorrect file. Please choose another file.
+                      {file.error}
                       </p>
                     </div>
                   </div>
                 )}
               </div>
-            ) : (
+            ) : file.isNew? (
               <div className="flex items-center space-x-2 w-24 flex-shrink-0">
                 <div className="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div className={`h-full transition-all duration-300 ease-out ${file?.error ? "bg-red" : "bg-[#3b82f6]"}`} style={{ width: `${file?.progress}%` }}></div>
@@ -335,6 +367,11 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
                   )}
                 </p>
               </div>
+            ): (
+              <>
+               <button onClick={() => download(file)}>
+                  <Download className="w-4 h-4" />
+                </button></>
             )}
           </div>
         ))}

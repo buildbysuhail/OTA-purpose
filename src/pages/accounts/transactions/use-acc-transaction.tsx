@@ -38,6 +38,7 @@ import {
   AccTransactionRow,
   AccTransactionRowInitialData,
   AccUserConfig,
+  Attachments,
   BillwiseData,
 } from "./acc-transaction-types";
 import {
@@ -626,7 +627,12 @@ export const useAccTransaction = (
       }
 
       voucher.transaction.details = refactorDetails(voucher.transaction);
+      voucher.transaction.attachments = refactorAttachments(voucher.transaction);
     }
+      if(voucher.transaction.attachments) {
+        voucher.transaction.attachments = refactorAttachments(voucher.transaction);
+      }
+      debugger;
     // Handle attachments
 
     // Calculate total amount
@@ -637,6 +643,18 @@ export const useAccTransaction = (
 
     return voucher;
   };
+  const refactorAttachments = (transaction: AccTransactionData) => {
+    return transaction.attachments.map(
+      (att, index) => {
+        const baseDetail: Attachments = {
+          ...att,
+          id: att.attachmentId,
+          isNew: false,
+          name: att.fileName
+
+        }
+        return baseDetail;
+      })}
   const refactorDetails = (transaction: AccTransactionData) => {
     return transaction.details.map(
       (detail, index) => {
@@ -1183,7 +1201,7 @@ export const useAccTransaction = (
     debugger;
     if (valid == true) {
       const master = attachMaster();
-      const attachments = formState.transaction.attachments.map(x => ({
+      const attachments = formState.transaction.attachments?.filter(x => x.id > 0)?.map(x => ({
         aType: x.aType,
         attachmentId: x.id,
         fileName: x.name,
@@ -1723,7 +1741,7 @@ export const useAccTransaction = (
       });
     }
   };
-  const handleFieldKeyDown = (
+  const handleFieldKeyDown = async(
     field: string,
     key: any,
     gridRef?: any,
@@ -1772,15 +1790,18 @@ export const useAccTransaction = (
     } else if (field === "bankDate") {
       debugger;
       if (isEnterKey(key)) {
+        debugger;
         if (
           clientSession.isAppGlobal &&
           ["CQP", "CQR"].includes(formState.transaction.master.voucherType)
         ) {
           focusChequeStatus()
         } else {
+          let _drCr = getDrCr(formState.transaction.master.voucherType);
           dispatch(
-            accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+            accFormStateHandleFieldChange({ fields: { showbillwise: true, billwiseDrCr:_drCr } })
           );
+          // await showBillwise()
         }
       }
     } else if (field === "commonNarration") {
@@ -1929,9 +1950,10 @@ export const useAccTransaction = (
             !isPaymentReceipt &&
             !isChequeVoucher)
         ) {
-          // Handle billwise click
+          let _drCr = getDrCr(formState.transaction.master.voucherType);
+
           dispatch(
-            accFormStateHandleFieldChange({ fields: { showbillwise: true } })
+            accFormStateHandleFieldChange({ fields: { showbillwise: true, billwiseDrCr: _drCr } })
           );
         } else {
           focusChequeNumber();
@@ -2386,42 +2408,8 @@ export const useAccTransaction = (
           : formState.row.ledgerID
       );
       if (isBillwiseApplicable == true) {
-        let _drCr;
-        switch (formState.transaction.master.voucherType) {
-          case "CP":
-          case "BP":
-          case "DN":
-          case "CQP":
-          case "SV":
-          case "SRV":
-          case "PBP":
-            _drCr = "Dr";
-            break;
-          case "CR":
-          case "BR":
-          case "CN":
-          case "CQR":
-          case "PV":
-          case "PBR":
-            _drCr = "Cr";
+        let _drCr = getDrCr(formState.transaction.master.voucherType);
 
-            break;
-          case "OB":
-          case "MJV":
-            if (formState.row.drCr == "Dr") {
-              _drCr = "Dr";
-            } else {
-              _drCr = "Cr";
-            }
-            break;
-          case "JV":
-            if (formState.transaction.master.drCr == "Dr") {
-              _drCr = "Cr";
-            } else {
-              _drCr = "Dr";
-            }
-            break;
-        }
         dispatch(
           accFormStateHandleFieldChange({
             fields: { showbillwise: true, billwiseDrCr: _drCr },

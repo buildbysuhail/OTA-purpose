@@ -399,6 +399,7 @@ const Urls = {
   unlock_acc_transaction_master:
     "/Core/TransactionBase/UnlockAccTransactionMaster/",
   ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
+  voucher_history: "/Core/UserAction/GetByVoucher/",
   voucher_selector: "/Core/VoucherSelector/",
   partiesBankNames: "/Core/TransactionBase/SelectPartiesBankNames",
   validate_cheque_status: "/Core/TransactionBase/ValidateChequeStatus/",

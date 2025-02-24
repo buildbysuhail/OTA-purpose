@@ -60,7 +60,7 @@
   "cost_center": "مركز التكلفة",
   "total_amount": "إجمالي المبلغ",
   "print_cheque": "طباعة الشيك",
-  "template_elite": "قالب النخبة",
+  "change_template": "نموذج",
   "total": "الإجمالي",
   "barcode_print": "طباعة الباركود",
 
@@ -146,7 +146,7 @@
   "done": "تم",
   "attachment": "المرفق",
 
-  "print_payment": "طباعة الدفع",
+  "print_payment_advise": "طباعة نصيحة الدفع",
   "bal": "الرصيد",
   "cash_payment": "الدفع نقداً",
   "cash_receipt": "إيصال نقدي",

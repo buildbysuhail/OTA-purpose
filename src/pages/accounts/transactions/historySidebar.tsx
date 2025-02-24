@@ -87,6 +87,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
 
         {/* Content */}
         <div className="space-y-4">
+          {/* {isOpen && */}
           <ERPDevGrid 
             columns={columns}
             dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}
@@ -108,13 +109,19 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             className="HistorySidebarcustom "
             ShowGridPreferenceChooser={false}
           />
+{/* } */}
           {/* Transaction Date */}
         </div>
       </div>
     </ERPResizableSidebar>
   );
 };
-
 export default React.memo(HistorySidebar, (prevProps, nextProps) => {
-  return prevProps.isOpen === nextProps.isOpen && prevProps.onClose === nextProps.onClose;
+  // Allow re-render only when `isOpen` transitions from false to true
+  if (!prevProps.isOpen && nextProps.isOpen) {
+    return false; // Re-render when opening
+  }
+
+  // Prevent re-renders for other cases
+  return prevProps.isOpen === nextProps.isOpen;
 });

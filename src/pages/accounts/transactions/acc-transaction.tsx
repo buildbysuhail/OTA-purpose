@@ -2719,7 +2719,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 {/* {formState?.row.ledgerID?.toString()} */}
                 {formState.formElements.ledgerID.visible && (
                   <>
-                    {/* <ERPDataCombobox
+                    <ERPDataCombobox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       ref={ledgerIdRef}
                       triggerEffect={triggerEffect}
@@ -2778,7 +2778,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           </div>
                         )
                       }
-                    /> */}
+                    />
                   </>
                 )}
                 {formState.formElements.amount.visible && (
@@ -3932,7 +3932,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       />
                     </div>
                     <div className="mb-1">
-                      {/* <ERPDataCombobox
+                      <ERPDataCombobox
                         localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="cashacc"
                         field={{
@@ -3948,7 +3948,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         }
                         // label={t("cost_center")}
                         label={t("ledger")}
-                      /> */}
+                      />
                     </div>
                     <div className="mb-4">
                       <ERPInput

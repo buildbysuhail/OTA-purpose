@@ -53,6 +53,7 @@ const UserTypes = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
+      Actionswidth:100,
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
@@ -88,6 +89,7 @@ const UserTypes = () => {
                 changeReload={(reload: any) => { dispatch(toggleUserTypePopup({ ...rootState, reload: reload })); }}
                 reload={rootState?.PopupData?.userType?.reload}
                 gridAddButtonIcon="ri-add-line"
+                ERPGridActionsstyle={true}
               />
             </div>
             {/* </div> */}

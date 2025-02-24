@@ -198,14 +198,7 @@ const ERPModal = React.memo(
 
     return (
       
-      <Transition appear show={isOpen} as={Fragment}
-             enter="ease-out duration-300"
-                    enterFrom="opacity-0 scale-95"
-                    enterTo="opacity-100 scale-100"
-                    // leave="ease-in duration-100"
-                    leaveFrom="opacity-100 scale-100"
-                    leaveTo="opacity-0 scale-95"
-      >
+      <Transition appear show={isOpen} as={Fragment} >
        <Dialog
        
             as="div"
@@ -213,39 +206,48 @@ const ERPModal = React.memo(
             onClose={disableOutsideClickClose ? () => {} : handleClose}
             style={customPosition ? customStyle : {}}
           >
-           
-
-            <div className={`fixed inset-0 bg-black bg-opacity-50`}>
-  
-{isPositionCalculated && (
+          <TransitionChild
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        </TransitionChild>   
+        
+            <div className={`fixed inset-0`}>
+            <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+             <div className="h-full w-full">
+             {isPositionCalculated && (
   <Rnd
   key={rndKey}
   default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
- 
-      //  onDragStop={(_, d) => {
-      
-      //   setPosition({ x: d.x, y: d.y });
-      // }}
-      
+
        onResize={(_, __, ref, ___, pos) => {
          setPosition({ x: pos.x, y: pos.y });
          setModalHeight(ref.offsetHeight);
          setModalWidth(ref.offsetWidth);
        }}
-      //  onResizeStop={(e, dir, ref, delta, pos) => {
        
-      //   setModalHeight(ref.offsetHeight);
-      //   setModalWidth(ref.offsetWidth);
-      //   setPosition(pos);
-      // }}
       bounds="parent"
       // bounds="window"
       minWidth={minWidth}
       minHeight={minHeight}
       dragGrid={[10, 10]}
       resizeGrid={[10, 10]}
-      // lockAspectRatio={16 / 9}
-       className="bg-white shadow-sm rounded-md border "
+  dragHandleClassName="drag-handle" // Specify the drag handle class name
+       className="bg-white shadow-sm rounded-md border dark:border-dark-border dark:bg-dark-bg dark:text-dark-text"
     >
       <DialogPanel
         className={`erp-modal w-full h-full flex flex-col overflow-hidden pb-10`}
@@ -253,7 +255,7 @@ const ERPModal = React.memo(
       >
         <DialogTitle
           as="h3"
-          className="place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[50px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900"
+          className="drag-handle cursor-move place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900"
           style={{ flex: "0 0 auto" }}
         >
           <div className="flex items-center dark:text-dark-text">{title}</div>
@@ -359,7 +361,9 @@ const ERPModal = React.memo(
       </DialogPanel>
     </Rnd>
 )}
-                  
+             </div>
+
+       </TransitionChild>           
               </div>
           
           </Dialog>
@@ -381,176 +385,5 @@ const ERPModal = React.memo(
   }
 );
 export default ERPModal;
-    // return (
-    //   <div>
-    //     <Transition appear show={isOpen} as={Fragment}>
-    //       <Dialog
-    //         as="div"
-    //         className={`relative erp-modal ${
-    //           customPosition ? "" : "fixed inset-0"
-    //         }`}
-    //         onClose={disableOutsideClickClose ? () => {} : handleClose}
-    //         style={customPosition ? customStyle : {}}
-    //       >
-    //         {!customPosition && (
-    //           <Transition
-    //             as={Fragment}
-    //             show={isOpen}
-    //             enter="ease-out duration-300"
-    //             enterFrom="opacity-0"
-    //             enterTo="opacity-100"
-    //             leave="ease-in duration-200"
-    //             leaveFrom="opacity-100"
-    //             leaveTo="opacity-0"
-    //           >
-    //             <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
-    //           </Transition>
-    //         )}
-
-    //         <div className={`${customPosition ? "" : "fixed inset-0"}`}>
-    //           <div
-    //             className={`flex min-h-full items-center justify-center text-center ${
-    //               customPosition ? "" : "p-4"
-    //             }`}
-    //           >
-    //             <TransitionChild
-    //               as={Fragment}
-    //               enter="ease-out duration-300"
-    //               enterFrom="opacity-0 scale-95"
-    //               enterTo="opacity-100 scale-100"
-    //               leave="ease-in duration-200"
-    //               leaveFrom="opacity-100 scale-100"
-    //               leaveTo="opacity-0 scale-95"
-    //             >
-    //               <DialogPanel
-                  
-    //                 className={`erp-modal${
-    //                   isOpen ? "-opened" : "closed"
-    //                 } transform dark:bg-dark-bg bg-white text-left align-middle shadow-xl transition-all  ${
-    //                   isMaximized ? "w-full  rounded-md" : `${width} rounded-md`
-    //                 } ${isRemoveSomething ? "px-0" : "px-0"}`}
-    //                 style={{
-    //                   height: isMaximized ? `${modalHeight}px` : "auto",
-    //                   maxHeight: `${modalHeight}px`,
-    //                   // minHeight: minHeight ? `${minHeight}px` : '',
-    //                   display: "flex",
-    //                   flexDirection: "column",
-    //                 }}
-    //               >
-    //                 <DialogTitle
-    //                   as="h3"
-    //                   className="place-items-center px-4 bg-[#f6f6f6] h-[40px] rounded-t-md sticky min-w-full top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900 "
-    //                   style={{ flex: "0 0 auto" }} // Prevent header from shrinking
-    //                 >
-    //                   <div className="flex items-center dark:text-dark-text">
-    //                     {title}
-    //                   </div>
-    //                   {closeButton === "Button" && (
-    //                     <div className="max-w-[200px] inline-block">
-    //                       <ERPButton
-    //                         className="w-full"
-    //                         type="button"
-    //                         title={closeTitle}
-    //                         onClick={handleClose}
-    //                         tabIndex={-1}
-    //                       />
-    //                     </div>
-    //                   )}
-    //                   <div className="flex items-center space-x-2">
-    //                     {isMaximize ? (
-    //                       <button
-    //                         className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
-    //                         onClick={() => setIsMaximized(!isMaximized)}
-    //                         aria-label={isMaximized ? "Restore" : "Maximize"}
-    //                       >
-    //                         {isMaximized ? (
-    //                           <Minimize2 size={15} />
-    //                         ) : (
-    //                           <Maximize2 size={15} />
-    //                         )}
-    //                       </button>
-    //                     ) : null}
-    //                     <button
-    //                       className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full"
-    //                       onClick={handleClose}
-    //                       aria-label="Close"
-    //                     >
-    //                       <X size={15} />
-    //                     </button>
-    //                   </div>
-    //                 </DialogTitle>
-
-    //                 <div className={`flex flex-col justify-between flex-grow ${isRemoveSomething ? "px-0" : "px-4"} `}>
-    //                   <ERPScrollArea
-    //                     maxHeight={`${modalHeight - (footer ? 130 : 80)}px`}
-    //                     className="overflow-y-auto pr-2 overflow-x-hidden py-4 h-auto "
-    //                   >
-                        
-    //                     {content &&
-    //                       cloneElement(
-    //                         content,
-    //                         isTransactionScreen
-    //                           ? {
-    //                               ...contentProps,
-    //                               isMaximized: isMaximized,
-    //                               modalHeight: modalHeight, // Pass isMaximized to the content
-    //                               rowData: rowData,
-    //                               origin: origin,
-    //                               postData: mergeObjectsRemovingIdenticalKeys(
-    //                                 content.postData,
-    //                                 postData
-    //                               ),
-    //                             }
-    //                           : {
-    //                               contentProps: contentProps
-    //                                 ? contentProps
-    //                                 : {},
-    //                               isMaximized: isMaximized,
-    //                               modalHeight: modalHeight, // Pass isMaximized to the content
-    //                               rowData: rowData,
-    //                               origin: origin,
-    //                               postData: mergeObjectsRemovingIdenticalKeys(
-    //                                 content.postData,
-    //                                 postData
-    //                               ),
-    //                             }
-    //                       )}
-    //                   </ERPScrollArea>
-
-    //                   {footer && <div className="">{footer}</div>}
-    //                 </div>
-
-    //                 {!isForm && isButton && (
-    //                   <div
-    //                     className="border-t py-2 flex gap-2 justify-end"
-    //                     style={{ flex: "0 0 auto" }}
-    //                   >
-    //                     <div className="max-w-[200px]">
-    //                       <ERPButton
-    //                         className="w-full"
-    //                         type="button"
-    //                         title={closeTitle}
-    //                         onClick={handleClose}
-    //                         tabIndex={-1}
-    //                       />
-    //                     </div>
-
-    //                     {hasSubmit && (
-    //                       <ERPSubmitButton
-    //                         onClick={handleSubmit}
-    //                         className="uppercase"
-    //                       >
-    //                         {submitTitle || "Submit"}
-    //                       </ERPSubmitButton>
-    //                     )}
-    //                   </div>
-    //                 )}
-    //               </DialogPanel>
-    //             </TransitionChild>
-    //           </div>
-    //         </div>
-    //       </Dialog>
-    //     </Transition>
-    //   </div>
-    // );
-
+  
+    

@@ -677,14 +677,17 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   
     // 1. Check Cache for ongoing or completed API requests
     if (apiRequestCache.has(cacheKey)) {
-      return apiRequestCache.get(cacheKey);
+      return filterLedgers(await apiRequestCache.get(cacheKey),field?.params)
+      // return apiRequestCache.get(cacheKey);
     }
   
     // 2. Fetch Data (Cache Miss)
     const promise = api.getAsync(url, params).then((_res) => {
       // 3. Update Redux After Fetch
+      debugger;
       if (url.includes("/Accounts/Data/AccLedgers/")) {
         console.log('Accounts/Data/AccLedgers');
+        console.log(params);
         
         dispatch(setData({ key: "ledgers", value: _res }));
         return filterLedgers(_res, params);
@@ -709,6 +712,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
     // Check if data is available in Redux
     if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length) {
+      console.log('Accounts/Data/AccLedgers2');
+        console.log(field?.params);
       _items = await filterLedgers(reduxState.ledgers, field?.params || "");
     } else if (field?.getListUrl?.includes("/Accounts/Data/CostCentres/") && reduxState?.costCentres?.length) {
       _items = reduxState.costCentres;
@@ -726,7 +731,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         _options = includeOptions ? [...includeOptions, ..._options] : _options;
         setItems(_options);
         setFilteredItems(_options);
+        if (value == -2 && _options != undefined && _options != null && _options.length > 0) {
 
+          handleItemClick(_options[0]);
+        }
       debugger;
         // Automatically select the first option after data is loaded
        
@@ -794,17 +802,17 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       } else {
         setInitial(final);
       }
-      if (value == -2 && items != undefined && items != null && items.length > 0) {
+      // if (value == -2 && items != undefined && items != null && items.length > 0) {
 
-        handleItemClick(items[0]);
-      }
+      //   handleItemClick(items[0]);
+      // }
       setActiveIndex(
         final != null
           ? filteredItems?.findIndex((item) => item.value === final.value)
           : -1
       );
       // }
-    }, [items, data, defaultData, field, initialValue, filteredItems, value, data?.[field?.id ?? ""]]); // Add value and data dependency
+    }, [items, data, defaultData, field, field?.params, initialValue, filteredItems, value, data?.[field?.id ?? ""]]); // Add value and data dependency
 
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({ label: "", value: null, is_active: false, name: "" });

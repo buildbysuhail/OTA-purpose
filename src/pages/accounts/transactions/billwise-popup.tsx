@@ -701,8 +701,14 @@ debugger;
     },
   ];
   const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) =>
-      `${getFormattedValue(itemInfo.value)}`;
+    return (itemInfo: { value: any }) =>{
+console.log('itemInfo.value');
+console.log(itemInfo?.value);
+console.log(itemInfo);
+
+
+      return `${getFormattedValue(itemInfo.value)}`;
+    }
   }, []);
 
   const summaryItems: SummaryConfig[] = [
@@ -719,13 +725,13 @@ debugger;
       customizeText: customizeSummaryRow,
     },
     {
-      column: t("billwise_amount"),
+      column: t("balance"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: t("balance"),
+      column: t("billwiseAmount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,

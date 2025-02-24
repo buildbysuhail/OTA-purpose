@@ -68,7 +68,7 @@ const RevertBillModifications: React.FC = () => {
         width: 200,
       },
       {
-        dataField: "VchNo",
+        dataField: "vchNo",
         caption: t("voucher_number"),
         dataType: "string",
         allowSearch: true,

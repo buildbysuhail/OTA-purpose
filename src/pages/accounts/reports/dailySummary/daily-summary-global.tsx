@@ -457,6 +457,7 @@ const DailySummaryGlobal = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   showTotalCount={false}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
                   gridHeader={t("daily_summary_report")}

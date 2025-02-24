@@ -2316,8 +2316,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                     ? -1 * formState.masterBalance
                                     : formState.masterBalance || 0
                                 )} ${(formState.masterBalance ?? 0) < 0
-                                    ? "Cr"
-                                    : "Dr"
+                                  ? "Cr"
+                                  : "Dr"
                                   }`}
                               </span>
                             </div>
@@ -3127,7 +3127,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                     />
                   )}
-                  {formState.formElements.bankCharge.visible && (
+                  {/* {formState.formElements.bankCharge.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="bankCharge"
@@ -3145,7 +3145,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.bankCharge?.disabled
                       }
                     />
-                  )}
+                  )} */}
                   {/* {formState.formElements.paymentType.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}

@@ -200,7 +200,7 @@ export const useAccTransaction = (
     }
   };
   const focusChequeStatus = () => {
-    debugger;
+    
     if (chequeStatusRef.current) {
       chequeStatusRef.current?.select();
       chequeStatusRef.current?.focus();
@@ -281,13 +281,7 @@ export const useAccTransaction = (
     }
 
     if (setVoucherNo) {
-      // dispatch(
-      //   accFormStateHandleFieldChange({
-      //     fields: {
-      //       openUnsavedPrompt: false,
-      //     },
-      //   })
-      // );
+     
       dispatch(
         accFormStateTransactionMasterHandleFieldChange({
           fields: {
@@ -485,6 +479,10 @@ export const useAccTransaction = (
       transaction: { ..._formState.transaction },
       row: { ..._formState.row },
     });
+    
+    console.log('accFormStateHandleFieldChange1');
+    console.log(_formState);
+    
     dispatch(
       accFormStateHandleFieldChange({
         fields: {
@@ -632,7 +630,7 @@ export const useAccTransaction = (
       if(voucher.transaction.attachments) {
         voucher.transaction.attachments = refactorAttachments(voucher.transaction);
       }
-      debugger;
+      
     // Handle attachments
 
     // Calculate total amount
@@ -998,14 +996,14 @@ export const useAccTransaction = (
       if (isNullOrUndefinedOrZero(element.ledgerID)) {
         break;
       }
-      debugger;
+      
       element.adjAmount = 0;
       element.checkBouncedDate = element.bankDate;
       element.currencyID = 1;
       element.exchangeRate = 1;
       element.isDisplay = true;
       element.isDr = true;
-      debugger;
+      
       switch (formState.transaction.master.voucherType) {
         case "CP":
         case "BP":
@@ -1198,7 +1196,7 @@ export const useAccTransaction = (
     );
 
     const valid = validate();
-    debugger;
+    
     if (valid == true) {
       const master = attachMaster();
       const attachments = formState.transaction.attachments?.filter(x => x.id > 0)?.map(x => ({
@@ -1217,7 +1215,7 @@ export const useAccTransaction = (
         details: attachDetails(),
         attachments: attachments,
       };
-      debugger;
+      
       const saveRes =
         formState.transaction.master.accTransactionMasterID > 0
           ? await api.putAsync(
@@ -1788,9 +1786,9 @@ export const useAccTransaction = (
         }
       }
     } else if (field === "bankDate") {
-      debugger;
+      
       if (isEnterKey(key)) {
-        debugger;
+        
         if (
           clientSession.isAppGlobal &&
           ["CQP", "CQR"].includes(formState.transaction.master.voucherType)
@@ -1932,7 +1930,7 @@ export const useAccTransaction = (
   const handleNarrationKeyDown = (e: any) => {
     // Handle Enter key
     if (e === "Enter") {
-      debugger;
+      
       const isChequeVoucher =
         formState.transaction.master.voucherType === "CQP" ||
         formState.transaction.master.voucherType === "CQR";

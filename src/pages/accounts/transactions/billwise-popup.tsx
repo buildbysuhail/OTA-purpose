@@ -91,7 +91,7 @@ const BillwiseComponent = ({
   }, []);
   useEffect(() => {
 
-    
+    debugger;
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else {
@@ -216,7 +216,7 @@ const BillwiseComponent = ({
   }, [store]);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
-
+debugger;
     const rows = billwiseStr.split("|");
     const updatedData = [...store];
 

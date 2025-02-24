@@ -160,6 +160,9 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionFormState]?: any };
       }>
     ) => {
+      console.log('accFormStateHandleFieldChange2');
+      console.log( action.payload?.fields?.row);
+      
       const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       Object.keys(fields).forEach((key) => {

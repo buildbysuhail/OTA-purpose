@@ -1061,7 +1061,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           if (e.format === "pdf") {
             const doc = await generatePdf(e.component); // Generate the PDF
-            doc?.save(`${gridId}.pdf`); // Save the PDF
+            doc?.save(`${gridHeader}.pdf`); // Save the PDF
           } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
@@ -1172,7 +1172,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               workbook.xlsx.writeBuffer().then((buffer) => {
                 saveAs(
                   new Blob([buffer], { type: "application/octet-stream" }),
-                  `${gridId}.xlsx`
+                  `${gridHeader}.xlsx`
                 );
               });
             });
@@ -1688,6 +1688,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   }
                   // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
                   groupIndex={column.groupIndex}
+                  cssClass = {column.cssClass}
                   format={column.format}
                   dataType={column.dataType}
                   allowSorting={column.allowSorting}

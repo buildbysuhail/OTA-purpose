@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
 import { RootState } from '../../redux/store';
@@ -19,6 +19,8 @@ import {
   faSearch,
   faDollarSign,
 } from '@fortawesome/free-solid-svg-icons';
+import { APIClient } from '../../helpers/api-client';
+import Urls from '../../redux/urls';
 
 interface Activity {
   userName: string;
@@ -195,9 +197,37 @@ const ActivityCard: React.FC<{ activity: Activity }> = ({ activity }) => (
   </div>
 );
 
+const api = new APIClient()
 const VoucherNumberDetails: React.FC<VoucherNumberDetailsProps> = ({ setIsOpen }) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchActivities = async () => {
+      debugger;
+      try {
+        const params: Record<any, any> = {
+          VoucherNumber: formState.transaction.master.voucherNumber, // Ensuring it's always a string
+          voucherPrefix:(formState.transaction?.master?.voucherPrefix || ""),
+          voucherType:(formState.transaction?.master?.voucherType || ""),
+          formType: (formState.transaction?.master?.formType || ""),
+          MannualInvoiceNumber: "", // Convert undefined to an empty string or appropriate string value
+          SearchUsingMannualInvNo:false, // Convert boolean to string
+        };
+        const response = await api.getAsync(Urls.voucher_history, new URLSearchParams(params).toString()); // Replace with actual API URL
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data: Activity[] = await response.json();
+        setActivities(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchActivities();
+  }, [formState.transaction.master.voucherNumber]);
   return (
     <div className="p-6  rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-3">

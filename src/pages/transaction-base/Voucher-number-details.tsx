@@ -32,11 +32,11 @@ const VoucherNumberDetailsSidebar: React.FC<VoucherNumberDetailsSidebarProps> = 
   return (
     <div onClick={handleOutsideClick}>
       <div ref={sidebarRef}>
-        <ERPResizableSidebar
+       {setIsOpen && <ERPResizableSidebar
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           children={<VoucherNumberDetails setIsOpen={setIsOpen} />}
-        />
+        />}
       </div>
 
       {displayType === "button" ? (

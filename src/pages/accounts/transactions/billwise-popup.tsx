@@ -769,7 +769,7 @@ const BillwiseComponent = ({
               </div>
               <div>
                 <div className="text-sm font-medium text-gray-900">
-                  {formState.row.ledgerName}
+                  {formState.ledgerData.partyName}
                 </div>
                 <div className="flex items-center gap-1">
                   <span className="font-medium">

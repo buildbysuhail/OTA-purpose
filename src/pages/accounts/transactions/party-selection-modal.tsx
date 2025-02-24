@@ -28,7 +28,7 @@ const PartySelection: React.FC<PartySelectionProps> = ({ focusTaxNoField }) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
 
   const onRowDblClick = useCallback(async (_event: RowDblClickEvent) => {
-    debugger;
+    
     dispatch(accFormStateHandleFieldChange({ fields: { showPartySelection: false } }));
     dispatch(
       accFormStateRowHandleFieldChange({

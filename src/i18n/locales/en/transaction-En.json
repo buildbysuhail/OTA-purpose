@@ -60,7 +60,7 @@
   "discount": "Discount",
   "total_amount": "Total amount",
   "print_cheque": "Print cheque",
-  "template_elite": "Elite template",
+  "change_template": "change template",
   "total": "Total",
   "barcode_print": "Barcode print",
 
@@ -146,7 +146,7 @@
   "done": "Done",
   "attachment": "Attachment",
 
-  "print_payment": "Print payment",
+  "print_payment_advise": "Print Payment Advice",
   "bal": "Bal",
    "cash_payment": "Cash Payment",
   "cash_receipt": "Cash Receipt",

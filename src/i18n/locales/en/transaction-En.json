@@ -314,5 +314,7 @@
   "cleared_pdc_cannot_be_modified":"Cleared PDC cannot be modified",
   "bounced_pdc_cannot_be_modified":"Bounced PDC cannot be modified",
   "contains_multiple_statuses":"Contains multiple statuses, only a single status cleared is accepted. Ensure all statuses are the same",
-  "voucher_in_use":"Voucher in use"
+  "voucher_in_use":"Voucher in use",
+
+  "payment_type":"Payment type"
 }

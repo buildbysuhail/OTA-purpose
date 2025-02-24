@@ -314,5 +314,7 @@
   "cleared_pdc_cannot_be_modified": "لا يمكن تعديل PDC المسددة",
   "bounced_pdc_cannot_be_modified": "لا يمكن تعديل PDC المرتجعة",
   "contains_multiple_statuses": "يحتوي على حالات متعددة، ولا يُقبل سوى حالة واحدة وهي المسددة. تأكد من أن جميع الحالات متطابقة",
-  "voucher_in_use": "القسيمة قيد الاستخدام"
+  "voucher_in_use": "القسيمة قيد الاستخدام",
+
+  "payment_type": "نوع الدفع"
 }

@@ -132,6 +132,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -182,6 +183,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
                   }}
                   reload={rootState?.PopupData?.groupCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 ></ErpDevGrid>
               </div>
             </div>

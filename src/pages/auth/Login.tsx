@@ -3,21 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { EyeSlashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import Cookies from "js-cookie";
 import usFlag from "../../assets/images/flags/us_flag.png";
-
-// import ERPToast from "../../components/ERPComponets/ERPToast";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
 import type { StateBase } from "../../base/state-base";
 import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
-import ERPInput from "../../components/ERPComponents/erp-input";
 import type { UserModel } from "../../redux/slices/user-session/reducer";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { type AppState, languagesData } from "../../redux/slices/app/types";
-
 import type { RootState } from "../../redux/store";
 import { customJsonParse, modelToBase64 } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
@@ -40,9 +32,9 @@ import { ClientSessionModel } from "../../redux/slices/client-session/reducer";
 const api = new APIClient()
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('main')
   const [data, setData] = useState<LoginData>(new LoginData());
   const [showConfetti, setShowConfetti] = useState(false);
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [hasToChooseBranch, setHasToChooseBranch] = useState(false);
@@ -60,44 +52,42 @@ const Login = () => {
     show: boolean;
     token: string;
   }>({ show: false, token: "" });
-  const load = async() => {
+
+  const load = async () => {
     const settings = await api.getAsync(Urls.application_setting);
     localStorage.setItem('as', modelToBase64(settings))
     dispatch(setApplicationSettings(
       {
         ...settings,
         apiLoaded: true
-    }));
+      }));
   }
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (data?.userName && data?.password) {
       setError(null);
-
       const login = await dispatch(loginUser(data)).unwrap();
-
       setError("");
-      
       if (login.isOk == true) {
         let ass = localStorage.getItem("as");
-    let appSettings: ApplicationSettingsType;
-    try {
-      
-      if (ass != undefined && ass != null && ass != "") {
-        appSettings = customJsonParse(atob(ass));
-        dispatch(setApplicationSettings(
-          {
-            ...appSettings,
-            apiLoaded: false
-        }));
-      }else{
-        await load();
-      }
-    } catch (error) { }
+        let appSettings: ApplicationSettingsType;
+        try {
+          if (ass != undefined && ass != null && ass != "") {
+            appSettings = customJsonParse(atob(ass));
+            dispatch(setApplicationSettings(
+              {
+                ...appSettings,
+                apiLoaded: false
+              }));
+          } else {
+            await load();
+          }
+        } catch (error) { }
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
           setIsLoggedToBranch(false);
-        } else { 
+        } else {
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
@@ -108,10 +98,8 @@ const Login = () => {
         localStorage.setItem("ut", login.item.userThemes);
         localStorage.setItem("ur", login.item.useRights);
         const _userProfileDetails = atob(login.item.userProfileDetails);
-        const userProfileDetails: UserModel =
-          customJsonParse(_userProfileDetails);
-        const clientSession: ClientSessionModel =
-          customJsonParse(login.item.clientSessions);
+        const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
+        const clientSession: ClientSessionModel = customJsonParse(login.item.clientSessions);
         const _userRights = atob(login.item.userRights);
         const userRights: UserTypeRights[] = customJsonParse(_userRights);
         const _userThemes = atob(login.item.userThemes);
@@ -130,7 +118,7 @@ const Login = () => {
           clientSession,
           userProfileDetails,
           userRights,
-          locale 
+          locale
         );
       } else {
         if (login.item.hasToSetCounter) {
@@ -141,7 +129,7 @@ const Login = () => {
         }
       }
     } else {
-      alert("Please fill all fields");
+      alert(t("please_fill_all_fields"));
     }
   };
 
@@ -168,15 +156,11 @@ const Login = () => {
       <div className="flex justify-center h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3"
-          style={{
-            backgroundImage:
-              "url('https://fourthrev.com/wp-content/uploads/2023/03/FR_Blog_How-to-Become-a-Data-Analyst-in-2023_Blog_1200x628-1-768x402.png')",
-          }}
-        >
+          style={{ backgroundImage: "url('https://fourthrev.com/wp-content/uploads/2023/03/FR_Blog_How-to-Become-a-Data-Analyst-in-2023_Blog_1200x628-1-768x402.png')", }}>
           <div className="flex items-center h-full px-20">
             <div>
               <h2 className="text-4xl font-bold text-white">
-                Elevate your business to new heights
+                {t("elevate_your_business_to_new_heights")}
               </h2>
             </div>
           </div>
@@ -192,51 +176,52 @@ const Login = () => {
                   : switcherdata.Light(updateAppState, appState);
               }}
               variant="ghost"
-              size="icon"
-            >
+              size="icon">
               {appState.mode === "dark" ? (
                 <Sun className="h-[1.2rem] w-[1.2rem]" />
               ) : (
                 <Moon className="h-[1.2rem] w-[1.2rem]" />
               )}
-              <span className="sr-only">Toggle dark mode</span>
+              <span className="sr-only">{t("toggle_dark_mode")}</span>
             </Button>
           </div>
+
           <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
           {/* <ConfettiEffect /> */}
 
-          {showConfetti && (
-            <div className="fixed inset-0 z-50 pointer-events-none">
-            <ConfettiEffect />
-          </div>
-           )}
+          {
+            showConfetti && (
+              <div className="fixed inset-0 z-50 pointer-events-none">
+                <ConfettiEffect />
+              </div>
+            )
+          }
+
           <div className="flex-1">
             <div className="text-center">
-              <img src={polo} alt="logo" className="unset h-[110px] w-[150px] mx-auto my-4"  />
+              <img src={polo} alt="logo" className="unset h-[110px] w-[150px] mx-auto my-4" />
               {/* <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-dark-text">
                 Polosys
               </h2> */}
               <p className="mt-3 text-gray-500 dark:text-dark-text">
-                Sign in to access your account
+                {t("sign_in_to_access_your_account")}
               </p>
             </div>
 
             <div className="mt-8">
-              {error && (
-                <div className="w-full bg-red-50 py-2 px-4 rounded-md flex items-center justify-between border border-red-100">
-                  <p className="text-[13px] text-red-600">{error}</p>
-                  <XMarkIcon
-                    className="w-4 aspect-square stroke-red-600 cursor-pointer"
-                    onClick={() => {
-                      setError(null);
-                    }}
-                  />
-                </div>
-              )}
-              <form
-                onSubmit={handleSubmit}
-                className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2"
-              >
+              {
+                error && (
+                  <div className="w-full bg-[#fef2f2] py-2 px-4 rounded-md flex items-center justify-between border border-[#fee2e2]">
+                    <p className="text-[13px] text-[#dc2626]">{error}</p>
+                    <XMarkIcon
+                      className="w-4 aspect-square stroke-[#dc2626] cursor-pointer"
+                      onClick={() => { setError(null); }}
+                    />
+                  </div>
+                )
+              }
+
+              <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2" >
                 <div className="col-span-full ">
                   <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">
                     {t("email-phone-username")}
@@ -245,14 +230,13 @@ const Login = () => {
                     id="userName"
                     type="text"
                     value={data.userName}
-                    onChange={(e) =>
-                      setData({ ...data, userName: e.target.value })
-                    }
+                    onChange={(e) => setData({ ...data, userName: e.target.value })}
                     required
                     autoComplete=""
-                    className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
+                    className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-[#3b82f6]  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
                   />
                 </div>
+
                 <div className="col-span-full ">
                   <label className=" capitalize mb-1 block text-[12px] dark:text-dark-text text-black">
                     {t("password") || "password"}*
@@ -261,60 +245,55 @@ const Login = () => {
                     <div className="w-full">
                       <input
                         autoComplete="off"
-                        placeholder="Password"
+                        placeholder={t("password")}
                         required
                         pattern="^\S+$"
-                        title="Password must not contain whitespace characters."
-                        onChange={(e) =>
-                          setData({ ...data, password: e.target?.value })
-                        }
+                        title={t("password_whitespace_error")}
+                        onChange={(e) => setData({ ...data, password: e.target?.value })}
                         type={showPassword ? "text" : "password"}
                         id="password"
-                        className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-blue-500  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
+                        className="rtl:border rtl:rounded-none  rtl:rounded-r  outline-none border-b border-l border-t w-full h-10 dark:border-dark-border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-2 focus:border-[#3b82f6]  focus:bg-white focus:outline-none  sm:text-sm rounded-l"
                       />
                     </div>
-                    <div
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="border dark:border-dark-border border-gray-300 rounded-r flex justify-center items-center px-3 cursor-pointer rtl:border rtl:rounded-none rtl:rounded-l "
-                    >
-                      {showPassword ? (
-                        <EyeSlashIcon className="dark:text-dark-text text-black h-4 w-4" />
-                      ) : (
-                        <EyeIcon className="dark:text-dark-text text-black h-4 w-4" />
-                      )}
+
+                    <div onClick={() => setShowPassword(!showPassword)} className="border dark:border-dark-border border-gray-300 rounded-r flex justify-center items-center px-3 cursor-pointer rtl:border rtl:rounded-none rtl:rounded-l ">
+                      {
+                        showPassword ? (
+                          <EyeSlashIcon className="dark:text-dark-text text-black h-4 w-4" />
+                        ) : (
+                          <EyeIcon className="dark:text-dark-text text-black h-4 w-4" />
+                        )
+                      }
                     </div>
                   </div>
                 </div>
+
                 <div className="col-span-full">
-                  <div className="text-xs flex justify-end text-blue-600 ">
+                  <div className="text-xs flex justify-end text-[#2563eb] ">
                     {/* <span className="cursor-pointer font-medium" onClick={() => setForgotPassword((prevData: boolean) => !prevData)}>
                     {t("forgot-password")}?
                   </span> */}
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    {comapanies?.loading || loginData?.loading ? (
-                      <div className="true ml-1 h-4 w-4 bg-white rounded-full animate-ping"></div>
-                    ) : (
-                      t("login")
-                    )}
+
+                  <button type="submit" className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6]">
+                    {
+                      comapanies?.loading || loginData?.loading ? (
+                        <div className="true ml-1 h-4 w-4 bg-white rounded-full animate-ping"></div>
+                      ) : (
+                        t("login")
+                      )
+                    }
                   </button>
                 </div>
               </form>
+
               <p className="mt-6 text-sm text-center dark:text-dark-text text-gray-600">
                 <a
                   href="#"
-                  className="text-blue-500 focus:outline-none focus:underline hover:underline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowForgotPassword(true);
-                  }}
-                >
-                  Forgot Password?
+                  className="text-[#3b82f6] focus:outline-none focus:underline hover:underline"
+                  onClick={(e) => { e.preventDefault(); setShowForgotPassword(true); }} >
+                  {t("forgot_password")}
                 </a>
-                .
               </p>
             </div>
           </div>
@@ -326,26 +305,26 @@ const Login = () => {
         isOpen={counterSettings.show}
         closeButton="LeftArrow"
         hasSubmit={false}
-        closeTitle="Close"
-        title="Counter Settings"
+        closeTitle={t("close")}
+        title={t("counter_settings")}
         width={800}
         height={600}
         minHeight={600}
-        closeModal={() => {
-          setCounterSettings({ show: false, token: "" });
-        }}
+        closeModal={() => { setCounterSettings({ show: false, token: "" }); }}
         content={
           <CounterSettings
-          token={counterSettings.token}
-          isFromLogin={true}
-          onSuccess={() => setCounterSettings({ show: false, token: "" })}
-        />
-      }
-      ></ERPModal>
+            token={counterSettings.token}
+            isFromLogin={true}
+            onSuccess={() => setCounterSettings({ show: false, token: "" })}
+          />
+        }
+      />
 
-      {showForgotPassword && (
-        <ForgotPassword onClose={() => setShowForgotPassword(false)} />
-      )}
+      {
+        showForgotPassword && (
+          <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+        )
+      }
     </div>
   );
 };

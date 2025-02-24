@@ -144,6 +144,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -194,6 +195,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
                   }}
                   reload={rootState?.PopupData?.warehouse?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 ></ErpDevGrid>
               </div>
             </div>

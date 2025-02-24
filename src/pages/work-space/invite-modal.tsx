@@ -21,15 +21,13 @@ interface UserForm {
     userTypeCode: string;
     counterID: number;
     employeeID: number;
-    maxDiscPercAllowed: number|null;
+    maxDiscPercAllowed: number | null;
     passkey: string;
     Passwd: string;
     confrimPassword: string;
 }
 
-interface NewUserForm extends UserForm {
-
-}
+interface NewUserForm extends UserForm { }
 
 interface InviteModalProps {
     isOpen: boolean;
@@ -46,8 +44,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [existingUser, setExistingUser] = useState<string>('');
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
-
-
     const [newUserForm, setNewUserForm] = useState<NewUserForm>({
         userName: '',
         Passwd: 'hjoi',
@@ -61,7 +57,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
         maxDiscPercAllowed: null,
         passkey: ''
     });
-
     const [existingUserForm, setExistingUserForm] = useState<UserForm>({
         userName: '',
         email: '',
@@ -75,14 +70,10 @@ const InviteModal: React.FC<InviteModalProps> = ({
         Passwd: '',
         confrimPassword: '',
     });
-
     const formData = mode === 'new' ? newUserForm : existingUserForm;
-
     const { t } = useTranslation("userManage");
     const dispatch = useDispatch();
     const apiClient = new APIClient();
-
-
     const handleFieldChange = useCallback((field: string, value: any) => {
         if (mode === 'new') {
             setNewUserForm(prev => ({
@@ -100,11 +91,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
     const handlleUserSelect = async (userData: any) => {
         try {
             console.log("handlleUserSelect");
-            
-            
             const hygu = userData.value
             setExistingUser(hygu);
-
         } catch (error) {
             console.error('Failed to fetch user details:', error);
         }
@@ -145,7 +133,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await apiClient.getAsync(`${Urls.Users}${existingUser}`)     
+                const response = await apiClient.getAsync(`${Urls.Users}${existingUser}`)
                 const userData = {
                     userName: response?.userName || '',
                     email: response?.email || '',
@@ -159,16 +147,14 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     Passwd: '',
                     confrimPassword: '',
                 };
-                    setExistingUserForm(userData);   
-               
+                setExistingUserForm(userData);
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
             }
         };
-     if(existingUser){
-        fetchUserData();
-     }
-        
+        if (existingUser) {
+            fetchUserData();
+        }
     }, [existingUser]);
 
     const handleInvite = async () => {
@@ -183,7 +169,6 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     }
                 }) as any
             ).unwrap();
-
             handleResponse(response, () => {
                 onSuccess?.();
                 handleClose();
@@ -205,7 +190,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
         <ERPModal
             isOpen={isOpen}
             closeModal={handleClose}
-            title={mode === 'new' ? 'Invite New User' : 'Invite Existing User'}
+            title={mode === 'new' ? t('invite_new_user') : t('invite_existing_user')}
             content={<div className="space-y-4">
                 <div className="flex space-x-4 mb-6 ml-2 gap-4">
                     {existingUser}
@@ -213,7 +198,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         id="newUser"
                         name="mode"
                         value="new"
-                        label="New User"
+                        label={t("new_user")}
                         checked={mode === 'new'}
                         onChange={() => setMode('new')}
                         className="flex items-center space-x-2"
@@ -222,32 +207,32 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         id="existingUser"
                         name="mode"
                         value="existing"
-                        label="Existing User"
+                        label={t("existing_user")}
                         checked={mode === 'existing'}
                         onChange={() => setMode('existing')}
                         className="flex items-center space-x-2"
                     />
                 </div>
 
-                {mode === 'existing' && (
-                    <ERPDataCombobox
-                        id="existingUser"
-                        field={{
-                            id: 'existingUser',
-                            required: true,
-                            getListUrl: Urls.data_users,
-                            valueKey: 'name',
-                            labelKey: 'name',
-                        }}
-                        value={existingUser}
-                        label={t('select_user')}
-                        required={true}
-                        data={formData}
-                        onSelectItem={(data: any) => {
-                            handlleUserSelect(data);
-                        }}
-                    />
-                )}
+                {
+                    mode === 'existing' && (
+                        <ERPDataCombobox
+                            id="existingUser"
+                            field={{
+                                id: 'existingUser',
+                                required: true,
+                                getListUrl: Urls.data_users,
+                                valueKey: 'name',
+                                labelKey: 'name',
+                            }}
+                            value={existingUser}
+                            label={t('select_user')}
+                            required={true}
+                            data={formData}
+                            onSelectItem={(data: any) => { handlleUserSelect(data); }}
+                        />
+                    )
+                }
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <ERPInput
@@ -260,28 +245,31 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         id={'userName'}
                     />
 
-                    {mode === 'new' && (
-                        <>
-                            <ERPInput
-                                value={formData.Passwd ?? ''}
-                                onChange={(e: any) => handleFieldChange('Passwd', e.target.value)}
-                                label={t('password')}
-                                type="password"
-                                placeholder={t('password')}
-                                required={true}
-                                id={'Passwd'}
-                            />
-                            <ERPInput
-                                value={formData.confrimPassword ?? ''}
-                                onChange={(e: any) => handleFieldChange('confrimPassword', e.target.value)}
-                                label={t('confirm_password')}
-                                type="password"
-                                placeholder={t('confirm_password')}
-                                required={true}
-                                id={'confrimPassword'}
-                            />
-                        </>
-                    )}
+                    {
+                        mode === 'new' && (
+                            <>
+                                <ERPInput
+                                    value={formData.Passwd ?? ''}
+                                    onChange={(e: any) => handleFieldChange('Passwd', e.target.value)}
+                                    label={t('password')}
+                                    type="password"
+                                    placeholder={t('password')}
+                                    required={true}
+                                    id={'Passwd'}
+                                />
+
+                                <ERPInput
+                                    value={formData.confrimPassword ?? ''}
+                                    onChange={(e: any) => handleFieldChange('confrimPassword', e.target.value)}
+                                    label={t('confirm_password')}
+                                    type="password"
+                                    placeholder={t('confirm_password')}
+                                    required={true}
+                                    id={'confrimPassword'}
+                                />
+                            </>
+                        )
+                    }
 
                     <ERPInput
                         value={formData.email}
@@ -331,7 +319,8 @@ const InviteModal: React.FC<InviteModalProps> = ({
                         onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
                     />
 
-                    {applicationSettings.accountsSettings?.allowSalesCounter &&
+                    {
+                        applicationSettings.accountsSettings?.allowSalesCounter &&
                         <ERPDataCombobox
                             value={formData.counterID}
                             id="counterID"
@@ -370,7 +359,7 @@ const InviteModal: React.FC<InviteModalProps> = ({
 
                     <ERPInput
                         value={formData.maxDiscPercAllowed}
-                        onChange={(e: any) => handleFieldChange('maxDiscPercAllowed',  parseInt(e.target.value))}
+                        onChange={(e: any) => handleFieldChange('maxDiscPercAllowed', parseInt(e.target.value))}
                         label={t('max_dis%')}
                         type="number"
                         min={0}
@@ -381,28 +370,27 @@ const InviteModal: React.FC<InviteModalProps> = ({
                     />
                 </div>
 
-                <div className="flex justify-end space-x-4 pt-4">
+                <div className="flex justify-end gap-4 pt-4">
                     <ERPButton
-                        title="Clear"
+                        title={t("clear")}
                         variant="secondary"
                         onClick={handleClear}
                     />
                     <ERPButton
-                        title="cancel"
+                        title={t("cancel")}
                         variant="secondary"
                         onClick={handleClose}
                     />
-                  
                     <ERPButton
-                        title="Invite"
+                        title={t("invite")}
                         variant="primary"
                         onClick={handleInvite}
                         disabled={isLoading}
                     />
                 </div>
             </div>}
-           width={600}
-           height={600}
+            width={600}
+            height={600}
             isButton={false}
             hasSubmit={false}
         />

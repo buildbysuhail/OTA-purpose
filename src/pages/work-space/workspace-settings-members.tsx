@@ -14,9 +14,9 @@ import ErpAvatar from "../../components/ERPComponents/erp-avatar";
 import { postAction } from "../../redux/slices/app-thunks";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import InviteModal from "./invite-modal";
+import { useTranslation } from "react-i18next";
 
 interface WorkspaceSettingsMembersProps { }
-
 const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -36,7 +36,6 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
     key: "Id",
     async load(loadOptions: any) {
       const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
-
       const queryString = paramNames
         .filter((paramName) => isNotEmpty(loadOptions[paramName]))
         .map((paramName) => `${paramName}=${JSON.stringify(loadOptions[paramName])}`)
@@ -65,6 +64,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
   const dispatch = useDispatch();
+  const { t } = useTranslation('main');
   const resetPassword = async () => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
@@ -101,37 +101,33 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div
             id="phone-number"
-            className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""
-              } col-span-12`}
-          >
+            className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""} col-span-12`}>
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Members{" "}
+                  {t("members")}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Manage the members and users of your workspace, and set
-                    their access levels. You can invite new users up to the
-                    maximum number of seats allowed on your plan
+                    {t("workspace_members_management")}
                   </p>
                 </div>
+
                 <div>
                   <ERPButton
-                    title="Invite"
+                    title={t("invite")}
                     variant="primary"
                     className="ml-auto"
                     onClick={handleInviteClick}
                   />
                 </div>
               </div>
+
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
                   <DataGrid
                     ref={dataGridRef}
                     height={gridHeight}
-                    dataSource={
-                      store
-                      // "https://localhost:7213/api/Subscription/WorkSpace/GetMembers"
-                    }
+                    dataSource={store}
+                    // "https://localhost:7213/api/Subscription/WorkSpace/GetMembers"
                     showBorders={true}
                     // remoteOperations={true}
                     showColumnLines={true}
@@ -146,7 +142,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       <Item location="before">
                         <div className="informer">
                           <div className="count">{121}</div>
-                          <span>Total Count</span>
+                          <span>{t("total_count")}</span>
                         </div>
                       </Item>
                       <Item name="searchPanel" location="after"></Item>
@@ -157,7 +153,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                     <SearchPanel
                       visible={true}
                       width={240}
-                      placeholder={"Search..."}
+                      placeholder={t("search...")}
                     />
                     <FilterRow visible={true} applyFilter="auto" />
                     {/* 
@@ -170,7 +166,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       minWidth={250}
                       allowFiltering={true}
                       dataField="DisplayName"
-                      caption={"Name"}
+                      caption={t("name")}
                       dataType="string"
                       cellRender={({ data }) => (
                         <div className="sm:flex items-start items-center">
@@ -205,7 +201,7 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="Email"
-                      caption={"Email"}
+                      caption={t("email")}
                       dataType="string"
                     />
                     <Column
@@ -213,21 +209,21 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="LastActive"
-                      caption={"Last Active"}
+                      caption={t("last_active")}
                       dataType="datetime"
                     />
                     <Column
                       width={100}
                       dataField="Active"
-                      caption={"Status"}
+                      caption={t("status")}
                       cellRender={({ data }) =>
                         data.Active === true ? (
                           <span className="badge bg-success" id="status">
-                            Active
+                            {t("active")}
                           </span>
                         ) : (
                           <span className="badge bg-danger" id="status">
-                            Inactive
+                            {t("inactive")}
                           </span>
                         )
                       }
@@ -238,41 +234,29 @@ const WorkspaceSettingsMembers: FC<WorkspaceSettingsMembersProps> = (props) => {
                       allowHeaderFiltering={false}
                       width={100}
                       dataField="Active"
-                      caption={"Action"}
+                      caption={t("action")}
                       cellRender={({ data }) => (
                         <div className="hs-dropdown ti-dropdown ms-2">
                           <button
                             aria-label="button"
                             type="button"
                             className="ti-btn ti-btn-secondary ti-btn-sm"
-                            aria-expanded="false"
-                          >
+                            aria-expanded="false">
                             <i className="ti ti-dots-vertical"></i>
                           </button>
+
                           <ul className="hs-dropdown-menu ti-dropdown-menu hidden">
-                            <li>
-                              <Link
-                                className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                to="#"
-                              >
-                                Deactivate User
-                              </Link>
+                            <li>  <Link className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" to="#">
+                              {t("deactivate_user")}
+                            </Link>
                             </li>
-                            <li>
-                              <Link
-                                className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                to="#"
-                              >
-                                Delete User
-                              </Link>
+                            <li>  <Link className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" to="#"  >
+                              {t("delete_user")}
+                            </Link>
                             </li>
-                            <li>
-                              <Link
-                                className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block"
-                                to="#"
-                              >
-                                Edit User
-                              </Link>
+                            <li>  <Link className="ti-dropdown-item !py-2 !px-[0.9375rem] !text-[0.8125rem] !font-medium block" to="#">
+                              {t("edit_user")}
+                            </Link>
                             </li>
                           </ul>
                         </div>

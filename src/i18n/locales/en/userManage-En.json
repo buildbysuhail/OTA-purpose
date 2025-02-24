@@ -42,5 +42,14 @@
     "save":"Save",
     "close":"Close",
 
-    "load_rights":"Load rights"
+    "load_rights":"Load rights",
+
+    "clear":"Clear",
+    "cancel":"Cancel",
+    "invite":"Invite",
+    "invite_new_user":"Invite new user",
+    "invite_existing_user":"Invite existing user",
+    "existing_user":"Existing user",
+    "new_user":"New user",
+    "select_user":"Select user"
 }

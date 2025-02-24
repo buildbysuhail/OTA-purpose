@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import ERPRadio from "../../components/ERPComponents/erp-radio";
@@ -8,18 +7,19 @@ import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import { hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 import { inputBox } from "../../redux/slices/app/types";
+import { useTranslation } from "react-i18next";
 
 interface InputBoxStylingProps {
   inputBox?: inputBox; // Pass the inputBox state
   onInputBoxChange: (field: keyof inputBox, value: any) => void; // Handler for state updates
-//   resetInputBox?: () => void; // Reset handler
- isInputBgColor?:boolean;
+  //   resetInputBox?: () => void; // Reset handler
+  isInputBgColor?: boolean;
 }
 
 const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
   inputBox,
   onInputBoxChange,
-  isInputBgColor=false,
+  isInputBgColor = false,
 }) => {
   // Internal demo state for live preview
   const [demo, setDemo] = useState({
@@ -29,48 +29,36 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
     radioButton: false,
     checkBox: false,
   });
+  const { t } = useTranslation('main')
 
   return (
     <div className="flex flex-col">
       {/* Live Demo Section */}
-  <div className={`${isInputBgColor ? "pt-3":""}`}>
-     <ERPCheckbox
+      <div className={`${isInputBgColor ? "pt-3" : ""}`}>
+        <ERPCheckbox
           localInputBox={inputBox}
-            id="bold"
-            customSize="sm"
-            name="bold"
-            checked={inputBox?.bold }
-            onChange={(e) => {         
-            onInputBoxChange("bold", e.target.checked);
-            }}
-            label="Bold"
-       />
-     </div>
-    
-      
+          id="bold"
+          customSize="sm"
+          name="bold"
+          checked={inputBox?.bold}
+          onChange={(e) => { onInputBoxChange("bold", e.target.checked); }}
+          label={t("bold")}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start switcher-style">
         <ERPInput
           id="inputBox"
-          label="Demo Input"
-          onChange={(e) => {
-            setDemo((prevDemo) => ({
-              ...prevDemo,
-              inputBox: e.target?.value,
-            }));
-          }}
+          label={t("demo_input")}
+          onChange={(e) => { setDemo((prevDemo) => ({ ...prevDemo, inputBox: e.target?.value, })); }}
           value={demo.inputBox}
           localInputBox={inputBox}
         />
 
         <ERPDateInput
           id="dateBox"
-          label="Date Input"
-          onChange={(e) => {
-            setDemo((prevDemo) => ({
-              ...prevDemo,
-              dateBox: e.target?.value,
-            }));
-          }}
+          label={t("date_input")}
+          onChange={(e) => { setDemo((prevDemo) => ({ ...prevDemo, dateBox: e.target?.value, })); }}
           value={demo.dateBox}
           localInputBox={inputBox}
         />
@@ -78,18 +66,13 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
         <ERPDataCombobox
           id="selectBox"
           data={demo}
-          label="Demo Select Box"
+          label={t("demo_select_box")}
           field={{
             id: "selectBox",
             valueKey: "value",
             labelKey: "label",
           }}
-          onChange={(e) => {
-            setDemo((prevDemo) => ({
-              ...prevDemo,
-              selectBox: e?.value ?? null,
-            }));
-          }}
+          onChange={(e) => { setDemo((prevDemo) => ({ ...prevDemo, selectBox: e?.value ?? null, })); }}
           options={[
             { value: 0, label: "0" },
             { value: 1, label: "1" },
@@ -118,9 +101,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-normal" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            Normal
+            {t("normal")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -135,9 +119,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-standard" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            Standard
+            {t("standard")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -152,9 +137,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-outlined" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            Outlined
+            {t("outlined")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -169,7 +155,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-filled" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            Filled
+            {t("filled")}
           </label>
         </div>
       </div>
@@ -190,9 +176,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-sm" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            sm
+            {t("sm")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -207,9 +194,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-md" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            md
+            {t("md")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -224,9 +212,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-lg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            lg
+            {t("lg")}
           </label>
         </div>
+
         <div className="flex items-center">
           <input
             type="radio"
@@ -241,7 +230,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             }}
           />
           <label htmlFor="input-customize" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-            Customize
+            {t("customize")}
           </label>
         </div>
       </div>
@@ -252,17 +241,15 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
           <div className="basis-2/3">
             <ERPSlider
               id="borderRadius"
-              label="Border Radius"
+              label={t("border_radius")}
               className="bg-slate-300"
               value={inputBox?.borderRadius}
-              onChange={(e) => {
-                const newValue = parseInt(e.target?.value, 10);
-                onInputBoxChange("borderRadius", newValue);
-              }}
+              onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("borderRadius", newValue); }}
               min={0}
               max={20}
             />
           </div>
+
           <div className="basis-1/3">
             <ERPInput
               id="borderRadius"
@@ -270,299 +257,263 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               type="number"
               value={inputBox?.borderRadius}
               data={inputBox}
-              onChange={(e) => {
-                const newValue = parseInt(e.target?.value, 10);
-                onInputBoxChange("borderRadius", newValue);
-              }}
+              onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("borderRadius", newValue); }}
               min={0}
               max={20}
             />
           </div>
         </div>
+
         <div className="flex flex-col space-y-1 translate-y-4">
           <div className="flex items-center space-x-3">
             <div className="basis-1/2">
               <ERPSlider
                 id="marginBottom"
-                label={`Margin Bottom (${inputBox?.marginBottom ?? 0})`}
+                label={`${t("margin_bottom")} (${inputBox?.marginBottom ?? 0})`}
                 className="bg-slate-300"
                 value={inputBox?.marginBottom}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("marginBottom", newValue);
-                }}
+                onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("marginBottom", newValue); }}
                 min={0}
                 max={30}
               />
             </div>
+
             <div className="basis-1/2">
               <ERPSlider
                 id="marginTop"
-                label={`Margin Top (${inputBox?.marginTop ?? 0})`}
+                label={`${t("margin_top")} (${inputBox?.marginTop ?? 0})`}
                 className="bg-slate-300"
                 value={inputBox?.marginTop}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("marginTop", newValue);
-                }}
+                onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("marginTop", newValue); }}
                 min={0}
                 max={30}
               />
             </div>
           </div>
+
           <div className="px-4 text-secondary text-xs">
-            <b className="me-2">Note:</b>If you face any alignment issue, adjust margin top & bottom of input box.
+            <b className="me-2">{t("note")}</b>
+            {t("alignment_issue_tip")}
           </div>
         </div>
       </div>
 
       {/* Font Size, Label Font Size, and Font Weight Customization */}
-      {inputBox?.inputSize === "customize" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style mb-1">
-          <div className="flex items-center space-x-3">
-            <div className="basis-2/3">
-              <ERPSlider
-                id="fontSize"
-                label="Font Size"
-                className="bg-slate-300"
-                value={inputBox?.fontSize}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("fontSize", newValue);
-                }}
-                min={5}
-                max={25}
-              />
-            </div>
-            <div className="basis-1/3 translate-y-3">
-              <ERPInput
-                id="fontSize"
-                type="number"
-                noLabel={true}
-                value={inputBox?.fontSize}
-                data={inputBox}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("fontSize", newValue);
-                }}
-                min={5}
-                max={25}
-              />
-            </div>
-          </div>
+      {
+        inputBox?.inputSize === "customize" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style mb-1">
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3">
+                <ERPSlider
+                  id="fontSize"
+                  label={t("font_size")}
+                  className="bg-slate-300"
+                  value={inputBox?.fontSize}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontSize", newValue); }}
+                  min={5}
+                  max={25}
+                />
+              </div>
 
-          <div className="flex items-center space-x-3">
-            <div className="basis-2/3">
-              <ERPSlider
-                id="labelFontSize"
-                label="Label Font Size"
-                className="bg-slate-300"
-                value={inputBox?.labelFontSize}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("labelFontSize", newValue);
-                }}
-                min={5}
-                max={25}
-              />
-            </div>
-            <div className="basis-1/3 translate-y-3">
-              <ERPInput
-                id="labelFontSize"
-                type="number"
-                noLabel={true}
-                value={inputBox?.labelFontSize}
-                data={inputBox}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("labelFontSize", newValue);
-                }}
-                min={5}
-                max={25}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="basis-2/3">
-              <ERPSlider
-                id="fontWeight"
-                label="Font Weight"
-                className="bg-slate-300"
-                value={inputBox?.fontWeight}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("fontWeight", newValue);
-                }}
-                min={300}
-                max={700}
-                step={100}
-              />
-            </div>
-            <div className="basis-1/3 translate-y-3">
-              <ERPInput
-                id="fontWeight"
-                type="number"
-                noLabel={true}
-                value={inputBox?.fontWeight}
-                data={inputBox}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value, 10);
-                  onInputBoxChange("fontWeight", newValue);
-                }}
-                min={300}
-                max={700}
-                step={100}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="basis-2/3">
-              <ERPSlider
-                id="inputHeight"
-                label="Height"
-                className="bg-slate-300"
-                value={inputBox?.inputHeight}
-                onChange={(e) => {
-                  const newValue = parseFloat(e.target?.value);
-                  onInputBoxChange("inputHeight", newValue);
-                }}
-                min={0}
-                max={5}
-                step={0.1}
-              />
-            </div>
-            <div className="basis-1/3 translate-y-3">
-              <ERPInput
-                id="inputHeight"
-                type="number"
-                noLabel={true}
-                value={inputBox?.inputHeight}
-                data={inputBox}
-                onChange={(e) => {
-                  const newValue = parseFloat(e.target?.value);
-                  onInputBoxChange("inputHeight", newValue);
-                }}
-                min={0}
-                max={5}
-                step={0.1}
-              />
-            </div>
-          </div>
-
-          {/* AdjustA, AdjustB, AdjustC, and AdjustD Sliders */}
-          <div className="flex items-center space-x-3">
-            <div className="basis-1/2">
-              <ERPSlider
-                id="adjustA"
-                label={`AdjustA (${inputBox?.adjustA ?? 0})`}
-                className="bg-slate-300"
-                value={inputBox?.adjustA}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("adjustA", newValue);
-                }}
-                min={-30}
-                max={30}
-              />
-            </div>
-            <div className="basis-1/2">
-              <ERPSlider
-                id="adjustB"
-                label={`AdjustB (${inputBox?.adjustB ?? 0})`}
-                className="bg-slate-300"
-                value={inputBox?.adjustB}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("adjustB", newValue);
-                }}
-                min={-30}
-                max={30}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col space-y-1 translate-y-[10px]">
-          <div className="flex items-center space-x-3">
-            <div className="basis-1/2">
-              <ERPSlider
-                id="adjustC"
-                label={`AdjustC (${inputBox?.adjustC ?? 0})`}
-                className="bg-slate-300"
-                value={inputBox?.adjustC}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("adjustC", newValue);
-                }}
-                min={-30}
-                max={30}
-              />
-            </div>
-            <div className="basis-1/2">
-              <ERPSlider
-                id="adjustD"
-                label={`AdjustD (${inputBox?.adjustD ?? 0})`}
-                className="bg-slate-300"
-                value={inputBox?.adjustD}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target?.value);
-                  onInputBoxChange("adjustD", newValue);
-                }}
-                min={-30}
-                max={30}
-              />
-            </div>
-          </div>
-          <div className="px-4 text-secondary text-xs">
-            <b className="me-2">Note:</b>this styles are not applied for normal input.
-          </div>
-        </div>
-
-        </div>
-      )}
-
-      {/* Color Customization */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {isInputBgColor && (
-            <div className="flex items-center">
-            <label htmlFor="inputBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-             Input Background Color
-            </label>
-            <div className="ti-form-radio">
-              <div
-                className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                style={{
-                  backgroundColor: `rgb(${inputBox?.inputBgColor ?? "128, 128, 128"})`,
-                }}
-              >
-                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
-                <input
-                  type="color"
-                  value={inputBox?.inputBgColor}
-                  onChange={(e) => {
-                    const rgb = hexToRgb(e.target?.value);
-                    if (rgb) {
-                      onInputBoxChange("inputBgColor", `${rgb?.r},${rgb?.g},${rgb?.b}`);
-                    }
-                  }}
-                  className="opacity-0 w-full h-full cursor-pointer"
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="fontSize"
+                  type="number"
+                  noLabel={true}
+                  value={inputBox?.fontSize}
+                  data={inputBox}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontSize", newValue); }}
+                  min={5}
+                  max={25}
                 />
               </div>
             </div>
+
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3">
+                <ERPSlider
+                  id="labelFontSize"
+                  label={t("label_font_size")}
+                  className="bg-slate-300"
+                  value={inputBox?.labelFontSize}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("labelFontSize", newValue); }}
+                  min={5}
+                  max={25}
+                />
+              </div>
+
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="labelFontSize"
+                  type="number"
+                  noLabel={true}
+                  value={inputBox?.labelFontSize}
+                  data={inputBox}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("labelFontSize", newValue); }}
+                  min={5}
+                  max={25}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3">
+                <ERPSlider
+                  id="fontWeight"
+                  label={t("font_weight")}
+                  className="bg-slate-300"
+                  value={inputBox?.fontWeight}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontWeight", newValue); }}
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+              </div>
+
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="fontWeight"
+                  type="number"
+                  noLabel={true}
+                  value={inputBox?.fontWeight}
+                  data={inputBox}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value, 10); onInputBoxChange("fontWeight", newValue); }}
+                  min={300}
+                  max={700}
+                  step={100}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <div className="basis-2/3">
+                <ERPSlider
+                  id="inputHeight"
+                  label={t("height")}
+                  className="bg-slate-300"
+                  value={inputBox?.inputHeight}
+                  onChange={(e) => { const newValue = parseFloat(e.target?.value); onInputBoxChange("inputHeight", newValue); }}
+                  min={0}
+                  max={5}
+                  step={0.1}
+                />
+              </div>
+
+              <div className="basis-1/3 translate-y-3">
+                <ERPInput
+                  id="inputHeight"
+                  type="number"
+                  noLabel={true}
+                  value={inputBox?.inputHeight}
+                  data={inputBox}
+                  onChange={(e) => { const newValue = parseFloat(e.target?.value); onInputBoxChange("inputHeight", newValue); }}
+                  min={0}
+                  max={5}
+                  step={0.1}
+                />
+              </div>
+            </div>
+
+            {/* AdjustA, AdjustB, AdjustC, and AdjustD Sliders */}
+            <div className="flex items-center space-x-3">
+              <div className="basis-1/2">
+                <ERPSlider
+                  id="adjustA"
+                  label={`${t("adjust_a")} (${inputBox?.adjustA ?? 0})`}
+                  className="bg-slate-300"
+                  value={inputBox?.adjustA}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustA", newValue); }}
+                  min={-30}
+                  max={30}
+                />
+              </div>
+
+              <div className="basis-1/2">
+                <ERPSlider
+                  id="adjustB"
+                  label={`${t("adjust_b")} (${inputBox?.adjustB ?? 0})`}
+                  className="bg-slate-300"
+                  value={inputBox?.adjustB}
+                  onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustB", newValue); }}
+                  min={-30}
+                  max={30}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-1 translate-y-[10px]">
+              <div className="flex items-center space-x-3">
+                <div className="basis-1/2">
+                  <ERPSlider
+                    id="adjustC"
+                    label={`${t("adjust_c")} (${inputBox?.adjustC ?? 0})`}
+                    className="bg-slate-300"
+                    value={inputBox?.adjustC}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustC", newValue); }}
+                    min={-30}
+                    max={30}
+                  />
+                </div>
+
+                <div className="basis-1/2">
+                  <ERPSlider
+                    id="adjustD"
+                    label={`${t("adjust_d")} (${inputBox?.adjustD ?? 0})`}
+                    className="bg-slate-300"
+                    value={inputBox?.adjustD}
+                    onChange={(e) => { const newValue = parseInt(e.target?.value); onInputBoxChange("adjustD", newValue); }}
+                    min={-30}
+                    max={30}
+                  />
+                </div>
+              </div>
+
+              <div className="px-4 text-secondary text-xs">
+                <b className="me-2">{t("note")}</b>
+                {t("input_style_note")}
+              </div>
+            </div>
           </div>
-        )}
-    
+        )
+      }
+
+      {/* Color Customization */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {
+          isInputBgColor && (
+            <div className="flex items-center">
+              <label htmlFor="inputBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
+                {t("input_background_color")}
+              </label>
+              <div className="ti-form-radio">
+                <div className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                  style={{ backgroundColor: `rgb(${inputBox?.inputBgColor ?? "128, 128, 128"})`, }}>
+                  <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                  <input
+                    type="color"
+                    value={inputBox?.inputBgColor}
+                    onChange={(e) => {
+                      const rgb = hexToRgb(e.target?.value);
+                      if (rgb) {
+                        onInputBoxChange("inputBgColor", `${rgb?.r},${rgb?.g},${rgb?.b}`);
+                      }
+                    }}
+                    className="opacity-0 w-full h-full cursor-pointer"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        }
+
         <div className="flex items-center">
           <label htmlFor="borderColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Border Color
+            {t("border_color")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.borderColor ?? "128, 128, 128"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.borderColor ?? "128, 128, 128"})`, }}  >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -581,15 +532,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="fontColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Font Color
+            {t("font_color")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.fontColor ?? "128, 128, 128"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.fontColor ?? "128, 128, 128"})`, }}>
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -608,15 +556,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="labelColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Label Color
+            {t("label_color")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.labelColor ?? "128, 128, 128"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.labelColor ?? "128, 128, 128"})`, }} >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -635,15 +580,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="borderFocus" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Border Focus
+            {t("border_focus")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.borderFocus ?? "128, 128, 128"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.borderFocus ?? "128, 128, 128"})`, }} >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -662,15 +604,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="selectColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Active Select Box
+            {t("active_select_box")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.selectColor ?? "128, 128, 128"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.selectColor ?? "128, 128, 128"})`, }}>
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -689,15 +628,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="focusBgColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Focus Background
+            {t("focus_background")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.focusBgColor ?? "255, 204, 88"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.focusBgColor ?? "255, 204, 88"})`, }}  >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -716,15 +652,12 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
         <div className="flex items-center">
           <label htmlFor="focusForeColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
-            Focus Fore Color
+            {t("focus_fore_color")}
           </label>
           <div className="ti-form-radio">
             <div
               className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-              style={{
-                backgroundColor: `rgb(${inputBox?.focusForeColor ?? "black"})`,
-              }}
-            >
+              style={{ backgroundColor: `rgb(${inputBox?.focusForeColor ?? "black"})`, }}     >
               <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
               <input
                 type="color"
@@ -744,37 +677,29 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
 
       {/* Radio & Checkbox Customization */}
       <div className="mt-2">
-        <p className="switcher-style-head ">Radio & Check Box:</p>
+        <p className="switcher-style-head ">{t("radio_&_check_box")}</p>
         <div className="grid grid-cols-2 gap-3 items-center switcher-style">
           <ERPRadio
-          localInputBox={inputBox}
+            localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}
             checked={demo.radioButton}
-            onChange={(e) => {
-              setDemo((prevDemo) => ({
-                ...prevDemo,
-                radioButton: !demo.radioButton,
-              }));
-            }}
-            label="Demo Radio Button"
+            onChange={(e) => { setDemo((prevDemo) => ({ ...prevDemo, radioButton: !demo.radioButton, })); }}
+            label={t("demo_radio_button")}
           />
+
           <ERPCheckbox
-          localInputBox={inputBox}
+            localInputBox={inputBox}
             id="radioButton"
             name="radioButton"
             data={demo}
             checked={demo.checkBox}
-            onChange={(e) => {
-              setDemo((prevDemo) => ({
-                ...prevDemo,
-                checkBox: !demo.checkBox,
-              }));
-            }}
-            label="Demo CheckBox"
+            onChange={(e) => { setDemo((prevDemo) => ({ ...prevDemo, checkBox: !demo.checkBox, })); }}
+            label={t("demo_checkBox")}
           />
         </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 switcher-style">
           <div className="flex items-center">
             <input
@@ -790,9 +715,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-sm" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              sm
+              {t("sm")}
             </label>
           </div>
+
           <div className="flex items-center">
             <input
               type="radio"
@@ -807,9 +733,10 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-md" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              md
+              {t("md")}
             </label>
           </div>
+
           <div className="flex items-center">
             <input
               type="radio"
@@ -824,7 +751,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-lg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              lg
+              {t("lg")}
             </label>
           </div>
         </div>

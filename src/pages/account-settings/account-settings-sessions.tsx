@@ -8,14 +8,7 @@ import { APIClient } from "../../helpers/api-client";
 import { useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataGrid } from "devextreme-react";
-import {
-  Column,
-  Paging,
-  Scrolling,
-  DataGridTypes,
-  ColumnFixing, 
-  LoadPanel
-} from "devextreme-react/cjs/data-grid";
+import { Column, Paging, Scrolling, DataGridTypes, ColumnFixing, LoadPanel } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import AccountSettingsApis from "./account-settings-apis";
 import chrome from '../../assets/images/browser-logos/chrome.png';
@@ -23,9 +16,10 @@ import firefox from '../../assets/images/browser-logos/firefox.png';
 import microsoft from '../../assets/images/browser-logos/microsoft.png';
 import safari from '../../assets/images/browser-logos/safari.png';
 import { postAction } from "../../redux/slices/app-thunks";
+import { useTranslation } from "react-i18next";
 // import { deviceLogos } from "../../assets/images/device-logos"; 
 
-interface AccountSettingsProps {}
+interface AccountSettingsProps { }
 
 const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
@@ -58,64 +52,54 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
             `${paramName}=${JSON.stringify(loadOptions[paramName])}`
         )
         .join("&");
-
       try {
         const response = await AccountSettingsApis.getSessions("");
-
         const result = response;
-
         return result !== undefined && result != null
           ? {
-              data: result,
-              totalCount: result.length,
-            }
+            data: result,
+            totalCount: result.length,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         throw new Error("Data Loading Error");
       }
     },
   });
-  
- 
-  
+
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
-  const [loadingLogout, setLoadingLogout] = useState<{loading:boolean, deviceId: string}>({loading:false, deviceId: ''});
-
- 
+  const [loadingLogout, setLoadingLogout] = useState<{ loading: boolean, deviceId: string }>({ loading: false, deviceId: '' });
   const dispatch = useDispatch();
-
-  const handleLogout = async (deviceId:string) => {
-    setLoadingLogout({loading: true, deviceId: deviceId});
-    // 
+  const { t } = useTranslation('main')
+  const handleLogout = async (deviceId: string) => {
+    setLoadingLogout({ loading: true, deviceId: deviceId });
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.logoutUserSession,
         data: {
-           deviceId: deviceId
-           },
+          deviceId: deviceId
+        },
       }) as any
     ).unwrap();
-    // 
-    setLoadingLogout({loading: false, deviceId: deviceId});
+    setLoadingLogout({ loading: false, deviceId: deviceId });
     handleResponse(response, () => {
       store.load();
     });
   };
-
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
 
-// ======================================cellRender===================================================
+  // ======================================cellRender===================================================
 
   const renderBrowserCell = (data: DataGridTypes.ColumnCellTemplateData) => {
     let browserImage = '';
-    
+
     switch (data.data.browser) {
       case 'Chrome':
         browserImage = chrome;
@@ -132,117 +116,99 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       default:
         browserImage = ''; // You can add a default image or leave it empty
     }
-  
+
     return (
       <div className="flex justify-start items-center  gap-1">
         {browserImage && <img src={browserImage} alt={data.data.browser} className=" hover:brightness-150 drop-shadow-md" style={{ width: '15px', height: '15px' }} />}
         <span className=".dx-row">{data.data.browser}{" "}
-        {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm " style={{ color:'#22c55e',fontSize: '7px' }}></i>}
+          {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm " style={{ color: '#22c55e', fontSize: '7px' }}></i>}
         </span>
       </div>
     );
   };
 
- const renderCountryCell = (data: DataGridTypes.ColumnCellTemplateData)=>(
-  <div className="flex justify-start items-center  gap-1">
-   <img
-      src={data.data.country_flag ? data.data.country_flag : ""}
-      alt={``}
-      className="aspect-square  rounded-full drop-shadow-md hover:brightness-150"
-      style={{ width: '15px', height: '15px',}} 
-    />
-    <span className=".dx-row">{`${data.data.country},${data.data.state}`}</span>
-</div>
- )
-
- const renderDeviceCell = (data: DataGridTypes.ColumnCellTemplateData)=>{
-  // let deviceImage = '';
-  let iconclass = "";
- 
-  switch (data.data.device) {
-    case 'Windows':
-    //  deviceImage = deviceLogos.windows;
-    iconclass = "ri-windows-fill"
-      break;
-    case 'Linux':
-    //  deviceImage = deviceLogos.linux;
-  
-     iconclass = "ri-ubuntu-fill"
-      break;
-    case 'Android':
-    //  deviceImage = deviceLogos.android;
-    iconclass ="ri-android-fill"
-      break;
-    case 'macOS':
-    //  deviceImage = deviceLogos.mac;
-    iconclass = "ri-mac-fill"
-      break;
-      case 'iOS':
-    //  deviceImage = deviceLogos.ios;
-    iconclass ="ri-apple-fill"
-    
-      break; 
-    default:
-    //  deviceImage = ''; // You can add a default image or leave it empty
-  };
-
-  return (
+  const renderCountryCell = (data: DataGridTypes.ColumnCellTemplateData) => (
     <div className="flex justify-start items-center  gap-1">
-      {/* {deviceImage && <img src={deviceImage} alt={data.data.device} className="aspect-square object-contain" style={{ width: '17px', height: '17px' }} />} */}
-      <div className="w-[16px] h-[16px]  flex justify-center items-start">
-      {iconclass  && <i className={`${iconclass} object-contain text-[16px] text-sky-400`} ></i>}
-      </div>
-      <span className=".dx-row">{data.data.device} </span>
-      
+      <img
+        src={data.data.country_flag ? data.data.country_flag : ""}
+        alt={``}
+        className="aspect-square  rounded-full drop-shadow-md hover:brightness-150"
+        style={{ width: '15px', height: '15px', }}
+      />
+      <span className=".dx-row">{`${data.data.country},${data.data.state}`}</span>
     </div>
-  );
- }
+  )
 
+  const renderDeviceCell = (data: DataGridTypes.ColumnCellTemplateData) => {
+    // let deviceImage = '';
+    let iconclass = "";
 
+    switch (data.data.device) {
+      case 'Windows':
+        //  deviceImage = deviceLogos.windows;
+        iconclass = "ri-windows-fill"
+        break;
+      case 'Linux':
+        //  deviceImage = deviceLogos.linux;
+        iconclass = "ri-ubuntu-fill"
+        break;
+      case 'Android':
+        //  deviceImage = deviceLogos.android;
+        iconclass = "ri-android-fill"
+        break;
+      case 'macOS':
+        //  deviceImage = deviceLogos.mac;
+        iconclass = "ri-mac-fill"
+        break;
+      case 'iOS':
+        //  deviceImage = deviceLogos.ios;
+        iconclass = "ri-apple-fill"
+        break;
+      default:
+      //  deviceImage = ''; // You can add a default image or leave it empty
+    };
 
-//  ==========================================================================================
+    return (
+      <div className="flex justify-start items-center  gap-1">
+        {/* {deviceImage && <img src={deviceImage} alt={data.data.device} className="aspect-square object-contain" style={{ width: '17px', height: '17px' }} />} */}
+        <div className="w-[16px] h-[16px]  flex justify-center items-start">
+          {iconclass && <i className={`${iconclass} object-contain text-[16px] text-sky-400`} ></i>}
+        </div>
+        <span className=".dx-row">{data.data.device} </span>
+      </div>
+    );
+  }
+  //  ==========================================================================================
   return (
     <Fragment>
-      
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div id="phone-number"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "Password" ? "blink" : ""
-            } col-span-12`}
-          >
+          <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === "Password" ? "blink" : ""} col-span-12`}>
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Sessions{" "}
+                  {t("sessions")}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                  View and manage devices where you're currently logged in
+                    {t("device_management")}
                   </p>
-                  
                 </div>
-                <div></div>
               </div>
+
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
-
                   <DataGrid
                     height={gridHeight}
-                    dataSource={
-                      store
-                    }
+                    dataSource={store}
                     className="custom-data-grid"
                     showBorders={true}
                     columnAutoWidth={true}
                     // columnMinWidth={100}
                     // remoteOperations={true}
                     showColumnLines={false}
-                    showRowLines={true}
-                
-                  >
-                    <ColumnFixing enabled={true}/>
-                    <Scrolling  mode="standard" 
-                      // scrollByContent={true}
-                     
+                    showRowLines={true}>
+                    <ColumnFixing enabled={true} />
+                    <Scrolling mode="standard"
+                    // scrollByContent={true}
                     // rowRenderingMode="virtual" 
                     />
                     <LoadPanel enabled={false} />
@@ -252,17 +218,14 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       <SearchPanel visible={true} width={240} placeholder={'Search...'} /> */}
                     {/* <Column dataField="branchName" caption={'branchName'} dataType="string" /> */}
 
-                     <Column
-                      
+                    <Column
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
-                     
-                      caption="  Branch Name"
+                      caption={t("branch_name")}
                       dataType="string"
-                    /> 
-                     <Column
-                    
+                    />
+                    <Column
                       width={140}
                       allowSearch={true}
                       allowFiltering={true}
@@ -272,77 +235,62 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       //  rowData.isActive ? 0 : 1 
                       // )}
                       // sortOrder="asc"
-                      caption={"Browser"}
-                      
-                      dataType="string"
-                    /> 
-                    <Column
-                    width={140}
-                      allowSearch={true}
-                      allowFiltering={true}
-                      dataField="ipAddress"
-                      caption={"IP Address"}
-                      
+                      caption={t("browser")}
                       dataType="string"
                     />
                     <Column
-                    width={140}
+                      width={140}
+                      allowSearch={true}
+                      allowFiltering={true}
+                      dataField="ipAddress"
+                      caption={t("ip_address")}
+                      dataType="string"
+                    />
+                    <Column
+                      width={140}
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="device"
                       cellRender={renderDeviceCell}
-                      caption={"Device"}
-                      
+                      caption={t("device")}
                       dataType="string"
                     />
                     <Column
-                    width={200}
+                      width={200}
                       allowSearch={true}
                       allowFiltering={true}
                       cellRender={renderCountryCell}
                       dataField="location"
-                      caption={"Location"}
-                      
+                      caption={t("location")}
                       dataType="string"
                     />
-
                     <Column
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="recentActivity"
-                      caption={"Recent Activity"}
+                      caption={t("recent_activity")}
                       width={200}
                       dataType="datetime"
                     />
-                     <Column
+                    <Column
                       dataField="actions"
                       caption={' '}
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
-                    
                         <>
-                         {/* {data.isActive &&  */}
-                    <ERPButton 
-                     variant="primary"
-                     className= {`p-[1px] m-[0px] h-7 w-7`}
-                     onClick={() => {
-                       handleLogout(data?.deviceId ?? '');
-                     }}
-                     startIcon={loadingLogout.loading == false ? 'ri-logout-box-r-line' : ''}
-                     disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
-                     loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
-                     >
-
-                     </ERPButton>
-                      
+                          {/* {data.isActive &&  */}
+                          <ERPButton
+                            variant="primary"
+                            className={`p-[1px] m-[0px] h-7 w-7`}
+                            onClick={() => { handleLogout(data?.deviceId ?? ''); }}
+                            startIcon={loadingLogout.loading == false ? 'ri-logout-box-r-line' : ''}
+                            disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
+                            loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
+                          />
                         </>
-                       )
-                         }
-                      
-                   
-                     width={50} 
-                    
-                     />
+                      )}
+                      width={50}
+                    />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}
                     {/* <Column dataField="isDefault" caption={'Is Default'} cellRender={({ data }) => (
                 data.isDefault === true ? 

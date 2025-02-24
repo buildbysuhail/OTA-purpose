@@ -7,28 +7,35 @@ import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import WhatsAppDemo from "./whatsapp-demo"
+import WhatsAppDemo from "./whatsapp-demo";
+import { X } from 'lucide-react';
 import { NotificationsChannel, NotificationsProvider } from "../../../enums/notification-chanal";
 
 const api = new APIClient();
-interface information {
+interface Information {
   AccountSid: string;
   AuthToken: string;
   FromPhone: string;
+  phoneNumber?: string;
+  message?: string;
 }
 const WhatsappIntegration = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation("integration");
   const WhatsappTwilioConnectPopup: React.FC = () => {
-    const initialState: information = {
+    const initialState: Information = {
       AccountSid: "",
       AuthToken: "",
       FromPhone: "",
+      phoneNumber: "",
+      message: "",
     };
+
     const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
-    const [information, setInformation] = useState<information>(initialState);
+    const [information, setInformation] = useState<Information>(initialState);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     useEffect(() => {
       if (isOpen) {
@@ -50,6 +57,8 @@ const WhatsappIntegration = () => {
               AccountSid: parsedConfig.AccountSid || "",
               AuthToken: parsedConfig.AuthToken || "",
               FromPhone: parsedConfig.FromPhone || "",
+              phoneNumber: parsedConfig.phoneNumber || "",
+              message: parsedConfig.message || "",
             });
           } catch (parseError) {
             console.error("Error parsing configJson:", parseError);
@@ -63,7 +72,7 @@ const WhatsappIntegration = () => {
     }, []);
 
     const handleFieldChange = (settingName: any, value: any) => {
-      setInformation((prevSettings = {} as information) => ({
+      setInformation((prevSettings = {} as Information) => ({
         ...prevSettings,
         [settingName]: value ?? "",
       }));
@@ -84,8 +93,26 @@ const WhatsappIntegration = () => {
           requestBody
         );
         handleResponse(response);
+        await handleSendDemoMessage();
       } catch (error) {
         console.error("Error saving settings:", error);
+      }
+    };
+
+    const handleSendDemoMessage = async () => {
+      try {
+        const demoMessageResponse = await api.post(
+          `${Urls.demo_whatsapp_message}`,
+          {
+            provider: NotificationsProvider.TwillioWhatsapp,
+            channel: NotificationsChannel.Whatsapp,
+            configJson: JSON.stringify(information),
+            isEnable: true,
+          }
+        );
+        handleResponse(demoMessageResponse);
+      } catch (error) {
+        console.error("Error sending demo WhatsApp message:", error);
       }
     };
 
@@ -145,7 +172,7 @@ const WhatsappIntegration = () => {
                   }
                 />
               </div>
-              
+
               <div className="mb-6">
                 <ERPInput
                   id="FromPhone"
@@ -159,13 +186,72 @@ const WhatsappIntegration = () => {
                 />
               </div>
 
-              <ERPButton
-                title={t("connect_with_twilio")}
-                variant="primary"
-                type="submit"
-                className="!mt-[13px]"
-              />
+              <div className="flex items-center gap-4">
+                <ERPButton
+                  title={t("connect_with_twilio")}
+                  variant="primary"
+                  type="submit"
+                  className="!mt-[13px]"
+                />
+                <ERPButton
+                  title={t("send_demo_message")}
+                  variant="secondary"
+                  className="!mt-[13px]"
+                  onClick={() => setIsPopupOpen(true)}
+                />
+              </div>
             </form>
+
+            {isPopupOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity rounded-sm ">
+                <div className="bg-white dark:bg-dark-bg rounded-lg shadow-lg max-w-md w-full p-6 relative">
+                  <div className="flex justify-between items-center border-b pb-2">
+                    <h2 className="text-lg font-semibold dark:text-dark-text">Demo Message</h2>
+                    <button
+                      onClick={() => setIsPopupOpen(false)}
+                      className="text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-4 mt-4">
+                    <ERPInput
+                      id="phoneNumber"
+                      label={t("phone_number")}
+                      placeholder={t("phone_number")}
+                      value={information.phoneNumber}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("phoneNumber", data.phoneNumber)
+                      }
+                    />
+                    <div className="flex items-center">
+                      <input
+                        type="text"
+                        placeholder={t("type_a_message")}
+                        className="dark:!bg-dark-bg-card bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
+                        value={information.message}
+                        onChange={(e) => handleFieldChange("message", e.target.value)}
+                      />
+                      <button className="bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full" onClick={handleSendDemoMessage}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          className="w-4 h-4 text-center !display-revert">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -230,7 +316,6 @@ const WhatsappIntegration = () => {
                 target="_blank"
                 rel="noopener noreferrer">
                 {t("read_more")}
-                {/* <ExternalLink size={14} className="ml-1" /> */}
                 <i className="ri-external-link-line"></i>
               </a>
             </li>
@@ -252,4 +337,4 @@ const WhatsappIntegration = () => {
   );
 };
 
-export default WhatsappIntegration
+export default WhatsappIntegration;

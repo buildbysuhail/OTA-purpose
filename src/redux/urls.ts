@@ -412,7 +412,9 @@ const Urls = {
 
     //Invite
     invite_link:"/Subscription/User/SendInviteLink",
-    accept_link:"/Subscription/User/AcceptInviteLink"
+    accept_link:"/Subscription/User/AcceptInviteLink",
+
+    demo_whatsapp_message:""
 };
 
 export default Urls;

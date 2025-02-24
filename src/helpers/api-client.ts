@@ -66,116 +66,41 @@ class APIClient {
     return response;
   };
  
-
-  filterLedgers = async (ledgers: any[], queryString: string): Promise<any[]> => {
-    // Decrypt all names asynchronously
-    const decryptedLedgers = await Promise.all(
-        ledgers.map(async (x) => ({
-            ...x,
-            // name: await decryptAES(x.name),
-        }))
-    );
-
-    if (!queryString) return decryptedLedgers;
-
-    const queryParams = new URLSearchParams(queryString);
-
-    // Return all ledgers if ledgerType is "All"
-    if ((queryParams.get("ledgerType") as any) == 0) {
-      return decryptedLedgers;
-  }
-  else {
-    
-  }
-    
-  return decryptedLedgers.filter((ledger) => {
-    for (const [key, value] of queryParams.entries()) {
-        if (key === "ledgerID") {
-            if (ledger.id === undefined || String(ledger.id) !== value) {
-                return false;
-            }
-        } else if (key === "ledgerType") {
-            const ledgerTypes: number[] = Array.isArray(ledger.ledgerType) ? ledger.ledgerType : [];
-            const valueAsNumber = Number(value);
-            
-            if (!ledgerTypes.includes(valueAsNumber)) {
-                return false;
-            }
-        }
-    }
-    return true;
-});
-
-};
-  
-  getAsync = async (
-    url: string,
-    queryString: string = "",
-    config: any = undefined,
-    token?: string,
-    force: boolean = false,
-    reduxState: any = undefined,
-    dispatch: any = undefined
-  ): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined, token?: string): Promise<any> => {
     try {
-      console.log(queryString);
-      let _qry = queryString.toString();
-      
-      if (url.includes("/Accounts/Data/AccLedgers/") && !force) {
-        
-        if (reduxState?.ledgers !== undefined && reduxState?.ledgers !== null) {
-          return this.filterLedgers(reduxState.ledgers, queryString);
-          
-        }
-        _qry = "";
-      }
-
-      if (url.includes("/Accounts/Data/CostCentres/") && !force) {
-        
-        if (reduxState?.costCentres !== undefined && reduxState?.costCentres !== null) {
-          return reduxState?.costCentres
-        }
-        _qry = "";
-        
-      }
-
       setAuthorization(token);
-      const fullUrl = _qry ? `${url}?${_qry}` : url;
-      const response = config
-        ? await axios.get(fullUrl, config)
-        : await axios.get(fullUrl);
-      let _res =
-        response?.status !== undefined && response?.status !== null
-          ? response?.data
-          : response;
-      if (url.includes("/Accounts/Data/AccLedgers/")) {
-        
-        dispatch(setData({ key: "ledgers", value: _res }));
-        _res = this.filterLedgers(_res, queryString);
+      const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
+      const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
+      if (response?.status != undefined && response?.status != null) {
+        return response?.data;
       }
-      if (url.includes("/Accounts/Data/CostCentres/")) { 
-        dispatch(setData({ key: "costCentres", value: _res }));
-        // _res = this.filterLedgers(_res, queryString);
-        _res
+      else {
+        return response
       }
-      return _res;
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        // Handle Axios specific errors
         if (error.response) {
-          console.error("Error data:", error.response.data);
-          console.error("Error status:", error.response.status);
-          console.error("Error headers:", error.response.headers);
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Error data:', error.response.data);
+          console.error('Error status:', error.response.status);
+          console.error('Error headers:', error.response.headers);
         } else if (error.request) {
-          console.error("Error request:", error.request);
+          // The request was made but no response was received
+          console.error('Error request:', error.request);
         } else {
-          console.error("Error message:", error.message);
+          console.error('Error message:', error.message);
         }
       } else {
-        console.error("Unexpected error:", error);
+        // Handle non-Axios errors
+        console.error('Unexpected error:', error);
       }
-      return undefined;
+      return undefined; // Re-throw the error for the caller to handle if needed
     }
   };
+  
+
   getNativeAsync = async (
     url: string,
     queryString: string = "",

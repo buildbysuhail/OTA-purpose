@@ -191,6 +191,10 @@ const Urls = {
     "/Core/Preferences/UpdateSettingsScreen",
   sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/GetAllByChannel/",
+  notification_provider_update: "/Core/NotificationProvider/UpdateConfig/",
+  notification_provider_set_as_default: "/Core/NotificationProvider/SetAsDefault/",
+  notification_provider_test: "/Core/NotificationProvider/TestConnection/",
+
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate/",
   headers_footers: "/Core/HeaderFooter/",

@@ -155,7 +155,7 @@ export default function Component() {
               {menuItems.length > 0 ? (
                 menuItems.map((item) => (
                   <button
-                    key={item.id}
+                    key={item.transactionCode}
                     className={`
                     flex items-center 
                     w-full 

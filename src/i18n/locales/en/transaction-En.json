@@ -316,5 +316,6 @@
   "contains_multiple_statuses":"Contains multiple statuses, only a single status cleared is accepted. Ensure all statuses are the same",
   "voucher_in_use":"Voucher in use",
 
-  "payment_type":"Payment type"
+  "payment_type":"Payment type",
+  "cash_bank_account":"Cash bank account"
 }

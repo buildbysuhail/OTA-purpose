@@ -196,7 +196,7 @@ const WhatsappIntegration = () => {
   //                 className="!mt-[13px]"
   //               />
   //               <ERPButton
-  //                 title={t("send_demo_message")}
+  //                 title={t("send_test_message")}
   //                 variant="secondary"
   //                 className="!mt-[13px]"
   //                 onClick={() => setIsPopupOpen(true)}

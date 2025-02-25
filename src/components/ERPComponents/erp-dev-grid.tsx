@@ -1195,7 +1195,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       (row: any) => {
         // Extracting data from row
         const transactionMasterID = parseInt(row.id || "0", 10);
-        const c = row.form || "";
+        const c = row.form || row.vType ||"";
         const vchr = c.split(" ");
         const vchtype = vchr[0];
         const voucherform = c.substring(c.indexOf(" ") + 1);
@@ -1257,9 +1257,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn(event.data)))
         ) {
           if (dynamicProps?.isTransactionScreen) {
+            
+debugger;
             const params = handleInvoke(event.data);
             if (params) {
-
+debugger;
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object

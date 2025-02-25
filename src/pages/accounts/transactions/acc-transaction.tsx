@@ -415,11 +415,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ledgerName: ledgerData?.partyName,
                 partyName:
                   formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.partyName
+                    ? ledgerData.partyName??""
                     : "",
                 taxNo:
                   formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.taxNumber
+                    // ? ledgerData.taxNumber??""
+                    ? ledgerData.taxNumber??""
                     : "",
               },
             })

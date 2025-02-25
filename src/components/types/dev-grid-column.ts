@@ -27,6 +27,7 @@ export interface DevGridColumn {
     isLocked?: boolean | false;
     fixedPosition?: 'left' | 'right';
     width?: number;
+    Actionswidth?: number;
     alignment?: "center" | "left" | "right";
     showInPdf?: boolean | false;
     allowEditing?: boolean;

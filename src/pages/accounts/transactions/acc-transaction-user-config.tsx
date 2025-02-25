@@ -368,8 +368,21 @@ export const AccTransactionUserConfig = () => {
               />
             </div>
 
-            <div className="w-full p-2 flex justify-end space-x-2 mb-3">
-              <ERPButton
+  
+          </>
+        }
+       
+        footer={(
+          <div className=" h-[42px] pt-[4px] pb-[2px]  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">   
+                   {/* <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
+                {t("cancel")}
+              </ERPSubmitButton>
+              <ERPSubmitButton type="button" className=" max-w-[115px]"
+                variant="primary"
+                onClick={handleApplyPreferences}>
+                {t("save")}
+              </ERPSubmitButton> */}
+                  <ERPButton
                 title={t("reset")}
                 onClick={resetThemeChange}
                 type="reset"
@@ -380,8 +393,7 @@ export const AccTransactionUserConfig = () => {
                 variant="primary"
               ></ERPButton>
             </div>
-          </>
-        }
+          )}
       ></ERPModal>
     </>
   );

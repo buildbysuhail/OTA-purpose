@@ -190,7 +190,7 @@ const Urls = {
   application_settings_UpdateSettingsScreen:
     "/Core/Preferences/UpdateSettingsScreen",
   sql_commands: "/Core/SQLCommand/",
-  notification_provider: "/Core/NotificationProvider/",
+  notification_provider: "/Core/NotificationProvider/GetAllByChannel/",
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate/",
   headers_footers: "/Core/HeaderFooter/",

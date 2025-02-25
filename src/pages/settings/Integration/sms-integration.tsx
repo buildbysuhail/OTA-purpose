@@ -20,6 +20,7 @@ const api = new APIClient();
 const SMSIntegration: React.FC = () => {
   debugger;
   const [loading, setLoading] = useState(true);
+  const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
   const [provider, setProvider] = useState<{isOpen: boolean, information?: information}>({isOpen: false, information:undefined});
   const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
   const { t } = useTranslation("integration");
@@ -45,6 +46,22 @@ const SMSIntegration: React.FC = () => {
       console.error("Error loading settings:", error);
     } finally {
       setLoading(false);
+    }
+  };
+  const setAsDefault = async () => {
+    setSubmittingSetAsDefault(true);
+    try {
+      const requestBody = {
+        provider: NotificationsProvider.TwillioSms,
+        channel: NotificationsChannel.Sms
+      };
+
+      const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
+      await handleResponse(response);
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    } finally {
+      setSubmittingSetAsDefault(false);
     }
   };
   const handleOpen = (configJson: any) => {
@@ -107,8 +124,7 @@ const SMSIntegration: React.FC = () => {
               ) : (
                 <ERPButton
                   title={t("set as default")}
-                  //  onClick={resetThemeChange}
-                  type="reset"
+                   onClick={setAsDefault}
                 ></ERPButton>
                 //   <button onClick={() => setIsOpen(true)} className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors">
                 //     {t("set as default")}

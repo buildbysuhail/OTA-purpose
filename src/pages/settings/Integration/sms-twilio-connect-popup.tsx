@@ -8,6 +8,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { information, information as InformationType } from "./sms-integration-type";
+import { useTranslation } from "react-i18next";
 
 const api = new APIClient();
 
@@ -21,7 +22,6 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
   const handleFieldChange = (settingName: keyof information, value: any) => {
     setInformation((prevSettings) => ({
       ...prevSettings,
@@ -67,6 +67,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
     }
   };
 
+  const { t } = useTranslation('integration')
+
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 gap-3 p-4">
@@ -90,7 +92,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         <h2 className="text-lg font-semibold mb-3">{t("have_an_account_already?")}</h2>
         <p className="mb-4">{t("enter_the_following_details")}</p>
 
-        <div  className="space-y-6">
+        <div className="space-y-6">
           <ERPInput
             id="accountSid"
             value={information.accountSid || ""}
@@ -123,7 +125,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
 
           <div className="flex items-center gap-4">
             <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
-              onClick={ () => handleSubmit()} />
+              onClick={() => handleSubmit()} />
             <ERPButton
               title={t("send_demo_message")}
               variant="secondary"

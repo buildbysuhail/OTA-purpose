@@ -105,7 +105,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
       {
         dataField: "voucherNumber",
         caption: t("voucher_number"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,

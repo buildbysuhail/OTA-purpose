@@ -78,7 +78,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       },
     },
     {
-      dataField: "vType",
+      dataField: "form",
       caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,

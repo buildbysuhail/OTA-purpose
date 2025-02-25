@@ -27,6 +27,7 @@ export interface DevGridColumn {
     isLocked?: boolean | false;
     fixedPosition?: 'left' | 'right';
     width?: number;
+    Actionswidth?: number;
     alignment?: "center" | "left" | "right";
     showInPdf?: boolean | false;
     allowEditing?: boolean;
@@ -35,6 +36,7 @@ export interface DevGridColumn {
     visibleDynamic?: (filter: any) => boolean;
     captionDynamic?: (filter: any) => string;
     groupIndex?:any;
+    cssClass?:string;
     editorOptions?: any;
     validationRules?: any;
     customizeText?:(cellElement: any) => string;

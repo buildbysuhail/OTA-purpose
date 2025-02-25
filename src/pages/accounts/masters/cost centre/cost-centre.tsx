@@ -61,6 +61,7 @@ const CostCentre = () => {
       fixed: true,
       fixedPosition: "right",
       width: 180,
+      Actionswidth:100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
           view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
@@ -94,6 +95,7 @@ const CostCentre = () => {
                   changeReload={(reload: any) => { dispatch(toggleCostCentrePopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.costCentre?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 />
               </div>
             </div>

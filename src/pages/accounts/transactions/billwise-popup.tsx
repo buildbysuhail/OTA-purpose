@@ -91,7 +91,7 @@ const BillwiseComponent = ({
   }, []);
   useEffect(() => {
 
-    
+    debugger;
     if (!isNullOrUndefinedOrEmpty(formState.row.billwiseDetails)) {
       generateGridFromBillwiseString(formState.row.billwiseDetails);
     } else {
@@ -216,7 +216,7 @@ const BillwiseComponent = ({
   }, [store]);
 
   const generateGridFromBillwiseString = (billwiseStr: string) => {
-
+debugger;
     const rows = billwiseStr.split("|");
     const updatedData = [...store];
 
@@ -701,8 +701,14 @@ const BillwiseComponent = ({
     },
   ];
   const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) =>
-      `${getFormattedValue(itemInfo.value)}`;
+    return (itemInfo: { value: any }) =>{
+console.log('itemInfo.value');
+console.log(itemInfo?.value);
+console.log(itemInfo);
+
+
+      return `${getFormattedValue(itemInfo.value)}`;
+    }
   }, []);
 
   const summaryItems: SummaryConfig[] = [
@@ -719,13 +725,13 @@ const BillwiseComponent = ({
       customizeText: customizeSummaryRow,
     },
     {
-      column: t("billwise_amount"),
+      column: t("balance"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
-      column: t("balance"),
+      column: t("billwiseAmount"),
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,

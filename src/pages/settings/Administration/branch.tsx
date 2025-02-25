@@ -215,6 +215,7 @@ const BranchGrid = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
+      Actionswidth:100,
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
@@ -256,6 +257,7 @@ const BranchGrid = () => {
                   }}
                   reload={rootState?.PopupData?.branch?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 ></ERPDevGrid>
               </div>
             </div>

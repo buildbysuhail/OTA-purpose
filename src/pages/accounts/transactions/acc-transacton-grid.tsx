@@ -105,12 +105,14 @@ const AccTransactionGrid: React.FC<{voucherType?: string
       {
         dataField: "voucherNumber",
         caption: t("voucher_number"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
-        alignment: "left",
+        alignment: "center",
         showInPdf: true,
+        cssClass: "centered-header",
+        cellRender: (data) => <div style={{ textAlign: "center" }}>{data.value}</div>
       },
       {
         dataField: "referenceNumber",
@@ -209,6 +211,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -308,6 +311,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 allowExport={true}
                 reload={reload}
                 changeReload={() => {setReload(false)}}
+                ERPGridActionsstyle={true}
               />
             </div>
           </div>

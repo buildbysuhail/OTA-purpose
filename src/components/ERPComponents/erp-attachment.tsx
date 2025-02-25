@@ -61,7 +61,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
   );
   const download = async (file: Attachments) => {
     try {
-      debugger;
+      
       const res = await axios.get(Urls.acc_attachmentInfo_download, {
         params: { FileKey: file.id },
         responseType: "blob",
@@ -92,7 +92,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
   };
 
   const addFiles = async (newFiles: File[]) => {
-    debugger;
+    
     const newUpload = {
       id: Math.random().toString(36).slice(2),
       file: newFiles[0],
@@ -115,7 +115,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
         row,
       })
     );
-    debugger;
+    
     let formData = new FormData();
     formData.append("file", newUpload.file, newUpload.name);
     formData.append("key", key);
@@ -146,7 +146,7 @@ export default function ERPAttachment({ setIsOpen }: ERPAttachmentProps) {
       },
     ).then((res: any) => {
       if (res.isOk) {
-        debugger;
+        
         dispatch(
           accFormStateTransactionAttachmentsRowUpdate({
             row: {

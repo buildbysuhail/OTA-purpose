@@ -108,7 +108,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
   };
 
   useEffect(() => {
-    debugger;
+    
     const _input = {
       voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
       transactionType: getParamOrProp<string>("transactionType") || props.transactionType,
@@ -129,7 +129,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       }
     });
     if(isDirty) {
-    debugger;
+    
     if (isChooseVoucherEnabled(_input.title ?? "", userSession) && (_input.voucherNo ==  undefined ||  _input.voucherNo <= 0)) {
       const fetchData = async () => {
         try {
@@ -137,7 +137,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
             `${Urls.voucher_selector}${_input.voucherType}`
           );
 
-          debugger;
+          
           if (
             res == undefined ||
             res == null ||
@@ -148,7 +148,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
                 ...prev,
                 formType: res[0].formType,
                 voucherNo: res[0].lastVNo,
-                voucherPrefix: res[0].lastPrefix,
+                voucherPrefix: res[0].lastPrefix?.toUpperCase(),
               }));
 
               await initializeVoucher(
@@ -156,7 +156,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
                 {
                   formType: res[0].formType,
                   voucherNo: res[0].lastVNo,
-                  voucherPrefix: res[0].lastPrefix
+                  voucherPrefix: res[0].lastPrefix?.toUpperCase()
                 }
               ); // Call initializeVoucher here
             }
@@ -194,7 +194,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       ...prev,
       formType: _event.data.formType,
       voucherNo: _event.data.lastVNo,
-      voucherPrefix: _event.data.lastPrefix,
+      voucherPrefix: _event.data.lastPrefix?.toUpperCase(),
     }));
     const asd = {
       voucherType: getParamOrProp<string>("voucherType") || props.voucherType,

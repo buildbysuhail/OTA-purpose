@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Urls from "../../../redux/urls";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
@@ -7,12 +7,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { NotificationsChannel } from "../../../enums/notification-chanal";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import HtmlEditor, {
-  Toolbar,
-  MediaResizing,
-  ImageUpload,
-  Item,
-} from "devextreme-react/html-editor";
+import HtmlEditor, { Toolbar, MediaResizing, ImageUpload, Item, } from "devextreme-react/html-editor";
 
 interface NotificationContent {
   Subject: string;
@@ -35,8 +30,8 @@ interface TemplateProps {
   templateKey: string;
   isOpen: boolean;
   closeModal: () => void;
-  isMaximized?: boolean; 
-  modalHeight?:any
+  isMaximized?: boolean;
+  modalHeight?: any
 }
 const initialState: NotificationTemplate = {
   id: 0,
@@ -81,22 +76,21 @@ const headerOptions = {
 };
 const api = new APIClient();
 const EmailTemplate: React.FC<TemplateProps> = React.memo(
-  ({ channel, isOpen, templateKey, closeModal,isMaximized,modalHeight }) => {
+  ({ channel, isOpen, templateKey, closeModal, isMaximized, modalHeight }) => {
     const [formState, setFormState] = useState<NotificationTemplate>(initialState);
     const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const { t } = useTranslation();
+    const [Height, setHeight] = useState<{
+      mobile: number;
+      windows: number;
+    }>({ mobile: 500, windows: 500 });
 
-   const [Height, setHeight] = useState<{
-     mobile: number;
-     windows: number;
-   }>({ mobile: 500, windows: 500 });
-
-  useEffect(() => {
-    let gridHeightMobile = modalHeight - 50; 
-    let gridHeightWindows = isMaximized ? modalHeight - 270 : modalHeight - 400;  
-    setHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [isMaximized,modalHeight]);
+    useEffect(() => {
+      let gridHeightMobile = modalHeight - 50;
+      let gridHeightWindows = isMaximized ? modalHeight - 270 : modalHeight - 400;
+      setHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    }, [isMaximized, modalHeight]);
 
     const handleFieldChange = (field: any, value: any) => {
       setFormState((prevState) => ({
@@ -106,7 +100,6 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
           [field]: value,
         },
       }));
-      
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -120,8 +113,8 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
           templateKey,
           templateName: channel,
         };
-        const response = await api.post(`${Urls.notification_template}`,requestBody );
-        handleResponse(response,()=>{closeModal()});
+        const response = await api.post(`${Urls.notification_template}`, requestBody);
+        handleResponse(response, () => { closeModal() });
       } catch (error) {
         console.error("Error saving settings:", error);
       } finally {
@@ -141,7 +134,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         const response = await api.getAsync(
           `${Urls.notification_template}?templatekey=${templateKey}&Channel=${NotificationsChannel.Email}`
         );
-           
+
         const parsedContent = JSON.parse(response.content);
         setFormState({
           ...response,
@@ -156,11 +149,11 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         setLoading(false);
       }
     };
-   
+
     const valueChanged = (e: any) => {
-        handleFieldChange("Body", e.value);
-      };
-      
+      handleFieldChange("Body", e.value);
+    };
+
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="w-full">
@@ -176,24 +169,15 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               <HtmlEditor
                 height={Height.windows}
                 value={formState.content?.Body}
-                onValueChanged={valueChanged}
-              >
+                onValueChanged={valueChanged}>
                 <MediaResizing enabled={true} />
                 <ImageUpload tabs={["file", "url"]} fileUploadMode="both" />
                 <Toolbar multiline={true}>
                   <Item name="undo" />
                   <Item name="redo" />
                   <Item name="separator" />
-                  <Item
-                    name="size"
-                    acceptedValues={sizeValues}
-                    options={fontSizeOptions}
-                  />
-                  <Item
-                    name="font"
-                    acceptedValues={fontValues}
-                    options={fontFamilyOptions}
-                  />
+                  <Item name="size" acceptedValues={sizeValues} options={fontSizeOptions} />
+                  <Item name="font" acceptedValues={fontValues} options={fontFamilyOptions} />
                   <Item name="separator" />
                   <Item name="bold" />
                   <Item name="italic" />
@@ -208,11 +192,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
                   <Item name="orderedList" />
                   <Item name="bulletList" />
                   <Item name="separator" />
-                  <Item
-                    name="header"
-                    acceptedValues={headerValues}
-                    options={headerOptions}
-                  />
+                  <Item name="header" acceptedValues={headerValues} options={headerOptions} />
                   <Item name="separator" />
                   <Item name="color" />
                   <Item name="background" />
@@ -232,12 +212,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               checked={formState.isAttachFile}
               data={formState}
               label="Attach File"
-              onChangeData={(data) => {
-                setFormState((prevState) => ({
-                  ...prevState,
-                  isAttachFile: data.isAttachFile, 
-                }));
-              }}
+              onChangeData={(data) => { setFormState((prevState) => ({ ...prevState, isAttachFile: data.isAttachFile, })); }}
             />
           </div>
           <div className="flex justify-end items-center gap-5">
@@ -249,12 +224,12 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               type="submit"
               startIcon="ri-save-line"
             />
-             <ERPButton
+            <ERPButton
               title={t("cancel")}
               variant="secondary"
               disabled={isSaving}
               type="button"
-              onClick={()=>closeModal()}
+              onClick={() => closeModal()}
               startIcon="ri-close-circle-line"
             />
           </div>

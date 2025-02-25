@@ -313,6 +313,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
                   <div className="grid grid-cols-1 gap-3">
                     <ERPInput
                       id="phone"
+                      label={t("phone_number")}
                       placeholder={t("please_enter_phone_number")}
                       required={true}
                       value={phone}
@@ -490,7 +491,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
                     }
                     validation={_basicInfo.validations?.dob}
                   /> */}
-                  <div className="w-full p-2 flex justify-end">
+                  <div className="w-full p-2 flex justify-end gap-4">
                     <ERPButton
                       title={t("cancel")}
                       onClick={resetBasicInfo}

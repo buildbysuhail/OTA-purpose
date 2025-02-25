@@ -135,6 +135,7 @@ const Counters = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
+      Actionswidth:100,
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
@@ -171,6 +172,7 @@ const Counters = () => {
                   changeReload={(reload: any) => { dispatch(toggleCounterPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.counter?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 />
               </div>
             </div>

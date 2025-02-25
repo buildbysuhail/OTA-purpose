@@ -42,5 +42,14 @@
   "save": "حفظ",
   "close": "إغلاق",
   
-  "load_rights": "تحميل الصلاحيات"
+  "load_rights": "تحميل الصلاحيات",
+
+  "clear": "مسح",
+  "cancel": "إلغاء",
+  "invite": "دعوة",
+  "invite_new_user": "دعوة مستخدم جديد",
+  "invite_existing_user": "دعوة مستخدم موجود",
+  "existing_user": "مستخدم موجود",
+  "new_user": "مستخدم جديد",
+  "select_user": "اختر المستخدم"
 }

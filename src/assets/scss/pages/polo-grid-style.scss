@@ -1,6 +1,7 @@
 .box-title-desc {
   @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
 }
+
 // .custom-before {
 //   @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary/50 before:rounded-md;
 // }
@@ -60,11 +61,13 @@ $dark-grid-selection: #000000;
   .dx-datagrid-summary-item {
     color: $dark-text;
   }
+
   // this selection
   .dx-datagrid-rowsview .dx-row.dx-selection td,
   .dx-datagrid-rowsview .dx-row.dx-selection:hover td {
     background-color: $dark-grid-selection !important;
-    color: $dark-text !important; /* Text color for selected rows */
+    color: $dark-text !important;
+    /* Text color for selected rows */
   }
 
   span.dx-datagrid-nodata {
@@ -75,12 +78,13 @@ $dark-grid-selection: #000000;
   //   background-color: #fd0505; /* Set your desired color */
   // }
 
-  .dx-datagrid-filter-row > td {
+  .dx-datagrid-filter-row>td {
     // border-top: 1px solid rgb(252 1 1);
     // border-right: 1px solid rgb(0 170 255);
     background-color: black;
     color: white;
   }
+
   // .dx-datagrid-filter-row  {
   //   // border-top: 1px solid rgb(252 1 1);
   //   // border-right: 1px solid rgb(0 170 255);
@@ -92,16 +96,9 @@ $dark-grid-selection: #000000;
     background-color: rgb(8, 8, 8);
     color: white;
   }
-  .dx-datagrid-content
-    .dx-datagrid-table
-    .dx-row
-    .dx-editor-cell
-    .dx-texteditor,
-  .dx-datagrid-content
-    .dx-datagrid-table
-    .dx-row
-    .dx-editor-cell
-    .dx-texteditor-container {
+
+  .dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor,
+  .dx-datagrid-content .dx-datagrid-table .dx-row .dx-editor-cell .dx-texteditor-container {
     background-color: rgb(73, 73, 73);
     color: white;
   }
@@ -162,7 +159,8 @@ $dark-grid-selection: #000000;
 
   /* Optional: hover state for better interaction */
   .dx-datagrid-rowsview .dx-row:hover {
-    background-color: $dark-grid-hover !important; /* Slightly darker on hover */
+    background-color: $dark-grid-hover !important;
+    /* Slightly darker on hover */
   }
 
   .dx-datagrid-action {
@@ -172,11 +170,14 @@ $dark-grid-selection: #000000;
 
   // d2
   /* If you want to keep the original alternating feature but change colors */
-  .dx-datagrid-rowsview .dx-row-alt > td {
-    background-color: $dark-bg-header !important; /* Your desired color for alternate rows */
+  .dx-datagrid-rowsview .dx-row-alt>td {
+    background-color: $dark-bg-header !important;
+    /* Your desired color for alternate rows */
   }
-  .dx-datagrid-rowsview .dx-row-alt:hover > td {
-    background-color: $dark-grid-hover !important; /* Your desired color for alternate rows */
+
+  .dx-datagrid-rowsview .dx-row-alt:hover>td {
+    background-color: $dark-grid-hover !important;
+    /* Your desired color for alternate rows */
   }
 
   // border
@@ -193,12 +194,12 @@ $dark-grid-selection: #000000;
   }
 
   /* Column headers border */
-  .dx-datagrid-headers .dx-datagrid-table .dx-header-row > td {
+  .dx-datagrid-headers .dx-datagrid-table .dx-header-row>td {
     border-right: 1px solid $dark-border;
   }
 
   /* Cell borders */
-  .dx-datagrid-rowsview .dx-row > td {
+  .dx-datagrid-rowsview .dx-row>td {
     border-right: 1px solid $dark-border;
     // border right color
     border-bottom: 1px solid $dark-border;
@@ -206,7 +207,7 @@ $dark-grid-selection: #000000;
   }
 
   /* Selected row borders */
-  .dx-datagrid-rowsview .dx-selection > td {
+  .dx-datagrid-rowsview .dx-selection>td {
     border-right: 1px solid $dark-border;
 
     border-bottom: 1px solid $dark-border;
@@ -218,7 +219,7 @@ $dark-grid-selection: #000000;
   }
 
   /* Filter row borders */
-  .dx-datagrid-filter-row > td {
+  .dx-datagrid-filter-row>td {
     border-top: 1px solid $dark-border;
     border-right: 1px solid $dark-border;
   }
@@ -244,16 +245,19 @@ $dark-grid-selection: #000000;
     border: 1px solid $dark-border !important;
     // $dark-borde
   }
+
   .dx-freespace-row {
     background: $dark-bg;
   }
+
   .dx-scrollable-content {
     background: $dark-bg-card;
   }
 
   /* Loading panel background */
   .dx-loadpanel-content {
-    background-color: $dark-bg-card !important; /* Black with opacity */
+    background-color: $dark-bg-card !important;
+    /* Black with opacity */
     // loading bg  all background-color
     border: none !important;
   }
@@ -281,7 +285,7 @@ $dark-grid-selection: #000000;
   }
 
   /* Target all cells within the hovered row */
-  .dx-datagrid-rowsview .dx-row:hover > td {
+  .dx-datagrid-rowsview .dx-row:hover>td {
     color: $dark-text !important;
   }
 
@@ -292,6 +296,7 @@ $dark-grid-selection: #000000;
     color: $dark-text; // Text color for table rows
 
     font-size: 13px;
+
     // line-height: 1rem;
     &:nth-child(even) {
       background-color: $dark-bg-card; // Light background for even rows
@@ -336,10 +341,12 @@ $dark-grid-selection: #000000;
       //  display: block;
     }
   }
+
   // Remove border for last two columns (assuming they are actions column)
   .dx-datagrid-action:last-child,
   .dx-datagrid-action:nth-last-child(2) {
     border-right: none;
+
     &::after {
       display: none;
     }
@@ -382,12 +389,15 @@ $dark-grid-selection: #000000;
       display: flex;
       align-items: center;
     }
+
     .dx-toolbar-before {
-      justify-content: flex-start; /* Align to the left */
+      justify-content: flex-start;
+      /* Align to the left */
     }
 
     .dx-toolbar-after {
-      justify-content: flex-end; /* Align to the right */
+      justify-content: flex-end;
+      /* Align to the right */
     }
 
     // Buttons in the toolbar
@@ -402,6 +412,7 @@ $dark-grid-selection: #000000;
       }
     }
   }
+
   //action buttons
   .action-field {
     display: flex;
@@ -427,6 +438,7 @@ $dark-grid-selection: #000000;
     // Specific styles for each action
     .view-icon {
       color: #00bfff; // Sky blue for view
+
       &:hover {
         background-color: #00bfff;
       }
@@ -434,6 +446,7 @@ $dark-grid-selection: #000000;
 
     .delete-icon {
       color: #ff4d4f; // Red for delete
+
       &:hover {
         background-color: #ff4d4f;
       }
@@ -441,6 +454,7 @@ $dark-grid-selection: #000000;
 
     .edit-icon {
       color: #28a745; // Green for edit
+
       &:hover {
         background-color: #28a745;
       }
@@ -463,7 +477,8 @@ $dark-grid-selection: #000000;
   // $dark-grid-hover: #000000;
 
   .dx-treelist-container {
-    background-color: $dark-bg !important; /* Light blue background */
+    background-color: $dark-bg !important;
+    /* Light blue background */
   }
 
   /* Optional: Change the header background color */
@@ -477,6 +492,7 @@ $dark-grid-selection: #000000;
     background-color: $dark-bg-card !important;
     color: $dark-text !important;
   }
+
   /* Optional: Change the row background color on hover */
   .dx-treelist-rowsview .dx-row:hover {
     background-color: $dark-hover-bg !important;
@@ -505,52 +521,53 @@ $dark-grid-selection: #000000;
   .dx-treelist-rowsview .dx-row.dx-selection td,
   .dx-treelist-rowsview .dx-row.dx-selection:hover td {
     background-color: $dark-bg-header !important;
-    color: $dark-hover-text !important; /* Text color for selected rows */
+    color: $dark-hover-text !important;
+    /* Text color for selected rows */
   }
+
   // test
 
   .dx-treelist-headers .dx-treelist-table .dx-header-row {
     border: 1px solid $dark-border !important;
   }
-  .dx-treelist-headers .dx-treelist-table .dx-row > td {
-    border: 1px solid $dark-border !important ;
+
+  .dx-treelist-headers .dx-treelist-table .dx-row>td {
+    border: 1px solid $dark-border !important;
   }
 
-  .dx-treelist .dx-column-lines > td {
+  .dx-treelist .dx-column-lines>td {
     /* border-left: 1px solid #e80000 !important; */
     border-right: 1px solid $dark-border !important;
   }
 
-  .dx-treelist .dx-row-lines > td {
+  .dx-treelist .dx-row-lines>td {
     border-bottom: 1px solid $dark-border !important;
   }
 }
+
 .HistorySidebarcustom {
-  .dx-datagrid .dx-row-alt > td {
+  .dx-datagrid .dx-row-alt>td {
     background-color: unset !important;
   }
 
-  .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td {
+  .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused)>td {
     background-color: unset !important;
   }
 
-  .dx-datagrid-table
-    .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(
-      .dx-row-removed
-    ):not(.dx-edit-row):not(.dx-row-focused)
-    > td:not(.dx-focused) {
+  .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row):not(.dx-row-focused)>td:not(.dx-focused) {
     background-color: unset !important;
     // color: #333;
   }
 
-  .dx-datagrid .dx-row-lines > td {
+  .dx-datagrid .dx-row-lines>td {
     border-bottom: 1px solid #eaeaea !important;
   }
 
-  .dx-datagrid > .dx-datagrid-headers {
+  .dx-datagrid>.dx-datagrid-headers {
     display: contents !important;
   }
-  .dx-datagrid .dx-row > td {
+
+  .dx-datagrid .dx-row>td {
     padding: 0px !important;
   }
 
@@ -559,7 +576,7 @@ $dark-grid-selection: #000000;
   // }
 }
 
-.ERPGridActionsstyleNo{
+.ERPGridActionsstyleNo {
 
   // .dx-datagrid-borders>.dx-datagrid-headers {
   //   margin-right: 15px;
@@ -570,29 +587,32 @@ $dark-grid-selection: #000000;
   //   padding-bottom: 15px;
 
   // }
-  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper{
+  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
     padding-right: 15px;
-    padding-bottom: 15px;
+    // padding-bottom: 15px;
   }
 }
-.ERPGridActionsstyleyes{
+
+.ERPGridActionsstyleyes {
 
   // .dx-datagrid-borders>.dx-datagrid-headers {
   //   margin-right: 15px;
   // }
 
-  .dx-datagrid-rowsview .dx-datagrid-content{
+  .dx-datagrid-rowsview .dx-datagrid-content {
     padding-right: 15px;
     padding-bottom: 15px;
 
   }
-  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper{
+
+  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
     padding-right: 15px;
-    padding-bottom: 15px;
+    // padding-bottom: 15px;
   }
 
-  .dx-datagrid-scroll-container .dx-col-fixed  {
-    width: 115px !important;
+  .dx-datagrid-scroll-container .dx-col-fixed {
+    // width: 115px !important;
+    width: calc(var(--actions-width) + 30px) !important;
     // width: calc(100% + 15px) !important;
   }
 
@@ -610,27 +630,27 @@ $dark-grid-selection: #000000;
   //   width: 115px !important;
   // }
 
-  
+
 }
 
 .custom-data-grid {
 
-//   .ERPGridActionsstyleyes{
+  //   .ERPGridActionsstyleyes{
 
-//   .dx-datagrid-borders>.dx-datagrid-headers {
-//     margin-right: 15px;
-//   }
+  //   .dx-datagrid-borders>.dx-datagrid-headers {
+  //     margin-right: 15px;
+  //   }
 
-//   .dx-datagrid-rowsview .dx-datagrid-content{
-//     padding-right: 15px;
-//     padding-bottom: 15px;
+  //   .dx-datagrid-rowsview .dx-datagrid-content{
+  //     padding-right: 15px;
+  //     padding-bottom: 15px;
 
-//   }
-//   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper{
-//     padding-right: 15px;
-//     padding-bottom: 15px;
-//   }
-// }
+  //   }
+  //   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper{
+  //     padding-right: 15px;
+  //     padding-bottom: 15px;
+  //   }
+  // }
 
   // Table Header Styling
   .dx-row-matched-red {
@@ -642,7 +662,7 @@ $dark-grid-selection: #000000;
   // }
 
   .dx-datagrid-rowsview {
-    .dx-selection.dx-row:not(.dx-row-focused).dx-row-matched-red > td {
+    .dx-selection.dx-row:not(.dx-row-focused).dx-row-matched-red>td {
       background-color: red !important;
     }
   }
@@ -653,6 +673,7 @@ $dark-grid-selection: #000000;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border: 1px solid #e0e6f5;
+
     .dx-header-row {
       background-color: #f4f7fe; // Light gray-blue header background
       font-weight: 600;
@@ -670,6 +691,7 @@ $dark-grid-selection: #000000;
     color: #4a4a4a; // Text color for table rows
 
     font-size: 13px;
+
     // line-height: 1rem;
     &:nth-child(even) {
       background-color: #f9fbff; // Light background for even rows
@@ -707,10 +729,12 @@ $dark-grid-selection: #000000;
       //  display: block;
     }
   }
+
   // Remove border for last two columns (assuming they are actions column)
   .dx-datagrid-action:last-child,
   .dx-datagrid-action:nth-last-child(2) {
     border-right: none;
+
     &::after {
       display: none;
     }
@@ -728,11 +752,13 @@ $dark-grid-selection: #000000;
     }
 
     .dx-toolbar-before {
-      justify-content: flex-start; /* Align to the left */
+      justify-content: flex-start;
+      /* Align to the left */
     }
 
     .dx-toolbar-after {
-      justify-content: flex-end; /* Align to the right */
+      justify-content: flex-end;
+      /* Align to the right */
     }
 
     // Buttons in the toolbar
@@ -747,6 +773,7 @@ $dark-grid-selection: #000000;
       }
     }
   }
+
   //action buttons
   .action-field {
     display: flex;
@@ -772,6 +799,7 @@ $dark-grid-selection: #000000;
     // Specific styles for each action
     .view-icon {
       color: #00bfff; // Sky blue for view
+
       &:hover {
         background-color: #00bfff;
       }
@@ -779,6 +807,7 @@ $dark-grid-selection: #000000;
 
     .delete-icon {
       color: #ff4d4f; // Red for delete
+
       &:hover {
         background-color: #ff4d4f;
       }
@@ -786,6 +815,7 @@ $dark-grid-selection: #000000;
 
     .edit-icon {
       color: #28a745; // Green for edit
+
       &:hover {
         background-color: #28a745;
       }
@@ -800,4 +830,15 @@ $dark-grid-selection: #000000;
     height: 0px !important;
     overflow: visible !important;
   }
+}
+
+
+.centered-header .dx-datagrid-text-content {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.centered-header {
+  text-align: center !important;
+  justify-content: center !important;
 }

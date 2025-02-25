@@ -152,6 +152,7 @@ const Users = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
+      Actionswidth:100,
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
@@ -186,6 +187,7 @@ const Users = () => {
                 reload={rootState?.PopupData?.user?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
+                ERPGridActionsstyle={true}
               />
             </div>
           </div>

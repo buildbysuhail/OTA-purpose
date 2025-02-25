@@ -149,6 +149,7 @@ const MemoizedSalesRouteManage = useMemo(() => React.memo(SalesRouteManage), [])
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        Actionswidth:100,
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -199,6 +200,7 @@ const MemoizedSalesRouteManage = useMemo(() => React.memo(SalesRouteManage), [])
                   }}
                   reload={rootState?.PopupData?.salesRoute?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 ></ErpDevGrid>
               </div>
             </div>

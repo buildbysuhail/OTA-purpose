@@ -12,19 +12,11 @@ import desktopdark from "../../../assets/images/brand-logos/desktop-dark.png";
 import toggledark from "../../../assets/images/brand-logos/toggle-dark.png";
 import desktopwhite from "../../../assets/images/brand-logos/desktop-dark.png";
 import togglewhite from "../../../assets/images/brand-logos/mini_logo.png";
-import SimpleBar from "simplebar-react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppState } from "../../../utilities/hooks/useAppState";
-import {
-  AppState,
-  languagesData,
-  Locale,
-} from "../../../redux/slices/app/types";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../utilities/hooks/useAppDispatch";
+import { AppState, languagesData, Locale, } from "../../../redux/slices/app/types";
+import { useAppDispatch, useAppSelector, } from "../../../utilities/hooks/useAppDispatch";
 import LanguageSwitcher from "./language-switcher";
 import { useSelector } from "react-redux";
 import * as switcherdata from "../switcher/switcherdata/switcherdata";
@@ -32,20 +24,17 @@ import profile from "../../../assets/images/faces/profile-circle.512x512.png";
 import { Button } from "../../../dark/Button";
 import { Moon, Sun } from "lucide-react";
 
-interface HeaderProps {}
+interface HeaderProps { }
 
 const Header: FC<HeaderProps> = () => {
   const [languages, setLanguages] = useState<Locale[]>(languagesData);
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('main');
   const { appState, updateAppState } = useAppState();
   let dispatch = useAppDispatch();
-
   //Fullscvreen
   const [fullScreen, setFullScreen] = useState(false);
   const toggleFullScreen = () => {
     const elem = document.documentElement;
-
     if (!document.fullscreenElement) {
       elem.requestFullscreen().then(() => setFullScreen(true));
     } else {
@@ -53,9 +42,7 @@ const Header: FC<HeaderProps> = () => {
     }
   };
   let userSession = useAppSelector((state: RootState) => state.UserSession);
-
   let userBranches = useAppSelector((state: RootState) => state.UserBranches);
-
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
   };
@@ -66,16 +53,12 @@ const Header: FC<HeaderProps> = () => {
   // }, []);
   useEffect(() => {
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, []);
   let profile_image = localStorage?.getItem("profile_image");
-
-  //
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
   const handleToggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -129,7 +112,6 @@ const Header: FC<HeaderProps> = () => {
   ];
   const [cartItems, setCartItems] = useState([...cartProduct]);
   const [cartItemCount, setCartItemCount] = useState(cartProduct.length);
-
   const handleRemove = (e: any, itemId: any) => {
     e.stopPropagation(); // Prevents the event from reaching the button click event
     const updatedCart = cartItems.filter((item) => item.id !== itemId);
@@ -190,7 +172,6 @@ const Header: FC<HeaderProps> = () => {
   ];
 
   const [notifications, setNotifications] = useState([...initialNotifications]);
-
   const handleNotificationClose = (e: any, index: any) => {
     e.stopPropagation(); // Prevents the event from reaching the button click event
     const updatedNotifications = [...notifications];
@@ -210,6 +191,7 @@ const Header: FC<HeaderProps> = () => {
       });
     }
   }
+
   const toggleSidebar = () => {
     const theme = appState;
     let sidemenuType = theme.dataNavLayout;
@@ -265,7 +247,6 @@ const Header: FC<HeaderProps> = () => {
                 }
               }
             }
-
             // doublemenu(updateAppState);
             break;
           // detached
@@ -281,6 +262,7 @@ const Header: FC<HeaderProps> = () => {
           case "default":
             updateAppState({ ...theme, toggled: "" });
         }
+
         switch (navStyle) {
           case "menu-click":
             if (theme.toggled === "menu-click-closed") {
@@ -363,6 +345,7 @@ const Header: FC<HeaderProps> = () => {
           : "dark",
     };
   };
+
   const ToggleDark = () => {
     const theme = updateAppStateValues(appState);
     updateAppState(theme);
@@ -397,39 +380,17 @@ const Header: FC<HeaderProps> = () => {
             <div className="header-content-left">
               <div className="header-element">
                 <div className="horizontal-logo">
-                  <a
-                    href={`${import.meta.env.BASE_URL}`}
-                    className="header-logo"
-                  >
-                    <img
-                      src={desktoplogo}
-                      alt="logo"
-                      className="desktop-logo"
-                    />
+                  <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
+                    <img src={desktoplogo} alt="logo" className="desktop-logo" />
                     <img src={togglelogo} alt="logo" className="toggle-logo" />
-                    <img
-                      src={desktopdark}
-                      alt="logo"
-                      className="desktop-dark"
-                    />
+                    <img src={desktopdark} alt="logo" className="desktop-dark" />
                     <img src={toggledark} alt="logo" className="toggle-dark" />
-                    <img
-                      src={desktopwhite}
-                      alt="logo"
-                      className="desktop-white"
-                    />
-                    <img
-                      src={togglewhite}
-                      alt="logo"
-                      className="toggle-white"
-                    />
+                    <img src={desktopwhite} alt="logo" className="desktop-white" />
+                    <img src={togglewhite} alt="logo" className="toggle-white" />
                   </a>
                 </div>
               </div>
-              <div
-                className="header-element md:px-[0.325rem] !items-center"
-                onClick={() => toggleSidebar()}
-              >
+              <div className="header-element md:px-[0.325rem] !items-center" onClick={() => toggleSidebar()}>
                 {/* <Link
                   aria-label="Hide Sidebar"
                   className="sidemenu-toggle animated-arrow  hor-toggle horizontal-navtoggle inline-flex items-center"
@@ -438,10 +399,7 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i
-                  className="ri-menu-2-line text-2xl mr-2"
-                  onClick={() => toggleSidebar()}
-                ></i>
+                <i className="ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
               </div>
             </div>
 
@@ -699,14 +657,15 @@ const Header: FC<HeaderProps> = () => {
                       : switcherdata.Light(updateAppState, appState);
                   }}
                   variant="ghost"
-                  size="icon"
-                >
-                  {appState.mode === "dark" ? (
-                    <Sun className="h-[1.2rem] w-[1.2rem]" />
-                  ) : (
-                    <Moon className="h-[1.2rem] w-[1.2rem]" />
-                  )}
-                  <span className="sr-only">Toggle dark mode</span>
+                  size="icon">
+                  {
+                    appState.mode === "dark" ? (
+                      <Sun className="h-[1.2rem] w-[1.2rem]" />
+                    ) : (
+                      <Moon className="h-[1.2rem] w-[1.2rem]" />
+                    )
+                  }
+                  <span className="sr-only">{t("toggle_dark_mode")}</span>
                 </Button>
               </div>
               <LanguageSwitcher></LanguageSwitcher>
@@ -829,11 +788,7 @@ const Header: FC<HeaderProps> = () => {
                 </Link>
               </div> */}
               <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
-                <Link
-                  to={"/settings"}
-                  aria-label="settings"
-                  className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
-                >
+                <Link to={"/settings"} aria-label="settings" className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10">
                   <i className="bx bx-cog full-screen-close text-[1.125rem] header-link-icon"></i>
                 </Link>
               </div>
@@ -933,110 +888,90 @@ const Header: FC<HeaderProps> = () => {
                 </div>
               </div> */}
               <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
-                <Link
-                  to="#"
-                  aria-label="anchor"
-                  onClick={toggleFullScreen}
-                  className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
-                >
-                  {fullScreen ? (
-                    <i className="bx bx-exit-fullscreen full-screen-close header-link-icon"></i>
-                  ) : (
-                    <i className="bx bx-fullscreen full-screen-open header-link-icon"></i>
-                  )}
+                <Link to="#" aria-label="anchor" onClick={toggleFullScreen} className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10">
+                  {
+                    fullScreen ? (
+                      <i className="bx bx-exit-fullscreen full-screen-close header-link-icon"></i>
+                    ) : (
+                      <i className="bx bx-fullscreen full-screen-open header-link-icon"></i>
+                    )
+                  }
                 </Link>
               </div>
 
-              {!deviceInfo?.isMobile && (
-                <div
-                  id="dropdown-profile"
-                  className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]"
-                >
-                  <img
-                    className="inline-block rounded-full dark:bg-[#f2f2f28a] "
-                    title={userSession?.userimage || profile}
-                    src={userSession?.userimage || profile}
-                    width="32"
-                    height="32"
-                    alt="Image Description"
-                  />
-                  <div className="md:block hidden dropdown-profile">
-                    <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
-                      {userSession?.displayName}
-                    </p>
-                    <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
-                      {userSession?.userTypeName}
-                    </span>
-                  </div>
+              {
+                !deviceInfo?.isMobile && (
+                  <div id="dropdown-profile" className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]">
+                    <img
+                      className="inline-block rounded-full dark:bg-[#f2f2f28a] "
+                      title={userSession?.userimage || profile}
+                      src={userSession?.userimage || profile}
+                      width="32"
+                      height="32"
+                      alt="Image Description"
+                    />
+                    <div className="md:block hidden dropdown-profile">
+                      <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                        {userSession?.displayName}
+                      </p>
+                      <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                        {userSession?.userTypeName}
+                      </span>
+                    </div>
 
-                  <div
-                    className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
-                    aria-labelledby="dropdown-profile"
-                  >
-                    <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                          to="/account-settings/profile/avatar"
-                        >
-                          <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Account Settings
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                          to="/switch-organization"
-                        >
-                          <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Organizations{" "}
-                          <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                            {userBranches?.branches?.length}
-                          </span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                          to="/logout"
-                        >
-                          <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Log Out
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              )}
+                    <div className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end" aria-labelledby="dropdown-profile">
+                      <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="/account-settings/profile/avatar">
+                            <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("account_settings")}
+                          </Link>
+                        </li>
 
-              {deviceInfo?.isMobile && (
-                <div
-                  id="dropdown-profile"
-                  className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] "
-                >
-                  <img
-                    className="inline-block rounded-full "
-                    src={userSession?.userimage || profile}
-                    width="20"
-                    height="20"
-                    alt="Image Description"
-                  />
-                  <div className="md:block hidden dropdown-profile">
-                    <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
-                      {userSession?.displayName}
-                    </p>
-                    <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
-                      {userSession?.userTypeName}
-                    </span>
-                  </div>
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="/switch-organization">
+                            <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("organizations")}
+                            <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
+                              {userBranches?.branches?.length}
+                            </span>
+                          </Link>
+                        </li>
 
-                  <div
-                    className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
-                    aria-labelledby="dropdown-profile"
-                  >
-                    <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
-                      <li>
-                        {/* <Link
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="/logout">
+                            <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("log_out")}
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                )
+              }
+
+              {
+                deviceInfo?.isMobile && (
+                  <div id="dropdown-profile" className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] ">
+                    <img
+                      className="inline-block rounded-full "
+                      src={userSession?.userimage || profile}
+                      width="20"
+                      height="20"
+                      alt="Image Description"
+                    />
+                    <div className="md:block hidden dropdown-profile">
+                      <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                        {userSession?.displayName}
+                      </p>
+                      <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                        {userSession?.userTypeName}
+                      </span>
+                    </div>
+                    <div className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end" aria-labelledby="dropdown-profile">
+                      <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
+                        <li>
+                          {/* <Link
                           className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
                           to="/account-settings/profile/avatar"
                         >
@@ -1051,62 +986,54 @@ const Header: FC<HeaderProps> = () => {
                           <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
                           {userSession?.displayName}
                         </Link> */}
-                        <div
-                          id="dropdown-profile"
-                          className="cursor-pointer  hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] "
-                        >
-                          <img
-                            className="inline-block rounded-full "
-                            title={userSession?.userimage || profile}
-                            src={userSession?.userimage || profile}
-                            width="32"
-                            height="32"
-                            alt="Image Description"
-                          />
-                          <div className="  ">
-                            <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
-                              {userSession?.displayName}
-                            </p>
-                            <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
-                              {userSession?.userTypeName}
-                            </span>
+                          <div id="dropdown-profile" className="cursor-pointer  hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] ">
+                            <img
+                              className="inline-block rounded-full "
+                              title={userSession?.userimage || profile}
+                              src={userSession?.userimage || profile}
+                              width="32"
+                              height="32"
+                              alt="Image Description"
+                            />
+                            <div className="  ">
+                              <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                                {userSession?.displayName}
+                              </p>
+                              <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                                {userSession?.userTypeName}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                          to="/account-settings/profile/avatar"
-                        >
-                          <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Account Settings
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                          to="/switch-organization"
-                        >
-                          <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Organizations{" "}
-                          <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                            {userBranches?.branches?.length}
-                          </span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                          to="/logout"
-                        >
-                          <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
-                          Log Out
-                        </Link>
-                      </li>
-                    </ul>
+                        </li>
+
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="/account-settings/profile/avatar">
+                            <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("account_settings")}
+                          </Link>
+                        </li>
+
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="/switch-organization">
+                            <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("organizations")}
+                            <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
+                              {userBranches?.branches?.length}
+                            </span>
+                          </Link>
+                        </li>
+
+                        <li>
+                          <Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="/logout">
+                            <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
+                            {t("log_out")}
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              }
 
               {/* <div className="header-element md:px-[0.48rem]">
                 <button aria-label="button" type="button"

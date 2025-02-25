@@ -142,6 +142,7 @@ const FinancialYear = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
+      Actionswidth:100,
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
@@ -176,6 +177,7 @@ const FinancialYear = () => {
                   changeReload={(reload: any) => { dispatch(toggleFinancialYearPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.financialYear?.reload}
                   gridAddButtonIcon="ri-add-line"
+                  ERPGridActionsstyle={true}
                 />
               </div>
             </div>

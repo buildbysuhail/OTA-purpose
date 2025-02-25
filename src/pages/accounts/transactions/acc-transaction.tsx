@@ -129,7 +129,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   isTeller = false,
 }) => {
   const [triggerEffect, setTriggerEffect] = useState(false);
-  debugger;
+  
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -182,7 +182,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [showValidation, setShowValidation] = useState(false);
   const focusTaxNoField = () => {
-    debugger;
+    
     setTimeout(() => {
       if (taxNoRef.current) {
         taxNoRef.current.select();
@@ -319,36 +319,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, [financialYearID]);
-  // useEffect(() => {
-  //   dispatch(
-  //     accFormStateHandleFieldChange({
-  //       fields: {
-  //         transactionType: transactionType,
-  //         formCode: formCode,
-  //       },
-  //     })
-  //   );
-  // }, [voucherType]);
-
-  // useEffect(() => {
-  //   dispatch(
-  //     accFormStateHandleFieldChange({
-  //       fields: {
-  //         isInvoker: voucherNo && voucherNo > 0,
-  //         // foreignCurrency:
-  //         //   applicationSettings.accountsSettings
-  //         //     ?.maintainMultiCurrencyTransactions,
-  //       },
-  //     })
-  //   );
-  // }, []);
-
-  // useEffect(() => {
-  //   dispatch(accFormStateHandleFieldChange({ fields: { formCode: formCode } }));
-  // }, [formCode]);
 
   useEffect(() => {
-    debugger;
+    
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
@@ -442,11 +415,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ledgerName: ledgerData?.partyName,
                 partyName:
                   formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.partyName
+                    ? ledgerData.partyName??""
                     : "",
                 taxNo:
                   formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.taxNumber
+                    // ? ledgerData.taxNumber??""
+                    ? ledgerData.taxNumber??""
                     : "",
               },
             })
@@ -524,6 +498,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   useEffect(() => {
     const initializeFormElements = async () => {
+      console.log('initializeFormElements');
+      
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -557,6 +533,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           false
         );
 
+        
         employeeID = userSession.employeeId ?? 0;
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
@@ -1224,13 +1201,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
 
       _formState.formElements = fnlFormElmns;
-
-      setAccTransVoucher(_formState, true);
+      
+      
       if (_formState.isTaxOnExpense) {
         focusRefNo();
       } else {
         focusLedgerCode();
       }
+      if(!isInvoker) {
+        _formState.row.ledgerCode = "";
+      }
+      setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously
     };
 
@@ -1816,6 +1797,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
                   <h6 className="text-lg font-bold mb-0 whitespace-nowrap overflow-hidden text-ellipsis ml-0 transition-all duration-300 [@media(min-width:1000px)]:ml-[231px]">
                     {t(formState.title)}
+                    {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(formState.formElements.masterAccount.visible.toString())} */}
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>
@@ -2316,8 +2298,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                     ? -1 * formState.masterBalance
                                     : formState.masterBalance || 0
                                 )} ${(formState.masterBalance ?? 0) < 0
-                                  ? "Cr"
-                                  : "Dr"
+                                    ? "Cr"
+                                    : "Dr"
                                   }`}
                               </span>
                             </div>
@@ -3127,7 +3109,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                     />
                   )}
-                  {/* {formState.formElements.bankCharge.visible && (
+                  {formState.formElements.bankCharge.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="bankCharge"
@@ -3145,7 +3127,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState.formElements.bankCharge?.disabled
                       }
                     />
-                  )} */}
+                  )}
                   {/* {formState.formElements.paymentType.visible && (
                     <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -3268,7 +3250,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           disabled={formState.formElements.pnlMasters?.disabled}
                           disableEnterNavigation
                           onKeyDown={(e) => {
-                            debugger;
+                            
                             handleKeyDown(e, "invoiceDate");
                           }}
                         />
@@ -3359,7 +3341,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onClick={() => addOrEditRow()}
                       disableEnterNavigation
                       onKeyDown={(e) => {
-                        debugger;
+                        
                         if (e.key == "Enter") {
                           addOrEditRow();
                         }

@@ -30,7 +30,7 @@
     "no_message_available": "No message available",
     "no_items_available": "No items available",
     "customer":"Customer",
-    "send_demo_message":"Send demo message",
+    "send_test_message":"Send test message",
     "phone_number":"Phone number",
     "demo_message":"Demo message",
     "email":"Email"

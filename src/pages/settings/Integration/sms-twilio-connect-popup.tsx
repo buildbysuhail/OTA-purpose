@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const api = new APIClient();
 
 interface SMSTwilioConnectPopupProps {
-  data: Partial<information>;
+  data?: information;
 }
 
 const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {} }) => {
@@ -127,7 +127,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
             <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
               onClick={() => handleSubmit()} />
             <ERPButton
-              title={t("send_demo_message")}
+              title={t("send_test_message")}
               variant="secondary"
               onClick={() => setIsPopupOpen(true)}
             />
@@ -140,7 +140,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
               <div className="flex justify-between items-center border-b dark:border-gray-700 pb-4">
                 <h2 className="text-xl font-semibold">{t("demo_message")}</h2>
                 <button onClick={() => setIsPopupOpen(false)} className="p-1">
-                  <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+                  <X className="w-5 h-5  hover:text-gray-700" />
                 </button>
               </div>
 

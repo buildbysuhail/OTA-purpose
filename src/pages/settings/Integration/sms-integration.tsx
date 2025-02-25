@@ -78,10 +78,10 @@ const SMSIntegration: React.FC = () => {
     }
 
     setProvider({isOpen: true, information: {
-      accountSid: parsedConfig.AccountSid ?? "",
-      authToken: parsedConfig.AuthToken ?? "",
-      verifyServiceSid: parsedConfig.VerifyServiceSid ?? "",
-      fromPhone: parsedConfig.FromPhone ?? "",
+      accountSid: parsedConfig.accountSid ?? "",
+      authToken: parsedConfig.authToken ?? "",
+      verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+      fromPhone: parsedConfig.fromPhone ?? "",
     }});
 
   };
@@ -111,7 +111,7 @@ const SMSIntegration: React.FC = () => {
             <div className="flex items-center gap-4">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
-                onClick={() => handleOpen(item.configJson)}
+                onClick={() => {debugger; handleOpen(item.configJson)}}
                 variant="primary"
               ></ERPButton>
               {/* <button onClick={() => setIsOpen(true)} className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors">

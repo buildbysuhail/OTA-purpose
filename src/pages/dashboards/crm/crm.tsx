@@ -107,7 +107,7 @@ const Crm: FC<CrmProps> = () => {
           </button> */}
         </div>
       </div>
-      <ERPModalResizable></ERPModalResizable>
+      {/* <ERPModalResizable></ERPModalResizable> */}
       <div className="grid grid-cols-12 gap-x-6 px-4">
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">

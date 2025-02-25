@@ -8,15 +8,16 @@ import { ApplicationSettingsType } from "../../settings/system/application-setti
 import { AccTransactionFormState } from "./acc-transaction-types";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { isEqual } from "lodash";
-import { modelToBase64, modelToBase64Unicode } from "../../../utilities/jsonConverter";
+import {
+  modelToBase64,
+  modelToBase64Unicode,
+} from "../../../utilities/jsonConverter";
 
 export const calculateTotal = (state: AccTransactionFormState): number => {
-  
   return state.transaction.master.voucherType !== "MJV"
     ? state.transaction.details.reduce(
-        (sum, detail) => sum + ((Number(detail.amount) || 0)
+        (sum, detail) => sum + (Number(detail.amount) || 0),
         // -(detail.hasDiscount ? Number(detail.discount??0) : 0)
-      ),
         0
       )
     : state.transaction.details.reduce(
@@ -101,15 +102,17 @@ export const validateTransactionDate = (
         hasBlockedRight == undefined ||
         (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
       ) {
-        const maxPostDate = moment()
-          .local()
-          .add(
-            applicationSettings.mainSettings?.postDatedTransInNumbers,
-            "days"
-          )
-          .toDate();
+        const maxPostDate = new Date();
+        maxPostDate.setHours(0, 0, 0, 0); // Removes time part
+        maxPostDate.setDate(
+          maxPostDate.getDate() +
+            (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
+        );
 
-        if (transDate > maxPostDate) {
+        const transDateOnly = new Date(transDate);
+        transDateOnly.setHours(0, 0, 0, 0); // Removes time part
+
+        if (transDateOnly > maxPostDate) {
           return {
             valid: false,
             message: "Post Dated Transaction Not Allowed.",
@@ -133,15 +136,18 @@ export const validateTransactionDate = (
         hasBlockedRight == undefined ||
         (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
       ) {
-        const minPreDate = moment()
-          .local()
-          .subtract(
-            applicationSettings.mainSettings?.preDatedTransInNumbers,
-            "days"
-          )
-          .toDate();
+        debugger;
+        const minPreDate = new Date();
+        minPreDate.setHours(0, 0, 0, 0); // Removes time part
+        minPreDate.setDate(
+          minPreDate.getDate() -
+            (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
+        );
 
-        if (transDate < minPreDate) {
+        const transDateOnly = new Date(transDate);
+        transDateOnly.setHours(0, 0, 0, 0); // Removes time part
+
+        if (transDateOnly < minPreDate) {
           return {
             valid: false,
             message: "Pre Dated Transaction Not Allowed",
@@ -152,7 +158,7 @@ export const validateTransactionDate = (
           valid: false,
           message: "User privilege not assigned. Please contact admin.",
         };
-      }
+      }1
     }
   }
 
@@ -165,9 +171,9 @@ export const isDirtyAccTransaction = (
   // // const _prevState = customJsonParse(atob(prevState))
   // const keys = Object.keys(_prevState ?? {}).length;
   const _current = modelToBase64Unicode({
-        transaction: { ...currentState.transaction },
-        row: { ...currentState.row },
-      });
+    transaction: { ...currentState.transaction },
+    row: { ...currentState.row },
+  });
   const _isEqual = prevState === _current;
   return _isEqual === false && prevState !== undefined && prevState !== "";
 };

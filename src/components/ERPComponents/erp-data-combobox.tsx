@@ -684,7 +684,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     // 2. Fetch Data (Cache Miss)
     const promise = api.getAsync(url, params).then((_res) => {
       // 3. Update Redux After Fetch
-      debugger;
+      
       if (url.includes("/Accounts/Data/AccLedgers/")) {
         console.log('Accounts/Data/AccLedgers');
         console.log(params);
@@ -735,7 +735,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
           handleItemClick(_options[0]);
         }
-      debugger;
+      
         // Automatically select the first option after data is loaded
        
       } catch (error) {
@@ -770,6 +770,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, [query, filterItems]);
 
     useEffect(() => {
+      
       // if (triggerEffect) {
       const fieldKey = field?.id?.replaceAll("_id", "");
       const defaultValueKey = getNestedValue(
@@ -791,7 +792,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
         setInitial(null);
-        if (triggerEffect || value == null) {
+        if (triggerEffect && (value == null)) {
           setInputValue("");
         }
         // if (filteredItems.length > 0 && inputValue === "") {

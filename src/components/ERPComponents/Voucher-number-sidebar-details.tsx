@@ -205,7 +205,7 @@ const VoucherNumberDetails: React.FC<VoucherNumberDetailsProps> = ({ setIsOpen }
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchActivities = async () => {
-      debugger;
+      
       try {
         const params: Record<any, any> = {
           VoucherNumber: formState.transaction.master.voucherNumber, // Ensuring it's always a string

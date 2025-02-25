@@ -105,12 +105,14 @@ const AccTransactionGrid: React.FC<{voucherType?: string
       {
         dataField: "voucherNumber",
         caption: t("voucher_number"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
-        alignment: "left",
+        alignment: "center",
         showInPdf: true,
+        cssClass: "centered-header",
+        cellRender: (data) => <div style={{ textAlign: "center" }}>{data.value}</div>
       },
       {
         dataField: "referenceNumber",

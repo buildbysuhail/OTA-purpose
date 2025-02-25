@@ -1084,7 +1084,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           if (e.format === "pdf") {
             const doc = await generatePdf(e.component); // Generate the PDF
-            doc?.save(`${gridId}.pdf`); // Save the PDF
+            doc?.save(`${gridHeader}.pdf`); // Save the PDF
           } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
@@ -1195,7 +1195,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               workbook.xlsx.writeBuffer().then((buffer) => {
                 saveAs(
                   new Blob([buffer], { type: "application/octet-stream" }),
-                  `${gridId}.xlsx`
+                  `${gridHeader}.xlsx`
                 );
               });
             });
@@ -1218,7 +1218,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       (row: any) => {
         // Extracting data from row
         const transactionMasterID = parseInt(row.id || "0", 10);
-        const c = row.form || "";
+        const c = row.form || row.vType ||"";
         const vchr = c.split(" ");
         const vchtype = vchr[0];
         const voucherform = c.substring(c.indexOf(" ") + 1);
@@ -1280,9 +1280,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn(event.data)))
         ) {
           if (dynamicProps?.isTransactionScreen) {
+            
+debugger;
             const params = handleInvoke(event.data);
             if (params) {
-
+debugger;
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object
@@ -1711,6 +1713,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   }
                   // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
                   groupIndex={column.groupIndex}
+                  cssClass = {column.cssClass}
                   format={column.format}
                   dataType={column.dataType}
                   allowSorting={column.allowSorting}

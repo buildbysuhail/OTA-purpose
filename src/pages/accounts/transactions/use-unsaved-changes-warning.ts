@@ -196,7 +196,7 @@ export const useUnsavedChangesWarning = () => {
           
           pendingLocation.current = location.pathname;
           navigationAttempted.current = true;
-          window.history.pushState(null, '', currentPath.current);
+          // window.history.pushState(null, '', currentPath.current);
           setIsLeavingPage(false);
         }
       });

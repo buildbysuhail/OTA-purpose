@@ -36,6 +36,7 @@ export interface DevGridColumn {
     visibleDynamic?: (filter: any) => boolean;
     captionDynamic?: (filter: any) => string;
     groupIndex?:any;
+    cssClass?:string;
     editorOptions?: any;
     validationRules?: any;
     customizeText?:(cellElement: any) => string;

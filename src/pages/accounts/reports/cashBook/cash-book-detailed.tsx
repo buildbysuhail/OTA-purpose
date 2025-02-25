@@ -52,14 +52,7 @@ const CashBookDetailed: FC<CashBookDetailedProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        return (cellElement.data.transactionDate == null || cellElement.data.transactionDate == "" ? "" : moment(cellElement.data.transactionDate, "DD-MM-YYYY").format("DD-MMM-YYYY")); // Ensures proper formatting
-      }
+     format:"dd-MMM-yyyy"
     },
     {
       dataField: "vchNo",

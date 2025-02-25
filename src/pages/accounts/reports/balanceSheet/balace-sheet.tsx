@@ -13,7 +13,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ExcelJS from "exceljs";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
-import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
+import { formatDateFields, isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
 import { pdf, BlobProvider, PDFViewer } from '@react-pdf/renderer';
 import BalanceSheetPDFTemplate from "./balance-sheet-pdf/balance-sheet-horizontal-pdf";
 import { useSelector } from "react-redux";
@@ -220,9 +220,10 @@ const BalanceSheet = () => {
 
   const LoadAsync = async (_filter?: any) => {
     setLoading(true);
+    
     const res = await api.postAsync(
       Urls.acc_reports_balance_sheet,
-      _filter || filter
+      formatDateFields(_filter || filter)
     );
     if (res != undefined && res.isOk != undefined && res.isOk == false) {
       setFilterValidations(res.validations);

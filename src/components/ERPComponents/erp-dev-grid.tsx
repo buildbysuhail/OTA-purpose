@@ -24,7 +24,7 @@ import dxDataGrid from "devextreme/ui/data_grid";
 import ERPAlert from "./erp-sweet-alert";
 import ERPToast from "./erp-toast";
 import moment from "moment";
-import { identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, } from "../../utilities/Utils";
+import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, } from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
@@ -288,19 +288,8 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated =
-        filterData && Object.keys(filterData).length > 0
-          ? Object.fromEntries(
-            Object.entries(filterData).map(([key, value]) => {
-              if (
-                (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
-                key.toLowerCase().includes("date")
-              ) {
-                return [key, moment(value).format("YYYY-MM-DD")]; // Keep only the date part
-              }
-              return [key, value];
-            })
-          ) : filterData;
-
+      formatDateFields(filterData);
+const postDataModified =  formatDateFields(postData)
       try {
         setFilterValidations(undefined);
         const result =
@@ -311,8 +300,8 @@ const createStore = async (
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
-                  : postData != undefined
-                    ? postData
+                  : postDataModified != undefined
+                    ? postDataModified
                     : {},
                 queryString
               )
@@ -693,6 +682,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       data,
       keyExpr,
       dataUrl,
+      // postData,
       method,
       filter,
       _reload,

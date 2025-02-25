@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import { printPdf } from "../../../../utilities/print-report-utils";
 import ProfitAndLossVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-vertical-pdf";
 import ProfitAndLossPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-horizontal-pdf";
+import { formatDateFields } from "../../../../utilities/Utils";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -235,7 +236,7 @@ const ProfitAndLossReport = () => {
     setLoading(true);
     const res = await api.postAsync(
       Urls.acc_reports_profit_and_loss,
-      _filter || filter
+      formatDateFields(_filter || filter)
     );
     if (res != undefined && res.isOk != undefined && res.isOk == false) {
       setFilterValidations(res.validations);

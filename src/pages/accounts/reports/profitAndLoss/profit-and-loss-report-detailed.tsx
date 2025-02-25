@@ -40,6 +40,7 @@ import BalanceSheetVerticalPDFTemplate from "../balanceSheet/balance-sheet-pdf/b
 import { printPdf } from "../../../../utilities/print-report-utils";
 import ProfitAndLossDetailedVerticalPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-vertical-pdf";
 import ProfitAndLossDetailedPDFTemplate from "./profit-and-loss-pdf/profit-and-loss-detailed-horizontal-pdf ";
+import { formatDateFields } from "../../../../utilities/Utils";
 const api = new APIClient();
 const ProfitAndLossRow: React.FC<{
   item: any;
@@ -266,7 +267,7 @@ const ProfitAndLossDetailedReport = () => {
     setLoading(true);
     const res = await api.postAsync(
       Urls.acc_reports_profit_and_loss_detailed,
-      _filter || filter
+      formatDateFields(_filter || filter)
     );
     if (res != undefined && res.isOk != undefined && res.isOk == false) {
       setFilterValidations(res.validations);

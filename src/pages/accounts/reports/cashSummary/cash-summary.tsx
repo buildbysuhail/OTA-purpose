@@ -126,7 +126,7 @@ const CashSummary = () => {
                   reload={true}
                   enablefilter={true}
                   filterWidth={335}
-                  filterHeight={160}
+                  filterHeight={80}
                   showFilterInitially={true}
                   filterContent={<CashSummaryReportFilter />}
                   filterInitialData={CashSummaryReportFilterInitialState}

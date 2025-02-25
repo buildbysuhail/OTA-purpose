@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,12 +9,13 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import { DailySummaryFilter } from "./daily-summary-master";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter }) => {
+const DailySummaryCreditDetails: React.FC<{filter: DailySummaryFilter; onReloadChange: () => void; reloadBase: boolean}> = ({ filter,onReloadChange, reloadBase}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation('accountsReport');
   const { getFormattedValue } = useNumberFormat()
   // const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
   const rootState = useRootState();
+    const [reload, setReload] = useState<boolean>(false);
   const columns: DevGridColumn[] = [
     {
       dataField: "invTransactionMasterID",
@@ -277,6 +278,11 @@ const DailySummaryCreditDetails: React.FC<DailySummaryFilter> = ({ filter }) => 
       width: 150,
     },
   ];
+  useEffect(() => {
+      if (reloadBase) {
+        setReload(true)
+      }
+    }, [reloadBase]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

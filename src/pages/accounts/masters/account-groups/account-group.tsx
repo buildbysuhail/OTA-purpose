@@ -203,7 +203,7 @@ const AccountGroupType = () => {
           fixed: true,
           fixedPosition: "right",
           width: 100,
-          Actionswidth: 100,
+          Actionswidth: 200,
           cellRender: (cellElement: any, cellInfo: any) => {
             return (
               <ERPGridActions

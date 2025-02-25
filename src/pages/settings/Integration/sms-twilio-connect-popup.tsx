@@ -55,7 +55,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         provider: NotificationsProvider.TwillioSms,
         channel: NotificationsChannel.Sms,
         configJson: JSON.stringify(information),
-        phoneNumber: phone,
+        to: phone,
         message: message,
         isEnable: true,
       };

@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
@@ -12,6 +12,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import IncomeReportFilter from "./income-report-filter";
 import ExpenseReportFilter, { ExpenseReportFilterInitialState } from "./expense-report-filter";
 import moment from "moment";
+import AccTransactionForm from "../../transactions/acc-transaction";
 
 const ExpenseReportDetailed = () => {
   const dispatch = useAppDispatch();
@@ -90,6 +91,14 @@ const ExpenseReportDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        )
+      },
     },
     {
       dataField: "date",
@@ -299,6 +308,15 @@ const ExpenseReportDetailed = () => {
                   filterInitialData={ExpenseReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
+                  childPopupProps={{
+                    content: <AccTransactionForm isTeller={false} />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen: true,
+                    width: 1000,
+                    drillDownCells: "vchNo,",
+                    // enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

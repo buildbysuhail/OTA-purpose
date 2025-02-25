@@ -10,6 +10,7 @@ import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
+import AccTransactionForm from "../../transactions/acc-transaction";
 
 const DayBookDetailed = () => {
   const { t } = useTranslation('accountsReport');
@@ -292,6 +293,15 @@ return( <span className={`${"font-bold text-[#DC143C]"}`}>
                   filterInitialData={DayBookReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
+                  childPopupProps={{
+                    content: <AccTransactionForm isTeller={false} />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen: true,
+                    width: 1000,
+                    drillDownCells: "vchNo,",
+                    // enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -3,12 +3,13 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import AccTransactionForm from "../transactions/acc-transaction";
 interface CollectionReport {
   from: Date
 }
@@ -49,6 +50,14 @@ const CollectionReport = () => {
       allowFiltering: true,
       width: 125,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        )
+      },
     },
     {
       dataField: "form",
@@ -194,6 +203,15 @@ const CollectionReport = () => {
                   reload={true}
                   // summaryItems={summaryItems}
                   showSummary={false}
+                  childPopupProps={{
+                    content: <AccTransactionForm isTeller={false} />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen: true,
+                    width: 1000,
+                    drillDownCells: "vchNo,",
+                    // enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 />
               </div>
             </div>

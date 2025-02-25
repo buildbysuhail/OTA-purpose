@@ -3,13 +3,14 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import TransactionReportFilter, { TransactionReportFilterInitialState } from "./transaction-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import moment from "moment";
+import AccTransactionForm from "../../transactions/acc-transaction";
 
 interface TransactionReport {
   from: Date
@@ -46,6 +47,14 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 140,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        )
+      },
     },
     {
       dataField: "form",
@@ -257,6 +266,15 @@ const TransactionReport = () => {
                   filterContent={<TransactionReportFilter />}
                   onFilterChanged={(filter: any) => { setFilter(filter) }}
                   filterInitialData={TransactionReportFilterInitialState}
+                  childPopupProps={{
+                    content: <AccTransactionForm isTeller={false} />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen: true,
+                    width: 1000,
+                    drillDownCells: "vchNo,",
+                    // enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 />
               </div>
             </div>

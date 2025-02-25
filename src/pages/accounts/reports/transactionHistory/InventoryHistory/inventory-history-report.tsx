@@ -62,7 +62,7 @@ const InventoryHistoryReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 150, 
       showInPdf: true,
     },
     {

@@ -415,7 +415,8 @@ const Urls = {
   accept_link: "/Subscription/User/AcceptInviteLink",
 
   demo_whatsapp_message: "",
-  demo_email_message: ""
+  demo_email_message: "",
+  demo_sms_message: "",
 };
 
 export default Urls;

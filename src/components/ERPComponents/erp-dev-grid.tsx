@@ -1440,7 +1440,7 @@ debugger;
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`} style={gridStyle} >
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyesremove" : "ERPGridActionsstyleNoremove"} ${className}`} style={gridStyle} >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1719,12 +1719,12 @@ debugger;
                   allowSorting={column.allowSorting}
                   allowSearch={column.allowSearch}
                   allowFiltering={column.allowFiltering ?? false}
-                  // width={column.width}
-                  width={
-                    column.fixed && column.Actionswidth 
-                      ? column.Actionswidth + 15 // Add 15px to Actionswidth
-                      : column.width
-                  }
+                  width={column.width}
+                  // width={
+                  //   column.fixed && column.Actionswidth 
+                  //     ? column.Actionswidth + 44 // Add 15px to Actionswidth
+                  //     : column.width
+                  // }
                   minWidth={column.minWidth}
                   fixed={column.fixed}
                   fixedPosition={column.fixedPosition}

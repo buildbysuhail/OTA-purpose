@@ -204,7 +204,7 @@ interface ERPDevGridProps {
   childPopupPropsDynamic?: (data?: any) => {
     title: string;
     width?: number;
-    Actionswidth?: number;
+    // Actionswidth?: number;
     height?: number;
     isForm: boolean;
     content: any;
@@ -260,6 +260,8 @@ const createStore = async (
             ];
           }
           return [f.field, f.operation, f.value];
+          console.log();
+          
         });
       }
 
@@ -486,7 +488,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       childPopupProps = {
         title: "",
         width: 1000,
-        Actionswidth: null,
+        // Actionswidth: 100,
         height: 800,
         isForm: false,
         content: null,
@@ -503,15 +505,36 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ref
   ) => {
 
+    // Determine the Actionswidth value
+    const actionsWidth = childPopupPropsDynamic
+      ? childPopupPropsDynamic().Actionswidth
+      : childPopupProps.Actionswidth;
+
+    const gridStyle: React.CSSProperties = {
+      ["--actions-width" as any]: `${actionsWidth || 123}px`, // Default to 100 if not set
+    };
+
+    //  // Determine the Actionswidth value
+    //  const actionsWidth = childPopupPropsDynamic
+    //   ? childPopupPropsDynamic().Actionswidth
+    //   : childPopupProps.Actionswidth;
+
+    // const gridStyle: React.CSSProperties = {
+    //   ["--popup-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
+    //   ["--actions-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
+    // };
+
     const gridRef = useRef<any>(null); // Use `any` for the instance
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
     }));
 
     // CSS Variable for Width
-    const gridStyle: React.CSSProperties = {
-      ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
-    };
+    // const gridStyle: React.CSSProperties = {
+    //   ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
+    //   // Add this line for actions width
+    //   ["--actions-width" as any]: `${childPopupProps?.Actionswidth || 0}px`, 
+    // };
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
@@ -1415,7 +1438,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`} style={gridStyle}>
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`} style={gridStyle} >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1693,7 +1716,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   allowSorting={column.allowSorting}
                   allowSearch={column.allowSearch}
                   allowFiltering={column.allowFiltering ?? false}
-                  width={column.width}
+                  // width={column.width}
+                  width={
+                    column.fixed && column.Actionswidth 
+                      ? column.Actionswidth + 15 // Add 15px to Actionswidth
+                      : column.width
+                  }
                   minWidth={column.minWidth}
                   fixed={column.fixed}
                   fixedPosition={column.fixedPosition}

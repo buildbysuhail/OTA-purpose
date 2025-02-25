@@ -592,7 +592,8 @@ $dark-grid-selection: #000000;
   }
 
   .dx-datagrid-scroll-container .dx-col-fixed  {
-    width: 115px !important;
+    // width: 115px !important;
+    width: calc(var(--actions-width) + 30px) !important;
     // width: calc(100% + 15px) !important;
   }
 

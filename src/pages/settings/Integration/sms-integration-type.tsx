@@ -31,7 +31,14 @@ export interface SMSIntegrationData {
   };
   isEnable: boolean;
 }
-
+export interface information {
+  accountSid: string;
+  authToken: string;
+  verifyServiceSid: string;
+  fromPhone: string;
+  phoneNumber?: string;
+  message?: string;
+}
 // channel
 // : 
 // 1

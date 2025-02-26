@@ -211,7 +211,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         fixed: true,
         fixedPosition: "right",
         width: 100,
-        Actionswidth:100,
+        
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -311,7 +311,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 allowExport={true}
                 reload={reload}
                 changeReload={() => {setReload(false)}}
-                ERPGridActionsstyle={true}
+                
               />
             </div>
           </div>

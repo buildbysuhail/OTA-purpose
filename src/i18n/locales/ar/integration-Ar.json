@@ -36,5 +36,7 @@
     "email": "البريد الإلكتروني",
 
     "selected_integration": "التكامل المحدد",
-    "whatsapp_integration": "تكامل واتساب"
+    "whatsapp_integration": "تكامل واتساب",
+    "demo_mail": "بريد تجريبي",
+    "set_as_default": "تعيين كافتراضي"
 }

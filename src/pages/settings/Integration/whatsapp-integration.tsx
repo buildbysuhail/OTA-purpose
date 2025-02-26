@@ -113,7 +113,7 @@ const WhatsappIntegration: React.FC = () => {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("set as default")} onClick={setAsDefault} className="min-w-[120px]" />
+                <ERPButton title={t("Set as default")} onClick={setAsDefault} className="min-w-[120px]" />
               )}
             </div>
           </div>

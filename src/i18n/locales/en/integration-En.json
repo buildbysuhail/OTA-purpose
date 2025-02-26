@@ -36,5 +36,7 @@
     "email":"Email",
 
     "selected_integration":"Selected integration",
-    "whatsapp_integration":"Whatsapp integration"
+    "whatsapp_integration":"Whatsapp integration",
+    "demo_mail":"Demo mail",
+    "set_as_default":"Set as default"
 }

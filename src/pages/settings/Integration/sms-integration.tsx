@@ -175,7 +175,7 @@ const SMSIntegration: React.FC = () => {
               : t(provider.providerName?.toLowerCase() || "twilio")
           }
           width={provider.providerName === "SmsGatewayCenter" ? 500 : 600}
-          height={provider.providerName === "SmsGatewayCenter" ? 200 : 600}
+          height={provider.providerName === "SmsGatewayCenter" ? 200 : 620}
           isForm={true}
           closeModal={() => {
             setProvider({ isOpen: false, information: undefined, providerName: undefined });

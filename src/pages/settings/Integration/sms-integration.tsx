@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import ERPInput from "../../../components/ERPComponents/erp-input";
+import React, { useEffect, useState } from "react";
 import Urls from "../../../redux/urls";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
@@ -8,15 +7,11 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import SmsDemo from "./sms-demo";
 import { information, SMSIntegrationData } from "./sms-integration-type";
-import {
-  NotificationsProvider,
-  NotificationsChannel,
-} from "../../../enums/notification-chanal";
-import { CircleCheck, X } from "lucide-react";
+import {  NotificationsProvider,  NotificationsChannel,} from "../../../enums/notification-chanal";
+import { CircleCheck } from "lucide-react";
 import SMSTwilioConnectPopup from "./sms-twilio-connect-popup";
 
 const api = new APIClient();
-
 const SMSIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
@@ -25,7 +20,6 @@ const SMSIntegration: React.FC = () => {
     information: undefined,
   });
   const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
-  // state to store the selected integration
   const [selectedIntegration, setSelectedIntegration] = useState<SMSIntegrationData | null>(null);
   const { t } = useTranslation("integration");
 
@@ -101,25 +95,24 @@ const SMSIntegration: React.FC = () => {
               <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">
                 {item.name}
               </h2>
-              <p className="text-sm dark:text-dark-text text-gray-600">
-                {item.description}
-              </p>
+              <p className="text-sm dark:text-dark-text text-gray-600">{item.description}</p>
             </div>
 
-            <div className="mt-4 md:mt-0 flex items-center gap-4">
+            {/* Button container */}
+            <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item.configJson)}
                 variant="primary"
+                className="min-w-[120px]"
               />
               {item.isDefault ? (
-                <CircleCheck className="" />
+                <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("set as default")} onClick={setAsDefault} />
+                <ERPButton title={t("set as default")} onClick={setAsDefault} className="min-w-[120px]" />
               )}
             </div>
           </div>
-
         ))}
 
         {/* Conditional rendering of the lower section */}
@@ -177,9 +170,7 @@ const SMSIntegration: React.FC = () => {
           width={600}
           height={600}
           isForm={true}
-          closeModal={() => {
-            setProvider({ isOpen: false, information: undefined });
-          }}
+          closeModal={() => {  setProvider({ isOpen: false, information: undefined });}}
           content={<SMSTwilioConnectPopup data={provider.information} />}
         />
       </div>

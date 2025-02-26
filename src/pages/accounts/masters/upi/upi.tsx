@@ -131,7 +131,7 @@ const Upi = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      Actionswidth:100,
+      
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
@@ -166,7 +166,7 @@ const Upi = () => {
                   changeReload={(reload: any) => { dispatch(toggleUpi({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.upi?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 />
               </div>
             </div>

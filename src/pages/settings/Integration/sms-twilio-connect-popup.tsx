@@ -135,36 +135,41 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         </div>
 
         {isPopupOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
-            <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full p-6">
-              <div className="flex justify-between items-center border-b dark:border-gray-700 pb-4">
-                <h2 className="text-xl font-semibold">{t("demo_message")}</h2>
-                <button onClick={() => setIsPopupOpen(false)} className="p-1">
-                  <X className="w-5 h-5  hover:text-gray-700" />
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-md backdrop-blur-sm z-50 p-4">
+            <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
+              <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                  {t("demo_message")}
+                </h2>
+                <button
+                  onClick={() => setIsPopupOpen(false)}
+                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
 
-              <ERPInput
-                id="phoneNumber"
-                value={phone || ""}
-                label={t("phone_number")}
-                placeholder={t("phone_number")}
-                onChange={(e) => {
-                  debugger;
-                  setPhone(e.target.value)
-                }}
-              />
+              <div className="mt-4 space-y-4">
+                <ERPInput
+                  id="phoneNumber"
+                  value={phone || ""}
+                  label={t("phone_number")}
+                  placeholder={t("phone_number")}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
 
-              <textarea
-                placeholder={t("type_a_message")}
-                className="w-full dark:bg-dark-bg-card border rounded-lg p-3 h-24 resize-none"
-                value={message || ""}
-                onChange={(e) => setMessage(e.target.value)}
-              />
+                <textarea
+                  placeholder={t("type_a_message")}
+                  className="w-full dark:bg-dark-bg-card border border-gray-300 dark:border-gray-600 rounded-lg p-3 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
+                  value={message || ""}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </div>
 
-              <div className="flex justify-end mt-4">
+              <div className="flex justify-end mt-6">
                 <button
-                  className="bg-green-500 hover:bg-green-600 text-white rounded-full p-3 shadow-lg"
+                  className="bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#86efac]"
                   onClick={handleSendDemoMessage}
                 >
                   <svg
@@ -174,13 +179,19 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
                     stroke="currentColor"
                     className="w-5 h-5 transform rotate-45"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"
+                    />
                   </svg>
                 </button>
               </div>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

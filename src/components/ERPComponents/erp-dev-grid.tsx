@@ -1447,7 +1447,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`} style={gridStyle} >
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyesre" : "ERPGridActionsstyleNore"} ${className}`} style={gridStyle} >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}

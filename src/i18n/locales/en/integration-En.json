@@ -33,5 +33,7 @@
     "send_test_message":"Send test message",
     "phone_number":"Phone number",
     "demo_message":"Demo message",
-    "email":"Email"
+    "email":"Email",
+
+    "selected_integration":"Selected integration"
 }

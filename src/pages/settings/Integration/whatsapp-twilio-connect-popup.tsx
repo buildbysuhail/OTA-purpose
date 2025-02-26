@@ -6,16 +6,16 @@ import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { information } from "./sms-integration-type";
 import { useTranslation } from "react-i18next";
+import { information } from "./whatsapp-integration-type";
 
 const api = new APIClient();
 
-interface SMSTwilioConnectPopupProps {
+interface WhatsappTwilioConnectPopupProps {
   data?: information;
 }
 
-const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {} }) => {
+const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({ data = {} }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -32,8 +32,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
     setIsSaving(true);
     try {
       const requestBody = {
-        provider: NotificationsProvider.TwillioSms,
-        channel: NotificationsChannel.Sms,
+        provider: NotificationsProvider.TwillioWhatsapp,
+        channel: NotificationsChannel.Whatsapp,
         configJson: JSON.stringify(information),
         isEnable: true,
       };
@@ -50,8 +50,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
     if (e) e.preventDefault();
     try {
       const payload = {
-        provider: NotificationsProvider.TwillioSms,
-        channel: NotificationsChannel.Sms,
+        provider: NotificationsProvider.TwillioWhatsapp,
+        channel: NotificationsChannel.Whatsapp,
         configJson: JSON.stringify(information),
         to: phone,
         message: message,
@@ -141,7 +141,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
                   value={phone || ""}
                   label={t("phone_number")}
                   placeholder={t("phone_number")}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => { setPhone(e.target.value) }}
                   className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
                 />
 
@@ -154,7 +154,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
               </div>
 
               <div className="flex justify-end mt-6">
-                <button className="bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#93c5fd]" onClick={handleSendDemoMessage}>
+                <button className="bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#86efac]" onClick={handleSendDemoMessage}>
                   <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
                 </button>
               </div>
@@ -166,4 +166,4 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   );
 };
 
-export default SMSTwilioConnectPopup;
+export default WhatsappTwilioConnectPopup;

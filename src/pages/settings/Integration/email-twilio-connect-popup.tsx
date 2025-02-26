@@ -6,16 +6,16 @@ import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { information } from "./sms-integration-type";
 import { useTranslation } from "react-i18next";
+import { information } from "./email-integration-type";
 
 const api = new APIClient();
 
-interface SMSTwilioConnectPopupProps {
+interface EmailTwilioConnectPopupProps {
   data?: information;
 }
 
-const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {} }) => {
+const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data = {} }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -32,8 +32,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
     setIsSaving(true);
     try {
       const requestBody = {
-        provider: NotificationsProvider.TwillioSms,
-        channel: NotificationsChannel.Sms,
+        provider: NotificationsProvider.Smtp,
+        channel: NotificationsChannel.Email,
         configJson: JSON.stringify(information),
         isEnable: true,
       };
@@ -50,8 +50,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
     if (e) e.preventDefault();
     try {
       const payload = {
-        provider: NotificationsProvider.TwillioSms,
-        channel: NotificationsChannel.Sms,
+        provider: NotificationsProvider.Smtp,
+        channel: NotificationsChannel.Email,
         configJson: JSON.stringify(information),
         to: phone,
         message: message,
@@ -128,7 +128,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
             <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
               <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                  {t("demo_message")}
+                  {t("demo_mail")}
                 </h2>
                 <button onClick={() => setIsPopupOpen(false)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Close">
                   <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
@@ -136,13 +136,22 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
               </div>
 
               <div className="mt-4 space-y-4">
-                <ERPInput
+                {/* <ERPInput
                   id="phoneNumber"
                   value={phone || ""}
                   label={t("phone_number")}
                   placeholder={t("phone_number")}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
+                /> */}
+
+                <ERPInput
+                  id="email"
+                  data={information}
+                  label={t("email")}
+                  placeholder={t("email")}
+                  value={information.email}
+                  onChangeData={(data: any) => handleFieldChange("email", data.email)}
                 />
 
                 <textarea
@@ -166,4 +175,4 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   );
 };
 
-export default SMSTwilioConnectPopup;
+export default EmailTwilioConnectPopup;

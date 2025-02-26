@@ -73,7 +73,7 @@ const Remainders = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      Actionswidth:100,
+      
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
@@ -110,7 +110,7 @@ const Remainders = () => {
                   changeReload={(reload: any) => { dispatch(toggleRemainderPopup({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.reminder?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 />
               </div>
             </div>

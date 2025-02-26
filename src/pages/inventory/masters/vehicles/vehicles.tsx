@@ -188,7 +188,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         fixed: true,
         fixedPosition: "right",
         width: 100,
-        Actionswidth:100,
+        
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -239,7 +239,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
                   }}
                   reload={rootState?.PopupData?.vehicles?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 ></ErpDevGrid>
               </div>
             </div>

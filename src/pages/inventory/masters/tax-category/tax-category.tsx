@@ -124,7 +124,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         fixed: true,
         fixedPosition: "right",
         width: 100,
-        Actionswidth:100,
+        
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -175,7 +175,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
                   }}
                   reload={rootState?.PopupData?.taxCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 ></ErpDevGrid>
               </div>
             </div>

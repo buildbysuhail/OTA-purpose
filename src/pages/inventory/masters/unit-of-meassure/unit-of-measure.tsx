@@ -165,7 +165,7 @@ const UnitOfMeasure = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      Actionswidth:100,
+      
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
@@ -215,7 +215,7 @@ const UnitOfMeasure = () => {
                   }}
                   reload={rootState?.PopupData?.unitOfMeasure?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 ></ErpDevGrid>
               </div>
             </div>

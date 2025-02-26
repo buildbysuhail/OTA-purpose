@@ -133,7 +133,7 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
         fixed: true,
         fixedPosition: "right",
         width: 100,
-        Actionswidth:100,
+        
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -184,7 +184,7 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
                   }}
                   reload={rootState?.PopupData?.section?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 ></ErpDevGrid>
               </div>
             </div>

@@ -129,7 +129,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         fixed: true,
         fixedPosition: "right",
         width: 100,
-        Actionswidth:100,
+        
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
@@ -180,7 +180,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
                   }}
                   reload={rootState?.PopupData?.productCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  ERPGridActionsstyle={true}
+                  
                 ></ErpDevGrid>
               </div>
             </div>

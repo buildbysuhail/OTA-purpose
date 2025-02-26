@@ -576,28 +576,9 @@ $dark-grid-selection: #000000;
   // }
 }
 
-.ERPGridActionsstyleNo {
 
-  // .dx-datagrid-borders>.dx-datagrid-headers {
-  //   margin-right: 15px;
-  // }
 
-  // .dx-datagrid-rowsview .dx-datagrid-content{
-  //   padding-right: 15px;
-  //   padding-bottom: 15px;
-
-  // }
-  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
-    padding-right: 15px;
-    // padding-bottom: 15px;
-  }
-}
-
-.ERPGridActionsstyleyes {
-
-  // .dx-datagrid-borders>.dx-datagrid-headers {
-  //   margin-right: 15px;
-  // }
+.hasRightFixedColumn {
 
   .dx-datagrid-rowsview .dx-datagrid-content {
     padding-right: 15px;
@@ -607,50 +588,32 @@ $dark-grid-selection: #000000;
 
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
     padding-right: 15px;
-    // padding-bottom: 15px;
   }
-
+  
   .dx-datagrid-scroll-container .dx-col-fixed {
-    // width: 115px !important;
-    width: calc(var(--actions-width) + 30px) !important;
-    // width: calc(100% + 15px) !important;
+    width: calc(var(--actions-width) + 15px) !important;
+  }
+}
+.hasLeftFixedColumn {
+
+  .dx-datagrid-rowsview .dx-datagrid-content {
+    padding-left: 15px;
+    padding-bottom: 15px;
+
   }
 
-  // .dx-datagrid-scroll-container .dx-col-fixed {
-  //   width: calc(var(--popup-width, 10px) + 15px) !important;
-  // }
-
-  // .dx-datagrid-action .dx-cell-focus-disabled .dx-datagrid-drag-action{
-  //   padding-right: 15px;
-  // }
-  //  .dx-col-fixed {
-  //   width: 115px !important;
-  // }
-  // .dx-datagrid-table .dx-datagrid-table-fixed .dx-pointer-events-none  .dx-col-fixed {
-  //   width: 115px !important;
-  // }
-
-
+  .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
+    padding-left: 15px;
+  }
+  
+  .dx-datagrid-scroll-container .dx-col-fixed {
+    width: calc(var(--actions-width) + 15px) !important;
+  }
 }
 
 .custom-data-grid {
 
-  //   .ERPGridActionsstyleyes{
 
-  //   .dx-datagrid-borders>.dx-datagrid-headers {
-  //     margin-right: 15px;
-  //   }
-
-  //   .dx-datagrid-rowsview .dx-datagrid-content{
-  //     padding-right: 15px;
-  //     padding-bottom: 15px;
-
-  //   }
-  //   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper{
-  //     padding-right: 15px;
-  //     padding-bottom: 15px;
-  //   }
-  // }
 
   // Table Header Styling
   .dx-row-matched-red {

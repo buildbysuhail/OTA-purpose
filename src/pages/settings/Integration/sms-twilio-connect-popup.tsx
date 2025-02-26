@@ -1,5 +1,4 @@
-import { t } from "i18next";
-import { X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { NotificationsChannel, NotificationsProvider } from "../../../enums/notification-chanal";
@@ -7,7 +6,7 @@ import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { information, information as InformationType } from "./sms-integration-type";
+import { information } from "./sms-integration-type";
 import { useTranslation } from "react-i18next";
 
 const api = new APIClient();
@@ -38,7 +37,6 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         configJson: JSON.stringify(information),
         isEnable: true,
       };
-
       const response = await api.post(Urls.notification_provider_update, requestBody);
       await handleResponse(response);
     } catch (error) {
@@ -59,7 +57,6 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         message: message,
         isEnable: true,
       };
-
       const demoMessageResponse = await api.post(Urls.notification_provider_test, payload);
       await handleResponse(demoMessageResponse);
     } catch (error) {
@@ -68,18 +65,12 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   };
 
   const { t } = useTranslation('integration')
-
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 gap-3 p-4">
         <h2 className="text-lg font-semibold mb-3">{t("don't_have_an_account?")}</h2>
         <p className="mb-2">{t("create_an_account")}</p>
-        <a
-          href="https://www.twilio.com/try-twilio"
-          className="text-[#2589BD] hover:underline block mb-4"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://www.twilio.com/try-twilio" className="text-[#2589BD] hover:underline block mb-4" target="_blank" rel="noopener noreferrer">
           {t("go_to_twilio")}
         </a>
 
@@ -99,10 +90,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
             label={t("account_SID")}
             placeholder={t("account_SID")}
             data={information}
-            onChangeData={(data) => {
-              debugger;
-              handleFieldChange("accountSid", data.accountSid)
-            }}
+            onChangeData={(data) => { handleFieldChange("accountSid", data.accountSid) }}
           />
 
           <ERPInput
@@ -125,7 +113,8 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
 
           <div className="flex items-center gap-4">
             <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
-              onClick={() => handleSubmit()} />
+              onClick={() => handleSubmit()}
+            />
             <ERPButton
               title={t("send_test_message")}
               variant="secondary"
@@ -141,11 +130,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                   {t("demo_message")}
                 </h2>
-                <button
-                  onClick={() => setIsPopupOpen(false)}
-                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="Close"
-                >
+                <button onClick={() => setIsPopupOpen(false)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Close">
                   <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
@@ -157,6 +142,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
                   label={t("phone_number")}
                   placeholder={t("phone_number")}
                   onChange={(e) => setPhone(e.target.value)}
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
                 />
 
                 <textarea
@@ -168,30 +154,13 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
               </div>
 
               <div className="flex justify-end mt-6">
-                <button
-                  className="bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#86efac]"
-                  onClick={handleSendDemoMessage}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5 transform rotate-45"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"
-                    />
-                  </svg>
+                <button className="bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#93c5fd]" onClick={handleSendDemoMessage}>
+                  <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
                 </button>
               </div>
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

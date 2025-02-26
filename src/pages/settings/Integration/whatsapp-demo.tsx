@@ -12,7 +12,6 @@ interface MenuItem {
 }
 
 const api = new APIClient();
-
 export default function Component() {
   const [selectedMenu, setSelectedMenu] = useState<string>("Customers");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -50,7 +49,6 @@ export default function Component() {
   };
 
   const { t } = useTranslation('integration');
-
   const WhatsAppDemo = ({ message, sender }: { message: string; sender: string }) => (
     <div className="bg-gray p-2 sm:p-4 rounded-lg w-full max-w-full sm:max-w-sm">
       <div className="dark:!bg-dark-bg bg-white dark:!border-dark-border rounded-lg shadow-lg border overflow-hidden max-w-full sm:max-w-xs mx-auto">
@@ -116,7 +114,6 @@ export default function Component() {
             <WhatsAppDemo message={selectedItem.content || t("no_message_available")} sender="Polosys L.L.P" />
           </div>
         </div>
-
         <div className="hidden lg:block">
           <WhatsAppDemo message={selectedItem.content || t("no_message_available")} sender="Polosys L.L.P" />
         </div>
@@ -132,18 +129,12 @@ export default function Component() {
   return (
     <div className="dark:!border-dark-border border p-4 rounded-lg">
       <div className="flex gap-3 md:flex-row h-[389px] bg-gray relative">
-        <button
-          className="md:hidden absolute top-2 right-2 p-1 rounded-lg dark:!bg-dark-bg bg-white shadow"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
+        <button className="md:hidden absolute top-2 right-2 p-1 rounded-lg dark:!bg-dark-bg bg-white shadow" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
           <i className="ti ti-menu-2 text-base"></i>
         </button>
 
         {/* Sidebar */}
-        <aside
-          className={`${isSidebarOpen ? "block" : "hidden"
-            } md:block w-full md:w-56 h-full md:h-[389px] dark:!bg-dark-bg bg-white  dark:!border-dark-border border rounded-lg absolute md:relative top-0 left-0 z-10 md:z-0`}
-        >
+        <aside className={`${isSidebarOpen ? "block" : "hidden"} md:block w-full md:w-56 h-full md:h-[389px] dark:!bg-dark-bg bg-white  dark:!border-dark-border border rounded-lg absolute md:relative top-0 left-0 z-10 md:z-0`}>
           <div className="h-full !rounded-lg overflow-y-auto">
             <nav className="py-4 dark:!bg-dark-bg dark:!border-dark-border !rounded-lg ">
               {menuItems.length > 0 ? (
@@ -154,8 +145,7 @@ export default function Component() {
                       ? "bg-gray border-green text-green"
                       : "border-transparent hover:bg-gray hover:border-gray"
                       }`}
-                    onClick={(e) => handleMenuClick(e, item.transactionName)}
-                  >
+                    onClick={(e) => handleMenuClick(e, item.transactionName)}>
                     <span className="mx-4 md:mx-2 text-sm">{item.transactionName}</span>
                   </button>
                 ))
@@ -172,10 +162,7 @@ export default function Component() {
         </main>
 
         {isSidebarOpen && (
-          <div
-            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-0"
-            onClick={() => setIsSidebarOpen(false)}
-          ></div>
+          <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-0" onClick={() => setIsSidebarOpen(false)}></div>
         )}
       </div>
     </div>

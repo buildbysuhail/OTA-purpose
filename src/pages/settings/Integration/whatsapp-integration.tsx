@@ -9,7 +9,7 @@ import { NotificationsProvider, NotificationsChannel } from "../../../enums/noti
 import { CircleCheck } from "lucide-react";
 import WhatsAppDemo from "./whatsapp-demo";
 import { information, WhatsappIntegrationData } from "./whatsapp-integration-type";
-import SMSTwilioConnectPopup from "./sms-twilio-connect-popup";
+import WhatsappTwilioConnectPopup from "./whatsapp-twilio-connect-popup";
 
 const api = new APIClient();
 
@@ -109,6 +109,7 @@ const WhatsappIntegration: React.FC = () => {
                 variant="primary"
                 className="min-w-[120px]"
               />
+
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
@@ -174,10 +175,8 @@ const WhatsappIntegration: React.FC = () => {
           width={600}
           height={600}
           isForm={true}
-          closeModal={() => {
-            setProvider({ isOpen: false, information: undefined });
-          }}
-          content={<SMSTwilioConnectPopup data={provider.information} />}
+          closeModal={() => { setProvider({ isOpen: false, information: undefined }); }}
+          content={<WhatsappTwilioConnectPopup data={provider.information} />}
         />
       </div>
     </div>

@@ -7,17 +7,25 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import SmsDemo from "./sms-demo";
 import { information, SMSIntegrationData } from "./sms-integration-type";
-import {  NotificationsProvider,  NotificationsChannel,} from "../../../enums/notification-chanal";
+import { NotificationsProvider, NotificationsChannel, } from "../../../enums/notification-chanal";
 import { CircleCheck } from "lucide-react";
 import SMSTwilioConnectPopup from "./sms-twilio-connect-popup";
+import SMSGatewayCenterPopup from "./sms-gateway-center-popup";
+
+interface ProviderState {
+  isOpen: boolean;
+  information?: information;
+  providerName?: string;
+}
 
 const api = new APIClient();
 const SMSIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
-  const [provider, setProvider] = useState<{ isOpen: boolean, information?: information }>({
+  const [ubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
+    providerName: undefined,
   });
   const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
   const [selectedIntegration, setSelectedIntegration] = useState<SMSIntegrationData | null>(null);
@@ -31,9 +39,7 @@ const SMSIntegration: React.FC = () => {
     setLoading(true);
     const Channel = NotificationsChannel.Sms;
     try {
-      const response = await api.getAsync(
-        `${Urls.notification_provider}?channel=${Channel}`
-      );
+      const response = await api.getAsync(`${Urls.notification_provider}?channel=${Channel}`);
       setFormState(response);
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -58,7 +64,7 @@ const SMSIntegration: React.FC = () => {
     }
   };
 
-  const handleOpen = (configJson: any) => {
+  const handleOpen = (configJson: any, providerName?: string) => {
     let parsedConfig: any = {};
 
     if (typeof configJson === "string" && configJson.trim() !== "") {
@@ -79,6 +85,7 @@ const SMSIntegration: React.FC = () => {
         verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
         fromPhone: parsedConfig.fromPhone ?? "",
       },
+      providerName: providerName ?? "",
     });
   };
 
@@ -102,7 +109,7 @@ const SMSIntegration: React.FC = () => {
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
-                onClick={() => handleOpen(item.configJson)}
+                onClick={() => handleOpen(item.configJson, item.name)}
                 variant="primary"
                 className="min-w-[120px]"
               />
@@ -115,10 +122,8 @@ const SMSIntegration: React.FC = () => {
           </div>
         ))}
 
-        {/* Conditional rendering of the lower section */}
         <div className="mt-8">
           {selectedIntegration ? (
-            // New content based on the selected integration
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("selected_integration")} : {selectedIntegration.name}
@@ -126,11 +131,9 @@ const SMSIntegration: React.FC = () => {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              {/* You can include additional details or components specific to the selected integration */}
               <SmsDemo />
             </div>
           ) : (
-            // Default content
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
@@ -166,12 +169,24 @@ const SMSIntegration: React.FC = () => {
 
         <ERPModal
           isOpen={provider.isOpen}
-          title={t("twilio")}
-          width={600}
-          height={600}
+          title={
+            provider.providerName === "SmsGatewayCenter"
+              ? "SMSGatewayCenter Integration"
+              : t(provider.providerName?.toLowerCase() || "twilio")
+          }
+          width={provider.providerName === "SmsGatewayCenter" ? 500 : 600}
+          height={provider.providerName === "SmsGatewayCenter" ? 200 : 600}
           isForm={true}
-          closeModal={() => {  setProvider({ isOpen: false, information: undefined });}}
-          content={<SMSTwilioConnectPopup data={provider.information} />}
+          closeModal={() => {
+            setProvider({ isOpen: false, information: undefined, providerName: undefined });
+          }}
+          content={
+            provider.providerName === "SmsGatewayCenter" ? (
+              <SMSGatewayCenterPopup data={provider.information} />
+            ) : (
+              <SMSTwilioConnectPopup data={provider.information} />
+            )
+          }
         />
       </div>
     </div>

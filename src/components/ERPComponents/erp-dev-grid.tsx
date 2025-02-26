@@ -28,7 +28,7 @@ import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeOb
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
-import { Printer } from "lucide-react";
+import { Plus, Printer } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 
 interface ToolbarItem {
@@ -290,8 +290,8 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated =
-      formatDateFields(filterData);
-const postDataModified =  formatDateFields(postData)
+        formatDateFields(filterData);
+      const postDataModified =  formatDateFields(postData)
       try {
         setFilterValidations(undefined);
         const result =
@@ -510,7 +510,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
     const actionColumn = gridCols.find(col => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
-    
+
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
@@ -571,7 +571,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       heightToAdjustOnWindowsInModal,
     ]);
 
-    
+
     const rootState = useAppSelector((x) => x);
     const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
@@ -1090,8 +1090,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           };
 
           if (e.format === "pdf") {
-            const doc = await generatePdf(e.component); // Generate the PDF
-            doc?.save(`${gridHeader}.pdf`); // Save the PDF
+            const doc = await generatePdf(e.component);
+            if (!doc) return;
+
+            const totalPages = doc.getNumberOfPages();
+            if (totalPages > 50) {
+              const userConfirmed = window.confirm(
+                "The document contains more than 50 pages. Are you sure you want to download it?"
+              );
+              if (userConfirmed) {
+                doc.save(`${gridHeader}.pdf`);
+              } else {
+                return;
+              }
+            } else {
+              doc.save(`${gridHeader}.pdf`);
+            }
           } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
@@ -1531,74 +1545,74 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
             {allowSelection && <Selection mode={selectionMode} selectAllMode={"allPages"}
-                showCheckBoxesMode={"always"} />
+              showCheckBoxesMode={"always"} />
             }
             {allowGrouping && <Grouping />}
             {groupPanelVisible && (
-                <Grouping contextMenuEnabled={true} expandMode="rowClick" />
-              )}
+              <Grouping contextMenuEnabled={true} expandMode="rowClick" />
+            )}
             {allowEditing && allowEditing.allow && (
-                <Editing
-                  mode={editMode}
-                  allowUpdating={allowEditing.config.edit}
-                  allowDeleting={allowEditing.config.delete}
-                  allowAdding={allowEditing.config.add}
-                />
-              )}
+              <Editing
+                mode={editMode}
+                allowUpdating={allowEditing.config.edit}
+                allowDeleting={allowEditing.config.delete}
+                allowAdding={allowEditing.config.add}
+              />
+            )}
             {allowExport ? (
-                <Export
-                  enabled={true}
-                  formats={["pdf", "xlsx"]}
-                  allowExportSelectedData={false}
-                />
-              ) : (
-                <Export enabled={false}></Export>
-              )}
+              <Export
+                enabled={true}
+                formats={["pdf", "xlsx"]}
+                allowExportSelectedData={false}
+              />
+            ) : (
+              <Export enabled={false}></Export>
+            )}
 
             <Toolbar>
               {!hideGridHeader && (
-                  <Item location="before">
-                    <div className="flex  flex-col">
-                      <div className={`box-title !text-xs !font-medium`}>
-                        <span className="text-sm dark:!text-dark-text">
-                          {gridHeader}
-                        </span>
-                        &nbsp;{""}
-                        {header}
-                      </div>
+                <Item location="before">
+                  <div className="flex  flex-col">
+                    <div className={`box-title !text-xs !font-medium`}>
+                      <span className="text-sm dark:!text-dark-text">
+                        {gridHeader}
+                      </span>
+                      &nbsp;{""}
+                      {header}
                     </div>
-                  </Item>
-                )}
+                  </div>
+                </Item>
+              )}
               {isPreferenceChooserVisible && (
-                  <Item
-                    key={appState?.dir}
-                    location="before"
-                  >
-                    <GridPreferenceChooser
-                      columns={columns}
-                      gridId={gridId}
-                      onApplyPreferences={onApplyPreferences}
-                      GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
-                    />
-                  </Item>
-                )}
+                <Item
+                  key={appState?.dir}
+                  location="before"
+                >
+                  <GridPreferenceChooser
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                    GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
+                  />
+                </Item>
+              )}
 
 
               {enableScrollButton && (
-                  <Item>
-                    <div
-                      title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}
+                <Item>
+                  <div
+                    title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => scrollTo(isAtBottom ? 0 : 100)}
+                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
                     >
-                      <button
-                        type="button"
-                        onClick={() => scrollTo(isAtBottom ? 0 : 100)}
-                        className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
-                      >
-                        {isAtBottom ? "↑" : "↓"}
-                      </button>
-                    </div>
-                  </Item>
-                )
+                      {isAtBottom ? "↑" : "↓"}
+                    </button>
+                  </div>
+                </Item>
+              )
               }
 
               {!hideDefaultSearchPanel && <Item name="searchPanel" />}
@@ -1662,9 +1676,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     <div>
                       {
                         gridAddButtonType == "link" && (
-                          <Link to={gridAddButtonLink} className="ti-btn-primary-full ti-btn ti-btn-full ">
-                            {t("add")}
-                            <i className="ri-user-add-line"></i>
+                          <Link to={gridAddButtonLink} className="ti-btn-primary-full ti-btn ti-btn-full">
+                            {t("new")}
+                            <Plus className="w-4 h-4" />
                           </Link>
                         )
                       }

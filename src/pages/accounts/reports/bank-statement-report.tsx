@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
 import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import BankStatementReportFilter, { BankStatementReportFilterInitialState } from "./bank-statement-report-filter";
 import moment from "moment";
+import AccTransactionForm from "../transactions/acc-transaction";
 
 const BankStatementReport = () => {
   const { t } = useTranslation('accountsReport');
@@ -67,6 +68,14 @@ const BankStatementReport = () => {
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        )
+      },
     },
     {
       dataField: "ledger",
@@ -360,6 +369,15 @@ const BankStatementReport = () => {
                   filterInitialData={BankStatementReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
+                  childPopupProps={{
+                    content: <AccTransactionForm isTeller={false} />,
+                    title: t(""),
+                    isForm: false,
+                    isTransactionScreen: true,
+                    width: 1000,
+                    drillDownCells: "vchNo,",
+                    // enableFn: (data: any) => data?.ledgerID != 0
+                  }}
                 />
               </div>
             </div>

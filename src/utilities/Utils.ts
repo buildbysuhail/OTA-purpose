@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { ToWords } from "to-words";
 import { useSelector } from "react-redux";
 import { capitalize } from "@mui/material";
@@ -7,6 +6,7 @@ import { thisYear } from "../utilities/ERPDateFilterData";
 import { RootState } from "../redux/store";
 import { AppState } from "../redux/slices/app/types";
 import moment from "moment";
+import dayjs from "dayjs";
 
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
@@ -14,6 +14,28 @@ export function capitalizeFirstLetter(text: string) {
 
 export function camelize(str: string) {
   return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+}
+
+/**
+ * Formats all date-related fields in an object to "YYYY-MM-DD".
+ * 
+ * @param {Object} postData - The input object containing key-value pairs.
+ * @returns {Object} - A new object with date fields formatted while keeping other fields unchanged.
+ */
+export const formatDateFields = (data: any) => {
+  if (!data || Object.keys(data).length === 0) return data;
+
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => {
+      if (
+        (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
+        key.toLowerCase().includes("date") // Check if key includes "date"
+      ) {
+        return [key, moment(value).format("YYYY-MM-DD")]; // Format the date
+      }
+      return [key, value]; // Keep other values unchanged
+    })
+  );
 }
 
 /**

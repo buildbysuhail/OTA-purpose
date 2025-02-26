@@ -132,7 +132,7 @@ const BankReconciliation = () => {
     try {
       const _data = await api.getAsync(
         Urls.bankReconciliation,
-        `LedgerID=${formState.selectedBankId}&IsReconciled=${formState.showReconciled}`
+        `LedgerID=${formState.selectedBankId??0}&IsReconciled=${formState.showReconciled}`
       );
       const rows = _data.map((row: any, index: number) => ({
         ...row,

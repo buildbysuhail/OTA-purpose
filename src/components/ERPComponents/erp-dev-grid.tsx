@@ -24,11 +24,12 @@ import dxDataGrid from "devextreme/ui/data_grid";
 import ERPAlert from "./erp-sweet-alert";
 import ERPToast from "./erp-toast";
 import moment from "moment";
-import { identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, } from "../../utilities/Utils";
+import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, } from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
 import { Printer } from "lucide-react";
+import ReactDOMServer from "react-dom/server";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -262,7 +263,7 @@ const createStore = async (
           }
           return [f.field, f.operation, f.value];
           console.log();
-          
+
         });
       }
 
@@ -289,19 +290,8 @@ const createStore = async (
 
       const queryString = new URLSearchParams(params).toString();
       const updated =
-        filterData && Object.keys(filterData).length > 0
-          ? Object.fromEntries(
-            Object.entries(filterData).map(([key, value]) => {
-              if (
-                (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
-                key.toLowerCase().includes("date")
-              ) {
-                return [key, moment(value).format("YYYY-MM-DD")]; // Keep only the date part
-              }
-              return [key, value];
-            })
-          ) : filterData;
-
+      formatDateFields(filterData);
+const postDataModified =  formatDateFields(postData)
       try {
         setFilterValidations(undefined);
         const result =
@@ -312,8 +302,8 @@ const createStore = async (
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
-                  : postData != undefined
-                    ? postData
+                  : postDataModified != undefined
+                    ? postDataModified
                     : {},
                 queryString
               )
@@ -704,6 +694,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       data,
       keyExpr,
       dataUrl,
+      // postData,
       method,
       filter,
       _reload,
@@ -1003,14 +994,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             options.pdfCell
           );
 
-          let isDefined = renderResult !== undefined;
-          let isObject = typeof renderResult === "object";
-          let isValidReactElement = React.isValidElement(renderResult);
+          // let isDefined = renderResult !== undefined;
+          // let isObject = typeof renderResult === "object";
+          // let isValidReactElement = React.isValidElement(renderResult);
 
-          if (isDefined && isObject && !isValidReactElement) {
-            options.pdfCell = renderResult;
+          if (React.isValidElement(renderResult)) {
+            options.pdfCell.text = ReactDOMServer.renderToStaticMarkup(renderResult);
+          } else if (typeof renderResult === "string" || typeof renderResult === "number") {
+            options.pdfCell.text = renderResult.toString();
+          } else if (renderResult && typeof renderResult === "object" && renderResult.text) {
+            options.pdfCell.text = renderResult.text;
           } else {
-            options.pdfCell = options.pdfCell; // Retain the original value
+            // Otherwise, leave the original value.
+            options.pdfCell.text = options.pdfCell.text;
           }
         }
       };
@@ -1030,7 +1026,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         topLeft: { x: 0, y: currentY },
         customizeCell: customizeCell,
       });
-
+      debugger;
       // Restore original column visibility and settings
       originalColumnVisibility.forEach((column: any) => {
         gridInstance.columnOption(column.dataField, "visible", column.visible);
@@ -1291,11 +1287,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn(event.data)))
         ) {
           if (dynamicProps?.isTransactionScreen) {
-            
-debugger;
+
+            debugger;
             const params = handleInvoke(event.data);
             if (params) {
-debugger;
+              debugger;
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object
@@ -1535,74 +1531,74 @@ debugger;
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
             {allowSelection && <Selection mode={selectionMode} selectAllMode={"allPages"}
-              showCheckBoxesMode={"always"} />
+                showCheckBoxesMode={"always"} />
             }
             {allowGrouping && <Grouping />}
             {groupPanelVisible && (
-              <Grouping contextMenuEnabled={true} expandMode="rowClick" />
-            )}
+                <Grouping contextMenuEnabled={true} expandMode="rowClick" />
+              )}
             {allowEditing && allowEditing.allow && (
-              <Editing
-                mode={editMode}
-                allowUpdating={allowEditing.config.edit}
-                allowDeleting={allowEditing.config.delete}
-                allowAdding={allowEditing.config.add}
-              />
-            )}
+                <Editing
+                  mode={editMode}
+                  allowUpdating={allowEditing.config.edit}
+                  allowDeleting={allowEditing.config.delete}
+                  allowAdding={allowEditing.config.add}
+                />
+              )}
             {allowExport ? (
-              <Export
-                enabled={true}
-                formats={["pdf", "xlsx"]}
-                allowExportSelectedData={false}
-              />
-            ) : (
-              <Export enabled={false}></Export>
-            )}
+                <Export
+                  enabled={true}
+                  formats={["pdf", "xlsx"]}
+                  allowExportSelectedData={false}
+                />
+              ) : (
+                <Export enabled={false}></Export>
+              )}
 
             <Toolbar>
               {!hideGridHeader && (
-                <Item location="before">
-                  <div className="flex  flex-col">
-                    <div className={`box-title !text-xs !font-medium`}>
-                      <span className="text-sm dark:!text-dark-text">
-                        {gridHeader}
-                      </span>
-                      &nbsp;{""}
-                      {header}
+                  <Item location="before">
+                    <div className="flex  flex-col">
+                      <div className={`box-title !text-xs !font-medium`}>
+                        <span className="text-sm dark:!text-dark-text">
+                          {gridHeader}
+                        </span>
+                        &nbsp;{""}
+                        {header}
+                      </div>
                     </div>
-                  </div>
-                </Item>
-              )}
+                  </Item>
+                )}
               {isPreferenceChooserVisible && (
-                <Item
-                  key={appState?.dir}
-                  location="before"
-                >
-                  <GridPreferenceChooser
-                    columns={columns}
-                    gridId={gridId}
-                    onApplyPreferences={onApplyPreferences}
-                    GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
-                  />
-                </Item>
-              )}
+                  <Item
+                    key={appState?.dir}
+                    location="before"
+                  >
+                    <GridPreferenceChooser
+                      columns={columns}
+                      gridId={gridId}
+                      onApplyPreferences={onApplyPreferences}
+                      GridPreferenceChooserAccTrance={isPreferenceChooserVisible}
+                    />
+                  </Item>
+                )}
 
 
               {enableScrollButton && (
-                <Item>
-                  <div
-                    title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => scrollTo(isAtBottom ? 0 : 100)}
-                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
+                  <Item>
+                    <div
+                      title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}
                     >
-                      {isAtBottom ? "↑" : "↓"}
-                    </button>
-                  </div>
-                </Item>
-              )
+                      <button
+                        type="button"
+                        onClick={() => scrollTo(isAtBottom ? 0 : 100)}
+                        className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
+                      >
+                        {isAtBottom ? "↑" : "↓"}
+                      </button>
+                    </div>
+                  </Item>
+                )
               }
 
               {!hideDefaultSearchPanel && <Item name="searchPanel" />}

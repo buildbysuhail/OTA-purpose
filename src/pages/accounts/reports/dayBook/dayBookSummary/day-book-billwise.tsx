@@ -3,13 +3,14 @@ import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
 import { FC, Fragment, useEffect, useState } from "react";
 import { useRootState } from "../../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { DrillDownCellTemplate } from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import { mergeObjectsRemovingIdenticalKeys } from "../../../../../utilities/Utils";
 import moment from "moment";
+import AccTransactionForm from "../../../transactions/acc-transaction";
 
 interface DayBookBillwiseProps {
   postData?: any;
@@ -52,14 +53,7 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-         return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
-      }
+     format:"dd-MMM-yyyy"
     },
     {
       dataField: "form",
@@ -78,6 +72,14 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       allowFiltering: true,
       width: 100,
       showInPdf: true,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <DrillDownCellTemplate
+            data={cellElement}
+            field="vchNo"
+          ></DrillDownCellTemplate>
+        )
+      },
     },
     {
       dataField: "particulars",
@@ -368,6 +370,15 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
               hideGridAddButton={true}
               // gridAddButtonType="popup"
               reload={true}
+              childPopupProps={{
+                content: <AccTransactionForm isTeller={false} />,
+                title: t(""),
+                isForm: false,
+                isTransactionScreen: true,
+                width: 1000,
+                drillDownCells: "vchNo,",
+                // enableFn: (data: any) => data?.ledgerID != 0
+              }}
             ></ErpDevGrid>
           </div>
         </div>

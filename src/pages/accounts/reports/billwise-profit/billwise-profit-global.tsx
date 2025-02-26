@@ -749,6 +749,8 @@ const BillwiseProfitGlobal = () => {
                   enablefilter={true}
                   showFilterInitially={true}
                   filterContent={<BillwiseProfitReportFilter />}
+                  filterHeight={630}
+                  filterWidth={850}
                   filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>
               </div>

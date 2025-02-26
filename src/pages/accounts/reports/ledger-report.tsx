@@ -24,19 +24,11 @@ const LedgerReport = () => {
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const rootState = useRootState();
-  const LoadAsync = async (_filter?: any) => {
-    setLoading(true);
-    const res = await api.postAsync(
-      Urls.acc_reports_profit_and_loss,
-      _filter || filter
-    );
-    setData(res?.data || []);
-    setLoading(false);
-  };
+  
   const { getFormattedValue } = useNumberFormat();
   const onApplyFilter = useCallback((_filter: any) => {
     setFilter({ ..._filter });
-    LoadAsync(_filter);
+   
   }, []);
 
   const onCloseFilter = useCallback(() => {

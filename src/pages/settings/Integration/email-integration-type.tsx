@@ -1,4 +1,4 @@
-export const initialSMSIntegration = {
+export const initialEmailIntegration = {
   validations: {
     provider: null,
     channel: null,
@@ -16,7 +16,7 @@ export const initialSMSIntegration = {
   },
 };
 
-export interface SMSIntegrationData {
+export interface EmailIntegrationData {
   id: number;
   provider: number;
   isDefault?:boolean;
@@ -36,7 +36,7 @@ export interface information {
   authToken: string;
   verifyServiceSid: string;
   fromPhone: string;
-  phoneNumber?: string;
+  email?: string;
   message?: string;
 }
 // channel

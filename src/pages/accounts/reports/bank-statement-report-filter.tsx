@@ -31,7 +31,7 @@ const BankStatementReportFilter = ({ getFieldProps, handleFieldChange }: any) =>
         field={{
           id: "bankLedgerID",
           getListUrl: Urls.data_acc_ledgers,
-          params: `ledgerID = 0 & ledgerType=${LedgerType.BankAccount}`,
+          params: `ledgerType=${LedgerType.BankAccount}`,
           // getListUrl: Urls.data_acc_ledgers,
           // params: `ledgerID = 0 & ledgerType=${LedgerType.BankAccount}`,
           valueKey: "id",

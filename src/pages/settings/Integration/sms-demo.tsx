@@ -109,9 +109,19 @@ export default function Component() {
       <div className="flex flex-col dark:!bg-dark-bg justify-between md:flex-row h-full p-3 md:p-6">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{selectedMenu}</h2>
-          <p className="mb-2 md:mb-4">{selectedItem.content || t("no_message_available")}</p>
+          <p className="hidden lg:block mb-2 md:mb-4">
+            {selectedItem.content || t("no_message_available")}
+          </p>
+          {/* SmsDemo for medium and small devices */}
+          <div className="block lg:hidden">
+            <SmsDemo
+              message={selectedItem.content || t("no_message_available")}
+              sender="Polosys L.L.P"
+            />
+          </div>
         </div>
-        <div>
+        {/* SmsDemo for large devices */}
+        <div className="hidden lg:block">
           <SmsDemo
             message={selectedItem.content || t("no_message_available")}
             sender="Polosys L.L.P"
@@ -155,7 +165,7 @@ export default function Component() {
               {menuItems.length > 0 ? (
                 menuItems.map((item) => (
                   <button
-                    key={item.id}
+                    key={item.transactionCode}
                     className={`
                     flex items-center 
                     w-full 

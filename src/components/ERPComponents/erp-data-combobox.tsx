@@ -711,6 +711,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
        let _items;
 
     // Check if data is available in Redux
+    debugger;
     if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length) {
       console.log('Accounts/Data/AccLedgers2');
         console.log(field?.params);

@@ -100,6 +100,7 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowKeyboardNavigation?: boolean;
   allowSearching?: boolean;
+  allowResizing?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
   | boolean
@@ -417,6 +418,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       initialFilters = [],
       allowSorting = true,
       allowSearching = true,
+      allowResizing = true,
       allowKeyboardNavigation = false,
       showFilterRow = true,
       remoteOperations = true,
@@ -506,12 +508,21 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   ) => {
 
     // Determine the Actionswidth value
-    const actionsWidth = childPopupPropsDynamic
-      ? childPopupPropsDynamic().Actionswidth
-      : childPopupProps.Actionswidth;
+    // const actionsWidth = childPopupPropsDynamic
+    //   ? childPopupPropsDynamic().Actionswidth
+    //   : childPopupProps.Actionswidth;
 
+    // const gridStyle: React.CSSProperties = {
+    //   ["--actions-width" as any]: `${actionsWidth || 123}px`, // Default to 100 if not set
+    // };
+
+    // Get Actionswidth from the column configuration
+    const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    const actionColumn = gridCols.find(col => col.Actionswidth !== undefined);
+    const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
+    
     const gridStyle: React.CSSProperties = {
-      ["--actions-width" as any]: `${actionsWidth || 123}px`, // Default to 100 if not set
+      ["--actions-width" as any]: `${actionsWidth}px`,
     };
 
     //  // Determine the Actionswidth value
@@ -570,7 +581,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       heightToAdjustOnWindowsInModal,
     ]);
 
-    const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
+    
     const rootState = useAppSelector((x) => x);
     const [preferences, setPreferences] = useState<GridPreference>();
     const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
@@ -1440,7 +1451,7 @@ debugger;
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyesremove" : "ERPGridActionsstyleNoremove"} ${className}`} style={gridStyle} >
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyes" : "ERPGridActionsstyleNo"} ${className}`} style={gridStyle} >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1718,6 +1729,8 @@ debugger;
                   dataType={column.dataType}
                   allowSorting={column.allowSorting}
                   allowSearch={column.allowSearch}
+                  // allowResizing={column.allowResizing}
+                  allowResizing={column.allowResizing}
                   allowFiltering={column.allowFiltering ?? false}
                   width={column.width}
                   // width={

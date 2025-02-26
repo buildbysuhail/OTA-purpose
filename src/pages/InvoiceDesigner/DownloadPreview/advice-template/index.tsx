@@ -6,7 +6,7 @@ import { AccountTransactionProps } from "../account_transactiocn-premium";
 import { Header } from "./Header";
 import { Content } from "./Content";
 
-const AdvancedPayment = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
+const AdviceTemplate = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
 
 // Paddings
 const paddingLeft = template?.propertiesState?.padding?.left || 10;
@@ -48,4 +48,4 @@ return (
 </Document>
 );
 };
-export default AdvancedPayment;
+export default AdviceTemplate;

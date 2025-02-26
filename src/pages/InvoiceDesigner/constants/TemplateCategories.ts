@@ -274,12 +274,17 @@ export const TemplateTypes: {
     },
     {
       id: 54,
-      name: "advanced_payment",
-      template_group_id: "AP",
+      name: "payment_advice",
+      template_group_id: "PARP",
     },
     {
       id: 55,
+      name: "receipt_advice",
+      template_group_id: "RARP",
+    },
+    {
+      id: 56,
       name: "cheque",
-      template_group_id: "cheque"
+      template_group_id: "Cheque"
     },
   ];

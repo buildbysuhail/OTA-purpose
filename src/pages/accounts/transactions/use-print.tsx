@@ -16,6 +16,8 @@ import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import Urls from "../../../redux/urls";
+import VoucherType from "../../../enums/voucher-types";
+import AdviceTemplate from "../../InvoiceDesigner/DownloadPreview/advice-template";
 const api = new APIClient();
 export const useAccPrint = () => {
   const currentBranch = useCurrentBranch();
@@ -27,21 +29,31 @@ export const useAccPrint = () => {
     (state: RootState) => state.ClientSession
   );
 const {hasRight} = useUserRights();
-
-
+const voucherTypeSet = new Set(Object.values(VoucherType));
+const adviceTem = ["PARP","RARP","Cheque"]
 const handleDirectPrint = async (template:any) => {
-  try {
-    // Generate the PDF for the selected template
-    const pdfDocument = renderSelectedTemplate({
+  let pdfDocument;
+
+  if (adviceTem.includes(template.templateKind)) {
+    pdfDocument = (
+      <AdviceTemplate
+        template={template}
+        data={formState.transaction}
+        userSession={userSession}
+      />
+    );
+  } else {
+    pdfDocument = renderSelectedTemplate({
       template: template,
       data: formState.transaction,
       currentBranch: currentBranch,
       userSession: userSession,
     });
+  }
 
+  try {
     // Create a PDF blob
     const blob = await pdf(pdfDocument).toBlob();
-
     // Create a URL for the blob
     const pdfUrl = URL.createObjectURL(blob);
 
@@ -67,15 +79,12 @@ const handleDirectPrint = async (template:any) => {
     });
   } catch (error) {
     console.error("Error printing voucher:", error);
-  //  ERPAlert.show({
-  //         title: "Warning",
-  //         text: "An error occurred while printing. Please try again.",
-  //         icon: "warning",
-  //       });
   }
 };
 
   const fetchDefaultTemplates = async (voucherType:any) => {
+       // Create a set of all possible VoucherType values
+
       try {
           const res = await api.getAsync(
             `${Urls.default_template}?template_group=${voucherType}`
@@ -100,13 +109,12 @@ const handleDirectPrint = async (template:any) => {
          
           dispatch(acctemplatesData(_template));
           // const template = formState.templatesData?.find(item=>item.templateGroup===voucherType) 
-          if(voucherType !== "AP"){
+          if(voucherTypeSet.has(voucherType)){
             dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
           } 
+         
           return _template;
-     
-        
-     
+       
       } catch (error) {
         console.error("Error fetching Default templates:", error);
       }
@@ -129,7 +137,7 @@ const handleDirectPrint = async (template:any) => {
   );
   let template = formState.template;
  
-    if(formState.template== undefined || formState.template ==null)
+    if(formState.template == undefined || formState.template == null)
     {
       if(existingTemplate){
         dispatch(accFormStateHandleFieldChange({fields:{template:existingTemplate}}));
@@ -139,7 +147,7 @@ const handleDirectPrint = async (template:any) => {
       }
     }
  
- 
+    console.log(template);
   // If template is valid, proceed with printing
   if (formState.printPreview) {
     setIsPrintModalOpen(true);
@@ -148,20 +156,22 @@ const handleDirectPrint = async (template:any) => {
   }
   };
 
-   const printPaymentReceiptAdvice = async(voucher?: AccTransactionFormState) => {
+   const printPaymentReceiptAdvice = async(voucher?: AccTransactionFormState,voucherType?:any) => {
+
     voucher = voucher == undefined ? formState : voucher
-    let voucherType = ["CP","BP","CQP"].includes(formState.transaction.master.voucherType) ? "PARP"
+    let voucherTypes = ["CP","BP","CQP"].includes(formState.transaction.master.voucherType) ? "PARP"
     : ["CR","BR","CQR"].includes(formState.transaction.master.voucherType) ? "RARP":"";
     const existingTemplate = voucher.templatesData?.find(
-      (template: any) => template.templateGroup === voucherType
+      (template: any) => template.templateGroup === voucherTypes
     );
 
     let template;
       if(existingTemplate){
         template = existingTemplate
       } else{
-        template = await fetchDefaultTemplates(voucherType)
+        template = await fetchDefaultTemplates(voucherTypes)
       }
+      console.log(template);
     await handleDirectPrint(template);
    };
     const printCheque = async (voucher?: AccTransactionFormState) => {

@@ -121,7 +121,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
         <View style={{ flexBasis: "33.33%", display: "flex", justifyContent: "flex-end",alignItems:"center"  }}>
          
             <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
-              {headerState?.docTitle || "Payment Voucher"}
+              {headerState?.docTitle }
             </Text>
           
           </View>

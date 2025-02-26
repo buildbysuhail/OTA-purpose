@@ -32,8 +32,9 @@ import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
 import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
 import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-universal";
-import AdvancedPayment from "./DownloadPreview/advanced-payment";
+import AdvancedPayment from "./DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
+import AdviceTemplate from "./DownloadPreview/advice-template";
 
 interface DesignSectionType {
   id: number;
@@ -412,13 +413,13 @@ const InvoiceDesigner = () => {
                   )}
                 </button>
               </div>
-            ) : ["AP", "cheque"].includes(templateGroup) ? (
+            ) : ["PARP","RARP","Cheque"].includes(templateGroup) ? (
               <div>
                 <button
                   title={t("save_template")}
                   onClick={() => {
                     manageSaveAccTemplate(
-                      <AdvancedPayment
+                      <AdviceTemplate
                         template={templateData.activeTemplate}
                         data={DummyVoucherData}
                         currentBranch={currentBranch}
@@ -566,13 +567,13 @@ const InvoiceDesigner = () => {
       }
 
       {
-        ["AP", "cheque"].includes(templateGroup) && (
+        ["PARP","RARP","cheque"].includes(templateGroup) && (
           <PDFViewer
             className="pdf-viewer"
             width="100%"
             height="auto"
             style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}>
-            <AdvancedPayment
+            <AdviceTemplate
               template={templateData.activeTemplate}
               data={DummyVoucherData}
               currentBranch={currentBranch}

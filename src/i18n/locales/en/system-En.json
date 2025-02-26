@@ -500,5 +500,7 @@
     "are_you_sure_you_want_to_delete_this_item":"Are you sure you want to delete this item ?",
     "sms_template":"Sms Template",
     "whatsApp_template":"Whatsapp Template",
-    "email_template":"Email Template"
+    "email_template":"Email Template",
+    "payment_advice":"Payment Advice",
+    "receipt_advice":"Receipt Advice"
 }

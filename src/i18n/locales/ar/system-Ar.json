@@ -500,5 +500,7 @@
   "are_you_sure_you_want_to_delete_this_item": "هل أنت متأكد أنك تريد حذف هذا العنصر؟",
   "sms_template": "قالب الرسائل القصيرة",
   "whatsApp_template": "قالب الواتساب",
-  "email_template": "قالب البريد الإلكتروني"
+  "email_template": "قالب البريد الإلكتروني",
+  "payment_advice":" إشعار دفع",
+  "receipt_advice":" إشعار استلام"
 }

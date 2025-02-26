@@ -78,6 +78,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
     isLocked: column.isLocked ?? false,
     caption: column.caption || capitalizeAndAddSpace(column.dataField ?? ""),
     width: column.width || 100,
+    // Actionswidth: column.width || 100, 
     alignment: column.alignment || 'left',
     visible: true,
     readOnly: false,
@@ -235,7 +236,13 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                       <input
                         type="number"
                         value={column.width || ''}
-                        onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target?.value) || undefined)}
+                        // onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target?.value) || undefined)}
+                        // In erp-gridpreference.tsx
+                        onChange={(e) => handleColumnPreferenceChange(
+                          column.dataField, 
+                          'width', 
+                          Math.max(50, parseInt(e.target.value) || 100) // Ensure minimum width of 50
+                        )}
                         disabled={column.isLocked}
                         className="dark:bg-dark-bg-card border dark:border-dark-border rounded p-1 w-16 mh-[27px]"
                       />

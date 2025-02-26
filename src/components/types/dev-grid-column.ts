@@ -21,6 +21,7 @@ export interface DevGridColumn {
     dataType?: "string" | "number" | "date" | "boolean" | "object" | "datetime";
     allowSorting?: boolean;
     allowSearch?: boolean |true;
+    allowResizing?: boolean |true;
     allowFiltering?: boolean;
     minWidth?: number;
     fixed?: boolean;
@@ -70,6 +71,7 @@ export interface DevGridColumn {
     dataField: string;
     format?: string;
     width?: number;
+    // Actionswidth?: number;
     minWidth?: number;
     alignment: 'left' | 'center' | 'right';
     visible: boolean;

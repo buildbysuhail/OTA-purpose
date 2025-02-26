@@ -8,14 +8,13 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import DailySummary from "./dailySummary/daily-summary";
 import DailySummaryCreditDetails from "./daily-summary-credit-details";
 import DailySummaryReceiptDetails from "./daily-summary-receipt-details";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
 export interface DailySummaryFilter {
-  filter: {
-    transactionDate: Date;
+  transactionDate: Date;
     counterID: number;
     costCentreID: number;
     counterShiftId: number;
     employeeID: number;
-  };
 }
 // const PartySummaryMaster = () => {
 const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any) => {
@@ -25,18 +24,18 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
+  const [reload, setReload] = useState<boolean>(false);
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<DailySummaryFilter>({
-    filter: {
-      transactionDate: new Date(),
+    transactionDate: new Date(),
       counterID: 0,
       costCentreID: 0,
       counterShiftId: 0,
       employeeID: 0,
-    }
   });
 
   const [activeTab, setActiveTab] = useState("salesReportSummary");
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => { setActiveTab(newValue); };
   return (
     <Fragment>
@@ -46,26 +45,25 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
             <div className="flex items-center gap-4 w-full">
               <ERPDateInput
                 id="transactionDate"
-                value={filter.filter.transactionDate}
+                value={filter.transactionDate}
                 customSize='sm'
-
-                data={filter.filter}
+                data={filter}
                 label={t("transaction_date")}
-                onChangeData={(data: any) => setFilter((prev: any) => ({
-                  ...prev,
-                  filter: {
-                    ...prev.filter,
+                onChangeData={(data: any) => {
+                  debugger;
+                  setFilter((prev: any) => ({
+                    ...prev,
                     transactionDate: data.transactionDate
-                  }
-                }))}
+                  }))
+                }}
               />
 
               <ERPDataCombobox
                 id="counterID"
-                value={filter.filter.counterID}
+                value={filter.counterID}
                 customSize='sm'
                 className="w-[300px]"
-                data={filter.filter}
+                data={filter}
                 label={t("counter")}
                 field={{
                   id: "counterID",
@@ -77,19 +75,16 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
                   ...prev,
-                  filter: {
-                    ...prev.filter,
-                    counterID: data.counterID
-                  }
+                  counterID: data.counterID
                 }))}
               />
 
               <ERPDataCombobox
                 id="costCentreID"
-                value={filter.filter.costCentreID}
+                value={filter.costCentreID}
                 customSize='sm'
                 className="w-[300px]"
-                data={filter.filter}
+                data={filter}
                 label={t("cost_centre")}
                 field={{
                   id: "costCentreID",
@@ -101,18 +96,15 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
                   ...prev,
-                  filter: {
-                    ...prev.filter,
                     costCentreID: data.costCentreID
-                  }
                 }))}
               />
               <ERPDataCombobox
                 id="counterShiftId"
-                value={filter.filter.counterShiftId}
+                value={filter.counterShiftId}
                 customSize='sm'
                 className="w-[300px]"
-                data={filter.filter}
+                data={filter}
                 label={t("shift")}
                 field={{
                   id: "counterShiftId",
@@ -124,18 +116,15 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
                   ...prev,
-                  filter: {
-                    ...prev.filter,
-                    counterShiftId: data.counterShiftId
-                  }
+                  counterShiftId: data.counterShiftId
                 }))}
               />
               <ERPDataCombobox
                 id="employeeID"
-                value={filter.filter.employeeID}
+                value={filter.employeeID}
                 customSize='sm'
                 className="w-[300px]"
-                data={filter.filter}
+                data={filter}
                 label={t("employee")}
                 field={{
                   id: "employeeID",
@@ -147,12 +136,12 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 // onChangeData={(data) => handleFieldChange({ ledgerID: data.ledgerID })}
                 onChangeData={(data: any) => setFilter((prev: any) => ({
                   ...prev,
-                  filter: {
-                    ...prev.filter,
-                    employeeID: data.employeeID
-                  }
+                  employeeID: data.employeeID
                 }))}
               />
+              <ERPButton title="Show" onClick={() =>{ debugger;
+                setReload(true)
+              }}></ERPButton>{reload?.toString()}
             </div>
 
             <div className="grid grid-cols-1 gap-3">
@@ -163,13 +152,13 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
               </Tabs>
               <div className="pt-2">
                 {activeTab === "salesReportSummary" && (
-                  <DailySummary filter={filter.filter}></DailySummary>
+                  <DailySummary filter={filter} onReloadChange={()=> setReload(false)} reloadBase={reload}></DailySummary>
                 )}
                 {activeTab === "creditDetails" && (
-                  <DailySummaryCreditDetails filter={filter.filter}></DailySummaryCreditDetails>
+                  <DailySummaryCreditDetails filter={filter} onReloadChange={()=> setReload(false)} reloadBase={reload}></DailySummaryCreditDetails>
                 )}
                 {activeTab === "receiptDetails" && (
-                  <DailySummaryReceiptDetails filter={filter.filter}></DailySummaryReceiptDetails>
+                  <DailySummaryReceiptDetails filter={filter} onReloadChange={()=> setReload(false)} reloadBase={reload}></DailySummaryReceiptDetails>
                 )}
               </div>
             </div>

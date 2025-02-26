@@ -21,12 +21,12 @@ export default function Component() {
 
   useEffect(() => {
     loadData();
-    const intervalId = setInterval(() => {
+    const interValid = setInterval(() => {
       setCurrentTime(formatCurrentTime());
-    }, 60000);
+    }, 6000);
 
     setCurrentTime(formatCurrentTime());
-    return () => clearInterval(intervalId);
+    return () => clearInterval(interValid);
   }, []);
 
   const loadData = async () => {
@@ -51,18 +51,16 @@ export default function Component() {
 
   const { t } = useTranslation('integration');
 
-  const WhatsAppDemo = ({ message }: { message: string }) => (
+  const WhatsAppDemo = ({ message, sender }: { message: string; sender: string }) => (
     <div className="bg-gray p-2 sm:p-4 rounded-lg w-full max-w-full sm:max-w-sm">
-      <div className="bg-white rounded-lg shadow-lg border overflow-hidden max-w-full sm:max-w-xs mx-auto">
-        <div className="bg-green text-black px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
+      <div className="dark:!bg-dark-bg bg-white dark:!border-dark-border rounded-lg shadow-lg border overflow-hidden max-w-full sm:max-w-xs mx-auto">
+        <div className="dark:!bg-dark-bg bg-green dark:text-dark-text text-black px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
           <div className="flex items-center">
-            <i className="ti ti-chevron-left mr-1 sm:mr-2 text-[12px] sm:text-[15px] text-white"></i>
-            <div className="w-8 h-8 bg-[#dee2e6] rounded-full mr-2"></div>
-            <span className="font-semibold text-sm text-white">{t("customer")}</span>
+            <i className="ti ti-chevron-left mr-1 sm:mr-2 text-[12px] sm:text-[15px]"></i>
+            <span className="font-semibold text-sm sm:text-white">{t("customer")}</span>
           </div>
-          <div className="flex items-center text-white">
-            <i className="ti ti-phone mr-4 sm:mr-4 text-[12px] sm:text-[15px]"></i>
-            <i className="ti ti-video mr-4 text-[15px]"></i>
+          <div className="flex items-center">
+            <i className="ti ti-phone mr-2 sm:mr-4 text-[12px] sm:text-[15px]"></i>
             <i className="ti ti-dots-vertical text-[12px] sm:text-[15px]"></i>
           </div>
         </div>
@@ -74,20 +72,20 @@ export default function Component() {
           </div>
         </div>
 
-        <div className=" dark:!bg-dark-bg bg-gray border border-t dark:!border-dark-border  px-2 sm:px-4 py-1 sm:py-2 flex items-center">
+        <div className=" dark:!bg-dark-bg bg-gray border border-t dark:!border-dark-border px-2 sm:px-4 py-1 sm:py-2 flex items-center">
           <input
             type="text"
             placeholder={t("type_a_message")}
             className="dark:!bg-dark-bg-card bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
             readOnly
           />
-          <button className="bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full">
+          <button className="dark:!bg-dark-bg bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full p-1 sm:p-2 border border-[#22c55e]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-4 h-4 text-center !display-revert">
+              className="w-4 h-4 sm:w-6 sm:h-6">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -108,13 +106,19 @@ export default function Component() {
     };
 
     return (
-      <div className="flex flex-col justify-between md:flex-row h-full p-3 md:p-6">
+      <div className="flex flex-col dark:!bg-dark-bg justify-between md:flex-row h-full p-3 md:p-6">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{selectedMenu}</h2>
-          <p className="mb-2 md:mb-4">{selectedItem.content || t("no_message_available")}</p>
+          <p className="hidden lg:block mb-2 md:mb-4">
+            {selectedItem.content || t("no_message_available")}
+          </p>
+          <div className="block lg:hidden">
+            <WhatsAppDemo message={selectedItem.content || t("no_message_available")} sender="Polosys L.L.P" />
+          </div>
         </div>
-        <div>
-          <WhatsAppDemo message={selectedItem.content || t("no_message_available")} />
+
+        <div className="hidden lg:block">
+          <WhatsAppDemo message={selectedItem.content || t("no_message_available")} sender="Polosys L.L.P" />
         </div>
       </div>
     );

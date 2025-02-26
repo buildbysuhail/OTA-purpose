@@ -18,8 +18,7 @@ interface DailySummary {
   counterShiftId: number;
   employeeID: number;
 }
-const DailySummary: React.FC<DailySummaryFilter> = ({ filter
-}) => {
+const DailySummary: React.FC<{ filter: DailySummaryFilter; onReloadChange: () => void; reloadBase: boolean }> = ({ filter, onReloadChange, reloadBase }) => {
   const dispatch = useAppDispatch();
   const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation('accountsReport');
@@ -139,7 +138,7 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
       allowFiltering: true,
       width: 120,
       showInPdf: true,
-     format:"dd-MMM-yyyy"
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "vrType",
@@ -610,8 +609,10 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
   ];
   const [detailsColumns, setDetailsColumns] = useState<any>(detailColumnsTemp);
   useEffect(() => {
-
-  }, [voucherType]);
+    if (reloadBase) {
+      setReload(true)
+    }
+  }, [reloadBase]);
   const onRowClick = useCallback((event: any) => {
     setVoucherType(event.data?.cType);
     const updatedColumns = [...detailColumnsTemp]
@@ -656,9 +657,13 @@ const DailySummary: React.FC<DailySummaryFilter> = ({ filter
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-6 col-span-12">
-
+        {reload?.toString()}
           <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
+              reload={reload}
+              changeReload={() => {
+                setReload(false); onReloadChange && onReloadChange();
+              }}
               heightToAdjustOnWindows={275}
               columns={columns}
               showSerialNo={true}

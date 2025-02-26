@@ -33,5 +33,8 @@
     "send_test_message": "أرسل رسالة تجريبية",
     "phone_number": "رقم الهاتف",
     "demo_message": "رسالة تجريبية",
-    "email": "البريد الإلكتروني"
+    "email": "البريد الإلكتروني",
+
+    "selected_integration": "التكامل المحدد",
+    "whatsapp_integration": "تكامل واتساب"
 }

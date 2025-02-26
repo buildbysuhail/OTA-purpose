@@ -170,7 +170,9 @@ const AccountLedgerType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        showInPdf: true
+        showInPdf: true,
+        // fixed: true,
+        // fixedPosition: "right",
       },
       {
         dataField: "isCostCentreApplicable",
@@ -201,16 +203,20 @@ const AccountLedgerType = () => {
         allowFiltering: true,
         width: 150,
         visible: false,
+        // fixed: true,
+        // fixedPosition: "right",
       },
       {
         dataField: "actions",
         caption: t("actions"),
         isLocked: true,
+        
         allowSearch: false,
         allowFiltering: false,
         fixed: true,
         fixedPosition: "right",
         width: 100,
+        
         cellRender: (cellElement: any, cellInfo: any) => (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}

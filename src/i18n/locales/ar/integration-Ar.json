@@ -39,5 +39,16 @@
     "whatsapp_integration": "تكامل واتساب",
     "demo_mail": "بريد تجريبي",
     "set_as_default": "تعيين كافتراضي",
-    "maintain": "صيانة"
+    "maintain": "صيانة",
+
+    "from_email": "من البريد الإلكتروني",
+    "smtp_server": "خادم SMTP",
+    "port": "المنفذ",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "connect_email": "ربط البريد الإلكتروني",
+    "send_test_email": "إرسال بريد إلكتروني تجريبي",
+    "demo_email": "بريد إلكتروني تجريبي",
+    "recipient_email": "البريد الإلكتروني للمستلم",
+    "smtp_email": "بريد SMTP"
 }

@@ -10,15 +10,24 @@ import { CircleCheck } from "lucide-react";
 import WhatsAppDemo from "./whatsapp-demo";
 import { information, WhatsappIntegrationData } from "./whatsapp-integration-type";
 import WhatsappTwilioConnectPopup from "./whatsapp-twilio-connect-popup";
+import WhatsappGatewayCenterPopup from "./whatsapp-gateway-center-popup";
+
+interface ProviderState {
+  isOpen: boolean;
+  information?: information;
+  providerName?: string;
+  id?: number
+}
 
 const api = new APIClient();
 
 const WhatsappIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
-  const [provider, setProvider] = useState<{ isOpen: boolean, information?: information }>({
+  const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
+    providerName: undefined,
   });
   const [formState, setFormState] = useState<WhatsappIntegrationData[]>([]);
   // state to store the selected integration
@@ -44,12 +53,13 @@ const WhatsappIntegration: React.FC = () => {
     }
   };
 
-  const setAsDefault = async () => {
+  const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.TwillioWhatsapp,
         channel: NotificationsChannel.Whatsapp,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
       await handleResponse(response);
@@ -60,17 +70,17 @@ const WhatsappIntegration: React.FC = () => {
     }
   };
 
-  const handleOpen = (configJson: any) => {
+  const handleOpen = (item: any) => {
     let parsedConfig: any = {};
 
-    if (typeof configJson === "string" && configJson.trim() !== "") {
+    if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = JSON.parse(configJson);
+        parsedConfig = JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
-    } else if (typeof configJson === "object" && configJson !== null) {
-      parsedConfig = configJson;
+    } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
+      parsedConfig = item?.configJson;
     }
 
     setProvider({
@@ -81,6 +91,8 @@ const WhatsappIntegration: React.FC = () => {
         verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
         fromPhone: parsedConfig.fromPhone ?? "",
       },
+      id: item.id,
+      providerName: item?.name ?? "",
     });
   };
 
@@ -105,7 +117,7 @@ const WhatsappIntegration: React.FC = () => {
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
-                onClick={() => handleOpen(item.configJson)}
+                onClick={() => handleOpen(item)}
                 variant="primary"
                 className="min-w-[120px]"
               />
@@ -113,17 +125,15 @@ const WhatsappIntegration: React.FC = () => {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={setAsDefault} className="min-w-[120px]" />
+                <ERPButton title={t("Set as default")} onClick={() =>  setAsDefault(item.id)} className="min-w-[120px]" />
               )}
             </div>
           </div>
 
         ))}
 
-        {/* Conditional rendering of the lower section */}
         <div className="mt-8">
           {selectedIntegration ? (
-            // New content based on the selected integration
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("selected_integration")} : {selectedIntegration.name}
@@ -131,11 +141,9 @@ const WhatsappIntegration: React.FC = () => {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              {/* You can include additional details or components specific to the selected integration */}
               <WhatsAppDemo />
             </div>
           ) : (
-            // Default content
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
@@ -171,12 +179,22 @@ const WhatsappIntegration: React.FC = () => {
 
         <ERPModal
           isOpen={provider.isOpen}
-          title={t("twilio")}
-          width={600}
-          height={620}
+          title={
+            provider.providerName === "WhatsappGatewayCenter"
+              ? "WhatsappGatewayCenter Integration"
+              : t(provider.providerName?.toLowerCase() || "twilio")
+          }
+          width={provider.providerName === "WhatsappGatewayCenter" ? 500 : 600}
+          height={provider.providerName === "WhatsappGatewayCenter" ? 200 : 620}
           isForm={true}
-          closeModal={() => { setProvider({ isOpen: false, information: undefined }); }}
-          content={<WhatsappTwilioConnectPopup data={provider.information} />}
+          closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
+          content={
+            provider.providerName === "WhatsappGatewayCenter" ? (
+              <WhatsappGatewayCenterPopup data={provider.information} id={provider.id}/>
+            ) : (
+              <WhatsappTwilioConnectPopup data={provider.information} id={provider.id}/>
+            )
+          }
         />
       </div>
     </div>

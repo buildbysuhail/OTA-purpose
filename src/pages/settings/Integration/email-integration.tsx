@@ -11,13 +11,21 @@ import { CircleCheck } from "lucide-react";
 import { EmailIntegrationData, information } from "./email-integration-type";
 import EmailSmtpConnectPopup from "./email-twilio-connect-popup";
 
+interface ProviderState {
+  isOpen: boolean;
+  information?: information;
+  providerName?: string;
+  id?: number;
+}
+
 const api = new APIClient();
 const EmailIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
-  const [provider, setProvider] = useState<{ isOpen: boolean, information?: information }>({
+  const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
+    providerName: undefined,
   });
   const [formState, setFormState] = useState<EmailIntegrationData[]>([]);
   const [selectedIntegration, setSelectedIntegration] = useState<EmailIntegrationData | null>(null);
@@ -42,15 +50,17 @@ const EmailIntegration: React.FC = () => {
     }
   };
 
-  const setAsDefault = async () => {
+  const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.Smtp,
         channel: NotificationsChannel.Email,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
       await handleResponse(response);
+      await loadSettings();
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -58,38 +68,74 @@ const EmailIntegration: React.FC = () => {
     }
   };
 
-  const handleOpen = (configJson: any) => {
+  const handleOpen = (item: any) => {
     let parsedConfig: any = {};
-
-    if (typeof configJson === "string" && configJson.trim() !== "") {
+    if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = JSON.parse(configJson);
+        parsedConfig = JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
-    } else if (typeof configJson === "object" && configJson !== null) {
-      parsedConfig = configJson;
+    } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
+      parsedConfig = item?.configJson;
     }
 
     setProvider({
       isOpen: true,
       information: {
-        from: parsedConfig.From ?? "",
+        from: parsedConfig.from ?? "",
         smtpServer: parsedConfig.SmtpServer ?? "",
         port: parsedConfig.Port ?? "",
         userName: parsedConfig.UserName ?? "",
         password: parsedConfig.Password ?? "",
       },
+      id: item.id,
+      providerName: item?.name ?? "",
     });
+  };
+
+  const openNewModal = () => {
+    setProvider({
+      isOpen: true,
+      information: {
+        from: "",
+        smtpServer: "",
+        port: "",
+        userName: "",
+        password: "",
+      },
+      providerName: "New SMTP Connection",
+    });
+  };
+
+  const handleCloseModal = () => {
+    setProvider(prev => ({
+      ...prev,
+      isOpen: false
+    }));
+  };
+
+  const handleRefreshData = async () => {
+    await loadSettings();
   };
 
   return (
     <div className="p-6 max-w-8xl mx-auto dark:bg-dark-bg bg-white dark:text-dark-text">
       <div className="xxl:h-[61.8rem]">
-        <h1 className="text-2xl font-bold mb-4 dark:text-dark-text text-gray-800">
-          {t("email_integrations")}
-        </h1>
-
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold mb-4 dark:text-dark-text text-gray-800">
+            {t("email_integrations")}
+          </h1>
+          <div className="flex items-center justify-between">
+            <ERPButton
+              title="New"
+              onClick={openNewModal}
+              variant="primary"
+              className="min-w-[120px]"
+            />
+          </div>
+        </div>
+        
         {formState?.map((item) => (
           <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg">
             <div className="cursor-pointer" onClick={() => setSelectedIntegration(item)}>
@@ -103,23 +149,26 @@ const EmailIntegration: React.FC = () => {
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
-                onClick={() => handleOpen(item.configJson)}
+                onClick={() => handleOpen(item)}
                 variant="primary"
                 className="min-w-[120px]"
               />
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={setAsDefault} className="min-w-[120px]" />
+                <ERPButton
+                  title={t("Set as default")}
+                  onClick={() =>  setAsDefault(item.id)}
+                  className="min-w-[120px]"
+                  disabled={SubmittingSetAsDefault}
+                />
               )}
             </div>
           </div>
         ))}
 
-        {/* Conditional rendering of the lower section */}
         <div className="mt-8">
           {selectedIntegration ? (
-            // New content based on the selected integration
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("selected_integration")} : {selectedIntegration.name}
@@ -127,18 +176,16 @@ const EmailIntegration: React.FC = () => {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              {/* You can include additional details or components specific to the selected integration */}
               <EmailDemo />
             </div>
           ) : (
-            // Default content
             <div>
               <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
               </h3>
               <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
                 <li className="pb-3">
-                {t("create_a_twilio_account")}{" "}
+                  {t("create_a_twilio_account")}{" "}
                   <a
                     href="https://www.twilio.com/try-twilio"
                     className="text-[#2589BD] hover:underline"
@@ -171,8 +218,8 @@ const EmailIntegration: React.FC = () => {
           width={600}
           height={350}
           isForm={true}
-          closeModal={() => { setProvider({ isOpen: false, information: undefined }); }}
-          content={<EmailSmtpConnectPopup data={provider.information} />}
+          closeModal={handleCloseModal}
+          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id} onSuccess={handleRefreshData} />}
         />
       </div>
     </div>

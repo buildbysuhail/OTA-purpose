@@ -14,7 +14,7 @@ import SMSGatewayCenterPopup from "./sms-gateway-center-popup";
 
 interface ProviderState {
   isOpen: boolean;
-  information?: information;
+  information?: any;
   providerName?: string;
   id?: number
 }
@@ -49,12 +49,13 @@ const SMSIntegration: React.FC = () => {
     }
   };
 
-  const setAsDefault = async () => {
+  const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.TwillioSms,
         channel: NotificationsChannel.Sms,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
       await handleResponse(response);
@@ -66,29 +67,42 @@ const SMSIntegration: React.FC = () => {
   };
 
   const handleOpen = (item: any) => {
+    debugger;
     let parsedConfig: any = {};
-
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = JSON.parse(item?.configJson);
+        parsedConfig = item.provider == NotificationsProvider.LinkSms ? item?.configJson : JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
     } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
       parsedConfig = item?.configJson;
     }
-
-    setProvider({
-      isOpen: true,
-      information: {
-        accountSid: parsedConfig.accountSid ?? "",
-        authToken: parsedConfig.authToken ?? "",
-        verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-        fromPhone: parsedConfig.fromPhone ?? "",
-      },
-      id: item.id,
-      providerName: item?.name ?? "",
-    });
+    debugger;
+if(item.provider == NotificationsProvider.LinkSms ) {
+  setProvider({
+    isOpen: true,
+    information:
+    {
+      configJson: parsedConfig
+    },
+    id: item.id,
+    providerName: item?.name ?? "",
+  });
+} else {
+  setProvider({
+    isOpen: true,
+    information:{
+      accountSid: parsedConfig.accountSid ?? "",
+      authToken: parsedConfig.authToken ?? "",
+      verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+      fromPhone: parsedConfig.fromPhone ?? "",
+    },
+    id: item.id,
+    providerName: item?.name ?? "",
+  });
+}
+   
   };
 
   return (
@@ -118,7 +132,7 @@ const SMSIntegration: React.FC = () => {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={setAsDefault} className="min-w-[120px]" />
+                <ERPButton title={t("Set as default")} onClick={() =>  setAsDefault(item.id)} className="min-w-[120px]" />
               )}
             </div>
           </div>
@@ -184,7 +198,7 @@ const SMSIntegration: React.FC = () => {
           }}
           content={
             provider.providerName === "SmsGatewayCenter" ? (
-              <SMSGatewayCenterPopup data={provider.information} id={provider.id}/>
+              <SMSGatewayCenterPopup data={provider.information} id={provider.id} />
             ) : (
               <SMSTwilioConnectPopup data={provider.information} />
             )

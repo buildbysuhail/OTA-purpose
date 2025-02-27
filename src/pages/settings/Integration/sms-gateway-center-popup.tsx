@@ -1,5 +1,5 @@
 import { Send, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { NotificationsChannel, NotificationsProvider } from "../../../enums/notification-chanal";
 import Urls from "../../../redux/urls";
@@ -12,31 +12,36 @@ import { useTranslation } from "react-i18next";
 const api = new APIClient();
 
 interface SMSGatewayCenterPopupProps {
-  data?: information;
+  data?: any;
   id?: number;
 }
 
 const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id }) => {
-  const [information, setInformation] = useState<Partial<information>>(data);
+  debugger;
+  const [information, setInformation] = useState(data?.configJson);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleFieldChange = (settingName: keyof information, value: any) => {
-    setInformation((prevSettings) => ({
-      ...prevSettings,
-      [settingName]: value ?? "",
-    }));
+  const handleFieldChange = (settingName: string, value: any) => {
+    setInformation(value);
   };
-
+// useEffect(()=> {
+// setInformation(
+//   {
+//     ...data,
+//     url: data.configJson
+//   }
+// )
+// },[])
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.LinkSms,
         channel: NotificationsChannel.Sms,
-        configJson: JSON.stringify(information),
+        configJson: information,
         isEnable: true,
         id: id
       };
@@ -55,7 +60,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       const payload = {
         provider: NotificationsProvider.LinkSms,
         channel: NotificationsChannel.Sms,
-        configJson: JSON.stringify(information),
+        configJson: information,
         to: phone,
         message: message,
         isEnable: true,
@@ -74,12 +79,11 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       <div className="grid grid-cols-1 gap-3 p-4">
         <div className="space-y-6">
           <ERPInput
-            id="url"
-            value={information.url || ""} 
+            id="configJson"
+            value={information || ""}
             label={t("url")}
             placeholder={t("url")}
-            data={information}
-            onChangeData={(data) => handleFieldChange("url", data.url)} 
+            onChange={(e) => handleFieldChange("configJson", e.target.value)}
           />
 
           <div className="flex items-center gap-4">

@@ -476,6 +476,11 @@ $dark-grid-selection: #000000;
   // $dark-combo-dd: #373737;
   // $dark-grid-hover: #000000;
 
+
+.dx-scrollbar-hoverable {
+    background-color: #231f1f;
+}
+
   .dx-treelist-container {
     background-color: $dark-bg !important;
     /* Light blue background */
@@ -587,7 +592,7 @@ $dark-grid-selection: #000000;
   }
 
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
-    padding-right: 15px;
+    padding-right: 1px;
   }
   
   .dx-datagrid-scroll-container .dx-col-fixed {
@@ -603,7 +608,7 @@ $dark-grid-selection: #000000;
   }
 
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
-    padding-left: 15px;
+    padding-left: 1px;
   }
   
   .dx-datagrid-scroll-container .dx-col-fixed {
@@ -612,6 +617,10 @@ $dark-grid-selection: #000000;
 }
 
 .custom-data-grid {
+
+  .dx-scrollbar-hoverable {
+    background-color: #ffffff;
+}
 
 
 

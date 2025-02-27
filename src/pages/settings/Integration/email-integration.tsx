@@ -50,12 +50,13 @@ const EmailIntegration: React.FC = () => {
     }
   };
 
-  const setAsDefault = async () => {
+  const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.Smtp,
         channel: NotificationsChannel.Email,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
       await handleResponse(response);
@@ -157,7 +158,7 @@ const EmailIntegration: React.FC = () => {
               ) : (
                 <ERPButton
                   title={t("Set as default")}
-                  onClick={setAsDefault}
+                  onClick={() =>  setAsDefault(item.id)}
                   className="min-w-[120px]"
                   disabled={SubmittingSetAsDefault}
                 />

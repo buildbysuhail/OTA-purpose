@@ -53,12 +53,13 @@ const WhatsappIntegration: React.FC = () => {
     }
   };
 
-  const setAsDefault = async () => {
+  const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
     try {
       const requestBody = {
         provider: NotificationsProvider.TwillioWhatsapp,
         channel: NotificationsChannel.Whatsapp,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
       await handleResponse(response);
@@ -124,7 +125,7 @@ const WhatsappIntegration: React.FC = () => {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={setAsDefault} className="min-w-[120px]" />
+                <ERPButton title={t("Set as default")} onClick={() =>  setAsDefault(item.id)} className="min-w-[120px]" />
               )}
             </div>
           </div>

@@ -1794,7 +1794,7 @@ const last = fixedColumns && fixedColumns[fixedColumns.length-1];
           (childPopupProps || childPopupPropsDynamic) && (
             <ERPModal
               isOpen={isChildOpen.isOpen}
-              minHeight={800}
+              minHeight={300}
               title={
                 childPopupPropsDynamic
                   ? childPopupPropsDynamic(isChildOpen.key).title

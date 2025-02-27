@@ -88,14 +88,15 @@ const ERPModal = React.memo(
     customStyle = {},
   }: ERPModalProps) => {
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
-    const [modalHeight, setModalHeight] = useState(0);
-    const [modalWidth, setModalWidth] = useState(0);
+    const [modalHeight, setModalHeight] = useState(height);
+    const [modalWidth, setModalWidth] = useState(width);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [previousPosition, setPreviousPosition] = useState({ x: 0, y: 0 });
     const [rndKey, setRndKey] = useState(0);
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
 
     useEffect(() => {
+      debugger;
       if (isOpen) {
         const handlePositionUpdate = () => {
           const windowWidth = window.innerWidth;
@@ -182,7 +183,7 @@ const ERPModal = React.memo(
     }, [isOpen]);
 
     return (
-      
+      <>
       <Transition appear show={isOpen} as={Fragment} >
        <Dialog
        
@@ -216,9 +217,14 @@ const ERPModal = React.memo(
              <div className="h-full w-full">
              {isPositionCalculated && (
   <Rnd
-  // key={rndKey}
-  default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
-
+  // key={title}
+  // default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
+position={position}
+ onDragStop={(_, d) => {
+      
+        setPosition({ x: d.x, y: d.y });
+      }}
+size={{width: modalWidth, height: modalHeight}}
        onResize={(_, __, ref, ___, pos) => {
          setPosition({ x: pos.x, y: pos.y });
          setModalHeight(ref.offsetHeight);
@@ -354,6 +360,7 @@ const ERPModal = React.memo(
           </Dialog>
       
           </Transition>
+          </>
     );
   },
   (prevProps, nextProps) => {

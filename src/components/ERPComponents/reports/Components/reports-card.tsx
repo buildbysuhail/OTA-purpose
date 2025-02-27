@@ -112,7 +112,7 @@ const ReportsCard = ({ data }: any) => {
         {/* <h2 className="text-lg font-bold mb-4">{t(data?.title)}</h2> */}
         <div className="flex gap-2 items-center">
           {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}
-          <p className=" dark:!text-dark-text text-sm font-medium">{t(data?.title)}</p>
+          <p className=" dark:!text-dark-text text-sm font-medium ms-[8px] mb-[8px]">{t(data?.title)}</p>
         </div>
 
         {/* Render Favorites List */}
@@ -127,7 +127,9 @@ const ReportsCard = ({ data }: any) => {
                       <div
                         className="
                           p-[5px]
-                          border-b
+                          border-b 
+                          border-dotted
+                          border-gray-400
                           last:border-b-0
                           cursor-pointer
                           hover:bg-gray-100
@@ -161,7 +163,7 @@ const ReportsCard = ({ data }: any) => {
                             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.07-.65L12 2 9.07 8.59 2 9.24l5.46 4.73L5.82 21z" />
                           </svg>
                         </span>
-                        <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black">
+                        <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-[#5d81ea]">
                           {t(route?.title)}
                         </span>
                       </div>
@@ -183,7 +185,9 @@ const ReportsCard = ({ data }: any) => {
                   <div
                     className="
                       p-[5px]
-                      border-b
+                      border-b 
+                      border-dotted
+                      border-gray-400
                       last:border-b-0
                       cursor-pointer
                       hover:bg-gray-100
@@ -204,21 +208,21 @@ const ReportsCard = ({ data }: any) => {
                     key={`JPKNE84_${routeIdx}`}
                   >
                     <span
-                      className="cursor-pointer mr-2"
+                      className="cursor-pointer me-[12px] ms-[2px] "
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleFavorite(route.id);
                       }}
                     >
-                      <svg
-                        className={`w-6 h-6 transition-colors duration-300 ${isFavorite ? 'fill-[#FFD700]' : 'fill-gray-300'}`}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.07-.65L12 2 9.07 8.59 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
+                    <svg
+                      className={`${isFavorite ? 'w-6 h-6' : 'w-[20px] h-[20px]'}  transition-colors duration-300 ${isFavorite ? 'fill-[#FFD700]' : 'fill-[#f9fafb]'} stroke-black stroke-[1]`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.07-.65L12 2 9.07 8.59 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
                     </span>
-                    <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-black">
+                    <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text  text-[#5d81ea]">
                       {t(route?.title)}
                     </span>
                   </div>

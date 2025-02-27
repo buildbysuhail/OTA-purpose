@@ -24,11 +24,11 @@ export interface EmailIntegrationData {
   name: string;
   channel: number;
   configJson: {
-    From: string;
-    SmtpServer: string;
-    Port: number;
-    UserName: string;
-    Password: string;
+    from: string;
+    smtpServer: string;
+    port: string;
+    userName: string;
+    password: string;
   };
   isEnable: boolean;
 }
@@ -36,7 +36,7 @@ export interface EmailIntegrationData {
 export interface information {
   from: string;
   smtpServer: string;
-  port: number;
+  port: string;
   userName: string;
   password: string;
   email?: string;

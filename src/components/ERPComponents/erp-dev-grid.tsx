@@ -1,4 +1,3 @@
-
 import React, { forwardRef, Fragment, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
@@ -81,6 +80,7 @@ interface ERPDevGridProps {
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
   GridPreferenceChooserAccTrance?: boolean;
+  ERPGridActionsstyle?: boolean;
   showColumnHeaderscustom?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
@@ -392,6 +392,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
       GridPreferenceChooserAccTrance = false,
+      ERPGridActionsstyle = false,
       showColumnHeaderscustom = true,
       showRowLines = true,
       pageSize = 100,
@@ -479,7 +480,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       childPopupProps = {
         title: "",
         width: 1000,
-        // 
+        // Actionswidth: 100,
         height: 800,
         isForm: false,
         content: null,
@@ -496,19 +497,45 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ref
   ) => {
 
-   
+    // Determine the Actionswidth value
+    // const actionsWidth = childPopupPropsDynamic
+    //   ? childPopupPropsDynamic().Actionswidth
+    //   : childPopupProps.Actionswidth;
+
+    // const gridStyle: React.CSSProperties = {
+    //   ["--actions-width" as any]: `${actionsWidth || 123}px`, // Default to 100 if not set
+    // };
 
     // Get Actionswidth from the column configuration
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
-    
+    const actionColumn = gridCols.find(col => col.Actionswidth !== undefined);
+    const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
 
+    const gridStyle: React.CSSProperties = {
+      ["--actions-width" as any]: `${actionsWidth}px`,
+    };
 
+    //  // Determine the Actionswidth value
+    //  const actionsWidth = childPopupPropsDynamic
+    //   ? childPopupPropsDynamic().Actionswidth
+    //   : childPopupProps.Actionswidth;
+
+    // const gridStyle: React.CSSProperties = {
+    //   ["--popup-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
+    //   ["--actions-width" as any]: `${actionsWidth || 100}px`, // Default to 100 if not set
+    // };
 
     const gridRef = useRef<any>(null); // Use `any` for the instance
     useImperativeHandle(ref, () => ({
       instance: () => gridRef.current?.instance(), // Safely access instance()
     }));
 
+    // CSS Variable for Width
+    // const gridStyle: React.CSSProperties = {
+    //   ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
+    //   // Add this line for actions width
+    //   ["--actions-width" as any]: `${childPopupProps?.Actionswidth || 0}px`, 
+    // };
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
@@ -569,22 +596,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     useEffect(() => {
       setGridCols(columns);
     }, []);
-    const [hasRightFixedColumn, setHasRightFixedColumn] = useState<{has: boolean, class: string}>({has: false, class:""});
-    const [gridStyle, setGridStyle] = useState<React.CSSProperties>({});
-    useEffect(() => {
-    const fixedColumns = gridCols.filter(col => col.fixed == true && col.fixedPosition == "right");
-const last = fixedColumns && fixedColumns[fixedColumns.length-1];
-    
-    if(fixedColumns && fixedColumns.length > 0) {
-
-      setHasRightFixedColumn({has: true, class:appState?.dir === "rtl" ? "hasLeftFixedColumn" : "hasRightFixedColumn"})
-      const actionsWidth = last?.width || last?.minWidth || 123; // Default width if not found
-      
-      setGridStyle({
-      ["--actions-width" as any]: `${actionsWidth}px`,
-    })
-    }
-    }, [gridCols]);
     useEffect(() => {
       if (filterInitialData && Object.keys(filter).length === 0) {
         setFilter(filterInitialData);
@@ -988,13 +999,16 @@ const last = fixedColumns && fixedColumns[fixedColumns.length-1];
           // let isValidReactElement = React.isValidElement(renderResult);
 
           if (React.isValidElement(renderResult)) {
-            options.pdfCell.text = ReactDOMServer.renderToStaticMarkup(renderResult);
+            const staticMarkup = ReactDOMServer.renderToStaticMarkup(renderResult);
+            const parser = new DOMParser();
+            const docHtml = parser.parseFromString(staticMarkup, "text/html");
+            const textContent = docHtml.body.textContent || "";
+            options.pdfCell.text = textContent;
           } else if (typeof renderResult === "string" || typeof renderResult === "number") {
             options.pdfCell.text = renderResult.toString();
           } else if (renderResult && typeof renderResult === "object" && renderResult.text) {
             options.pdfCell.text = renderResult.text;
           } else {
-            // Otherwise, leave the original value.
             options.pdfCell.text = options.pdfCell.text;
           }
         }
@@ -1450,7 +1464,7 @@ const last = fixedColumns && fixedColumns[fixedColumns.length-1];
     const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${hasRightFixedColumn.has ? hasRightFixedColumn.class : ""} ${className}`} style={gridStyle} >
+        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyesre" : "ERPGridActionsstyleNore"} ${className}`} style={gridStyle} >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1729,7 +1743,7 @@ const last = fixedColumns && fixedColumns[fixedColumns.length-1];
                   allowSorting={column.allowSorting}
                   allowSearch={column.allowSearch}
                   // allowResizing={column.allowResizing}
-                  allowResizing={column.isLocked ? false : column.allowResizing}
+                  // allowResizing={column.allowResizing}
                   allowFiltering={column.allowFiltering ?? false}
                   width={column.width}
                   // width={
@@ -1739,7 +1753,7 @@ const last = fixedColumns && fixedColumns[fixedColumns.length-1];
                   // }
                   minWidth={column.minWidth}
                   fixed={column.fixed}
-                  fixedPosition={appState?.dir === "rtl" ? column.fixedPosition == "right" ? "left": "right" : column.fixedPosition}
+                  fixedPosition={column.fixedPosition}
                   cellRender={
                     column.cellRenderDynamic === undefined &&
                       column.cellRender === undefined &&

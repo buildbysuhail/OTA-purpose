@@ -75,11 +75,11 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
         <div className="space-y-6">
           <ERPInput
             id="url"
-            value={information.url || ""} 
+            value={information.url || ""}
             label={t("url")}
             placeholder={t("url")}
             data={information}
-            onChangeData={(data) => handleFieldChange("url", data.url)} 
+            onChangeData={(data) => handleFieldChange("url", data.url)}
           />
 
           <div className="flex items-center gap-4">

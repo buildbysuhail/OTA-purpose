@@ -13,9 +13,10 @@ const api = new APIClient();
 
 interface SMSTwilioConnectPopupProps {
   data?: information;
+  id?: number;
 }
 
-const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {} }) => {
+const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}, id }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -56,6 +57,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         to: phone,
         message: message,
         isEnable: true,
+        id: id
       };
       const demoMessageResponse = await api.post(Urls.notification_provider_test, payload);
       await handleResponse(demoMessageResponse);

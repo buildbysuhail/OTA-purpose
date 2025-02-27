@@ -95,34 +95,52 @@ const ERPModal = React.memo(
     const [rndKey, setRndKey] = useState(0);
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
 
+
     useEffect(() => {
-      debugger;
       if (isOpen) {
         const handlePositionUpdate = () => {
           const windowWidth = window.innerWidth;
           const windowHeight = window.innerHeight;
+
+          if (isMaximized) {
+            // Set position to top-left for maximized view
+            const centeredX = (windowWidth - modalWidth) / 2;
+            const centeredY = (windowHeight - modalHeight) / 2;
+            setPreviousPosition({x: centeredX, y: centeredY});
+            setPosition({ x: 25, y: 25});
+          } else {
+            
               let newX = (windowWidth - modalWidth) / 2;
-              let newY = (windowHeight - modalHeight) / 2
+              let newY = (windowHeight - modalHeight) / 2;
+
               newY = Math.max(newY, 0);
               newX = Math.max(newX, 0);
+
+              // if (windowHeight < height) {
+              //   newY = 10;
+              //   newX = (windowWidth - width) / 2;
+              // }
+              // if (windowWidth < width) {
+              //   newY =(windowHeight - height) / 2;
+              //   newX = 10;
+              // }
               setPosition({ x: newX, y: newY });
-              setIsPositionCalculated(true);
-        }
-   
+            
+          }
+          setIsPositionCalculated(true);
+        };
+
         handlePositionUpdate();
         setRndKey((prev) => prev + 1);
       }
-    }, [isOpen
-      // , modalWidth, modalHeight, 
-      // isMaximized
-    ]);
+    }, [isOpen,isMaximized]);
 
     useEffect(() => {
       const updateModalDimensions = () => {
         const newHeight = isMaximized
           ? window.innerHeight - 50
-          : Math.min(window.innerHeight - 25, height);
-        const newWidth = isMaximized ? window.innerWidth - 50 : Math.min(window.innerWidth - 25, width); 
+          : Math.min(window.innerHeight - 40, height);
+        const newWidth = isMaximized ? window.innerWidth - 50 : Math.min(window.innerWidth - 40, width); 
         setModalHeight(newHeight);
         setModalWidth(newWidth);
         setRndKey((prev) => prev + 1);
@@ -130,7 +148,7 @@ const ERPModal = React.memo(
       updateModalDimensions();
       window.addEventListener("resize", updateModalDimensions);
       return () => window.removeEventListener("resize", updateModalDimensions);
-    }, [isMaximized, height, width]);
+    }, [isMaximized, height, width,isOpen]);
 
     const handleClose = () => {
       closeModal(false);
@@ -217,20 +235,26 @@ const ERPModal = React.memo(
              <div className="h-full w-full">
              {isPositionCalculated && (
   <Rnd
-  // key={title}
+  // key={rndKey}
   // default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
 position={position}
+size={{width: modalWidth, height: modalHeight}}
  onDragStop={(_, d) => {
       
         setPosition({ x: d.x, y: d.y });
       }}
-size={{width: modalWidth, height: modalHeight}}
+      onResizeStop={(_, __, ref, ___, pos) => {
+        setModalHeight(ref.offsetHeight);
+        setModalWidth(ref.offsetWidth);
+        setPosition(pos);
+      }}
        onResize={(_, __, ref, ___, pos) => {
          setPosition({ x: pos.x, y: pos.y });
          setModalHeight(ref.offsetHeight);
          setModalWidth(ref.offsetWidth);
        }}
-       
+       disableDragging ={isMaximized}
+      enableResizing={!isMaximized}
       bounds="parent"
       // bounds="window"
       minWidth={ minWidth}
@@ -246,7 +270,7 @@ size={{width: modalWidth, height: modalHeight}}
       >
         <DialogTitle
           as="h3"
-          className="drag-handle cursor-move place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900"
+          className={`drag-handle ${isMaximized ?"cursor-pointer":"cursor-move"}  place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900`}
           style={{ flex: "0 0 auto" }}
         >
           <div className="flex items-center dark:text-dark-text">{title}</div>
@@ -266,9 +290,8 @@ size={{width: modalWidth, height: modalHeight}}
               <button
                 className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
                 onClick={() => {
-                  if (isMaximized) {
-                    // Restore to previous position
-                    // setPosition(previousPosition);
+                  if (isMaximized) {// Restore to previous position
+                    setPosition(previousPosition);
                   } 
                   setIsMaximized(!isMaximized);
                 }}
@@ -351,7 +374,7 @@ size={{width: modalWidth, height: modalHeight}}
         )}
       </DialogPanel>
     </Rnd>
-)}
+ )} 
              </div>
 
        </TransitionChild>           

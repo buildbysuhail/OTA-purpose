@@ -77,7 +77,8 @@ const SMSIntegration: React.FC = () => {
     } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
       parsedConfig = item?.configJson;
     }
-if(NotificationsProvider.LinkSms ) {
+    debugger;
+if(item.provider == NotificationsProvider.LinkSms ) {
   setProvider({
     isOpen: true,
     information:

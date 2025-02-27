@@ -41,7 +41,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       const requestBody = {
         provider: NotificationsProvider.LinkSms,
         channel: NotificationsChannel.Sms,
-        configJson: information?.configJson,
+        configJson: information,
         isEnable: true,
         id: id
       };
@@ -60,7 +60,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
       const payload = {
         provider: NotificationsProvider.LinkSms,
         channel: NotificationsChannel.Sms,
-        configJson: information?.configJson,
+        configJson: information,
         to: phone,
         message: message,
         isEnable: true,

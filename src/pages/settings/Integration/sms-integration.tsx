@@ -67,7 +67,6 @@ const SMSIntegration: React.FC = () => {
 
   const handleOpen = (item: any) => {
     let parsedConfig: any = {};
-
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
         parsedConfig = JSON.parse(item?.configJson);
@@ -184,7 +183,7 @@ const SMSIntegration: React.FC = () => {
           }}
           content={
             provider.providerName === "SmsGatewayCenter" ? (
-              <SMSGatewayCenterPopup data={provider.information} id={provider.id}/>
+              <SMSGatewayCenterPopup data={provider.information} id={provider.id} />
             ) : (
               <SMSTwilioConnectPopup data={provider.information} />
             )

@@ -38,6 +38,7 @@ export interface information {
   fromPhone: string;
   phoneNumber?: string;
   message?: string;
+  url?: string;
 }
 // channel
 // :

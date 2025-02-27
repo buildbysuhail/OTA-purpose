@@ -13,9 +13,10 @@ const api = new APIClient();
 
 interface SMSGatewayCenterPopupProps {
   data?: information;
+  id?: number;
 }
 
-const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {} }) => {
+const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -37,6 +38,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
         channel: NotificationsChannel.Sms,
         configJson: JSON.stringify(information),
         isEnable: true,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
       await handleResponse(response);

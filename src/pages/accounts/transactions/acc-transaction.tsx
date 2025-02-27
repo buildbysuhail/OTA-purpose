@@ -3263,16 +3263,27 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                           label={t("taxable_amount")}
                           value={formState.row.taxableAmount}
                           onChange={(e) =>
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: {
-                                  taxableAmount:
-                                    e.target?.value != ""
-                                      ? parseFloat(e.target?.value)
-                                      : "",
-                                },
-                              })
-                            )
+                          {
+                            {
+                              const sd = e.target?.value != ""
+                              ? parseFloat(e.target?.value)
+                              : 0
+                              dispatch(
+                                accFormStateRowHandleFieldChange({
+                                  fields: {
+                                    taxableAmount:
+                                      e.target?.value != ""
+                                        ? parseFloat(e.target?.value)
+                                        : "",
+                                        taxAmount:
+                                      sd *
+                                      ((formState.row.taxPerc ?? 0) / 100)
+                                  },
+                                })
+                              )
+                            }
+                          
+                          }
                           }
                           disabled={formState.formElements.pnlMasters?.disabled}
                         />

@@ -111,7 +111,10 @@ const ERPModal = React.memo(
         handlePositionUpdate();
         setRndKey((prev) => prev + 1);
       }
-    }, [isOpen, modalWidth, modalHeight, isMaximized]);
+    }, [isOpen
+      // , modalWidth, modalHeight, 
+      // isMaximized
+    ]);
 
     useEffect(() => {
       const updateModalDimensions = () => {
@@ -213,7 +216,7 @@ const ERPModal = React.memo(
              <div className="h-full w-full">
              {isPositionCalculated && (
   <Rnd
-  key={rndKey}
+  // key={rndKey}
   default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
 
        onResize={(_, __, ref, ___, pos) => {
@@ -259,7 +262,7 @@ const ERPModal = React.memo(
                 onClick={() => {
                   if (isMaximized) {
                     // Restore to previous position
-                    setPosition(previousPosition);
+                    // setPosition(previousPosition);
                   } 
                   setIsMaximized(!isMaximized);
                 }}

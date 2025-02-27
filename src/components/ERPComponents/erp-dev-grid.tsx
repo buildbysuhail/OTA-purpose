@@ -16,7 +16,6 @@ import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDis
 import ERPButton from "./erp-button";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
-import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
@@ -24,12 +23,13 @@ import dxDataGrid from "devextreme/ui/data_grid";
 import ERPAlert from "./erp-sweet-alert";
 import ERPToast from "./erp-toast";
 import moment from "moment";
-import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, } from "../../utilities/Utils";
+import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, formatDate as appFormatDate } from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
 import { Plus, Printer } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
+import { formatDate } from "devextreme/localization";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -722,21 +722,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       formState: any
     ): string => {
       // Helper function to format dates in dd/MM/yyyy format
-      const formatDate = (dateStr: string): string => {
-        const format = identifyDateFormat(dateStr);
-        let date;
-
-        // Explicit handling for ISO 8601
-        if (format == "Unknown format") {
-          date = moment(dateStr).local();
-        } else if (format === "ISO 8601") {
-          date = moment(dateStr).local(); // ISO 8601 is natively supported
-        } else {
-          date = moment(dateStr, format).local();
-        }
-        const str = date.format("DD/MM/YYYY");
-        return str;
-      };
+     
 
       // Function to evaluate and replace placeholders and conditions
       const evaluateExpression = (expression: string, data: any): boolean => {
@@ -769,7 +755,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   innerPlaceholder.includes("Date")
                 ) {
                   // If the placeholder is a date, format it
-                  return formatDate(formState[innerPlaceholder]);
+                  return appFormatDate(formState[innerPlaceholder]);
                 }
                 return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
               }
@@ -789,7 +775,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 ) {
                   // If the placeholder is a date, format it
                   return rowData != undefined
-                    ? formatDate(rowData[innerPlaceholder])
+                    ? appFormatDate(rowData[innerPlaceholder])
                     : "N/A";
                 }
                 return rowData != undefined
@@ -811,7 +797,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   innerPlaceholder.includes("Date")
                 ) {
                   // If the placeholder is a date, format it
-                  return formatDate(postData[innerPlaceholder]);
+                  return appFormatDate(postData[innerPlaceholder]);
                 }
                 return postData != undefined
                   ? postData[innerPlaceholder] || "N/A"
@@ -834,7 +820,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   innerPlaceholder.includes("finTo")
                 ) {
                   // If the placeholder is a date, format it
-                  return formatDate(userSession[innerPlaceholder]);
+                  return appFormatDate(userSession[innerPlaceholder]);
                 }
                 return userSession != undefined
                   ? userSession[innerPlaceholder] || "N/A"
@@ -847,7 +833,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           // Handle regular placeholders
           if (placeholder.includes("date") || placeholder.includes("Date")) {
             // If the placeholder is a date, format it
-            return formatDate(formState[placeholder]);
+            return appFormatDate(formState[placeholder]);
           }
           return formState[placeholder] || "N/A";
         }
@@ -1322,6 +1308,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               console.error("Invalid data or parameters");
             }
           } else {
+            debugger;
             let updatedBodyProps: any = {};
 
             dynamicProps?.bodyProps != undefined

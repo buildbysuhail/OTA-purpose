@@ -16,6 +16,22 @@ export function camelize(str: string) {
   return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
 }
 
+export const formatDate = (dateStr: string): string => {
+  const format = identifyDateFormat(dateStr);
+  let date;
+
+  // Explicit handling for ISO 8601
+  if (format == "Unknown format") {
+    date = moment(dateStr).local();
+  } else if (format === "ISO 8601") {
+    date = moment(dateStr).local(); // ISO 8601 is natively supported
+  } else {
+    date = moment(dateStr, format).local();
+  }
+  const str = date.format("DD/MM/YYYY");
+  return str;
+};
+
 /**
  * Formats all date-related fields in an object to "YYYY-MM-DD".
  * 
@@ -27,10 +43,15 @@ export const formatDateFields = (data: any) => {
 
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
+      debugger;
       if (
         (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
         key.toLowerCase().includes("date") // Check if key includes "date"
       ) {
+        if(typeof value === "string") {
+          const fd = formatDate(value);
+          return [key,  moment(fd,"DD/MM/YYYY").format("YYYY-MM-DD")];
+        }
         return [key, moment(value).format("YYYY-MM-DD")]; // Format the date
       }
       return [key, value]; // Keep other values unchanged

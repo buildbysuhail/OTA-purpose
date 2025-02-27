@@ -210,7 +210,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
     };
     const asf = {formType: _event.data.formType,
       voucherNo: _event.data.lastVNo,
-      voucherPrefix: _event.data.lastPrefix}
+      voucherPrefix: _event.data.lastPrefix?.toUpperCase()}
     await initializeVoucher(asd,asf); // Call initializeVoucher here
     setOpenVoucherSelector(false);
   }, [searchParams, props]);

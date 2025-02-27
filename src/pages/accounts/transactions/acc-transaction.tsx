@@ -534,7 +534,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
 
         
-        employeeID = userSession.employeeId ?? 0;
+        employeeID = userSession.employeeId ?? -2;
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
             userSession?.counterwiseCashLedgerId > 0 &&
@@ -1127,6 +1127,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
         case "TXP": {
+          debugger;
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -1138,6 +1139,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             employee: {
               ...fieldsToUpdate.employee,
               label: t("paid_by"),
+              disabled: isNullOrUndefinedOrZero(userSession.employeeId) == true ? false : true
             },
             narration: {
               ...fieldsToUpdate.narration,
@@ -1154,6 +1156,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             bankName: {
               ...fieldsToUpdate.bankDate,
+              visible: false,
+            },
+            remarks: {
+              ...fieldsToUpdate.remarks,
               visible: false,
             },
             nameOnCheque: {
@@ -1843,7 +1849,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   {/* Load Button */}
                   <div
                     className="group relative inline-flex flex-col items-center"
-                    title={t("load")}
+                    title={t("refresh")}
                   >
                     <button
                       className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"

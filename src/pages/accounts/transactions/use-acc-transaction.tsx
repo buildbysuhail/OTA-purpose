@@ -568,7 +568,7 @@ export const useAccTransaction = (
         ...voucher.transaction.master,
         employeeID:
           userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
-            ? userSession.employeeId
+            ? userSession.employeeId??-2
             : voucher.transaction.master.employeeID,
       };
       voucher.transaction.master = updatedMaster;
@@ -1382,6 +1382,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);
@@ -1412,7 +1413,7 @@ export const useAccTransaction = (
         } else {
           if (
             formState.formElements.amount.disabled == false &&
-            formState.IsBillwiseTransAdjustmentExists == true
+            formState.IsBillwiseTransAdjustmentExists == true && !formState.isTaxOnExpense
           ) {
             dispatch(
               accFormStateHandleFieldChange({

@@ -609,6 +609,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
+      debugger;
       if (_reload !== undefined && _reload !== true) {
         return;
       }
@@ -712,11 +713,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
 
     // Check if data is available in Redux
     debugger;
-    if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length) {
+    if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length && reload != true) {
       console.log('Accounts/Data/AccLedgers2');
         console.log(field?.params);
       _items = await filterLedgers(reduxState.ledgers, field?.params || "");
-    } else if (field?.getListUrl?.includes("/Accounts/Data/CostCentres/") && reduxState?.costCentres?.length) {
+    } else if (field?.getListUrl?.includes("/Accounts/Data/CostCentres/") && reduxState?.costCentres?.length && reload != true) {
       _items = reduxState.costCentres;
     } else {
       // Fetch data if not available in Redux

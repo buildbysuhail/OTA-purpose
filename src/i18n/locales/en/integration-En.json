@@ -38,5 +38,6 @@
     "selected_integration":"Selected integration",
     "whatsapp_integration":"Whatsapp integration",
     "demo_mail":"Demo mail",
-    "set_as_default":"Set as default"
+    "set_as_default":"Set as default",
+    "maintain":"Maintain"
 }

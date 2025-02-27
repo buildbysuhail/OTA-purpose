@@ -24,6 +24,7 @@ import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTable
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { exludedRoutes } from "../content/transaction-routes";
 import profile from "../../../assets/images/faces/profile-circle.512x512.png";
+import { ArrowBigLeftDash } from "lucide-react";
 
 interface SidebarProps {
   type:
@@ -866,9 +867,22 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                       } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
-                        <span className="category-name">
-                          {levelone.menutitle}
-                        </span>
+                        <span className="category-name flex">
+                        {levelone.menutitle === "main" ? (
+                          levelone.menutitle
+                          
+                        ) : (
+                          <div className="flex justify-between w-full">
+                          <span className="category-name flex items-center space-x-1">
+                            {levelone.menutitle}
+                          </span>
+                          <Link to={import.meta.env.BASE_URL} className="ml-auto flex items-center space-x-1">
+                            <ArrowBigLeftDash size={15} />
+                            <span>Home</span>
+                          </Link>
+                        </div>                        
+                        )}
+                      </span>
                       ) : (
                         ""
                       )}

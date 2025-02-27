@@ -877,8 +877,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                             {levelone.menutitle}
                           </span>
                           <Link to={import.meta.env.BASE_URL} className="ml-auto flex items-center space-x-1">
-                            <ArrowBigLeftDash size={15} />
-                            <span>Home</span>
+                            <ArrowBigLeftDash size={15} className="text-[#ffffff]" />
+                            <span className="text-[#ffffff]">Home</span>
                           </Link>
                         </div>                        
                         )}

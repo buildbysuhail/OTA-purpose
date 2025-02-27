@@ -14,7 +14,7 @@ import SMSGatewayCenterPopup from "./sms-gateway-center-popup";
 
 interface ProviderState {
   isOpen: boolean;
-  information?: information;
+  information?: any;
   providerName?: string;
   id?: number
 }
@@ -66,28 +66,41 @@ const SMSIntegration: React.FC = () => {
   };
 
   const handleOpen = (item: any) => {
+    debugger;
     let parsedConfig: any = {};
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = JSON.parse(item?.configJson);
+        parsedConfig = item.provider == NotificationsProvider.LinkSms ? item?.configJson : JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
     } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
       parsedConfig = item?.configJson;
     }
-
-    setProvider({
-      isOpen: true,
-      information: {
-        accountSid: parsedConfig.accountSid ?? "",
-        authToken: parsedConfig.authToken ?? "",
-        verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-        fromPhone: parsedConfig.fromPhone ?? "",
-      },
-      id: item.id,
-      providerName: item?.name ?? "",
-    });
+if(NotificationsProvider.LinkSms ) {
+  setProvider({
+    isOpen: true,
+    information:
+    {
+      configJson: parsedConfig
+    },
+    id: item.id,
+    providerName: item?.name ?? "",
+  });
+} else {
+  setProvider({
+    isOpen: true,
+    information:{
+      accountSid: parsedConfig.accountSid ?? "",
+      authToken: parsedConfig.authToken ?? "",
+      verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+      fromPhone: parsedConfig.fromPhone ?? "",
+    },
+    id: item.id,
+    providerName: item?.name ?? "",
+  });
+}
+   
   };
 
   return (

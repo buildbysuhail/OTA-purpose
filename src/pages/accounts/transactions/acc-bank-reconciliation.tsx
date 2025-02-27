@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -68,6 +68,9 @@ const BankReconciliation = () => {
     setDateChangeState(type);
   };
 
+  useEffect(()=> {
+    handleShow();
+  },[key])
   const handleSelectionChange = (e: any) => {
     if (Array.isArray(e.selectedRowKeys)) {
       const selectedKeys = e.selectedRowKeys.map((row: any) =>
@@ -141,9 +144,7 @@ const BankReconciliation = () => {
       console.log("1234");
       setData(rows);
       setPrevData(rows);
-      setKey((prev: number) => {
-        return prev + 1;
-      });
+      
     } finally {
       setLoading((prev) => ({ ...prev, show: false }));
     }
@@ -191,6 +192,9 @@ const BankReconciliation = () => {
           icon: "success",
           text: t("changes_saved_successfully"),
           title: t("success"),
+        });
+        setKey((prev: number) => {
+          return prev + 1;
         });
       });
     } catch (error) {
@@ -554,7 +558,11 @@ const BankReconciliation = () => {
                   <div className="col-span-3">
                     <ERPButton
                       title={t("show")}
-                      onClick={handleShow}
+                      onClick={()=> {
+                        setKey((prev: number) => {
+                          return prev + 1;
+                        });
+                      }}
                       loading={loading.show}
                       variant="secondary"
                       className="mt-[15px] !mb-0 w-[100px]"

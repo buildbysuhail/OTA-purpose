@@ -168,7 +168,7 @@ const EmailIntegration: React.FC = () => {
           isOpen={provider.isOpen}
           title={t("twilio")}
           width={600}
-          height={600}
+          height={620}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined }); }}
           content={<EmailTwilioConnectPopup data={provider.information} />}

@@ -34,7 +34,13 @@ export const clearEntryControl = (
   state.row.ledgerID = 0;
   state.row.amount = 0;
   state.row.discount = 0;
-  state.row.bankName = "";
+  state.row.partyName = "";
+  state.row.taxNo = "";
+  state.row.taxInvoiceNo = "";
+  state.row.invoiceDate = "";
+  state.row.taxPerc = 0;
+  state.row.taxableAmount = 0;
+  state.row.taxAmount = 0;
   state.previousNarration = state.row.narration;
   state.row.narration =
     state.transaction.master.voucherType == VoucherType.JournalVoucher

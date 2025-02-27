@@ -16,6 +16,7 @@ interface ProviderState {
   isOpen: boolean;
   information?: information;
   providerName?: string;
+  id?: number
 }
 
 const api = new APIClient();
@@ -64,17 +65,17 @@ const SMSIntegration: React.FC = () => {
     }
   };
 
-  const handleOpen = (configJson: any, providerName?: string) => {
+  const handleOpen = (item: any) => {
     let parsedConfig: any = {};
 
-    if (typeof configJson === "string" && configJson.trim() !== "") {
+    if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = JSON.parse(configJson);
+        parsedConfig = JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
-    } else if (typeof configJson === "object" && configJson !== null) {
-      parsedConfig = configJson;
+    } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
+      parsedConfig = item?.configJson;
     }
 
     setProvider({
@@ -85,7 +86,8 @@ const SMSIntegration: React.FC = () => {
         verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
         fromPhone: parsedConfig.fromPhone ?? "",
       },
-      providerName: providerName ?? "",
+      id: item.id,
+      providerName: item?.name ?? "",
     });
   };
 
@@ -109,7 +111,7 @@ const SMSIntegration: React.FC = () => {
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
-                onClick={() => handleOpen(item.configJson, item.name)}
+                onClick={() => handleOpen(item)}
                 variant="primary"
                 className="min-w-[120px]"
               />
@@ -182,7 +184,7 @@ const SMSIntegration: React.FC = () => {
           }}
           content={
             provider.providerName === "SmsGatewayCenter" ? (
-              <SMSGatewayCenterPopup data={provider.information} />
+              <SMSGatewayCenterPopup data={provider.information} id={provider.id}/>
             ) : (
               <SMSTwilioConnectPopup data={provider.information} />
             )

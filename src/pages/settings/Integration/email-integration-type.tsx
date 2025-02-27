@@ -19,26 +19,30 @@ export const initialEmailIntegration = {
 export interface EmailIntegrationData {
   id: number;
   provider: number;
-  isDefault?:boolean;
-  description?:string;
-  name:string;
+  isDefault?: boolean;
+  description?: string;
+  name: string;
   channel: number;
   configJson: {
-    AccountSid:string;
-    AuthToken:string;
-    VerifyServiceSid?:string;
-    FromPhone:string;
+    From: string;
+    SmtpServer: string;
+    Port: number;
+    UserName: string;
+    Password: string;
   };
   isEnable: boolean;
 }
+
 export interface information {
-  accountSid: string;
-  authToken: string;
-  verifyServiceSid: string;
-  fromPhone: string;
+  from: string;
+  smtpServer: string;
+  port: number;
+  userName: string;
+  password: string;
   email?: string;
   message?: string;
 }
+
 // channel
 // : 
 // 1
@@ -53,4 +57,4 @@ export interface information {
 // 1
 // providerName
 // : 
-// "Twilio"
+// "SMTP"

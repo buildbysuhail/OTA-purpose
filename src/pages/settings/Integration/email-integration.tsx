@@ -9,7 +9,7 @@ import EmailDemo from "./email-demo";
 import { NotificationsProvider, NotificationsChannel, } from "../../../enums/notification-chanal";
 import { CircleCheck } from "lucide-react";
 import { EmailIntegrationData, information } from "./email-integration-type";
-import EmailTwilioConnectPopup from "./email-twilio-connect-popup";
+import EmailSmtpConnectPopup from "./email-twilio-connect-popup";
 
 const api = new APIClient();
 const EmailIntegration: React.FC = () => {
@@ -74,10 +74,11 @@ const EmailIntegration: React.FC = () => {
     setProvider({
       isOpen: true,
       information: {
-        accountSid: parsedConfig.accountSid ?? "",
-        authToken: parsedConfig.authToken ?? "",
-        verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-        fromPhone: parsedConfig.fromPhone ?? "",
+        from: parsedConfig.From ?? "",
+        smtpServer: parsedConfig.SmtpServer ?? "",
+        port: parsedConfig.Port ?? "",
+        userName: parsedConfig.UserName ?? "",
+        password: parsedConfig.Password ?? "",
       },
     });
   };
@@ -137,7 +138,7 @@ const EmailIntegration: React.FC = () => {
               </h3>
               <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
                 <li className="pb-3">
-                  {t("create_a_twilio_account")}{" "}
+                {t("create_a_twilio_account")}{" "}
                   <a
                     href="https://www.twilio.com/try-twilio"
                     className="text-[#2589BD] hover:underline"
@@ -166,12 +167,12 @@ const EmailIntegration: React.FC = () => {
 
         <ERPModal
           isOpen={provider.isOpen}
-          title={t("twilio")}
+          title={t("smtp_email")}
           width={600}
-          height={620}
+          height={350}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined }); }}
-          content={<EmailTwilioConnectPopup data={provider.information} />}
+          content={<EmailSmtpConnectPopup data={provider.information} />}
         />
       </div>
     </div>

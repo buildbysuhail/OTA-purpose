@@ -11,13 +11,13 @@ import { information } from "./email-integration-type";
 
 const api = new APIClient();
 
-interface EmailTwilioConnectPopupProps {
+interface EmailSmtpConnectPopupProps {
   data?: information;
 }
 
-const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data = {} }) => {
+const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {} }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
-  const [phone, setPhone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -53,14 +53,14 @@ const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data 
         provider: NotificationsProvider.Smtp,
         channel: NotificationsChannel.Email,
         configJson: JSON.stringify(information),
-        to: phone,
+        to: email,
         message: message,
         isEnable: true,
       };
       const demoMessageResponse = await api.post(Urls.notification_provider_test, payload);
       await handleResponse(demoMessageResponse);
     } catch (error) {
-      console.error("Error sending demo WhatsApp message:", error);
+      console.error("Error sending demo email message:", error);
     }
   };
 
@@ -68,55 +68,62 @@ const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data 
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 gap-3 p-4">
-        <h2 className="text-lg font-semibold mb-3">{t("don't_have_an_account?")}</h2>
-        <p className="mb-2">{t("create_an_account")}</p>
-        <a href="https://www.twilio.com/try-twilio" className="text-[#2589BD] hover:underline block mb-4" target="_blank" rel="noopener noreferrer">
-          {t("go_to_twilio")}
-        </a>
-
-        <div className="flex items-center my-4">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-4 text-center">{t("or")}</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <h2 className="text-lg font-semibold mb-3">{t("have_an_account_already?")}</h2>
-        <p className="mb-4">{t("enter_the_following_details")}</p>
-
         <div className="space-y-6">
-          <ERPInput
-            id="accountSid"
-            value={information.accountSid || ""}
-            label={t("account_SID")}
-            placeholder={t("account_SID")}
-            data={information}
-            onChangeData={(data) => { handleFieldChange("accountSid", data.accountSid) }}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <ERPInput
+              id="from"
+              value={information.from || ""}
+              label={t("from_email")}
+              placeholder={t("from_email")}
+              data={information}
+              onChangeData={(data) => { handleFieldChange("from", data.from) }}
+            />
 
-          <ERPInput
-            id="authToken"
-            data={information}
-            value={information.authToken || ""}
-            label={t("auth_token")}
-            placeholder={t("auth_token")}
-            onChangeData={(data) => handleFieldChange("authToken", data.authToken)}
-          />
+            <ERPInput
+              id="smtpServer"
+              data={information}
+              value={information.smtpServer || ""}
+              label={t("smtp_server")}
+              placeholder={t("smtp_server")}
+              onChangeData={(data) => handleFieldChange("smtpServer", data.smtpServer)}
+            />
 
-          <ERPInput
-            id="fromPhone"
-            data={information}
-            value={information.fromPhone || ""}
-            label={t("from_phone")}
-            placeholder={t("from_phone")}
-            onChangeData={(data) => handleFieldChange("fromPhone", data.fromPhone)}
-          />
+            <ERPInput
+              id="port"
+              data={information}
+              value={information.port || ""}
+              label={t("port")}
+              placeholder={t("port")}
+              onChangeData={(data) => handleFieldChange("port", data.port)}
+              type="number"
+            />
+
+            <ERPInput
+              id="userName"
+              data={information}
+              value={information.userName || ""}
+              label={t("username")}
+              placeholder={t("username")}
+              onChangeData={(data) => handleFieldChange("userName", data.userName)}
+            />
+
+            <ERPInput
+              id="password"
+              data={information}
+              value={information.password || ""}
+              label={t("password")}
+              placeholder={t("password")}
+              type="password"
+              onChangeData={(data) => handleFieldChange("password", data.password)}
+            />
+          </div>
 
           <div className="flex items-center gap-4">
-            <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
+            <ERPButton title={t("connect_email")} variant="primary" disabled={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton
-              title={t("send_test_message")}
+              title={t("send_test_email")}
               variant="secondary"
               onClick={() => setIsPopupOpen(true)}
             />
@@ -128,7 +135,7 @@ const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data 
             <div className="bg-white dark:bg-dark-bg rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300">
               <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                  {t("demo_mail")}
+                  {t("demo_email")}
                 </h2>
                 <button onClick={() => setIsPopupOpen(false)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Close">
                   <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
@@ -136,22 +143,13 @@ const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data 
               </div>
 
               <div className="mt-4 space-y-4">
-                {/* <ERPInput
-                  id="phoneNumber"
-                  value={phone || ""}
-                  label={t("phone_number")}
-                  placeholder={t("phone_number")}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
-                /> */}
-
                 <ERPInput
-                  id="email"
-                  data={information}
-                  label={t("email")}
-                  placeholder={t("email")}
-                  value={information.email}
-                  onChangeData={(data: any) => handleFieldChange("email", data.email)}
+                  id="toEmail"
+                  value={email || ""}
+                  label={t("recipient_email")}
+                  placeholder={t("recipient_email")}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#86efac] transition"
                 />
 
                 <textarea
@@ -175,4 +173,4 @@ const EmailTwilioConnectPopup: React.FC<EmailTwilioConnectPopupProps> = ({ data 
   );
 };
 
-export default EmailTwilioConnectPopup;
+export default EmailSmtpConnectPopup;

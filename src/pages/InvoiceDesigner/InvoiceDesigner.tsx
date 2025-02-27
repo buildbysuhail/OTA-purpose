@@ -567,7 +567,7 @@ const InvoiceDesigner = () => {
       }
 
       {
-        ["PARP","RARP","cheque"].includes(templateGroup) && (
+        ["PARP","RARP","Cheque"].includes(templateGroup) && (
           <PDFViewer
             className="pdf-viewer"
             width="100%"

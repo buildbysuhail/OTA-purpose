@@ -100,43 +100,25 @@ const ERPModal = React.memo(
         const handlePositionUpdate = () => {
           const windowWidth = window.innerWidth;
           const windowHeight = window.innerHeight;
-
-          if (isMaximized) {
-            // Set position to top-left for maximized view
-            const centeredX = (windowWidth - width) / 2;
-            const centeredY = (windowHeight - height) / 2;
-            setPreviousPosition({ x: centeredX, y: centeredY });
-            setPosition({ x: 20, y: 20 });
-          } else {
-            if (width && height) {
-              let newX = (windowWidth - width) / 2;
-              let newY = (windowHeight - height) / 2;
-
+              let newX = (windowWidth - modalWidth) / 2;
+              let newY = (windowHeight - modalHeight) / 2
               newY = Math.max(newY, 0);
               newX = Math.max(newX, 0);
-
-              if (windowHeight < height) {
-                newY = 10;
-                newX = (windowWidth - width) / 2;
-              }
-
               setPosition({ x: newX, y: newY });
-            }
-          }
-          setIsPositionCalculated(true);
-        };
-
+              setIsPositionCalculated(true);
+        }
+   
         handlePositionUpdate();
         setRndKey((prev) => prev + 1);
       }
-    }, [isOpen, width, height, isMaximized]);
+    }, [isOpen, modalWidth, modalHeight, isMaximized]);
 
     useEffect(() => {
       const updateModalDimensions = () => {
         const newHeight = isMaximized
           ? window.innerHeight - 50
           : Math.min(window.innerHeight - 25, height);
-        const newWidth = isMaximized ? window.innerWidth - 40 : width;
+        const newWidth = isMaximized ? window.innerWidth - 50 : Math.min(window.innerWidth - 25, width); 
         setModalHeight(newHeight);
         setModalWidth(newWidth);
         setRndKey((prev) => prev + 1);
@@ -242,7 +224,7 @@ const ERPModal = React.memo(
        
       bounds="parent"
       // bounds="window"
-      minWidth={minWidth}
+      minWidth={ minWidth}
       minHeight={minHeight}
       dragGrid={[10, 10]}
       resizeGrid={[10, 10]}

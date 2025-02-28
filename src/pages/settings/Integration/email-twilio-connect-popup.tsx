@@ -24,6 +24,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isSendingDemo, setIsSendingDemo] = useState(false);
   const { t } = useTranslation('integration');
 
   useEffect(() => {
@@ -71,6 +72,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
 
   const handleSendDemoMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setIsSendingDemo(true);
     try {
       const configData = {
         from: information.from || "",
@@ -94,6 +96,8 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
       await handleResponse(demoMessageResponse);
     } catch (error) {
       console.error("Error sending demo email message:", error);
+    } finally {
+      setIsSendingDemo(false);
     }
   };
 
@@ -155,6 +159,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
               title={id ? t("update") : t("connect_email")}
               variant="primary"
               disabled={isSaving}
+              loading={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton
@@ -196,8 +201,16 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
               </div>
 
               <div className="flex justify-end mt-6">
-                <button className="bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#93c5fd]" onClick={handleSendDemoMessage}>
-                  <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
+                <button
+                  className="bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#93c5fd]"
+                  onClick={handleSendDemoMessage}
+                  disabled={isSendingDemo}
+                >
+                  {isSendingDemo ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
+                  )}
                 </button>
               </div>
             </div>

@@ -143,7 +143,7 @@ const ERPButton = forwardRef<HTMLButtonElement, ERPButtonProps>(
         data-jump-target={jumpTarget}
         style={{
           backgroundColor: isFocused 
-          ? `rgb(${inputBoxState?.focusBgColor || '255, 255, 255'})` 
+          ? `rgb(${inputBoxState?.buttonFocusBg || '89, 137, 232'})` 
           : undefined,
           marginBottom: `${inputBoxState?.marginBottom ?? 0}px`,
           marginTop: `${inputBoxState?.marginTop ?? 0}px`,

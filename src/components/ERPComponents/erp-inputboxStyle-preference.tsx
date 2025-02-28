@@ -673,6 +673,30 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
             </div>
           </div>
         </div>
+
+        <div className="flex items-center">
+          <label htmlFor="focusButtonColor" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold -translate-y-2">
+            {t("focus_button_color")}
+          </label>
+          <div className="ti-form-radio">
+            <div
+              className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+              style={{ backgroundColor: `rgb(${inputBox?.buttonFocusBg ?? "black"})`, }}     >
+              <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+              <input
+                type="color"
+                value={inputBox?.buttonFocusBg}
+                onChange={(e) => {
+                  const rgb = hexToRgb(e.target?.value);
+                  if (rgb) {
+                    onInputBoxChange("buttonFocusBg", `${rgb?.r},${rgb?.g},${rgb?.b}`);
+                  }
+                }}
+                className="opacity-0 w-full h-full cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Radio & Checkbox Customization */}

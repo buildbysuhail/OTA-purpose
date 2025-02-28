@@ -44,12 +44,12 @@ const EmailIntegration: React.FC = () => {
       const response = await api.getAsync(
         `${Urls.notification_provider}?channel=${Channel}`
       );
-      
+
       const transformedResponse = response.map((item: any) => ({
         ...item,
         configJson: JSON.parse(item.configJson),
       }));
-      
+
       setFormState(transformedResponse);
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -68,11 +68,11 @@ const EmailIntegration: React.FC = () => {
         id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      handleResponse(response,async()=>{
-             await loadSettings();
-           },()=>{
-     
-           });
+      handleResponse(response, async () => {
+        await loadSettings();
+      }, () => {
+
+      });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -145,9 +145,9 @@ const EmailIntegration: React.FC = () => {
             />
           </div>
         </div>
-        
+
         {formState?.map((item) => (
-          <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg">
+          <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg group relative">
             <div className="cursor-pointer" onClick={() => setSelectedIntegration(item)}>
               <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">
                 {item.name}
@@ -158,23 +158,25 @@ const EmailIntegration: React.FC = () => {
 
             {/* Button container */}
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                {item.isDefault ? (
+                  <CircleCheck className="min-w-[40px]" />
+                ) : (
+                  <ERPButton
+                    title={t("Set as default")}
+                    onClick={() => setAsDefault(item.id)}
+                    className="min-w-[120px]"
+                    disabled={submittingSetAsDefault}
+                    loading={submittingSetAsDefault && item.id === selectedForDefaultId}
+                  />
+                )}
+              </div>
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item)}
                 variant="primary"
                 className="min-w-[120px]"
               />
-              {item.isDefault ? (
-                <CircleCheck className="min-w-[40px]" />
-              ) : (
-                <ERPButton
-                  title={t("Set as default")}
-                  onClick={() =>  setAsDefault(item.id)}
-                  className="min-w-[120px]"
-                  disabled={submittingSetAsDefault}
-                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
-                />
-              )}
             </div>
           </div>
         ))}
@@ -231,10 +233,10 @@ const EmailIntegration: React.FC = () => {
           height={350}
           isForm={true}
           closeModal={handleCloseModal}
-          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id}  onSuccess={() => {
-                          setProvider({ isOpen: false, information: undefined, provider: undefined });
-                          loadSettings();
-                        }}/>}
+          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id} onSuccess={() => {
+            setProvider({ isOpen: false, information: undefined, provider: undefined });
+            loadSettings();
+          }} />}
         />
       </div>
     </div>

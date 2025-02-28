@@ -23,6 +23,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
   const [message, setMessage] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isSendingDemo, setIsSendingDemo] = useState(false);
 
   const handleFieldChange = (settingName: keyof information, value: any) => {
     setInformation((prevSettings) => ({
@@ -52,6 +53,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
 
   const handleSendDemoMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setIsSendingDemo(true);
     try {
       const payload = {
         provider: NotificationsProvider.LinkWhatsapp,
@@ -65,6 +67,8 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
       await handleResponse(demoMessageResponse);
     } catch (error) {
       console.error("Error sending demo Whatsapp message:", error);
+    } finally {
+      setIsSendingDemo(false);
     }
   };
 
@@ -88,6 +92,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
               title={id ? t('connect') : t('save')}
               variant="primary"
               disabled={isSaving}
+              loading={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton
@@ -129,8 +134,16 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
               </div>
 
               <div className="flex justify-end mt-6">
-                <button className="bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#93c5fd]" onClick={handleSendDemoMessage}>
-                  <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
+                <button
+                  className="bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-full p-3 shadow-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#86efac]"
+                  onClick={handleSendDemoMessage}
+                  disabled={isSendingDemo}
+                >
+                  {isSendingDemo ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Send className="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
+                  )}
                 </button>
               </div>
             </div>

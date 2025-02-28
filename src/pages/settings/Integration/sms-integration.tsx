@@ -124,7 +124,7 @@ const SMSIntegration: React.FC = () => {
         </h1>
 
         {formState?.map((item) => (
-          <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg">
+          <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between mb-4 p-4 dark:bg-dark-bg-header dark:text-dark-text bg-gray-50 rounded-lg group relative">
             <div className="cursor-pointer" onClick={() => setSelectedIntegration(item)}>
               <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">
                 {item.name}
@@ -134,22 +134,24 @@ const SMSIntegration: React.FC = () => {
 
             {/* Button container */}
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                {item.isDefault ? (
+                  <CircleCheck className="min-w-[40px]" />
+                ) : (
+                  <ERPButton
+                    title={t("Set as default")}
+                    onClick={() => setAsDefault(item.id)}
+                    className="min-w-[120px]"
+                    loading={submittingSetAsDefault && item.id === selectedForDefaultId}
+                  />
+                )}
+              </div>
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item)}
                 variant="primary"
                 className="min-w-[120px]"
               />
-              {item.isDefault ? (
-                <CircleCheck className="min-w-[40px]" />
-              ) : (
-                <ERPButton
-                  title={t("Set as default")}
-                  onClick={() => setAsDefault(item.id)}
-                  className="min-w-[120px]"
-                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
-                />
-              )}
             </div>
           </div>
         ))}

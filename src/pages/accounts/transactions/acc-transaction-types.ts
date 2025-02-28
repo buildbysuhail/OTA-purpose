@@ -597,6 +597,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
       otherLabelFontSize: 14,
       inputBgColor: "255, 255, 255",
       borderColor: "128, 128, 128",
+      buttonFocusBg:"89, 137, 232",
       selectColor: "255, 255, 255",
       fontColor: "128, 128, 128",
       labelColor: "128, 128, 128",

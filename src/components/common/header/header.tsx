@@ -30,6 +30,7 @@ const Header: FC<HeaderProps> = () => {
   const [languages, setLanguages] = useState<Locale[]>(languagesData);
   const { t } = useTranslation('main');
   const { appState, updateAppState } = useAppState();
+  const _appState = useSelector((state: RootState) => state.AppState?.appState);
   let dispatch = useAppDispatch();
   //Fullscvreen
   const [fullScreen, setFullScreen] = useState(false);
@@ -182,9 +183,11 @@ const Header: FC<HeaderProps> = () => {
   function menuClose() {
     const theme = appState;
     if (window.innerWidth <= 992) {
+      debugger;
       updateAppState({ ...theme, toggled: "close" });
     }
     if (window.innerWidth >= 992) {
+      debugger;
       updateAppState({
         ...theme,
         toggled: appState?.toggled ? appState?.toggled : "",
@@ -193,12 +196,14 @@ const Header: FC<HeaderProps> = () => {
   }
 
   const toggleSidebar = () => {
+    debugger;
     const theme = appState;
     let sidemenuType = theme.dataNavLayout;
     if (window.innerWidth >= 992) {
       if (sidemenuType === "vertical") {
         let verticalStyle = theme.dataVerticalStyle;
         const navStyle = theme.dataNavStyle;
+        debugger;
         switch (verticalStyle) {
           // closed
           case "closed":
@@ -300,7 +305,8 @@ const Header: FC<HeaderProps> = () => {
         updateAppState({ ...theme, toggled: "open" });
 
         setTimeout(() => {
-          if (theme.toggled == "open") {
+          debugger;
+          // if (theme.toggled == "open") {
             const overlay = document.querySelector("#responsive-overlay");
 
             if (overlay) {
@@ -314,7 +320,7 @@ const Header: FC<HeaderProps> = () => {
                 }
               });
             }
-          }
+          // }
 
           window.addEventListener("resize", () => {
             if (window.screen.width >= 992) {
@@ -949,7 +955,10 @@ const Header: FC<HeaderProps> = () => {
                   </div>
                 )
               }
-
+<>
+{_appState.toggled}
+{appState.toggled}
+</>
               {
                 deviceInfo?.isMobile && (
                   <div id="dropdown-profile" className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] ">

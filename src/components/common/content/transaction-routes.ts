@@ -188,6 +188,7 @@ export const transactionRoutes: TransactionRoute[] = [
 export const exludedRoutes = [
   { title: TransactionTitles.ChequePayment, countries: [Countries.Saudi] },
   { title: TransactionTitles.ChequeReceipt, countries: [Countries.Saudi] },
+  { title: TransactionTitles.TaxOnExpensePayment, countries: [Countries.India] },
 ];
 
 export const isChooseVoucherEnabled = (title: string, userSession: UserModel) => [

@@ -174,7 +174,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       );
       setMenuitems(st);
     }
-  }, [userSession.userTypeCode]);
+  }, [userSession.userTypeCode,MENUITEMS,SettingsMenuItems,]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();
@@ -1022,7 +1022,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         </aside>
       </Fragment>
     );
-  }, [menuitems,t]);
+  }, [menuitems,t,appState]);
   return renderNavItems;
 });
 

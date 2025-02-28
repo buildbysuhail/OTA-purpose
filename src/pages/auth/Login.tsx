@@ -73,25 +73,7 @@ const Login = () => {
         let ass = localStorage.getItem("as");
         let appSettings: ApplicationSettingsType;
         try {
-          if (ass != undefined && ass != null && ass != "") {
-            appSettings = customJsonParse(atob(ass));
-            dispatch(setApplicationSettings(
-              {
-                ...appSettings,
-                apiLoaded: false
-              }));
-          } else {
-            await load();
-          }
-        } catch (error) { }
-        if (login.item.hasToChooseBranch) {
-          setHasToChooseBranch(true);
-          setIsLoggedToBranch(false);
-        } else {
-          setIsLoggedToBranch(true);
-          setHasToChooseBranch(false);
-        }
-        localStorage.removeItem("_token");
+          localStorage.removeItem("_token");
         localStorage.setItem("token", login.item.token);
         localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("cs", login.item.clientSessions);
@@ -120,6 +102,26 @@ const Login = () => {
           userRights,
           locale
         );
+        
+          if (ass != undefined && ass != null && ass != "") {
+            appSettings = customJsonParse(atob(ass));
+            dispatch(setApplicationSettings(
+              {
+                ...appSettings,
+                apiLoaded: false
+              }));
+          } else {
+            await load();
+          }
+        } catch (error) { }
+        if (login.item.hasToChooseBranch) {
+          setHasToChooseBranch(true);
+          setIsLoggedToBranch(false);
+        } else {
+          setIsLoggedToBranch(true);
+          setHasToChooseBranch(false);
+        }
+        
       } else {
         if (login.item.hasToSetCounter) {
           localStorage.setItem("_token", login.item.token);

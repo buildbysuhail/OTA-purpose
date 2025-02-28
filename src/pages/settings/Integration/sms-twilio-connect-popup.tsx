@@ -42,7 +42,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      handleResponse(response,()=> {onSuccess &&  onSuccess()});
+      handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -117,7 +117,10 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
           />
 
           <div className="flex items-center gap-4">
-            <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
+            <ERPButton
+              title={id ? t("update") : t("new")}
+              variant="primary"
+              disabled={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton

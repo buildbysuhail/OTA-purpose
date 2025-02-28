@@ -40,7 +40,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
         isEnable: true,
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      handleResponse(response,()=> {onSuccess &&  onSuccess()});
+      handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -115,7 +115,10 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
           />
 
           <div className="flex items-center gap-4">
-            <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
+            <ERPButton
+              title={id ? "update" : "new"}
+              variant="primary"
+              disabled={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton

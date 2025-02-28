@@ -23,7 +23,8 @@ interface ProviderState {
 const api = new APIClient();
 const SMSIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [ubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [submittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [selectedForDefaultId, setSelectedForDefaultId] = useState<number | null>(null);
   const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
@@ -52,6 +53,7 @@ const SMSIntegration: React.FC = () => {
 
   const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
+    setSelectedForDefaultId(id);
     try {
       const requestBody = {
         provider: NotificationsProvider.TwillioSms,
@@ -59,16 +61,17 @@ const SMSIntegration: React.FC = () => {
         id: id
       };
       const response = await api.postAsync(Urls.notification_provider_set_as_default, requestBody);
-      
-      handleResponse(response,async()=>{
+
+      handleResponse(response, async () => {
         await loadSettings();
-      },()=>{
+      }, () => {
 
       });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setSubmittingSetAsDefault(false);
+      setSelectedForDefaultId(null);
     }
   };
 
@@ -85,32 +88,32 @@ const SMSIntegration: React.FC = () => {
       parsedConfig = item?.configJson;
     }
     debugger;
-if(item.provider == NotificationsProvider.SmsGateway ) {
-  setProvider({
-    isOpen: true,
-    provider: item.provider,
-    information:
-    {
-      configJson: parsedConfig
-    },
-    id: item.id,
-    providerName: item?.name ?? "",
-  });
-} else {
-  setProvider({
-    isOpen: true,
-    provider: item.provider,
-    information:{
-      accountSid: parsedConfig.accountSid ?? "",
-      authToken: parsedConfig.authToken ?? "",
-      verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-      fromPhone: parsedConfig.fromPhone ?? "",
-    },
-    id: item.id,
-    providerName: item?.name ?? "",
-  });
-}
-   
+    if (item.provider == NotificationsProvider.SmsGateway) {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information:
+        {
+          configJson: parsedConfig
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    } else {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information: {
+          accountSid: parsedConfig.accountSid ?? "",
+          authToken: parsedConfig.authToken ?? "",
+          verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+          fromPhone: parsedConfig.fromPhone ?? "",
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    }
+
   };
 
   return (
@@ -140,7 +143,12 @@ if(item.provider == NotificationsProvider.SmsGateway ) {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={() =>  setAsDefault(item.id)} className="min-w-[120px]" />
+                <ERPButton
+                  title={t("Set as default")}
+                  onClick={() => setAsDefault(item.id)}
+                  className="min-w-[120px]"
+                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
+                />
               )}
             </div>
           </div>
@@ -211,10 +219,10 @@ if(item.provider == NotificationsProvider.SmsGateway ) {
                 loadSettings();
               }} />
             ) : provider.provider != undefined && provider.information != undefined && provider.isOpen == true && (
-              <SMSTwilioConnectPopup data={provider.information}  id={provider.id}  onSuccess={() => {
+              <SMSTwilioConnectPopup data={provider.information} id={provider.id} onSuccess={() => {
                 setProvider({ isOpen: false, information: undefined, provider: undefined });
                 loadSettings();
-              }}/>
+              }} />
             )
           }
         />

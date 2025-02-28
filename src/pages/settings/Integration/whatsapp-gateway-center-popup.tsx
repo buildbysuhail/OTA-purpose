@@ -42,7 +42,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
         id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      handleResponse(response,()=> {onSuccess &&  onSuccess()});
+      handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -85,7 +85,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
 
           <div className="flex items-center gap-4">
             <ERPButton
-              title={t("connect")}
+              title={id ? 'connect' : 'save'}
               variant="primary"
               disabled={isSaving}
               onClick={() => handleSubmit()}

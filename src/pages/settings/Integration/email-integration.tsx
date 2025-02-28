@@ -22,7 +22,8 @@ interface ProviderState {
 const api = new APIClient();
 const EmailIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [submittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [selectedForDefaultId, setSelectedForDefaultId] = useState<number | null>(null);
   const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
@@ -59,6 +60,7 @@ const EmailIntegration: React.FC = () => {
 
   const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
+    setSelectedForDefaultId(id);
     try {
       const requestBody = {
         provider: NotificationsProvider.Smtp,
@@ -75,6 +77,7 @@ const EmailIntegration: React.FC = () => {
       console.error("Error saving settings:", error);
     } finally {
       setSubmittingSetAsDefault(false);
+      setSelectedForDefaultId(null);
     }
   };
 
@@ -168,7 +171,8 @@ const EmailIntegration: React.FC = () => {
                   title={t("Set as default")}
                   onClick={() =>  setAsDefault(item.id)}
                   className="min-w-[120px]"
-                  disabled={SubmittingSetAsDefault}
+                  disabled={submittingSetAsDefault}
+                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
                 />
               )}
             </div>

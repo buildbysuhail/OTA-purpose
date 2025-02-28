@@ -28,14 +28,14 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
   const handleFieldChange = (settingName: string, value: any) => {
     setInformation(value);
   };
-// useEffect(()=> {
-// setInformation(
-//   {
-//     ...data,
-//     url: data.configJson
-//   }
-// )
-// },[])
+  // useEffect(()=> {
+  // setInformation(
+  //   {
+  //     ...data,
+  //     url: data.configJson
+  //   }
+  // )
+  // },[])
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -47,7 +47,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
         id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      handleResponse(response,()=> {onSuccess &&  onSuccess()});
+      handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -89,7 +89,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
 
           <div className="flex items-center gap-4">
             <ERPButton
-              title={t("connect")}
+              title={id ? "connect" : "save"}
               variant="primary"
               disabled={isSaving}
               onClick={() => handleSubmit()}

@@ -106,7 +106,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
   return (
     <div className="flex flex-col gap-4">
       {favoriteItems.length > 0 && (
-        <div className="w-auto dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow shadow-lg">
+        <div className="w-auto  p-5  flex flex-grow ">
           <div className="flex flex-col">
             <div className="flex gap-2 items-center">
               <p className="dark:!text-dark-text text-sm font-medium ms-[8px] mb-[8px]">{t('Favorites')}</p>
@@ -120,7 +120,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
         </div>
       )}
 
-      <div className="w-auto dark:bg-dark-bg-card dark:border-dark-border bg-gray-50 rounded-lg p-5 border flex flex-grow shadow-lg">
+      <div className="w-full   p-5  flex flex-grow ">
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
             <p className="dark:!text-dark-text text-sm font-medium ms-[8px] mb-[8px]">{t(data?.title)}</p>
@@ -185,7 +185,7 @@ const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate
           </svg>
         ) : (
           <svg
-            className="w-[15px] h-[15px]  transition-colors duration-300 fill-gray-300"
+            className="w-[15px] h-[15px]  transition-colors duration-300 fill-[#cbcbcb]"
             xmlns="http://www.w3.org/2000/svg"
             version="1.1"
             xmlnsXlink="http://www.w3.org/1999/xlink"

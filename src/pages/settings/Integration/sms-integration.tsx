@@ -134,18 +134,27 @@ const SMSIntegration: React.FC = () => {
 
             {/* Button container */}
             <div className="mt-4 md:mt-0 flex flex-wrap md:flex-nowrap items-center gap-4 w-full md:w-auto">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-                {item.isDefault ? (
-                  <CircleCheck className="min-w-[40px]" />
-                ) : (
+              {item.isDefault ? (
+                <div className="flex items-center justify-center min-w-[40px]">
+                  <div className="relative p-1 rounded-full bg-[#d1fae5] dark:bg-[#14532d]">
+                    <CircleCheck
+                      className="text-[#16a34a] dark:text-[#4ade80]"
+                      size={24}
+                      strokeWidth={3}
+                    />
+                    {/* <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#22c55e] rounded-full animate-pulse"></span> */}
+                  </div>
+                </div>
+              ) : (
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                   <ERPButton
                     title={t("Set as default")}
                     onClick={() => setAsDefault(item.id)}
                     className="min-w-[120px]"
                     loading={submittingSetAsDefault && item.id === selectedForDefaultId}
                   />
-                )}
-              </div>
+                </div>
+              )}
               <ERPButton
                 title={item.isEnable ? t("maintain") : t("connect")}
                 onClick={() => handleOpen(item)}

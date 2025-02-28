@@ -43,7 +43,13 @@ const EmailIntegration: React.FC = () => {
       const response = await api.getAsync(
         `${Urls.notification_provider}?channel=${Channel}`
       );
-      setFormState(response);
+      
+      const transformedResponse = response.map((item: any) => ({
+        ...item,
+        configJson: JSON.parse(item.configJson),
+      }));
+      
+      setFormState(transformedResponse);
     } catch (error) {
       console.error("Error loading settings:", error);
     } finally {
@@ -143,6 +149,7 @@ const EmailIntegration: React.FC = () => {
               <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">
                 {item.name}
               </h2>
+              <p className="text-sm dark:text-dark-text text-gray-600">{item.configJson?.from}</p>
               <p className="text-sm dark:text-dark-text text-gray-600">{item.description}</p>
             </div>
 

@@ -89,7 +89,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
 
           <div className="flex items-center gap-4">
             <ERPButton
-              title={id ? "connect" : "save"}
+              title={id ? t("connect") : t("save")}
               variant="primary"
               disabled={isSaving}
               onClick={() => handleSubmit()}

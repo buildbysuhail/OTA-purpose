@@ -116,7 +116,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
 
           <div className="flex items-center gap-4">
             <ERPButton
-              title={id ? "update" : "new"}
+              title={id ? t("update") : t("new")}
               variant="primary"
               disabled={isSaving}
               onClick={() => handleSubmit()}

@@ -22,7 +22,7 @@
     "auth_token": "رمز المصادقة",
     "from_phone": "رقم الهاتف المرسل منه",
     "connect_with_twilio": "اتصل بتويلو",
-
+    
     "whatsapp_integrations": "تكاملات واتساب",
     "email_integrations": "تكاملات البريد الإلكتروني",
 
@@ -50,5 +50,8 @@
     "send_test_email": "إرسال بريد إلكتروني تجريبي",
     "demo_email": "بريد إلكتروني تجريبي",
     "recipient_email": "البريد الإلكتروني للمستلم",
-    "smtp_email": "بريد SMTP"
+    "smtp_email": "بريد SMTP",
+    "update": "تحديث",
+    "new": "جديد",
+    "save": "حفظ"
 }

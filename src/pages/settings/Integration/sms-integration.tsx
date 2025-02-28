@@ -16,6 +16,7 @@ interface ProviderState {
   isOpen: boolean;
   information?: any;
   providerName?: string;
+  provider?: NotificationsProvider;
   id?: number
 }
 
@@ -73,10 +74,10 @@ const SMSIntegration: React.FC = () => {
 
   const handleOpen = (item: any) => {
     debugger;
-    let parsedConfig: any = {};
+    let parsedConfig: any;
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = item.provider == NotificationsProvider.LinkSms ? item?.configJson : JSON.parse(item?.configJson);
+        parsedConfig = item.provider == NotificationsProvider.SmsGateway ? item?.configJson : JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
@@ -84,9 +85,10 @@ const SMSIntegration: React.FC = () => {
       parsedConfig = item?.configJson;
     }
     debugger;
-if(item.provider == NotificationsProvider.LinkSms ) {
+if(item.provider == NotificationsProvider.SmsGateway ) {
   setProvider({
     isOpen: true,
+    provider: item.provider,
     information:
     {
       configJson: parsedConfig
@@ -97,6 +99,7 @@ if(item.provider == NotificationsProvider.LinkSms ) {
 } else {
   setProvider({
     isOpen: true,
+    provider: item.provider,
     information:{
       accountSid: parsedConfig.accountSid ?? "",
       authToken: parsedConfig.authToken ?? "",
@@ -183,29 +186,35 @@ if(item.provider == NotificationsProvider.LinkSms ) {
                   </a>
                 </li>
               </ul>
-              <SmsDemo />
+              {/* <SmsDemo /> */}
             </div>
           )}
         </div>
 
         <ERPModal
-          isOpen={provider.isOpen}
+          isOpen={provider.isOpen && provider.provider != undefined}
           title={
-            provider.providerName === "SmsGatewayCenter"
+            provider.provider === NotificationsProvider.SmsGateway
               ? "SMSGatewayCenter Integration"
               : t(provider.providerName?.toLowerCase() || "twilio")
           }
-          width={provider.providerName === "SmsGatewayCenter" ? 500 : 600}
-          height={provider.providerName === "SmsGatewayCenter" ? 200 : 620}
+          width={provider.provider === NotificationsProvider.SmsGateway ? 500 : 600}
+          height={provider.provider === NotificationsProvider.SmsGateway ? 200 : 620}
           isForm={true}
           closeModal={() => {
-            setProvider({ isOpen: false, information: undefined, providerName: undefined });
+            setProvider({ isOpen: false, information: undefined, provider: undefined });
           }}
           content={
-            provider.providerName === "SmsGatewayCenter" ? (
-              <SMSGatewayCenterPopup data={provider.information} id={provider.id} />
-            ) : (
-              <SMSTwilioConnectPopup data={provider.information} />
+            provider.provider === NotificationsProvider.SmsGateway ? (
+              <SMSGatewayCenterPopup data={provider.information} id={provider.id} onSuccess={() => {
+                setProvider({ isOpen: false, information: undefined, provider: undefined });
+                loadSettings();
+              }} />
+            ) : provider.provider != undefined && provider.information != undefined && provider.isOpen == true && (
+              <SMSTwilioConnectPopup data={provider.information}  id={provider.id}  onSuccess={() => {
+                setProvider({ isOpen: false, information: undefined, provider: undefined });
+                loadSettings();
+              }}/>
             )
           }
         />

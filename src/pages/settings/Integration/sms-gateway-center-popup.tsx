@@ -14,9 +14,10 @@ const api = new APIClient();
 interface SMSGatewayCenterPopupProps {
   data?: any;
   id?: number;
+  onSuccess?: () => void;
 }
 
-const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id }) => {
+const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id, onSuccess }) => {
   debugger;
   const [information, setInformation] = useState(data?.configJson);
   const [phone, setPhone] = useState<string>("");
@@ -39,14 +40,14 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
     setIsSaving(true);
     try {
       const requestBody = {
-        provider: NotificationsProvider.LinkSms,
+        provider: NotificationsProvider.SmsGateway,
         channel: NotificationsChannel.Sms,
         configJson: information,
         isEnable: true,
         id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      await handleResponse(response);
+      handleResponse(response,()=> {onSuccess &&  onSuccess()});
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -58,7 +59,7 @@ const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}
     if (e) e.preventDefault();
     try {
       const payload = {
-        provider: NotificationsProvider.LinkSms,
+        provider: NotificationsProvider.SmsGateway,
         channel: NotificationsChannel.Sms,
         configJson: information,
         to: phone,

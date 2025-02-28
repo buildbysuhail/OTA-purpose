@@ -14,8 +14,9 @@ import WhatsappGatewayCenterPopup from "./whatsapp-gateway-center-popup";
 
 interface ProviderState {
   isOpen: boolean;
-  information?: information;
+  information?: any;
   providerName?: string;
+  provider?: NotificationsProvider;
   id?: number
 }
 
@@ -62,7 +63,11 @@ const WhatsappIntegration: React.FC = () => {
         id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      await handleResponse(response);
+      handleResponse(response,async()=>{
+             await loadSettings();
+           },()=>{
+     
+           });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -83,17 +88,33 @@ const WhatsappIntegration: React.FC = () => {
       parsedConfig = item?.configJson;
     }
 
-    setProvider({
-      isOpen: true,
-      information: {
-        accountSid: parsedConfig.accountSid ?? "",
-        authToken: parsedConfig.authToken ?? "",
-        verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-        fromPhone: parsedConfig.fromPhone ?? "",
-      },
-      id: item.id,
-      providerName: item?.name ?? "",
-    });
+    if(item.provider == NotificationsProvider.SmsGateway ) {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information:
+        {
+          configJson: parsedConfig
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    } else {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information: {
+          accountSid: parsedConfig.accountSid ?? "",
+          authToken: parsedConfig.authToken ?? "",
+          verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+          fromPhone: parsedConfig.fromPhone ?? "",
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    }
+
+    
   };
 
   return (
@@ -172,7 +193,7 @@ const WhatsappIntegration: React.FC = () => {
                   </a>
                 </li>
               </ul>
-              <WhatsAppDemo />
+              {/* <WhatsAppDemo /> */}
             </div>
           )}
         </div>
@@ -190,9 +211,15 @@ const WhatsappIntegration: React.FC = () => {
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={
             provider.providerName === "WhatsappGatewayCenter" ? (
-              <WhatsappGatewayCenterPopup data={provider.information} id={provider.id}/>
+              <WhatsappGatewayCenterPopup data={provider.information} id={provider.id} onSuccess={() => {
+                              setProvider({ isOpen: false, information: undefined, provider: undefined });
+                              loadSettings();
+                            }}/>
             ) : (
-              <WhatsappTwilioConnectPopup data={provider.information} id={provider.id}/>
+              <WhatsappTwilioConnectPopup data={provider.information} id={provider.id} onSuccess={() => {
+                              setProvider({ isOpen: false, information: undefined, provider: undefined });
+                              loadSettings();
+                            }}/>
             )
           }
         />

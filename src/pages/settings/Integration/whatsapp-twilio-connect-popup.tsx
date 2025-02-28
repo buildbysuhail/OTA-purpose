@@ -14,9 +14,10 @@ const api = new APIClient();
 interface WhatsappTwilioConnectPopupProps {
   data?: information;
   id?: number;
+  onSuccess?: () => void;
 }
 
-const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({ data = {}, id }) => {
+const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -39,7 +40,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
         isEnable: true,
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      await handleResponse(response);
+      handleResponse(response,()=> {onSuccess &&  onSuccess()});
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

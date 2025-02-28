@@ -15,6 +15,7 @@ interface EmailSmtpConnectPopupProps {
   data?: information;
   id?: number;
   onSuccess?: () => void;
+
 }
 
 const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
@@ -60,10 +61,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
       
       const response = await api.post(Urls.notification_provider_update, requestBody);
       
-      await handleResponse(response);
-      if (onSuccess) {
-        onSuccess();
-      }
+      await handleResponse(response,()=> {onSuccess &&  onSuccess()});
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

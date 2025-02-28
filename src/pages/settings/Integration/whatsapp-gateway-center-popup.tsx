@@ -14,9 +14,10 @@ const api = new APIClient();
 interface WhatsappGatewayCenterPopupProps {
   data?: information;
   id?: number;
+  onSuccess?: () => void;
 }
 
-const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({ data = {}, id }) => {
+const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({ data = {}, id, onSuccess }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -41,7 +42,7 @@ const WhatsappGatewayCenterPopup: React.FC<WhatsappGatewayCenterPopupProps> = ({
         id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      await handleResponse(response);
+      handleResponse(response,()=> {onSuccess &&  onSuccess()});
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

@@ -9,6 +9,6 @@ export enum NotificationsProvider {
   TwillioSms = 1,
   TwillioWhatsapp = 2,
   Smtp = 3,
-  LinkSms,
+  SmsGateway,
   LinkWhatsapp
 }

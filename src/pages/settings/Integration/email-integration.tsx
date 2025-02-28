@@ -15,6 +15,7 @@ interface ProviderState {
   isOpen: boolean;
   information?: information;
   providerName?: string;
+  provider?: NotificationsProvider;
   id?: number;
 }
 
@@ -59,8 +60,11 @@ const EmailIntegration: React.FC = () => {
         id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      await handleResponse(response);
-      await loadSettings();
+      handleResponse(response,async()=>{
+             await loadSettings();
+           },()=>{
+     
+           });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -115,9 +119,6 @@ const EmailIntegration: React.FC = () => {
     }));
   };
 
-  const handleRefreshData = async () => {
-    await loadSettings();
-  };
 
   return (
     <div className="p-6 max-w-8xl mx-auto dark:bg-dark-bg bg-white dark:text-dark-text">
@@ -207,7 +208,7 @@ const EmailIntegration: React.FC = () => {
                   </a>
                 </li>
               </ul>
-              <EmailDemo />
+              {/* <EmailDemo /> */}
             </div>
           )}
         </div>
@@ -219,7 +220,10 @@ const EmailIntegration: React.FC = () => {
           height={350}
           isForm={true}
           closeModal={handleCloseModal}
-          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id} onSuccess={handleRefreshData} />}
+          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id}  onSuccess={() => {
+                          setProvider({ isOpen: false, information: undefined, provider: undefined });
+                          loadSettings();
+                        }}/>}
         />
       </div>
     </div>

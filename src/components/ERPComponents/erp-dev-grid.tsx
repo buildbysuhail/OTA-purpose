@@ -291,7 +291,7 @@ const createStore = async (
       const queryString = new URLSearchParams(params).toString();
       const updated =
         formatDateFields(filterData);
-      const postDataModified =  formatDateFields(postData)
+      const postDataModified = formatDateFields(postData)
       try {
         setFilterValidations(undefined);
         const result =
@@ -722,7 +722,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       formState: any
     ): string => {
       // Helper function to format dates in dd/MM/yyyy format
-     
+
 
       // Function to evaluate and replace placeholders and conditions
       const evaluateExpression = (expression: string, data: any): boolean => {
@@ -986,10 +986,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
           if (React.isValidElement(renderResult)) {
             const staticMarkup = ReactDOMServer.renderToStaticMarkup(renderResult);
-            const parser = new DOMParser();
-            const docHtml = parser.parseFromString(staticMarkup, "text/html");
-            const textContent = docHtml.body.textContent || "";
-            options.pdfCell.text = textContent;
+            // const parser = new DOMParser();
+            // const docHtml = parser.parseFromString(staticMarkup, "text/html");
+            // const textContent = docHtml.body.textContent || "";
+            // options.pdfCell.text = textContent;
+            options.pdfCell.html = staticMarkup;
           } else if (typeof renderResult === "string" || typeof renderResult === "number") {
             options.pdfCell.text = renderResult.toString();
           } else if (renderResult && typeof renderResult === "object" && renderResult.text) {
@@ -1228,7 +1229,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       (row: any) => {
         // Extracting data from row
         const transactionMasterID = parseInt(row.id || "0", 10);
-        const c = row.form || row.vType ||"";
+        const c = row.form || row.vType || "";
         const vchr = c.split(" ");
         const vchtype = vchr[0];
         const voucherform = c.substring(c.indexOf(" ") + 1);
@@ -1724,7 +1725,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   }
                   // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
                   groupIndex={column.groupIndex}
-                  cssClass = {column.cssClass}
+                  cssClass={column.cssClass}
                   format={column.format}
                   dataType={column.dataType}
                   allowSorting={column.allowSorting}

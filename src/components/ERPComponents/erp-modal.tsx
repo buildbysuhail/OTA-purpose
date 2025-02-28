@@ -17,7 +17,7 @@ import { ERPScrollArea } from "./erp-scrollbar";
 import { Minimize2, Maximize2, X } from "lucide-react";
 import { mergeObjectsRemovingIdenticalKeys } from "../../utilities/Utils";
 import { Rnd } from "react-rnd";
-import { Move, ArrowUp, ArrowRight, ArrowDown, ArrowLeft } from "lucide-react";
+
 type ERPModalProps = {
   title: string;
   isOpen: boolean;
@@ -88,71 +88,63 @@ const ERPModal = React.memo(
     customStyle = {},
   }: ERPModalProps) => {
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
-    const [modalHeight, setModalHeight] = useState(height);
-    const [modalWidth, setModalWidth] = useState(width);
+    const [modalHeight, setModalHeight] = useState(0);
+    const [modalWidth, setModalWidth] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [previousPosition, setPreviousPosition] = useState({ x: 0, y: 0 });
-    const [rndKey, setRndKey] = useState(0);
+    const [initPosition, setInitPosition] = useState({ x: 0, y: 0 });
     const [isPositionCalculated, setIsPositionCalculated] = useState(false);
 
-
-    useEffect(() => {
-      if (isOpen) {
-        const handlePositionUpdate = () => {
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-
-          if (isMaximized) {
-            // Set position to top-left for maximized view
-            const centeredX = (windowWidth - modalWidth) / 2;
-            const centeredY = (windowHeight - modalHeight) / 2;
-            setPreviousPosition({x: centeredX, y: centeredY});
-            setPosition({ x: 25, y: 25});
-          } else {
-            
-              let newX = (windowWidth - modalWidth) / 2;
-              let newY = (windowHeight - modalHeight) / 2;
-
-              newY = Math.max(newY, 0);
-              newX = Math.max(newX, 0);
-
-              // if (windowHeight < height) {
-              //   newY = 10;
-              //   newX = (windowWidth - width) / 2;
-              // }
-              // if (windowWidth < width) {
-              //   newY =(windowHeight - height) / 2;
-              //   newX = 10;
-              // }
-              setPosition({ x: newX, y: newY });
-            
-          }
-          setIsPositionCalculated(true);
-        };
-
-        handlePositionUpdate();
-        setRndKey((prev) => prev + 1);
+    const calculateDimensionsAndPosition = () => {
+      if (!isOpen) return;
+    
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+    
+      // Calculate dimensions first
+      const newWidth = isMaximized 
+        ? windowWidth - 50 
+        : Math.min(windowWidth - 40, width);
+        
+      const newHeight = isMaximized
+        ? windowHeight - 50
+        : Math.min(windowHeight - 40, height);
+    
+      // Then calculate position
+      let newX, newY;
+      if (isMaximized) {
+        newX = 25;
+        newY = 25;
+        setInitPosition({
+          x: (windowWidth - width) / 2,
+          y: (windowHeight - height) / 2
+        });
+      } else {
+        newX = Math.max((windowWidth - newWidth) / 2, 0);
+        newY = Math.max((windowHeight - newHeight) / 2, 0);
       }
-    }, [isOpen,isMaximized]);
-
+    
+      // Update all state together
+      setModalWidth(newWidth);
+      setModalHeight(newHeight);
+      setPosition({ x: newX, y: newY });
+      setIsPositionCalculated(true);
+    };
+    
     useEffect(() => {
-      const updateModalDimensions = () => {
-        const newHeight = isMaximized
-          ? window.innerHeight - 50
-          : Math.min(window.innerHeight - 40, height);
-        const newWidth = isMaximized ? window.innerWidth - 50 : Math.min(window.innerWidth - 40, width); 
-        setModalHeight(newHeight);
-        setModalWidth(newWidth);
-        setRndKey((prev) => prev + 1);
-      };
-      updateModalDimensions();
-      window.addEventListener("resize", updateModalDimensions);
-      return () => window.removeEventListener("resize", updateModalDimensions);
-    }, [isMaximized, height, width,isOpen]);
+      calculateDimensionsAndPosition();
+    }, [isOpen, isMaximized, width, height]);
+    
+    // useEffect(() => {
+    //   const handleResize = () => calculateDimensionsAndPosition();
+    //   window.addEventListener('resize', handleResize);
+    //   return () => window.removeEventListener('resize', handleResize);
+    // }, [isOpen, isMaximized]);
 
     const handleClose = () => {
       closeModal(false);
       setIsMaximized(false)
+      setPosition({ x: 0, y: 0 });
+      setIsPositionCalculated(false);
     }
     const handleSubmit = () => {
       if (onSubmitModel) {
@@ -233,15 +225,20 @@ const ERPModal = React.memo(
             leaveTo="opacity-0 scale-95"
           >
              <div className="h-full w-full">
-             {isPositionCalculated && (
+     {isPositionCalculated &&(
   <Rnd
-  // key={rndKey}
-  // default={{x: position.x, y: position.y , width: modalWidth, height: modalHeight}}
-position={position}
-size={{width: modalWidth, height: modalHeight}}
+
+  position={ position}
+  size={{
+    width:  modalWidth ,
+    height:  modalHeight 
+  }}
+  onDragStart={(e) => {
+    e.stopPropagation(); 
+  }}
  onDragStop={(_, d) => {
-      
-        setPosition({ x: d.x, y: d.y });
+  if (!isMaximized) setPosition({ x: d.x, y: d.y });
+       
       }}
       onResizeStop={(_, __, ref, ___, pos) => {
         setModalHeight(ref.offsetHeight);
@@ -254,8 +251,8 @@ size={{width: modalWidth, height: modalHeight}}
          setModalWidth(ref.offsetWidth);
        }}
        disableDragging ={isMaximized}
-      enableResizing={!isMaximized}
-      bounds="parent"
+       enableResizing={!isMaximized}
+       bounds="parent"
       // bounds="window"
       minWidth={ minWidth}
       minHeight={minHeight}
@@ -291,7 +288,7 @@ size={{width: modalWidth, height: modalHeight}}
                 className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#e6e6e6] rounded-full"
                 onClick={() => {
                   if (isMaximized) {// Restore to previous position
-                    setPosition(previousPosition);
+                    setPosition(initPosition);
                   } 
                   setIsMaximized(!isMaximized);
                 }}
@@ -374,7 +371,9 @@ size={{width: modalWidth, height: modalHeight}}
         )}
       </DialogPanel>
     </Rnd>
- )} 
+     )}        
+
+ 
              </div>
 
        </TransitionChild>           

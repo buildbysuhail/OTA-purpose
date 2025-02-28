@@ -155,11 +155,11 @@ if(item.provider == NotificationsProvider.SmsGateway ) {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              <SmsDemo />
+              {/* <SmsDemo /> */}
             </div>
           ) : (
             <div>
-              <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
+              {/* <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
               </h3>
               <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
@@ -185,7 +185,7 @@ if(item.provider == NotificationsProvider.SmsGateway ) {
                     <i className="ri-external-link-line ml-1"></i>
                   </a>
                 </li>
-              </ul>
+              </ul> */}
               {/* <SmsDemo /> */}
             </div>
           )}

@@ -15,6 +15,7 @@ interface EmailSmtpConnectPopupProps {
   data?: information;
   id?: number;
   onSuccess?: () => void;
+
 }
 
 const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
@@ -24,7 +25,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
   const [isSaving, setIsSaving] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { t } = useTranslation('integration');
-  
+
   useEffect(() => {
     if (data) {
       setInformation(data);
@@ -48,7 +49,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
         UserName: information.userName || "",
         Password: information.password || ""
       };
-      
+
       const requestBody = {
         id: id || 0,
         provider: NotificationsProvider.Smtp,
@@ -57,13 +58,10 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
         isEnable: true,
         name: "SMTP"
       };
-      
+
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      
-      await handleResponse(response);
-      if (onSuccess) {
-        onSuccess();
-      }
+
+      await handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -81,7 +79,7 @@ const EmailSmtpConnectPopup: React.FC<EmailSmtpConnectPopupProps> = ({ data = {}
         UserName: information.userName || "",
         Password: information.password || ""
       };
-      
+
       const payload = {
         provider: NotificationsProvider.Smtp,
         channel: NotificationsChannel.Email,

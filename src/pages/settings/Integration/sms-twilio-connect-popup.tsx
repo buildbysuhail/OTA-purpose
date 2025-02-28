@@ -14,9 +14,10 @@ const api = new APIClient();
 interface SMSTwilioConnectPopupProps {
   data?: information;
   id?: number;
+  onSuccess?: () => void;
 }
 
-const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}, id }) => {
+const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}, id, onSuccess }) => {
   const [information, setInformation] = useState<Partial<information>>(data);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -30,6 +31,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   };
 
   const handleSubmit = async () => {
+    debugger;
     setIsSaving(true);
     try {
       const requestBody = {
@@ -37,9 +39,10 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
         channel: NotificationsChannel.Sms,
         configJson: JSON.stringify(information),
         isEnable: true,
+        id: id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
-      await handleResponse(response);
+      handleResponse(response, () => { onSuccess && onSuccess() });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -114,7 +117,10 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
           />
 
           <div className="flex items-center gap-4">
-            <ERPButton title={t("connect_with_twilio")} variant="primary" disabled={isSaving}
+            <ERPButton
+              title={id ? t("update") : t("new")}
+              variant="primary"
+              disabled={isSaving}
               onClick={() => handleSubmit()}
             />
             <ERPButton

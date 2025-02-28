@@ -16,13 +16,15 @@ interface ProviderState {
   isOpen: boolean;
   information?: any;
   providerName?: string;
+  provider?: NotificationsProvider;
   id?: number
 }
 
 const api = new APIClient();
 const SMSIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [ubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [submittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [selectedForDefaultId, setSelectedForDefaultId] = useState<number | null>(null);
   const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
@@ -51,27 +53,34 @@ const SMSIntegration: React.FC = () => {
 
   const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
+    setSelectedForDefaultId(id);
     try {
       const requestBody = {
         provider: NotificationsProvider.TwillioSms,
         channel: NotificationsChannel.Sms,
         id: id
       };
-      const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      await handleResponse(response);
+      const response = await api.postAsync(Urls.notification_provider_set_as_default, requestBody);
+
+      handleResponse(response, async () => {
+        await loadSettings();
+      }, () => {
+
+      });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setSubmittingSetAsDefault(false);
+      setSelectedForDefaultId(null);
     }
   };
 
   const handleOpen = (item: any) => {
     debugger;
-    let parsedConfig: any = {};
+    let parsedConfig: any;
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
-        parsedConfig = item.provider == NotificationsProvider.LinkSms ? item?.configJson : JSON.parse(item?.configJson);
+        parsedConfig = item.provider == NotificationsProvider.SmsGateway ? item?.configJson : JSON.parse(item?.configJson);
       } catch (error) {
         console.error("Error parsing configJson:", error);
       }
@@ -79,30 +88,32 @@ const SMSIntegration: React.FC = () => {
       parsedConfig = item?.configJson;
     }
     debugger;
-if(item.provider == NotificationsProvider.LinkSms ) {
-  setProvider({
-    isOpen: true,
-    information:
-    {
-      configJson: parsedConfig
-    },
-    id: item.id,
-    providerName: item?.name ?? "",
-  });
-} else {
-  setProvider({
-    isOpen: true,
-    information:{
-      accountSid: parsedConfig.accountSid ?? "",
-      authToken: parsedConfig.authToken ?? "",
-      verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
-      fromPhone: parsedConfig.fromPhone ?? "",
-    },
-    id: item.id,
-    providerName: item?.name ?? "",
-  });
-}
-   
+    if (item.provider == NotificationsProvider.SmsGateway) {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information:
+        {
+          configJson: parsedConfig
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    } else {
+      setProvider({
+        isOpen: true,
+        provider: item.provider,
+        information: {
+          accountSid: parsedConfig.accountSid ?? "",
+          authToken: parsedConfig.authToken ?? "",
+          verifyServiceSid: parsedConfig.verifyServiceSid ?? "",
+          fromPhone: parsedConfig.fromPhone ?? "",
+        },
+        id: item.id,
+        providerName: item?.name ?? "",
+      });
+    }
+
   };
 
   return (
@@ -132,7 +143,12 @@ if(item.provider == NotificationsProvider.LinkSms ) {
               {item.isDefault ? (
                 <CircleCheck className="min-w-[40px]" />
               ) : (
-                <ERPButton title={t("Set as default")} onClick={() =>  setAsDefault(item.id)} className="min-w-[120px]" />
+                <ERPButton
+                  title={t("Set as default")}
+                  onClick={() => setAsDefault(item.id)}
+                  className="min-w-[120px]"
+                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
+                />
               )}
             </div>
           </div>
@@ -147,11 +163,11 @@ if(item.provider == NotificationsProvider.LinkSms ) {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              <SmsDemo />
+              {/* <SmsDemo /> */}
             </div>
           ) : (
             <div>
-              <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
+              {/* <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
               </h3>
               <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
@@ -177,30 +193,36 @@ if(item.provider == NotificationsProvider.LinkSms ) {
                     <i className="ri-external-link-line ml-1"></i>
                   </a>
                 </li>
-              </ul>
-              <SmsDemo />
+              </ul> */}
+              {/* <SmsDemo /> */}
             </div>
           )}
         </div>
 
         <ERPModal
-          isOpen={provider.isOpen}
+          isOpen={provider.isOpen && provider.provider != undefined}
           title={
-            provider.providerName === "SmsGatewayCenter"
+            provider.provider === NotificationsProvider.SmsGateway
               ? "SMSGatewayCenter Integration"
               : t(provider.providerName?.toLowerCase() || "twilio")
           }
-          width={provider.providerName === "SmsGatewayCenter" ? 500 : 600}
-          height={provider.providerName === "SmsGatewayCenter" ? 200 : 620}
+          width={provider.provider === NotificationsProvider.SmsGateway ? 500 : 600}
+          height={provider.provider === NotificationsProvider.SmsGateway ? 200 : 620}
           isForm={true}
           closeModal={() => {
-            setProvider({ isOpen: false, information: undefined, providerName: undefined });
+            setProvider({ isOpen: false, information: undefined, provider: undefined });
           }}
           content={
-            provider.providerName === "SmsGatewayCenter" ? (
-              <SMSGatewayCenterPopup data={provider.information} id={provider.id} />
-            ) : (
-              <SMSTwilioConnectPopup data={provider.information} />
+            provider.provider === NotificationsProvider.SmsGateway ? (
+              <SMSGatewayCenterPopup data={provider.information} id={provider.id} onSuccess={() => {
+                setProvider({ isOpen: false, information: undefined, provider: undefined });
+                loadSettings();
+              }} />
+            ) : provider.provider != undefined && provider.information != undefined && provider.isOpen == true && (
+              <SMSTwilioConnectPopup data={provider.information} id={provider.id} onSuccess={() => {
+                setProvider({ isOpen: false, information: undefined, provider: undefined });
+                loadSettings();
+              }} />
             )
           }
         />

@@ -15,13 +15,15 @@ interface ProviderState {
   isOpen: boolean;
   information?: information;
   providerName?: string;
+  provider?: NotificationsProvider;
   id?: number;
 }
 
 const api = new APIClient();
 const EmailIntegration: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [SubmittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [submittingSetAsDefault, setSubmittingSetAsDefault] = useState(false);
+  const [selectedForDefaultId, setSelectedForDefaultId] = useState<number | null>(null);
   const [provider, setProvider] = useState<ProviderState>({
     isOpen: false,
     information: undefined,
@@ -42,7 +44,13 @@ const EmailIntegration: React.FC = () => {
       const response = await api.getAsync(
         `${Urls.notification_provider}?channel=${Channel}`
       );
-      setFormState(response);
+      
+      const transformedResponse = response.map((item: any) => ({
+        ...item,
+        configJson: JSON.parse(item.configJson),
+      }));
+      
+      setFormState(transformedResponse);
     } catch (error) {
       console.error("Error loading settings:", error);
     } finally {
@@ -52,6 +60,7 @@ const EmailIntegration: React.FC = () => {
 
   const setAsDefault = async (id: number) => {
     setSubmittingSetAsDefault(true);
+    setSelectedForDefaultId(id);
     try {
       const requestBody = {
         provider: NotificationsProvider.Smtp,
@@ -59,12 +68,16 @@ const EmailIntegration: React.FC = () => {
         id: id
       };
       const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      await handleResponse(response);
-      await loadSettings();
+      handleResponse(response,async()=>{
+             await loadSettings();
+           },()=>{
+     
+           });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setSubmittingSetAsDefault(false);
+      setSelectedForDefaultId(null);
     }
   };
 
@@ -115,9 +128,6 @@ const EmailIntegration: React.FC = () => {
     }));
   };
 
-  const handleRefreshData = async () => {
-    await loadSettings();
-  };
 
   return (
     <div className="p-6 max-w-8xl mx-auto dark:bg-dark-bg bg-white dark:text-dark-text">
@@ -142,6 +152,7 @@ const EmailIntegration: React.FC = () => {
               <h2 className="text-xl font-semibold dark:text-dark-text text-gray-700">
                 {item.name}
               </h2>
+              <p className="text-sm dark:text-dark-text text-gray-600">{item.configJson?.from}</p>
               <p className="text-sm dark:text-dark-text text-gray-600">{item.description}</p>
             </div>
 
@@ -160,7 +171,8 @@ const EmailIntegration: React.FC = () => {
                   title={t("Set as default")}
                   onClick={() =>  setAsDefault(item.id)}
                   className="min-w-[120px]"
-                  disabled={SubmittingSetAsDefault}
+                  disabled={submittingSetAsDefault}
+                  loading={submittingSetAsDefault && item.id === selectedForDefaultId}
                 />
               )}
             </div>
@@ -176,11 +188,11 @@ const EmailIntegration: React.FC = () => {
               <p className="mb-4 dark:text-dark-text text-gray-600">
                 {selectedIntegration.description}
               </p>
-              <EmailDemo />
+              {/* <EmailDemo /> */}
             </div>
           ) : (
             <div>
-              <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
+              {/* <h3 className="text-lg font-semibold mb-2 dark:text-dark-text text-gray-700">
                 {t("before_you_can")}
               </h3>
               <ul className="list-disc pl-5 dark:text-dark-text text-gray-600">
@@ -206,8 +218,8 @@ const EmailIntegration: React.FC = () => {
                     <i className="ri-external-link-line ml-1"></i>
                   </a>
                 </li>
-              </ul>
-              <EmailDemo />
+              </ul> */}
+              {/* <EmailDemo /> */}
             </div>
           )}
         </div>
@@ -219,7 +231,10 @@ const EmailIntegration: React.FC = () => {
           height={350}
           isForm={true}
           closeModal={handleCloseModal}
-          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id} onSuccess={handleRefreshData} />}
+          content={<EmailSmtpConnectPopup data={provider.information} id={provider.id}  onSuccess={() => {
+                          setProvider({ isOpen: false, information: undefined, provider: undefined });
+                          loadSettings();
+                        }}/>}
         />
       </div>
     </div>

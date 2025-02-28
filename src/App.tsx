@@ -61,8 +61,15 @@ function App() {
     const fetchSettings = async () => {
       try {
         const settings = await api.getAsync(Urls.application_setting);
+        const token =localStorage.getItem("token");
+        debugger;
+        if(token) {
+          debugger;
+          console.log(token);
+          
         localStorage.setItem("as", modelToBase64(settings));
         dispatch(setApplicationSettings({ ...settings, apiLoaded: true }));
+        }
       } catch (error) {
         console.error("Error fetching application settings:", error);
       }

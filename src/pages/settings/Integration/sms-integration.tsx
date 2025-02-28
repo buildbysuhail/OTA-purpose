@@ -57,8 +57,13 @@ const SMSIntegration: React.FC = () => {
         channel: NotificationsChannel.Sms,
         id: id
       };
-      const response = await api.post(Urls.notification_provider_set_as_default, requestBody);
-      await handleResponse(response);
+      const response = await api.postAsync(Urls.notification_provider_set_as_default, requestBody);
+      
+      handleResponse(response,async()=>{
+        await loadSettings();
+      },()=>{
+
+      });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

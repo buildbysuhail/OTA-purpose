@@ -378,7 +378,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
-            ledgerID > 0
+            (ledgerID??0) > 0
               ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
               : 0,
             api.getAsync(
@@ -1127,7 +1127,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
         case "TXP": {
-          debugger;
+          
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -1390,7 +1390,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {
         dataField: "discount",
         caption: t("discount"),
-        visible: false,
+        dataType: "number" as "number",
+        visible: true,
         customizeText: (cellInfo: any) =>
           `${getFormattedValue(cellInfo.value)}`,
       },
@@ -1544,38 +1545,44 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [formState.formElements.gridColumns]);
 
   const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => `${getFormattedValue(itemInfo.value)}`;
+    return (itemInfo: { value: any }) => {
+      debugger;
+      const value = itemInfo.value;
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+    };
   }, []);
 
   const summaryItems: SummaryConfig[] = [
-    {
-      column: "amount",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "amountFC",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "debit",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
-    {
-      column: "credit",
-      summaryType: "sum",
-      valueFormat: "currency",
-      customizeText: customizeSummaryRow,
-    },
+    // {
+    //   column: "amount",
+    //   summaryType: "sum",
+    //   valueFormat: "currency",
+    //   customizeText: customizeSummaryRow,
+    // },
+    // {
+    //   column: "amountFC",
+    //   summaryType: "sum",
+    //   valueFormat: "currency",
+    //   customizeText: customizeSummaryRow,
+    // },
+    // {
+    //   column: "debit",
+    //   summaryType: "sum",
+    //   valueFormat: "currency",
+    //   customizeText: customizeSummaryRow,
+    // },
+    // {
+    //   column: "credit",
+    //   summaryType: "sum",
+    //   valueFormat: "currency",
+    //   customizeText: customizeSummaryRow,
+    // },
     {
       column: "discount",
       summaryType: "sum",
-      valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
   ];
@@ -2703,7 +2710,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     }
                   />
                 )}
-                {/* {formState?.row.ledgerID?.toString()} */}
+                {formState?.row.ledgerID?.toString()}
                 {formState.formElements.ledgerID.visible && (
                   <>
                     <ERPDataCombobox
@@ -2712,7 +2719,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       triggerEffect={triggerEffect}
                       id="ledgerID"
                       required={true}
-                      className="w-full"
+                      className="w-full"          
+                      value={formState.row.ledgerID}
                       label={t(formState.formElements.ledgerID.label)}
                       data={formState.row}
                       reload={formState.formElements.ledgerID.reload}
@@ -2787,9 +2795,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         accFormStateRowHandleFieldChange({
                           fields: {
                             amount:
-                              e.target?.value != ""
-                                ? parseFloat(e.target?.value)
-                                : "",
+                            e.target?.value !== "" && !e.target?.value.endsWith(".")
+                            // ? parseFloat(e.target?.value)
+                            ? e.target?.value
+                            : e.target?.value,
                           },
                         })
                       )
@@ -3066,6 +3075,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     <ERPDateInput
                       localInputBox={formState.userConfig?.inputBoxStyle}
                       id="bankDate"
+                      
                       label={t(formState.formElements.bankDate.label)}
                       value={new Date(formState.row.bankDate)}
                       onChange={(e) =>

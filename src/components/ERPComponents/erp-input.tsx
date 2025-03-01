@@ -157,6 +157,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
       if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
@@ -164,7 +165,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
       if (type == "number") {
         const value = e.target.value;
-        if (/^\d*$/.test(value)) {
+        if (/^\d*\.?\d*$|^\.$/.test(value)) {
           onChangeData &&
             data &&
             onChangeData(setNestedValue(data, id, e.target?.value));

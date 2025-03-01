@@ -86,6 +86,7 @@ interface ERPDevGridProps {
   pageSize?: number;
   allowPaging?: boolean;
   allowSelection?: boolean;
+  allowSelectAll?: boolean;
   selectionMode?: "single" | "multiple" | "none";
   allowExport?: boolean;
   exportFormats?: string[];
@@ -399,6 +400,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowPaging = true,
       allowSelection = true,
       selectionMode = "single",
+      allowSelectAll = true,
       allowExport = true,
       exportFormats = ["pdf", "excel"],
       allowColumnReordering = true,
@@ -1016,7 +1018,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         topLeft: { x: 0, y: currentY },
         customizeCell: customizeCell,
       });
-      debugger;
+      
       // Restore original column visibility and settings
       originalColumnVisibility.forEach((column: any) => {
         gridInstance.columnOption(column.dataField, "visible", column.visible);
@@ -1292,10 +1294,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         ) {
           if (dynamicProps?.isTransactionScreen) {
 
-            debugger;
+            
             const params = handleInvoke(event.data);
             if (params) {
-              debugger;
+              
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object
@@ -1309,7 +1311,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               console.error("Invalid data or parameters");
             }
           } else {
-            debugger;
+            
             let updatedBodyProps: any = {};
 
             dynamicProps?.bodyProps != undefined
@@ -1390,11 +1392,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const handleScroll = useCallback(() => {
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-        const scrollTop = gridInstance.getScrollable().scrollTop();
-        const scrollHeight = gridInstance.getScrollable().scrollHeight();
-        const clientHeight = gridInstance.getScrollable().clientHeight();
-
-        if (scrollTop + clientHeight >= scrollHeight) {
+        const scrollable = gridInstance.getScrollable();
+    
+        if (!scrollable) return;
+    
+        const scrollTop = scrollable.scrollTop(); // Current scroll position
+        const scrollHeight = scrollable.scrollHeight(); // Total scrollable height
+        const clientHeight = scrollable.clientHeight(); // Visible portion of the grid
+    
+        const buffer = 5; // Small buffer to ensure detection (adjust if necessary)
+    
+        if (scrollTop + clientHeight >= scrollHeight - buffer) {
           setIsAtBottom(true);
         } else {
           setIsAtBottom(false);
@@ -1407,7 +1415,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const gridInstance = gridRef.current.instance();
         const scrollable = gridInstance.getScrollable();
         const scrollHeight = scrollable.scrollHeight();
-        scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight });
+        const clientHeight = scrollable.clientHeight(); // Get visible area height
+    
+        // Ensure scrolling reaches the real bottom
+        scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight - clientHeight });
       }
     }, []);
 
@@ -1428,6 +1439,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return (itemInfo: { value: any }) => `Sales Total: ${itemInfo.value.toFixed(2)}`
     }, [])
 
+    // Attach scroll event listener
+    useEffect(() => {
+      console.log('scrollToCalled');
+      
+      if (gridRef.current) {
+        const gridInstance = gridRef.current.instance();
+        gridInstance?.getScrollable()?.scrollTo({ left: 0, top: 0 }); // Reset scroll position
+      }
+    }, [dataUrl]);
+
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
       return (
@@ -1442,6 +1463,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 showInColumn={config.showInColumn}
                 alignment={config.alignment}
                 customizeText={config.customizeText}
+                skipEmptyValues={false} 
               />
             )
           })}
@@ -1535,7 +1557,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
-            {allowSelection && <Selection mode={selectionMode} selectAllMode={"allPages"}
+            {allowSelection && <Selection mode={selectionMode}  allowSelectAll={allowSelectAll}  selectAllMode={"allPages"}
               showCheckBoxesMode={"always"} />
             }
             {allowGrouping && <Grouping />}
@@ -1596,7 +1618,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   >
                     <button
                       type="button"
-                      onClick={() => scrollTo(isAtBottom ? 0 : 100)}
+                      onClick={() => {
+                        debugger;
+                        scrollTo(isAtBottom ? 0 : 100);
+                      }}
                       className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
                     >
                       {isAtBottom ? "↑" : "↓"}

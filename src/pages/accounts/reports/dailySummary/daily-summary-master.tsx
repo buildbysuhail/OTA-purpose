@@ -50,7 +50,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                 data={filter}
                 label={t("transaction_date")}
                 onChangeData={(data: any) => {
-                  debugger;
+                  
                   setFilter((prev: any) => ({
                     ...prev,
                     transactionDate: data.transactionDate
@@ -139,7 +139,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
                   employeeID: data.employeeID
                 }))}
               />
-              <ERPButton title="Show" onClick={() =>{ debugger;
+              <ERPButton title="Show" onClick={() =>{ 
                 setReload(true)
               }}></ERPButton>{reload?.toString()}
             </div>

@@ -113,7 +113,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
             </div>
             <div className="flex flex-wrap gap-0 gap-x-6">
               {favoriteItems.map((route, routeIdx) => (
-                <Item key={`favorite_route_${routeIdx}`} route={route} isFavorite={true} toggleFavorite={toggleFavorite} navigate={navigate} dispatch={dispatch} />
+                <Item key={`favorite_route_${routeIdx}`} route={route} isFavorite={true} toggleFavorite={toggleFavorite} navigate={navigate} dispatch={dispatch} t={t}/>
               ))}
             </div>
           </div>
@@ -129,7 +129,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
             {distributedAllItems.map((columnItems, idx) => (
               <div className="flex flex-col" key={`column_${idx}`}>
                 {columnItems.map((route, routeIdx) => (
-                  <Item key={`JPKNE84_${routeIdx}`} route={route} isFavorite={favorites.includes(route.id)} toggleFavorite={toggleFavorite} navigate={navigate} dispatch={dispatch} />
+                  <Item key={`JPKNE84_${routeIdx}`} route={route} isFavorite={favorites.includes(route.id)} toggleFavorite={toggleFavorite} navigate={navigate} dispatch={dispatch} t={t} />
                 ))}
               </div>
             ))}
@@ -146,9 +146,10 @@ interface ItemProps {
   toggleFavorite: (routeId: number) => void;
   navigate: (path: string) => void;
   dispatch: (action: any) => void;
+  t:any
 }
 
-const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate, dispatch }) => {
+const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate, dispatch ,t}) => {
   return (
     <div
       className="p-[5px] border-b border-dotted border-gray-400 cursor-pointer hover:bg-gray-100 transition duration-200 flex items-center"
@@ -200,7 +201,7 @@ const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate
         )}
       </span>
       <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1 dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text text-[#5d81ea]">
-        {route.title}
+        {t(route.title)}
       </span>
     </div>
   );

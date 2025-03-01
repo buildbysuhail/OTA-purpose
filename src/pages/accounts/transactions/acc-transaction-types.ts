@@ -205,7 +205,7 @@ export interface AccTransactionRow {
   slNo?: number;
   accTransactionMasterID: number;
   accTransactionDetailID: number;
-  ledgerID: number;
+  ledgerID: number | null;
   ledgerCode: string;
   ledgerName: string;
   accGroupName: string;
@@ -216,7 +216,7 @@ export interface AccTransactionRow {
   particulars: string;
   amount?: number;
   amountFC?: number;
-  hasDiscount?: boolean;
+  hasDiscount: boolean;
   discount?: number;
   debit?: number;
   credit?: number;
@@ -312,7 +312,7 @@ export const AccTransactionMasterInitialData: AccTransactionMaster = {
 export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransactionMasterID: 0,
   accTransactionDetailID: 0,
-  ledgerID: 0,
+  ledgerID: null,
   relatedLedgerID: 0,
   amount: undefined,
   discount: 0,
@@ -362,7 +362,8 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   taxPerc: 0,
   taxableAmount: 0,
   taxAmount: 0,
-  paymentType: ""
+  paymentType: "",
+  hasDiscount: false
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: AccTransactionMasterInitialData,
@@ -513,7 +514,7 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   paymentType: { visible: false, disabled: false, label: "payment_type" },
   chequeStatus: { visible: false, disabled: false, label: "check_status" },
   bankCharge: { visible: false, disabled: false, label: "bank_charge" },
-  bankDate: { visible: false, disabled: false, label: "bank_date" },
+  bankDate: { visible: false, disabled: false, label: "cheque_date" },
   nameOnCheque: { visible: true, disabled: false, label: "name_on_cheque" },
   bankName: { visible: true, disabled: false, label: "bank_name" },
   projectId: { visible: false, disabled: false, label: "project" },

@@ -62,9 +62,9 @@ function App() {
       try {
         const settings = await api.getAsync(Urls.application_setting);
         const token =localStorage.getItem("token");
-        debugger;
+        
         if(token) {
-          debugger;
+          
           console.log(token);
           
         localStorage.setItem("as", modelToBase64(settings));

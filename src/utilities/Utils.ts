@@ -43,7 +43,7 @@ export const formatDateFields = (data: any) => {
 
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
-      debugger;
+      
       if (
         (typeof value === "string" || value instanceof Date) && // Ensure it's a valid date input
         key.toLowerCase().includes("date") // Check if key includes "date"

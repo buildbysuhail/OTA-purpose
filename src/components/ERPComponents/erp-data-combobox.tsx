@@ -609,7 +609,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, []);
 
     useEffect(() => {
-      debugger;
+      
       if (_reload !== undefined && _reload !== true) {
         return;
       }
@@ -712,7 +712,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
        let _items;
 
     // Check if data is available in Redux
-    debugger;
+    
     if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length && reload != true) {
       console.log('Accounts/Data/AccLedgers2');
         console.log(field?.params);
@@ -794,7 +794,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
         setInitial(null);
-        if (triggerEffect && (value == null)) {
+        if (triggerEffect || value == null) {
+          handleItemClick({value: 0, label:""})
           setInputValue("");
         }
         // if (filteredItems.length > 0 && inputValue === "") {

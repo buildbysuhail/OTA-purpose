@@ -30,8 +30,8 @@ export const clearEntryControl = (
   defaultCostCenterID: number
 ): AccTransactionFormState => {
   state.row.ledgerCode = "";
+  state.row.ledgerID = null;
   state.row.accGroupName = "";
-  state.row.ledgerID = 0;
   state.row.amount = 0;
   state.row.discount = 0;
   state.row.partyName = "";
@@ -142,7 +142,7 @@ export const validateTransactionDate = (
         hasBlockedRight == undefined ||
         (hasBlockedRight != undefined && hasBlockedRight("PRE_POST") == false)
       ) {
-        debugger;
+        
         const minPreDate = new Date();
         minPreDate.setHours(0, 0, 0, 0); // Removes time part
         minPreDate.setDate(

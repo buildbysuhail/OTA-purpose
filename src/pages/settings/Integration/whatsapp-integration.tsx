@@ -219,25 +219,20 @@ const WhatsappIntegration: React.FC = () => {
         <ERPModal
           isOpen={provider.isOpen}
           title={
-            provider.providerName === "WhatsappGatewayCenter"
-              ? "WhatsappGatewayCenter Integration"
-              : t(provider.providerName?.toLowerCase() || "twilio")
+            provider.provider === NotificationsProvider.TwillioWhatsapp ? t(provider.providerName?.toLowerCase() || "twilio"):""
           }
-          width={provider.providerName === "WhatsappGatewayCenter" ? 500 : 600}
-          height={provider.providerName === "WhatsappGatewayCenter" ? 200 : 620}
+          width={600}
+          height={ 620}
           isForm={true}
           closeModal={() => { setProvider({ isOpen: false, information: undefined, providerName: undefined }); }}
           content={
-            provider.providerName === "WhatsappGatewayCenter" ? (
-              <WhatsappGatewayCenterPopup data={provider.information} id={provider.id} onSuccess={() => {
-                setProvider({ isOpen: false, information: undefined, provider: undefined });
-                loadSettings();
-              }} />
-            ) : (
+            provider.provider === NotificationsProvider.TwillioWhatsapp ? (
               <WhatsappTwilioConnectPopup data={provider.information} id={provider.id} onSuccess={() => {
                 setProvider({ isOpen: false, information: undefined, provider: undefined });
                 loadSettings();
               }} />
+            ) : (
+              <></>
             )
           }
         />

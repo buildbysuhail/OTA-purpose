@@ -62,7 +62,7 @@ const accTransactionSlice = createSlice({
       (state.transaction.master.accTransactionMasterID = 0),
         (state.row.ledgerCode = "");
       state.transaction.attachments = [];
-      state.row.ledgerID = 0;
+      state.row.ledgerID = null;
       state.transaction.master.remarks = "";
       state.row.accTransactionDetailID = 0;
       state.previousNarration = "";
@@ -661,7 +661,7 @@ const accTransactionSlice = createSlice({
             case "CQR":
             case "PV":
             case "PBR":
-              state.masterAccountID = firstDetail.ledgerID;
+              state.masterAccountID = firstDetail.ledgerID??0;
               break;
 
             case "JV":
@@ -669,7 +669,7 @@ const accTransactionSlice = createSlice({
                 payload.master.drCr === "Dr" ? "Debit" : "Credit";
               state.masterAccountID =
                 payload.master.drCr === "Dr"
-                  ? firstDetail.ledgerID
+                  ? (firstDetail.ledgerID??0)
                   : firstDetail.relatedLedgerID;
               break;
           }

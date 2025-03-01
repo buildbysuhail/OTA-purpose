@@ -32,7 +32,7 @@ const SMSTwilioConnectPopup: React.FC<SMSTwilioConnectPopupProps> = ({ data = {}
   };
 
   const handleSubmit = async () => {
-    debugger;
+    
     setIsSaving(true);
     try {
       const requestBody = {

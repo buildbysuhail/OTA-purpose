@@ -18,7 +18,7 @@ interface SMSGatewayCenterPopupProps {
 }
 
 const SMSGatewayCenterPopup: React.FC<SMSGatewayCenterPopupProps> = ({ data = {}, id, onSuccess }) => {
-  debugger;
+  
   const [information, setInformation] = useState(data?.configJson);
   const [phone, setPhone] = useState<string>("");
   const [message, setMessage] = useState<string>("");

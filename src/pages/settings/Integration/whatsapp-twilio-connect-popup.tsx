@@ -39,6 +39,7 @@ const WhatsappTwilioConnectPopup: React.FC<WhatsappTwilioConnectPopupProps> = ({
         channel: NotificationsChannel.Whatsapp,
         configJson: JSON.stringify(information),
         isEnable: true,
+        id
       };
       const response = await api.post(Urls.notification_provider_update, requestBody);
       handleResponse(response, () => { onSuccess && onSuccess() });

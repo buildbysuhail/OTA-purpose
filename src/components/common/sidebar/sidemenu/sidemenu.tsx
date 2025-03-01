@@ -371,7 +371,7 @@ export const MENUITEMS = [
     Name: "",
     active: false,
     selected: false,
-    title: "accountant",
+    title: "accounts",
     badge: "",
     badgetxt: "",
     rights: "",

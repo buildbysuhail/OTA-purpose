@@ -607,14 +607,14 @@ export const useAccTransaction = (
           case "PV":
           case "PBR":
           case "CRE":
-            voucher.masterAccountID = firstDetail.ledgerID;
+            voucher.masterAccountID = firstDetail.ledgerID??0;
             break;
 
           case "JV":
           case "JVSP":
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
-                ? firstDetail.ledgerID
+                ? (firstDetail.ledgerID??0)
                 : firstDetail.relatedLedgerID;
             // voucher.transaction.master.drCr =
             // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
@@ -1022,14 +1022,14 @@ export const useAccTransaction = (
         case "PV":
         case "CQR":
         case "CRE":
-          element.relatedLedgerID = element.ledgerID;
+          element.relatedLedgerID = element.ledgerID??0;
           element.ledgerID = formState.masterAccountID;
           break;
 
         case "JV":
         case "JVSP":
           if (formState.row.drCr === "Dr") {
-            element.relatedLedgerID = element.ledgerID;
+            element.relatedLedgerID = element.ledgerID??0;
             element.ledgerID = formState.masterAccountID;
           } else {
             element.ledgerID = element.ledgerID; // Preserve original ledgerID
@@ -1043,7 +1043,7 @@ export const useAccTransaction = (
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
             element.ledgerID = element.ledgerID; // Keep original ledger ID
           } else {
-            element.relatedLedgerID = element.ledgerID;
+            element.relatedLedgerID = element.ledgerID??0;
             element.ledgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
           }
@@ -1074,7 +1074,7 @@ export const useAccTransaction = (
         case "BRT":
         case "DNT":
         case "INC":
-          element.relatedLedgerID = element.ledgerID;
+          element.relatedLedgerID = element.ledgerID??0;
           element.ledgerID = formState.masterAccountID;
           break;
       }
@@ -1382,7 +1382,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    debugger;
+    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);

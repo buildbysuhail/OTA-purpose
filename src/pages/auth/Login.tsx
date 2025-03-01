@@ -26,6 +26,7 @@ import { setApplicationSettings } from "../../redux/slices/app/application-setti
 import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import polo from "../../assets/images/brand-logos/polo_logo.png";
+import loginBg from "../../assets/images/login.jpg";
 import ConfettiEffect from "./confetti-effect";
 import { ClientSessionModel } from "../../redux/slices/client-session/reducer";
 
@@ -102,7 +103,7 @@ const Login = () => {
           userRights,
           locale
         );
-        
+
           if (ass != undefined && ass != null && ass != "") {
             appSettings = customJsonParse(atob(ass));
             dispatch(setApplicationSettings(
@@ -158,7 +159,7 @@ const Login = () => {
       <div className="flex justify-center h-screen">
         <div
           className="hidden bg-cover lg:block lg:w-2/3"
-          style={{ backgroundImage: "url('https://fourthrev.com/wp-content/uploads/2023/03/FR_Blog_How-to-Become-a-Data-Analyst-in-2023_Blog_1200x628-1-768x402.png')", }}>
+          style={{ backgroundImage: `url(${loginBg})`, }}>
           <div className="flex items-center h-full px-20">
             <div>
               <h2 className="text-4xl font-bold text-white">

@@ -751,7 +751,7 @@ export const Themebackgroundcolor : React.FC<actionfunctionProps> = ({ actionfun
 
 export const Reset = (actionfunction: any, appState: any) => {
     
-    debugger;
+    
     Vertical(actionfunction, appState);
     actionfunction({
         ...appState,
@@ -792,7 +792,7 @@ export const Reset = (actionfunction: any, appState: any) => {
 };
 export const Reset1 = (actionfunction: any, appState: any) => {
     
-    debugger;
+    
     Vertical(actionfunction, appState);
     actionfunction({
         ...appState,

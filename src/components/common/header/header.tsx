@@ -183,11 +183,11 @@ const Header: FC<HeaderProps> = () => {
   function menuClose() {
     const theme = appState;
     if (window.innerWidth <= 992) {
-      debugger;
+      
       updateAppState({ ...theme, toggled: "close" });
     }
     if (window.innerWidth >= 992) {
-      debugger;
+      
       updateAppState({
         ...theme,
         toggled: appState?.toggled ? appState?.toggled : "",
@@ -196,14 +196,14 @@ const Header: FC<HeaderProps> = () => {
   }
 
   const toggleSidebar = () => {
-    debugger;
+    
     const theme = appState;
     let sidemenuType = theme.dataNavLayout;
     if (window.innerWidth >= 992) {
       if (sidemenuType === "vertical") {
         let verticalStyle = theme.dataVerticalStyle;
         const navStyle = theme.dataNavStyle;
-        debugger;
+        
         switch (verticalStyle) {
           // closed
           case "closed":
@@ -305,7 +305,7 @@ const Header: FC<HeaderProps> = () => {
         updateAppState({ ...theme, toggled: "open" });
 
         setTimeout(() => {
-          debugger;
+          
           // if (theme.toggled == "open") {
             const overlay = document.querySelector("#responsive-overlay");
 

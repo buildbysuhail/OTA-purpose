@@ -76,7 +76,7 @@ const SMSIntegration: React.FC = () => {
   };
 
   const handleOpen = (item: any) => {
-    debugger;
+    
     let parsedConfig: any;
     if (typeof item?.configJson === "string" && item?.configJson.trim() !== "") {
       try {
@@ -87,7 +87,7 @@ const SMSIntegration: React.FC = () => {
     } else if (typeof item?.configJson === "object" && item?.configJson !== null) {
       parsedConfig = item?.configJson;
     }
-    debugger;
+    
     if (item.provider == NotificationsProvider.SmsGateway) {
       setProvider({
         isOpen: true,

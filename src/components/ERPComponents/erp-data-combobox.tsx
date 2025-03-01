@@ -830,7 +830,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       setDisplayValue("");
       setFilteredItems(items); // Reset filtered items to original list
       onChange?.(value);
-      onChangeData?.(value && data ? { ...data, [id]: value?.value } : null);
+      onChangeData && onChangeData(value && data ? { ...data, [id]: value?.value } : {});
       handleChange?.(field?.id ?? "", value?.value);
       handleChangeData?.(field?.id ?? "", value?.value);
       onSelectItem?.(value);

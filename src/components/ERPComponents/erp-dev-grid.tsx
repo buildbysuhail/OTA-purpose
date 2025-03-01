@@ -27,7 +27,7 @@ import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeOb
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
-import { Plus, Printer } from "lucide-react";
+import { EllipsisVertical, FileUp, Plus, Printer } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
 
@@ -58,6 +58,7 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
+  moreOption?:boolean;
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
@@ -371,6 +372,7 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
+      moreOption=false,
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
@@ -512,7 +514,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
     const actionColumn = gridCols.find(col => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
-
+    const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
@@ -1633,7 +1635,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                         debugger;
                         scrollTo(isAtBottom ? 0 : 100);
                       }}
-                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-10 h-10 rounded-full shadow-md hover:shadow-lg focus:outline-none mr-2"
+                      className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"
                     >
                       {isAtBottom ? "↑" : "↓"}
                     </button>
@@ -1659,6 +1661,69 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     >
                       <Printer className="w-4 h-4" />
                     </button>
+                  </Item>
+                )
+              }
+               {
+                moreOption && (
+                  <Item>
+                    <div className="relative">
+                    <button
+                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
+                      // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
+                      // onClick={handlePrintPdf}setMoreOptionVisible
+                      onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
+                    >
+                      <EllipsisVertical className="w-4 h-4" />
+                    </button>
+                    {isMoreOptionVisible && (
+                      <div
+                       className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                       style={{
+                        top: "100%", // Position the popup right below the button
+                        left: "-90px", // Align it with the left edge of the button
+                        width: "221px", // Set your desired width
+                        marginTop: "4px", // Add some spacing between the button and the popup
+                      }}
+                      >
+                   <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                    <ul className="space-y-1">
+                      <li>
+                       <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      // onClick={}
+                      >              
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                    </button>
+                      </li>
+
+                      <li>
+                       <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      // onClick={}
+                      >              
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                    </button>
+                      </li>
+
+                      <li>
+                       <button
+                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      // onClick={}
+                      >              
+                      <FileUp className="pe-2" />
+                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                    </button>
+                      </li>
+                  
+                    </ul>
+                  </nav>
+                      </div>
+                    )}
+                    </div>
+               
                   </Item>
                 )
               }

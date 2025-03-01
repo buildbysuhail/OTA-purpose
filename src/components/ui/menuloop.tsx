@@ -46,7 +46,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                     </p>
                   </li>
                 ) : (
-                  <li className={`${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
+                  <li className={`relative ${firstlevel.menutitle ? 'slide__category' : firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
                     {firstlevel.type === "link" ?
                       <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''} group `}>
                       {firstlevel.icon && <firstlevel.icon className='w-[14px]' />}
@@ -56,7 +56,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
                           {t(firstlevel.title)}
                         </div>
                         {firstlevel.addPath != undefined && firstlevel.addPath != null && firstlevel.addPath != "" &&
-                          <span className=" fixed ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
+                          <span className=" absolute ms-[147px] hidden bg-black text-white  group-hover:block hover:bg-[#00000047] rounded-full">
                             <Link to={firstlevel.addPath} className={` ${firstlevel.selected ? 'active' : 'active'}`}>
                             <CirclePlus className="text-[#ffffffa1]  hover:text-white hover:w-[26px] hover:h-[26px] side-menu__label" />
                               {/* <i className="side-menu__icon">

@@ -128,6 +128,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   financialYearID,
   isTeller = false,
 }) => {
+  debugger;
   const [triggerEffect, setTriggerEffect] = useState(false);
   
   useEffect(() => {
@@ -624,6 +625,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           transactionMasterID
         );
       }
+      _formState = {
+        ..._formState,
+      transactionType: transactionType ?? "",
+      formCode: formCode ?? "",
+      title:
+        (formType == undefined || formType.trim() == ""
+          ? t(title)
+          : t(title) + "[" + formType + "]") ?? ""
+      };
       _formState.isTaxOnExpense = [
         "TXP",
         "CPT",

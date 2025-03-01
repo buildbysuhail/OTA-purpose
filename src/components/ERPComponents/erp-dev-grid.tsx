@@ -1445,7 +1445,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-        gridInstance?.getScrollable()?.scrollTo({ left: 0, top: 0 }); // Reset scroll position
+    
+        // Reset Scroll Position
+        gridInstance?.getScrollable()?.scrollTo({ left: 0, top: 0 });
+    
+        // Clear Filters
+        gridInstance?.clearFilter();
+    
+        // Clear Sorting
+        gridInstance?.clearSorting();
+    
+        // Clear Search Panel
+        gridInstance?.searchByText("");
       }
     }, [dataUrl]);
 

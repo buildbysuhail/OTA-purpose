@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback, forwardRef, memo, cloneElement } from "react";
+import React, { useState, useEffect, useRef, useCallback, forwardRef, memo, cloneElement, useMemo } from "react";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useTranslation } from "react-i18next";
@@ -770,9 +770,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     useEffect(() => {
       filterItems(query);
     }, [query, filterItems]);
-
+    const memoizedField = useMemo(() => field, [field?.id, field?.params]);
+    const memoizedData = useMemo(() => data, [JSON.stringify(data)]);
+    const memoizedItems = useMemo(() => items, [JSON.stringify(items)]);
+    const memoizedFilteredItems = useMemo(() => filteredItems, [JSON.stringify(filteredItems)]);
     useEffect(() => {
-      
+      debugger;
       // if (triggerEffect) {
       const fieldKey = field?.id?.replaceAll("_id", "");
       const defaultValueKey = getNestedValue(
@@ -816,7 +819,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
           : -1
       );
       // }
-    }, [items, data, defaultData, field, field?.params, initialValue, filteredItems, value, data?.[field?.id ?? ""]]); // Add value and data dependency
+    }, [memoizedItems, memoizedData, memoizedField, memoizedFilteredItems, value]);
 
     const clearSelection = (e?: React.MouseEvent) => {
       handleItemClick({ label: "", value: null, is_active: false, name: "" });

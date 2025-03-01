@@ -29,7 +29,7 @@ const ReportList = () => {
               <Header />
             </div>
           </div>
-          <div className="py-6 px-4 pb-28 max-w-4xl mx-2 w-full h-full overflow-auto scrollbar-hide">
+          <div className="py-6 px-4 pb-[139px] max-w-none ml-0 mr-0 pl-0 pr-0 pt-0   mx-2 w-full h-full overflow-auto scrollbar-hide">
             <div className="w-full flex flex-wrap gap-4 justify-center">
               {settingsRoutes?.map((item: any, idx: number) => {
                 return <ReportsCard data={item} key={`QKLJM34${idx}`} />;

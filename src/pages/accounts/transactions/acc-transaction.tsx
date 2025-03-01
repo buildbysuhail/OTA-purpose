@@ -4129,7 +4129,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               formState.formElements.printCheque.visible && (
                 <ERPCheckbox
                   localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="printCheque"
+                  id="p-rintCheque"
                   label={t(formState.formElements.printCheque.label)}
                   checked={formState.printCheque}
                   onChange={(e) =>

@@ -230,6 +230,9 @@ export interface HeaderState {
   hasfaxField?: boolean;
   faxLabel?: string;
 
+  hasEmailField?: boolean;
+  emailLabel?: string;
+
   bgColor?: string;
   isFirstOnly?: boolean;
   bg_image_header_position?: string;
@@ -684,6 +687,8 @@ export const initialTemplateState: ActionState<TemplateState> = {
       phoneLabel: "",
       hasfaxField: false,
       faxLabel: "",
+      hasEmailField: false,
+      emailLabel: "",
       bgColor: "#FFFFFF",
       isFirstOnly: false,
       bg_image_header_position: "center",

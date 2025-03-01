@@ -12,6 +12,7 @@ import { RootState } from "../../../redux/store";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
+import VoucherType from "../../../enums/voucher-types";
 
 
 interface HeaderDesignerProps {

@@ -123,28 +123,28 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             {t("padding")} <span className="text-xs">{t("in_pts")}</span>
           </label>
           <div className="flex gap-2 mt-1">
+    
             <ERPInput
-              value={propertiesState?.padding?.top}
-              onChange={(e) => {
-                if (!(e.target?.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: e.target?.valueAsNumber } });
-                }
-              }}
+              id="padding_top"
               label={t("top")}
               type="number"
-              id="padding_top"
+              value={propertiesState?.padding?.top}
+          
+              onChange={(e) =>
+                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: parseInt(e.target.value, 10)} })
+              }
               placeholder=" "
               className="w-full"
               min={0}
+              step={10}
               max={60}
             />
             <ERPInput
               value={propertiesState?.padding?.bottom}
-              onChange={(e) => {
-                if (!(e.target?.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: e.target?.valueAsNumber } });
-                }
-              }}
+           
+              onChange={(e) =>
+                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: parseInt(e.target.value, 10)} })
+              }
               label={t("bottom")}
               type="number"
               id="padding_bottom"
@@ -155,11 +155,10 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             />
             <ERPInput
               value={propertiesState?.padding?.left}
-              onChange={(e) => {
-                if (!(e.target?.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: e.target?.valueAsNumber } });
-                }
-              }}
+           
+              onChange={(e) =>
+                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: parseInt(e.target.value, 10)} })
+              }
               label={t("left")}
               type="number"
               id="padding_left"
@@ -170,11 +169,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             />
             <ERPInput
               value={propertiesState?.padding?.right}
-              onChange={(e) => {
-                if (!(e.target?.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: e.target?.valueAsNumber } });
-                }
-              }}
+              onChange={(e) =>
+                onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: parseInt(e.target.value, 10)} })
+              }
               label={t("right")}
               type="number"
               id="padding_right"

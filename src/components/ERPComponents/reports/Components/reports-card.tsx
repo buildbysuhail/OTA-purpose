@@ -59,59 +59,59 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
   };
 
   const updateFavoriteStatus = async (routeId: number, isFavorite: boolean) => {
-    try {
-      const response = await fetch('https://api.example.com/updateFavorite', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_API_KEY'
-        },
-        body: JSON.stringify({ id: routeId, isFavorite })
-      });
+    // try {
+    //   const response = await fetch('https://api.example.com/updateFavorite', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'Bearer YOUR_API_KEY'
+    //     },
+    //     body: JSON.stringify({ id: routeId, isFavorite })
+    //   });
 
-      if (!response.ok) {
-        // ERPToast.showWith("Failed to update favorite status. Please try again.", "error");
-      }
-    } catch (error) {
-      // console.error('Error updating favorite status:', error);
-      // ERPToast.showWith("Error updating favorite status. Please try again.", "error");
-    }
+    //   if (!response.ok) {
+    //     // ERPToast.showWith("Failed to update favorite status. Please try again.", "error");
+    //   }
+    // } catch (error) {
+    //   // console.error('Error updating favorite status:', error);
+    //   // ERPToast.showWith("Error updating favorite status. Please try again.", "error");
+    // }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.example.com/getData', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_API_KEY'
-          }
-        });
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch('https://api.example.com/getData', {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': 'Bearer YOUR_API_KEY'
+    //       }
+    //     });
 
-        if (response.ok) {
-          const result = await response.json();
-          setFavorites(result.favoriteIds || []);
-        } else {
-          console.error('Failed to fetch data');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    //     if (response.ok) {
+    //       const result = await response.json();
+    //       setFavorites(result.favoriteIds || []);
+    //     } else {
+    //       console.error('Failed to fetch data');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
 
-    fetchData();
+    // fetchData();
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-1">
       {favoriteItems.length > 0 && (
-        <div className="w-auto  p-5  flex flex-grow ">
+        <div className="w-full p-5 pb-1 flex flex-grow">
           <div className="flex flex-col">
             <div className="flex gap-2 items-center">
               <p className="dark:!text-dark-text text-sm font-medium ms-[8px] mb-[8px]">{t('Favorites')}</p>
             </div>
-            <div className="flex flex-wrap gap-0 gap-x-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1.5">
               {favoriteItems.map((route, routeIdx) => (
                 <Item key={`favorite_route_${routeIdx}`} route={route} isFavorite={true} toggleFavorite={toggleFavorite} navigate={navigate} dispatch={dispatch} t={t}/>
               ))}
@@ -120,12 +120,12 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data }) => {
         </div>
       )}
 
-      <div className="w-full   p-5  flex flex-grow ">
+      <div className="w-full p-5 flex flex-grow">
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
             <p className="dark:!text-dark-text text-sm font-medium ms-[8px] mb-[8px]">{t(data?.title)}</p>
           </div>
-          <div className={`grid grid-cols-${columns} gap-6`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-${columns} gap-6`}>
             {distributedAllItems.map((columnItems, idx) => (
               <div className="flex flex-col" key={`column_${idx}`}>
                 {columnItems.map((route, routeIdx) => (
@@ -153,15 +153,15 @@ const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate
   return (
     <div
       className="p-[5px] border-b border-dotted border-gray-400 cursor-pointer hover:bg-gray-100 transition duration-200 flex items-center"
-      onClick={() => {
-        if (route?.path && route?.type === 'link') {
-          navigate(route?.path);
-        } else if (route?.action && route?.type === 'popup') {
-          dispatch(route?.action({ isOpen: true }));
-        } else {
-          ERPToast.showWith("This Feature is under development. Please try later!", "warning");
-        }
-      }}
+      // onClick={() => {
+      //   if (route?.path && route?.type === 'link') {
+      //     navigate(route?.path);
+      //   } else if (route?.action && route?.type === 'popup') {
+      //     dispatch(route?.action({ isOpen: true }));
+      //   } else {
+      //     ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+      //   }
+      // }}
     >
       <span
         className="cursor-pointer mr-2"
@@ -200,7 +200,17 @@ const Item: React.FC<ItemProps> = ({ route, isFavorite, toggleFavorite, navigate
           </svg>
         )}
       </span>
-      <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1 dark:hover:bg-dark-hover-bg hover:bg-gray-400 hover:text-black hover:rounded-[5px] dark:text-dark-text text-[#5d81ea]">
+      <span className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out p-1  dark:text-dark-text text-[#5d81ea]"
+            onClick={() => {
+              if (route?.path && route?.type === 'link') {
+                navigate(route?.path);
+              } else if (route?.action && route?.type === 'popup') {
+                dispatch(route?.action({ isOpen: true }));
+              } else {
+                ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+              }
+            }}
+            >
         {t(route.title)}
       </span>
     </div>

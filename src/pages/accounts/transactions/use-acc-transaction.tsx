@@ -1101,7 +1101,8 @@ export const useAccTransaction = (
         element.billwiseDetails = "";
         element.chequeStatus = "P";
       }
-      element.invoiceDate = element.invoiceDate == "" || element.invoiceDate == null ? formState.transaction.master.transactionDate: element.invoiceDate 
+      element.invoiceDate = element.invoiceDate == "" || element.invoiceDate == null ? formState.transaction.master.transactionDate: element.invoiceDate ;
+      element.projectId = element.projectId.toString() == "" ? 0 : element.projectId;
       updatedDetails.push(element);
     }
     return updatedDetails;

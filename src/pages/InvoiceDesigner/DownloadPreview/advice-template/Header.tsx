@@ -42,7 +42,9 @@ const styles = StyleSheet.create({
   docTitle:{
     fontSize: 18,
     fontWeight: "medium",
-    textDecoration:"underline"
+    border:"1px solid rgb(104, 101, 101)",
+    paddingHorizontal:8,
+    paddingVertical:4
   },
 });
 
@@ -89,7 +91,6 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
       height:headerState?.headerHeight || undefined,
       backgroundColor: template?.headerState?.bgColor || "#fff",
       position: 'relative',
-      borderBottom:"1px solid rgb(104, 101, 101)",
       zIndex:10
       }}>
   {/* Background Image */}
@@ -117,14 +118,20 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
               {currentBranch?.name}
             </Text>
           )}
+
+            {headerState?.showOrgAddress &&
+            currentBranch.address?.map((org: any, idx: number) => (
+              <Text key={`ADDK_${idx}`} style={fontStyles}>{org}</Text>
+            ))
+          }
         </View>
-        <View style={{ flexBasis: "33.33%", display: "flex", justifyContent: "flex-end",alignItems:"center"  }}>
+        <View style={{ flexBasis: "33.33%", display: "flex",flexDirection: "column", justifyContent: "flex-end",alignItems:"center" ,gap:4 }}>
          
             <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
               {headerState?.docTitle }
             </Text>
-          
-          </View>
+            <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{"Payment No:3"}</Text>
+        </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
           {headerState?.showOrgAddress &&
             currentBranch.address?.map((org: any, idx: number) => (
@@ -141,6 +148,12 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
             <View style={styles.otherInfo}>
               <Text style={labelStyles}>{headerState?.faxLabel || "Fax No"}:</Text>
               <Text style={fontStyles}>{currentBranch?.fax || "##12344543"}</Text>
+            </View>
+          )}
+             {headerState?.hasEmailField && (
+            <View style={styles.otherInfo}>
+              <Text style={labelStyles}>{headerState?.emailLabel || "Email"}:</Text>
+              <Text style={fontStyles}>{currentBranch?.email || "accounts@companyName.com"}</Text>
             </View>
           )}
         </View>

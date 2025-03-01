@@ -106,6 +106,22 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                             max={28}
                             step={1}
                         />
+                            <div className="flex flex-col gap-2">
+                            <ERPCheckbox
+                                id="hasEmailField"
+                                label={t("email")}
+                                checked={headerState?.hasEmailField}
+                                onChange={(e) => handleChange("header", "hasEmailField", e.target?.checked)}
+                            />
+                            {headerState?.hasEmailField && (
+                                <ERPInput
+                                    id="email"
+                                    noLabel
+                                    value={headerState?.emailLabel}
+                                    onChange={(e) => handleChange("header", "emailLabel", e.target?.value)}
+                                />
+                            )}
+                        </div>
                         <div className="flex flex-col gap-2">
                             <ERPCheckbox
                                 id="hasPhoneField"

@@ -267,7 +267,7 @@ export const Content = ({ data, template, currentBranch, docIDKey, currency }: {
               <Text style={fontStyles}>Ho No:1223</Text>
               {headerState?.hasShipTo && (
                 <>
-                  <Text style={labelStyles}>{headerState?.billTo ?? "BillTo"}</Text>
+                  <Text style={labelStyles}>{headerState?.shipTo ?? "Ship To"}</Text>
                   <Text style={fontStyles}>Ho No:1223</Text>
                 </>
               )}

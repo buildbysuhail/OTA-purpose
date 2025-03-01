@@ -8,17 +8,8 @@ import VoucherType from "../../../../enums/voucher-types";
 
 const styles = StyleSheet.create({
 
-    bgImage: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      zIndex: -10,
-    },
     content: {
-      paddingHorizontal: 20,
-      paddingVertical: 10,
+      paddingVertical: 20,
       display: "flex",
       flexDirection: "column",
       gap:20,
@@ -28,12 +19,13 @@ const styles = StyleSheet.create({
     VoucherInfo: {
       display: "flex",
       flexDirection: "row",
-      flexWrap: "wrap",
       justifyContent:"space-between", 
       width: "100%",
     },
-    dottedBorder: {
-      borderBottom: "1px dotted rgb(38, 37, 37)",
+    billTo: {
+      display: "flex",
+      flexDirection: "column",
+      width: "60%",
     },
  
   });
@@ -50,7 +42,9 @@ const styles = StyleSheet.create({
     const labelColor = template?.propertiesState?.label_font_color || "#000";
     const labelFontWeight = template?.propertiesState?.label_font_weight || 400;
     const labelFontStyle = template?.propertiesState?.label_font_style || "normal";
-  
+
+    const custNameFontColor = headerState?.customerNameFontColor;
+    const custNameFontSize = headerState?.customerNameFontSize || 12;
     const labelStyles = {
       color: labelColor,
       fontSize: labelFontSize,
@@ -73,116 +67,87 @@ const styles = StyleSheet.create({
       width:"100%",
       backgroundColor:  template?.propertiesState?.bg_color|| "#fff",
       position: 'relative',
-      borderBottom:"1px solid rgb(104, 101, 101)",
       zIndex:10
       }}>
-        {/* bgImage */}
-        {template?.background_image && (
-          <Image
-            src={template?.background_image}
-            style={[
-              styles.bgImage,
-              { objectPosition: headerState?.bg_image_header_position || 'center' }
-            ]}
-          />
-        )}
-
       
         <View style={styles.content}>
             {/* date & No */}
           <View style={styles.VoucherInfo}>
-            
               <View style={{
-                display: "flex", flexDirection: "row",gap:2,
+                display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",padding:10,width:"40%"
               }}>
-                <Text style={labelStyles}>{headerState?.numberField?`${headerState?.numberField} :`:"No :"}</Text>
-                <Text style={[fontStyles, styles.dottedBorder,{width:50}]}>
-                  {data.master?.voucherNumber || 1}
-                </Text>
+                  {/* {headerState?.showReceivedFrom && (
+                          <View>
+                            <Text style={labelStyles}>{headerState?.receivedFromLabel ?? "Received From"}</Text>
+                          </View>
+                        )} */}
+                        {/* {headerState?.hasBillTo && ( */}
+                          {/* <View style={styles.billTo}> */}
+                            {/* <Text style={labelStyles}>{headerState?.billTo ?? "Bill T0"}</Text> */}
+                            <Text style={{
+                              ...fontStyles,
+                              color: custNameFontColor, fontSize: custNameFontSize
+                            }}>
+                              "Nizam Karippali "
+                            </Text>
+                            <Text style={fontStyles}>Dubai</Text>
+                            <Text style={fontStyles}>Karama 123ft</Text>
+                            <Text style={fontStyles}>Ho No:1223</Text>
+                            {/* {headerState?.hasShipTo && (
+                              <>
+                                <Text style={labelStyles}>{headerState?.shipTo ?? "Ship To"}</Text>
+                                <Text style={fontStyles}>Ho No:1223</Text>
+                              </>
+                            )} */}
+                          {/* </View> */}
+                        {/* )} */}
               </View>
            
     
             
-             <View style={{
-                display: "flex", flexDirection: "row",gap:2,
+              <View style={{
+                display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",paddingLeft:5,paddingTop:5,width:"40%"
               }}>
-                <Text style={labelStyles}>{headerState?.accountTransactionInfo?.dateField?`${headerState?.accountTransactionInfo?.dateField} :`:"Date :"}</Text>
-                <Text style={[fontStyles, styles.dottedBorder]}>
-                  {dateTrimmer(data.master?.transactionDate)}
-                </Text>
+                  {/* {headerState?.showReceivedFrom && (
+                          <View>
+                            <Text style={labelStyles}>{headerState?.receivedFromLabel ?? "Received From"}</Text>
+                          </View>
+                        )} */}
+                        {/* {headerState?.hasBillTo && ( */}
+                          {/* <View style={styles.billTo}> */}
+                            {/* <Text style={labelStyles}>{headerState?.billTo ?? "Bill T0"}</Text> */}
+                            <Text style={{
+                              ...fontStyles,
+                              color: custNameFontColor, fontSize: custNameFontSize
+                            }}>
+                              "Nizam Karippali"
+                            </Text>
+                            <Text style={fontStyles}>Dubai</Text>
+                            <Text style={fontStyles}>Karama 123ft</Text>
+                            <Text style={fontStyles}>Ho No:1223</Text>
+                            {/* {headerState?.hasShipTo && (
+                              <>
+                                <Text style={labelStyles}>{headerState?.shipTo ?? "Ship To"}</Text>
+                                <Text style={fontStyles}>Ho No:1223</Text>
+                              </>
+                            )} */}
+                          {/* </View> */}
+                        {/* )} */}
               </View>
             
              </View>
             {/* Payment Details */}
           
-       
-            <View style={{ display: "flex", flexDirection: "column",gap:30, width:"100%" }}>
-            <View style={{ display: "flex", flexDirection: "row",justifyContent:"flex-start" ,gap:5 ,width:"100%" }}>
-              <Text style={labelStyles}>{headerState?.accountTransactionInfo?.paymentMode?`${headerState?.accountTransactionInfo?.paymentMode}`:"PAYMENT GIVEN TO"}:</Text>
-              <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
-                <Text style={fontStyles}>
-                {(data?.master?.voucherType == VoucherType.CashPayment || data?.master?.voucherType == VoucherType.CashReceipt || data?.master?.voucherType == VoucherType.CashPaymentEstimate|| data?.master?.voucherType == VoucherType.CashReceiptEstimate)?"Cash":
-                (data?.master?.voucherType == VoucherType.BankPayment || data?.master?.voucherType == VoucherType.BankReceipt || data?.master?.voucherType == VoucherType.BankReconciliation)?"Bank":"Cash" }
-              </Text>
-              </View>
-            </View>
-            <View style={{ width: "100%", borderBottom:"1px dotted rgb(38, 37, 37)" }} />
-          </View>
-
-
-             <View style={{ display: "flex", flexDirection: "row", justifyContent:"flex-start",gap:5, width:"100%", }}>
-              <Text style={labelStyles}>the sum of rupees :</Text>
-              <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
-                <Text style={fontStyles}>
-                {getAmountInWords(Number(data.master?.totalDebit), currency)}
-              </Text>
-              </View>
-            </View>
+       <View>
+       <Text style={labelStyles}>Dear Sir,</Text>
+    
+    <Text style={fontStyles}>
+    We have cleared the below invoices with document number 3
+    </Text>
+        </View> 
+     
+      
           
-          <View style={{ display: "flex", flexDirection: "row",gap:10, width:"100%",justifyContent:"flex-start",alignItems:"flex-start" }}>
-           <View style={{ display: "flex", flexDirection: "row",gap:5, width:"100%",justifyContent:"flex-start" }}>
-              <Text style={labelStyles}>by Cash/*Cheque/*DD No :</Text>
-              <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
-                <Text style={fontStyles}>
-                
-              </Text>
-              </View>
-            </View>
-
-            <View style={{ display: "flex", flexDirection: "row",gap:5, width:"100%",justifyContent:"flex-start"}}>
-              <Text style={labelStyles}>towards :</Text>
-              <View style={{ flex: 1,  borderBottom:"1px dotted rgb(38, 37, 37)"}}>
-                <Text style={fontStyles}>
-                
-              </Text>
-              </View>
-            </View>
-          </View>
-          <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"flex-start", width:"100%"}}>
-  
-           <View style={{display:"flex",flexDirection:"column",gap:2,
-            
-           }}>
-            <View style={{display:"flex",flexDirection:"row",border:"2px solid rgb(38, 37, 37)",borderRadius:5,width:"100%",height:30}}>
-              <View style={{width:"30%",backgroundColor:"rgb(38, 37, 37)"}}>
-              <Text style={{color:"rgb(251, 250, 250)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>Rs:</Text>
-              </View>
-              <View style={{flex:1,backgroundColor:"rgb(246, 245, 245)"}}>
-              <Text style={{color:"rgb(61, 60, 60)",fontSize:14,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>
-                {data.master?.totalDebit}
-              </Text>
-              </View>
-            </View>
-              <Text style={{color:"rgb(87, 86, 86)",fontSize:6,fontStyle:"italic",fontFamily:"RobotoMono"}}>*All Cheque/DD are subject to realisation</Text>
-           </View>
-           <View style={{alignSelf:"flex-end"}}>
-            <Text style={labelStyles}>Reciver Name </Text>
-            </View >
-            <View style={{alignSelf:"flex-end"}}>
-            <Text style={labelStyles}>Authorised Signatory</Text>
-            </View>
-        </View>
-
         </View>
         </View>
     );

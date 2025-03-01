@@ -137,7 +137,7 @@ const BranchManage: React.FC = React.memo(() => {
             valueKey: "companyID",
             labelKey: "companyName",
           }}
-          onChange={(data: any) => handleFieldChange("companyID", data.companyID)}
+          onChangeData={(data: any) => handleFieldChange("companyID", data.companyID)}
           label={t("company_id")}
         />
 
@@ -216,7 +216,7 @@ const BranchManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChange={(data: any) => handleFieldChange("country", data.id.country)}
+          onChangeData={(data: any) => handleFieldChange("country", data.id)}
           label={t("country")}
         />
 

@@ -794,9 +794,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
         setInitial(null);
-        if (triggerEffect && value == null) {
-          
-          // handleItemClick({value: 0, label:""})
+        if (triggerEffect || value == null) {
+          handleItemClick({value: "", label:""})
           setInputValue("");
         }
         // if (filteredItems.length > 0 && inputValue === "") {

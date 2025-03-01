@@ -82,7 +82,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
         <ERPDataCombobox
           defaultValue={propertiesState?.pageSize ?? "A4"}
-          // value={propertiesState?.pageSize ?? "A4"}
+          value={propertiesState?.pageSize ?? "A4"}
           field={{
             id: "pageSize",
             required: true,
@@ -105,12 +105,12 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             valueKey: "value",
             labelKey: "label",
           }}
-          defaultData={propertiesState?.orientation ?? "Portrait"}
+          defaultValue={propertiesState?.orientation ?? "Portrait"}
+          value={propertiesState?.orientation ?? "Portrait"}
           data={propertiesState}
           onChangeData={(data: any) => {
             onChange?.({ ...propertiesState, orientation: data.orientation })
           }}
-          defaultValue={propertiesState?.orientation ?? "portrait"}
           options={[
             { label: "Portrait", value: "portrait" },
             { label: "Landscape", value: "landscape" },
@@ -210,6 +210,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               <ERPDataCombobox
                 id="Payment Stub Position"
                 defaultValue={propertiesState?.payment_stub_position ?? "new_page"}
+                value={propertiesState?.payment_stub_position ?? "new_page"}
                 onChangeData={(data: any) => {
                   onChange?.({ ...propertiesState, payment_stub_position: data.payment_stub_position })
                 }}
@@ -236,6 +237,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             }}
             data={propertiesState}
             defaultValue={propertiesState?.font_family ?? "Roboto"}
+            value={propertiesState?.font_family ?? "Roboto"}
             onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, font_family: data.font_family })
             }}
@@ -256,6 +258,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               labelKey: "label",
             }}
             defaultValue={propertiesState?.fontStyle ?? "normal"}
+            value={propertiesState?.fontStyle ?? "normal"}
             onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, fontStyle: data.fontStyle })
             }}
@@ -311,6 +314,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           <ERPDataCombobox
             id="label_font_style"
             label={t("label_font_style")}
+            value={propertiesState?.label_font_style ?? "normal"}
             defaultValue={propertiesState?.label_font_style ?? "normal"}
             data={propertiesState}
             field={{
@@ -445,6 +449,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 valueKey: "value",
                 labelKey: "label",
               }}
+              value={propertiesState?.bg_image_position ?? "top left"}
               defaultValue={propertiesState?.bg_image_position ?? "top left"}
               handleChange={(id, value) => {
                 dispatch(setTemplatePropertiesState({

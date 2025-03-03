@@ -1,6 +1,8 @@
 import { inputBox } from "../../../redux/slices/app/types";
 import moment from "moment";
 import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
+import { Dispatch } from "react";
+import { AnyAction } from "redux";
 
 // AccTransaction interface
 export interface AccTransactionProps {
@@ -647,3 +649,10 @@ export interface PrintTransProps {
   vrNumber: string;
   isPrintPreview: boolean;
 }
+export interface AccVoucherElementProps {
+    formState: AccTransactionFormState;
+    dispatch: Dispatch<AnyAction>;
+    handleKeyDown: (e: any, field: string) => void;
+    t: any;
+    loadAndSetAccTransVoucher: (usingManualInvNumber?: boolean, voucherNumber?: number, voucherPrefix?: string, voucherType?: string, formType?: string, manualInvoiceNumber?: string, accTransactionMasterID?: number, mode?: "increment" | "decrement" | undefined, skipPrompt?: boolean | false, setVoucherNo?: boolean | false) => Promise<boolean>;
+  }

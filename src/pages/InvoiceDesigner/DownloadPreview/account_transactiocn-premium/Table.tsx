@@ -2,7 +2,10 @@ import { View, Text,StyleSheet } from "@react-pdf/renderer";
 import { AccountTransactionProps } from ".";
 import { TemplateState } from "../../Designer/interfaces";
 
-const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
+
+
+
+const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
   const accTableState = template?.accTableState;
   const propertiesState = template?.propertiesState;
 
@@ -18,7 +21,7 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
     table: {
       width: "100%",
       display: "flex",
-      marginBottom: 10,
+      marginVertical: 10,
     },
     thead: {
       backgroundColor: accTableState?.showTableHeaderBg ? accTableState?.tableHeaderBgColor : "#fff",
@@ -26,6 +29,7 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
       fontSize: accTableState?.headerFontSize || 12,
       flexDirection: "row",
       borderBottom: `1px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor  :""}`,
+     
     },
     th: {
       padding: 5,
@@ -53,60 +57,54 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
     },
    
   });
-  
-  return (
-    <View>
-      <View style={[styles.table,labelStyles]}>
-        {/* Table Header */}
-        <View style={styles.thead}>
-          {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
-          {/* Invoice Number */}
+    // Function to Render the Table Header
+    const renderHeader = () => (
+      <View style={styles.thead} {...(accTableState?.headerRepeatOnPage ? { fixed: true } : {})}>
+        {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
         {accTableState?.showInvoiceNumber && (
           <Text style={[styles.th, { width: accTableState?.InvoiceNumberWidth }]}>
             {accTableState?.InvoiceNumberLabel || "Invoice Number"}
           </Text>
         )}
-
-        {/* Invoice Date */}
         {accTableState?.showInvoiceDate && (
           <Text style={[styles.th, { width: accTableState?.InvoiceDateWidth }]}>
             {accTableState?.InvoiceDateLabel || "Invoice Date"}
           </Text>
         )}
-
-        {/* Invoice Amount */}
         {accTableState?.showInvoiceAmount && (
           <Text style={[styles.th, { width: accTableState?.InvoiceAmountWidth }]}>
             {accTableState?.InvoiceAmountLabel || "Invoice Amount"}
           </Text>
         )}
-
-        {/* Withholding Tax */}
         {accTableState?.showWithholdingTax && (
           <Text style={[styles.th, { width: accTableState?.WithholdingTaxWidth }]}>
             {accTableState?.WithholdingTaxLabel || "Withholding Tax"}
           </Text>
         )}
-
-        {/* TCS Amount */}
         {accTableState?.showTCSAmount && (
           <Text style={[styles.th, { width: accTableState?.TCSAmountWidth }]}>
             {accTableState?.TCSAmountLabel || "TCS Amount"}
           </Text>
         )}
-
-        {/* Payment Amount */}
         {accTableState?.showPaymentAmount && (
           <Text style={[styles.th, { width: accTableState?.PaymentAmountWidth }]}>
             {accTableState?.PaymentAmountLabel || "Payment Amount"}
           </Text>
         )}
-        </View>
+      </View>
+    );
+
+  return (
+   
+      <View style={[styles.table,labelStyles]} wrap>
+        {/* Table Header */}
+      {/* Render Header Conditionally */}
+       { renderHeader()} 
 
         {/* Table Body */}
         <View style={styles.tbody}>
           {data?.details
-            ?.slice(0,2) 
+        
           .map((val: any, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
                 {accTableState?.showLineItemNumber && (
@@ -149,7 +147,7 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
         </View>
 
       </View>
-    </View>
+
   );
 };
 

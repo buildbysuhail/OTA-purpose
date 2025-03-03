@@ -6,6 +6,7 @@ import { AccountTransactionProps } from "../account_transactiocn-premium";
 import { Header } from "./Header";
 import { Content } from "./Content";
 import Table from "./Table";
+import { Footer } from "./Footer";
 
 const AdviceTemplate = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
 // Paddings
@@ -28,18 +29,21 @@ return (
      padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
     }}>
       {/* Main Content */}
-      <View style={{
+      <View 
+      style={{
         flex: 1,
         flexDirection: 'column',
-        borderTop:"1.5px solid rgb(104, 101, 101)"
-        
-      }}>
-          
+        borderTop:"1.5px solid rgb(104, 101, 101)"     
+      }}
+      >   
         {/* Header */}
        <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Content */}
         <Content data={data} template={template} currentBranch={currentBranch} />
+        {/* Table */}
         <Table data={data} template={template} />
+        {/* Footer */}
+        <Footer data={data} template={template}  />
       </View>
 
     </View>

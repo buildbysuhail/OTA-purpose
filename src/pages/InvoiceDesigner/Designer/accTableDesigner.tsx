@@ -248,8 +248,13 @@ const LayoutEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
         />
       )}
 
-      <h1>{t("table_header")}</h1>
-
+      <h3>{t("table_header")}</h3>
+      <ERPCheckbox
+        id="headerRepeatOnPage"
+        label={t("header_repeat_on_each_page")}
+        onChange={(e) => onChange?.({ ...accTableState, headerRepeatOnPage: e.target.checked })}
+        checked={accTableState?.headerRepeatOnPage}
+      />
       <ERPStepInput
         value={accTableState?.headerFontSize}
         onChange={(headerFontSize) => onChange?.({ ...accTableState, headerFontSize })}
@@ -293,7 +298,7 @@ const LayoutEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
         }}
       />
 
-      <h1>{t("item_row")}</h1>
+      <h3>{t("item_row")}</h3>
 
       <ERPStepInput
         value={accTableState?.itemRowFontSize}

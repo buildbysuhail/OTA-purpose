@@ -62,7 +62,7 @@ return (
       wrap
     >
       {/* Main Container */}
-      <View style={{ flex: 1, flexDirection: 'column', width: '100%', height: '100%' }}>
+      <View style={{ flex: 1, flexDirection: 'column', width: '100%',}}>
         {/* Header */}
         <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Main Content */}
@@ -89,9 +89,9 @@ return (
           )}
      
           {/* Content */}
-          <View style={{ position: 'relative', zIndex: 50 ,
+          <View style={{flex: 1, position: 'relative', zIndex: 50 ,
             padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
-          }}>
+          }} wrap>
             <Content data={data} template={template} currentBranch={currentBranch} />
             <Table data={data} template={template} />
             {/* Add other components like Table, Header, Footer here */}
@@ -100,7 +100,10 @@ return (
 
         {/* Footer */}
         <Footer data={data} template={template}/>
+  
       </View>
+           {/* ✅ Page Number - Show on Every Page */}
+  
     </Page>
   </Document>
 );

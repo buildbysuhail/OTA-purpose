@@ -82,8 +82,8 @@ export const Header = ({ data, template, currentBranch, docIDKey, currency }: { 
     <View style={{
       width: "100%", height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
       backgroundColor: template?.headerState?.bgColor || "#fff",
-      position: 'relative',
-    }}>
+      position: 'relative',marginBottom:20
+    }} {...(headerState?.isFirstOnly ? {fixed:false} : {fixed: true})}>
       {/* Background Image */}
       {template?.background_image_header && (
         <Image

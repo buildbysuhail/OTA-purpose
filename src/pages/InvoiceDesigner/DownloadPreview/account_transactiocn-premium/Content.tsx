@@ -96,8 +96,7 @@ const styles = StyleSheet.create({
 });
 
 export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
-
-
+  
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
   const totalState = template?.totalState;

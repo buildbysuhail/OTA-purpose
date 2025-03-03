@@ -406,6 +406,7 @@ export interface ItemTableMasterState {
   showTableBorder?: boolean;
   tableBorderColor?: string;
   /// Table Header
+  headerRepeatOnPage?:boolean;
   headerFontSize?: number;
   showTableHeaderBg?: boolean;
   tableHeaderBgColor?: string;

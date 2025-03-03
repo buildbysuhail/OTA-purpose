@@ -421,5 +421,13 @@
   "my_organization": "منظمتي",
   "continue": "متابعة",
   "back": "رجوع",
-  "new": "جديد"
+  "new": "جديد",
+
+  "small": "صغير",
+  "medium": "متوسط",
+  "large": "كبير",
+
+  "final_reports": "التقارير النهائية",
+  "income_and_expense": "الدخل والمصروفات",
+  "cash_summary_ledgerwise_report": "تقرير ملخص النقد حسب دفتر الأستاذ"
 }

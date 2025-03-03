@@ -94,6 +94,7 @@ import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-d
 import UnsavedChangesModal from "./unsavedChangesModal";
 import PartySelectionModal from "./party-selection-modal";
 import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
+import AccVoucherNoPrefix from "./components/acc-voucher-no-prefix";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2184,94 +2185,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="">
                 <div className="grid grid-cols-1 leading-none lg:w-3/4">
                   <div className="flex items-center gap-2">
-                    {formState.formElements.voucherPrefix.visible && (
-                      <ERPInput
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="master_voucherPrefix"
-                        label={t(formState.formElements.voucherPrefix.label)}
-                        value={formState.transaction.master.voucherPrefix}
-                        className="max-w-[100px]"
-                        onChange={(e) =>
-                          dispatch(
-                            accFormStateTransactionMasterHandleFieldChange({
-                              fields: { voucherPrefix: e.target?.value },
-                            })
-                          )
-                        }
-                        disabled={
-                          formState.formElements.voucherPrefix?.disabled ||
-                          formState.formElements.pnlMasters?.disabled
-                        }
-                      />
-                    )}
-
-                    {formState.formElements.voucherNumber.visible && (
-                      <>
-                        <ERPInput
-                          disableEnterNavigation={true}
-                          ref={voucherNumberRef}
-                          id="voucherNumber"
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          onKeyUp={(e) => {
-                            handleKeyDown(e, "voucherNumber");
-                          }}
-                          min={1}
-                          label={t(formState.formElements.voucherNumber.label)}
-                          value={formState.transaction.master.voucherNumber}
-                          type="number"
-                          required={true}
-                          showCustomNumberChanger={
-                            formState.formElements.voucherNumberUpDownBtns
-                              .visible == true
-                          }
-                          className="max-w-[200px]"
-                          onChange={async (e: any) => {
-                            if (e.isCustomNumberChangerEvent == true) {
-                              const ret = await loadAndSetAccTransVoucher(
-                                false,
-                                parseFloat(e.target?.value),
-                                undefined,
-                                undefined,
-                                undefined,
-                                undefined,
-                                undefined,
-                                e.mode == "down"
-                                  ? "decrement"
-                                  : e.mode == "up"
-                                    ? "increment"
-                                    : undefined,
-                                false
-                              );
-                              // if(ret) {
-                              //   dispatch(
-                              //     accFormStateTransactionMasterHandleFieldChange({
-                              //       fields: { voucherNumber: e.target?.value },
-                              //     })
-                              //   );
-                              // }
-                            } else {
-                              dispatch(
-                                accFormStateTransactionMasterHandleFieldChange({
-                                  fields: { voucherNumber: e.target?.value },
-                                })
-                              );
-                            }
-                          }}
-                          disabled={
-                            formState.formElements.voucherNumber?.disabled
-                            // ||
-                            // formState.formElements.pnlMasters?.disabled
-                          }
-                          labelInfo={
-                            // <div>
-                            <button className="pe-3">
-                              <VoucherNumberDetailsSidebar displayType="link" />
-                            </button>
-                            // </div>
-                          }
-                        />
-                      </>
-                    )}
+                  <AccVoucherNoPrefix
+      ref={voucherNumberRef} // ✅ Pass ref to the child
+      formState={formState}
+      dispatch={dispatch}
+      handleKeyDown={handleKeyDown}
+      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+      t={t}
+    />
                   </div>
                   {formState.formElements.masterAccount.visible &&
                     formState.formElements?.masterAccount?.accLedgerType !=
@@ -3514,17 +3435,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex flex-col mt-[58px] w-full overflow-scroll"></div>
           <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
             <div className="flex-1  px-2  rounded-md">
-              <label className="block mb-0 font-medium text-center text-sm text-gray-700">
-                {t("voucher_no")}
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  defaultValue="3"
-                  className="bg-transparent px-3 py-2 w-full text-center border-none rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[10px]"
-                />
-                {/* <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i> */}
-              </div>
+            <AccVoucherNoPrefix
+      ref={voucherNumberRef} // ✅ Pass ref to the child
+      formState={formState}
+      dispatch={dispatch}
+      handleKeyDown={handleKeyDown}
+      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+      t={t}
+    />
             </div>
 
             {/* Centered divider */}

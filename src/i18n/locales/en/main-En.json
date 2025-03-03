@@ -421,5 +421,13 @@
     "my_organization":"My Organization",
     "continue":"Continue",
     "back":"Back",
-    "new":"New"
+    "new":"New",
+
+    "small":"Small",
+    "medium":"Medium",
+    "large":"Large",
+
+    "final_reports":"Final Reports",
+    "income_and_expense":"Income And Expense",
+    "cash_summary_ledgerwise_report":"Cash Summary Ledgerwise Report"
 }

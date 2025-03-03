@@ -1,5 +1,5 @@
-import { BanknotesIcon, CircleStackIcon } from "@heroicons/react/24/outline";
-import { BookCopy, Boxes, Calendar, CalendarClock, ChartNoAxesCombined, CircleUser, Clock1Icon, Component, LucideCreditCard, LucideDollarSign, Scale, TrendingUp } from "lucide-react";
+import { CircleStackIcon } from "@heroicons/react/24/outline";
+import { BookCopy, Calendar, CalendarClock, ChartNoAxesCombined, CircleUser, Clock1Icon, Component, LucideCreditCard, LucideDollarSign, Scale, TrendingUp } from "lucide-react";
 import { IoBookOutline } from "react-icons/io5";
 import { BsCollection } from "react-icons/bs";
 import { FaScaleUnbalancedFlip } from "react-icons/fa6";
@@ -21,23 +21,13 @@ import { GrDocumentStore } from "react-icons/gr";
 import { FaSackDollar } from "react-icons/fa6";
 import { GiSwapBag } from "react-icons/gi";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-import { HiOutlineDocumentReport } from "react-icons/hi";
-import { AiOutlineFileText } from "react-icons/ai";
-import { TbTag } from "react-icons/tb";
-import { HiOutlineClipboardList } from "react-icons/hi";
-import { PiPackageLight } from "react-icons/pi";
-import { GiCargoShip } from "react-icons/gi";
-import { MdOutlineAnalytics } from "react-icons/md";
-import { PiUsersThreeLight } from "react-icons/pi";
-import { IoScaleOutline } from "react-icons/io5";
-import { RiFileListLine } from "react-icons/ri";
-import { HiOutlineDocumentText } from "react-icons/hi";
 
 
 export const ReportsMenuItems = [
   {
     menutitle: 'reports',
   },
+
   {
     icon: (<CircleUser className="side-menu__icon side-menu" />),
     type: 'sub',
@@ -61,6 +51,7 @@ export const ReportsMenuItems = [
       // { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', },
     ]
   },
+
   {
     icon: (<CircleUser className="side-menu__icon side-menu" />),
     type: 'sub',
@@ -83,7 +74,6 @@ export const ReportsMenuItems = [
       { id: 24, path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable', icon: LucideDollarSign },
       { id: 25, path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_aging_payable`, type: 'link', active: false, selected: false, title: 'account_payable_aging_report', icon: Clock1Icon },
       { id: 26, path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_aging_receivable`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', icon: Calendar },
-      
       { id: 1, path: `${import.meta.env.BASE_URL}reports/_/accounts/ledger_report`, type: 'link', active: false, selected: false, title: 'ledger_report', icon: IoBookOutline },
       { id: 2, path: `${import.meta.env.BASE_URL}reports/_/accounts/cash_book`, type: 'link', active: false, selected: false, title: 'cash_book', icon: FaCoins },
       { id: 3, path: `${import.meta.env.BASE_URL}reports/_/accounts/day_book_detailed`, type: 'link', active: false, selected: false, title: 'day_book_detailed', icon: BookCopy },
@@ -92,12 +82,12 @@ export const ReportsMenuItems = [
       { id: 6, path: `${import.meta.env.BASE_URL}reports/_/accounts/collection_report`, type: 'link', active: false, selected: false, title: 'collection_report', icon: BsCollection },
       { id: 7, path: `${import.meta.env.BASE_URL}reports/_/accounts/cash_summary`, type: 'link', active: false, selected: false, title: 'cash_summary_report', icon: GrDocumentStore },
       { id: 8, path: `${import.meta.env.BASE_URL}reports/_/accounts/cash_summary_ledgerwise`, type: 'link', active: false, selected: false, title: 'cash_summary_ledgerwise_report', icon: TbCoins },
-      
       // //for checking only skip and take
       // { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging`, type: 'link', active: false, selected: false, title: 'account_payable_aging_report' },
       // { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', },
     ]
   },
+
   {
     icon: (<CircleUser className="side-menu__icon side-menu" />),
     type: 'sub',
@@ -118,13 +108,12 @@ export const ReportsMenuItems = [
       { id: 14, path: `${import.meta.env.BASE_URL}reports/_/accounts/cash_flow`, type: 'link', active: false, selected: false, title: 'cash_flow', icon: CircleStackIcon },
       { id: 15, path: `${import.meta.env.BASE_URL}reports/_/accounts/bank_flow`, type: 'link', active: false, selected: false, title: 'bank_flow', icon: RiBankLine },
       { id: 16, path: `${import.meta.env.BASE_URL}reports/_/accounts/bank_statement`, type: 'link', active: false, selected: false, title: 'bank_statement', icon: RiBankFill },
-      
-      
       // //for checking only skip and take
       // { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging`, type: 'link', active: false, selected: false, title: 'account_payable_aging_report' },
       // { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'account_receivable_aging_report', },
     ]
   },
+
   // {
   //   icon: (<Boxes className="side-menu__icon side-menu" />),
   //   type: 'sub',

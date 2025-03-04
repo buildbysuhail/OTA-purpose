@@ -19,8 +19,7 @@ const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(
       dispatch,
 
       t,
-    },
-  ) => {
+    }, ref) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>

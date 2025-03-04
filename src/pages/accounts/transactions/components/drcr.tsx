@@ -18,7 +18,7 @@ const DrCr = React.forwardRef<HTMLInputElement, DrCrProps>(({
       {formState.formElements.drCr.visible && (
         <ERPDataCombobox
           onKeyDown={(e) => {
-            handleKeyDown(e, "drCr");
+            handleKeyDown && handleKeyDown(e, "drCr");
           }}
           ref={drCrRef}
           disableEnterNavigation={true}

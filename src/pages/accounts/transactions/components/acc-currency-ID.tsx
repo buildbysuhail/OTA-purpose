@@ -22,8 +22,7 @@ const AccCurrencyID = React.forwardRef<HTMLInputElement, AccCurrencyIDProps>(
       dispatch,
 
       t,
-    },
-  ) => {
+    }, ref) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>

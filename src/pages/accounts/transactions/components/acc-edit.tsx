@@ -13,7 +13,7 @@ const api = new APIClient();
 interface editProps extends AccVoucherElementProps { enableCombo: () => Promise<void>;}
 
 const AccEdit = React.forwardRef<HTMLInputElement, editProps>(
-  ({ formState, enableCombo, t }) => {
+  ({ formState, enableCombo, t }, ref) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>

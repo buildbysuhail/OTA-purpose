@@ -21,8 +21,7 @@ const AccEmployeeID = React.forwardRef<HTMLInputElement, AccEmployeeIDProps>(
       handleKeyDown,
 
       t,
-    },
-  ) => {
+    }, ref) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>

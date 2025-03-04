@@ -23,6 +23,7 @@ const AccTransactionDate = React.forwardRef<
 
       t,
     },
+    ref
   ) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (

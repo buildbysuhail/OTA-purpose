@@ -10,7 +10,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   dispatch,
   t,
   handleKeyDown
-}) => {
+}, ref) => {
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -26,7 +26,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
           ref={ledgerCodeRef}
           disableEnterNavigation={true}
           onKeyDown={(e) => {
-            handleKeyDown(e, "ledgerCode");
+            handleKeyDown && handleKeyDown(e, "ledgerCode");
           }}
           onChange={(e) =>
             dispatch(

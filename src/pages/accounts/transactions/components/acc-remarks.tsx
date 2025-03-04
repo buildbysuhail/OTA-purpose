@@ -21,8 +21,7 @@ const AccRemarks = React.forwardRef<
       dispatch,
 
       t,
-    },
-  ) => {
+    }, ref) => {
     const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>

@@ -54,7 +54,7 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
           }
           disableEnterNavigation
           onKeyDown={(e: any) => {
-            handleKeyDown(e, "costCentre");
+            handleKeyDown && handleKeyDown(e, "costCentre");
           }}
         />
       )}

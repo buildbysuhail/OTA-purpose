@@ -28,7 +28,7 @@ const Amount = React.forwardRef<HTMLInputElement, AmountProps>(({
           min={0}
           value={formState.row.amount}
           onKeyDown={(e) => {
-            handleKeyDown(e, "amount");
+            handleKeyDown && handleKeyDown(e, "amount");
           }}
           disableEnterNavigation={true}
           onChange={(e) =>

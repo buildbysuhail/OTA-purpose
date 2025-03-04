@@ -10,7 +10,7 @@ const Narration = React.forwardRef<HTMLInputElement, NarrationProps>(({
   dispatch,
   t,
   handleKeyDown
-}) => {
+}, ref) => {
   const narrationRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -23,7 +23,7 @@ const Narration = React.forwardRef<HTMLInputElement, NarrationProps>(({
           className="w-full"
           disableEnterNavigation
           onKeyDown={(e) => {
-            handleKeyDown(e, "narration");
+            handleKeyDown && handleKeyDown(e, "narration");
           }}
           label={t(formState.formElements.narration.label)}
           value={formState.row.narration}

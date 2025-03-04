@@ -18,7 +18,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
   handleKeyDown,
   triggerEffect,
   handleFieldKeyDown
-}) => {
+}, ref) => {
   const ledgerIdRef = useRef<HTMLInputElement>(null);
   const { getFormattedValue } = useNumberFormat();
   return (
@@ -45,7 +45,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
               )
             }
             onKeyDown={(e) => {
-              handleKeyDown(e, "ledgerID");
+              handleKeyDown && handleKeyDown(e, "ledgerID");
             }}
             onSelectItem={(e) => {
               dispatch(

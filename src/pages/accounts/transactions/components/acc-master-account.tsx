@@ -4,18 +4,18 @@ import { AccVoucherElementProps } from "../acc-transaction-types";
 import {
   accFormStateHandleFieldChange,
   updateFormElement,
-} from "../reducer";import { forwardRef, useRef } from "react";
+} from "../reducer"; import { forwardRef, useRef } from "react";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
 const api = new APIClient();
 
-interface AccMasterAccountrProps extends AccVoucherElementProps { getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string;}
+interface AccMasterAccountrProps extends AccVoucherElementProps { getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string; }
 
 const AccMasterAccount = React.forwardRef<
   HTMLInputElement,
   AccMasterAccountrProps
->(({ formState, dispatch, getFormattedValue, t }) => {
+>(({ formState, dispatch, getFormattedValue, t }, ref) => {
   return (
     <>
       {formState.formElements.masterAccount.visible &&

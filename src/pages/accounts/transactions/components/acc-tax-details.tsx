@@ -93,7 +93,7 @@ const AccTaxDetails = React.forwardRef<HTMLInputElement, AccTaxDetailsProps>(({
             onChange={(e) => dispatch(accFormStateRowHandleFieldChange({ fields: { invoiceDate: e.target?.value }, }))}
             disabled={formState.formElements.pnlMasters?.disabled}
             disableEnterNavigation
-            onKeyDown={(e) => { handleKeyDown(e, "invoiceDate"); }}
+            onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "invoiceDate"); }}
           />
           <ERPInput
             ref={taxableAmountRef}

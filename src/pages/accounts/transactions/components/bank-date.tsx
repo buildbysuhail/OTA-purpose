@@ -33,7 +33,7 @@ const BankDate = React.forwardRef<HTMLInputElement, BankDateProps>(({
           }
           disableEnterNavigation
           onKeyDown={(e) => {
-            handleKeyDown(e, "bankDate");
+            handleKeyDown && handleKeyDown(e, "bankDate");
           }}
         />
       )}

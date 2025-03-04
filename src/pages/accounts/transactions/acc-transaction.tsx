@@ -107,6 +107,20 @@ import AccReferenceDate from "./components/acc-reference-Date";
 import AccEmployeeID from "./components/acc-employee-ID";
 import AccRemarks from "./components/acc-remarks";
 import AccProject from "./components/acc-project";
+import AccTaxDetails from "./components/acc-tax-details";
+import Amount from "./components/amount";
+import BankCharge from "./components/bank-charge";
+import BankDate from "./components/bank-date";
+import BankName from "./components/bank-name";
+import ChequeNumber from "./components/cheque-number";
+import ChequeStatus from "./components/cheque-status";
+import CostCentre from "./components/cost-centre";
+import Discount from "./components/discount";
+import Drcr from "./components/drcr";
+import Ledger from "./components/ledger";
+import LedgerCode from "./components/ledger-code";
+import NameOnCheque from "./components/name-on-cheque";
+import Narration from "./components/narration";
 interface BilledItem {
   id?: number;
   name: string;
@@ -143,7 +157,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 }) => {
   debugger;
   const [triggerEffect, setTriggerEffect] = useState(false);
-  
+
   useEffect(() => {
     if (triggerEffect) {
       const timer = setTimeout(() => {
@@ -196,7 +210,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [showValidation, setShowValidation] = useState(false);
   const focusTaxNoField = () => {
-    
+
     setTimeout(() => {
       if (taxNoRef.current) {
         taxNoRef.current.select();
@@ -335,7 +349,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [financialYearID]);
 
   useEffect(() => {
-    
+
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
@@ -392,7 +406,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
 
           const [ledgerBalance, ledgerData] = await Promise.all([
-            (ledgerID??0) > 0
+            (ledgerID ?? 0) > 0
               ? api.getAsync(`${Urls.get_ledger_balance}${ledgerID ?? 0}`)
               : 0,
             api.getAsync(
@@ -429,12 +443,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ledgerName: ledgerData?.partyName,
                 partyName:
                   formState.isTaxOnExpense && ledgerData != null
-                    ? ledgerData.partyName??""
+                    ? ledgerData.partyName ?? ""
                     : "",
                 taxNo:
                   formState.isTaxOnExpense && ledgerData != null
                     // ? ledgerData.taxNumber??""
-                    ? ledgerData.taxNumber??""
+                    ? ledgerData.taxNumber ?? ""
                     : "",
               },
             })
@@ -513,7 +527,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       console.log('initializeFormElements');
-      
+
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -547,7 +561,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           false
         );
 
-        
+
         employeeID = userSession.employeeId ?? -2;
         if (voucherType == "CP" || voucherType == "CR") {
           masterAccountID =
@@ -640,12 +654,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       _formState = {
         ..._formState,
-      transactionType: transactionType ?? "",
-      formCode: formCode ?? "",
-      title:
-        (formType == undefined || formType.trim() == ""
-          ? t(title)
-          : t(title) + "[" + formType + "]") ?? ""
+        transactionType: transactionType ?? "",
+        formCode: formCode ?? "",
+        title:
+          (formType == undefined || formType.trim() == ""
+            ? t(title)
+            : t(title) + "[" + formType + "]") ?? ""
       };
       _formState.isTaxOnExpense = [
         "TXP",
@@ -1150,7 +1164,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
         }
         case "TXP": {
-          
+
           fieldsToUpdate = {
             ...fieldsToUpdate,
             masterAccount: {
@@ -1230,14 +1244,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
 
       _formState.formElements = fnlFormElmns;
-      
-      
+
+
       if (_formState.isTaxOnExpense) {
         focusRefNo();
       } else {
         focusLedgerCode();
       }
-      if(!isInvoker) {
+      if (!isInvoker) {
         _formState.row.ledgerCode = "";
       }
       setAccTransVoucher(_formState, true);
@@ -2017,7 +2031,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                                 className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
                                 onClick={(e) => {
                                   // Prevent default link behavior
-                                  printPaymentReceiptAdvice(formState,voucherType);
+                                  printPaymentReceiptAdvice(formState, voucherType);
                                 }}
                               >
                                 <Printer className="h-4 w-4" />
@@ -2197,61 +2211,61 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="">
                 <div className="grid grid-cols-1 leading-none lg:w-3/4">
                   <div className="flex items-center gap-2">
-                  <AccVoucherNoPrefix
-      ref={voucherNumberRef} // ✅ Pass ref to the child
-      formState={formState}
-      dispatch={dispatch}
-      handleKeyDown={handleKeyDown}
-      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-      t={t}
-    />
+                    <AccVoucherNoPrefix
+                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleKeyDown={handleKeyDown}
+                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                      t={t}
+                    />
                   </div>
-                      <div className="flex items-center">
-                        <AccMasterAccount
-                          formState={formState}
-                          dispatch={dispatch}
-                          getFormattedValue={getFormattedValue}
-                          t={t}
-                        />
-                        <div className="flex flex-wrap gap-4">
-                        <AccTransactionMaster
+                  <div className="flex items-center">
+                    <AccMasterAccount
+                      formState={formState}
+                      dispatch={dispatch}
+                      getFormattedValue={getFormattedValue}
+                      t={t}
+                    />
+                    <div className="flex flex-wrap gap-4">
+                      <AccTransactionMaster
                         formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
-                        </div>
-                      </div>
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                    </div>
+                  </div>
                   <div>
-                  <AccNotes
-                   handleKeyDown={handleKeyDown}
-                        formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                    <AccNotes
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
 
-                        <>
-                          <AccCurrencyID
+                    <>
+                      <AccCurrencyID
                         formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                        dispatch={dispatch}
+                        t={t}
+                      />
 
-                         <AccCurrencyRate
+                      <AccCurrencyRate
                         formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                        dispatch={dispatch}
+                        t={t}
+                      />
 
-                          
-                        </>
-                        <AccEdit
-                        formState={formState}
-                        enableCombo={enableCombo}
-                          t={t}
-                          dispatch={dispatch}
-                        />
+
+                    </>
+                    <AccEdit
+                      formState={formState}
+                      enableCombo={enableCombo}
+                      t={t}
+                      dispatch={dispatch}
+                    />
                   </div>
                 </div>
               </div>
@@ -2259,47 +2273,47 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex justify-end">
                 <div className="grid grid-cols-1 leading-none lg:full">
                   <div className="grid grid-cols-2 gap-2">
-                      <AccReferenceNumber
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        ref={refNoRef}
-                          t={t}
-                        />
-                      <AccTransactionDate
-                        formState={formState}
-                        dispatch={dispatch}
-                          t={t}
-                        />
+                    <AccReferenceNumber
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleLoadByRefNo={handleLoadByRefNo}
+                      ref={refNoRef}
+                      t={t}
+                    />
+                    <AccTransactionDate
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
 
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <AccReferenceDate
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
                     />
                     <AccEmployeeID
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    />
-                    
-                  </div>
-                  <div className="grid grid-cols-1">
-                  <AccRemarks
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    />
-                  <AccProject
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
                     />
 
-                    
+                  </div>
+                  <div className="grid grid-cols-1">
+                    <AccRemarks
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                    />
+                    <AccProject
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                    />
+
+
                   </div>
                 </div>
               </div>
@@ -2307,171 +2321,39 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
             <div className="leading-none">
               <div className="flex items-center gap-2">
-                {formState.formElements.ledgerCode.visible && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="ledgerCode"
-                    className=""
-                    required={true}
-                    label={t(formState.formElements.ledgerCode.label)}
-                    value={formState.row.ledgerCode}
-                    ref={ledgerCodeRef}
-                    disableEnterNavigation={true}
-                    onKeyDown={(e) => {
-                      handleKeyDown(e, "ledgerCode");
-                    }}
-                    onChange={(e) =>
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: { ledgerCode: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.ledgerCode?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
+                <LedgerCode
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
                 {formState?.row.ledgerID?.toString()}
-                {formState.formElements.ledgerID.visible && (
-                  <>
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      ref={ledgerIdRef}
-                      triggerEffect={triggerEffect}
-                      id="ledgerID"
-                      required={true}
-                      className="w-full"          
-                      value={formState.row.ledgerID}
-                      label={t(formState.formElements.ledgerID.label)}
-                      data={formState.row}
-                      reload={formState.formElements.ledgerID.reload}
-                      disableEnterNavigation={true}
-                      changeReload={(reload: boolean) =>
-                        dispatch(
-                          updateFormElement({
-                            fields: { ledgerID: { reload: false } },
-                          })
-                        )
-                      }
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, "ledgerID");
-                      }}
-                      onSelectItem={(e) => {
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { ledgerID: e.value, ledgerName: e.label },
-                          })
-                        );
-                        handleFieldKeyDown("ledgerID", e.value);
-                      }}
-                      field={{
-                        id: "ledgerID",
-                        valueKey: "id",
-                        labelKey: "name",
-                        getListUrl: Urls.data_acc_ledgers,
-                      }}
-                      disabled={
-                        formState.formElements.ledgerID?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      labelInfo={
-                        formState.formElements.pnlMasters?.disabled ==
-                          true ? null : (
-                          <div>
-                            <span className="text-primary">
-                              <button className="pe-3">
-                                <CustomerDetailsSidebar displayType="link" />
-                              </button>
-                              {t("bal")}:{" "}
-                              {`${getFormattedValue(
-                                formState.ledgerBalance < 0
-                                  ? -1 * formState.ledgerBalance
-                                  : formState.ledgerBalance || 0
-                              )} ${(formState.ledgerBalance ?? 0) < 0 ? "Cr" : "Dr"
-                                }`}
-                            </span>
-                          </div>
-                        )
-                      }
-                    />
-                  </>
-                )}
-                {formState.formElements.amount.visible && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    ref={amountRef}
-                    id="amount"
-                    boldInput={true}
-                    label={t(formState.formElements.amount.label)}
-                    type="number"
-                    required={true}
-                    min={0}
-                    value={formState.row.amount}
-                    onKeyDown={(e) => {
-                      handleKeyDown(e, "amount");
-                    }}
-                    disableEnterNavigation={true}
-                    onChange={(e) =>
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: {
-                            amount:
-                            e.target?.value !== "" && !e.target?.value.endsWith(".")
-                            // ? parseFloat(e.target?.value)
-                            ? e.target?.value
-                            : e.target?.value,
-                          },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.amount?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
-                {formState.formElements.drCr.visible && (
-                  <ERPDataCombobox
-                    onKeyDown={(e) => {
-                      handleKeyDown(e, "drCr");
-                    }}
-                    ref={drCrRef}
-                    disableEnterNavigation={true}
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    id="drCr"
-                    enableClearOption={false}
-                    className="min-w-[70px] max-w-[150px]"
-                    label={t(formState.formElements.drCr.label)}
-                    value={
-                      formState.row.drCr == undefined ||
-                        formState.row.drCr == ""
-                        ? "Dr"
-                        : formState.row.drCr
-                    }
-                    onSelectItem={(e) =>
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: { drCr: e.value },
-                        })
-                      )
-                    }
-                    field={{
-                      valueKey: "value",
-                      labelKey: "label",
-                    }}
-                    options={[
-                      { value: "Dr", label: "Debit" },
-                      { value: "Cr", label: "Credit" },
-                    ]}
-                    disabled={
-                      formState.formElements.drCr?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
-                <div className="xl:w-[170px] lg:w-[250px]">
+
+                <Ledger
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  triggerEffect={triggerEffect}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+                <Amount
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+                <Drcr
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+                {/* <div className="xl:w-[170px] lg:w-[250px]">
                   {formState.formElements.discount.visible && (
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2522,19 +2404,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       }
                     />
                   )}
-                </div>
+                </div> */}
+
+                <Discount
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
 
               <div className="grid grid-cols-3">
                 <div className="flex flex-wrap gap-4">
-                  <span className="text-blue-600 font-bold self-center">
+                  <span className="text-[#2563eb] font-bold self-center">
                     {t("group_name")}: {formState.ledgerData?.accGroupName}
                   </span>
                 </div>
-                <div
-                  className="text-red-600"
-                  style={{ fontSize: "12px", color: "chocolate" }}
-                >
+                <div className="text-[#dc2626]" style={{ fontSize: "12px", color: "chocolate" }}>
                   {t("amount_in_words")}: {formState.amountInWords}
                 </div>
               </div>
@@ -2542,71 +2430,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
             <div className="leading-none">
               <div className="flex items-center gap-2">
-                {formState.formElements.narration.visible && (
-                  <ERPInput
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    ref={narrationRef}
-                    id="narration"
-                    className="w-full"
-                    disableEnterNavigation
-                    onKeyDown={(e) => {
-                      handleKeyDown(e, "narration");
-                    }}
-                    label={t(formState.formElements.narration.label)}
-                    value={formState.row.narration}
-                    onChange={(e) =>
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: { narration: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.narration?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                  />
-                )}
+                <Narration
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
 
-                {formState.formElements.costCentreID.visible && (
-                  <ERPDataCombobox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    enableClearOption={false}
-                    ref={costCenterRef}
-                    id="costCentreID"
-                    // nameField="costCentreName"
-                    className="min-w-[180px]"
-                    label={t(formState.formElements.costCentreID.label)}
-                    data={formState.row}
-                    onSelectItem={(e) => {
-                      dispatch(
-                        accFormStateRowHandleFieldChange({
-                          fields: {
-                            costCentreID: e.value,
-                            costCentreName: e.label,
-                          },
-                        })
-                      );
-                      handleFieldKeyDown("costCentreID", "Enter");
-                    }}
-                    value={formState.row.costCentreID}
-                    field={{
-                      id: "costCentreID",
-                      valueKey: "id",
-                      labelKey: "name",
-                      getListUrl: Urls.data_costcentres,
-                    }}
-                    disabled={
-                      (formState.userConfig?.presetCostenterId ?? 0) > 0 ||
-                      formState.formElements.costCentreID.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                    disableEnterNavigation
-                    onKeyDown={(e: any) => {
-                      handleKeyDown(e, "costCentre");
-                    }}
-                  />
-                )}
+
+
+                <CostCentre
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
 
                 {formState.transaction?.master?.isLocked !== undefined &&
                   formState.transaction?.master?.isLocked == true &&
@@ -2638,346 +2477,57 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="flex justify-between">
                 {/* {(voucherType == "BP" || voucherType == "BR" || voucherType == "CQP" || voucherType == "CQP") && ( */}
                 <div className="flex flex-wrap gap-4">
-                  {formState.formElements.nameOnCheque.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="nameOnCheque"
-                      className="min-w-[140px] max-w-[200px]"
-                      label={t(formState.formElements.nameOnCheque.label)}
-                      value={formState.row.nameOnCheque}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { nameOnCheque: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.nameOnCheque?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                  {formState.formElements.bankName.visible && (
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="bankName"
-                      className="min-w-[180px] max-w-[200px]"
-                      label={t(formState.formElements.bankName.label)}
-                      value={formState.row.bankName}
-                      options={formState.row.ledgerID ? undefined : []}
-                      field={bankAccountField}
-                      onChange={handleBankNameChange}
-                      disabled={
-                        formState.formElements.bankName?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                  {formState.formElements.chequeNumber.visible && (
-                    <ERPInput
-                      ref={chequeNumberRef}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="chequeNumber"
-                      label={t(formState.formElements.chequeNumber.label)}
-                      value={formState.row.chequeNumber}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { chequeNumber: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.chequeNumber?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                  {formState.formElements.bankDate.visible && (
-                    <ERPDateInput
-                      localInputBox={formState.userConfig?.inputBoxStyle}
-                      id="bankDate"
-                      
-                      label={t(formState.formElements.bankDate.label)}
-                      value={new Date(formState.row.bankDate)}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { bankDate: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.bankDate?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, "bankDate");
-                      }}
-                    />
-                  )}
-                  {formState.formElements.chequeStatus.visible && (
-                    <ERPDataCombobox
-                      ref={chequeStatusRef}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      enableClearOption={false}
-                      id="chequeStatus"
-                      label={t(formState.formElements.chequeStatus.label)}
-                      value={formState.row.chequeStatus}
-                      data={formState.row}
-                      onChange={(e) => {
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { chequeStatus: e.value },
-                          })
-                        )
-                      }}
-                      field={{
-                        valueKey: "value",
-                        labelKey: "label",
-                      }}
-                      options={[
-                        { value: "pending", label: "Pending" },
-                        { value: "cleared", label: "Cleared" },
-                      ]}
-                      disabled={
-                        formState.formElements.chequeStatus?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                  {formState.formElements.bankCharge.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="bankCharge"
-                      label={t(formState.formElements.bankCharge.label)}
-                      value={formState.row.bankCharge}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { bankCharge: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.bankCharge?.disabled ||
-                        formState.formElements.bankCharge?.disabled
-                      }
-                    />
-                  )}
-                  {/* {formState.formElements.paymentType.visible && (
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="paymentType"
-                      label={t(formState.formElements.paymentType.label)}
-                      value={formState.row.paymentType}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { paymentType: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.formElements.paymentType?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )} */}
+                  <NameOnCheque
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
 
-                  {["TXP"].includes(
-                    formState.transaction.master.voucherType
-                  ) && (
-                      <>
-                        <div className="flex items-center gap-1">
-                          <ERPInput
-                            ref={partyNameRef}
-                            localInputBox={formState?.userConfig?.inputBoxStyle}
-                            id="partyName"
-                            label={t("party_name")}
-                            value={formState.row.partyName}
-                            onChange={(e) =>
-                              dispatch(
-                                accFormStateRowHandleFieldChange({
-                                  fields: { partyName: e.target?.value },
-                                })
-                              )
-                            }
-                            disabled={formState.formElements.pnlMasters?.disabled}
-                          />
+                  <BankName
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
 
-                          <button
-                            data-skip={true}
-                            onClick={() => {
-                              dispatch(
-                                accFormStateHandleFieldChange({
-                                  fields: { showPartySelection: true },
-                                })
-                              );
-                            }}
-                            className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-transparent border border-gray-100 p-[8px] mt-[4px] rounded-md hover:bg-gray-200 transition-colors"
-                          >
-                            <Search className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                          </button>
+                  <ChequeNumber
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
 
-                          {formState.showPartySelection && (
-                            <ERPModal
-                              isOpen={formState.showPartySelection}
-                              closeModal={() =>
-                                dispatch(
-                                  accFormStateHandleFieldChange({
-                                    fields: { showPartySelection: false },
-                                  })
-                                )
-                              }
-                              width={600}
-                              height={700}
-                              title="Party Selection"
-                              content={
-                                <PartySelectionModal
-                                  focusTaxNoField={focusTaxNoField}
-                                />
-                              }
-                            />
-                          )}
-                        </div>
-                        <ERPInput
-                          ref={taxNoRef}
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="taxNo"
-                          label={t("tax_no")}
-                          className="max-w-[150px]"
-                          value={formState.row.taxNo}
-                          onChange={(e) =>
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: { taxNo: e.target?.value },
-                              })
-                            )
-                          }
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                        />
-                        <ERPInput
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="taxInvoiceNo"
-                          label={t("tax_invoice_no")}
-                          className="max-w-[150px]"
-                          value={formState.row.taxInvoiceNo}
-                          onChange={(e) =>
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: { taxInvoiceNo: e.target?.value },
-                              })
-                            )
-                          }
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                        />
-                        <ERPDateInput
-                          localInputBox={formState.userConfig?.inputBoxStyle}
-                          id="invoiceDate"
-                          label={t("invoice_date")}
-                          value={new Date(formState.row.invoiceDate)}
-                          onChange={(e) =>
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: { invoiceDate: e.target?.value },
-                              })
-                            )
-                          }
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                          disableEnterNavigation
-                          onKeyDown={(e) => {
-                            
-                            handleKeyDown(e, "invoiceDate");
-                          }}
-                        />
-                        <ERPInput
-                          ref={taxableAmountRef}
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="taxableAmount"
-                          className="max-w-[150px]"
-                          type="number"
-                          label={t("taxable_amount")}
-                          value={formState.row.taxableAmount}
-                          onChange={(e) =>
-                          {
-                            {
-                              const sd = e.target?.value != ""
-                              ? parseFloat(e.target?.value)
-                              : 0
-                              dispatch(
-                                accFormStateRowHandleFieldChange({
-                                  fields: {
-                                    taxableAmount:
-                                      e.target?.value != ""
-                                        ? parseFloat(e.target?.value)
-                                        : "",
-                                        taxAmount:
-                                      sd *
-                                      ((formState.row.taxPerc ?? 0) / 100)
-                                  },
-                                })
-                              )
-                            }
-                          
-                          }
-                          }
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                        />
-                        <ERPInput
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="taxPerc"
-                          type="number"
-                          label={t("tax%")}
-                          className="max-w-[65px]"
-                          value={formState.row.taxPerc}
-                          onChange={(e) => {
-                            const taxPerc =
-                              e.target?.value != ""
-                                ? parseFloat(e.target?.value)
-                                : 0;
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: {
-                                  taxPerc:
-                                    e.target?.value != ""
-                                      ? parseFloat(e.target?.value)
-                                      : "",
-                                  taxAmount:
-                                    (formState.row.taxableAmount ?? 0) *
-                                    (taxPerc / 100),
-                                },
-                              })
-                            );
-                          }}
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                        />
-                        <ERPInput
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          id="taxAmount"
-                          type="number"
-                          label={t("tax_amount")}
-                          className="max-w-[100px]"
-                          value={formState.row.taxAmount}
-                          onChange={(e) =>
-                            dispatch(
-                              accFormStateRowHandleFieldChange({
-                                fields: {
-                                  taxAmount:
-                                    e.target?.value != ""
-                                      ? parseFloat(e.target?.value)
-                                      : "",
-                                },
-                              })
-                            )
-                          }
-                          disabled={formState.formElements.pnlMasters?.disabled}
-                        />
-                      </>
-                    )}
+                  <BankDate
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+
+                  <ChequeStatus
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+
+                  <BankCharge
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    t={t}
+                  />
+
+
+                  <AccTaxDetails
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    t={t}
+                  />
                 </div>
+
                 <div className="flex items-end text-end">
                   {formState.formElements.btnAdd.visible == true && (
                     <ERPButton
@@ -2991,7 +2541,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       onClick={() => addOrEditRow()}
                       disableEnterNavigation
                       onKeyDown={(e) => {
-                        
+
                         if (e.key == "Enter") {
                           addOrEditRow();
                         }
@@ -3127,14 +2677,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex flex-col mt-[58px] w-full overflow-scroll"></div>
           <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
             <div className="flex-1  px-2  rounded-md">
-            <AccVoucherNoPrefix
-      ref={voucherNumberRef} // ✅ Pass ref to the child
-      formState={formState}
-      dispatch={dispatch}
-      handleKeyDown={handleKeyDown}
-      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-      t={t}
-    />
+              <AccVoucherNoPrefix
+                ref={voucherNumberRef} // ✅ Pass ref to the child
+                formState={formState}
+                dispatch={dispatch}
+                handleKeyDown={handleKeyDown}
+                loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                t={t}
+              />
             </div>
 
             {/* Centered divider */}
@@ -3178,104 +2728,104 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccMasterAccount
-                          formState={formState}
-                          dispatch={dispatch}
-                          getFormattedValue={getFormattedValue}
-                          t={t}
-                        />
+                  formState={formState}
+                  dispatch={dispatch}
+                  getFormattedValue={getFormattedValue}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccTransactionMaster
-                        formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                <AccTransactionMaster
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccNotes
-                   handleKeyDown={handleKeyDown}
-                        formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                <AccNotes
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccCurrencyID
-                        formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                <AccCurrencyID
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccCurrencyRate
-                        formState={formState}
-                          dispatch={dispatch}
-                          t={t}
-                        />
+                <AccCurrencyRate
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccEdit
-                        formState={formState}
-                        enableCombo={enableCombo}
-                          t={t}
-                          dispatch={dispatch}
-                        />
+                <AccEdit
+                  formState={formState}
+                  enableCombo={enableCombo}
+                  t={t}
+                  dispatch={dispatch}
+                />
               </div>
               <div className="mb-1">
 
-              <AccReferenceNumber
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleLoadByRefNo={handleLoadByRefNo}
-                        ref={refNoRef}
-                          t={t}
-                        />
+                <AccReferenceNumber
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleLoadByRefNo={handleLoadByRefNo}
+                  ref={refNoRef}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccTransactionDate
-                        formState={formState}
-                        dispatch={dispatch}
-                          t={t}
-                        />
+                <AccTransactionDate
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccReferenceDate
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    />
+                <AccReferenceDate
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccEmployeeID
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    handleKeyDown={handleKeyDown}
-                    />
+                <AccEmployeeID
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                  handleKeyDown={handleKeyDown}
+                />
               </div>
               <div className="mb-1">
 
-              <AccRemarks
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    />
+                <AccRemarks
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                />
               </div>
               <div className="mb-1">
 
-              <AccProject
-                    dispatch={dispatch}
-                    formState={formState}
-                    t={t}
-                    />
+                <AccProject
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                />
               </div>
               {/* <div className="mb-4">
           <input

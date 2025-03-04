@@ -235,21 +235,25 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
 
                 {headerState?.isFirstOnly &&
                     <ERPInput
+
                         value={headerState?.headerHeight ?? 20}
                         onChange={(e) => {
-                            if (!(e.target?.valueAsNumber > 60)) {
-                                handleChange("header", "headerHeight", e.target?.valueAsNumber)
-                            }
+                         
+                                handleChange("header", "headerHeight", parseInt(e.target.value, 10))
+                        
                         }}
+                        // onChange={(e) =>
+                        //     onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: parseInt(e.target.value, 10)} })
+                        //   }
                         label={t("header_height_for_first_page")}
                         type="number"
                         id="headerHeight"
                         placeholder=" "
                         className="w-full"
                         suffix={"pts"}
-                        min={20}
-                        max={60}
+                     
                     />
+
                 }
             </div>
             {/* <div

@@ -133,6 +133,12 @@ export const Header = ({ data, template, currentBranch, docIDKey, currency }: { 
               <Text style={fontStyles}>{currentBranch?.fax || "##12344543"}</Text>
             </View>
           )}
+          {headerState?.hasEmailField && (
+            <View style={styles.otherInfo}>
+              <Text style={labelStyles}>{headerState?.emailLabel || "Email"}:</Text>
+              <Text style={fontStyles}>{currentBranch?.email || "accounts@companyName.com"}</Text>
+            </View>
+          )}
         </View>
 
       </View>

@@ -13,6 +13,7 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import VoucherType from "../../../enums/voucher-types";
+import { accTransaction } from "../constants/TemplateCategories";
 
 
 interface HeaderDesignerProps {
@@ -129,7 +130,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
 
           <div className="text-sm">Document Title</div>
 
-          {!["journal_entry"].includes(templateGroup!) &&
+         
             <div className="flex flex-col gap-2">
               <ERPCheckbox
                 checked={headerState?.showDocTitle}
@@ -145,7 +146,7 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                 />
               )}
             </div>
-          }
+         
 
           <ERPInput
             value={headerState?.docTitleFontColor}
@@ -169,30 +170,104 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
 
 
           {/*  */}
-
-
-            <div className="flex flex-col gap-2">
+       {["PARP","RARP","Cheque"].includes(templateGroup as string)&&(
+        <>
+          <div className="flex flex-col gap-2">
               <ERPCheckbox
-              id="headerStateNumberField"
-                label="Number Field"
-                checked={headerState?.showNumberField}
-                onChange={(e) => onChange({ ...headerState, showNumberField: e.target.checked })}
+              id="showPaymentMode"
+                label="Payment Mode"
+                checked={headerState?.adviceTransInfo?.showPaymentMode}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showPaymentMode: e.target.checked } })}
               />
-              {headerState?.showNumberField && (
+
+              {headerState?.adviceTransInfo?.showPaymentMode && (
                 <ERPInput
                   noLabel
-                  id="numberField"
-                  value={headerState?.numberField}
-                  onChange={(e) => onChange({ ...headerState, numberField: e.target?.value })}
+                  id="paymentMode"
+                  value={headerState?.adviceTransInfo?.paymentMode}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, paymentMode: e.target?.value } })}
                 />
               )}
             </div>
-      
-          {/* */}
+         
 
-          {/* */}
-          
             <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="showDateField"
+                label="Date Field"
+                checked={headerState?.adviceTransInfo?.showDateField}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showDateField: e.target.checked } })}
+              />
+
+              {headerState?.adviceTransInfo?.showDateField && (
+                <ERPInput
+                  noLabel
+                  id="dateField"
+                  value={headerState?.adviceTransInfo?.dateField}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, dateField: e.target?.value } })}
+                />
+              )}
+            </div>
+         
+
+            <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="showReferenceField"
+                label="Reference Field"
+                checked={headerState?.adviceTransInfo?.showReferenceField}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showReferenceField: e.target.checked } })}
+              />
+
+              {headerState?.adviceTransInfo?.showReferenceField && (
+                <ERPInput
+                  noLabel
+                  id="referenceField"
+                  value={headerState?.adviceTransInfo?.referenceField}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, referenceField: e.target?.value } })}
+                />
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="showPaymentAmount"
+                label="Payment Amount"
+                checked={headerState?.adviceTransInfo?.showPaymentAmount}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showPaymentAmount: e.target.checked } })}
+              />
+
+              {headerState?.adviceTransInfo?.showPaymentAmount && (
+                <ERPInput
+                  noLabel
+                  id="paymentAmount"
+                  value={headerState?.adviceTransInfo?.paymentAmount}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, paymentAmount: e.target?.value } })}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="showBank"
+                label="Bank"
+                checked={headerState?.adviceTransInfo?.showBank}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showBank: e.target.checked } })}
+              />
+
+              {headerState?.adviceTransInfo?.showBank && (
+                <ERPInput
+                  noLabel
+                  id="bank"
+                  value={headerState?.adviceTransInfo?.bank}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, bank: e.target?.value } })}
+                />
+              )}
+            </div>
+        </>
+       )}
+         
+     {accTransaction.includes(templateGroup as VoucherType) &&
+     <>
+       <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showPaymentMode"
                 label="Payment Mode"
@@ -247,8 +322,25 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                 />
               )}
             </div>
+        <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="headerStateNumberField"
+                label="Number Field"
+                checked={headerState?.showNumberField}
+                onChange={(e) => onChange({ ...headerState, showNumberField: e.target.checked })}
+              />
+              {headerState?.showNumberField && (
+                <ERPInput
+                  noLabel
+                  id="numberField"
+                  value={headerState?.numberField}
+                  onChange={(e) => onChange({ ...headerState, numberField: e.target?.value })}
+                />
+              )}
+        </div>
 
-            <div className="flex flex-col gap-2">
+        
+        <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showOverPayment"
                 label="Over Payment"
@@ -264,12 +356,10 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
                   onChange={(e) => onChange({ ...headerState, accountTransactionInfo: { ...headerState?.accountTransactionInfo, overPayment: e.target?.value } })}
                 />
               )}
-            </div>
+         </div>
 
+            {/* */}
             <div className="flex flex-col gap-2">
-             
-
-             
                 <ERPInput
                   label="Payment Refund"
                   id="paymentRefund"
@@ -349,6 +439,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             step={1}
           />
       
+     </>
+     }
 
         </div>}
 

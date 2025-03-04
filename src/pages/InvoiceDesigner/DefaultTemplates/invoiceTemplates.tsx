@@ -4,12 +4,12 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Standard Template  ################ */
-      accTableState:{
-        showInvoiceNumber: true,
-        InvoiceNumberLabel: "Invoice Number",
-        InvoiceNumberWidth: "15%",
-      
-        // Invoice Date Fields
+      adviceTableState:{
+    
+        showLineItemNumber: true,
+        lineItemNumberLabel: "Invoice Number",
+        lineItemNumberWidth: "15%",
+            // Invoice Date Fields
         showInvoiceDate: true,
         InvoiceDateLabel: "Invoice Date",
         InvoiceDateWidth: "15%",
@@ -33,6 +33,47 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         showPaymentAmount: true,
         PaymentAmountLabel: "Payment Amount",
         PaymentAmountWidth: "20%",
+      },
+      accTableState:{
+        showLineItemNumber: true,
+        lineItemNumberLabel: "SiNo",
+        lineItemNumberWidth: "10%",
+  
+        showLedgerCode: true,
+        ledgerCodeLabel: "Ledger code",
+        ledgerCodeWidth: "",
+  
+        showLedger: true,
+        ledgerLabel: "Ledger",
+        ledgerWidth: "",
+  
+        showAmount: true,
+        amountLabel: "Amount",
+        amountWidth: "",
+  
+        showNarration: false,
+        narrationLabel: "Narration",
+        narrationWidth: "",
+  
+        showBillwiseDetails: false,
+        billwiseDetailsLabel: "Bill wise details",
+        billwiseDetailsWidth: "",
+  
+        showDiscount: true,
+        discountLabel: "Discount",
+        discountWidth: "",
+  
+        showCostCenter: false,
+        costCenterLabel: "Cost Center",
+        costCenterWidth: "",
+  
+        showAmountFc: false,
+        amountFcLabel: "AmountFc",
+        amountFcWidth: "",
+  
+        showBankCharge: true,
+        bankChargeLabel: "BankCharge",
+        bankChargeWidth: "",
       },
       totalState: {
         showTotalSection: true,
@@ -145,12 +186,12 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
   {
     content: {
       /* ################  Retail- Standard Template  ################ */
-      accTableState:{
-        showInvoiceNumber: true,
-        InvoiceNumberLabel: "Invoice Number",
-        InvoiceNumberWidth: "15%",
-      
-        // Invoice Date Fields
+      adviceTableState:{
+    
+        showLineItemNumber: true,
+        lineItemNumberLabel: "Invoice Number",
+        lineItemNumberWidth: "15%",
+            // Invoice Date Fields
         showInvoiceDate: true,
         InvoiceDateLabel: "Invoice Date",
         InvoiceDateWidth: "15%",
@@ -174,6 +215,47 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         showPaymentAmount: true,
         PaymentAmountLabel: "Payment Amount",
         PaymentAmountWidth: "20%",
+      },
+      accTableState:{
+        showLineItemNumber: true,
+        lineItemNumberLabel: "SiNo",
+        lineItemNumberWidth: "10%",
+  
+        showLedgerCode: true,
+        ledgerCodeLabel: "Ledger code",
+        ledgerCodeWidth: "",
+  
+        showLedger: true,
+        ledgerLabel: "Ledger",
+        ledgerWidth: "",
+  
+        showAmount: true,
+        amountLabel: "Amount",
+        amountWidth: "",
+  
+        showNarration: false,
+        narrationLabel: "Narration",
+        narrationWidth: "",
+  
+        showBillwiseDetails: false,
+        billwiseDetailsLabel: "Bill wise details",
+        billwiseDetailsWidth: "",
+  
+        showDiscount: true,
+        discountLabel: "Discount",
+        discountWidth: "",
+  
+        showCostCenter: false,
+        costCenterLabel: "Cost Center",
+        costCenterWidth: "",
+  
+        showAmountFc: false,
+        amountFcLabel: "AmountFc",
+        amountFcWidth: "",
+  
+        showBankCharge: true,
+        bankChargeLabel: "BankCharge",
+        bankChargeWidth: "",
       },
       totalState: {
         balanceFontSize: 8,

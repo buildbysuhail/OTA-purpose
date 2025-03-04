@@ -88,11 +88,11 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
   return (
     <View style={{
       width:"100%",
-      height:headerState?.headerHeight || undefined,
+      height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
       backgroundColor: template?.headerState?.bgColor || "#fff",
-      position: 'relative',
-      zIndex:10
-      }}>
+      borderTop:"1.5px solid rgb(104, 101, 101)" 
+      }}
+      {...(headerState?.isFirstOnly ? {fixed:false} : {fixed: true})}>
   {/* Background Image */}
     {template?.background_image_header && (
         <Image
@@ -126,10 +126,12 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           }
         </View>
         <View style={{ flexBasis: "33.33%", display: "flex",flexDirection: "column", justifyContent: "flex-end",alignItems:"center" ,gap:4 }}>
-         
-            <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
-              {headerState?.docTitle }
-            </Text>
+         {headerState?.showDocTitle &&
+          <Text style={[styles.docTitle, { color: headerState?.docTitleFontColor, fontSize: headerState?.docTitleFontSize, fontFamily: fontFamily }]}>
+          {headerState?.docTitle }
+        </Text>
+         }
+           
             <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{"Payment No:3"}</Text>
         </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>

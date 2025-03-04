@@ -22,10 +22,16 @@ const styles = StyleSheet.create({
       justifyContent:"space-between", 
       width: "100%",
     },
-    billTo: {
+    customer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent:"flex-start",
+      gap:2
+    },
+    customerInfo: {
       display: "flex",
       flexDirection: "column",
-      width: "60%",
+      flexBasis:"60%"
     },
  
   });
@@ -74,65 +80,154 @@ const styles = StyleSheet.create({
             {/* date & No */}
           <View style={styles.VoucherInfo}>
               <View style={{
-                display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",padding:10,width:"40%"
-              }}>
+                display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",padding:10,width:"50%"
+              }} wrap>
                   {/* {headerState?.showReceivedFrom && (
                           <View>
                             <Text style={labelStyles}>{headerState?.receivedFromLabel ?? "Received From"}</Text>
                           </View>
                         )} */}
-                        {/* {headerState?.hasBillTo && ( */}
-                          {/* <View style={styles.billTo}> */}
-                            {/* <Text style={labelStyles}>{headerState?.billTo ?? "Bill T0"}</Text> */}
+                      
                             <Text style={{
                               ...fontStyles,
                               color: custNameFontColor, fontSize: custNameFontSize
                             }}>
                               "Nizam Karippali "
                             </Text>
-                            <Text style={fontStyles}>Dubai</Text>
-                            <Text style={fontStyles}>Karama 123ft</Text>
-                            <Text style={fontStyles}>Ho No:1223</Text>
-                            {/* {headerState?.hasShipTo && (
-                              <>
-                                <Text style={labelStyles}>{headerState?.shipTo ?? "Ship To"}</Text>
-                                <Text style={fontStyles}>Ho No:1223</Text>
-                              </>
-                            )} */}
-                          {/* </View> */}
-                        {/* )} */}
+
+                            {headerState?.hasBillTo && (
+                              <View style={styles.customer}>
+                             <View style={{flexBasis:"30%"}}>
+                             <Text style={labelStyles}>{`${headerState?.billTo ?? "Bill T0"}` }</Text>
+                             </View>
+                             <View style={{flexBasis:"10%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                             </View>
+                                <View style={styles.customerInfo}>
+                                  <Text style={fontStyles}>Dubai</Text>
+                                  <Text style={fontStyles}>Karama 123ft</Text>
+                                  <Text style={fontStyles}>Ho No:1223</Text>
+                                </View>
+                              
+                              </View>
+                            )} 
+
+                        {headerState?.hasShipTo && (
+                        <>
+                          <View style={styles.customer}>
+                          <View style={{flexBasis:"30%"}}>
+                          <Text style={labelStyles}>{`${headerState?.shipTo ??  "Ship To"}` }</Text>
+                             </View>
+                             <View style={{flexBasis:"10%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                             </View>
+                                
+                           
+                                <View style={styles.customerInfo}>
+                                  <Text style={fontStyles}>Dubai</Text>
+                                  <Text style={fontStyles}>Karama 123ft</Text>
+                                
+                                </View>
+                              
+                              </View>
+                       
+
+                        </>
+                      )}
+                           
+               
               </View>
            
     
             
               <View style={{
                 display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",paddingLeft:5,paddingTop:5,width:"40%"
-              }}>
-                  {/* {headerState?.showReceivedFrom && (
-                          <View>
-                            <Text style={labelStyles}>{headerState?.receivedFromLabel ?? "Received From"}</Text>
-                          </View>
-                        )} */}
-                        {/* {headerState?.hasBillTo && ( */}
-                          {/* <View style={styles.billTo}> */}
-                            {/* <Text style={labelStyles}>{headerState?.billTo ?? "Bill T0"}</Text> */}
-                            <Text style={{
-                              ...fontStyles,
-                              color: custNameFontColor, fontSize: custNameFontSize
-                            }}>
-                              "Nizam Karippali"
-                            </Text>
-                            <Text style={fontStyles}>Dubai</Text>
-                            <Text style={fontStyles}>Karama 123ft</Text>
-                            <Text style={fontStyles}>Ho No:1223</Text>
-                            {/* {headerState?.hasShipTo && (
-                              <>
-                                <Text style={labelStyles}>{headerState?.shipTo ?? "Ship To"}</Text>
-                                <Text style={fontStyles}>Ho No:1223</Text>
-                              </>
-                            )} */}
-                          {/* </View> */}
-                        {/* )} */}
+              }} wrap>
+
+                  {headerState?.adviceTransInfo?.showDateField && (
+                   <View style={styles.customer}>
+                     <View style={{flexBasis:"50%"}}>
+                          <Text style={labelStyles}>{headerState?.adviceTransInfo?.dateField || "Payment Date"}</Text>
+                      </View>
+                      <View style={{flexBasis:"5%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                      </View>
+                      <View style={{...styles.customerInfo,flexBasis:"45%"}}>
+                      <Text style={fontStyles}>
+                        {/* {data.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data.master?.transactionDate)}
+                      </Text>
+                      </View>
+                    </View>
+                  )}
+
+    {headerState?.adviceTransInfo?.showReferenceField && (
+                   <View style={styles.customer}>
+                     <View style={{flexBasis:"50%"}}>
+                          <Text style={labelStyles}>{headerState?.adviceTransInfo?.referenceField || "Reference No"}</Text>
+                      </View>
+                      <View style={{flexBasis:"5%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                      </View>
+                      <View style={{...styles.customerInfo,flexBasis:"45%"}}>
+                      <Text style={fontStyles}>
+                        {/* {data.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data.master?.transactionDate)}
+                      </Text>
+                      </View>
+                    </View>
+                  )}
+{headerState?.adviceTransInfo?.showPaymentAmount && (
+                   <View style={styles.customer}>
+                     <View style={{flexBasis:"50%"}}>
+                          <Text style={labelStyles}>{headerState?.adviceTransInfo?.paymentAmount || "Payment Amount"}</Text>
+                      </View>
+                      <View style={{flexBasis:"5%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                      </View>
+                      <View style={{...styles.customerInfo,flexBasis:"45%"}}>
+                      <Text style={fontStyles}>
+                        {/* {data.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data.master?.transactionDate)}
+                      </Text>
+                      </View>
+                    </View>
+                  )}
+{headerState?.adviceTransInfo?.showPaymentMode && (
+                   <View style={styles.customer}>
+                     <View style={{flexBasis:"50%"}}>
+                          <Text style={labelStyles}>{headerState?.adviceTransInfo?.paymentMode || "Payment Method"}</Text>
+                      </View>
+                      <View style={{flexBasis:"5%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                      </View>
+                      <View style={{...styles.customerInfo,flexBasis:"45%"}}>
+                      <Text style={fontStyles}>
+                        {/* {data.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data.master?.transactionDate)}
+                      </Text>
+                      </View>
+                    </View>
+                  )}
+
+
+{headerState?.adviceTransInfo?.showBank && (
+                   <View style={styles.customer}>
+                     <View style={{flexBasis:"50%"}}>
+                          <Text style={labelStyles}>{headerState?.adviceTransInfo?.bank || "Bank"}</Text>
+                      </View>
+                      <View style={{flexBasis:"5%"}}>
+                             <Text style={labelStyles}>{`:` }</Text>
+                      </View>
+                      <View style={{...styles.customerInfo,flexBasis:"45%"}}>
+                      <Text style={fontStyles}>
+                        {/* {data.master?.date || "12/5/2024"} */}
+                        {dateTrimmer(data.master?.transactionDate)}
+                      </Text>
+                      </View>
+                    </View>
+                  )}
+
               </View>
             
              </View>
@@ -141,9 +236,9 @@ const styles = StyleSheet.create({
        <View>
        <Text style={labelStyles}>Dear Sir,</Text>
     
-    <Text style={fontStyles}>
-    We have cleared the below invoices with document number 3
-    </Text>
+        <Text style={fontStyles}>
+          We have cleared the below invoices with document number 3
+        </Text>
         </View> 
      
       

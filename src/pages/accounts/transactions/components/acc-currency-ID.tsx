@@ -12,7 +12,7 @@ import Urls from "../../../../redux/urls";
 
 // const api = new APIClient();
 
-interface AccCurrencyIDProps extends AccVoucherElementProps {}
+interface AccCurrencyIDProps extends AccVoucherElementProps { }
 
 const AccCurrencyID = React.forwardRef<HTMLInputElement, AccCurrencyIDProps>(
   (

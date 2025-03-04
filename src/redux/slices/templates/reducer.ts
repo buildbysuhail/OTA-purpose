@@ -6,7 +6,8 @@ import {
   ItemTableState,
   PropertiesState,
   TotalState,
-  accTableState
+  accTableState,
+  adviceTableState
 } from "../../../pages/InvoiceDesigner/Designer/interfaces";
 import { templateInitialState } from "../../reducers/TemplateReducer";
 import { getTemplates } from "./thunk";
@@ -80,6 +81,12 @@ const templateSlice = createSlice({
       action: PayloadAction<accTableState>
     ) => {
       state.activeTemplate.accTableState = action.payload;
+    },
+    setTemplateAdviceTableState: (
+      state,
+      action: PayloadAction<adviceTableState>
+    ) => {
+      state.activeTemplate.adviceTableState = action.payload;
     },
     setTemplateTotalState: (state, action: PayloadAction<TotalState>) => {
       state.activeTemplate.totalState = action.payload;
@@ -175,6 +182,7 @@ export const {
   setTemplateHeaderState,
   setTemplateItemTableState,
   setTemplateAccTableState,
+  setTemplateAdviceTableState,
   setTemplateTotalState,
   setTemplateFooterState,
 } = templateSlice.actions;

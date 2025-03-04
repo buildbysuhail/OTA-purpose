@@ -2,8 +2,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccVoucherElementProps } from "../acc-transaction-types";
 import { accFormStateTransactionMasterHandleFieldChange } from "../reducer";
-import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-number-details";
-import { forwardRef, useRef } from "react";
+import { useRef } from "react";
 import React from "react";
 import Urls from "../../../../redux/urls";
 

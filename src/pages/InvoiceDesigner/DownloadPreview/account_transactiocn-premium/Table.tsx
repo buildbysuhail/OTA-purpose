@@ -3,8 +3,6 @@ import { AccountTransactionProps } from ".";
 import { TemplateState } from "../../Designer/interfaces";
 
 
-
-
 const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
   const accTableState = template?.accTableState;
   const propertiesState = template?.propertiesState;
@@ -60,35 +58,55 @@ const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
     // Function to Render the Table Header
     const renderHeader = () => (
       <View style={styles.thead} {...(accTableState?.headerRepeatOnPage ? { fixed: true } : {})}>
-        {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
-        {accTableState?.showInvoiceNumber && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceNumberWidth }]}>
-            {accTableState?.InvoiceNumberLabel || "Invoice Number"}
+   
+        {accTableState?.showLineItemNumber && (
+          <Text style={[styles.th, { width: accTableState?.lineItemNumberWidth ? accTableState?.lineItemNumberWidth: ""}]}>
+            {accTableState?.lineItemNumberLabel || "SiNo"}
           </Text>
         )}
-        {accTableState?.showInvoiceDate && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceDateWidth }]}>
-            {accTableState?.InvoiceDateLabel || "Invoice Date"}
+        {accTableState?.showLedgerCode && (
+          <Text style={[styles.th, { width: accTableState?.ledgerCodeWidth }]}>
+            {accTableState?.ledgerCodeLabel || "Ledger code"}
           </Text>
         )}
-        {accTableState?.showInvoiceAmount && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceAmountWidth }]}>
-            {accTableState?.InvoiceAmountLabel || "Invoice Amount"}
+        {accTableState?.showLedger && (
+          <Text style={[styles.th, { width: accTableState?.ledgerWidth }]}>
+            {accTableState?.ledgerLabel || "Ledger"}
           </Text>
         )}
-        {accTableState?.showWithholdingTax && (
-          <Text style={[styles.th, { width: accTableState?.WithholdingTaxWidth }]}>
-            {accTableState?.WithholdingTaxLabel || "Withholding Tax"}
+        {accTableState?.showAmount && (
+          <Text style={[styles.th, { width: accTableState?.amountWidth }]}>
+            {accTableState?.amountLabel || "Amount"}
           </Text>
         )}
-        {accTableState?.showTCSAmount && (
-          <Text style={[styles.th, { width: accTableState?.TCSAmountWidth }]}>
-            {accTableState?.TCSAmountLabel || "TCS Amount"}
+        {accTableState?.showNarration && (
+          <Text style={[styles.th, { width: accTableState?.narrationWidth }]}>
+            {accTableState?.narrationLabel || "Narration"}
           </Text>
         )}
-        {accTableState?.showPaymentAmount && (
-          <Text style={[styles.th, { width: accTableState?.PaymentAmountWidth }]}>
-            {accTableState?.PaymentAmountLabel || "Payment Amount"}
+        {accTableState?.showBillwiseDetails && (
+          <Text style={[styles.th, { width: accTableState?.billwiseDetailsWidth }]}>
+            {accTableState?.billwiseDetailsLabel || "Bill wise details"}
+          </Text>
+        )}
+             {accTableState?.showDiscount && (
+          <Text style={[styles.th, { width: accTableState?.discountWidth}]}>
+            {accTableState?.discountLabel || "Discount"}
+          </Text>
+        )}
+             {accTableState?.showCostCenter && (
+          <Text style={[styles.th, { width: accTableState?.costCenterWidth }]}>
+            {accTableState?.costCenterLabel || "Cost Center"}
+          </Text>
+        )}
+             {accTableState?.showAmountFc && (
+          <Text style={[styles.th, { width: accTableState?.amountFcWidth }]}>
+            {accTableState?.amountFcLabel || "AmountFc"}
+          </Text>
+        )}
+             {accTableState?.showBankCharge && (
+          <Text style={[styles.th, { width: accTableState?.bankChargeWidth }]}>
+            {accTableState?.bankChargeLabel || "Bank Charge"}
           </Text>
         )}
       </View>
@@ -103,45 +121,58 @@ const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
 
         {/* Table Body */}
         <View style={styles.tbody}>
-          {data?.details
-        
-          .map((val: any, index: number) => (
+        {data?.details.map((val: any, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
                 {accTableState?.showLineItemNumber && (
                   <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
-                    {val.slNo}
+                    {val.slNo}{index + 1}
                   </Text>
                 )}
-                {(accTableState?.showInvoiceNumber) && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceNumberWidth }}>
+                {(accTableState?.showLedgerCode) && (
+                  <Text style={{ ...styles.td, width: accTableState?.ledgerCodeWidth }}>
                     INV-00{index + 1}
                   </Text>
                 )}
-                {accTableState?.showInvoiceDate && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceDateWidth }}>
+                {accTableState?.showLedger && (
+                  <Text style={{ ...styles.td, width: accTableState?.ledgerWidth }}>
                     2024-01-{10 + index}
                   </Text>
                 )}
-                {accTableState?.showInvoiceAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceAmountWidth }}>
+                {accTableState?.showAmount && (
+                  <Text style={{ ...styles.td, width: accTableState?.amountWidth }}>
                     {1000 + index * 500}.00 {/* Demo Invoice Amount */}
                   </Text>
                 )}
-                {accTableState?.showWithholdingTax && (
-                  <Text style={{ ...styles.td, width: accTableState?.WithholdingTaxWidth }}>
+                {accTableState?.showNarration && (
+                  <Text style={{ ...styles.td, width: accTableState?.narrationWidth }}>
                      {50 + index * 10}.00 {/* Demo Withholding Tax */} 
                   </Text>
                 )}
-                {accTableState?.showTCSAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.TCSAmountWidth }}>
+                {accTableState?.showBillwiseDetails && (
+                  <Text style={{ ...styles.td, width: accTableState?.billwiseDetailsWidth }}>
                     {20 + index * 5}.00 {/* Demo TCS Amount */}
                   </Text>
                 )}
-                {accTableState?.showPaymentAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.PaymentAmountWidth }}>
+                {accTableState?.showDiscount && (
+                  <Text style={{ ...styles.td, width: accTableState?.discountWidth }}>
                   {800 + index * 200}.00 {/* Demo Payment Amount */}
                   </Text>
-                )}    
+                )}   
+                   {accTableState?.showCostCenter && (
+                  <Text style={{ ...styles.td, width: accTableState?.costCenterWidth }}>
+                  {800 + index * 200}.00 {/* Demo Payment Amount */}
+                  </Text>
+                )} 
+                   {accTableState?.showAmountFc && (
+                  <Text style={{ ...styles.td, width: accTableState?.amountFcWidth }}>
+                  {800 + index * 200}.00 {/* Demo Payment Amount */}
+                  </Text>
+                )} 
+                   {accTableState?.showBankCharge && (
+                  <Text style={{ ...styles.td, width: accTableState?.bankChargeWidth }}>
+                  {800 + index * 200}.00 {/* Demo Payment Amount */}
+                  </Text>
+                )}  
               </View>
             ))}
         </View>

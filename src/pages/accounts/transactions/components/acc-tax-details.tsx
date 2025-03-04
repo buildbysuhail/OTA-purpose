@@ -20,7 +20,6 @@ const AccTaxDetails = React.forwardRef<HTMLInputElement, AccTaxDetailsProps>(({
   const partyNameRef = useRef<HTMLInputElement>(null);
   const taxNoRef = useRef<HTMLInputElement>(null);
   const taxableAmountRef = useRef<HTMLInputElement>(null);
-
   const focusTaxNoField = () => {
     setTimeout(() => {
       if (taxNoRef.current) {

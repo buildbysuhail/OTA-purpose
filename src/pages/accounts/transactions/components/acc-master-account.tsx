@@ -1,10 +1,7 @@
 import { APIClient } from "../../../../helpers/api-client";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccVoucherElementProps } from "../acc-transaction-types";
-import {
-  accFormStateHandleFieldChange,
-  updateFormElement,
-} from "../reducer"; import { forwardRef, useRef } from "react";
+import { accFormStateHandleFieldChange, updateFormElement, } from "../reducer";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
@@ -12,10 +9,12 @@ const api = new APIClient();
 
 interface AccMasterAccountrProps extends AccVoucherElementProps { getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string; }
 
-const AccMasterAccount = React.forwardRef<
-  HTMLInputElement,
-  AccMasterAccountrProps
->(({ formState, dispatch, getFormattedValue, t }, ref) => {
+const AccMasterAccount = React.forwardRef<HTMLInputElement, AccMasterAccountrProps>(({
+  formState,
+  dispatch,
+  getFormattedValue,
+  t
+}, ref) => {
   return (
     <>
       {formState.formElements.masterAccount.visible &&

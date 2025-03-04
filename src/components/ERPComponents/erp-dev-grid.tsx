@@ -1,18 +1,50 @@
-import React, { forwardRef, Fragment, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, } from "react";
+import React, {
+  forwardRef,
+  Fragment,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
 import { DataGrid, KeyboardNavigation } from "devextreme-react/data-grid";
-import { FilterRow, HeaderFilter, Paging, Scrolling, SearchPanel, ColumnFixing, ColumnChooser, Selection, Grouping, Toolbar, Item, Export, Editing, Column, Summary, TotalItem, } from "devextreme-react/data-grid";
+import {
+  FilterRow,
+  HeaderFilter,
+  Paging,
+  Scrolling,
+  SearchPanel,
+  ColumnFixing,
+  ColumnChooser,
+  Selection,
+  Grouping,
+  Toolbar,
+  Item,
+  Export,
+  Editing,
+  Column,
+  Summary,
+  TotalItem,
+} from "devextreme-react/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from "jspdf";
 import { Workbook } from "exceljs";
 import { saveAs } from "file-saver";
 import { Link } from "react-router-dom";
 import { DevGridColumn, GridPreference } from "../types/dev-grid-column";
-import { applyGridColumnPreferences, getInitialPreference, } from "../../utilities/dx-grid-preference-updater";
+import {
+  applyGridColumnPreferences,
+  getInitialPreference,
+} from "../../utilities/dx-grid-preference-updater";
 import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
 import { APIClient } from "../../helpers/api-client";
-import { useAppDispatch, useAppSelector, } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
@@ -23,7 +55,13 @@ import dxDataGrid from "devextreme/ui/data_grid";
 import ERPAlert from "./erp-sweet-alert";
 import ERPToast from "./erp-toast";
 import moment from "moment";
-import { formatDateFields, identifyDateFormat, isNullOrUndefinedOrEmpty, mergeObjectsRemovingIdenticalKeys, formatDate as appFormatDate } from "../../utilities/Utils";
+import {
+  formatDateFields,
+  identifyDateFormat,
+  isNullOrUndefinedOrEmpty,
+  mergeObjectsRemovingIdenticalKeys,
+  formatDate as appFormatDate,
+} from "../../utilities/Utils";
 import { RootState } from "../../redux/store";
 import { arabicFontBase64 } from "./arabicFont";
 import { transactionRoutes } from "../common/content/transaction-routes";
@@ -106,15 +144,15 @@ interface ERPDevGridProps {
   allowResizing?: boolean;
   showFilterRow?: boolean;
   remoteOperations?:
-  | boolean
-  | {
-    filtering?: boolean;
-    sorting?: boolean;
-    paging?: boolean;
-    summary?: boolean;
-    groupPaging?: boolean;
-    grouping?: boolean;
-  };
+    | boolean
+    | {
+        filtering?: boolean;
+        sorting?: boolean;
+        paging?: boolean;
+        summary?: boolean;
+        groupPaging?: boolean;
+        grouping?: boolean;
+      };
   focusedRowEnabled?: boolean;
   onRowClick?: (e: any) => void;
   onFilterChanged?: (e: any) => void;
@@ -161,9 +199,12 @@ interface ERPDevGridProps {
   allowGrouping?: boolean;
   groupPanelVisible?: boolean;
   allowEditing?: {
-    allow: boolean, config: {
-      add?: boolean, edit?: boolean, delete?: boolean
-    }
+    allow: boolean;
+    config: {
+      add?: boolean;
+      edit?: boolean;
+      delete?: boolean;
+    };
   };
   editMode?: "row" | "form" | "popup" | "batch" | "cell";
   onRowUpdating?: (e: any) => void;
@@ -265,7 +306,6 @@ const createStore = async (
           }
           return [f.field, f.operation, f.value];
           console.log();
-
         });
       }
 
@@ -281,9 +321,15 @@ const createStore = async (
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach((x: any) => {
-          if (x[1] instanceof Date || x[0]?.includes('date') || x[0]?.includes('Date')) {
-            const sds = moment(x[1]).utc().startOf('day');
-            params[x[0]] = JSON.stringify(sds.format("YYYY-MM-DDT00:00:00.000[Z]"));
+          if (
+            x[1] instanceof Date ||
+            x[0]?.includes("date") ||
+            x[0]?.includes("Date")
+          ) {
+            const sds = moment(x[1]).utc().startOf("day");
+            params[x[0]] = JSON.stringify(
+              sds.format("YYYY-MM-DDT00:00:00.000[Z]")
+            );
           } else {
             params[x[0]] = JSON.stringify(x[1]);
           }
@@ -291,25 +337,24 @@ const createStore = async (
       }
 
       const queryString = new URLSearchParams(params).toString();
-      const updated =
-        formatDateFields(filterData);
-      const postDataModified = formatDateFields(postData)
+      const updated = formatDateFields(filterData);
+      const postDataModified = formatDateFields(postData);
       try {
         setFilterValidations(undefined);
         const result =
           method === ActionType.GET
             ? await api.get(dataUrl, queryString)
             : method === ActionType.POST
-              ? await api.postAsync(
+            ? await api.postAsync(
                 dataUrl,
                 updated != undefined && Object.keys(updated).length > 0
                   ? updated
                   : postDataModified != undefined
-                    ? postDataModified
-                    : {},
+                  ? postDataModified
+                  : {},
                 queryString
               )
-              : null;
+            : null;
 
         if (
           result != undefined &&
@@ -329,7 +374,7 @@ const createStore = async (
           setFilterValidations(undefined);
         }
         setTotalRowCount((prev: number) =>
-          (prev <= 0 || (loadOptions.skip ?? 0) == 0)
+          prev <= 0 || (loadOptions.skip ?? 0) == 0
             ? result.dataRowCount != undefined && result.dataRowCount != null
               ? result.dataRowCount
               : result.totalCount
@@ -338,21 +383,27 @@ const createStore = async (
         return result != undefined
           ? result.isOk != undefined && result.isOk == false
             ? {
+                data: [],
+                totalCount: -1,
+                summary: {},
+                groupCount: 0,
+              }
+            : {
+                data:
+                  result.loadResult != undefined
+                    ? result.loadResult
+                    : result.data,
+                totalCount:
+                  result.loadResult != undefined
+                    ? result.loadResult.totalCount
+                    : result.totalCount,
+              }
+          : {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            }
-            : {
-              data: result.loadResult != undefined ? result.loadResult : result.data,
-              totalCount: result.loadResult != undefined ? result.loadResult.totalCount : result.totalCount,
-            }
-          : {
-            data: [],
-            totalCount: -1,
-            summary: {},
-            groupCount: 0,
-          };
+            };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -500,7 +551,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     },
     ref
   ) => {
-
     // Determine the Actionswidth value
     // const actionsWidth = childPopupPropsDynamic
     //   ? childPopupPropsDynamic().Actionswidth
@@ -512,7 +562,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     // Get Actionswidth from the column configuration
     const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
-    const actionColumn = gridCols.find(col => col.Actionswidth !== undefined);
+    const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
     const gridStyle: React.CSSProperties = {
@@ -538,18 +588,24 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // const gridStyle: React.CSSProperties = {
     //   ["--popup-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
     //   // Add this line for actions width
-    //   ["--actions-width" as any]: `${childPopupProps?.Actionswidth || 0}px`, 
+    //   ["--actions-width" as any]: `${childPopupProps?.Actionswidth || 0}px`,
     // };
 
     const { t } = useTranslation("main");
     const dispatch = useAppDispatch();
-    const appState = useAppSelector((state: RootState) => state?.AppState?.appState);
-    const userSession = useAppSelector((state: RootState) => state.UserSession as any);
+    const appState = useAppSelector(
+      (state: RootState) => state?.AppState?.appState
+    );
+    const userSession = useAppSelector(
+      (state: RootState) => state.UserSession as any
+    );
     const [gridHeight, setGridHeight] = useState<{
       mobile: number;
       windows: number;
     }>({ mobile: 500, windows: 500 });
-    const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText);
+    const [addButtonText, setAddButtonText] = useState<string>(
+      gridAddButtonText == "Add" ? t("add") : gridAddButtonText
+    );
     const onPopupOpenClick = useCallback(() => {
       popupAction &&
         dispatch(popupAction({ isOpen: true, key: null, reload: false }));
@@ -566,8 +622,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         heightToAdjustOnWindowsInModal !== undefined
           ? heightToAdjustOnWindowsInModal
           : wh - heightToAdjustOnWindows < 300
-            ? 300
-            : wh - heightToAdjustOnWindows;
+          ? 300
+          : wh - heightToAdjustOnWindows;
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [
       heightToAdjustOnMobile,
@@ -575,10 +631,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       heightToAdjustOnWindowsInModal,
     ]);
 
-
     const rootState = useAppSelector((x) => x);
     const [preferences, setPreferences] = useState<GridPreference>();
-    const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
+    const initialFilterState = useMemo(
+      () => filterInitialData || {},
+      [filterInitialData]
+    );
     const [filter, setFilter] = useState<any>({});
     const [filterValidations, setFilterValidations] = useState<any>({});
     const [filterShowCount, setFilterShowCount] = useState<number>(0);
@@ -591,7 +649,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     }>({ isOpen: false, props: {}, key: "", drillDownDisplayCells: [] });
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [bodyProps, setBodyProps] = useState({});
-    const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
+    const [_filterInitialData, set_filterInitialData] =
+      useState(filterInitialData);
     const [_reload, set_reload] = useState(reload);
     const [isPdfMode, setIsPdfMode] = useState(false);
     useEffect(() => {
@@ -619,7 +678,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       [columns]
     ); // Add any other dependencies here
     const onApplyFilter = useCallback((_filter: any) => {
-
       const dss = { ..._filter };
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
@@ -727,7 +785,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     ): string => {
       // Helper function to format dates in dd/MM/yyyy format
 
-
       // Function to evaluate and replace placeholders and conditions
       const evaluateExpression = (expression: string, data: any): boolean => {
         // Create a safer scope for evaluating the expression by passing 'data' as an argument
@@ -752,18 +809,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           );
           const result = conditionResult
             ? trueValue.replace(
-              /\[([^\]]+)\]/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return appFormatDate(formState[innerPlaceholder]);
+                /\[([^\]]+)\]/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return appFormatDate(formState[innerPlaceholder]);
+                  }
+                  return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
                 }
-                return formState[innerPlaceholder] || "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
+              )
             : "";
 
           return result;
@@ -771,22 +828,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("___");
           const result = r
             ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return rowData != undefined
+                      ? appFormatDate(rowData[innerPlaceholder])
+                      : "N/A";
+                  }
                   return rowData != undefined
-                    ? appFormatDate(rowData[innerPlaceholder])
-                    : "N/A";
+                    ? rowData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
                 }
-                return rowData != undefined
-                  ? rowData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
+              )
             : "";
 
           return result;
@@ -794,20 +851,20 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("****");
           const result = r
             ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date")
-                ) {
-                  // If the placeholder is a date, format it
-                  return appFormatDate(postData[innerPlaceholder]);
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return appFormatDate(postData[innerPlaceholder]);
+                  }
+                  return postData != undefined
+                    ? postData[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
                 }
-                return postData != undefined
-                  ? postData[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
+              )
             : "";
 
           return result;
@@ -815,22 +872,22 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const [l, r] = placeholder.split("---");
           const result = r
             ? r.replace(
-              /\(([^\]]+)\)/g,
-              (innerMatch: any, innerPlaceholder: any) => {
-                if (
-                  innerPlaceholder.includes("date") ||
-                  innerPlaceholder.includes("Date") ||
-                  innerPlaceholder.includes("finFrom") ||
-                  innerPlaceholder.includes("finTo")
-                ) {
-                  // If the placeholder is a date, format it
-                  return appFormatDate(userSession[innerPlaceholder]);
+                /\(([^\]]+)\)/g,
+                (innerMatch: any, innerPlaceholder: any) => {
+                  if (
+                    innerPlaceholder.includes("date") ||
+                    innerPlaceholder.includes("Date") ||
+                    innerPlaceholder.includes("finFrom") ||
+                    innerPlaceholder.includes("finTo")
+                  ) {
+                    // If the placeholder is a date, format it
+                    return appFormatDate(userSession[innerPlaceholder]);
+                  }
+                  return userSession != undefined
+                    ? userSession[innerPlaceholder] || "N/A"
+                    : "N/A"; // Return the value from formState, or "N/A" if not found
                 }
-                return userSession != undefined
-                  ? userSession[innerPlaceholder] || "N/A"
-                  : "N/A"; // Return the value from formState, or "N/A" if not found
-              }
-            )
+              )
             : "";
           return result;
         } else if (formState[placeholder] !== undefined) {
@@ -853,8 +910,21 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return formatStringWithConditions(_gridHeader, data);
     }, [gridHeader, filter]);
 
-    const pageOrientation = preferences?.orientation === "landscape" ? "landscape" : "portrait";
-    const generatePdf = async (gridInstance: any, isPrintAction: boolean = false) => {
+    const pageOrientation =
+      preferences?.orientation === "landscape" ? "landscape" : "portrait";
+    const generatePdf = async (
+      gridInstance: any,
+      isPrintAction: boolean = false
+    ) => {
+      const totalRows = gridInstance.totalCount(); // or gridInstance.getDataSource().totalCount()
+      if (totalRows > 500) {
+        const userConfirmed = window.confirm(
+          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${(totalRows??0)/25} pages, Please click 'Wait' if the application becomes unresponsive.`
+        );
+        if (!userConfirmed) {
+          return;
+        }
+      }
       const doc = new jsPDF({
         orientation: pageOrientation,
         unit: "pt",
@@ -865,10 +935,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       doc.addFileToVFS("Amiri-Regular.ttf", arabicFont);
       doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
       doc.setFont("Amiri");
-      const pageTitle = `${gridHeader} - ${!filterText || !filter
-        ? filterText || ""
-        : formatStringWithConditions(filterText.toString(), filter)
-        }`;
+      const pageTitle = `${gridHeader} - ${
+        !filterText || !filter
+          ? filterText || ""
+          : formatStringWithConditions(filterText.toString(), filter)
+      }`;
 
       let currentY = 30;
 
@@ -918,11 +989,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
       const pdfVisibleColumns = preferences
         ? preferences.columnPreferences
-          .filter((colPref) => colPref.showInPdf)
-          .map((colPref) => colPref.dataField)
-        : gridCols
-          .filter((col) => col.showInPdf)
-          .map((col) => col.dataField);
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => colPref.dataField)
+        : gridCols.filter((col) => col.showInPdf).map((col) => col.dataField);
 
       const pageWidth = doc.internal.pageSize.getWidth() - 80;
       const columnsWithoutWidth = pdfVisibleColumns.filter(
@@ -947,12 +1016,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       }
       const pdfColumnsWidths = preferences
         ? preferences.columnPreferences
-          .filter((colPref) => colPref.showInPdf)
-          .map((colPref) => colPref.width || 0)
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => colPref.width || 0)
         : gridCols
-          .filter((col) => col.showInPdf)
-          .map((col) => col.width || 100);
-
+            .filter((col) => col.showInPdf)
+            .map((col) => col.width || 100);
 
       if (columnsWithoutWidth.length > 0) {
         const specifiedWidthTotal = pdfColumnsWidths
@@ -972,13 +1040,46 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Customize the export to PDF to use rendered values
       const customizeCell = (options: any) => {
         if (options.gridCell.rowType != "data") return;
+        debugger;
         const column = gridCols.find(
           (x) => x.dataField == options.gridCell.column.dataField
         );
 
-        if (column && column.cellRender) {
-          const renderResult = column.cellRender(
-            { data: options.gridCell.data },
+        if (
+          column &&
+          column.cellRender &&
+          (column.cellRenderDynamic ||
+            column.cellRenderDynamicRootState ||
+            column.cellRender)
+        ) {
+          let renderResult = null;
+          if (column.cellRenderDynamic) {
+            renderResult = column.cellRenderDynamic(
+              options.gridCell,
+              options.pdfCell,
+              filter
+            );
+          }
+          if (column.cellRenderDynamicRootState) {
+            renderResult = column.cellRenderDynamicRootState(
+              options.gridCell,
+              options.pdfCell,
+              rootState
+            );
+          }
+          if (column.cellRender) {
+            renderResult = column.cellRender(
+              options.gridCell,
+              options.pdfCell,
+              filter
+            );
+          }
+
+          column.cellRender(
+            {
+              ...options.gridCell.data,
+              value: options.gridCell.data[options.gridCell.column.dataField],
+            },
             options.gridCell,
             filter,
             options.pdfCell
@@ -989,15 +1090,23 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           // let isValidReactElement = React.isValidElement(renderResult);
 
           if (React.isValidElement(renderResult)) {
-            const staticMarkup = ReactDOMServer.renderToStaticMarkup(renderResult);
+            const staticMarkup =
+              ReactDOMServer.renderToStaticMarkup(renderResult);
             // const parser = new DOMParser();
             // const docHtml = parser.parseFromString(staticMarkup, "text/html");
             // const textContent = docHtml.body.textContent || "";
             // options.pdfCell.text = textContent;
             options.pdfCell.html = staticMarkup;
-          } else if (typeof renderResult === "string" || typeof renderResult === "number") {
+          } else if (
+            typeof renderResult === "string" ||
+            typeof renderResult === "number"
+          ) {
             options.pdfCell.text = renderResult.toString();
-          } else if (renderResult && typeof renderResult === "object" && renderResult.text) {
+          } else if (
+            renderResult &&
+            typeof renderResult === "object" &&
+            renderResult.text
+          ) {
             options.pdfCell.text = renderResult.text;
           } else {
             options.pdfCell.text = options.pdfCell.text;
@@ -1013,45 +1122,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         }
       });
 
-      // await exportDataGridToPdf({
-      //   jsPDFDocument: doc,
-      //   component: gridInstance,
-      //   columnWidths: pdfColumnsWidths,
-      //   topLeft: { x: 0, y: currentY },
-      //   customizeCell: customizeCell,
-      // });
-
-      // Batch processing
-      const batchSize = 1000; // Define your batch size
-      const totalRows = gridInstance.totalCount();
-      let processedRows = 0;
-
-      while (processedRows < totalRows) {
-        const batchEnd = Math.min(processedRows + batchSize, totalRows);
-        const batchData = gridInstance.getVisibleRows().slice(processedRows, batchEnd);
-
-        // Manually render each row of the batch to the PDF
-        batchData.forEach((row: { data: { [x: string]: any; }; }) => {
-          pdfColumnsWidths.forEach((width, index) => {
-            const column = gridCols.find((col) => col.dataField === pdfVisibleColumns[index]);
-
-            if (column && column.dataField && row.data[column.dataField] !== undefined) {
-              const cellValue = row.data[column.dataField];
-              doc.text(cellValue.toString(), 40 + pdfColumnsWidths.slice(0, index).reduce((a, b) => a + b, 0), currentY);
-            } else {
-              // Handle the case where the column or dataField is undefined
-              doc.text("N/A", 40 + pdfColumnsWidths.slice(0, index).reduce((a, b) => a + b, 0), currentY);
-            }
-          });
-          currentY += 30; // Adjust the row height as needed
-        });
-
-        processedRows = batchEnd;
-        if (currentY + 60 > doc.internal.pageSize.getHeight()) {
-          doc.addPage();
-          currentY = 60;
-        }
-      }
+      await exportDataGridToPdf({
+        jsPDFDocument: doc,
+        component: gridInstance,
+        columnWidths: pdfColumnsWidths,
+        topLeft: { x: 0, y: currentY },
+        customizeCell: customizeCell,
+      });
 
       // Restore original column visibility and settings
       originalColumnVisibility.forEach((column: any) => {
@@ -1095,43 +1172,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         if (onExporting) {
           onExporting(e);
         } else {
-          // Helper function to get rendered cell value
-          const getCellDisplayValue = (
-            cellElement: any,
-            cellInfo: any,
-            column: any
-          ) => {
-            if (column.cellRenderDynamic) {
-              return column.cellRenderDynamic(
-                cellElement,
-                cellInfo,
-                filter,
-                e.format
-              );
-            }
-            if (column.cellRender) {
-              return column.cellRender(cellElement, cellInfo, filter, e.format);
-            }
-            return cellElement.data[column.dataField];
-          };
-
           if (e.format === "pdf") {
             const doc = await generatePdf(e.component);
             if (!doc) return;
 
-            const totalPages = doc.getNumberOfPages();
-            if (totalPages > 50) {
-              const userConfirmed = window.confirm(
-                "The document contains more than 50 pages. Are you sure you want to download it?"
-              );
-              if (userConfirmed) {
-                doc.save(`${gridHeader}.pdf`);
-              } else {
-                return;
-              }
-            } else {
-              doc.save(`${gridHeader}.pdf`);
-            }
+            doc.save(`${gridHeader}.pdf`);
           } else if (e.format === "xlsx") {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet(gridHeader);
@@ -1208,11 +1253,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               if (column) {
                 const renderResult = column.cellRender
                   ? column.cellRender(
-                    { data: options.gridCell.data },
-                    options.gridCell,
-                    filter,
-                    options.excelCell.style
-                  )
+                      { data: options.gridCell.data },
+                      options.gridCell,
+                      filter,
+                      options.excelCell.style
+                    )
                   : undefined;
 
                 let isDefined = renderResult !== undefined;
@@ -1327,12 +1372,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               dynamicProps?.enableFn(event.data)))
         ) {
           if (dynamicProps?.isTransactionScreen) {
-
-
             const params = handleInvoke(event.data);
             if (params) {
-
-              const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
+              const url = new URL(
+                `${window.location.origin}${params.transactionBase}/${params.transactionType}`
+              );
 
               // Append all parameters from the `params` object
               Object.entries(params).forEach(([key, value]) => {
@@ -1345,14 +1389,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               console.error("Invalid data or parameters");
             }
           } else {
-
             let updatedBodyProps: any = {};
 
             dynamicProps?.bodyProps != undefined
               ? dynamicProps?.bodyProps?.split(",").forEach((prop: string) => {
-                const trimmedProp = prop.trim();
-                updatedBodyProps[trimmedProp] = event.data[trimmedProp];
-              })
+                  const trimmedProp = prop.trim();
+                  updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+                })
               : {};
 
             const pdata =
@@ -1414,7 +1457,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         ) {
           e.rowElement.style.display = "none"; // Hide row
         }
-        onRowPrepared && onRowPrepared(e)
+        onRowPrepared && onRowPrepared(e);
       },
       [condition] // Add dependencies here
     );
@@ -1452,7 +1495,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const clientHeight = scrollable.clientHeight(); // Get visible area height
 
         // Ensure scrolling reaches the real bottom
-        scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight - clientHeight });
+        scrollable.scrollTo({
+          top: position === 0 ? 0 : scrollHeight - clientHeight,
+        });
       }
     }, []);
 
@@ -1470,12 +1515,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
     // Memoize the customizeText function
     const customizeDate = useMemo(() => {
-      return (itemInfo: { value: any }) => `Sales Total: ${itemInfo.value.toFixed(2)}`
-    }, [])
+      return (itemInfo: { value: any }) =>
+        `Sales Total: ${itemInfo.value.toFixed(2)}`;
+    }, []);
 
     // Attach scroll event listener
     useEffect(() => {
-      console.log('scrollToCalled');
+      console.log("scrollToCalled");
 
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
@@ -1497,7 +1543,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // Memoize the entire Summary component
     const MemoizedSummary = useMemo(() => {
       return (
-        <Summary recalculateWhileEditing={true} skipEmptyValues={false} >
+        <Summary recalculateWhileEditing={true} skipEmptyValues={false}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {
             return (
               <TotalItem
@@ -1510,16 +1556,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 customizeText={config.customizeText}
                 skipEmptyValues={false}
               />
-            )
+            );
           })}
         </Summary>
-      )
-    }, [summaryItems, columns,])
+      );
+    }, [summaryItems, columns]);
 
-    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] = useState(GridPreferenceChooserAccTrance);
+    const [isPreferenceChooserVisible, setIsPreferenceChooserVisible] =
+      useState(GridPreferenceChooserAccTrance);
     return (
       <Fragment>
-        <div className={`custom-data-grid ${isPreferenceChooserVisible ? "toolbar-expanded" : ""} ${ERPGridActionsstyle ? "ERPGridActionsstyleyesre" : "ERPGridActionsstyleNore"} ${className}`} style={gridStyle} >
+        <div
+          className={`custom-data-grid ${
+            isPreferenceChooserVisible ? "toolbar-expanded" : ""
+          } ${
+            ERPGridActionsstyle
+              ? "ERPGridActionsstyleyesre"
+              : "ERPGridActionsstyleNore"
+          } ${className}`}
+          style={gridStyle}
+        >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
             rtlEnabled={appState?.dir === "rtl"}
@@ -1539,7 +1595,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             }}
             columnHidingEnabled={columnHidingEnabled}
             // columns={gridCols}
-            onRowClick={(e) => onClickByRootState != undefined ? onClickByRootState(e, rootState) : onRowClick && onRowClick(e)}
+            onRowClick={(e) =>
+              onClickByRootState != undefined
+                ? onClickByRootState(e, rootState)
+                : onRowClick && onRowClick(e)
+            }
             onSelectionChanged={(e) =>
               onSelectionChangedByRootState != undefined
                 ? onSelectionChangedByRootState(e, rootState)
@@ -1566,45 +1626,51 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           >
             {MemoizedSummary}
             <ColumnFixing enabled={true} />
-            <Scrolling mode={scrollingMode}
+            <Scrolling
+              mode={scrollingMode}
               showScrollbar="always"
               renderAsync={false}
               useNative={"auto"}
               rowRenderingMode="virtual"
-              preloadEnabled={true} />
+              preloadEnabled={true}
+            />
 
-            {
-              allowPaging &&
-              (<Paging defaultPageSize={pageSize} pageSize={pageSize} />)
-            }
+            {allowPaging && (
+              <Paging defaultPageSize={pageSize} pageSize={pageSize} />
+            )}
 
-            {
-              allowFiltering && (
-                <FilterRow visible={false}>
-                  {initialFilters.map((filter: any, index: any) => (
-                    <Column
-                      key={index}
-                      dataField={filter.field}
-                      filterValue={filter.value}
-                      selectedFilterOperation={filter.operation}
-                    />
-                  ))}
-                </FilterRow>
-              )
-            }
+            {allowFiltering && (
+              <FilterRow visible={false}>
+                {initialFilters.map((filter: any, index: any) => (
+                  <Column
+                    key={index}
+                    dataField={filter.field}
+                    filterValue={filter.value}
+                    selectedFilterOperation={filter.operation}
+                  />
+                ))}
+              </FilterRow>
+            )}
 
             {allowSearching && <SearchPanel visible={true} />}
-            {allowKeyboardNavigation && <KeyboardNavigation
-              editOnKeyPress={true}
-              enterKeyAction={"startEdit"}
-              enterKeyDirection={"column"}
-            />}
+            {allowKeyboardNavigation && (
+              <KeyboardNavigation
+                editOnKeyPress={true}
+                enterKeyAction={"startEdit"}
+                enterKeyDirection={"column"}
+              />
+            )}
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
-            {allowSelection && <Selection mode={selectionMode} allowSelectAll={allowSelectAll} selectAllMode={"allPages"}
-              showCheckBoxesMode={"always"} />
-            }
+            {allowSelection && (
+              <Selection
+                mode={selectionMode}
+                allowSelectAll={allowSelectAll}
+                selectAllMode={"allPages"}
+                showCheckBoxesMode={"always"}
+              />
+            )}
             {allowGrouping && <Grouping />}
             {groupPanelVisible && (
               <Grouping contextMenuEnabled={true} expandMode="rowClick" />
@@ -1642,10 +1708,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 </Item>
               )}
               {isPreferenceChooserVisible && (
-                <Item
-                  key={appState?.dir}
-                  location="before"
-                >
+                <Item key={appState?.dir} location="before">
                   <GridPreferenceChooser
                     columns={columns}
                     gridId={gridId}
@@ -1655,11 +1718,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 </Item>
               )}
 
-
               {enableScrollButton && (
                 <Item>
                   <div
-                    title={isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")}
+                    title={
+                      isAtBottom ? t("scroll_to_top") : t("scroll_to_bottom")
+                    }
                   >
                     <button
                       type="button"
@@ -1673,214 +1737,199 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     </button>
                   </div>
                 </Item>
-              )
-              }
+              )}
 
               {!hideDefaultSearchPanel && <Item name="searchPanel" />}
 
-              {
-                !hideDefaultExportButton && allowExport && (
-                  <Item name="exportButton" />
-                )
-              }
+              {!hideDefaultExportButton && allowExport && (
+                <Item name="exportButton" />
+              )}
 
-              {
-                showPrintButton && ( // Conditionally render the print button
-                  <Item>
+              {showPrintButton && ( // Conditionally render the print button
+                <Item>
+                  <button
+                    className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
+                    onClick={handlePrintPdf}
+                  >
+                    <Printer className="w-4 h-4" />
+                  </button>
+                </Item>
+              )}
+              {moreOption && (
+                <Item>
+                  <div className="relative">
                     <button
-                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
-                      onClick={handlePrintPdf}
+                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
+                      // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
+                      // onClick={handlePrintPdf}setMoreOptionVisible
+                      onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
                     >
-                      <Printer className="w-4 h-4" />
+                      <EllipsisVertical className="w-4 h-4" />
                     </button>
-                  </Item>
-                )
-              }
-              {
-                moreOption && (
-                  <Item>
-                    <div className="relative">
-                      <button
-                        className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
-                        // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
-                        // onClick={handlePrintPdf}setMoreOptionVisible
-                        onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
+                    {isMoreOptionVisible && (
+                      <div
+                        className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                        style={{
+                          top: "100%", // Position the popup right below the button
+                          left: "-90px", // Align it with the left edge of the button
+                          width: "221px", // Set your desired width
+                          marginTop: "4px", // Add some spacing between the button and the popup
+                        }}
                       >
-                        <EllipsisVertical className="w-4 h-4" />
-                      </button>
-                      {isMoreOptionVisible && (
-                        <div
-                          className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
-                          style={{
-                            top: "100%", // Position the popup right below the button
-                            left: "-90px", // Align it with the left edge of the button
-                            width: "221px", // Set your desired width
-                            marginTop: "4px", // Add some spacing between the button and the popup
-                          }}
-                        >
-                          <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
-                            <ul className="space-y-1">
-                              <li>
-                                <button
-                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                        <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                          <ul className="space-y-1">
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                                 // onClick={}
-                                >
-                                  <FileUp className="pe-2" />
-                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                                </button>
-                              </li>
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("export_to_excel")}
+                                </span>
+                              </button>
+                            </li>
 
-                              <li>
-                                <button
-                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                                 // onClick={}
-                                >
-                                  <FileUp className="pe-2" />
-                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                                </button>
-                              </li>
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("export_to_excel")}
+                                </span>
+                              </button>
+                            </li>
 
-                              <li>
-                                <button
-                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                            <li>
+                              <button
+                                className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                                 // onClick={}
-                                >
-                                  <FileUp className="pe-2" />
-                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                                </button>
-                              </li>
+                              >
+                                <FileUp className="pe-2" />
+                                <span className="text-sm font-semibold ">
+                                  {t("export_to_excel")}
+                                </span>
+                              </button>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    )}
+                  </div>
+                </Item>
+              )}
 
-                            </ul>
-                          </nav>
-                        </div>
-                      )}
-                    </div>
-
-                  </Item>
-                )
-              }
-
-              {
-                enablefilter == true && (
-                  <Item>
-                    <ErpGridGlobalFilter
-                      width={filterWidth}
-                      height={filterHeight}
-                      title={gridHeader}
-                      gridId={gridId}
-                      validations={filterValidations}
-                      initialData={filter}
-                      content={
-                        filterContent
-                        // <LedgerReportFilter /> // Pass standalone JSX content
-                      }
-                      toogleFilter={showFilter}
-                      onApplyFilters={(filters) => onApplyFilter(filters)}
+              {enablefilter == true && (
+                <Item>
+                  <ErpGridGlobalFilter
+                    width={filterWidth}
+                    height={filterHeight}
+                    title={gridHeader}
+                    gridId={gridId}
+                    validations={filterValidations}
+                    initialData={filter}
+                    content={
+                      filterContent
+                      // <LedgerReportFilter /> // Pass standalone JSX content
+                    }
+                    toogleFilter={showFilter}
+                    onApplyFilters={(filters) => onApplyFilter(filters)}
                     // onClose={onCloseFilter}
-                    />
+                  />
+                </Item>
+              )}
+
+              {ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
+                <Item>
+                  <GridPreferenceChooser
+                    columns={columns}
+                    gridId={gridId}
+                    onApplyPreferences={onApplyPreferences}
+                  />
+                </Item>
+              )}
+
+              {!hideGridAddButton && (
+                <Item>
+                  <div>
+                    {gridAddButtonType == "link" && (
+                      <Link
+                        to={gridAddButtonLink}
+                        className="ti-btn-primary-full ti-btn ti-btn-full"
+                      >
+                        {t("new")}
+                        <Plus className="w-4 h-4" />
+                      </Link>
+                    )}
+                    {gridAddButtonType == "popup" && (
+                      <ERPButton
+                        variant="primary"
+                        onClick={onPopupOpenClick}
+                        title={addButtonText}
+                        startIcon={gridAddButtonIcon}
+                      />
+                    )}
+                  </div>
+                </Item>
+              )}
+
+              {customToolbarItems
+                ?.filter((item: any) => item.location === "before")
+                .map((toolbarItem: any, index: any) => (
+                  <Item key={index} location="before">
+                    {toolbarItem.item}
                   </Item>
-                )
-              }
+                ))}
 
-              {
-                ShowGridPreferenceChooser && !isPreferenceChooserVisible && (
-                  <Item>
-                    <GridPreferenceChooser
-                      columns={columns}
-                      gridId={gridId}
-                      onApplyPreferences={onApplyPreferences}
-                    />
+              {customToolbarItems
+                ?.filter((item: any) => item.location === "after")
+                .map((toolbarItem: any, index: any) => (
+                  <Item key={index} location="after">
+                    {toolbarItem.item}
                   </Item>
-                )
-              }
-
-              {
-                !hideGridAddButton && (
-                  <Item>
-                    <div>
-                      {
-                        gridAddButtonType == "link" && (
-                          <Link to={gridAddButtonLink} className="ti-btn-primary-full ti-btn ti-btn-full">
-                            {t("new")}
-                            <Plus className="w-4 h-4" />
-                          </Link>
-                        )
-                      }
-                      {
-                        gridAddButtonType == "popup" && (
-                          <ERPButton
-                            variant="primary"
-                            onClick={onPopupOpenClick}
-                            title={addButtonText}
-                            startIcon={gridAddButtonIcon}
-                          />
-                        )
-                      }
-                    </div>
-                  </Item>
-                )
-              }
-
-              {
-                customToolbarItems
-                  ?.filter((item: any) => item.location === "before")
-                  .map((toolbarItem: any, index: any) => (
-                    <Item key={index} location="before">
-                      {toolbarItem.item}
-                    </Item>
-                  ))
-              }
-
-              {
-                customToolbarItems
-                  ?.filter((item: any) => item.location === "after")
-                  .map((toolbarItem: any, index: any) => (
-                    <Item key={index} location="after">
-                      {toolbarItem.item}
-                    </Item>
-                  ))
-              }
+                ))}
             </Toolbar>
 
-            {
-              gridCols?.map((column, index) => (
-                <Column
-                  customizeText={column.customizeText}
-                  editorOptions={column.editorOptions}
-                  validationRules={column.validationRules}
-                  allowEditing={column.allowEditing || false}
-                  key={column.dataField}
-                  dataField={column.dataField}
-                  caption={
-                    column.captionDynamic != undefined
-                      ? column.captionDynamic(filter)
-                      : column.caption
-                  }
-                  // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
-                  groupIndex={column.groupIndex}
-                  cssClass={column.cssClass}
-                  format={column.format}
-                  dataType={column.dataType}
-                  allowSorting={column.allowSorting}
-                  allowSearch={column.allowSearch}
-                  // allowResizing={column.allowResizing}
-                  // allowResizing={column.allowResizing}
-                  allowFiltering={column.allowFiltering ?? false}
-                  width={column.width}
-                  // width={
-                  //   column.fixed && column.Actionswidth 
-                  //     ? column.Actionswidth + 44 // Add 15px to Actionswidth
-                  //     : column.width
-                  // }
-                  minWidth={column.minWidth}
-                  fixed={column.fixed}
-                  fixedPosition={column.fixedPosition}
-                  cellRender={
-                    column.cellRenderDynamic === undefined &&
-                      column.cellRender === undefined &&
-                      column.cellRenderDynamicRootState === undefined
-                      ? undefined
-                      : (cellElement: any, cellInfo: any) => {
+            {gridCols?.map((column, index) => (
+              <Column
+                customizeText={column.customizeText}
+                editorOptions={column.editorOptions}
+                validationRules={column.validationRules}
+                allowEditing={column.allowEditing || false}
+                key={column.dataField}
+                dataField={column.dataField}
+                caption={
+                  column.captionDynamic != undefined
+                    ? column.captionDynamic(filter)
+                    : column.caption
+                }
+                // headerCellRender={index === firstVisibleColumnIndex  ? renderCustomHeader : undefined} // Apply custom header to the first column
+                groupIndex={column.groupIndex}
+                cssClass={column.cssClass}
+                format={column.format}
+                dataType={column.dataType}
+                allowSorting={column.allowSorting}
+                allowSearch={column.allowSearch}
+                // allowResizing={column.allowResizing}
+                // allowResizing={column.allowResizing}
+                allowFiltering={column.allowFiltering ?? false}
+                width={column.width}
+                // width={
+                //   column.fixed && column.Actionswidth
+                //     ? column.Actionswidth + 44 // Add 15px to Actionswidth
+                //     : column.width
+                // }
+                minWidth={column.minWidth}
+                fixed={column.fixed}
+                fixedPosition={column.fixedPosition}
+                cellRender={
+                  column.cellRenderDynamic === undefined &&
+                  column.cellRender === undefined &&
+                  column.cellRenderDynamicRootState === undefined
+                    ? undefined
+                    : (cellElement: any, cellInfo: any) => {
                         if (column.cellRenderDynamic) {
                           return column.cellRenderDynamic(
                             cellElement,
@@ -1903,76 +1952,73 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                           );
                         }
                       }
-                  }
-                  visible={
-                    column.visibleDynamic != undefined
-                      ? column.visibleDynamic(filter)
-                      : column.visible || false
-                  }
-                />
-              ))
-            }
+                }
+                visible={
+                  column.visibleDynamic != undefined
+                    ? column.visibleDynamic(filter)
+                    : column.visible || false
+                }
+              />
+            ))}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}
           </DataGrid>
 
-          {
-            showTotalCount == true && (
-              <div className="p-3 bg-gray border dark:border-dark-border border-gray">
-                <span className="text-gray font-semibold">{t("total_records")}</span>
-                <span className="text-gray">{totalRowCount}</span>
-              </div>
-            )
-          }
+          {showTotalCount == true && (
+            <div className="p-3 bg-gray border dark:border-dark-border border-gray">
+              <span className="text-gray font-semibold">
+                {t("total_records")}
+              </span>
+              <span className="text-gray">{totalRowCount}</span>
+            </div>
+          )}
         </div>
 
-        {
-          (childPopupProps || childPopupPropsDynamic) && (
-            <ERPModal
-              isOpen={isChildOpen.isOpen}
-              minHeight={300}
-              title={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).title
-                  : childPopupProps?.title
-              }
-              width={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).width ?? 1000
-                  : childPopupProps?.width ?? 1000
-              }
-              height={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).height ?? 800
-                  : childPopupProps?.height ?? 800
-              }
-              isForm={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).isForm
-                  : childPopupProps?.isForm
-              }
-              origin={
-                originDynamic
-                  ? originDynamic(isChildOpen.key)
-                  : childPopupPropsDynamic
-                    ? childPopupPropsDynamic(isChildOpen.key).origin
-                    : childPopupProps?.origin
-              }
-              closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
-              content={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).content
-                  : childPopupProps?.content
-              }
-              rowData={isChildOpen.data}
-              isTransactionScreen={
-                childPopupPropsDynamic
-                  ? childPopupPropsDynamic(isChildOpen.key).isTransactionScreen
-                  : childPopupProps?.isTransactionScreen
-              }
-              contentProps={isChildOpen.props}
-            />
-          )
-        }
+        {(childPopupProps || childPopupPropsDynamic) && (
+          <ERPModal
+            isOpen={isChildOpen.isOpen}
+            minHeight={300}
+            title={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).title
+                : childPopupProps?.title
+            }
+            width={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).width ?? 1000
+                : childPopupProps?.width ?? 1000
+            }
+            height={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).height ?? 800
+                : childPopupProps?.height ?? 800
+            }
+            isForm={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).isForm
+                : childPopupProps?.isForm
+            }
+            origin={
+              originDynamic
+                ? originDynamic(isChildOpen.key)
+                : childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).origin
+                : childPopupProps?.origin
+            }
+            closeModal={() => setIsChildOpen({ isOpen: false, props: {} })}
+            content={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).content
+                : childPopupProps?.content
+            }
+            rowData={isChildOpen.data}
+            isTransactionScreen={
+              childPopupPropsDynamic
+                ? childPopupPropsDynamic(isChildOpen.key).isTransactionScreen
+                : childPopupProps?.isTransactionScreen
+            }
+            contentProps={isChildOpen.props}
+          />
+        )}
       </Fragment>
     );
   }
@@ -1994,17 +2040,17 @@ const _DrillDownCellTemplate = ({
     data.value !== 0
   ) {
     return (
-      <a href="#" style={{ color: "#1976d2", textDecoration: "underline" }}
+      <a
+        href="#"
+        style={{ color: "#1976d2", textDecoration: "underline" }}
         onClick={(e) => {
           e.preventDefault();
           // Handle drill-down logic here
-        }}>
-
-        {
-          data.column.dataType === "date"
-            ? moment(data.data[field], inputFormat).local().format("DD/MMM/YYYY") // Change this format as needed
-            : data.value.toString()
-        }
+        }}
+      >
+        {data.column.dataType === "date"
+          ? moment(data.data[field], inputFormat).local().format("DD/MMM/YYYY") // Change this format as needed
+          : data.value.toString()}
       </a>
     );
   }

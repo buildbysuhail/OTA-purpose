@@ -248,7 +248,6 @@ export const useAccTransaction = (
       transaction: { ...formState.transaction },
       row: { ...formState.row },
     });
-
     if (_s_isDirty && skipPrompt != true) {
       // if (mode == "increment" || mode == "decrement") {
       //   // const _voucherNumber =
@@ -474,8 +473,19 @@ export const useAccTransaction = (
     }
 
     _formState.prev = modelToBase64Unicode({
-      transaction: { ..._formState.transaction },
-      row: { ..._formState.row },
+      transaction: { ..._formState.transaction,
+        master:{
+          ..._formState.transaction.master,
+          employeeID: _formState.transaction.master.employeeID == null ? "" : _formState.transaction.master.employeeID,
+          currencyID: _formState.transaction.master.currencyID == null ? "" : _formState.transaction.master.currencyID
+        }
+       },
+      row: { ..._formState.row,
+         ledgerId: _formState.row.ledgerID == null ? "" : _formState.row.ledgerID,
+         costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
+         projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
+        //  currencyID: _formState.row.currencyID == null ? "" : _formState.row.currencyID,
+         projectId: _formState.row.projectId == null ? "" : _formState.row.projectId },
     });
 
     console.log("accFormStateHandleFieldChange1");

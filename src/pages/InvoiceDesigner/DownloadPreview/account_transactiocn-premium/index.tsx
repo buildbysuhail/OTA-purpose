@@ -89,7 +89,7 @@ return (
           )}
      
           {/* Content */}
-          <View style={{flex: 1, position: 'relative', zIndex: 50 ,
+          <View style={{ zIndex: 50 ,
             padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
           }} wrap>
             <Content data={data} template={template} currentBranch={currentBranch} />

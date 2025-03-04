@@ -15,14 +15,13 @@ interface ItemTableDesignerProps {
 }
 
 const LabelsEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
-  const [searchParams] = useSearchParams();
   const { t } = useTranslation('system');
-  const templateGroup = searchParams?.get("template_group")! as VoucherType | string
+
   return (
     <>
       <ERPCheckbox
         id="showLineItemNumber"
-        label={t("line_item_number")}
+        label={t("sino")}
         checked={accTableState
           ?.showLineItemNumber}
         onChange={(e) => onChange?.({
@@ -35,7 +34,7 @@ const LabelsEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
         ?.showLineItemNumber && (
           <div className=" flex gap-2">
             <ERPInput
-              id="lineItemNumberWidth"
+              id="SiNoWidth"
               label={t("width")}
               className="w-20"
               value={accTableState
@@ -46,8 +45,8 @@ const LabelsEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
               })}
             />
             <ERPInput
-              id="lineItemNumberLabel"
-              label={t("line_item_number")}
+              id="SiNoLabel"
+              label={t("sino_number")}
               value={accTableState
                 ?.lineItemNumberLabel}
               onChange={(e) => onChange?.({
@@ -58,167 +57,241 @@ const LabelsEditor = ({ accTableState, onChange }: ItemTableDesignerProps) => {
           </div>
         )}
 
+ 
+
       <ERPCheckbox
-        id="showInvoiceNumber"
-        label={t("invoice_number")}
-        checked={accTableState?.showInvoiceNumber}
-        onChange={(e) => onChange?.({ ...accTableState, showInvoiceNumber: e.target.checked })}
+        id="showLedgerCode"
+        label={t("ledger_code")}
+        checked={accTableState?.showLedgerCode}
+        onChange={(e) => onChange?.({ ...accTableState, showLedgerCode: e.target.checked })}
       />
 
-      {accTableState?.showInvoiceNumber && (
+      {accTableState?.showLedgerCode && (
         <div className=" flex gap-2">
           <ERPInput
-            id="InvoiceNumberWidth"
+            id="ledgerCodeWidth"
             label={t("width")}
             className="w-20"
-            value={accTableState?.InvoiceNumberWidth}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceNumberWidth: e.target?.value })}
+            value={accTableState?.ledgerCodeWidth}
+            onChange={(e) => onChange?.({ ...accTableState, ledgerCodeWidth: e.target?.value })}
           />
           <ERPInput
-            id="InvoiceNumberLabel"
-            label={t("invoice_number")}
-            placeholder={t("invoice_number")}
-            value={accTableState?.InvoiceNumberLabel}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceNumberLabel: e.target?.value })}
+            id="ledgerCodeLabel"
+            label={t("ledger_code")}
+            placeholder={t("ledger_code")}
+            value={accTableState?.ledgerCodeLabel}
+            onChange={(e) => onChange?.({ ...accTableState, ledgerCodeLabel: e.target?.value })}
           />
         </div>
       )}
 
       <ERPCheckbox
-        id="showInvoiceDate"
-        label={t("invoice_date")}
-        checked={accTableState?.showInvoiceDate}
-        onChange={(e) => onChange?.({ ...accTableState, showInvoiceDate: e.target.checked })}
+        id="showLedger"
+        label={t("ledger")}
+        checked={accTableState?.showLedger}
+        onChange={(e) => onChange?.({ ...accTableState, showLedger: e.target.checked })}
       />
 
-      {accTableState?.showInvoiceDate && (
+      {accTableState?.showLedger && (
         <div className=" flex gap-2">
           <ERPInput
-            id="InvoiceDateWidth"
+            id="ledgerWidth"
             label={t("width")}
             className="w-20"
-            value={accTableState?.InvoiceDateWidth}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceDateWidth: e.target?.value })}
+            value={accTableState?.ledgerWidth}
+            onChange={(e) => onChange?.({ ...accTableState, ledgerWidth: e.target?.value })}
           />
           <ERPInput
-            id="InvoiceDateLabel"
-            label={t("invoice_date")}
-            placeholder={t("invoice_date")}
-            value={accTableState?.InvoiceDateLabel}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceDateLabel: e.target?.value })}
+            id="ledgerLabel"
+            label={t("ledger")}
+            placeholder={t("ledger")}
+            value={accTableState?.ledgerLabel}
+            onChange={(e) => onChange?.({ ...accTableState, ledgerLabel: e.target?.value })}
+          />
+        </div>
+      )}
+      <ERPCheckbox
+        id="showAmount"
+        label={t("amount")}
+        checked={accTableState?.showAmount}
+        onChange={(e) => onChange?.({ ...accTableState, showAmount: e.target.checked })}
+      />
+
+      {accTableState?.showAmount && (
+        <div className=" flex gap-2">
+          <ERPInput
+            id="amountWidth"
+            label={t("width")}
+            className="w-20"
+            value={accTableState?.amountWidth}
+            onChange={(e) => onChange?.({ ...accTableState, amountWidth: e.target?.value })}
+          />
+          <ERPInput
+            id="amountLabel"
+            label={t("amount")}
+            placeholder={t("amount")}
+            value={accTableState?.amountLabel}
+            onChange={(e) => onChange?.({ ...accTableState, amountLabel: e.target?.value })}
           />
         </div>
       )}
 
       <ERPCheckbox
-        id="showInvoiceAmount"
-        label={t("invoice_amount")}
-        checked={accTableState?.showInvoiceAmount}
-        onChange={(e) => onChange?.({ ...accTableState, showInvoiceAmount: e.target.checked })}
+        id="showNarration"
+        label={t("narration")}
+        checked={accTableState?.showNarration}
+        onChange={(e) => onChange?.({ ...accTableState, showNarration: e.target.checked })}
       />
 
-      {accTableState?.showInvoiceAmount && (
+      {accTableState?.showNarration && (
         <div className=" flex gap-2">
           <ERPInput
-            id="InvoiceAmountWidth"
+            id="narrationWidth"
             label={t("width")}
             className="w-20"
-            value={accTableState?.InvoiceAmountWidth}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceAmountWidth: e.target?.value })}
+            value={accTableState?.narrationWidth}
+            onChange={(e) => onChange?.({ ...accTableState, narrationWidth: e.target?.value })}
           />
           <ERPInput
-            id="InvoiceAmountLabel"
-            label={t("invoice_amount")}
-            placeholder={t("invoice_amount")}
-            value={accTableState?.InvoiceAmountLabel}
-            onChange={(e) => onChange?.({ ...accTableState, InvoiceAmountLabel: e.target?.value })}
-          />
-        </div>
-      )}
-      <ERPCheckbox
-        id="showWithholdingTax"
-        label={t("withholding_tax")}
-        checked={accTableState?.showWithholdingTax}
-        onChange={(e) => onChange?.({ ...accTableState, showWithholdingTax: e.target.checked })}
-      />
-
-      {accTableState?.showWithholdingTax && (
-        <div className=" flex gap-2">
-          <ERPInput
-            id="WithholdingTaxWidth"
-            label={t("width")}
-            className="w-20"
-            value={accTableState?.WithholdingTaxWidth}
-            onChange={(e) => onChange?.({ ...accTableState, WithholdingTaxWidth: e.target?.value })}
-          />
-          <ERPInput
-            id="WithholdingTaxLabel"
-            label={t("withholding_tax")}
-            placeholder={t("withholding_tax")}
-            value={accTableState?.WithholdingTaxLabel}
-            onChange={(e) => onChange?.({ ...accTableState, WithholdingTaxLabel: e.target?.value })}
+            id="narrationLabel"
+            label={t("narration")}
+            placeholder={t("narration")}
+            value={accTableState?.narrationLabel}
+            onChange={(e) => onChange?.({ ...accTableState, narrationLabel: e.target?.value })}
           />
         </div>
       )}
 
       <ERPCheckbox
-        id="showPaymentAmount"
-        label={t("payment_amount")}
-        checked={accTableState?.showPaymentAmount}
-        onChange={(e) => onChange?.({ ...accTableState, showPaymentAmount: e.target.checked })}
+        id="showBillwiseDetails"
+        label={t("bill_wise_details")}
+        checked={accTableState?.showBillwiseDetails}
+        onChange={(e) => onChange?.({ ...accTableState, showBillwiseDetails: e.target.checked })}
       />
 
-      {accTableState?.showPaymentAmount && (
-        <div className=" flex gap-2">
-          <ERPInput
-            id="PaymentAmountWidth"
-            label={t("width")}
-            className="w-20"
-            value={accTableState?.PaymentAmountWidth}
-            onChange={(e) => onChange?.({ ...accTableState, PaymentAmountWidth: e.target?.value })}
-          />
-          <ERPInput
-            id="PaymentAmountLabel"
-            label={t("payment_amount")}
-            placeholder={t("payment_amount")}
-            value={accTableState?.PaymentAmountLabel}
-            onChange={(e) => onChange?.({ ...accTableState, PaymentAmountLabel: e.target?.value })}
-          />
-        </div>
-      )}
-
-      <ERPCheckbox
-        id="showTCSAmount"
-        label={t("tcs_amount")}
-        checked={accTableState?.showTCSAmount}
-        onChange={(e) => onChange?.({ ...accTableState, showTCSAmount: e.target.checked })}
-      />
-
-      {accTableState?.showTCSAmount && (
-        <>
+      {accTableState?.showBillwiseDetails && (
+     
           <div className=" flex gap-2">
             <ERPInput
-              id="TCSAmountWidth"
+              id="billwiseDetailsWidth"
               label={t("width")}
               className="w-20"
-              value={accTableState?.TCSAmountWidth}
-              onChange={(e) => onChange?.({ ...accTableState, TCSAmountWidth: e.target?.value })}
+              value={accTableState?.billwiseDetailsWidth}
+              onChange={(e) => onChange?.({ ...accTableState, billwiseDetailsWidth: e.target?.value })}
             />
             <ERPInput
-              id="TCSAmountLabel"
-              label={t("tcs_amount")}
-              placeholder={t("tcs_amount")}
-              value={accTableState?.TCSAmountLabel}
-              onChange={(e) => onChange?.({ ...accTableState, TCSAmountLabel: e.target?.value })}
+              id="billwiseDetailsLabel"
+              label={t("bill_wise_details")}
+              placeholder={t("bill_wise_details")}
+              value={accTableState?.billwiseDetailsLabel}
+              onChange={(e) => onChange?.({ ...accTableState, billwiseDetailsLabel: e.target?.value })}
             />
           </div>
-          <ERPCheckbox
-            id="showTCSSection"
-            label={t("tcs_section")}
-            checked={accTableState?.showTCSSection}
-            onChange={(e) => onChange?.({ ...accTableState, showTCSSection: e.target.checked })}
+     
+      )}
+
+        <ERPCheckbox
+        id="showDiscount"
+        label={t("discount")}
+        checked={accTableState?.showDiscount}
+        onChange={(e) => onChange?.({ ...accTableState, showDiscount: e.target.checked })}
+      />
+
+      {accTableState?.showDiscount && (
+        <div className=" flex gap-2">
+          <ERPInput
+            id="discountWidth"
+            label={t("width")}
+            className="w-20"
+            value={accTableState?.discountWidth}
+            onChange={(e) => onChange?.({ ...accTableState, discountWidth: e.target?.value })}
           />
-        </>
+          <ERPInput
+            id="discountLabel"
+            label={t("discount")}
+            placeholder={t("discount")}
+            value={accTableState?.discountLabel}
+            onChange={(e) => onChange?.({ ...accTableState, discountLabel: e.target?.value })}
+          />
+        </div>
+      )}
+
+      <ERPCheckbox
+        id="showCostCenter"
+        label={t("cost_center")}
+        checked={accTableState?.showCostCenter}
+        onChange={(e) => onChange?.({ ...accTableState, showCostCenter: e.target.checked })}
+      />
+
+      {accTableState?.showCostCenter && (
+        <div className=" flex gap-2">
+          <ERPInput
+            id="costCenterWidth"
+            label={t("width")}
+            className="w-20"
+            value={accTableState?.costCenterWidth}
+            onChange={(e) => onChange?.({ ...accTableState, costCenterWidth: e.target?.value })}
+          />
+          <ERPInput
+            id="costCenterLabel"
+            label={t("cost_center")}
+            placeholder={t("cost_center")}
+            value={accTableState?.costCenterLabel}
+            onChange={(e) => onChange?.({ ...accTableState, costCenterLabel: e.target?.value })}
+          />
+        </div>
+      )}
+
+      <ERPCheckbox
+        id="showAmountFc"
+        label={t("amount_fc")}
+        checked={accTableState?.showAmountFc}
+        onChange={(e) => onChange?.({ ...accTableState, showAmountFc: e.target.checked })}
+      />
+
+      {accTableState?.showAmountFc && (
+        <div className=" flex gap-2">
+          <ERPInput
+            id="amountFcWidth"
+            label={t("width")}
+            className="w-20"
+            value={accTableState?.amountFcWidth}
+            onChange={(e) => onChange?.({ ...accTableState, amountFcWidth: e.target?.value })}
+          />
+          <ERPInput
+            id="amountFcLabel"
+            label={t("amount_fc")}
+            placeholder={t("amount_fc")}
+            value={accTableState?.amountFcLabel}
+            onChange={(e) => onChange?.({ ...accTableState, amountFcLabel: e.target?.value })}
+          />
+        </div>
+      )}
+
+      <ERPCheckbox
+        id="showBankCharge"
+        label={t("bank_charge")}
+        checked={accTableState?.showBankCharge}
+        onChange={(e) => onChange?.({ ...accTableState, showBankCharge: e.target.checked })}
+      />
+
+      {accTableState?.showBankCharge && (
+        <div className=" flex gap-2">
+          <ERPInput
+            id="bankChargeWidth"
+            label={t("width")}
+            className="w-20"
+            value={accTableState?.bankChargeWidth}
+            onChange={(e) => onChange?.({ ...accTableState, bankChargeWidth: e.target?.value })}
+          />
+          <ERPInput
+            id="bankChargeLabel"
+            label={t("bank_charge")}
+            placeholder={t("bank_charge")}
+            value={accTableState?.bankChargeLabel}
+            onChange={(e) => onChange?.({ ...accTableState, bankChargeLabel: e.target?.value })}
+          />
+        </div>
       )}
     </>
   );

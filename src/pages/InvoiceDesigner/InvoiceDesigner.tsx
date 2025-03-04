@@ -16,7 +16,7 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import Urls from "../../redux/urls";
-import { setTemplate, setTemplateAccTableState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState, } from "../../redux/slices/templates/reducer";
+import { setTemplate, setTemplateAccTableState, setTemplateAdviceTableState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState, } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import VoucherType from "../../enums/voucher-types";
 import { TemplateDto, TemplateState } from "./Designer/interfaces";
@@ -35,6 +35,9 @@ import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-
 import AdvancedPayment from "./DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "./DownloadPreview/advice-template";
+import AdviceTableDesigner from "./Designer/adviceTableDesigner";
+import { accTransaction } from "./constants/TemplateCategories";
+
 
 interface DesignSectionType {
   id: number;
@@ -119,9 +122,11 @@ const InvoiceDesigner = () => {
   const { t } = useTranslation('system')
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
   const { templateKind } = location.state || {};
-  const templateGroup = searchParams?.get("template_group")! as | VoucherType | string;
+  const templateGroup = searchParams?.get("template_group") || "";
   const [maxHeight, setMaxHeight] = useState<number>(500);
 
+
+  
   useEffect(() => {
     let wh = window.innerHeight;
     setMaxHeight(wh);
@@ -501,7 +506,7 @@ const InvoiceDesigner = () => {
                 dispatch(setTemplateItemTableState(itemTableState))
               }
             />
-          ) : ["CP", "CR"].includes(templateGroup) ? (
+          ) : accTransaction.includes(templateGroup as VoucherType) ? (
             <AccTableDesigner
               template={templateData?.activeTemplate}
               accTableState={templateData?.activeTemplate?.accTableState}
@@ -509,7 +514,15 @@ const InvoiceDesigner = () => {
                 dispatch(setTemplateAccTableState(accTableState))
               }
             />
-          ) : null) // Return null for unsupported cases
+          ) :["PARP","RARP","Cheque"].includes(templateGroup) ? (
+            <AdviceTableDesigner
+            template={templateData?.activeTemplate}
+            adviceTableState={templateData?.activeTemplate?.adviceTableState}
+            onChange={(adviceTableState) =>
+              dispatch(setTemplateAdviceTableState(adviceTableState))
+            }
+          />
+          ): null) 
         }
 
         {
@@ -533,14 +546,14 @@ const InvoiceDesigner = () => {
       </div>
 
       {
-        ["CP", "CR"].includes(templateGroup) && (
+        accTransaction.includes(templateGroup as VoucherType) && (
           <>
             {/* <AccountPreview templateGroupId={templateGroup} data={DummyVoucherData} /> */}
             <PDFViewer
               className="pdf-viewer"
               width="100%"
               height="auto"
-              style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}>
+              style={{ maxHeight: maxHeight, margin: 20, border: "1px solid #DFDFDF" }}>
               {templateKind == "premium" ? (
                 <AccountTransactionsTemplate
                   template={templateData.activeTemplate}

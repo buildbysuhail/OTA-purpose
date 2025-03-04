@@ -288,3 +288,20 @@ export const TemplateTypes: {
       template_group_id: "Cheque"
     },
   ];
+
+  export const accTransaction = [
+    VoucherType.TaxOnExpensePayment,
+    VoucherType.ChequeReceipt,
+    VoucherType.MultiJournal,
+    VoucherType.ChequePayment,
+    VoucherType.CashReceipt,
+    VoucherType.DebitNote,
+    VoucherType.BankPayment,
+    VoucherType.CashReceiptEstimate,
+    VoucherType.OpeningBalance,
+    VoucherType.CashPaymentEstimate,
+    VoucherType.CashPayment,
+    VoucherType.CreditNote,
+    VoucherType.JournalVoucher,
+    VoucherType.JournalVoucherSpecial
+  ];

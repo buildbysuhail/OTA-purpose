@@ -45,6 +45,7 @@ export interface TemplateState {
   headerState?: HeaderState;
   itemTableState?: ItemTableState;
   accTableState?:accTableState;
+  adviceTableState?:adviceTableState;
   totalState?: TotalState;
   footerState?: FooterState;
   barcodeState?: BarcodeState;
@@ -373,6 +374,7 @@ export interface HeaderState {
     balanceDueLabel?: string;
   };
   accountTransactionInfo?:accountTransactionInfo;
+  adviceTransInfo?:adviceTransInfo;
 }
 export interface accountTransactionInfo {
 
@@ -402,6 +404,24 @@ export interface accountTransactionInfo {
    amtReceivedBgColor?: string;
    
 }
+export interface adviceTransInfo {
+
+  showPaymentMode?: boolean;
+  paymentMode?: string;
+
+  showDateField?: boolean;
+  dateField?: string;
+
+  showReferenceField?: boolean;
+  referenceField?: string;
+
+  showPaymentAmount?: boolean;
+  paymentAmount?: string;
+
+  showBank?: boolean;
+  bank?: string;
+   
+}
 export interface ItemTableMasterState {
   showTableBorder?: boolean;
   tableBorderColor?: string;
@@ -422,11 +442,45 @@ export interface ItemTableMasterState {
   lineItemNumberLabel?: string;
   lineItemNumberWidth?: string;
 }
-
 export interface accTableState extends ItemTableMasterState{
-  showInvoiceNumber?:boolean;
-  InvoiceNumberLabel?: string;
-  InvoiceNumberWidth?: string;
+
+  showLedgerCode?: boolean;
+  ledgerCodeLabel?: string;
+  ledgerCodeWidth?: string;
+
+  showLedger?: boolean;
+  ledgerLabel?: string;
+  ledgerWidth?: string;
+
+  showAmount?: boolean;
+  amountLabel?: string;
+  amountWidth?: string;
+
+  showNarration?: boolean;
+  narrationLabel?: string;
+  narrationWidth?: string;
+
+  showBillwiseDetails?: boolean;
+  billwiseDetailsLabel?: string;
+  billwiseDetailsWidth?: string;
+
+  showDiscount?: boolean;
+  discountLabel?: string;
+  discountWidth?: string;
+
+  showCostCenter?: boolean;
+  costCenterLabel?: string;
+  costCenterWidth?: string;
+
+  showAmountFc?: boolean;
+  amountFcLabel?: string;
+  amountFcWidth?: string;
+
+  showBankCharge?: boolean;
+  bankChargeLabel?: string;
+  bankChargeWidth?: string;
+}
+export interface adviceTableState extends ItemTableMasterState{
 
   showInvoiceDate?:boolean;
   InvoiceDateLabel?: string;
@@ -925,11 +979,52 @@ export const initialTemplateState: ActionState<TemplateState> = {
       bg_image_footer_position: "center",
     },
     accTableState:{
-      showInvoiceNumber: true,
-      InvoiceNumberLabel: "Invoice Number",
-      InvoiceNumberWidth: "15%",
+      showLineItemNumber: true,
+      lineItemNumberLabel: "SiNo",
+      lineItemNumberWidth: "10%",
+
+      showLedgerCode: true,
+      ledgerCodeLabel: "Ledger code",
+      ledgerCodeWidth: "",
+
+      showLedger: true,
+      ledgerLabel: "Ledger",
+      ledgerWidth: "",
+
+      showAmount: true,
+      amountLabel: "Amount",
+      amountWidth: "",
+
+      showNarration: false,
+      narrationLabel: "Narration",
+      narrationWidth: "",
+
+      showBillwiseDetails: false,
+      billwiseDetailsLabel: "Bill wise details",
+      billwiseDetailsWidth: "",
+
+      showDiscount: true,
+      discountLabel: "Discount",
+      discountWidth: "",
+
+      showCostCenter: false,
+      costCenterLabel: "Cost Center",
+      costCenterWidth: "",
+
+      showAmountFc: false,
+      amountFcLabel: "AmountFc",
+      amountFcWidth: "",
+
+      showBankCharge: true,
+      bankChargeLabel: "BankCharge",
+      bankChargeWidth: "",
+    },
+    adviceTableState:{
     
-      // Invoice Date Fields
+      showLineItemNumber: true,
+      lineItemNumberLabel: "Invoice Number",
+      lineItemNumberWidth: "15%",
+          // Invoice Date Fields
       showInvoiceDate: true,
       InvoiceDateLabel: "Invoice Date",
       InvoiceDateWidth: "15%",

@@ -2,7 +2,7 @@ import { View, Text,StyleSheet } from "@react-pdf/renderer";
 import { TemplateState } from "../../Designer/interfaces";
 
 const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
-  const accTableState = template?.accTableState;
+  const accTableState = template?.adviceTableState;
   const propertiesState = template?.propertiesState;
 
   const labelStyles = {
@@ -60,9 +60,9 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
         <View style={styles.thead}>
           {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
           {/* Invoice Number */}
-        {accTableState?.showInvoiceNumber && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceNumberWidth }]}>
-            {accTableState?.InvoiceNumberLabel || "Invoice Number"}
+        {accTableState?.showLineItemNumber && (
+          <Text style={[styles.th, { width: accTableState?.lineItemNumberWidth }]}>
+            {accTableState?.lineItemNumberLabel || "Invoice Number"}
           </Text>
         )}
 
@@ -113,8 +113,8 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
                     {val.slNo}
                   </Text>
                 )}
-                {(accTableState?.showInvoiceNumber) && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceNumberWidth }}>
+                {(accTableState?.showLineItemNumber) && (
+                  <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
                     INV-00{index + 1}
                   </Text>
                 )}

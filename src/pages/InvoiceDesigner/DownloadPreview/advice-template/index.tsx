@@ -25,17 +25,10 @@ return (
     wrap
   >
     {/* Main Container */}
-    <View style={{ width: '100%', height: '100%' ,
+    <View style={{ width: '100%',
      padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
     }}>
-      {/* Main Content */}
-      <View 
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        borderTop:"1.5px solid rgb(104, 101, 101)"     
-      }}
-      >   
+   
         {/* Header */}
        <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Content */}
@@ -44,8 +37,7 @@ return (
         <Table data={data} template={template} />
         {/* Footer */}
         <Footer data={data} template={template}  />
-      </View>
-
+   
     </View>
   </Page>
 </Document>

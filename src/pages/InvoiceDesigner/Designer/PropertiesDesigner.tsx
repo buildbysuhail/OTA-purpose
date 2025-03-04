@@ -123,7 +123,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             {t("padding")} <span className="text-xs">{t("in_pts")}</span>
           </label>
           <div className="flex gap-2 mt-1">
-    
+ 
             <ERPInput
               id="padding_top"
               label={t("top")}

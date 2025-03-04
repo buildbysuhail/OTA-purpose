@@ -58,7 +58,7 @@ type FilterOperation =
   | "between";
 
 interface ERPDevGridProps {
-  moreOption?:boolean;
+  moreOption?: boolean;
   showPrintButton?: boolean;
   showTotalCount?: boolean;
   summaryItems?: SummaryConfig[];
@@ -372,7 +372,7 @@ const isNotEmpty = (value: any) =>
 const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
   (
     {
-      moreOption=false,
+      moreOption = false,
       showPrintButton = true,
       showTotalCount = true,
       summaryItems = [],
@@ -961,10 +961,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const remainingWidth = pageWidth - specifiedWidthTotal;
         const defaultColumnWidth = remainingWidth / columnsWithoutWidth.length;
 
-        pdfColumnsWidths.forEach((width, index) =>{
-          if (width === 0){
+        pdfColumnsWidths.forEach((width, index) => {
+          if (width === 0) {
             pdfColumnsWidths[index] =
-            defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
+              defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
           }
         });
       }
@@ -1013,14 +1013,46 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         }
       });
 
-      await exportDataGridToPdf({
-        jsPDFDocument: doc,
-        component: gridInstance,
-        columnWidths: pdfColumnsWidths,
-        topLeft: { x: 0, y: currentY },
-        customizeCell: customizeCell,
-      });
-      
+      // await exportDataGridToPdf({
+      //   jsPDFDocument: doc,
+      //   component: gridInstance,
+      //   columnWidths: pdfColumnsWidths,
+      //   topLeft: { x: 0, y: currentY },
+      //   customizeCell: customizeCell,
+      // });
+
+      // Batch processing
+      const batchSize = 1000; // Define your batch size
+      const totalRows = gridInstance.totalCount();
+      let processedRows = 0;
+
+      while (processedRows < totalRows) {
+        const batchEnd = Math.min(processedRows + batchSize, totalRows);
+        const batchData = gridInstance.getVisibleRows().slice(processedRows, batchEnd);
+
+        // Manually render each row of the batch to the PDF
+        batchData.forEach((row: { data: { [x: string]: any; }; }) => {
+          pdfColumnsWidths.forEach((width, index) => {
+            const column = gridCols.find((col) => col.dataField === pdfVisibleColumns[index]);
+
+            if (column && column.dataField && row.data[column.dataField] !== undefined) {
+              const cellValue = row.data[column.dataField];
+              doc.text(cellValue.toString(), 40 + pdfColumnsWidths.slice(0, index).reduce((a, b) => a + b, 0), currentY);
+            } else {
+              // Handle the case where the column or dataField is undefined
+              doc.text("N/A", 40 + pdfColumnsWidths.slice(0, index).reduce((a, b) => a + b, 0), currentY);
+            }
+          });
+          currentY += 30; // Adjust the row height as needed
+        });
+
+        processedRows = batchEnd;
+        if (currentY + 60 > doc.internal.pageSize.getHeight()) {
+          doc.addPage();
+          currentY = 60;
+        }
+      }
+
       // Restore original column visibility and settings
       originalColumnVisibility.forEach((column: any) => {
         gridInstance.columnOption(column.dataField, "visible", column.visible);
@@ -1296,10 +1328,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         ) {
           if (dynamicProps?.isTransactionScreen) {
 
-            
+
             const params = handleInvoke(event.data);
             if (params) {
-              
+
               const url = new URL(`${window.location.origin}${params.transactionBase}/${params.transactionType}`);
 
               // Append all parameters from the `params` object
@@ -1313,7 +1345,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
               console.error("Invalid data or parameters");
             }
           } else {
-            
+
             let updatedBodyProps: any = {};
 
             dynamicProps?.bodyProps != undefined
@@ -1395,15 +1427,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
         const scrollable = gridInstance.getScrollable();
-    
+
         if (!scrollable) return;
-    
+
         const scrollTop = scrollable.scrollTop(); // Current scroll position
         const scrollHeight = scrollable.scrollHeight(); // Total scrollable height
         const clientHeight = scrollable.clientHeight(); // Visible portion of the grid
-    
+
         const buffer = 5; // Small buffer to ensure detection (adjust if necessary)
-    
+
         if (scrollTop + clientHeight >= scrollHeight - buffer) {
           setIsAtBottom(true);
         } else {
@@ -1418,7 +1450,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const scrollable = gridInstance.getScrollable();
         const scrollHeight = scrollable.scrollHeight();
         const clientHeight = scrollable.clientHeight(); // Get visible area height
-    
+
         // Ensure scrolling reaches the real bottom
         scrollable.scrollTo({ top: position === 0 ? 0 : scrollHeight - clientHeight });
       }
@@ -1444,19 +1476,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     // Attach scroll event listener
     useEffect(() => {
       console.log('scrollToCalled');
-      
+
       if (gridRef.current) {
         const gridInstance = gridRef.current.instance();
-    
+
         // Reset Scroll Position
         gridInstance?.getScrollable()?.scrollTo({ left: 0, top: 0 });
-    
+
         // Clear Filters
         gridInstance?.clearFilter();
-    
+
         // Clear Sorting
         gridInstance?.clearSorting();
-    
+
         // Clear Search Panel
         gridInstance?.searchByText("");
       }
@@ -1476,7 +1508,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 showInColumn={config.showInColumn}
                 alignment={config.alignment}
                 customizeText={config.customizeText}
-                skipEmptyValues={false} 
+                skipEmptyValues={false}
               />
             )
           })}
@@ -1570,7 +1602,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
             {allowColumnChooser && <ColumnChooser enabled={true} />}
-            {allowSelection && <Selection mode={selectionMode}  allowSelectAll={allowSelectAll}  selectAllMode={"allPages"}
+            {allowSelection && <Selection mode={selectionMode} allowSelectAll={allowSelectAll} selectAllMode={"allPages"}
               showCheckBoxesMode={"always"} />
             }
             {allowGrouping && <Grouping />}
@@ -1664,66 +1696,66 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                   </Item>
                 )
               }
-               {
+              {
                 moreOption && (
                   <Item>
                     <div className="relative">
-                    <button
-                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
-                      // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
-                      // onClick={handlePrintPdf}setMoreOptionVisible
-                      onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
-                    >
-                      <EllipsisVertical className="w-4 h-4" />
-                    </button>
-                    {isMoreOptionVisible && (
-                      <div
-                       className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
-                       style={{
-                        top: "100%", // Position the popup right below the button
-                        left: "-90px", // Align it with the left edge of the button
-                        width: "221px", // Set your desired width
-                        marginTop: "4px", // Add some spacing between the button and the popup
-                      }}
+                      <button
+                        className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
+                        // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
+                        // onClick={handlePrintPdf}setMoreOptionVisible
+                        onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
                       >
-                   <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
-                    <ul className="space-y-1">
-                      <li>
-                       <button
-                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      // onClick={}
-                      >              
-                      <FileUp className="pe-2" />
-                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                    </button>
-                      </li>
+                        <EllipsisVertical className="w-4 h-4" />
+                      </button>
+                      {isMoreOptionVisible && (
+                        <div
+                          className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
+                          style={{
+                            top: "100%", // Position the popup right below the button
+                            left: "-90px", // Align it with the left edge of the button
+                            width: "221px", // Set your desired width
+                            marginTop: "4px", // Add some spacing between the button and the popup
+                          }}
+                        >
+                          <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
+                            <ul className="space-y-1">
+                              <li>
+                                <button
+                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                // onClick={}
+                                >
+                                  <FileUp className="pe-2" />
+                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                                </button>
+                              </li>
 
-                      <li>
-                       <button
-                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      // onClick={}
-                      >              
-                      <FileUp className="pe-2" />
-                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                    </button>
-                      </li>
+                              <li>
+                                <button
+                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                // onClick={}
+                                >
+                                  <FileUp className="pe-2" />
+                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                                </button>
+                              </li>
 
-                      <li>
-                       <button
-                      className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      // onClick={}
-                      >              
-                      <FileUp className="pe-2" />
-                      <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
-                    </button>
-                      </li>
-                  
-                    </ul>
-                  </nav>
-                      </div>
-                    )}
+                              <li>
+                                <button
+                                  className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                                // onClick={}
+                                >
+                                  <FileUp className="pe-2" />
+                                  <span className="text-sm font-semibold ">{t("export_to_excel")}</span>
+                                </button>
+                              </li>
+
+                            </ul>
+                          </nav>
+                        </div>
+                      )}
                     </div>
-               
+
                   </Item>
                 )
               }

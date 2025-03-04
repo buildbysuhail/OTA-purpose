@@ -9,8 +9,6 @@ import { forwardRef, useRef } from "react";
 import React from "react";
 import { Ellipsis } from "lucide-react";
 
-const api = new APIClient();
-
 interface AccReferenceNumberProps extends AccVoucherElementProps {handleLoadByRefNo: () => Promise<void>}
 
 const AccReferenceNumber = React.forwardRef<
@@ -26,8 +24,7 @@ const AccReferenceNumber = React.forwardRef<
     },
     ref
   ) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
-    return (
+   return (
       <>
         {formState.formElements.referenceNumber.visible && (
           <>

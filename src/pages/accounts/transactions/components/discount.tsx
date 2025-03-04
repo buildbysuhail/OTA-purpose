@@ -17,7 +17,6 @@ const Discount = React.forwardRef<HTMLInputElement, DiscountProps>(({
   focusAmount
 }, ref) => {
   
-  const discountRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="xl:w-[170px] lg:w-[250px]">
@@ -49,7 +48,7 @@ const Discount = React.forwardRef<HTMLInputElement, DiscountProps>(({
 
       {formState.formElements.discount.visible && (
         <ERPInput
-          ref={discountRef}
+          ref={ref}
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="discount"
           type="number"

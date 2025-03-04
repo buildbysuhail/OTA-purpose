@@ -6,7 +6,6 @@ import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-numbe
 import { forwardRef, useRef } from "react";
 import React from "react";
 
-const api = new APIClient();
 
 interface AccCurrencyRateProps extends AccVoucherElementProps {}
 
@@ -22,7 +21,6 @@ const AccCurrencyRate = React.forwardRef<
 
       t,
     }, ref) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.foreignCurrency.visible == true &&

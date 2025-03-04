@@ -5,6 +5,7 @@ import { AccTransactionData, AccTransactionRow } from './acc-transaction-types';
 import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 import { useDispatch } from 'react-redux';
 import { accFormStateHandleFieldChange } from './reducer';
+import { setTransactionForHistory } from './functions';
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ export const useUnsavedChangesWarning = () => {
   
       if (!_prevState || Object.keys(_prevState).length !== 2) return false;
   
-      const base64 = await modelToBase64Unicode(currentStateCompare);
+      const base64 = await modelToBase64Unicode(setTransactionForHistory(currentStateCompare));
       const isEqual = _formState.prev === base64;
       console.log(`isEqual fgfgdf: ${isEqual}`);
       

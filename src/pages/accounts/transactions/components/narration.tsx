@@ -11,14 +11,13 @@ const Narration = React.forwardRef<HTMLInputElement, NarrationProps>(({
   t,
   handleKeyDown
 }, ref) => {
-  const narrationRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
       {formState.formElements.narration.visible && (
         <ERPInput
           localInputBox={formState?.userConfig?.inputBoxStyle}
-          ref={narrationRef}
+          ref={ref}
           id="narration"
           className="w-full"
           disableEnterNavigation

@@ -1,6 +1,6 @@
 import { APIClient } from "../../../../helpers/api-client";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import {  AccVoucherElementProps } from "../acc-transaction-types";
+import { AccVoucherElementProps } from "../acc-transaction-types";
 import {
   accFormStateRowHandleFieldChange,
   accFormStateTransactionMasterHandleFieldChange,
@@ -10,7 +10,7 @@ import { forwardRef, useRef } from "react";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
-const api = new APIClient();
+// const api = new APIClient();
 
 interface AccCurrencyIDProps extends AccVoucherElementProps {}
 
@@ -22,8 +22,9 @@ const AccCurrencyID = React.forwardRef<HTMLInputElement, AccCurrencyIDProps>(
       dispatch,
 
       t,
-    }, ref) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
+    },
+    ref
+  ) => {
     return (
       <>
         {formState.formElements.foreignCurrency.visible == true &&

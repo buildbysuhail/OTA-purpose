@@ -7,8 +7,6 @@ import { forwardRef, useRef } from "react";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
-const api = new APIClient();
-
 interface AccEmployeeIDProps extends AccVoucherElementProps {}
 
 const AccEmployeeID = React.forwardRef<HTMLInputElement, AccEmployeeIDProps>(
@@ -22,7 +20,6 @@ const AccEmployeeID = React.forwardRef<HTMLInputElement, AccEmployeeIDProps>(
 
       t,
     }, ref) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.employee.visible && (

@@ -12,14 +12,13 @@ const Amount = React.forwardRef<HTMLInputElement, AmountProps>(({
   handleKeyDown
 }, ref) => {
 
-  const amountRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
       {formState.formElements.amount.visible && (
         <ERPInput
           localInputBox={formState?.userConfig?.inputBoxStyle}
-          ref={amountRef}
+          ref={ref}
           id="amount"
           boldInput={true}
           label={t(formState.formElements.amount.label)}

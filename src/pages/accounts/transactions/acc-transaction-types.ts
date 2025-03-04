@@ -244,9 +244,9 @@ export interface AccTransactionRow {
   billwiseData: BillwiseData[];
   billwiseDetails: string;
   branchId: number;
-  costCentreID: number;
+  costCentreID: number | null;
   costCentreName: string;
-  projectId: number;
+  projectId: number | null;
   projectName: string;
 
   bankName: string;
@@ -337,8 +337,8 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   checkBouncedDate: moment.utc("2000-01-01").startOf("day").toISOString(), // January 1, 2000
   billwiseData: [],
   branchId: 0,
-  costCentreID: 0,
-  projectId: 0,
+  costCentreID: null,
+  projectId: null,
 
   bankName: "",
   nameOnCheque: "",

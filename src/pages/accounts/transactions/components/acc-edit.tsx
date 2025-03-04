@@ -8,7 +8,6 @@ import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-numbe
 import { forwardRef, useRef } from "react";
 import React from "react";
 
-const api = new APIClient();
 
 interface editProps extends AccVoucherElementProps { enableCombo: () => Promise<void>;}
 

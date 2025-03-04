@@ -183,3 +183,22 @@ export const isDirtyAccTransaction = (
   const _isEqual = prevState === _current;
   return _isEqual === false && prevState !== undefined && prevState !== "";
 };
+
+export const setTransactionForHistory = (
+  _formState: any
+): any => {
+  return {
+    transaction: { ..._formState.transaction,
+      master:{
+        ..._formState.transaction.master,
+        // employeeID: _formState.transaction.master.employeeID == null ? "" : _formState.transaction.master.employeeID,
+        // currencyID: _formState.transaction.master.currencyID == null ? "" : _formState.transaction.master.currencyID,
+      }
+     },
+    row: { ..._formState.row,
+      ledgerID: _formState.row.ledgerID == null ? "" : _formState.row.ledgerID,
+      //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
+      //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
+       projectId: _formState.row.projectId == null ? "" : _formState.row.projectId },
+  }
+};

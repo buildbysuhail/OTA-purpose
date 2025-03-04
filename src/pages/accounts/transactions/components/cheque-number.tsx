@@ -10,13 +10,13 @@ const ChequeNumber = React.forwardRef<HTMLInputElement, ChequeNumberProps>(({
   dispatch,
   t
 }, ref) => {
-  const chequeNumberRef = useRef<HTMLInputElement>(null);
+  
 
   return (
     <>
       {formState.formElements.chequeNumber.visible && (
         <ERPInput
-          ref={chequeNumberRef}
+          ref={ref}
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="chequeNumber"
           label={t(formState.formElements.chequeNumber.label)}

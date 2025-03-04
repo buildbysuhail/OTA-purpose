@@ -7,8 +7,6 @@ import { forwardRef, useRef } from "react";
 import React from "react";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
-const api = new APIClient();
-
 interface TransactionDateProps extends AccVoucherElementProps {}
 
 const AccTransactionDate = React.forwardRef<
@@ -25,7 +23,6 @@ const AccTransactionDate = React.forwardRef<
     },
     ref
   ) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.transactionDate.visible && (

@@ -10,12 +10,11 @@ const ChequeStatus = React.forwardRef<HTMLInputElement, ChequeStatusProps>(({
   dispatch,
   t
 }, ref) => {
-  const chequeStatusRef = useRef<HTMLInputElement>(null);
   return (
     <>
       {formState.formElements.chequeStatus.visible && (
         <ERPDataCombobox
-          ref={chequeStatusRef}
+          ref={ref}
           localInputBox={formState?.userConfig?.inputBoxStyle}
           enableClearOption={false}
           id="chequeStatus"

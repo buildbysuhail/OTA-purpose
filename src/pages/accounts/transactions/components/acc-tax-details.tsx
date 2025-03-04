@@ -8,18 +8,19 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import React, { useRef } from "react";
 
 
-interface AccTaxDetailsProps extends AccVoucherElementProps { }
+interface AccTaxDetailsProps extends AccVoucherElementProps {
+  partyNameRef: React.RefObject<HTMLInputElement>;
+  taxNoRef: React.RefObject<HTMLInputElement>;
+  taxableAmountRef: React.RefObject<HTMLInputElement>;
+ }
 
 const AccTaxDetails = React.forwardRef<HTMLInputElement, AccTaxDetailsProps>(({
   formState,
   dispatch,
   handleKeyDown,
   t,
-}, ref) => {
-
-  const partyNameRef = useRef<HTMLInputElement>(null);
-  const taxNoRef = useRef<HTMLInputElement>(null);
-  const taxableAmountRef = useRef<HTMLInputElement>(null);
+  partyNameRef,taxNoRef,taxableAmountRef
+}, ref) => {  
 
   const focusTaxNoField = () => {
     setTimeout(() => {

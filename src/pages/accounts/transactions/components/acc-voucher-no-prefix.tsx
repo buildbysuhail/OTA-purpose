@@ -26,7 +26,6 @@ interface AccVoucherNoPrefixProps extends AccVoucherElementProps{
   
   }, ref) => {
 
-  const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
   return (
     <>
       {formState.formElements.voucherPrefix.visible && (

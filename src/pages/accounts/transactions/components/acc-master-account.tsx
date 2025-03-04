@@ -8,8 +8,6 @@ import {
 import React from "react";
 import Urls from "../../../../redux/urls";
 
-const api = new APIClient();
-
 interface AccMasterAccountrProps extends AccVoucherElementProps { getFormattedValue: (val: number, ignoreNullOrZero?: boolean, decimalPoint?: number | undefined) => string; }
 
 const AccMasterAccount = React.forwardRef<
@@ -20,7 +18,9 @@ const AccMasterAccount = React.forwardRef<
     <>
       {formState.formElements.masterAccount.visible &&
         formState.formElements?.masterAccount?.accLedgerType != undefined && (
+          
           <ERPDataCombobox
+          ref={ref}
             localInputBox={formState?.userConfig?.inputBoxStyle}
             isInModal={false}
             className="w-full"

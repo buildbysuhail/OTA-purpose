@@ -50,6 +50,7 @@ import { ApplicationSettingsType } from "../../settings/system/application-setti
 import {
   calculateTotal,
   isDirtyAccTransaction,
+  setTransactionForHistory,
   validateTransactionDate,
 } from "./functions";
 import { useAccPrint } from "./use-print";
@@ -120,6 +121,7 @@ export const useAccTransaction = (
     }
   };
   const focusAmount = () => {
+    debugger;
     if (amountRef.current) {
       amountRef.current?.select();
       amountRef.current?.focus();
@@ -244,6 +246,7 @@ export const useAccTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
+    debugger;
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
@@ -472,21 +475,7 @@ export const useAccTransaction = (
         });
     }
 
-    _formState.prev = modelToBase64Unicode({
-      transaction: { ..._formState.transaction,
-        master:{
-          ..._formState.transaction.master,
-          employeeID: _formState.transaction.master.employeeID == null ? "" : _formState.transaction.master.employeeID,
-          currencyID: _formState.transaction.master.currencyID == null ? "" : _formState.transaction.master.currencyID
-        }
-       },
-      row: { ..._formState.row,
-         ledgerId: _formState.row.ledgerID == null ? "" : _formState.row.ledgerID,
-         costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
-         projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
-        //  currencyID: _formState.row.currencyID == null ? "" : _formState.row.currencyID,
-         projectId: _formState.row.projectId == null ? "" : _formState.row.projectId },
-    });
+    _formState.prev = modelToBase64Unicode(setTransactionForHistory(_formState));
 
     console.log("accFormStateHandleFieldChange1");
     console.log(_formState);
@@ -1112,7 +1101,7 @@ export const useAccTransaction = (
         element.chequeStatus = "P";
       }
       element.invoiceDate = element.invoiceDate == "" || element.invoiceDate == null ? formState.transaction.master.transactionDate: element.invoiceDate ;
-      element.projectId = element.projectId.toString() == "" ? 0 : element.projectId;
+      element.projectId = (element.projectId??0).toString() == "" ? 0 : element.projectId;
       updatedDetails.push(element);
     }
     return updatedDetails;
@@ -1545,7 +1534,7 @@ export const useAccTransaction = (
     formState.formElements.btnAdd;
 
     const costCentreName =
-      formState.row.costCentreID > 0
+      formState.row.costCentreID??0 > 0
         ? dataContainer.costCentres?.find(
             (x) => x.id == formState.row.costCentreID
           )?.name
@@ -1763,6 +1752,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
+    debugger;
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {

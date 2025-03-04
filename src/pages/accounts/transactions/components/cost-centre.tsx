@@ -15,7 +15,6 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
   handleFieldKeyDown,
   handleKeyDown,
 }, ref) => {
-  const costCenterRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -23,7 +22,7 @@ const CostCentre = React.forwardRef<HTMLInputElement, CostCentreProps>(({
         <ERPDataCombobox
           localInputBox={formState?.userConfig?.inputBoxStyle}
           enableClearOption={false}
-          ref={costCenterRef}
+          ref={ref}
           id="costCentreID"
           // nameField="costCentreName"
           className="min-w-[180px]"

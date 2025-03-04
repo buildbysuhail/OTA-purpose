@@ -19,7 +19,6 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
   triggerEffect,
   handleFieldKeyDown
 }, ref) => {
-  const ledgerIdRef = useRef<HTMLInputElement>(null);
   const { getFormattedValue } = useNumberFormat();
   return (
     <>
@@ -27,7 +26,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
         <>
           <ERPDataCombobox
             localInputBox={formState?.userConfig?.inputBoxStyle}
-            ref={ledgerIdRef}
+            ref={ref}
             triggerEffect={triggerEffect}
             id="ledgerID"
             required={true}

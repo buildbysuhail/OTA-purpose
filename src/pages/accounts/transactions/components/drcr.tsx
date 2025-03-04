@@ -11,7 +11,6 @@ const DrCr = React.forwardRef<HTMLInputElement, DrCrProps>(({
   t,
   handleKeyDown
 }, ref) => {
-  const drCrRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -20,7 +19,7 @@ const DrCr = React.forwardRef<HTMLInputElement, DrCrProps>(({
           onKeyDown={(e) => {
             handleKeyDown && handleKeyDown(e, "drCr");
           }}
-          ref={drCrRef}
+          ref={ref}
           disableEnterNavigation={true}
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="drCr"

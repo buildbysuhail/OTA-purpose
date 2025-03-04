@@ -96,7 +96,7 @@ import PartySelectionModal from "./party-selection-modal";
 import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
 import AccVoucherNoPrefix from "./components/acc-voucher-no-prefix";
 import AccMasterAccount from "./components/acc-master-account";
-import AccTransactionMaster from "./components/acc-transaction-master";
+import AccDrCrJv from "./components/acc-drcr-jv";
 import AccNotes from "./components/acc-notes";
 import AccCurrencyID from "./components/acc-currency-ID";
 import AccCurrencyRate from "./components/acc-currency-Rate";
@@ -2222,13 +2222,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
                   <div className="flex items-center">
                     <AccMasterAccount
+                    ref={masterAccountRef}
                       formState={formState}
                       dispatch={dispatch}
                       getFormattedValue={getFormattedValue}
                       t={t}
                     />
                     <div className="flex flex-wrap gap-4">
-                      <AccTransactionMaster
+                      <AccDrCrJv
                         formState={formState}
                         dispatch={dispatch}
                         t={t}
@@ -2322,6 +2323,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="leading-none">
               <div className="flex items-center gap-2">
                 <LedgerCode
+                ref={ledgerCodeRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -2331,6 +2333,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 {formState?.row.ledgerID?.toString()}
 
                 <Ledger
+                ref={ledgerIdRef}
                   handleFieldKeyDown={handleFieldKeyDown}
                   triggerEffect={triggerEffect}
                   handleKeyDown={handleKeyDown}
@@ -2340,6 +2343,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
 
                 <Amount
+                ref={amountRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -2347,66 +2351,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 />
 
                 <Drcr
+                ref={drCrRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
 
-                {/* <div className="xl:w-[170px] lg:w-[250px]">
-                  {formState.formElements.discount.visible && (
-                    <ERPCheckbox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="hasDiscount"
-                      className="text-left"
-                      label={t(formState.formElements.hasDiscount.label)}
-                      checked={formState.row.hasDiscount}
-                      onChange={(e) => {
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { hasDiscount: e.target.checked },
-                          })
-                        );
-                        if (e.target.checked) {
-                          focusDiscount();
-                        } else {
-                          focusAmount();
-                        }
-                      }}
-                      disabled={
-                        formState.formElements.hasDiscount?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-
-                  {formState.formElements.discount.visible && (
-                    <ERPInput
-                      ref={discountRef}
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="discount"
-                      type="number"
-                      min={0}
-                      // className="!m-0"
-                      noLabel
-                      value={formState.row.discount}
-                      onChange={(e) =>
-                        dispatch(
-                          accFormStateRowHandleFieldChange({
-                            fields: { discount: e.target?.value },
-                          })
-                        )
-                      }
-                      disabled={
-                        formState.row.hasDiscount != true ||
-                        formState.formElements.discount?.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                    />
-                  )}
-                </div> */}
+               
 
                 <Discount
+                ref={discountRef}
                   handleKeyDown={handleKeyDown}
                   focusDiscount={focusDiscount}
                   focusAmount={focusAmount}
@@ -2431,6 +2386,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="leading-none">
               <div className="flex items-center gap-2">
                 <Narration
+                ref={narrationRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -2440,6 +2396,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
 
                 <CostCentre
+                ref={costCenterRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -2492,6 +2449,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   />
 
                   <ChequeNumber
+                  ref={chequeNumberRef}
                     handleKeyDown={handleKeyDown}
                     formState={formState}
                     dispatch={dispatch}
@@ -2525,6 +2483,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     dispatch={dispatch}
                     handleKeyDown={handleKeyDown}
                     t={t}
+                    partyNameRef={partyNameRef}
+                    taxNoRef={taxNoRef}
+                    taxableAmountRef={taxableAmountRef}
+
                   />
                 </div>
 
@@ -2728,6 +2690,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccMasterAccount
+                ref={masterAccountRef}
                   formState={formState}
                   dispatch={dispatch}
                   getFormattedValue={getFormattedValue}
@@ -2736,7 +2699,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               </div>
               <div className="mb-1">
 
-                <AccTransactionMaster
+                <AccDrCrJv
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
@@ -2814,6 +2777,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccRemarks
+                ref={remarksRef}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
@@ -3474,7 +3438,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
           <Link to="/" className="w-24">
             <ERPButton
-              ref={btnSaveRef}
               title={t("close")}
               localInputBox={formState?.userConfig?.inputBoxStyle}
             />

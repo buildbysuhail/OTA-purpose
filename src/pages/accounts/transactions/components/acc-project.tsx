@@ -7,8 +7,6 @@ import { forwardRef, useRef } from "react";
 import React from "react";
 import Urls from "../../../../redux/urls";
 
-const api = new APIClient();
-
 interface AccProjectProps extends AccVoucherElementProps {}
 
 const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(
@@ -20,7 +18,6 @@ const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(
 
       t,
     }, ref) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.projectId.visible && (

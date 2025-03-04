@@ -6,7 +6,6 @@ import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-numbe
 import { forwardRef, useRef } from "react";
 import React from "react";
 
-const api = new APIClient();
 
 interface AccNotesProps extends AccVoucherElementProps {}
 
@@ -23,7 +22,6 @@ const AccNotes = React.forwardRef<HTMLInputElement, AccNotesProps>(
     },
     ref
   ) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.commonNarration.visible && (

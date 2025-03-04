@@ -11,7 +11,6 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
   t,
   handleKeyDown
 }, ref) => {
-  const ledgerCodeRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -23,7 +22,7 @@ const LedgerCode = React.forwardRef<HTMLInputElement, LedgerCodeProps>(({
           required={true}
           label={t(formState.formElements.ledgerCode.label)}
           value={formState.row.ledgerCode}
-          ref={ledgerCodeRef}
+          ref={ref}
           disableEnterNavigation={true}
           onKeyDown={(e) => {
             handleKeyDown && handleKeyDown(e, "ledgerCode");

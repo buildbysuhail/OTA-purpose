@@ -8,11 +8,9 @@ import VoucherNumberDetailsSidebar from "../../../transaction-base/Voucher-numbe
 import { forwardRef, useRef } from "react";
 import React from "react";
 
-const api = new APIClient();
-
 interface AccVoucherNoPrefixProps extends AccVoucherElementProps {}
 
-const AccTransactionMaster = React.forwardRef<
+const AccDrCrJv = React.forwardRef<
   HTMLInputElement,
   AccVoucherNoPrefixProps
 >(
@@ -26,14 +24,14 @@ const AccTransactionMaster = React.forwardRef<
     },
     ref
   ) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
-    return (
+      return (
       <>
         {formState.formElements.masterAccount.visible &&
           formState.formElements?.masterAccount?.accLedgerType != undefined && (
             <>
               {formState.formElements.jvDrCr.visible && (
                 <ERPDataCombobox
+                ref={ref}
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   enableClearOption={false}
                   id="drCr"
@@ -74,4 +72,4 @@ const AccTransactionMaster = React.forwardRef<
   }
 );
 
-export default React.memo(AccTransactionMaster);
+export default React.memo(AccDrCrJv);

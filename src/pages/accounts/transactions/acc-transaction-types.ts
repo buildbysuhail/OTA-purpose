@@ -652,7 +652,7 @@ export interface PrintTransProps {
 export interface AccVoucherElementProps {
     formState: AccTransactionFormState;
     dispatch: Dispatch<AnyAction>;
-    handleKeyDown: (e: any, field: string) => void;
+    handleKeyDown?: (e: any, field: string) => void;
     t: any;
-    loadAndSetAccTransVoucher: (usingManualInvNumber?: boolean, voucherNumber?: number, voucherPrefix?: string, voucherType?: string, formType?: string, manualInvoiceNumber?: string, accTransactionMasterID?: number, mode?: "increment" | "decrement" | undefined, skipPrompt?: boolean | false, setVoucherNo?: boolean | false) => Promise<boolean>;
+   
   }

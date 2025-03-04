@@ -9,6 +9,7 @@ import React from "react";
 const api = new APIClient();
 
 interface AccVoucherNoPrefixProps extends AccVoucherElementProps{
+  loadAndSetAccTransVoucher: (usingManualInvNumber?: boolean, voucherNumber?: number, voucherPrefix?: string, voucherType?: string, formType?: string, manualInvoiceNumber?: string, accTransactionMasterID?: number, mode?: "increment" | "decrement" | undefined, skipPrompt?: boolean | false, setVoucherNo?: boolean | false) => Promise<boolean>;
   }
   
   const AccVoucherNoPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>(({
@@ -57,7 +58,7 @@ interface AccVoucherNoPrefixProps extends AccVoucherElementProps{
         id="voucherNumber"
         localInputBox={formState?.userConfig?.inputBoxStyle}
         onKeyUp={(e) => {
-          handleKeyDown(e, "voucherNumber");
+          handleKeyDown && handleKeyDown(e, "voucherNumber");
         }}
         min={1}
         label={t(formState.formElements.voucherNumber.label)}

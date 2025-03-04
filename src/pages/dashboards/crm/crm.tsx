@@ -33,44 +33,44 @@ const Crm: FC<CrmProps> = () => {
   const [topExpenses, setTopExpenses] = useState<[]>([]);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   useEffect(() => {
-    // api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
-    //   setSalesSummary(res);
-    // });
-    // api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
-    //   setPurchaseSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
-    //   setIncomeSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
-    //   setExpenseSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
-    //   setReceivableSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
-    //   setPayableSummary(res);
-    // });
-    // api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
-    //   setTopExpenses(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
-    //   setCashSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
-    //   setBankSummary(res);
-    // });
-    ///////
-    // load();
+    api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
+      setTopExpenses(res);
+    });
+    api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
+      setSalesSummary(res);
+    });
+    api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
+      setPurchaseSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
+      setIncomeSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
+      setExpenseSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
+      setReceivableSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
+      setPayableSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
+      setCashSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
+      setBankSummary(res);
+    });
+    /////
+    load();
   }, []);
   const load = async () => {
-    // setSalesSummary(await  api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));    
-    // setPurchaseSummary(await api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));
-    // setIncomeSummary(await api.get('/Accounts/Dashboard/GetIncomeMonthly'));
-    // setExpenseSummary(await api.get('/Accounts/Dashboard/GetExpenseMonthly'));    
-    // setReceivableSummary(await api.get('/Accounts/Dashboard/GetReceivableMonthly'));
-    // setPayableSummary(await api.get('/Accounts/Dashboard/GetPayableMonthly'));
-    // setTopExpenses(await api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}));
+    setSalesSummary(await  api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));    
+    setPurchaseSummary(await api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));
+    setIncomeSummary(await api.get('/Accounts/Dashboard/GetIncomeMonthly'));
+    setExpenseSummary(await api.get('/Accounts/Dashboard/GetExpenseMonthly'));    
+    setReceivableSummary(await api.get('/Accounts/Dashboard/GetReceivableMonthly'));
+    setPayableSummary(await api.get('/Accounts/Dashboard/GetPayableMonthly'));
+    setTopExpenses(await api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}));
   }
   const userdata: any = [];
 
@@ -112,7 +112,7 @@ const Crm: FC<CrmProps> = () => {
         <div className="xxl:col-span-9 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
             <div className="xxl:col-span-4 xl:col-span-4  col-span-12">
-              <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+              {/* <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
               {!deviceInfo?.isMobile && (
                 <div className="box crm-highlight-card">
                   <div className="box-body">
@@ -135,7 +135,7 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                 </div>
                 )}
-              </div>
+              </div> */}
               {deviceInfo?.isMobile && (
               <div>
               <QuickCreate/>
@@ -195,7 +195,7 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+              {/* <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                 <div className="box">
                   <div className="box-header justify-between">
                     <div className="box-title">Profit Earned</div>
@@ -220,7 +220,7 @@ const Crm: FC<CrmProps> = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="xxl:col-span-8  xl:col-span-8  col-span-12">
               <div className="grid grid-cols-12 gap-x-6">
@@ -262,7 +262,7 @@ const Crm: FC<CrmProps> = () => {
                 </div>
               </div>
             </div>
-            <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            {/* <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
               <div className="box custom-card">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -367,12 +367,12 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="xxl:col-span-3 xl:col-span-12 col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
-            <div className="xxl:col-span-12 xl:col-span-12  col-span-12">
+            {/* <div className="xxl:col-span-12 xl:col-span-12  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -436,8 +436,8 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
+            </div> */}
+            {/* <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -507,8 +507,8 @@ const Crm: FC<CrmProps> = () => {
                   </ul>
                 </div>
               </div>
-            </div>
-            <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
+            </div> */}
+            {/* <div className="xxl:col-span-12 xl:col-span-6  col-span-12">
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -674,7 +674,7 @@ const Crm: FC<CrmProps> = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

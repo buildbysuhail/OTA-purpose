@@ -89,6 +89,7 @@ import HistorySidebar from "./historySidebar";
 import {
   customJsonParse,
   modelToBase64,
+  modelToBase64Unicode,
 } from "../../../utilities/jsonConverter";
 import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 import UnsavedChangesModal from "./unsavedChangesModal";
@@ -1577,7 +1578,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       return true;
     });
     console.log(cols);
-    setKey(modelToBase64(cols));
+    setKey(modelToBase64Unicode(cols));
     return cols;
   }, [formState.formElements.gridColumns]);
 

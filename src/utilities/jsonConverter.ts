@@ -24,6 +24,7 @@ export function customJsonParse<T>(jsonString: string): T {
 }
 export function modelToBase64<T>(model: T): string {
   try {
+    debugger;
     // Convert the model to a JSON string
     const jsonString = JSON.stringify(model);
 
@@ -32,6 +33,8 @@ export function modelToBase64<T>(model: T): string {
 
     return base64String;
   } catch (error) {
+    console.log(error);
+    
     console.error("Error converting model to base64:", error);
     throw new Error("Failed to convert model to base64");
   }
@@ -69,3 +72,12 @@ export function base64ToModelUnicode(base64String: string): string {
     throw error;
   }
 }
+export const base64UnicodeToModel = (base64: string): any | undefined => {
+  try {
+    const decodedString = atob(base64);
+    return customJsonParse(decodedString)
+  } catch (error) {
+    console.error("Error converting base64 to model:", error);
+    return undefined;
+  }
+};

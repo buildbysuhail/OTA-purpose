@@ -176,10 +176,10 @@ export const isDirtyAccTransaction = (
 ): boolean => {
   // // const _prevState = customJsonParse(atob(prevState))
   // const keys = Object.keys(_prevState ?? {}).length;
-  const _current = modelToBase64Unicode({
+  const _current = modelToBase64Unicode(setTransactionForHistory({
     transaction: { ...currentState.transaction },
     row: { ...currentState.row },
-  });
+  }));
   const _isEqual = prevState === _current;
   return _isEqual === false && prevState !== undefined && prevState !== "";
 };
@@ -187,6 +187,7 @@ export const isDirtyAccTransaction = (
 export const setTransactionForHistory = (
   _formState: any
 ): any => {
+  debugger;
   return {
     transaction: { ..._formState.transaction,
       master:{
@@ -196,9 +197,9 @@ export const setTransactionForHistory = (
       }
      },
     row: { ..._formState.row,
-      ledgerID: _formState.row.ledgerID == null ? "" : _formState.row.ledgerID,
+      ledgerID: _formState.row.ledgerID == null || _formState.row.ledgerID == ""  || _formState.row.ledgerID == 0 ? "" : _formState.row.ledgerID,
       //  costCentreID: _formState.row.costCentreID == null ? "" : _formState.row.costCentreID,
       //  projectSiteId: _formState.row.projectSiteId == null ? "" : _formState.row.projectSiteId,
-       projectId: _formState.row.projectId == null ? "" : _formState.row.projectId },
+       projectId: _formState.row.projectId == null || _formState.row.projectId == "" || _formState.row.projectId == 0 ? "" : _formState.row.projectId },
   }
 };

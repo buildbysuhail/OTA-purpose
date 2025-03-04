@@ -7,7 +7,7 @@ import React from "react";
 
 interface AccVoucherNoPrefixProps extends AccVoucherElementProps { }
 
-const AccTransactionMaster = React.forwardRef<
+const AccDrCrJv = React.forwardRef<
   HTMLInputElement,
   AccVoucherNoPrefixProps
 >(
@@ -21,7 +21,6 @@ const AccTransactionMaster = React.forwardRef<
     },
     ref
   ) => {
-    const voucherNumberRef = useRef<HTMLInputElement>(null); // Ref for voucherNumber
     return (
       <>
         {formState.formElements.masterAccount.visible &&

@@ -57,8 +57,9 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "left",
         showInPdf: true,
         cellRender: (cellInfo: any) => {
-          return cellInfo.value
-            ? formatDate(new Date(cellInfo.value), "MMM dd, yyyy")
+          debugger;
+          return cellInfo.data?.transactionDate
+            ? formatDate(new Date(cellInfo.data?.transactionDate), "MMM dd, yyyy")
             : "";
         },
       },
@@ -135,8 +136,8 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "left",
         showInPdf: true,
         cellRender: (cellInfo: any) => {
-          return cellInfo.value
-            ? formatDate(new Date(cellInfo.value), "MMM dd, yyyy")
+          return cellInfo?.data?.referenceDate
+            ? formatDate(new Date(cellInfo?.data?.referenceDate), "MMM dd, yyyy")
             : "";
         },
       },

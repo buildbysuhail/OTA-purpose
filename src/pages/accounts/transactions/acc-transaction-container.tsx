@@ -12,7 +12,6 @@ import { isChooseVoucherEnabled } from "../../../components/common/content/trans
 import AccTransactionForm from "./acc-transaction";
 import VoucherSelector from "../../transaction-base/voucher-selector";
 import { useUnsavedChangesWarning } from "./use-unsaved-changes-warning";
-import UnsavedChangesModal from "./unsavedChangesModal";
 import { useNavigate } from "react-router-dom";
 
 const api = new APIClient();

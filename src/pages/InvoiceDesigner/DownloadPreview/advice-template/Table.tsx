@@ -55,26 +55,19 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
     <View>
       <View style={[styles.table,labelStyles]}>
         {/* Table Header */}
-        <View style={styles.thead}>
-          {adviceTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
+        <View style={styles.thead} {...(adviceTableState?.headerRepeatOnPage ? { fixed: true } : {})}>
           {/* Invoice Number */}
         {adviceTableState?.showLineItemNumber && (
-          <View style={{width: adviceTableState?.lineItemNumberWidth }}>
-        <Text style={[styles.th]}>
+          <Text style={[styles.th, { width: adviceTableState?.lineItemNumberWidth }]}>
             {adviceTableState?.lineItemNumberLabel || "Invoice Number"}
           </Text>
-          </View>
-    
         )}
 
         {/* Invoice Date */}
         {adviceTableState?.showInvoiceDate && (
-              <View style={{ width: adviceTableState?.InvoiceDateWidth }}>
-              <Text style={[styles.th, { }]}>
+          <Text style={[styles.th, { width: adviceTableState?.InvoiceDateWidth }]}>
             {adviceTableState?.InvoiceDateLabel || "Invoice Date"}
           </Text>
-                </View>
-       
         )}
 
         {/* Invoice Amount */}
@@ -109,13 +102,10 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
         {/* Table Body */}
         <View style={styles.tbody}>
           {data?.details
+
           .map((val: any, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
-                {adviceTableState?.showLineItemNumber && (
-                  <Text style={{ ...styles.td, width: adviceTableState?.lineItemNumberWidth }}>
-                    {val.slNo}
-                  </Text>
-                )}
+           
                 {(adviceTableState?.showLineItemNumber) && (
                   <Text style={{ ...styles.td, width: adviceTableState?.lineItemNumberWidth }}>
                     INV-00{index + 1}

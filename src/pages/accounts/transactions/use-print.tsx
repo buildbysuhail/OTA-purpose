@@ -33,12 +33,12 @@ const voucherTypeSet = new Set(Object.values(VoucherType));
 const adviceTem = ["PARP","RARP","Cheque"]
 const handleDirectPrint = async (template:any) => {
   let pdfDocument;
-
   if (adviceTem.includes(template.templateKind)) {
     pdfDocument = (
       <AdviceTemplate
         template={template}
         data={formState.transaction}
+        currentBranch={currentBranch}
         userSession={userSession}
       />
     );
@@ -64,7 +64,6 @@ const handleDirectPrint = async (template:any) => {
       alert("Failed to open print window. Please allow popups and try again.");
       return;
     }
-
     // Wait for the PDF to load in the new tab
     printWindow.onload = () => {
       printWindow.print(); // Trigger print
@@ -84,7 +83,6 @@ const handleDirectPrint = async (template:any) => {
 
   const fetchDefaultTemplates = async (voucherType:any) => {
        // Create a set of all possible VoucherType values
-
       try {
           const res = await api.getAsync(
             `${Urls.default_template}?template_group=${voucherType}`
@@ -109,9 +107,9 @@ const handleDirectPrint = async (template:any) => {
          
           dispatch(acctemplatesData(_template));
           // const template = formState.templatesData?.find(item=>item.templateGroup===voucherType) 
-          if(voucherTypeSet.has(voucherType)){
-            dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
-          } 
+          // if(voucherTypeSet.has(voucherType)){
+          //   dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
+          // } 
          
           return _template;
        
@@ -121,17 +119,7 @@ const handleDirectPrint = async (template:any) => {
     };
 
   const printVoucher = async (setIsPrintModalOpen?:any,voucherType?:any,voucher?: AccTransactionFormState) => {
-   voucher = voucher == undefined ? formState : voucher
-     // Check if template is null, undefined, or an empty object
-  // if (!formState?.template || Object.keys(formState.template).length === 0) {
-  //   ERPAlert.show({
-  //     title: "Warning",
-  //     text: "Please Select Your Template!!!",
-  //     icon: "warning",
-  //   });
-  //   return; 
-  // }
-  
+    
    const existingTemplate = formState.templatesData?.find(
     (template: any) => template.templateGroup === voucherType
   );
@@ -161,16 +149,16 @@ const handleDirectPrint = async (template:any) => {
     voucher = voucher == undefined ? formState : voucher
     let voucherTypes = ["CP","BP","CQP"].includes(formState.transaction.master.voucherType) ? "PARP"
     : ["CR","BR","CQR"].includes(formState.transaction.master.voucherType) ? "RARP":"";
-    const existingTemplate = voucher.templatesData?.find(
-      (template: any) => template.templateGroup === voucherTypes
-    );
-
-    let template;
-      if(existingTemplate){
-        template = existingTemplate
-      } else{
-        template = await fetchDefaultTemplates(voucherTypes)
-      }
+    // const existingTemplate = voucher.templatesData?.find(
+    //   (template: any) => template.templateGroup === voucherTypes
+    // );
+   
+    let  template = await fetchDefaultTemplates(voucherTypes)
+      // if(existingTemplate){
+      //   template = existingTemplate
+      // } else{
+      //   template = await fetchDefaultTemplates(voucherTypes)
+      // }
       console.log(template);
     await handleDirectPrint(template);
    };

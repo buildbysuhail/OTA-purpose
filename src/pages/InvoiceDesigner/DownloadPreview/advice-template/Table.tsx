@@ -2,7 +2,7 @@ import { View, Text,StyleSheet } from "@react-pdf/renderer";
 import { TemplateState } from "../../Designer/interfaces";
 
 const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
-  const accTableState = template?.adviceTableState;
+  const adviceTableState = template?.adviceTableState;
   const propertiesState = template?.propertiesState;
 
   const labelStyles = {
@@ -10,42 +10,40 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
     fontStyle: propertiesState?.label_font_style,
     fontFamily:propertiesState?.font_family,
   };
-  
 
-  // Styles
   const styles = StyleSheet.create({
-    table: {
+    table:{
       width: "100%",
       display: "flex",
       marginBottom: 10,
     },
-    thead: {
-      backgroundColor: accTableState?.showTableHeaderBg ? accTableState?.tableHeaderBgColor : "#fff",
-      color: accTableState?.headerFontColor || "#000",
-      fontSize: accTableState?.headerFontSize || 12,
+    thead:{
+      backgroundColor: adviceTableState?.showTableHeaderBg ? adviceTableState?.tableHeaderBgColor : "#fff",
+      color: adviceTableState?.headerFontColor || "#000",
+      fontSize: adviceTableState?.headerFontSize || 12,
       flexDirection: "row",
-      borderBottom: `1px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor  :""}`,
+      borderBottom: `1px solid ${adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor  :""}`,
     },
-    th: {
+    th:{
       padding: 5,
       flex: 1,
       textAlign: "center",
     },
-    tbody: {
+    tbody:{
       flexDirection: "column",
   
     },
-    tr: {
+    tr:{
       flexDirection: "row",
-      borderBottom: `1px solid ${accTableState?.showTableBorder ? accTableState?.tableBorderColor  :""}`,
-      backgroundColor: accTableState?.showRowBg ? accTableState?.itemRowBgColor : "#fff",
+      borderBottom: `1px solid ${adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor  :""}`,
+      backgroundColor: adviceTableState?.showRowBg ? adviceTableState?.itemRowBgColor : "#fff",
     },
-    td: {
+    td:{
       padding: 4,
       flex: 1,
       textAlign: "center",
-      color: accTableState?.itemRowFontColor || "#000",
-      fontSize: accTableState?.itemRowFontSize || 12,
+      color: adviceTableState?.itemRowFontColor || "#000",
+      fontSize: adviceTableState?.itemRowFontSize || 12,
       fontWeight:propertiesState?.font_weight,
       // fontStyle:propertiesState?.label_font_color,
       // fontFamily:propertiesState?.label_font_color,
@@ -58,46 +56,52 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
       <View style={[styles.table,labelStyles]}>
         {/* Table Header */}
         <View style={styles.thead}>
-          {accTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
+          {adviceTableState?.showLineItemNumber && <Text style={styles.th}>#</Text>}
           {/* Invoice Number */}
-        {accTableState?.showLineItemNumber && (
-          <Text style={[styles.th, { width: accTableState?.lineItemNumberWidth }]}>
-            {accTableState?.lineItemNumberLabel || "Invoice Number"}
+        {adviceTableState?.showLineItemNumber && (
+          <View style={{width: adviceTableState?.lineItemNumberWidth }}>
+        <Text style={[styles.th]}>
+            {adviceTableState?.lineItemNumberLabel || "Invoice Number"}
           </Text>
+          </View>
+    
         )}
 
         {/* Invoice Date */}
-        {accTableState?.showInvoiceDate && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceDateWidth }]}>
-            {accTableState?.InvoiceDateLabel || "Invoice Date"}
+        {adviceTableState?.showInvoiceDate && (
+              <View style={{ width: adviceTableState?.InvoiceDateWidth }}>
+              <Text style={[styles.th, { }]}>
+            {adviceTableState?.InvoiceDateLabel || "Invoice Date"}
           </Text>
+                </View>
+       
         )}
 
         {/* Invoice Amount */}
-        {accTableState?.showInvoiceAmount && (
-          <Text style={[styles.th, { width: accTableState?.InvoiceAmountWidth }]}>
-            {accTableState?.InvoiceAmountLabel || "Invoice Amount"}
+        {adviceTableState?.showInvoiceAmount && (
+          <Text style={[styles.th, { width: adviceTableState?.InvoiceAmountWidth }]}>
+            {adviceTableState?.InvoiceAmountLabel || "Invoice Amount"}
           </Text>
         )}
 
         {/* Withholding Tax */}
-        {accTableState?.showWithholdingTax && (
-          <Text style={[styles.th, { width: accTableState?.WithholdingTaxWidth }]}>
-            {accTableState?.WithholdingTaxLabel || "Withholding Tax"}
+        {adviceTableState?.showWithholdingTax && (
+          <Text style={[styles.th, { width: adviceTableState?.WithholdingTaxWidth }]}>
+            {adviceTableState?.WithholdingTaxLabel || "Withholding Tax"}
           </Text>
         )}
 
         {/* TCS Amount */}
-        {accTableState?.showTCSAmount && (
-          <Text style={[styles.th, { width: accTableState?.TCSAmountWidth }]}>
-            {accTableState?.TCSAmountLabel || "TCS Amount"}
+        {adviceTableState?.showTCSAmount && (
+          <Text style={[styles.th, { width: adviceTableState?.TCSAmountWidth }]}>
+            {adviceTableState?.TCSAmountLabel || "TCS Amount"}
           </Text>
         )}
 
         {/* Payment Amount */}
-        {accTableState?.showPaymentAmount && (
-          <Text style={[styles.th, { width: accTableState?.PaymentAmountWidth }]}>
-            {accTableState?.PaymentAmountLabel || "Payment Amount"}
+        {adviceTableState?.showPaymentAmount && (
+          <Text style={[styles.th, { width: adviceTableState?.PaymentAmountWidth }]}>
+            {adviceTableState?.PaymentAmountLabel || "Payment Amount"}
           </Text>
         )}
         </View>
@@ -105,41 +109,40 @@ const Table = ({ data, template,}: { data: any; template?: TemplateState}) => {
         {/* Table Body */}
         <View style={styles.tbody}>
           {data?.details
-            ?.slice(0,2) 
           .map((val: any, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
-                {accTableState?.showLineItemNumber && (
-                  <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
+                {adviceTableState?.showLineItemNumber && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.lineItemNumberWidth }}>
                     {val.slNo}
                   </Text>
                 )}
-                {(accTableState?.showLineItemNumber) && (
-                  <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
+                {(adviceTableState?.showLineItemNumber) && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.lineItemNumberWidth }}>
                     INV-00{index + 1}
                   </Text>
                 )}
-                {accTableState?.showInvoiceDate && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceDateWidth }}>
+                {adviceTableState?.showInvoiceDate && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.InvoiceDateWidth }}>
                     2024-01-{10 + index}
                   </Text>
                 )}
-                {accTableState?.showInvoiceAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.InvoiceAmountWidth }}>
+                {adviceTableState?.showInvoiceAmount && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.InvoiceAmountWidth }}>
                     {1000 + index * 500}.00 {/* Demo Invoice Amount */}
                   </Text>
                 )}
-                {accTableState?.showWithholdingTax && (
-                  <Text style={{ ...styles.td, width: accTableState?.WithholdingTaxWidth }}>
+                {adviceTableState?.showWithholdingTax && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.WithholdingTaxWidth }}>
                      {50 + index * 10}.00 {/* Demo Withholding Tax */} 
                   </Text>
                 )}
-                {accTableState?.showTCSAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.TCSAmountWidth }}>
+                {adviceTableState?.showTCSAmount && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.TCSAmountWidth }}>
                     {20 + index * 5}.00 {/* Demo TCS Amount */}
                   </Text>
                 )}
-                {accTableState?.showPaymentAmount && (
-                  <Text style={{ ...styles.td, width: accTableState?.PaymentAmountWidth }}>
+                {adviceTableState?.showPaymentAmount && (
+                  <Text style={{ ...styles.td, width: adviceTableState?.PaymentAmountWidth }}>
                   {800 + index * 200}.00 {/* Demo Payment Amount */}
                   </Text>
                 )}    

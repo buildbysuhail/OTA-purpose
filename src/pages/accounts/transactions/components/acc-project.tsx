@@ -22,6 +22,7 @@ const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(({
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="project"
           label={t(formState.formElements.projectId.label)}
+          // value={formState.row.projectId}
           options={
             formState.row.ledgerID != undefined && formState.row.ledgerID != 0
               ? undefined

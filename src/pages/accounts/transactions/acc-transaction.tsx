@@ -2208,73 +2208,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   : "1px solid #ccc",
             }}
           >
-            <div className="grid grid-cols-2 gap-8 !mt-[35px]">
-              <div className="">
-                <div className="grid grid-cols-1 leading-none lg:w-3/4">
-                  <div className="flex items-center gap-2">
+            <div className={formState.userConfig?.isExpanded ? "grid grid-rows-2 !mt-[35px]" : "grid grid-cols-2 gap-8 !mt-[35px]"}>
+              {formState.userConfig?.isExpanded ? (
+                <>
+                  {/* Expanded View - First Row */}
+                  <div className="flex flex-wrap items-center gap-4">
                     <AccVoucherNoPrefix
-                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      ref={voucherNumberRef}
                       formState={formState}
                       dispatch={dispatch}
                       handleKeyDown={handleKeyDown}
                       loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
                       t={t}
                     />
-                  </div>
-                  <div className="flex items-center">
                     <AccMasterAccount
-                    ref={masterAccountRef}
+                      ref={masterAccountRef}
                       formState={formState}
                       dispatch={dispatch}
                       getFormattedValue={getFormattedValue}
                       t={t}
                     />
-                    <div className="flex flex-wrap gap-4">
-                      <AccDrCrJv
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <AccNotes
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-
-                    <>
-                      <AccCurrencyID
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                      />
-
-                      <AccCurrencyRate
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                      />
-
-
-                    </>
-                    <AccEdit
-                      formState={formState}
-                      enableCombo={enableCombo}
-                      t={t}
-                      dispatch={dispatch}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <div className="grid grid-cols-1 leading-none lg:full">
-                  <div className="grid grid-cols-2 gap-2">
                     <AccReferenceNumber
                       formState={formState}
                       dispatch={dispatch}
@@ -2282,17 +2235,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       ref={refNoRef}
                       t={t}
                     />
-                    <AccTransactionDate
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
                     <AccReferenceDate
                       dispatch={dispatch}
                       formState={formState}
+                      t={t}
+                    />
+                    <AccTransactionDate
+                      formState={formState}
+                      dispatch={dispatch}
                       t={t}
                     />
                     <AccEmployeeID
@@ -2301,225 +2251,507 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                       handleKeyDown={handleKeyDown}
                     />
-
-                  </div>
-                  <div className="grid grid-cols-1">
                     <AccRemarks
                       dispatch={dispatch}
                       formState={formState}
                       t={t}
                     />
-                    <AccProject
-                      dispatch={dispatch}
+                    <AccNotes
+                      handleKeyDown={handleKeyDown}
                       formState={formState}
+                      dispatch={dispatch}
                       t={t}
                     />
+                    <AccDrCrJv
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <AccCurrencyID
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <AccCurrencyRate
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <AccEdit
+                      formState={formState}
+                      enableCombo={enableCombo}
+                      t={t}
+                      dispatch={dispatch}
+                    />
+                  </div>
+                  <>
+                    <div className="flex flex-wrap items-center gap-4 leading-none">
+                      <LedgerCode
+                        ref={ledgerCodeRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <Ledger
+                        ref={ledgerIdRef}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                        triggerEffect={triggerEffect}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <Amount
+                        ref={amountRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <Drcr
+                        ref={drCrRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <Discount
+                        ref={discountRef}
+                        handleKeyDown={handleKeyDown}
+                        focusDiscount={focusDiscount}
+                        focusAmount={focusAmount}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <Narration
+                        ref={narrationRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <CostCentre
+                        ref={costCenterRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                      />
+                      <AccProject
+                        dispatch={dispatch}
+                        formState={formState}
+                        t={t}
+                      />
+                      <NameOnCheque
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankName
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <ChequeNumber
+                        ref={chequeNumberRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankDate
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <ChequeStatus
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankCharge
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        t={t}
+                      />
+                      <AccTaxDetails
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        t={t}
+                        partyNameRef={partyNameRef}
+                        taxNoRef={taxNoRef}
+                        taxableAmountRef={taxableAmountRef}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex gap-4">
+                        <span className="text-[#2563eb] font-bold self-center">
+                          {t("group_name")}: {formState.ledgerData?.accGroupName}
+                        </span>
+                      </div>
+                      <div className="text-[#dc2626] self-center" style={{ fontSize: "12px", color: "chocolate" }}>
+                        {t("amount_in_words")}: {formState.amountInWords}
+                      </div>
+
+                      <div className="flex gap-4">
+                        {formState.transaction?.master?.isLocked !== undefined &&
+                          formState.transaction?.master?.isLocked === true &&
+                          formState.isTaxOnExpense !== true &&
+                          (userSession.userTypeCode === "CA" || userSession.userTypeCode === "BA") && (
+                            <span>{t("unlock")}</span>
+                          )}
+                        <div className="flex items-center gap-2 mt-4">
+                          {applicationSettings.accountsSettings?.maintainBillwiseAccount === true &&
+                            !billWiseExcludedTransactions.includes(formState.transaction.master.voucherType) && (
+                              <ERPButton
+                                localInputBox={formState?.userConfig?.inputBoxStyle}
+                                title={t(formState.formElements.btnBillWise.label)}
+                                variant="secondary"
+                                onClick={showBillwise}
+                                disabled={
+                                  formState.ledgerBillWiseLoading ||
+                                  formState.formElements.btnBillWise.disabled === true ||
+                                  formState.formElements.pnlMasters?.disabled
+                                }
+                              />
+                            )}
+                        </div>
+                        <div className="flex items-end text-end">
+                          {formState.formElements.btnAdd.visible === true && (
+                            <ERPButton
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              ref={btnAddRef}
+                              title={t(formState.formElements.btnAdd.label)}
+                              variant="primary"
+                              loading={formState.rowProcessing}
+                              type="button"
+                              onClick={() => addOrEditRow()}
+                              disableEnterNavigation
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  addOrEditRow();
+                                }
+                              }}
+                              disabled={
+                                formState.formElements.btnAdd.disabled === true ||
+                                formState.ledgerBillWiseLoading ||
+                                formState.ledgerIsBillWiseAdjustExistLoading ||
+                                formState.formElements.pnlMasters?.disabled
+                              }
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                </>
+              ) : (
+                <>
+                  {/* Compact View */}
+                  <div className="">
+                    <div className="grid grid-cols-1 leading-none lg:w-3/4">
+                      <div className="flex items-center gap-2">
+                        <AccVoucherNoPrefix
+                          ref={voucherNumberRef}
+                          formState={formState}
+                          dispatch={dispatch}
+                          handleKeyDown={handleKeyDown}
+                          loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                          t={t}
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <AccMasterAccount
+                          ref={masterAccountRef}
+                          formState={formState}
+                          dispatch={dispatch}
+                          getFormattedValue={getFormattedValue}
+                          t={t}
+                        />
+                        <div className="flex flex-wrap gap-4">
+                          <AccDrCrJv
+                            formState={formState}
+                            dispatch={dispatch}
+                            t={t}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <AccNotes
+                          handleKeyDown={handleKeyDown}
+                          formState={formState}
+                          dispatch={dispatch}
+                          t={t}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <>
+                          <AccCurrencyID
+                            formState={formState}
+                            dispatch={dispatch}
+                            t={t}
+                          />
+                          <AccCurrencyRate
+                            formState={formState}
+                            dispatch={dispatch}
+                            t={t}
+                          />
+                        </>
+                        <AccEdit
+                          formState={formState}
+                          enableCombo={enableCombo}
+                          t={t}
+                          dispatch={dispatch}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <div className="grid grid-cols-1 leading-none lg:full">
+                      <div className="grid grid-cols-2 gap-2">
+                        <AccReferenceNumber
+                          formState={formState}
+                          dispatch={dispatch}
+                          handleLoadByRefNo={handleLoadByRefNo}
+                          ref={refNoRef}
+                          t={t}
+                        />
+                        <AccTransactionDate
+                          formState={formState}
+                          dispatch={dispatch}
+                          t={t}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <AccReferenceDate
+                          dispatch={dispatch}
+                          formState={formState}
+                          t={t}
+                        />
+                        <AccEmployeeID
+                          dispatch={dispatch}
+                          formState={formState}
+                          t={t}
+                          handleKeyDown={handleKeyDown}
+                        />
+                      </div>
+                      <div className="grid grid-cols-1">
+                        <AccRemarks
+                          dispatch={dispatch}
+                          formState={formState}
+                          t={t}
+                        />
+                        <AccProject
+                          dispatch={dispatch}
+                          formState={formState}
+                          t={t}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
 
+            {formState.userConfig?.isExpanded ? (
+              <></>
+            ) : (
+              <>
+                {/* Compact view – Original multi-row layout */}
+                <div className="leading-none">
+                  <div className="flex items-center gap-2">
+                    <LedgerCode
+                      ref={ledgerCodeRef}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    {formState?.row.ledgerID?.toString()}
+                    <Ledger
+                      ref={ledgerIdRef}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                      triggerEffect={triggerEffect}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <Amount
+                      ref={amountRef}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <Drcr
+                      ref={drCrRef}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                    <Discount
+                      ref={discountRef}
+                      handleKeyDown={handleKeyDown}
+                      focusDiscount={focusDiscount}
+                      focusAmount={focusAmount}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    <div className="flex flex-wrap gap-4">
+                      <span className="text-[#2563eb] font-bold self-center">
+                        {t("group_name")}: {formState.ledgerData?.accGroupName}
+                      </span>
+                    </div>
+                    <div
+                      className="text-[#dc2626]"
+                      style={{ fontSize: "12px", color: "chocolate" }}
+                    >
+                      {t("amount_in_words")}: {formState.amountInWords}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="leading-none">
-              <div className="flex items-center gap-2">
-                <LedgerCode
-                ref={ledgerCodeRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-                {formState?.row.ledgerID?.toString()}
-
-                <Ledger
-                ref={ledgerIdRef}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  triggerEffect={triggerEffect}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-                <Amount
-                ref={amountRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-                <Drcr
-                ref={drCrRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-               
-
-                <Discount
-                ref={discountRef}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-              </div>
-
-              <div className="grid grid-cols-3">
-                <div className="flex flex-wrap gap-4">
-                  <span className="text-[#2563eb] font-bold self-center">
-                    {t("group_name")}: {formState.ledgerData?.accGroupName}
-                  </span>
-                </div>
-                <div className="text-[#dc2626]" style={{ fontSize: "12px", color: "chocolate" }}>
-                  {t("amount_in_words")}: {formState.amountInWords}
-                </div>
-              </div>
-            </div>
-
-            <div className="leading-none">
-              <div className="flex items-center gap-2">
-                <Narration
-                ref={narrationRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-
-
-                <CostCentre
-                ref={costCenterRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-
-                {formState.transaction?.master?.isLocked !== undefined &&
-                  formState.transaction?.master?.isLocked == true &&
-                  formState.isTaxOnExpense != true &&
-                  (userSession.userTypeCode == "CA" ||
-                    userSession.userTypeCode == "BA") && <>{t("unlock")}</>}
-                <div className="flex items-center gap-2 mt-4">
-                  {applicationSettings.accountsSettings
-                    ?.maintainBillwiseAccount == true &&
-                    billWiseExcludedTransactions.includes(
-                      formState.transaction.master.voucherType
-                    ) == false && (
-                      <ERPButton
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        title={t(formState.formElements.btnBillWise.label)}
-                        variant="secondary"
-                        onClick={showBillwise}
-                        disabled={
-                          formState.ledgerBillWiseLoading ||
-                          formState.formElements.btnBillWise.disabled == true ||
-                          formState.formElements.pnlMasters?.disabled
-                        }
-                      />
-                    )}
-                </div>
-              </div>
-            </div>
-            <div className="leading-none ">
-              <div className="flex justify-between">
-                {/* {(voucherType == "BP" || voucherType == "BR" || voucherType == "CQP" || voucherType == "CQP") && ( */}
-                <div className="flex flex-wrap gap-4">
-                  <NameOnCheque
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-
-                  <BankName
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-
-                  <ChequeNumber
-                  ref={chequeNumberRef}
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-
-                  <BankDate
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-
-                  <ChequeStatus
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-
-                  <BankCharge
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    t={t}
-                  />
-
-
-                  <AccTaxDetails
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    t={t}
-                    partyNameRef={partyNameRef}
-                    taxNoRef={taxNoRef}
-                    taxableAmountRef={taxableAmountRef}
-
-                  />
-                </div>
-
-                <div className="flex items-end text-end">
-                  {formState.formElements.btnAdd.visible == true && (
-                    <ERPButton
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      ref={btnAddRef}
-                      title={t(formState.formElements.btnAdd.label)}
-                      // className="mt-4"
-                      variant="primary"
-                      loading={formState.rowProcessing}
-                      type="button"
-                      onClick={() => addOrEditRow()}
-                      disableEnterNavigation
-                      onKeyDown={(e) => {
-
-                        if (e.key == "Enter") {
-                          addOrEditRow();
-                        }
-                      }}
-                      disabled={
-                        formState.formElements.btnAdd.disabled == true ||
-                        formState.ledgerBillWiseLoading ||
-                        formState.ledgerIsBillWiseAdjustExistLoading ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
+                <div className="leading-none">
+                  <div className="flex items-center gap-2">
+                    <Narration
+                      ref={narrationRef}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
                     />
-                  )}
+                    <CostCentre
+                      ref={costCenterRef}
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                    {formState.transaction?.master?.isLocked !== undefined &&
+                      formState.transaction?.master?.isLocked === true &&
+                      formState.isTaxOnExpense !== true &&
+                      (userSession.userTypeCode === "CA" ||
+                        userSession.userTypeCode === "BA") && (
+                        <span>{t("unlock")}</span>
+                      )}
+                    <div className="flex items-center gap-2 mt-4">
+                      {applicationSettings.accountsSettings?.maintainBillwiseAccount === true &&
+                        !billWiseExcludedTransactions.includes(formState.transaction.master.voucherType) && (
+                          <ERPButton
+                            localInputBox={formState?.userConfig?.inputBoxStyle}
+                            title={t(formState.formElements.btnBillWise.label)}
+                            variant="secondary"
+                            onClick={showBillwise}
+                            disabled={
+                              formState.ledgerBillWiseLoading ||
+                              formState.formElements.btnBillWise.disabled === true ||
+                              formState.formElements.pnlMasters?.disabled
+                            }
+                          />
+                        )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+
+                <div className="leading-none">
+                  <div className="flex justify-between">
+                    <div className="flex flex-wrap gap-4">
+                      <NameOnCheque
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankName
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <ChequeNumber
+                        ref={chequeNumberRef}
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankDate
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <ChequeStatus
+                        handleKeyDown={handleKeyDown}
+                        formState={formState}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                      <BankCharge
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        t={t}
+                      />
+                      <AccTaxDetails
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        t={t}
+                        partyNameRef={partyNameRef}
+                        taxNoRef={taxNoRef}
+                        taxableAmountRef={taxableAmountRef}
+                      />
+                    </div>
+                    <div className="flex items-end text-end">
+                      {formState.formElements.btnAdd.visible === true && (
+                        <ERPButton
+                          localInputBox={formState?.userConfig?.inputBoxStyle}
+                          ref={btnAddRef}
+                          title={t(formState.formElements.btnAdd.label)}
+                          variant="primary"
+                          loading={formState.rowProcessing}
+                          type="button"
+                          onClick={() => addOrEditRow()}
+                          disableEnterNavigation
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              addOrEditRow();
+                            }
+                          }}
+                          disabled={
+                            formState.formElements.btnAdd.disabled === true ||
+                            formState.ledgerBillWiseLoading ||
+                            formState.ledgerIsBillWiseAdjustExistLoading ||
+                            formState.formElements.pnlMasters?.disabled
+                          }
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+
           </div>
           <div
             className="relative"
@@ -2689,25 +2921,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </select>
         </div> */}
               <div className="mb-1">
-
                 <AccMasterAccount
-                ref={masterAccountRef}
+                  ref={masterAccountRef}
                   formState={formState}
                   dispatch={dispatch}
                   getFormattedValue={getFormattedValue}
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccDrCrJv
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccNotes
                   handleKeyDown={handleKeyDown}
                   formState={formState}
@@ -2715,24 +2946,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccCurrencyID
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccCurrencyRate
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccEdit
                   formState={formState}
                   enableCombo={enableCombo}
@@ -2740,8 +2971,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   dispatch={dispatch}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccReferenceNumber
                   formState={formState}
                   dispatch={dispatch}
@@ -2750,16 +2981,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccTransactionDate
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-              <div className="mb-1">
 
+              <div className="mb-1">
                 <AccReferenceDate
                   dispatch={dispatch}
                   formState={formState}
@@ -2778,7 +3009,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccRemarks
-                ref={remarksRef}
+                  ref={remarksRef}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}

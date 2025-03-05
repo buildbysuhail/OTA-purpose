@@ -29,8 +29,8 @@ export interface Attachments {
   key: string;
   name: string;
   size: number;
-  aType: "url"| "file"| "base64";
-  type:string;
+  aType: "url" | "file" | "base64";
+  type: string;
   isNew: boolean;
   uploaded?: boolean;
   uploading?: boolean;
@@ -408,6 +408,7 @@ export interface AccUserConfig {
   outerPageBg?: string;
   innerPageBg?: string;
   inputBoxStyle?: inputBox
+  isExpanded?: boolean;
 }
 export interface AccTransactionFormState {
   store: any;
@@ -600,7 +601,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
       otherLabelFontSize: 14,
       inputBgColor: "255, 255, 255",
       borderColor: "128, 128, 128",
-      buttonFocusBg:"89, 137, 232",
+      buttonFocusBg: "89, 137, 232",
       selectColor: "255, 255, 255",
       fontColor: "128, 128, 128",
       labelColor: "128, 128, 128",
@@ -650,9 +651,8 @@ export interface PrintTransProps {
   isPrintPreview: boolean;
 }
 export interface AccVoucherElementProps {
-    formState: AccTransactionFormState;
-    dispatch: Dispatch<AnyAction>;
-    handleKeyDown?: (e: any, field: string) => void;
-    t: any;
-   
-  }
+  formState: AccTransactionFormState;
+  dispatch: Dispatch<AnyAction>;
+  handleKeyDown?: (e: any, field: string) => void;
+  t: any;
+}

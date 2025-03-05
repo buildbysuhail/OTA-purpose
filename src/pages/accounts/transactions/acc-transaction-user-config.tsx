@@ -27,14 +27,21 @@ interface pageBgColor {
 
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
+  const dispatch = useDispatch();
+  const { t } = useTranslation("transaction");
+  const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    const newValue = !isExpanded;
+    setIsExpanded(newValue);
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      isExpanded: newValue,
+    };
+    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
 
-  const { t } = useTranslation("transaction");
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
@@ -43,26 +50,18 @@ export const AccTransactionUserConfig = () => {
         [field]: value,
       },
     };
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: { userConfig: updatedUserConfig },
-      })
-    );
+    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
-  const dispatch = useDispatch();
 
   useEffect(() => { }, []);
-
   const postUserConfigOnOk = async (response: any) => {
     const base64 = modelToBase64(response);
     localStorage.setItem("utc", base64);
   };
+
   const postUserConfig = async () => {
     try {
-      const response = await api.post(
-        `${Urls.post_acc_user_config}`,
-        formState.userConfig
-      );
+      const response = await api.post(`${Urls.post_acc_user_config}`, formState.userConfig);
       handleResponse(response, () => {
         const base64 = modelToBase64(formState.userConfig);
         localStorage.setItem("utc", base64);
@@ -79,12 +78,9 @@ export const AccTransactionUserConfig = () => {
       ...formState.userConfig,
       [field]: value,
     };
-    dispatch(
-      accFormStateHandleFieldChange({
-        fields: { userConfig: updatedUserConfig },
-      })
-    );
+    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
+
   const resetThemeChange = async () => {
     try {
       ERPAlert.show({
@@ -98,11 +94,7 @@ export const AccTransactionUserConfig = () => {
             const st = atob(res.item);
             localStorage.setItem("utc", res.item);
             const _st: any = customJsonParse(st);
-            dispatch(
-              accFormStateHandleFieldChange({
-                fields: { userConfig: _st },
-              })
-            );
+            dispatch(accFormStateHandleFieldChange({ fields: { userConfig: _st } }));
           });
         },
       });
@@ -141,28 +133,20 @@ export const AccTransactionUserConfig = () => {
                     checked={isExpanded}
                     onChange={handleToggle}
                   />
-                  <label
-                    htmlFor="toggle-view"
-                    className="block cursor-pointer bg-gray-300 rounded-full p-1 transition-colors duration-300 ease-in-out peer-checked:bg-[#3b82f6]"
-                  >
-                    <div
-                      className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isExpanded ? "translate-x-6" : "translate-x-0"
-                        }`}
-                    ></div>
+                  <label htmlFor="toggle-view" className="block cursor-pointer bg-gray-300 rounded-full p-1 transition-colors duration-300 ease-in-out peer-checked:bg-[#3b82f6]">
+                    <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isExpanded ? "translate-x-6" : "translate-x-0"}`}></div>
                   </label>
                 </div>
               </div>
             </div>
-            
-            <div className="grid gird-col-3 gap-6 p-4">
+
+            <div className="grid grid-rows-3 gap-6 p-4">
               <ERPCheckbox
                 id="keepNarrationForJV"
                 label={t("keep_narration_for_jv")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.keepNarrationForJV}
-                onChangeData={(e) =>
-                  handleFieldChange("keepNarrationForJV", e.keepNarrationForJV)
-                }
+                onChangeData={(e) => handleFieldChange("keepNarrationForJV", e.keepNarrationForJV)}
               />
 
               <ERPCheckbox
@@ -170,27 +154,15 @@ export const AccTransactionUserConfig = () => {
                 label={t("clear_details_after_save_accounts")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.clearDetailsAfterSaveAccounts}
-                onChangeData={(e) =>
-                  handleFieldChange(
-                    "clearDetailsAfterSaveAccounts",
-                    e.clearDetailsAfterSaveAccounts
-                  )
-                }
+                onChangeData={(e) => handleFieldChange("clearDetailsAfterSaveAccounts", e.clearDetailsAfterSaveAccounts)}
               />
 
               <ERPCheckbox
                 id="mnuShowConfirmationForEditOnAccounts"
                 label={t("show_confirmation_for_edit_on_accounts")}
                 data={formState.userConfig}
-                checked={
-                  formState?.userConfig?.mnuShowConfirmationForEditOnAccounts
-                }
-                onChangeData={(e) =>
-                  handleFieldChange(
-                    "mnuShowConfirmationForEditOnAccounts",
-                    e.mnuShowConfirmationForEditOnAccounts
-                  )
-                }
+                checked={formState?.userConfig?.mnuShowConfirmationForEditOnAccounts}
+                onChangeData={(e) => handleFieldChange("mnuShowConfirmationForEditOnAccounts", e.mnuShowConfirmationForEditOnAccounts)}
               />
 
               <ERPCheckbox
@@ -198,13 +170,9 @@ export const AccTransactionUserConfig = () => {
                 label={t("maximize_billwise_screen_initially")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.maximizeBillwiseScreenInitially}
-                onChangeData={(e) =>
-                  handleFieldChange(
-                    "maximizeBillwiseScreenInitially",
-                    e.maximizeBillwiseScreenInitially
-                  )
-                }
+                onChangeData={(e) => handleFieldChange("maximizeBillwiseScreenInitially", e.maximizeBillwiseScreenInitially)}
               />
+
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}
@@ -215,10 +183,9 @@ export const AccTransactionUserConfig = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(e) =>
-                  handleFieldChange("presetCostenterId", e.presetCostenterId)
-                }
+                onChangeData={(e) => handleFieldChange("presetCostenterId", e.presetCostenterId)}
               />
+
               <div className="flex items-center gap-4">
                 <ERPInput
                   id="maxWidth"
@@ -228,10 +195,9 @@ export const AccTransactionUserConfig = () => {
                   className="w-full"
                   data={formState.userConfig}
                   value={formState?.userConfig?.maxWidth}
-                  onChangeData={(e: { maxWidth: any }) =>
-                    handleFieldChange("maxWidth", e.maxWidth)
-                  }
+                  onChangeData={(e: { maxWidth: any }) => handleFieldChange("maxWidth", e.maxWidth)}
                 />
+
                 <ERPInput
                   id="gridMaxWidth"
                   label={t("grid_max_width")}
@@ -240,11 +206,10 @@ export const AccTransactionUserConfig = () => {
                   className="w-full"
                   data={formState.userConfig}
                   value={formState?.userConfig?.gridMaxWidth}
-                  onChangeData={(e: { gridMaxWidth: any }) =>
-                    handleFieldChange("gridMaxWidth", e.gridMaxWidth)
-                  }
+                  onChangeData={(e: { gridMaxWidth: any }) => handleFieldChange("gridMaxWidth", e.gridMaxWidth)}
                 />
-                 <ERPInput
+
+                <ERPInput
                   id="gridHeight"
                   label={t("grid_height")}
                   placeholder={t("grid_height_eg")}
@@ -252,61 +217,40 @@ export const AccTransactionUserConfig = () => {
                   className="w-full"
                   data={formState.userConfig}
                   value={formState?.userConfig?.gridHeight}
-                  onChangeData={(e: { gridHeight: any }) =>
-                    handleFieldChange("gridHeight", e.gridHeight)
-                  }
+                  onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
                 />
               </div>
-
-        
 
               <div>
                 <ERPButton
                   title={t("left")}
-                  variant={
-                    formState?.userConfig?.alignment === "left"
-                      ? "primary"
-                      : "secondary"
-                  }
+                  variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
                   onClick={() => handleFieldChange("alignment", "left")}
                   className="mr-2"
                 />
+
                 <ERPButton
                   title={t("center")}
-                  variant={
-                    formState?.userConfig?.alignment === "center"
-                      ? "primary"
-                      : "secondary"
-                  }
+                  variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
                   onClick={() => handleFieldChange("alignment", "center")}
                   className="mr-2"
                 />
+
                 <ERPButton
                   title={t("right")}
-                  variant={
-                    formState?.userConfig?.alignment === "right"
-                      ? "primary"
-                      : "secondary"
-                  }
+                  variant={formState?.userConfig?.alignment === "right" ? "primary" : "secondary"}
                   onClick={() => handleFieldChange("alignment", "right")}
                 />
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-6 p-4 my-2">
-              <div className="flex items-center ">
-                <label
-                  htmlFor="outerPageBg"
-                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-                >
+              <div className="flex items-center">
+                <label htmlFor="outerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                   {t("page_background_color")}
                 </label>
                 <div className="ti-form-radio">
-                  <div
-                    className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                    style={{
-                      backgroundColor: `rgb(${formState.userConfig?.outerPageBg})`,
-                    }}
-                  >
+                  <div className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden" style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
                     <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                     <input
                       type="color"
@@ -314,10 +258,7 @@ export const AccTransactionUserConfig = () => {
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          handleFieldChange(
-                            "outerPageBg",
-                            `${rgb?.r},${rgb?.g},${rgb?.b}`
-                          );
+                          handleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -327,19 +268,11 @@ export const AccTransactionUserConfig = () => {
               </div>
 
               <div className="flex items-center">
-                <label
-                  htmlFor="innerPageBg"
-                  className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-                >
+                <label htmlFor="innerPageBg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
                   {t("form_background_color")}
                 </label>
                 <div className="ti-form-radio">
-                  <div
-                    className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                    style={{
-                      backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
-                    }}
-                  >
+                  <div className="relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden" style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
                     <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                     <input
                       type="color"
@@ -347,10 +280,7 @@ export const AccTransactionUserConfig = () => {
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          handleFieldChange(
-                            "innerPageBg",
-                            `${rgb?.r},${rgb?.g},${rgb?.b}`
-                          );
+                          handleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -359,8 +289,9 @@ export const AccTransactionUserConfig = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col ">
-              <p className="switcher-style-head ">{t("input_box_style")}:</p>
+
+            <div className="flex flex-col">
+              <p className="switcher-style-head">{t("input_box_style")}:</p>
               <InputBoxStyling
                 isInputBgColor
                 inputBox={formState.userConfig?.inputBoxStyle}
@@ -369,22 +300,13 @@ export const AccTransactionUserConfig = () => {
             </div>
           </>
         }
-       
-        footer={(
-          <div className=" h-[42px] pt-[4px] pb-[2px]  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">   
-                  <ERPButton
-                title={t("reset")}
-                onClick={resetThemeChange}
-                type="reset"
-              ></ERPButton>
-              <ERPButton
-                title={t("save_changes")}
-                onClick={postUserConfig}
-                variant="primary"
-              ></ERPButton>
-            </div>
-          )}
-      ></ERPModal>
+        footer={
+          <div className="h-[42px] pt-[4px] pb-[2px] w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+            <ERPButton title={t("reset")} onClick={resetThemeChange} type="reset" />
+            <ERPButton title={t("save_changes")} onClick={postUserConfig} variant="primary" />
+          </div>
+        }
+      />
     </>
   );
 };

@@ -357,7 +357,7 @@ export const useAccTransaction = (
     }
 
     if (
-      userSession.dbIdValue.trim() == "BAHAMDOON" &&
+      userSession.dbIdValue?.trim() == "BAHAMDOON" &&
       formState.isBahamdoonPOSReceipt != true
     ) {
       _formState.row.ledgerCode = "2768";
@@ -1238,7 +1238,7 @@ export const useAccTransaction = (
         );
         if (formState.printOnSave == true) {
           if (
-            userSession.dbIdValue.trim() == "BAHAMDOON" &&
+            userSession.dbIdValue?.trim() == "BAHAMDOON" &&
             formState.isBahamdoonPOSReceipt != true
           ) {
             printPaymentReceiptAdvice();

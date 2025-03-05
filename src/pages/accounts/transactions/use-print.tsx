@@ -33,7 +33,7 @@ const voucherTypeSet = new Set(Object.values(VoucherType));
 const adviceTem = ["PARP","RARP","Cheque"]
 const handleDirectPrint = async (template:any) => {
   let pdfDocument;
-  if (adviceTem.includes(template.templateKind)) {
+  if (adviceTem.includes(template.templateGroup)) {
     pdfDocument = (
       <AdviceTemplate
         template={template}
@@ -106,6 +106,7 @@ const handleDirectPrint = async (template:any) => {
           };
          
           dispatch(acctemplatesData(_template));
+
           // const template = formState.templatesData?.find(item=>item.templateGroup===voucherType) 
           // if(voucherTypeSet.has(voucherType)){
           //   dispatch(accFormStateHandleFieldChange({fields:{template:_template}}));
@@ -159,7 +160,7 @@ const handleDirectPrint = async (template:any) => {
       // } else{
       //   template = await fetchDefaultTemplates(voucherTypes)
       // }
-      console.log(template);
+      console.log("Advice Template",template);
     await handleDirectPrint(template);
    };
     const printCheque = async (voucher?: AccTransactionFormState) => {

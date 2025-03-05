@@ -3066,7 +3066,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         formState.billwiseDrCr != null &&
         formState.billwiseDrCr != "" && (
           <ERPModal
-            isFullHeight={true}
+           
             isOpen={formState.showbillwise ?? false}
             title={t("billwise")}
             initialMaximize={
@@ -3079,7 +3079,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 })
               );
             }}
-            onSubmit={() => { }}
+            isForm={true}
             width={1200}
             height={800}
             content={

@@ -115,7 +115,6 @@ export const AccTransactionUserConfig = () => {
         title={t("user_config")}
         width={1000}
         height={800}
-        minHeight={800}
         isForm={true}
         closeModal={() => setIsOpen(false)}
         content={

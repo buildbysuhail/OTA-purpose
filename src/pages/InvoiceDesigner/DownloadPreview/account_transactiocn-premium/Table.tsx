@@ -13,7 +13,6 @@ const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
     fontFamily:propertiesState?.font_family,
   };
   
-
   // Styles
   const styles = StyleSheet.create({
     table: {

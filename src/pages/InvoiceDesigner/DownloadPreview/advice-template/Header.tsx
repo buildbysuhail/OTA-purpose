@@ -90,7 +90,9 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
       width:"100%",
       height: headerState?.headerHeight ? `${headerState?.headerHeight}pt` : "auto",
       backgroundColor: template?.headerState?.bgColor || "#fff",
-      borderTop:"1.5px solid rgb(104, 101, 101)" 
+      borderTopWidth: headerState?.isFirstOnly ? 1.5 : 0,
+      borderTopColor: headerState?.isFirstOnly ? "rgb(104, 101, 101)" : "transparent",
+      borderTopStyle: headerState?.isFirstOnly ? "solid" : undefined,
       }}
       {...(headerState?.isFirstOnly ? {fixed:false} : {fixed: true})}>
   {/* Background Image */}

@@ -102,7 +102,7 @@ export  const Footer = ({ data, template,}: { data: any; template?: TemplateStat
      </View>
 
  </View>
- <Text style={labelStyles}>01/03/2025 09:52 AM </Text>
+
 </View>
     
   );

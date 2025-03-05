@@ -25,7 +25,7 @@ return (
     wrap
   >
     {/* Main Container */}
-    <View style={{ width: '100%',
+    <View style={{ width: '100%',flex: 1, flexDirection: 'column',
      padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
     }}>
    
@@ -34,10 +34,24 @@ return (
         {/* Content */}
         <Content data={data} template={template} currentBranch={currentBranch} />
         {/* Table */}
+        <View style={{flex:1}}>
         <Table data={data} template={template} />
+        </View>
+      
         {/* Footer */}
         <Footer data={data} template={template}  />
-   
+      <View style={{ width: '100%',display:"flex", flexDirection: 'row',justifyContent:"space-between",marginVertical:2
+     }}fixed>
+        <Text style={{fontSize: 8}}>01/03/2025 09:52 AM </Text>
+        <Text
+          style={{
+            fontSize: 8,
+          }}
+          fixed
+          render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+        />
+        </View>
+      
     </View>
   </Page>
 </Document>

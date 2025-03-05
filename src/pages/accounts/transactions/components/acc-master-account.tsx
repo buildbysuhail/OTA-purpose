@@ -1,4 +1,3 @@
-import { APIClient } from "../../../../helpers/api-client";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccVoucherElementProps } from "../acc-transaction-types";
 import { accFormStateHandleFieldChange, updateFormElement, } from "../reducer";
@@ -17,12 +16,11 @@ const AccMasterAccount = React.forwardRef<HTMLInputElement, AccMasterAccountrPro
     <>
       {formState.formElements.masterAccount.visible &&
         formState.formElements?.masterAccount?.accLedgerType != undefined && (
-          
           <ERPDataCombobox
-          ref={ref}
+            ref={ref}
             localInputBox={formState?.userConfig?.inputBoxStyle}
             isInModal={false}
-            className="w-full"
+            className={formState.userConfig?.isExpanded ? "w-[280px]" : "w-full"}
             id="masterAccount"
             label={t(formState.formElements.masterAccount.label)}
             value={formState.masterAccountID}

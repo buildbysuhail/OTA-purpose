@@ -1,6 +1,7 @@
 import { View, Text,StyleSheet } from "@react-pdf/renderer";
 import { AccountTransactionProps } from ".";
 import { TemplateState } from "../../Designer/interfaces";
+import { AccTransactionRow } from "../../../accounts/transactions/acc-transaction-types";
 
 
 const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
@@ -120,21 +121,21 @@ const Table = ({ data, template }: { data: any; template?: TemplateState,}) => {
 
         {/* Table Body */}
         <View style={styles.tbody}>
-        {data?.details.map((val: any, index: number) => (
+        {data?.details.map((item: AccTransactionRow, index: number) => (
               <View key={`tbr${index}`} style={styles.tr}>
                 {accTableState?.showLineItemNumber && (
                   <Text style={{ ...styles.td, width: accTableState?.lineItemNumberWidth }}>
-                    {val.slNo}{index + 1}
+                    {item.slNo}
                   </Text>
                 )}
                 {(accTableState?.showLedgerCode) && (
                   <Text style={{ ...styles.td, width: accTableState?.ledgerCodeWidth }}>
-                    INV-00{index + 1}
+                    {item.ledgerCode}
                   </Text>
                 )}
                 {accTableState?.showLedger && (
                   <Text style={{ ...styles.td, width: accTableState?.ledgerWidth }}>
-                    2024-01-{10 + index}
+                    {item.ledgerName}
                   </Text>
                 )}
                 {accTableState?.showAmount && (

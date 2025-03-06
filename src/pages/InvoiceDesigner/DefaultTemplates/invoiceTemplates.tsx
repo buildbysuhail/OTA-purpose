@@ -8,31 +8,31 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
     
         showLineItemNumber: true,
         lineItemNumberLabel: "Invoice Number",
-        lineItemNumberWidth: "15%",
+        lineItemNumberWidth: "",
             // Invoice Date Fields
         showInvoiceDate: true,
         InvoiceDateLabel: "Invoice Date",
-        InvoiceDateWidth: "15%",
+        InvoiceDateWidth: "",
       
         // Invoice Amount Fields
         showInvoiceAmount: true,
         InvoiceAmountLabel: "Invoice Amount",
-        InvoiceAmountWidth: "20%",
+        InvoiceAmountWidth: "",
       
         // Withholding Tax Fields
         showWithholdingTax: true,
         WithholdingTaxLabel: "Withholding Tax",
-        WithholdingTaxWidth: "15%",
+        WithholdingTaxWidth: "",
       
         // TCS Amount Fields
         showTCSAmount: true,
         TCSAmountLabel: "TCS Amount",
-        TCSAmountWidth: "15%",
+        TCSAmountWidth: "",
       
         // Payment Amount Fields
         showPaymentAmount: true,
         PaymentAmountLabel: "Payment Amount",
-        PaymentAmountWidth: "20%",
+        PaymentAmountWidth: "",
       },
       accTableState:{
         showLineItemNumber: true,

@@ -591,6 +591,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         }
       }
       const prevNation = formState.row.narration;
+      const templates = formState.templates;
+      const templatesData = formState.templatesData;
+      const template = formState.template;
       if (!isInvoker) {
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
@@ -1254,6 +1257,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       if (!isInvoker) {
         _formState.row.ledgerCode = "";
+      }
+      
+      _formState.templates = templates;
+      _formState.templatesData = templatesData;
+      const _template = templatesData?.find(x => x.templateGroup == _formState.transaction.master.voucherType);
+      if(_template != undefined) {
+        _formState.template = _template;
+      } else {
+        _formState.template = null
       }
       setAccTransVoucher(_formState, true);
       // Fetch templates asynchronously

@@ -65,25 +65,17 @@ const DayBookBillWise: FC<DayBookBillwiseProps> = ({
       showInPdf: true,
     },
     {
-      dataField: "vchNo",
-      caption: t("voucher_no"),
+      dataField: "costCenterName",
+      caption: t("cost_center"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <DrillDownCellTemplate
-            data={cellElement}
-            field="vchNo"
-          ></DrillDownCellTemplate>
-        )
-      },
     },
     {
       dataField: "particulars",
-      caption: t("account"),
+      caption: t("particulars"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

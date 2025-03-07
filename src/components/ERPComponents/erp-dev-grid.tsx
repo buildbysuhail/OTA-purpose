@@ -68,7 +68,7 @@ import { transactionRoutes } from "../common/content/transaction-routes";
 import { EllipsisVertical, FileUp, Plus, Printer } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
-
+import {useReportPrint} from "./reports/use-reports-print"
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -568,7 +568,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
-
+ const {printStatement} = useReportPrint()
+    
     //  // Determine the Actionswidth value
     //  const actionsWidth = childPopupPropsDynamic
     //   ? childPopupPropsDynamic().Actionswidth
@@ -1759,9 +1760,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 <Item>
                   <div className="relative">
                     <button
-                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] "
-                      // className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-8 h-8 rounded-full shadow-md hover:shadow-lg focus:outline-none "
-                      // onClick={handlePrintPdf}setMoreOptionVisible
+                      className="ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px]"
                       onClick={() => setMoreOptionVisible(!isMoreOptionVisible)}
                     >
                       <EllipsisVertical className="w-4 h-4" />
@@ -1781,11 +1780,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             <li>
                               <button
                                 className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                // onClick={}
+                                onClick={() => printStatement(
+                                  { 
+                                    orientation: preferences?.orientation ?? "portrait",
+                                    data:memoizedStore
+                                   }                                
+                                )}
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
-                                  {t("export_to_excel")}
+                                  {t("statement")}
                                 </span>
                               </button>
                             </li>
@@ -1797,7 +1801,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
-                                  {t("export_to_excel")}
+                                  {t("customer_balance")}
                                 </span>
                               </button>
                             </li>
@@ -1809,7 +1813,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
-                                  {t("export_to_excel")}
+                                  {t("billwise_details")}
                                 </span>
                               </button>
                             </li>

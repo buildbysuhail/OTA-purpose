@@ -12,7 +12,7 @@ interface AccVoucherNoPrefixProps extends AccVoucherElementProps {
   loadAndSetAccTransVoucher: (usingManualInvNumber?: boolean, voucherNumber?: number, voucherPrefix?: string, voucherType?: string, formType?: string, manualInvoiceNumber?: string, accTransactionMasterID?: number, mode?: "increment" | "decrement" | undefined, skipPrompt?: boolean | false, setVoucherNo?: boolean | false) => Promise<boolean>;
 }
 
-const AccVoucherNoPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>(({
+const AccVoucherNo = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>(({
 
   formState,
   dispatch,
@@ -23,26 +23,6 @@ const AccVoucherNoPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefix
 
   return (
     <>
-      {formState.formElements.voucherPrefix.visible && (
-        <ERPInput
-          localInputBox={formState?.userConfig?.inputBoxStyle}
-          id="master_voucherPrefix"
-          label={t(formState.formElements.voucherPrefix.label)}
-          value={formState.transaction.master.voucherPrefix}
-          className="max-w-[100px]"
-          onChange={(e) =>
-            dispatch(
-              accFormStateTransactionMasterHandleFieldChange({
-                fields: { voucherPrefix: e.target?.value },
-              })
-            )
-          }
-          disabled={
-            formState.formElements.voucherPrefix?.disabled ||
-            formState.formElements.pnlMasters?.disabled
-          }
-        />
-      )}
 
       {formState.formElements.voucherNumber.visible && (
         <>
@@ -116,7 +96,7 @@ const AccVoucherNoPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefix
   );
 });
 
-export default React.memo(AccVoucherNoPrefix);
+export default React.memo(AccVoucherNo);
 
 
 

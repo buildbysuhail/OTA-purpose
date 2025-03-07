@@ -95,7 +95,6 @@ import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-d
 import UnsavedChangesModal from "./unsavedChangesModal";
 import PartySelectionModal from "./party-selection-modal";
 import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
-import AccVoucherNoPrefix from "./components/acc-voucher-no-prefix";
 import AccMasterAccount from "./components/acc-master-account";
 import AccDrCrJv from "./components/acc-drcr-jv";
 import AccNotes from "./components/acc-notes";
@@ -122,6 +121,8 @@ import Ledger from "./components/ledger";
 import LedgerCode from "./components/ledger-code";
 import NameOnCheque from "./components/name-on-cheque";
 import Narration from "./components/narration";
+import AccVoucherPrefix from "./components/acc-voucher-prefix";
+import AccVoucherNo from "./components/acc-voucher-no";
 interface BilledItem {
   id?: number;
   name: string;
@@ -2225,8 +2226,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <>
                   {/* Expanded View - First Row */}
                   <div className="flex flex-wrap items-center gap-4">
-                    <AccVoucherNoPrefix
-                      ref={voucherNumberRef}
+                  <AccVoucherPrefix
+                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleKeyDown={handleKeyDown}
+                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                      t={t}
+                    />
+                    <AccVoucherNo
+                      ref={voucherNumberRef} // ✅ Pass ref to the child
                       formState={formState}
                       dispatch={dispatch}
                       handleKeyDown={handleKeyDown}
@@ -2473,14 +2482,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <div className="">
                     <div className="grid grid-cols-1 leading-none lg:w-3/4">
                       <div className="flex items-center gap-2">
-                        <AccVoucherNoPrefix
-                          ref={voucherNumberRef}
-                          formState={formState}
-                          dispatch={dispatch}
-                          handleKeyDown={handleKeyDown}
-                          loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                          t={t}
-                        />
+                      <AccVoucherPrefix
+                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleKeyDown={handleKeyDown}
+                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                      t={t}
+                    />
+                    <AccVoucherNo
+                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleKeyDown={handleKeyDown}
+                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                      t={t}
+                    />
                       </div>
                       <div className="flex items-center">
                         <AccMasterAccount
@@ -2870,7 +2887,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           )}
         </div>
       )}
-      {deviceInfo?.isMobile && (
+{deviceInfo?.isMobile && (
         <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
           {/* Sale Header */}
           <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
@@ -2882,31 +2899,35 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
           {/* Scrollable Content */}
           <div className="flex flex-col mt-[58px] w-full overflow-scroll"></div>
-          <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
-            <div className="flex-1  px-2  rounded-md">
-              <AccVoucherNoPrefix
-                ref={voucherNumberRef} // ✅ Pass ref to the child
+          <div className="flex items-center justify-between gap-2 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
+            <div className="flex items-center justify-center gap-2">
+              <AccVoucherPrefix
+                ref={voucherNumberRef} 
                 formState={formState}
                 dispatch={dispatch}
                 handleKeyDown={handleKeyDown}
                 loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
                 t={t}
               />
+              <AccVoucherNo
+                      ref={voucherNumberRef} 
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleKeyDown={handleKeyDown}
+                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                      t={t}
+                    />
             </div>
 
             {/* Centered divider */}
-            <div className="border-gray-300 border-l h-12"></div>
+            {/* <div className="border-gray-300 border-l h-12"></div> */}
 
-            <div className="flex-1  px-2 rounded-md">
-              <label className="block mb-0 font-medium text-center text-sm text-gray-700">
-                {t("date")}
-              </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  className="bg-transparent px-3 py-2 w-full text-center border-none rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[10px]"
+            <div>
+            <AccTransactionDate
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
                 />
-              </div>
             </div>
           </div>
 
@@ -2933,49 +2954,42 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </select>
         </div> */}
               <div className="mb-1">
+
                 <AccMasterAccount
-                  ref={masterAccountRef}
+                ref={masterAccountRef}
                   formState={formState}
                   dispatch={dispatch}
                   getFormattedValue={getFormattedValue}
                   t={t}
                 />
               </div>
-
               <div className="mb-1">
+
                 <AccDrCrJv
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-
+              
               <div className="mb-1">
-                <AccNotes
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-              </div>
 
-              <div className="mb-1">
                 <AccCurrencyID
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-
               <div className="mb-1">
+
                 <AccCurrencyRate
                   formState={formState}
                   dispatch={dispatch}
                   t={t}
                 />
               </div>
-
               <div className="mb-1">
+
                 <AccEdit
                   formState={formState}
                   enableCombo={enableCombo}
@@ -2983,32 +2997,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   dispatch={dispatch}
                 />
               </div>
-
+             
               <div className="mb-1">
-                <AccReferenceNumber
-                  formState={formState}
-                  dispatch={dispatch}
-                  handleLoadByRefNo={handleLoadByRefNo}
-                  ref={refNoRef}
-                  t={t}
-                />
-              </div>
 
-              <div className="mb-1">
-                <AccTransactionDate
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
+                
               </div>
-
-              <div className="mb-1">
-                <AccReferenceDate
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                />
-              </div>
+              
               <div className="mb-1">
 
                 <AccEmployeeID
@@ -3018,15 +3012,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   handleKeyDown={handleKeyDown}
                 />
               </div>
-              <div className="mb-1">
-
-                <AccRemarks
-                  ref={remarksRef}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                />
-              </div>
+              
               <div className="mb-1">
 
                 <AccProject
@@ -3035,30 +3021,170 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
-              {/* <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Remark"
-            // className="bg-white p-2 border rounded w-full"
-            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-          />
-        </div> */}
               <div className="mb-1">
-                <ERPInput
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="autoUpdateReleaseUpTo"
-                  label={t("remark")}
-                  type="text"
-                  data={settings}
-                  value={settings?.autoUpdateReleaseUpTo}
-                  onChangeData={(data) =>
-                    handleFieldChange(
-                      "autoUpdateReleaseUpTo",
-                      data.autoUpdateReleaseUpTo
-                    )
-                  }
+
+                <AccRemarks
+                ref={remarksRef}
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
                 />
               </div>
+              <div className="mb-1">
+              <LedgerCode
+                ref={ledgerCodeRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <Ledger
+                ref={ledgerIdRef}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  triggerEffect={triggerEffect}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <Amount
+                ref={amountRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <Drcr
+                ref={drCrRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <Discount
+                ref={discountRef}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <Narration
+                ref={narrationRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+              <CostCentre
+                ref={costCenterRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+
+              </div>
+              <div className="mb-1">
+              <NameOnCheque
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <BankName
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <ChequeNumber
+                  ref={chequeNumberRef}
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <BankDate
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <ChequeStatus
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <BankCharge
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    t={t}
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              <AccTaxDetails
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    t={t}
+                    partyNameRef={partyNameRef}
+                    taxNoRef={taxNoRef}
+                    taxableAmountRef={taxableAmountRef}
+
+                  />
+              
+
+              </div>
+              <div className="mb-1">
+              
+
+              </div>
+              
 
               <div className="flex justify-center mb-2">
                 <button
@@ -3080,35 +3206,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               />
             </div> */}
                   <div className="mb-1">
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="autoUpdateReleaseUpTo"
-                      label={t("ref_no")}
-                      type="text"
-                      data={settings}
-                      value={settings?.autoUpdateReleaseUpTo}
-                      onChangeData={(data) =>
-                        handleFieldChange(
-                          "autoUpdateReleaseUpTo",
-                          data.autoUpdateReleaseUpTo
-                        )
-                      }
-                    />
+                  
+
+                  <AccReferenceNumber
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleLoadByRefNo={handleLoadByRefNo}
+                    ref={refNoRef}
+                    t={t}
+                  />
+
                   </div>
                   <div className="mb-1">
-                    <label
-                      className="block font-medium text-gray-700 text-sm"
-                      htmlFor=""
-                    >
-                      {t("ref_date")}
-                    </label>
-                    <input
-                      type="date"
-                      placeholder={t("ref_date")}
-                      // className="bg-white p-2 border rounded w-full"
-                      className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                    />
-                  </div>
+
+                <AccReferenceDate
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                />
+              </div>
                   {/* <div className="mb-4">
               <label
                 htmlFor="cashacc"
@@ -3160,20 +3276,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               />
             </div> */}
                   <div className="mb-2">
-                    <ERPInput
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="autoUpdateReleaseUpTo"
-                      label={t("notes")}
-                      type="text"
-                      data={settings}
-                      value={settings?.autoUpdateReleaseUpTo}
-                      onChangeData={(data) =>
-                        handleFieldChange(
-                          "autoUpdateReleaseUpTo",
-                          data.autoUpdateReleaseUpTo
-                        )
-                      }
-                    />
+                  <AccNotes
+                    handleKeyDown={handleKeyDown}
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
                   </div>
                 </div>
               )}

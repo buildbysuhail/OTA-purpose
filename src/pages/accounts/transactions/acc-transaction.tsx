@@ -2220,8 +2220,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   formState.userConfig?.gridMaxWidth
                   ? "none"
                   : "1px solid #ccc",
-            }}
-          >
+                  marginTop:"2.5rem"
+            }}>
             <div className={formState.userConfig?.isExpanded ? "grid grid-rows-2 !mt-[35px]" : "grid grid-cols-2 gap-8 !mt-[35px]"}>
               {formState.userConfig?.isExpanded ? (
                 <>
@@ -2450,7 +2450,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         </div>
                         <div className="flex items-end text-end">
                           <BtnAdd
-                          ref={btnAddRef}
+                            ref={btnAddRef}
                             formState={formState}
                             dispatch={dispatch}
                             handleKeyDown={handleKeyDown}
@@ -2739,7 +2739,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     </div>
                     <div className="flex items-end text-end">
                       <BtnAdd
-                      ref={btnAddRef}
+                        ref={btnAddRef}
                         formState={formState}
                         dispatch={dispatch}
                         handleKeyDown={handleKeyDown}
@@ -3632,7 +3632,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div> */}
       {/* <div className="flex items-center justify-between z-10 fixed bottom-0 bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] p-2 "> */}
       <div
-        className="flex items-center justify-between h-[65px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg w-[-webkit-fill-available] lg:px-8 py-2 md:px-2"
+        className="flex items-center justify-between h-[65px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",

@@ -10,29 +10,21 @@ import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { Ellipsis } from "lucide-react";
+
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
   GridPreferenceChooserAccTrance?: boolean
 }
+
 const api = new APIClient();
-
-const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
-  gridId,
-  columns,
-  onApplyPreferences,
-  GridPreferenceChooserAccTrance
-}) => {
-
+const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences, GridPreferenceChooserAccTrance }) => {
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
   const [searchCols, setSearchCols] = useState<String>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-
   /* ########################################################################################### */
-
   const { t } = useTranslation('main');
 
   const onChange = (e: any) => {
@@ -60,13 +52,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
     dragItem.current = null;
     dragOverItem.current = null;
   };
-
   /* ########################################################################################### */
-
-
   /* ########################################################################################### */
-
-
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
 
   useEffect(() => {
@@ -143,7 +130,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
     onChange(preferences);
   }
 
-
   // ==================================================================
   const onClose = () => { };
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
@@ -157,18 +143,18 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
-      {GridPreferenceChooserAccTrance ?(
-              <button onClick={() => setIsOpen(true)} 
-                 className=""
-               >
-                 <Ellipsis className="text-[#0ea5e9]"/>
-               </button> 
-      ):(
-      <button onClick={() => setIsOpen(true)} className={`ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] `}>
-        <i className={`ri-apps-line`}></i>
-      </button>
-      )}
-      
+      {
+        GridPreferenceChooserAccTrance ? (
+          <button onClick={() => setIsOpen(true)} className="mt-[15px]">
+            <Ellipsis className="text-[#0ea5e9]" />
+          </button>
+        ) : (
+          <button onClick={() => setIsOpen(true)} className={`ti-btn dark:bg-dark-bg-header dark:text-dark-text rounded-[2px] `}>
+            <i className={`ri-apps-line`}></i>
+          </button>
+        )
+      }
+
       <ERPModal
         isForm
         isFullHeight={true}
@@ -239,8 +225,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                         // onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target?.value) || undefined)}
                         // In erp-gridpreference.tsx
                         onChange={(e) => handleColumnPreferenceChange(
-                          column.dataField, 
-                          'width', 
+                          column.dataField,
+                          'width',
                           Math.max(50, parseInt(e.target.value) || 100) // Ensure minimum width of 50
                         )}
                         disabled={column.isLocked}
@@ -315,8 +301,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         )}
 
         footer={(
-        <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">   
-                 <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
+          <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
+            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
               {t("cancel")}
             </ERPSubmitButton>
             <ERPSubmitButton type="button" className=" max-w-[115px]"

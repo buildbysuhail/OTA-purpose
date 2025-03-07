@@ -123,6 +123,7 @@ import NameOnCheque from "./components/name-on-cheque";
 import Narration from "./components/narration";
 import AccVoucherPrefix from "./components/acc-voucher-prefix";
 import AccVoucherNo from "./components/acc-voucher-no";
+import BtnAdd from "./components/btn-add";
 interface BilledItem {
   id?: number;
   name: string;
@@ -1259,11 +1260,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       if (!isInvoker) {
         _formState.row.ledgerCode = "";
       }
-      
+
       _formState.templates = templates;
       _formState.templatesData = templatesData;
       const _template = templatesData?.find(x => x.templateGroup == _formState.transaction.master.voucherType);
-      if(_template != undefined) {
+      if (_template != undefined) {
         _formState.template = _template;
       } else {
         _formState.template = null
@@ -2225,9 +2226,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               {formState.userConfig?.isExpanded ? (
                 <>
                   {/* Expanded View - First Row */}
-                  <div className="flex flex-wrap items-center gap-4">
-                  <AccVoucherPrefix
-                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                  <div className="flex flex-wrap items-center gap-1">
+                    <AccVoucherPrefix
+                      ref={voucherNumberRef}
                       formState={formState}
                       dispatch={dispatch}
                       handleKeyDown={handleKeyDown}
@@ -2235,7 +2236,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       t={t}
                     />
                     <AccVoucherNo
-                      ref={voucherNumberRef} // ✅ Pass ref to the child
+                      ref={voucherNumberRef}
                       formState={formState}
                       dispatch={dispatch}
                       handleKeyDown={handleKeyDown}
@@ -2306,7 +2307,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     />
                   </div>
                   <>
-                    <div className="flex flex-wrap items-center gap-4 leading-none">
+                    <div className={formState.userConfig?.isExpanded ? "flex flex-wrap gap-1 leading-none" : "flex flex-wrap items-center gap-4 leading-none"}>
                       <LedgerCode
                         ref={ledgerCodeRef}
                         handleKeyDown={handleKeyDown}
@@ -2414,7 +2415,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       />
                     </div>
 
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-between mt-[-1.5rem]">
                       <div className="flex gap-4">
                         <span className="text-[#2563eb] font-bold self-center">
                           {t("group_name")}: {formState.ledgerData?.accGroupName}
@@ -2448,29 +2449,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             )}
                         </div>
                         <div className="flex items-end text-end">
-                          {formState.formElements.btnAdd.visible === true && (
-                            <ERPButton
-                              localInputBox={formState?.userConfig?.inputBoxStyle}
-                              ref={btnAddRef}
-                              title={t(formState.formElements.btnAdd.label)}
-                              variant="primary"
-                              loading={formState.rowProcessing}
-                              type="button"
-                              onClick={() => addOrEditRow()}
-                              disableEnterNavigation
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  addOrEditRow();
-                                }
-                              }}
-                              disabled={
-                                formState.formElements.btnAdd.disabled === true ||
-                                formState.ledgerBillWiseLoading ||
-                                formState.ledgerIsBillWiseAdjustExistLoading ||
-                                formState.formElements.pnlMasters?.disabled
-                              }
-                            />
-                          )}
+                          <BtnAdd
+                            formState={formState}
+                            dispatch={dispatch}
+                            handleKeyDown={handleKeyDown}
+                            rowProcessing={formState.rowProcessing}
+                            addOrEditRow={addOrEditRow}
+                            t={t}
+                          />
                         </div>
                       </div>
                     </div>
@@ -2482,22 +2468,22 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   <div className="">
                     <div className="grid grid-cols-1 leading-none lg:w-3/4">
                       <div className="flex items-center gap-2">
-                      <AccVoucherPrefix
-                      ref={voucherNumberRef} // ✅ Pass ref to the child
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                      t={t}
-                    />
-                    <AccVoucherNo
-                      ref={voucherNumberRef} // ✅ Pass ref to the child
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                      t={t}
-                    />
+                        <AccVoucherPrefix
+                          ref={voucherNumberRef} // ✅ Pass ref to the child
+                          formState={formState}
+                          dispatch={dispatch}
+                          handleKeyDown={handleKeyDown}
+                          loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                          t={t}
+                        />
+                        <AccVoucherNo
+                          ref={voucherNumberRef} // ✅ Pass ref to the child
+                          formState={formState}
+                          dispatch={dispatch}
+                          handleKeyDown={handleKeyDown}
+                          loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                          t={t}
+                        />
                       </div>
                       <div className="flex items-center">
                         <AccMasterAccount
@@ -2751,29 +2737,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       />
                     </div>
                     <div className="flex items-end text-end">
-                      {formState.formElements.btnAdd.visible === true && (
-                        <ERPButton
-                          localInputBox={formState?.userConfig?.inputBoxStyle}
-                          ref={btnAddRef}
-                          title={t(formState.formElements.btnAdd.label)}
-                          variant="primary"
-                          loading={formState.rowProcessing}
-                          type="button"
-                          onClick={() => addOrEditRow()}
-                          disableEnterNavigation
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              addOrEditRow();
-                            }
-                          }}
-                          disabled={
-                            formState.formElements.btnAdd.disabled === true ||
-                            formState.ledgerBillWiseLoading ||
-                            formState.ledgerIsBillWiseAdjustExistLoading ||
-                            formState.formElements.pnlMasters?.disabled
-                          }
-                        />
-                      )}
+                      <BtnAdd
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        rowProcessing={formState.rowProcessing}
+                        addOrEditRow={addOrEditRow}
+                        t={t}
+                      />
                     </div>
                   </div>
                 </div>
@@ -2887,7 +2858,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           )}
         </div>
       )}
-{deviceInfo?.isMobile && (
+      {deviceInfo?.isMobile && (
         <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
           {/* Sale Header */}
           <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
@@ -2902,7 +2873,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           <div className="flex items-center justify-between gap-2 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
             <div className="flex items-center justify-center gap-2">
               <AccVoucherPrefix
-                ref={voucherNumberRef} 
+                ref={voucherNumberRef}
                 formState={formState}
                 dispatch={dispatch}
                 handleKeyDown={handleKeyDown}
@@ -2910,24 +2881,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 t={t}
               />
               <AccVoucherNo
-                      ref={voucherNumberRef} 
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                      t={t}
-                    />
+                ref={voucherNumberRef}
+                formState={formState}
+                dispatch={dispatch}
+                handleKeyDown={handleKeyDown}
+                loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                t={t}
+              />
             </div>
 
             {/* Centered divider */}
             {/* <div className="border-gray-300 border-l h-12"></div> */}
 
             <div>
-            <AccTransactionDate
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
+              <AccTransactionDate
+                formState={formState}
+                dispatch={dispatch}
+                t={t}
+              />
             </div>
           </div>
 
@@ -2956,7 +2927,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccMasterAccount
-                ref={masterAccountRef}
+                  ref={masterAccountRef}
                   formState={formState}
                   dispatch={dispatch}
                   getFormattedValue={getFormattedValue}
@@ -2971,7 +2942,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
-              
+
               <div className="mb-1">
 
                 <AccCurrencyID
@@ -2997,12 +2968,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   dispatch={dispatch}
                 />
               </div>
-             
+
               <div className="mb-1">
 
-                
+
               </div>
-              
+
               <div className="mb-1">
 
                 <AccEmployeeID
@@ -3012,7 +2983,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   handleKeyDown={handleKeyDown}
                 />
               </div>
-              
+
               <div className="mb-1">
 
                 <AccProject
@@ -3024,15 +2995,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="mb-1">
 
                 <AccRemarks
-                ref={remarksRef}
+                  ref={remarksRef}
                   dispatch={dispatch}
                   formState={formState}
                   t={t}
                 />
               </div>
               <div className="mb-1">
-              <LedgerCode
-                ref={ledgerCodeRef}
+                <LedgerCode
+                  ref={ledgerCodeRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -3041,8 +3012,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <Ledger
-                ref={ledgerIdRef}
+                <Ledger
+                  ref={ledgerIdRef}
                   handleFieldKeyDown={handleFieldKeyDown}
                   triggerEffect={triggerEffect}
                   handleKeyDown={handleKeyDown}
@@ -3053,8 +3024,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <Amount
-                ref={amountRef}
+                <Amount
+                  ref={amountRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -3063,8 +3034,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <Drcr
-                ref={drCrRef}
+                <Drcr
+                  ref={drCrRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -3073,8 +3044,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <Discount
-                ref={discountRef}
+                <Discount
+                  ref={discountRef}
                   handleKeyDown={handleKeyDown}
                   focusDiscount={focusDiscount}
                   focusAmount={focusAmount}
@@ -3085,8 +3056,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <Narration
-                ref={narrationRef}
+                <Narration
+                  ref={narrationRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -3095,8 +3066,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <CostCentre
-                ref={costCenterRef}
+                <CostCentre
+                  ref={costCenterRef}
                   handleKeyDown={handleKeyDown}
                   formState={formState}
                   dispatch={dispatch}
@@ -3106,85 +3077,85 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
               <div className="mb-1">
-              <NameOnCheque
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-              
+                <NameOnCheque
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <BankName
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-              
+                <BankName
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <ChequeNumber
+                <ChequeNumber
                   ref={chequeNumberRef}
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-              
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <BankDate
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-              
+                <BankDate
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <ChequeStatus
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
-              
+                <ChequeStatus
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <BankCharge
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    t={t}
-                  />
-              
+                <BankCharge
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleKeyDown={handleKeyDown}
+                  t={t}
+                />
+
 
               </div>
               <div className="mb-1">
-              <AccTaxDetails
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleKeyDown={handleKeyDown}
-                    t={t}
-                    partyNameRef={partyNameRef}
-                    taxNoRef={taxNoRef}
-                    taxableAmountRef={taxableAmountRef}
+                <AccTaxDetails
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleKeyDown={handleKeyDown}
+                  t={t}
+                  partyNameRef={partyNameRef}
+                  taxNoRef={taxNoRef}
+                  taxableAmountRef={taxableAmountRef}
 
-                  />
-              
+                />
+
 
               </div>
               <div className="mb-1">
-              
+
 
               </div>
-              
+
 
               <div className="flex justify-center mb-2">
                 <button
@@ -3206,25 +3177,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               />
             </div> */}
                   <div className="mb-1">
-                  
 
-                  <AccReferenceNumber
-                    formState={formState}
-                    dispatch={dispatch}
-                    handleLoadByRefNo={handleLoadByRefNo}
-                    ref={refNoRef}
-                    t={t}
-                  />
+
+                    <AccReferenceNumber
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleLoadByRefNo={handleLoadByRefNo}
+                      ref={refNoRef}
+                      t={t}
+                    />
 
                   </div>
                   <div className="mb-1">
 
-                <AccReferenceDate
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                />
-              </div>
+                    <AccReferenceDate
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                    />
+                  </div>
                   {/* <div className="mb-4">
               <label
                 htmlFor="cashacc"
@@ -3276,12 +3247,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               />
             </div> */}
                   <div className="mb-2">
-                  <AccNotes
-                    handleKeyDown={handleKeyDown}
-                    formState={formState}
-                    dispatch={dispatch}
-                    t={t}
-                  />
+                    <AccNotes
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
                   </div>
                 </div>
               )}
@@ -3417,7 +3388,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         formState.billwiseDrCr != null &&
         formState.billwiseDrCr != "" && (
           <ERPModal
-           
+
             isOpen={formState.showbillwise ?? false}
             title={t("billwise")}
             initialMaximize={

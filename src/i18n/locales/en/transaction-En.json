@@ -317,5 +317,7 @@
   "voucher_in_use":"Voucher in use",
 
   "payment_type":"Payment type",
-  "cash_bank_account":"Cash bank account"
+  "cash_bank_account":"Cash bank account",
+  "reset":"Reset",
+  "focus_button_color":"Focus button color"
 }

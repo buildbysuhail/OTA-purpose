@@ -28,11 +28,11 @@ import { ArrowBigLeftDash } from "lucide-react";
 
 interface SidebarProps {
   type:
-    | "erp"
-    | "account-settings"
-    | "workspace-settings"
-    | "settings"
-    | "reports";
+  | "erp"
+  | "account-settings"
+  | "workspace-settings"
+  | "settings"
+  | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
@@ -128,7 +128,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
-                  undefined
+                undefined
             )
           ) {
             item.visible = false;
@@ -145,8 +145,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
         menuitems.flatMap((item: any) =>
           item.children
             ? item.children
-                .filter((child: any) => child.rights !== undefined)
-                .map((child: any) => child.rights)
+              .filter((child: any) => child.rights !== undefined)
+              .map((child: any) => child.rights)
             : []
         ),
         UserAction.Show
@@ -165,7 +165,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
               (route) =>
                 route.title === item.title &&
                 route.countries.find((x) => x == userSession.countryId) !=
-                  undefined
+                undefined
             )
           ) {
             item.visible = false;
@@ -497,7 +497,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (!event?.ctrlKey) {
         for (const item of MENUITEMS) {
           if (item === targetObject) {
-            
+
             item.active = true;
             item.selected = true;
             // setMenuAncestorsActive(MENUITEMS,item);
@@ -545,7 +545,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       if (hasParentLevel > 2) {
         hasParent = true;
       }
-      
+
       parent.active = true;
       parent.selected = true;
       hasParentLevel += 1;
@@ -696,10 +696,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
             if (theme.dir == "rtl") {
               if (
                 siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
-                  0 &&
+                0 &&
                 outterUlWidth < window.innerWidth &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -708,10 +708,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
             } else {
               if (
                 outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
-                  window.innerWidth &&
+                window.innerWidth &&
                 siblingULRect.right >= 0 &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -855,40 +855,40 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                         levelone.menutitle
                           ? "slide__category"
                           : levelone.menutitle_lg
-                          ? "slide__category slide__category__lg"
-                          : ""
-                      } ${
-                        levelone.hasTopBorder === true
+                            ? "slide__category slide__category__lg"
+                            : ""
+                        } ${
+                          levelone.hasTopBorder === true
                           ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
-                      } ${levelone.type === "link" ? "slide" : ""}
+                        } ${levelone.type === "link" ? "slide" : ""}
                          ${levelone.type === "sub" ? "slide has-sub" : ""} ${
-                        levelone?.active ? "open" : ""
-                      } ${levelone?.selected ? "active" : ""}`}
+                          levelone?.active ? "open" : ""
+                        } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
                         <span className="category-name flex">
-                        {levelone.menutitle === "main" ? (
-                          levelone.menutitle
-                          
-                        ) : (
-                          <div className="flex justify-between w-full">
-                          <span className="category-name flex items-center space-x-1">
-                            {levelone.menutitle}
-                          </span>
-                          <Link to={import.meta.env.BASE_URL} className="ml-auto flex items-center space-x-1">
-                            <ArrowBigLeftDash size={15} className="text-[#ffffff]" />
-                            <span className="text-[#ffffff]">Home</span>
-                          </Link>
-                        </div>                        
-                        )}
-                      </span>
+                          {levelone.menutitle === "main" ? (
+                            levelone.menutitle
+
+                          ) : (
+                            <div className="flex justify-between w-full">
+                              <span className="category-name flex items-center space-x-1">
+                                 {levelone.menutitle}
+                              </span>
+                              <Link to={import.meta.env.BASE_URL} className="ml-auto flex items-center space-x-1">
+                                <ArrowBigLeftDash size={15} className="text-[#ffffff]" />
+                                <span className="text-[#ffffff]">Home</span>
+                              </Link>
+                            </div>
+                          )}
+                        </span>
                       ) : (
                         ""
                       )}
                       {levelone.menutitle_lg ? (
                         <span className="category-name">
-                          {levelone.menutitle_lg}
+                          {t(levelone.menutitle_lg)}
                         </span>
                       ) : (
                         ""
@@ -898,7 +898,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                           to={levelone.path}
                           className={`side-menu__item ${
                             levelone.selected ? "active" : ""
-                          }`}
+                            }`}
                         >
                           {levelone.icon}
                           <span className="side-menu__label">
@@ -958,7 +958,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
                           <div className="flex-grow p-2">
                             <div className="flex items-center !justify-between">
                               <h6 className="mb-1  text-[.6rem]">
-                                <p className="mb-1  text-[.8rem]">
+                                <p className="mb-1  text-[.8rem] truncate w-40">
                                   {userSession?.displayName}
                                 </p>
                                 <p>{userSession?.email}</p>

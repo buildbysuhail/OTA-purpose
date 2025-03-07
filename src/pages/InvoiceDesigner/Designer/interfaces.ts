@@ -1023,31 +1023,31 @@ export const initialTemplateState: ActionState<TemplateState> = {
     
       showLineItemNumber: true,
       lineItemNumberLabel: "Invoice Number",
-      lineItemNumberWidth: "15%",
+      lineItemNumberWidth: "auto",
           // Invoice Date Fields
       showInvoiceDate: true,
       InvoiceDateLabel: "Invoice Date",
-      InvoiceDateWidth: "15%",
+      InvoiceDateWidth: "auto",
     
       // Invoice Amount Fields
       showInvoiceAmount: true,
       InvoiceAmountLabel: "Invoice Amount",
-      InvoiceAmountWidth: "20%",
+      InvoiceAmountWidth: "auto",
     
       // Withholding Tax Fields
       showWithholdingTax: true,
       WithholdingTaxLabel: "Withholding Tax",
-      WithholdingTaxWidth: "15%",
+      WithholdingTaxWidth: "auto",
     
       // TCS Amount Fields
       showTCSAmount: true,
       TCSAmountLabel: "TCS Amount",
-      TCSAmountWidth: "15%",
+      TCSAmountWidth: "auto",
     
       // Payment Amount Fields
       showPaymentAmount: true,
       PaymentAmountLabel: "Payment Amount",
-      PaymentAmountWidth: "20%",
+      PaymentAmountWidth: "auto",
     }
   },
 };

@@ -81,8 +81,8 @@ const DayBookSummary = () => {
       }
     },
     {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "amount",
+      caption: t('amount'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -90,14 +90,14 @@ const DayBookSummary = () => {
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
-          const balance = cellElement.data?.debit;
+          const balance = cellElement.data?.amount;
           const isDebit = balance >= 0;
           const value =
             balance == null
               ? ""
               : balance < 0
                 ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
+                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) :getFormattedValue(balance,false,2) ;
 
           return {
             ...exportCell,
@@ -117,101 +117,101 @@ const DayBookSummary = () => {
         }
         else {
           return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.debit == null ? '0' : cellElement.data.debit < 0 ? (-1 * cellElement.data.debit) : cellElement.data.particulars === "TOTAL" ?
-              getFormattedValue(cellElement.data.debit) : cellElement.data.debit}`}
+            {`${cellElement.data?.amount == null ? '0' : cellElement.data.amount < 0 ? (-1 * cellElement.data.amount) : cellElement.data.particulars === "TOTAL" ?
+              getFormattedValue(cellElement.data.amount) :getFormattedValue(cellElement.data.amount,false,2) }`}
           </span>)
         }
       }
     },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 250,
-      showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.credit;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : balance < 0
-                ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
-                : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
+    // {
+    //   dataField: "credit",
+    //   caption: t("credit"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 250,
+    //   showInPdf: true,
+    //   cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+    //     if (exportCell != undefined) {
+    //       const balance = cellElement.data?.credit;
+    //       const isDebit = balance >= 0;
+    //       const value =
+    //         balance == null
+    //           ? ""
+    //           : balance < 0
+    //             ? cellElement.data.particulars === "TOTAL" ? getFormattedValue(-1 * balance) : (-1 * balance)
+    //             : cellElement.data.particulars === "TOTAL" ? getFormattedValue(balance) : balance;
 
-          return {
-            ...exportCell,
-            text: value,
-            bold: true,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            },
-          };
-        }
-        else {
-          return (
-            <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-              {`${cellElement.data?.credit == null ? '0' : cellElement.data.credit < 0 ? (-1 * cellElement.data.credit) : cellElement.data.particulars === "TOTAL" ?
-                getFormattedValue(cellElement.data.credit) : cellElement.data.credit}`}
-            </span>
-          )
-        }
-      }
-    },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      visible: false,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 250,
-      showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const balance = cellElement.data?.balance;
-          const isDebit = balance >= 0;
-          const value =
-            balance == null
-              ? ""
-              : balance < 0
-                ? getFormattedValue(-1 * balance) + 'Cr'
-                : getFormattedValue(balance) + 'Dr';
-          return {
-            ...exportCell,
-            text: value,
-            bold: true,
-            alignment: "right",
-            alignmentExcel: { horizontal: 'right' },
-            textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
-            font: {
-              ...exportCell.font,
-              color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
-              size: 10,
-              style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
-              bold: cellElement.data.particulars === "TOTAL" ? true : false,
-            },
-          };
-        }
-        else {
-          return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
-            {`${cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) :
-              getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' :
-                cellElement.data?.balance >= 0 ? 'Dr' : 'Cr'}`}
-          </span>)
-        }
-      }
-    },
+    //       return {
+    //         ...exportCell,
+    //         text: value,
+    //         bold: true,
+    //         alignment: "right",
+    //         alignmentExcel: { horizontal: 'right' },
+    //         textColor: cellElement.data.particulars === "TOTAL" ? '#FF0000' : '',
+    //         font: {
+    //           ...exportCell.font,
+    //           color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+    //           size: 10,
+    //           style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+    //           bold: cellElement.data.particulars === "TOTAL" ? true : false,
+    //         },
+    //       };
+    //     }
+    //     else {
+    //       return (
+    //         <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+    //           {`${cellElement.data?.credit == null ? '0' : cellElement.data.credit < 0 ? (-1 * cellElement.data.credit) : cellElement.data.particulars === "TOTAL" ?
+    //             getFormattedValue(cellElement.data.credit) : cellElement.data.credit}`}
+    //         </span>
+    //       )
+    //     }
+    //   }
+    // },
+    // {
+    //   dataField: "balance",
+    //   caption: t("balance"),
+    //   dataType: "number",
+    //   visible: false,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 250,
+    //   showInPdf: true,
+    //   cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+    //     if (exportCell != undefined) {
+    //       const balance = cellElement.data?.balance;
+    //       const isDebit = balance >= 0;
+    //       const value =
+    //         balance == null
+    //           ? ""
+    //           : balance < 0
+    //             ? getFormattedValue(-1 * balance) + 'Cr'
+    //             : getFormattedValue(balance) + 'Dr';
+    //       return {
+    //         ...exportCell,
+    //         text: value,
+    //         bold: true,
+    //         alignment: "right",
+    //         alignmentExcel: { horizontal: 'right' },
+    //         textColor: cellElement.data.ledgerName === "TOTAL" ? '#FF0000' : '',
+    //         font: {
+    //           ...exportCell.font,
+    //           color: cellElement.data.particulars === "TOTAL" ? { argb: 'FFFF0000' } : "",
+    //           size: 10,
+    //           style: cellElement.data.particulars === "TOTAL" ? 'bold' : 'normal',
+    //           bold: cellElement.data.particulars === "TOTAL" ? true : false,
+    //         },
+    //       };
+    //     }
+    //     else {
+    //       return (<span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-[#DC143C]' : ''}`}>
+    //         {`${cellElement.data?.balance == null ? '0' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) :
+    //           getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' :
+    //             cellElement.data?.balance >= 0 ? 'Dr' : 'Cr'}`}
+    //       </span>)
+    //     }
+    //   }
+    // },
   ];
   return (
     <Fragment>

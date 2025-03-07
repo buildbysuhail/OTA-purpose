@@ -317,5 +317,7 @@
   "voucher_in_use": "القسيمة قيد الاستخدام",
 
   "payment_type": "نوع الدفع",
-  "cash_bank_account": "حساب النقد والبنك"
+  "cash_bank_account": "حساب النقد والبنك",
+  "reset":"إعادة ضبط",
+  "focus_button_color": "لون زر التركيز"
 }

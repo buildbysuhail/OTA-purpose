@@ -55,7 +55,7 @@ const LedgerReport = () => {
             ) => {
               return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
             }
-          },
+    },
     
     {
       dataField: "form",
@@ -358,8 +358,6 @@ const LedgerReport = () => {
                     drillDownCells: "vchNo,",
                   }}
                 ></ErpDevGrid>
-
-
               </div>
             </div>
           </div>

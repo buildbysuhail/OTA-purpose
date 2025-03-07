@@ -120,7 +120,6 @@ const handleDirectPrint = async (template:any) => {
     };
 
   const printVoucher = async (setIsPrintModalOpen?:any,voucherType?:any,voucher?: AccTransactionFormState) => {
-    
    const existingTemplate = formState.templatesData?.find(
     (template: any) => template.templateGroup === voucherType
   );

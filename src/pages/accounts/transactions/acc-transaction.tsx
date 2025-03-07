@@ -2449,14 +2449,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             )}
                         </div>
                         <div className="flex items-end text-end">
-                          <BtnAdd
-                            formState={formState}
-                            dispatch={dispatch}
-                            handleKeyDown={handleKeyDown}
-                            rowProcessing={formState.rowProcessing}
-                            addOrEditRow={addOrEditRow}
-                            t={t}
-                          />
+                        {formState.formElements.btnAdd.visible === true && (
+                            <ERPButton
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              ref={btnAddRef}
+                              title={t(formState.formElements.btnAdd.label)}
+                              variant="primary"
+                              loading={formState.rowProcessing}
+                              type="button"
+                              onClick={() => addOrEditRow()}
+                              disableEnterNavigation
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  addOrEditRow();
+                                }
+                              }}
+                              disabled={
+                                formState.formElements.btnAdd.disabled === true ||
+                                formState.ledgerBillWiseLoading ||
+                                formState.ledgerIsBillWiseAdjustExistLoading ||
+                                formState.formElements.pnlMasters?.disabled
+                              }
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -2737,14 +2752,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       />
                     </div>
                     <div className="flex items-end text-end">
-                      <BtnAdd
-                        formState={formState}
-                        dispatch={dispatch}
-                        handleKeyDown={handleKeyDown}
-                        rowProcessing={formState.rowProcessing}
-                        addOrEditRow={addOrEditRow}
-                        t={t}
-                      />
+                    {formState.formElements.btnAdd.visible === true && (
+                            <ERPButton
+                              localInputBox={formState?.userConfig?.inputBoxStyle}
+                              ref={btnAddRef}
+                              title={t(formState.formElements.btnAdd.label)}
+                              variant="primary"
+                              loading={formState.rowProcessing}
+                              type="button"
+                              onClick={() => addOrEditRow()}
+                              disableEnterNavigation
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  addOrEditRow();
+                                }
+                              }}
+                              disabled={
+                                formState.formElements.btnAdd.disabled === true ||
+                                formState.ledgerBillWiseLoading ||
+                                formState.ledgerIsBillWiseAdjustExistLoading ||
+                                formState.formElements.pnlMasters?.disabled
+                              }
+                            />
+                          )}
                     </div>
                   </div>
                 </div>

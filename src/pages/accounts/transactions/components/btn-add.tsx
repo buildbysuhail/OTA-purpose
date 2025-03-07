@@ -7,21 +7,20 @@ interface BtnAddProps extends AccVoucherElementProps {
   addOrEditRow: () => void;
 }
 
-const BtnAdd = React.forwardRef<HTMLInputElement, BtnAddProps>(({
+const BtnAdd = React.forwardRef<HTMLButtonElement, BtnAddProps>(({
   formState,
   dispatch,
   t,
   rowProcessing,
   addOrEditRow
 }, ref) => {
-  const btnAddRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
       {formState.formElements.btnAdd.visible === true && (
         <ERPButton
           localInputBox={formState?.userConfig?.inputBoxStyle}
-          ref={btnAddRef}
+          ref={ref}
           title={t(formState.formElements.btnAdd.label)}
           variant="primary"
           loading={formState.rowProcessing}

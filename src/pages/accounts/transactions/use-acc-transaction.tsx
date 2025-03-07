@@ -475,7 +475,9 @@ export const useAccTransaction = (
         });
     }
 
-    _formState.prev = modelToBase64Unicode(setTransactionForHistory(_formState));
+    _formState.prev = modelToBase64Unicode(
+      setTransactionForHistory(_formState)
+    );
 
     console.log("accFormStateHandleFieldChange1");
     console.log(_formState);
@@ -567,7 +569,7 @@ export const useAccTransaction = (
         ...voucher.transaction.master,
         employeeID:
           userSession.dbIdValue == "543140180640" && userSession.employeeId > 0
-            ? userSession.employeeId??-2
+            ? userSession.employeeId ?? -2
             : voucher.transaction.master.employeeID,
       };
       voucher.transaction.master = updatedMaster;
@@ -606,14 +608,14 @@ export const useAccTransaction = (
           case "PV":
           case "PBR":
           case "CRE":
-            voucher.masterAccountID = firstDetail.ledgerID??0;
+            voucher.masterAccountID = firstDetail.ledgerID ?? 0;
             break;
 
           case "JV":
           case "JVSP":
             voucher.masterAccountID =
               voucher.transaction.master.drCr === "Dr"
-                ? (firstDetail.ledgerID??0)
+                ? firstDetail.ledgerID ?? 0
                 : firstDetail.relatedLedgerID;
             // voucher.transaction.master.drCr =
             // voucher.transaction.master.drCr === "Dr" ? "Debit" : "Credit";
@@ -899,12 +901,18 @@ export const useAccTransaction = (
     }
 
     if (formState.transaction.master.voucherType == "MJV") {
-      const totalDebit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.debit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
-      const totalCredit = formState.transaction.details
-        .reduce((sum, x) => sum + (x.credit || 0), 0)
-        .toFixed(applicationSettings.mainSettings?.decimalPoints);
+      const totalDebit = Number(
+        formState.transaction.details.reduce(
+          (sum, x) => sum + (Number(x.debit) || 0),
+          0
+        )
+      ).toFixed(applicationSettings.mainSettings?.decimalPoints || 2);
+      const totalCredit = Number(
+        formState.transaction.details.reduce(
+          (sum, x) => sum + (Number(x.credit) || 0),
+          0
+        )
+      ).toFixed(applicationSettings.mainSettings?.decimalPoints || 2);
       if (totalDebit !== totalCredit) {
         ERPAlert.show({
           icon: "warning",
@@ -1021,14 +1029,14 @@ export const useAccTransaction = (
         case "PV":
         case "CQR":
         case "CRE":
-          element.relatedLedgerID = element.ledgerID??0;
+          element.relatedLedgerID = element.ledgerID ?? 0;
           element.ledgerID = formState.masterAccountID;
           break;
 
         case "JV":
         case "JVSP":
           if (formState.row.drCr === "Dr") {
-            element.relatedLedgerID = element.ledgerID??0;
+            element.relatedLedgerID = element.ledgerID ?? 0;
             element.ledgerID = formState.masterAccountID;
           } else {
             element.ledgerID = element.ledgerID; // Preserve original ledgerID
@@ -1042,7 +1050,7 @@ export const useAccTransaction = (
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
             element.ledgerID = element.ledgerID; // Keep original ledger ID
           } else {
-            element.relatedLedgerID = element.ledgerID??0;
+            element.relatedLedgerID = element.ledgerID ?? 0;
             element.ledgerID =
               applicationSettings.accountsSettings.defaultSuspenseAcc; // Suspense account
           }
@@ -1073,7 +1081,7 @@ export const useAccTransaction = (
         case "BRT":
         case "DNT":
         case "INC":
-          element.relatedLedgerID = element.ledgerID??0;
+          element.relatedLedgerID = element.ledgerID ?? 0;
           element.ledgerID = formState.masterAccountID;
           break;
       }
@@ -1100,8 +1108,12 @@ export const useAccTransaction = (
         element.billwiseDetails = "";
         element.chequeStatus = "P";
       }
-      element.invoiceDate = element.invoiceDate == "" || element.invoiceDate == null ? formState.transaction.master.transactionDate: element.invoiceDate ;
-      element.projectId = (element.projectId??0).toString() == "" ? 0 : element.projectId;
+      element.invoiceDate =
+        element.invoiceDate == "" || element.invoiceDate == null
+          ? formState.transaction.master.transactionDate
+          : element.invoiceDate;
+      element.projectId =
+        (element.projectId ?? 0).toString() == "" ? 0 : element.projectId;
       updatedDetails.push(element);
     }
     return updatedDetails;
@@ -1382,7 +1394,6 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
-    
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);
@@ -1413,7 +1424,8 @@ export const useAccTransaction = (
         } else {
           if (
             formState.formElements.amount.disabled == false &&
-            formState.IsBillwiseTransAdjustmentExists == true && !formState.isTaxOnExpense
+            formState.IsBillwiseTransAdjustmentExists == true &&
+            !formState.isTaxOnExpense
           ) {
             dispatch(
               accFormStateHandleFieldChange({
@@ -1534,7 +1546,7 @@ export const useAccTransaction = (
     formState.formElements.btnAdd;
 
     const costCentreName =
-      formState.row.costCentreID??0 > 0
+      formState.row.costCentreID ?? 0 > 0
         ? dataContainer.costCentres?.find(
             (x) => x.id == formState.row.costCentreID
           )?.name
@@ -2365,26 +2377,20 @@ export const useAccTransaction = (
       })
     );
     const _drcr = getDrCr(formState.transaction.master.voucherType);
-    let accTransactionDetailID = formState.row.accTransactionDetailID??0;
+    let accTransactionDetailID = formState.row.accTransactionDetailID ?? 0;
     switch (formState.transaction.master.voucherType) {
       case "CR":
       case "BR":
       case "CN":
       case "CQR":
       case "PBR":
-        if (
-          formState.isEdit &&
-          accTransactionDetailID > 0
-        ) {
+        if (formState.isEdit && accTransactionDetailID > 0) {
           accTransactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
         }
 
         break;
       case "JV":
-        if (
-          formState.isEdit &&
-          accTransactionDetailID > 0
-        ) {
+        if (formState.isEdit && accTransactionDetailID > 0) {
           accTransactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
         }
 
@@ -2395,16 +2401,12 @@ export const useAccTransaction = (
           accTransactionDetailID > 0 &&
           formState.row.drCr.toUpperCase() == "CR"
         )
-        accTransactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
+          accTransactionDetailID++; // Debiting ID is returns from stored procedure to get crediting ID increment 1
 
         break;
     }
     const billwise = await api.getAsync(
-      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${
-        formState.row.ledgerID
-      }&DrCr=${_drcr}&AccTransactionDetailID=${
-        accTransactionDetailID
-      }`
+      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=${accTransactionDetailID}`
     );
     if (accTransactionDetailID > 0) {
       billwise.map((x: BillwiseData) => {

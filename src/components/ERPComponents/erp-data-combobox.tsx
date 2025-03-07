@@ -456,7 +456,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, [isOpen, initial, filteredItems]);
 
     useEffect(() => {
-      if (customSize == undefined || customSize == null) {
+      if (customSize == undefined || customSize === null) {
         setCustomSize(inputBoxState?.inputSize);
       }
     }, [inputBoxState?.inputSize]);
@@ -797,7 +797,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       // Reset internal state when external value changes to null/undefined
       if (!value && !data?.[field?.id ?? ""]) {
         setInitial(null);
-        if (triggerEffect || value == null) {
+        if (triggerEffect == true || value === null) {
           handleItemClick({value: "", label:""})
           setInputValue("");
         }
@@ -822,7 +822,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     }, [memoizedItems, memoizedData, memoizedField, memoizedFilteredItems, value]);
 
     const clearSelection = (e?: React.MouseEvent) => {
-      handleItemClick({ label: "", value: null, is_active: false, name: "" });
+      handleItemClick({ label: "", value: undefined, is_active: false, name: "" });
     };
 
     const handleItemClick = (value: Option) => {

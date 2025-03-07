@@ -441,7 +441,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                     onChange={(e) => { setBasicInfo((prev: any) => ({ ...prev, data: { ...prev.data, dob: e.target?.value, }, })); }}
                     validation={basicInfo.validations.dob}
                   />
-                  <div className="w-full p-2 flex justify-end">
+                  <div className="w-full p-2 flex gap-4 justify-end">
                     <ERPButton
                       title={t("reset")}
                       onClick={resetBasicInfo}

@@ -1045,7 +1045,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         const column = gridCols.find(
           (x) => x.dataField == options.gridCell.column.dataField
         );
-
+debugger;
         if (
           column &&
           column.cellRender &&
@@ -1076,15 +1076,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             );
           }
 
-          column.cellRender(
-            {
-              ...options.gridCell.data,
-              value: options.gridCell.data[options.gridCell.column.dataField],
-            },
-            options.gridCell,
-            filter,
-            options.pdfCell
-          );
+          // column.cellRender(
+          //   {
+          //     ...options.gridCell.data,
+          //     value: options.gridCell.data && options.gridCell.data[options.gridCell.column.dataField],
+          //   },
+          //   options?.gridCell,
+          //   filter,
+          //   options?.pdfCell
+          // );
 
           // let isDefined = renderResult !== undefined;
           // let isObject = typeof renderResult === "object";

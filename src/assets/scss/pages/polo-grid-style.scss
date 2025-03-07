@@ -477,9 +477,9 @@ $dark-grid-selection: #000000;
   // $dark-grid-hover: #000000;
 
 
-.dx-scrollbar-hoverable {
+  .dx-scrollbar-hoverable {
     background-color: #231f1f;
-}
+  }
 
   .dx-treelist-container {
     background-color: $dark-bg !important;
@@ -594,11 +594,12 @@ $dark-grid-selection: #000000;
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
     padding-right: 1px;
   }
-  
+
   .dx-datagrid-scroll-container .dx-col-fixed {
     width: calc(var(--actions-width) + 15px) !important;
   }
 }
+
 .hasLeftFixedColumn {
 
   .dx-datagrid-rowsview .dx-datagrid-content {
@@ -610,7 +611,7 @@ $dark-grid-selection: #000000;
   .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable>.dx-scrollable-wrapper {
     padding-left: 1px;
   }
-  
+
   .dx-datagrid-scroll-container .dx-col-fixed {
     width: calc(var(--actions-width) + 15px) !important;
   }
@@ -620,7 +621,7 @@ $dark-grid-selection: #000000;
 
   .dx-scrollbar-hoverable {
     background-color: #ffffff;
-}
+  }
 
 
 
@@ -799,7 +800,7 @@ $dark-grid-selection: #000000;
 // Conditional Toolbar Styling
 .toolbar-expanded {
   .dx-toolbar .dx-toolbar-items-container {
-    height: 0px !important;
+    height: 10px !important;
     overflow: visible !important;
   }
 }

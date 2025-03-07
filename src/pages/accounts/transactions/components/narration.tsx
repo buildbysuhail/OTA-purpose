@@ -19,7 +19,7 @@ const Narration = React.forwardRef<HTMLInputElement, NarrationProps>(({
           localInputBox={formState?.userConfig?.inputBoxStyle}
           ref={ref}
           id="narration"
-          className={formState.userConfig?.isExpanded?"w-[400px]":"w-full"}
+          className={formState.userConfig?.isExpanded ? "w-[320px]" : "w-full"}
           disableEnterNavigation
           onKeyDown={(e) => {
             handleKeyDown && handleKeyDown(e, "narration");

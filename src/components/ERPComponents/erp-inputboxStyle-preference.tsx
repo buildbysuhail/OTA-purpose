@@ -105,7 +105,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
           </label>
         </div>
 
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="radio"
             name="inputBox"
@@ -157,7 +157,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
           <label htmlFor="input-filled" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
             {t("filled")}
           </label>
-        </div>
+        </div> */}
       </div>
 
       {/* Input Size Customization */}
@@ -739,7 +739,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-sm" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              {t("sm")}
+              {t("small")}
             </label>
           </div>
 
@@ -757,7 +757,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-md" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              {t("md")}
+              {t("medium")}
             </label>
           </div>
 
@@ -775,7 +775,7 @@ const InputBoxStyling: React.FC<InputBoxStylingProps> = ({
               }}
             />
             <label htmlFor="input-lg" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold">
-              {t("lg")}
+              {t("large")}
             </label>
           </div>
         </div>

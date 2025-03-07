@@ -124,6 +124,7 @@ import Narration from "./components/narration";
 import AccVoucherPrefix from "./components/acc-voucher-prefix";
 import AccVoucherNo from "./components/acc-voucher-no";
 import BtnAdd from "./components/btn-add";
+import AccHeader from "./components/acc-header";
 interface BilledItem {
   id?: number;
   name: string;
@@ -1354,6 +1355,43 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   };
   const [key, setKey] = useState<string>("key");
+  const columnsMobile: DevGridColumn[] = useMemo(() => {
+    const cols = [
+      {
+        dataField: "slNo",
+        caption: t("si_no"),
+        
+        cellRender: (cellData: any) => {
+          // Declare the constant 'items' using cellData.data
+          const items = cellData.data as AccTransactionRow;
+        
+          return (
+            <div
+              key={items.slNo}
+              className="bg-[#f3f3f3] shadow-md mb-3 p-1 rounded-sm"
+            >
+              <div className="flex justify-between items-center mb-0 mt-1 h-[10px]">
+                {/* <span className="text-gray-500 text-sm">#{items.id}</span> */}
+                <h6 className="mb-1 font-bold text-[16px]">
+                  {items.ledgerName}
+                </h6>
+                <span className="font-bold text-sm">
+                  ₹ {items.amount}
+                </span>
+              </div>
+              <div className="flex justify-between items-center mb-1"></div>
+              <p className="mb-1 text-yellow info">
+                {t("discount")}: {items.discount}
+              </p>
+              {/* <p className="text-gray-600 text-sm">Tax: {items.tax}%</p> */}
+            </div>
+          );
+        },
+      }
+    ];
+    return cols;
+  }, [formState.formElements.gridColumns]);
+  
   const columns: DevGridColumn[] = useMemo(() => {
     const cols = [
       {
@@ -1790,27 +1828,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   //   };
   // }, []);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      // Check if the click is outside the popup AND not on the button
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsPopupVisible(false);
-      }
-    }
-
-    // Attach the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  
 
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -1866,320 +1884,32 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </h6>
                   <i className="fas fa-cog ms-1"></i>
                 </div>
-                <div className="flex items-center justify-end space-x-4 p-1 w-full">
-                  {/* Load Temp Rows */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title="Load Details"
-                  >
-                    <button
-                      disabled={formState.formElements.pnlMasters.disabled}
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        loadTemporaryRows();
-                      }}
-                    >
-                      <ChevronUp className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
-                  {/* Delete Button */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("delete")}
-                  >
-                    <button
-                      disabled={
-                        formState.transaction.master.accTransactionMasterID <
-                        1 ||
-                        (formState.transaction.master.accTransactionMasterID >
-                          0 &&
-                          formState.formElements.pnlMasters.disabled != true)
-                      }
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        deleteAccTransVoucher();
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
-                  {/* Load Button */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("refresh")}
-                  >
-                    <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={handleRefresh}
-                    >
-                      <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-                  {/* createNewVoucher */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("clone")}
-                  >
-                    <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={createNewVoucher}
-                    >
-                      <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
-                  {/* Edit Button */}
-                  {formState.formElements.lnkUnlockVoucher.visible != true && (
-                    <div
-                      className="group relative inline-flex flex-col items-center"
-                      title={t("edit")}
-                    >
-                      <button
-                        disabled={
-                          formState.transaction.master.accTransactionMasterID <
-                          1 ||
-                          (formState.transaction.master.accTransactionMasterID >
-                            0 &&
-                            formState.formElements.pnlMasters.disabled != true)
-                        }
-                        className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                        onClick={() => {
-                          handleEdit();
-                        }}
-                      >
-                        <Pencil className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                      </button>
-                    </div>
-                  )}
-                  {/* Print Button */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("print")}
-                  >
-                    <button
-                      disabled={
-                        formState.transaction.master.accTransactionMasterID <
-                        1 ||
-                        (formState.transaction.master.accTransactionMasterID >
-                          0 &&
-                          formState.formElements.pnlMasters.disabled != true)
-                      }
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={() => {
-                        printVoucher(setIsPrintModalOpen, voucherType);
-                      }}
-                    >
-                      <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
-                  {/* Clear Button */}
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("clear")}
-                  >
-                    <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={handleClearControls}
-                    // onClick={() => {
-                    //   clearControls(
-                    //     formState.isEdit,
-                    //     formState.transaction.master.accTransactionMasterID
-                    //   );
-                    // }}
-                    >
-                      <Eraser className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-                  <div
-                    className="group relative inline-flex flex-col items-center"
-                    title={t("history")}
-                  >
-                    <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      onClick={handleHistoryClick}
-                    >
-                      <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-                  </div>
-
-                  <HistorySidebar
-                    transactionType={transactionType ?? ""}
-                    isOpen={isHistorySidebarOpen}
-                    onClose={() => setIsHistorySidebarOpen(false)}
-                  // data={historyData}
-                  />
-
-                  {/* Settings  Button */}
-                  <div>
-                    <AccTransactionUserConfig />
-                  </div>
-
-                  <div className="relative">
-                    <button
-                      ref={buttonRef}
-                      onClick={() => setIsPopupVisible(!isPopupVisible)}
-                      // onClick={handleButtonClick}
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                      title={t("previous_page")}
-                    >
-                      <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                    </button>
-
-                    {isPopupVisible && (
-                      <div
-                        ref={popupRef} // Attach ref to the popup
-                        className="absolute  rounded-sm dark:bg-dark-bg dark:text-dark-text  bg-gray-100 shadow-lg p-4 z-50 "
-                        style={{
-                          top: "100%", // Position the popup right below the button
-                          left: "-180px", // Align it with the left edge of the button
-                          width: "251px", // Set your desired width
-                          marginTop: "8px", // Add some spacing between the button and the popup
-                        }}
-                      >
-                        <nav className="w-full dark:bg-dark-bg dark:text-dark-text  bg-gray-100 text-black">
-                          <ul className="space-y-1">
-                            <li>
-                              <button
-                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm"
-                                onClick={(e) => {
-                                  // Prevent default link behavior
-                                  printPaymentReceiptAdvice(formState, voucherType);
-                                }}
-                              >
-                                <Printer className="h-4 w-4" />
-                                {/* <span>printPaymentReceiptAdvice</span> */}
-                                <span>{t("print_payment_advise")}</span>
-                              </button>
-                            </li>
-
-                            {formState.formElements.lnkUnlockVoucher
-                              .visible && (
-                                <li>
-                                  <button
-                                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                    onClick={(e) => {
-                                      // Prevent default link behavior
-
-                                      unlockVoucher();
-                                    }}
-                                  >
-                                    <KeyRound className="h-4 w-4" />
-                                    {/* <span>UnlockVoucher_Click</span> */}
-                                    <span>{t("unlock_voucher")}</span>
-                                  </button>
-                                </li>
-                              )}
-
-                            {formState.transaction.master.voucherType ===
-                              "MJV" &&
-                              userSession.dbIdValue === "ABCO" && (
-                                <li>
-                                  <button
-                                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                    onClick={() => setShowValidation(true)}
-                                  >
-                                    <FileUp className="h-4 w-4" />
-                                    <span>{t("MJV_excel_import")}</span>
-                                  </button>
-                                </li>
-                              )}
-
-                            {formState.formElements.foreignCurrency.visible && (
-                              <li>
-                                <ERPCheckbox
-                                  id="foreignCurrency"
-                                  label={
-                                    formState.formElements.foreignCurrency.label
-                                  }
-                                  className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                  checked={formState.foreignCurrency}
-                                  onChange={(e) =>
-                                    dispatch(
-                                      accFormStateHandleFieldChange({
-                                        fields: {
-                                          foreignCurrency: e.target.checked,
-                                        },
-                                      })
-                                    )
-                                  }
-                                  disabled={
-                                    formState.formElements.foreignCurrency
-                                      ?.disabled ||
-                                    formState.formElements.pnlMasters?.disabled
-                                  }
-                                />
-                              </li>
-                            )}
-                            <li>
-                              <button
-                                onClick={selectTemplates}
-                                className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                              >
-                                <AlignHorizontalSpaceBetween className="h-4 w-4" />
-                                {t("change_template")}
-                              </button>
-                            </li>
-                            {formState.formElements.printPreview.visible && (
-                              <li>
-                                <ERPCheckbox
-                                  localInputBox={
-                                    formState?.userConfig?.inputBoxStyle
-                                  }
-                                  id="printPreview"
-                                  className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                  label={t(
-                                    formState.formElements.printPreview.label
-                                  )}
-                                  checked={formState.printPreview}
-                                  onChange={(e) =>
-                                    dispatch(
-                                      accFormStateHandleFieldChange({
-                                        fields: {
-                                          printPreview: e.target.checked,
-                                        },
-                                      })
-                                    )
-                                  }
-                                  disabled={
-                                    formState.formElements.printPreview
-                                      ?.disabled
-                                  }
-                                />
-                              </li>
-                            )}
-                          </ul>
-                        </nav>
-                      </div>
-                    )}
-                    {showValidation && (
-                      <ERPModal
-                        isForm={true}
-                        isOpen={showValidation}
-                        closeButton="LeftArrow"
-                        hasSubmit={false}
-                        closeTitle={t("close")}
-                        title={t("MJV_excel_import")}
-                        width={1000}
-                        height={800}
-                        isFullHeight={true}
-                        closeModal={() => setShowValidation(false)}
-                        content={<AccExcelImport />}
-                      ></ERPModal>
-                    )}
-                  </div>
-
-                  {/* Previous Page Button */}
-                  <button
-                    onClick={goToPreviousPage}
-                    className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                    title={t("previous_page")}
-                  >
-                    <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
-                  </button>
-                </div>
+                <AccHeader
+                  formState={formState}
+                  dispatch={dispatch}
+                  handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+                  t={t} // Replace with your translation function
+                  loadTemporaryRows={loadTemporaryRows}
+                  deleteAccTransVoucher={deleteAccTransVoucher}
+                  handleRefresh={handleRefresh}
+                  createNewVoucher={createNewVoucher}
+                  handleEdit={handleEdit}
+                  printVoucher={printVoucher}
+                  handleClearControls={handleClearControls}
+                  handleHistoryClick={handleHistoryClick}
+                  setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+                  transactionType={formState.transactionType} // Replace with your actual transaction type
+                  voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+                  userSession={userSession} // Replace with your actual user session object
+                  unlockVoucher={unlockVoucher}
+                  setShowValidation={setShowValidation}
+                  showValidation={showValidation}
+                  selectTemplates={selectTemplates}
+                  goToPreviousPage={goToPreviousPage}
+                  isHistorySidebarOpen={isHistorySidebarOpen}
+                  setIsPrintModalOpen={setIsPrintModalOpen}
+                  printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+                />
               </div>
             </div>
           </div>
@@ -2862,16 +2592,42 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       )}
       {deviceInfo?.isMobile && (
         <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
-          {/* Sale Header */}
-          <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
-            <ERPPreviousUrlButton></ERPPreviousUrlButton>
-            <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
-              {t("cash_payment")}
-            </h1>
-            <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
-          </div>
+        {/* Sale Header */}
+        <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
+          <ERPPreviousUrlButton></ERPPreviousUrlButton>
+          <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
+            {t("cash_payment")}
+          </h1>
+          {/* <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i> */}
+        </div>
+            <AccHeader
+          formState={formState}
+          dispatch={dispatch}
+          handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
+          t={t} // Replace with your translation function
+          loadTemporaryRows={loadTemporaryRows}
+          deleteAccTransVoucher={deleteAccTransVoucher}
+          handleRefresh={handleRefresh}
+          createNewVoucher={createNewVoucher}
+          handleEdit={handleEdit}
+          printVoucher={printVoucher}
+          handleClearControls={handleClearControls}
+          handleHistoryClick={handleHistoryClick}
+          setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+          transactionType={formState.transactionType} // Replace with your actual transaction type
+          voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
+          userSession={userSession} // Replace with your actual user session object
+          unlockVoucher={unlockVoucher}
+          setShowValidation={setShowValidation}
+          showValidation={showValidation}
+          selectTemplates={selectTemplates}
+          goToPreviousPage={goToPreviousPage}
+          isHistorySidebarOpen={isHistorySidebarOpen}
+          setIsPrintModalOpen={setIsPrintModalOpen}
+          printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+        />
           {/* Scrollable Content */}
-          <div className="flex flex-col mt-[58px] w-full overflow-scroll"></div>
+          <div className="flex flex-col mt-[0px] w-full overflow-scroll"></div>
           <div className="flex items-center justify-between gap-2 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
             <div className="flex items-center justify-center gap-2">
               <AccVoucherPrefix
@@ -3264,27 +3020,44 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <h2 className="font-light text-sm">{t("billed_items")}</h2>
               </div>
               <div className="pt-1">
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-[#f3f3f3] shadow-md mb-3 p-1 rounded-sm"
-                  >
-                    <div className="flex justify-between items-center mb-0 mt-1 h-[10px]">
-                      {/* <span className="text-gray-500 text-sm">#{item.id}</span> */}
-                      <h6 className="mb-1 font-bold text-[16px]">
-                        {item.name}
-                      </h6>
-                      <span className="font-bold text-sm">
-                        ₹ {item.price * item.quantity}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center mb-1"></div>
-                    <p className="mb-1 text-yellow info">
-                      {t("discount")}: {item.discount}
-                    </p>
-                    {/* <p className="text-gray-600 text-sm">Tax: {item.tax}%</p> */}
-                  </div>
-                ))}
+              <ErpDevGrid
+              key={key}
+              GridPreferenceChooserAccTrance
+              heightToAdjustOnWindows={
+                formState.userConfig?.gridHeight ??
+                (isChequeSectionVisible ? 650 : 600)
+              }
+              summaryItems={summaryItems}
+              ref={erpGridRef}
+              keyExpr="slNo"
+              columns={columnsMobile}
+              height={gridHeight}
+              allowFiltering={false}
+              dataUrl={Urls.acc_reports_ledger}
+              hideGridAddButton={true}
+              hideDefaultExportButton={true}
+              hideDefaultSearchPanel={true}
+              allowSearching={false}
+              allowExport={false}
+              hideGridHeader={true}
+              enablefilter={false}
+              remoteOperations={false}
+              data={formState.transaction.details}
+              gridId={`${gridCode}-grid`}
+              onClickByRootState={(e: any, state: RootState) => {
+                onSelectionChanged(e, state, true);
+              }}
+              showTotalCount={false}
+              onKeyDown={(e) => handleKeyDown("grid", e)}
+              onSelectionChangedByRootState={(e: any, state: RootState) =>
+                onSelectionChanged(e, state, false)
+              }
+              enableScrollButton={false}
+              ShowGridPreferenceChooser={false}
+              showPrintButton={false}
+              className=" HistorySidebarcustom pb-14"
+              showColumnHeaderscustom={false}
+            ></ErpDevGrid>
 
                 {/* Total Summary */}
                 <div className="bg-white shadow-md mb-4 p-4 rounded-lg">

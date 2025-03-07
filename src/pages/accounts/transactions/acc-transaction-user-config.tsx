@@ -24,8 +24,11 @@ const api = new APIClient();
 interface pageBgColor {
   pageBgColor: string;
 }
+interface AccTransactionUserConfigProps {
+  phone?: boolean;
+}
 
-export const AccTransactionUserConfig = () => {
+export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> = ({ phone = false }) => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
@@ -80,6 +83,7 @@ export const AccTransactionUserConfig = () => {
     };
     dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
   };
+  // const [phone , setphone ] = useState(false)
 
   const resetThemeChange = async () => {
     try {
@@ -106,7 +110,7 @@ export const AccTransactionUserConfig = () => {
   return (
     <>
       <div className="group relative inline-flex flex-col items-center" title={t("settings")}>
-        <button className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors" onClick={() => setIsOpen(true)}>
+        <button className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-1.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`} onClick={() => setIsOpen(true)}>
           <Settings className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
         </button>
       </div>

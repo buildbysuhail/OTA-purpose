@@ -1354,42 +1354,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   };
   const [key, setKey] = useState<string>("key");
-  const columnsMobile: DevGridColumn[] = useMemo(() => {
-    const cols = [
-      {
-        dataField: "slNo",
-        caption: t("si_no"),
-        
-        cellRender: (cellData: any) => {
-          // Declare the constant 'items' using cellData.data
-          const items = cellData.data as AccTransactionRow;
-        
-          return (
-            <div
-              key={items.slNo}
-              className="bg-[#f3f3f3] shadow-md mb-3 p-1 rounded-sm"
-            >
-              <div className="flex justify-between items-center mb-0 mt-1 h-[10px]">
-                {/* <span className="text-gray-500 text-sm">#{items.id}</span> */}
-                <h6 className="mb-1 font-bold text-[16px]">
-                  {items.ledgerName}
-                </h6>
-                <span className="font-bold text-sm">
-                  ₹ {items.amount}
-                </span>
-              </div>
-              <div className="flex justify-between items-center mb-1"></div>
-              <p className="mb-1 text-yellow info">
-                {t("discount")}: {items.discount}
-              </p>
-              {/* <p className="text-gray-600 text-sm">Tax: {items.tax}%</p> */}
-            </div>
-          );
-        },
-      }
-    ];
-    return cols;
-  }, [formState.formElements.gridColumns]);
   const columns: DevGridColumn[] = useMemo(() => {
     const cols = [
       {
@@ -2485,29 +2449,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                             )}
                         </div>
                         <div className="flex items-end text-end">
-                        {formState.formElements.btnAdd.visible === true && (
-                            <ERPButton
-                              localInputBox={formState?.userConfig?.inputBoxStyle}
-                              ref={btnAddRef}
-                              title={t(formState.formElements.btnAdd.label)}
-                              variant="primary"
-                              loading={formState.rowProcessing}
-                              type="button"
-                              onClick={() => addOrEditRow()}
-                              disableEnterNavigation
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  addOrEditRow();
-                                }
-                              }}
-                              disabled={
-                                formState.formElements.btnAdd.disabled === true ||
-                                formState.ledgerBillWiseLoading ||
-                                formState.ledgerIsBillWiseAdjustExistLoading ||
-                                formState.formElements.pnlMasters?.disabled
-                              }
-                            />
-                          )}
+                          <BtnAdd
+                          ref={btnAddRef}
+                            formState={formState}
+                            dispatch={dispatch}
+                            handleKeyDown={handleKeyDown}
+                            rowProcessing={formState.rowProcessing}
+                            addOrEditRow={addOrEditRow}
+                            t={t}
+                          />
                         </div>
                       </div>
                     </div>
@@ -2788,29 +2738,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       />
                     </div>
                     <div className="flex items-end text-end">
-                    {formState.formElements.btnAdd.visible === true && (
-                            <ERPButton
-                              localInputBox={formState?.userConfig?.inputBoxStyle}
-                              ref={btnAddRef}
-                              title={t(formState.formElements.btnAdd.label)}
-                              variant="primary"
-                              loading={formState.rowProcessing}
-                              type="button"
-                              onClick={() => addOrEditRow()}
-                              disableEnterNavigation
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  addOrEditRow();
-                                }
-                              }}
-                              disabled={
-                                formState.formElements.btnAdd.disabled === true ||
-                                formState.ledgerBillWiseLoading ||
-                                formState.ledgerIsBillWiseAdjustExistLoading ||
-                                formState.formElements.pnlMasters?.disabled
-                              }
-                            />
-                          )}
+                      <BtnAdd
+                      ref={btnAddRef}
+                        formState={formState}
+                        dispatch={dispatch}
+                        handleKeyDown={handleKeyDown}
+                        rowProcessing={formState.rowProcessing}
+                        addOrEditRow={addOrEditRow}
+                        t={t}
+                      />
                     </div>
                   </div>
                 </div>
@@ -3328,43 +3264,27 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <h2 className="font-light text-sm">{t("billed_items")}</h2>
               </div>
               <div className="pt-1">
-              <ErpDevGrid
-              key={key}
-              GridPreferenceChooserAccTrance
-              heightToAdjustOnWindows={
-                formState.userConfig?.gridHeight ??
-                (isChequeSectionVisible ? 650 : 600)
-              }
-              summaryItems={summaryItems}
-              ref={erpGridRef}
-              keyExpr="slNo"
-              columns={columnsMobile}
-              height={gridHeight}
-              allowFiltering={false}
-              dataUrl={Urls.acc_reports_ledger}
-              hideGridAddButton={true}
-              hideDefaultExportButton={true}
-              hideDefaultSearchPanel={true}
-              allowSearching={false}
-              allowExport={false}
-              hideGridHeader={true}
-              enablefilter={false}
-              remoteOperations={false}
-              data={formState.transaction.details}
-              gridId={`${gridCode}-grid`}
-              onClickByRootState={(e: any, state: RootState) => {
-                onSelectionChanged(e, state, true);
-              }}
-              showTotalCount={false}
-              onKeyDown={(e) => handleKeyDown("grid", e)}
-              onSelectionChangedByRootState={(e: any, state: RootState) =>
-                onSelectionChanged(e, state, false)
-              }
-              enableScrollButton={false}
-              ShowGridPreferenceChooser={false}
-              showPrintButton={false}
-              className="pb-14"
-            ></ErpDevGrid>
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-[#f3f3f3] shadow-md mb-3 p-1 rounded-sm"
+                  >
+                    <div className="flex justify-between items-center mb-0 mt-1 h-[10px]">
+                      {/* <span className="text-gray-500 text-sm">#{item.id}</span> */}
+                      <h6 className="mb-1 font-bold text-[16px]">
+                        {item.name}
+                      </h6>
+                      <span className="font-bold text-sm">
+                        ₹ {item.price * item.quantity}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center mb-1"></div>
+                    <p className="mb-1 text-yellow info">
+                      {t("discount")}: {item.discount}
+                    </p>
+                    {/* <p className="text-gray-600 text-sm">Tax: {item.tax}%</p> */}
+                  </div>
+                ))}
 
                 {/* Total Summary */}
                 <div className="bg-white shadow-md mb-4 p-4 rounded-lg">

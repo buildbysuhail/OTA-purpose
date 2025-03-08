@@ -83,7 +83,7 @@ const BankReconciliation = () => {
             ...transaction,
             bankDate: transaction.bankDate == null ?
               dateChangeState === "today"
-                ? moment().format("DD/MM/YYYY")
+                ? moment().local().format("DD/MM/YYYY")
                 : transaction.chequeDate : transaction.bankDate,
           };
         }
@@ -115,7 +115,7 @@ const BankReconciliation = () => {
             ...transaction,
             bankDate:
               dateChangeState === "today"
-                ? moment().format("DD/MM/YYYY")
+                ? moment().local().format("DD/MM/YYYY")
                 : transaction.chequeDate,
           };
         }
@@ -171,7 +171,7 @@ const BankReconciliation = () => {
           ...it,
           ledgerID: formState.selectedBankId,
           bankDate: it.bankDate
-            ? moment(it.bankDate, "YYYY/MM/DD").format("YYYY-MM-DD")
+            ? moment(it.bankDate, "YYYY/MM/DD").local().format("YYYY-MM-DD")
             : null, // ✅ Corrected format
         }));
 

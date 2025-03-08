@@ -47,6 +47,7 @@ interface AccHeaderProps extends AccVoucherElementProps {
   selectTemplates: () => void;
   goToPreviousPage: () => void;
   isHistorySidebarOpen: boolean;
+  phone?: boolean;
   setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   printPaymentReceiptAdvice: (voucher?: AccTransactionFormState, voucherType?: any) => Promise<void>
 }
@@ -77,6 +78,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       goToPreviousPage,
       isHistorySidebarOpen,
       setIsPrintModalOpen,
+      phone = false,
       printPaymentReceiptAdvice
     },
     ref
@@ -108,7 +110,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     }, []);
     return (
       <>
-        <div className="flex items-center justify-end space-x-4 p-1 w-full">
+        <div className={`flex items-center justify-end space-x-4 p-1 w-full ${phone ? 'mt-[62px]' : ''}`}>
                   {/* Load Temp Rows */}
                   <div
                     className="group relative inline-flex flex-col items-center"
@@ -116,7 +118,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                   >
                     <button
                       disabled={formState.formElements.pnlMasters.disabled}
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={() => {
                         loadTemporaryRows();
                       }}
@@ -138,7 +140,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                           0 &&
                           formState.formElements.pnlMasters.disabled != true)
                       }
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={() => {
                         deleteAccTransVoucher();
                       }}
@@ -153,7 +155,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                     title={t("refresh")}
                   >
                     <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={handleRefresh}
                     >
                       <RefreshCw className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -165,7 +167,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                     title={t("clone")}
                   >
                     <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={createNewVoucher}
                     >
                       <BadgePlusIcon className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -186,7 +188,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                             0 &&
                             formState.formElements.pnlMasters.disabled != true)
                         }
-                        className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                        className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                         onClick={() => {
                           handleEdit();
                         }}
@@ -208,7 +210,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                           0 &&
                           formState.formElements.pnlMasters.disabled != true)
                       }
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={() => {
                         printVoucher(setIsPrintModalOpen, voucherType);
                       }}
@@ -223,7 +225,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                     title={t("clear")}
                   >
                     <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={handleClearControls}
                     // onClick={() => {
                     //   clearControls(
@@ -240,7 +242,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                     title={t("history")}
                   >
                     <button
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
                       onClick={handleHistoryClick}
                     >
                       <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -256,7 +258,11 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
 
                   {/* Settings  Button */}
                   <div>
-                    <AccTransactionUserConfig />
+                    {phone ? (
+                      <AccTransactionUserConfig phone={true} />
+                    ) : (
+                      <AccTransactionUserConfig />
+                    )}
                   </div>
 
                   <div className="relative">
@@ -264,7 +270,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                       ref={buttonRef}
                       onClick={() => setIsPopupVisible(!isPopupVisible)}
                       // onClick={handleButtonClick}
-                      className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
+                      className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} ${phone ? 'me-[15px]' : ''}  rounded-md hover:bg-gray-200 transition-colors`}
                       title={t("previous_page")}
                     >
                       <EllipsisVertical className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
@@ -414,13 +420,18 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                   </div>
 
                   {/* Previous Page Button */}
-                  <button
+                  {phone ? (
+                      null
+                    ) : (
+                      <button
                     onClick={goToPreviousPage}
                     className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
                     title={t("previous_page")}
                   >
                     <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                   </button>
+                    )}
+                 
                 </div>
       </>
     );

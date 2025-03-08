@@ -1682,7 +1682,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
     { id: 2, name: "Banana", price: 50, quantity: 3, discount: 0, tax: 0 },
   ]);
+  debugger;
   const [isOpen, setIsOpen] = useState(false);
+  debugger;
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
@@ -2625,11 +2627,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           isHistorySidebarOpen={isHistorySidebarOpen}
           setIsPrintModalOpen={setIsPrintModalOpen}
           printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+          phone={true}
         />
           {/* Scrollable Content */}
           <div className="flex flex-col mt-[0px] w-full overflow-scroll"></div>
-          <div className="flex items-center justify-between gap-2 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
-            <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-between gap-1 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
+            <div className="flex items-center justify-center gap-1">
               <AccVoucherPrefix
                 ref={voucherNumberRef}
                 formState={formState}
@@ -2692,7 +2695,97 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
+              
               <div className="mb-1">
+
+                <AccRemarks
+                  ref={remarksRef}
+                  dispatch={dispatch}
+                  formState={formState}
+                  t={t}
+                />
+              </div>
+             
+              
+             
+              
+              <div className="mb-1">
+
+
+              </div>
+
+
+              <div className="flex justify-center mb-2">
+                <button
+                  className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
+                  onClick={() => setShowInputBox(!showInputBox)}
+                >
+                  {showInputBox ? t("view_less") : t("view_more")}
+                </button>
+              </div>
+              {showInputBox && (
+                // <div className="flex justify-center">
+                <div>
+                  {/* <div className="mb-1">
+              <input
+                type="text"
+                placeholder="Ref No"
+                // className="bg-white p-2 border rounded w-full"
+                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+              />
+            </div> */}
+                  <div className="mb-1">
+
+
+                    <AccReferenceNumber
+                      formState={formState}
+                      dispatch={dispatch}
+                      handleLoadByRefNo={handleLoadByRefNo}
+                      ref={refNoRef}
+                      t={t}
+                    />
+
+                  </div>
+                  <div className="mb-1">
+
+                    <AccReferenceDate
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                    />
+                  </div>
+                  {/* <div className="mb-4">
+              <label
+                htmlFor="cashacc"
+                className="block font-medium text-gray-700 text-sm"
+              >
+                Paid By
+              </label>
+              <select
+                id="cashacc"
+                name="cashacc"
+                value={formData.cashacc}
+                onChange={handleInputChange}
+                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
+              >
+                <option value="">Select Paid By</option>
+                <option value="ajmal">ajmal</option>
+                <option value="vajid">vajid</option>
+                <option value="nizam">nizam</option>
+                <option value="safvan">safvan</option>
+                <option value="sreeram">sreeram</option>
+                <option value="javad">javad</option>
+              </select>
+            </div> */}
+                  <div className="mb-1">
+                  <AccEmployeeID
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                  />
+                  </div>
+                  <div className="mb-1">
 
                 <AccDrCrJv
                   formState={formState}
@@ -2732,15 +2825,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               </div>
 
-              <div className="mb-1">
-
-                <AccEmployeeID
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                />
-              </div>
+              
 
               <div className="mb-1">
 
@@ -2750,91 +2835,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   t={t}
                 />
               </div>
-              <div className="mb-1">
+                  {/* <div className="mb-1">
+              <input
+                type="text"
+                placeholder="Notes"
+                // className="bg-white p-2 border rounded w-full"
+                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+              />
+            </div> */}
+                  <div className="mb-2">
+                    <AccNotes
+                      handleKeyDown={handleKeyDown}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                  </div>
 
-                <AccRemarks
-                  ref={remarksRef}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                />
-              </div>
-              <div className="mb-1">
-                <LedgerCode
-                  ref={ledgerCodeRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <Ledger
-                  ref={ledgerIdRef}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                  triggerEffect={triggerEffect}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <Amount
-                  ref={amountRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <Drcr
-                  ref={drCrRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <Discount
-                  ref={discountRef}
-                  handleKeyDown={handleKeyDown}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <Narration
-                  ref={narrationRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                />
-
-              </div>
-              <div className="mb-1">
-                <CostCentre
-                  ref={costCenterRef}
-                  handleKeyDown={handleKeyDown}
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
-
-              </div>
-              <div className="mb-1">
+                  <div className="mb-1">
                 <NameOnCheque
                   handleKeyDown={handleKeyDown}
                   formState={formState}
@@ -2909,111 +2927,28 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
 
               </div>
-              <div className="mb-1">
-
-
-              </div>
-
-
-              <div className="flex justify-center mb-2">
-                <button
-                  className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
-                  onClick={() => setShowInputBox(!showInputBox)}
-                >
-                  {showInputBox ? t("view_less") : t("view_more")}
-                </button>
-              </div>
-              {showInputBox && (
-                // <div className="flex justify-center">
-                <div>
-                  {/* <div className="mb-1">
-              <input
-                type="text"
-                placeholder="Ref No"
-                // className="bg-white p-2 border rounded w-full"
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-              />
-            </div> */}
-                  <div className="mb-1">
-
-
-                    <AccReferenceNumber
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      ref={refNoRef}
-                      t={t}
-                    />
-
-                  </div>
-                  <div className="mb-1">
-
-                    <AccReferenceDate
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                    />
-                  </div>
-                  {/* <div className="mb-4">
-              <label
-                htmlFor="cashacc"
-                className="block font-medium text-gray-700 text-sm"
-              >
-                Paid By
-              </label>
-              <select
-                id="cashacc"
-                name="cashacc"
-                value={formData.cashacc}
-                onChange={handleInputChange}
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-              >
-                <option value="">Select Paid By</option>
-                <option value="ajmal">ajmal</option>
-                <option value="vajid">vajid</option>
-                <option value="nizam">nizam</option>
-                <option value="safvan">safvan</option>
-                <option value="sreeram">sreeram</option>
-                <option value="javad">javad</option>
-              </select>
-            </div> */}
-                  <div className="mb-1">
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="cashacc"
-                      field={{
-                        id: "cashacc",
-                        // required: true,
-                        getListUrl: Urls.data_employees,
-                        valueKey: "id",
-                        labelKey: "name",
-                      }}
-                      data={formData}
-                      onChangeData={(data) =>
-                        handleFieldChange("cashacc", data.cashacc)
-                      }
-                      // label={t("cost_center")}
-                      label={t("paid_by")}
-                    />
-                  </div>
-                  {/* <div className="mb-1">
-              <input
-                type="text"
-                placeholder="Notes"
-                // className="bg-white p-2 border rounded w-full"
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-              />
-            </div> */}
-                  <div className="mb-2">
-                    <AccNotes
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
                 </div>
               )}
+
+                <button
+                  // onClick={addItem}
+                  onClick={() => setIsOpen(true)}
+                  className="flex justify-center items-center border-2 border-gray-400 bg-white mb-4 p-2 rounded w-full text-blue-500"
+                >
+                  {/* <Plus className="mr-2 text-blue-500" size={16} /> Add Items{" "} */}
+                  <i
+                    className="ri-add-circle-fill pr-2"
+                    style={{ fontSize: "18px" }}
+                  ></i>
+                  <div
+                    className="mr-2 text-amber-700"
+                  // size={16}
+                  >
+                    {" "}
+                    {t("add_items")}{" "}
+                  </div>
+                  <div className="pl-1 text-gray-500">{t("optional")}</div>
+                </button>
 
               {/* Billed Items Section */}
               <div className="bg-custom-blue mb-1 p-1 rounded-sm text-white">
@@ -3022,7 +2957,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <div className="pt-1">
               <ErpDevGrid
               key={key}
-              GridPreferenceChooserAccTrance
+              GridPreferenceChooserAccTrance={false}
               heightToAdjustOnWindows={
                 formState.userConfig?.gridHeight ??
                 (isChequeSectionVisible ? 650 : 600)
@@ -3031,7 +2966,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               ref={erpGridRef}
               keyExpr="slNo"
               columns={columnsMobile}
-              height={gridHeight}
+              // height={gridHeight}
+              height="10px"
               allowFiltering={false}
               dataUrl={Urls.acc_reports_ledger}
               hideGridAddButton={true}
@@ -3055,13 +2991,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               enableScrollButton={false}
               ShowGridPreferenceChooser={false}
               showPrintButton={false}
-              className=" HistorySidebarcustom pb-14"
+              className=" HistorySidebarcustom "
               showColumnHeaderscustom={false}
             ></ErpDevGrid>
 
                 {/* Total Summary */}
                 <div className="bg-white shadow-md mb-4 p-4 rounded-lg">
-                  <div className="flex justify-between mb-2 text-gray-600 text-sm">
+                  {/* <div className="flex justify-between mb-2 text-gray-600 text-sm">
                     <span>
                       {t("total_disc")}:{" "}
                       {items
@@ -3074,7 +3010,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         .reduce((total, item) => total + item.tax, 0)
                         .toFixed(1)}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between font-semibold text-sm">
                     <span>
                       {t("total_qty")}: {calculateTotalQuantity().toFixed(1)}
@@ -3086,25 +3022,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 </div>
 
                 {/* Add Items Button */}
-                <button
-                  // onClick={addItem}
-                  onClick={() => setIsOpen(true)}
-                  className="flex justify-center items-center border-2 border-gray-400 bg-white mb-4 p-2 rounded w-full text-blue-500"
-                >
-                  {/* <Plus className="mr-2 text-blue-500" size={16} /> Add Items{" "} */}
-                  <i
-                    className="ri-add-circle-fill pr-2"
-                    style={{ fontSize: "18px" }}
-                  ></i>
-                  <div
-                    className="mr-2 text-amber-700"
-                  // size={16}
-                  >
-                    {" "}
-                    {t("add_items")}{" "}
-                  </div>
-                  <div className="pl-1 text-gray-500">{t("optional")}</div>
-                </button>
+                
               </div>
 
               {/* Footer Buttons */}
@@ -3239,102 +3157,90 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               style={{}} // Inline styles for full screen
             >
               <div className=" max-w-none flex-grow h-full px-5">
-                <div className="flex justify-between items-center mb-1">
+                {/* <div className="flex justify-between items-center mb-1">
                   <div className="text-gray-600"></div>
 
                   <div className="text-gray-600"></div>
-                </div>
+                </div> */}
 
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <div className="mb-4">
-                      <ERPInput
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="autoUpdateReleaseUpTo"
-                        label={t("ledger_code")}
-                        type="text"
-                        data={settings}
-                        value={settings?.autoUpdateReleaseUpTo}
-                        onChangeData={(data) =>
-                          handleFieldChange(
-                            "autoUpdateReleaseUpTo",
-                            data.autoUpdateReleaseUpTo
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mb-1">
-                      <ERPDataCombobox
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="cashacc"
-                        field={{
-                          id: "cashacc",
-                          // required: true,
-                          getListUrl: Urls.data_acc_ledgers,
-                          valueKey: "id",
-                          labelKey: "name",
-                        }}
-                        data={formData}
-                        onChangeData={(data) =>
-                          handleFieldChange("cashacc", data.cashacc)
-                        }
-                        // label={t("cost_center")}
-                        label={t("ledger")}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <ERPInput
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="autoUpdateReleaseUpTo"
-                        label={t("amount")}
-                        type="number"
-                        data={settings}
-                        value={settings?.autoUpdateReleaseUpTo}
-                        onChangeData={(data) =>
-                          handleFieldChange(
-                            "autoUpdateReleaseUpTo",
-                            data.autoUpdateReleaseUpTo
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <ERPInput
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="autoUpdateReleaseUpTo"
-                        label={t("narration")}
-                        type="string"
-                        data={settings}
-                        value={settings?.autoUpdateReleaseUpTo}
-                        onChangeData={(data) =>
-                          handleFieldChange(
-                            "autoUpdateReleaseUpTo",
-                            data.autoUpdateReleaseUpTo
-                          )
-                        }
-                      />
-                    </div>
+                  <div className="mb-1">
+                <LedgerCode
+                  ref={ledgerCodeRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
 
-                    <div className="mb-1">
-                      <ERPDataCombobox
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        id="cashacc"
-                        field={{
-                          id: "cashacc",
-                          // required: true,
-                          getListUrl: Urls.data_costcentres,
-                          valueKey: "id",
-                          labelKey: "name",
-                        }}
-                        data={formData}
-                        onChangeData={(data) =>
-                          handleFieldChange("cashacc", data.cashacc)
-                        }
-                        // label={t("cost_center")}
-                        label={t("cost_center")}
-                      />
-                    </div>
-                  </div>
+              </div>
+                  <div className="mb-1">
+                <Ledger
+                  ref={ledgerIdRef}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                  triggerEffect={triggerEffect}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+                <Amount
+                  ref={amountRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+                <Drcr
+                  ref={drCrRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+                <Discount
+                  ref={discountRef}
+                  handleKeyDown={handleKeyDown}
+                  focusDiscount={focusDiscount}
+                  focusAmount={focusAmount}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+                <Narration
+                  ref={narrationRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                />
+
+              </div>
+              <div className="mb-1">
+                <CostCentre
+                  ref={costCenterRef}
+                  handleKeyDown={handleKeyDown}
+                  formState={formState}
+                  dispatch={dispatch}
+                  t={t}
+                  handleFieldKeyDown={handleFieldKeyDown}
+                />
+
+              </div>
+                    
+
                 </form>
                 <div className="max-w-none mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <div className=" pt-1">

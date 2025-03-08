@@ -1,4 +1,4 @@
-import { ChatBubbleLeftEllipsisIcon, ClipboardDocumentListIcon, CreditCardIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftEllipsisIcon, CheckBadgeIcon, ClipboardDocumentListIcon, CreditCardIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
 import {
   toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfileIndiaPopup, toggleCompanyProfilePopup,
   toggleDayClosePopup, toggleDeleteInactiveTransactionPopup, toggleExchangeRatesPopup, toggleHeaderFooterPopup, toggleHideAccLedger, toggleImportExportPopup, toggleRefreshAllBranches,
@@ -9,7 +9,7 @@ import { FaWhatsapp } from "react-icons/fa";
 export const SettingsMenuItems = [
   {
     menutitle: 'settings',
-    title:''
+    title: ''
   },
   {
     icon: (<Crown className="side-menu__icon side-menu" />),
@@ -53,6 +53,7 @@ export const SettingsMenuItems = [
   //   class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
   //   columns: 2,
   //   children: [
+  //     { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/products`, type: 'link', active: false, selected: false, title: 'products' },
   //     { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-group`, type: 'link', active: false, selected: false, title: 'product_group' },
   //     { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-category`, type: 'link', active: false, selected: false, title: 'product_category' },
   //     { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/brands`, type: 'link', active: false, selected: false, title: 'brands' },

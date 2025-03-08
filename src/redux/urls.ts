@@ -375,6 +375,7 @@ const Urls = {
     "/Accounts/Import/DownloadPrivilegeCardsFormat/",
 
   // Inventory
+  products: "/Inventory/Products/",
   productGroup: "/Inventory/ProductGroup/",
   productCategory: "/Inventory/ProductCategory/",
   brands: "/Inventory/Brands/",

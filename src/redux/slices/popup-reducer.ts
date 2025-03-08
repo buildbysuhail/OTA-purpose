@@ -7,7 +7,7 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
-  onCloseWithUnsavedChange: {warn: boolean, succeeded: boolean, canceled: boolean}
+  onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
   section: popupDataProps
   salesManRoute: popupDataProps
   userType: popupDataProps
@@ -64,11 +64,12 @@ interface popupData {
   hide_acc_ledger: popupDataProps
   groupCategory: popupDataProps
   specialSchemes: popupDataProps
-  groupOrder:popupDataProps
-  testPopup:popupDataProps
+  groupOrder: popupDataProps
+  testPopup: popupDataProps
+  products: popupDataProps
 }
 const initialState: popupData = {
-  onCloseWithUnsavedChange: {warn: false, succeeded: false, canceled: false},
+  onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -99,7 +100,7 @@ const initialState: popupData = {
   accountGroup: { isOpen: false, key: null, mode: "edit", reload: true },
   accountLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   costCentre: { isOpen: false, key: null, mode: "edit", reload: true },
-  priceList:{ isOpen: false, key: null, mode: "edit", reload: true },
+  priceList: { isOpen: false, key: null, mode: "edit", reload: true },
   branchLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   authorizationSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   barcodeprint: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -127,13 +128,14 @@ const initialState: popupData = {
   schemes: { isOpen: false, key: null, mode: "edit", reload: true },
   salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
   specialSchemes: { isOpen: false, key: null, mode: "edit", reload: true },
+  products: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
-    onCloseWithUnsavedChange: (state, action: PayloadAction<{warn: boolean, succeeded: boolean, canceled: boolean}>) => {
+    onCloseWithUnsavedChange: (state, action: PayloadAction<{ warn: boolean, succeeded: boolean, canceled: boolean }>) => {
       state.onCloseWithUnsavedChange = action.payload;
     },
     toggleUserTypePrivilegePopup: (state, action: PayloadAction<popupDataProps>) => {
@@ -206,7 +208,7 @@ const popupDataSlice = createSlice({
       state.commands = action.payload;
     },
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
-      
+
       state.accountGroup = action.payload;
     },
     toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {
@@ -274,6 +276,9 @@ const popupDataSlice = createSlice({
     },
     toggleUpi: (state, action: PayloadAction<popupDataProps>) => {
       state.upi = action.payload;
+    },
+    toggleProducts: (state, action: PayloadAction<popupDataProps>) => {
+      state.products = action.payload;
     },
     toggleProductGroup: (state, action: PayloadAction<popupDataProps>) => {
       state.productGroup = action.payload;
@@ -394,6 +399,7 @@ export const {
   toggleSchemes,
   toggleSalesRoute,
   toggleSpecialSchemes,
+  toggleProducts
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

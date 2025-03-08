@@ -6,6 +6,7 @@ import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 import { useDispatch } from 'react-redux';
 import { accFormStateHandleFieldChange } from './reducer';
 import { setTransactionForHistory } from './functions';
+import { history as _history } from '../../../history'
 
 export const useUnsavedChangesWarning = () => {
   const navigate = useNavigate();
@@ -137,17 +138,25 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     
     const blockNavigation = async (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isNavigationLink = target.tagName === 'A' ||
-        target.closest('a') ||
-        target.hasAttribute('href') ||
-        target.role === 'link';
-  
+      debugger
+      const target = e.target;
+      const isNavigationLink =
+      target.tagName === "a" ||
+      target.tagName === "A" ||
+        target.closest("a") ||
+        target.hasAttribute("href") ||
+        target.role === "link" ;
+        console.log("🔹 Clicked Element:", target);
+        console.log("🔹 Tag Name:", target.tagName);
+        console.log("🔹 Attributes:", target.attributes);
+        console.log("🔹 Role:", target.getAttribute("role"));
+        console.log("🔹 Closest <a>:", target.closest("a"));
+        console.log("🔹 Closest [role='link']:", target.closest("[role='link']"));
+        console.log("🔹 Closest [role='button']:", target.closest("[role='button']"));
+        console.log("🔹 Closest [href]:", target.closest("[href]"));
       if (isNavigationLink) {
         // const unsavedChanges = await hasUnsavedChanges();
         hasUnsavedChanges().then((unsavedChanges) => {
-          console.log("Unsaved changes 147: ", unsavedChanges);
-           // Should hit here if executed
           if (unsavedChanges) {
             e.preventDefault();
             e.stopPropagation();
@@ -161,6 +170,8 @@ export const useUnsavedChangesWarning = () => {
             }
             setIsModalOpen(true);
             setIsLeavingPage(false);
+            
+        previousPath.current = window.location.pathname;
           }
        }).catch(error => console.error(error));
         
@@ -205,30 +216,87 @@ export const useUnsavedChangesWarning = () => {
   }, [location, hasUnsavedChanges]);
 
   // Handle browser back/forward buttons
-  useEffect(() => {
-    const handlePopState = async (e: PopStateEvent) => {
-      console.log('9');
+  // useEffect(() => {
+  //   const handlePopState = async (e: PopStateEvent) => {
+  //     console.log('9');
       
+  //     debugger;
+  //     const unsavedChanges = await hasUnsavedChanges();
+  //     // hasUnsavedChanges().then((unsavedChanges) => {
+  //       console.log("Unsaved changes: 213 ", unsavedChanges);
+  //        // Should hit here if executed
+  //       if (unsavedChanges) {
+  //       //   e.preventDefault();
+  //       // console.log("window.location.pathname ", window.location.pathname);
+  //       // console.log("currentPath.current ", currentPath.current);
+  //       //   pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+  //       //   window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
+  //       //   setIsModalOpen(true);
+  //       //   setIsLeavingPage(false);
+  //       window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
+  //       }
+  //   //  }).catch(error => console.error(error));
       
-      const unsavedChanges = await hasUnsavedChanges();
-      // hasUnsavedChanges().then((unsavedChanges) => {
-        console.log("Unsaved changes: 213 ", unsavedChanges);
-         // Should hit here if executed
-        if (unsavedChanges) {
-          e.preventDefault();
-        console.log("window.location.pathname ", window.location.pathname);
-        console.log("currentPath.current ", currentPath.current);
-          pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
-          window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
-          setIsModalOpen(true);
-          setIsLeavingPage(false);
-        }
-    //  }).catch(error => console.error(error));
-      
-    };
+  //   };
   
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+  //   window.addEventListener('popstate', handlePopState);
+  //   return () => window.removeEventListener('popstate', handlePopState);
+  // }, [hasUnsavedChanges]);
+  // useEffect(() => {
+  //   const handlePopState = async (e: PopStateEvent) => {
+  //     const nextPath = e.state?.path || window.location.pathname || "/"; // Get next path from history
+
+  //     const unsavedChanges = await hasUnsavedChanges();
+  // debugger;
+  //     if (unsavedChanges) {
+  //       debugger;
+  //       // Re-push the same state to prevent navigation
+  //       window.history.pushState(null, '', window.location.href);
+  //       // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+  //       setIsLeavingPage(false);
+  //       setIsModalOpen(true);
+  //     }
+      
+  //     previousPath.current = nextPath;
+  //   };
+  
+  //   // Push an initial state when the component mounts
+  //   window.history.pushState(null, '', window.location.href);
+  
+  //   // Listen for back/forward button events
+  //   window.addEventListener('popstate', handlePopState);
+  
+  //   return () => {
+  //     window.removeEventListener('popstate', handlePopState);
+  //   };
+  // }, [hasUnsavedChanges]);
+
+  useEffect(() => {
+    const unlisten = _history.listen(({ action, location: newLocation }) => {
+      debugger;
+      if (action === 'POP' || action === 'POP' || action === 'REPLACE') {
+        const intendedPath = newLocation.pathname;
+
+        hasUnsavedChanges().then((unsavedChanges) => {
+          debugger
+          if (unsavedChanges) {
+            debugger;
+            // Re-push the same state to prevent navigation
+            window.history.pushState(null, '', `/accounts/transactions/${_formState.transactionType}`);
+            // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
+            setIsLeavingPage(false);
+            setIsModalOpen(true);
+            pendingLocation.current = intendedPath;
+          } else {
+            // If no unsaved changes, allow navigation and update the previousPath ref
+            previousPath.current = intendedPath;
+          }
+        }).catch((error) => console.error(error));
+      }
+    });
+
+    // Cleanup: Stop listening when the component unmounts
+    return () => unlisten();
   }, [hasUnsavedChanges]);
 
   const handleStay = useCallback(() => {
@@ -238,7 +306,7 @@ export const useUnsavedChangesWarning = () => {
     setIsLeavingPage(false);
     pendingLocation.current = null;
     navigationAttempted.current = false;
-    window.history.pushState(null, '', currentPath.current);
+    // window.history.pushState(null, '', currentPath.current);
   }, []);
 
   const handleLeave = useCallback(() => {

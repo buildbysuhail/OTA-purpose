@@ -187,7 +187,7 @@ export const isDirtyAccTransaction = (
 export const setTransactionForHistory = (
   _formState: any
 ): any => {
-  debugger;
+  
   return {
     transaction: { ..._formState.transaction,
       master:{

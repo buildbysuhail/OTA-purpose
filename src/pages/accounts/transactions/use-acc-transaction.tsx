@@ -121,7 +121,7 @@ export const useAccTransaction = (
     }
   };
   const focusAmount = () => {
-    debugger;
+    
     if (amountRef.current) {
       amountRef.current?.select();
       amountRef.current?.focus();
@@ -246,7 +246,7 @@ export const useAccTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
@@ -1764,7 +1764,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    debugger;
+    
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {

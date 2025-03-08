@@ -24,7 +24,6 @@ export function customJsonParse<T>(jsonString: string): T {
 }
 export function modelToBase64<T>(model: T): string {
   try {
-    debugger;
     // Convert the model to a JSON string
     const jsonString = JSON.stringify(model);
 

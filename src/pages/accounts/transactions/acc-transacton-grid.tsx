@@ -57,7 +57,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "left",
         showInPdf: true,
         cellRender: (cellInfo: any) => {
-          debugger;
+          
           return cellInfo.data?.transactionDate
             ? formatDate(new Date(cellInfo.data?.transactionDate), "MMM dd, yyyy")
             : "";

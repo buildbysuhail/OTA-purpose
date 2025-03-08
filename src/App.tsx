@@ -1,7 +1,7 @@
 import "devextreme/dist/css/dx.light.css";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Route, Routes, useLocation, useNavigate, } from "react-router-dom";
+import { BrowserRouter as Router,Route, Routes, useLocation, useNavigate, } from "react-router-dom";
 import Loader from "./components/common/loader/loader";
 import Switcher from "./components/common/switcher/switcher";
 import Layout from "./components/common/layout/layout";
@@ -207,6 +207,7 @@ function App() {
         <AutoClicker />
         <div className="page dark:!bg-dark-bg" onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
+          
             <Routes>
               <Route path="login" element={<Login />} />
               <Route path="logout" element={<Logout />} />
@@ -224,6 +225,7 @@ function App() {
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
+            
           </Suspense>
         </div>
       </HelmetProvider>

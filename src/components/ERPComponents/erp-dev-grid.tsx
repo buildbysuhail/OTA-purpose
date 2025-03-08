@@ -1041,11 +1041,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Customize the export to PDF to use rendered values
       const customizeCell = (options: any) => {
         if (options.gridCell.rowType != "data") return;
-        debugger;
+        
         const column = gridCols.find(
           (x) => x.dataField == options.gridCell.column.dataField
         );
-debugger;
+
         if (
           column &&
           column.cellRender &&
@@ -1729,7 +1729,7 @@ debugger;
                     <button
                       type="button"
                       onClick={() => {
-                        debugger;
+                        
                         scrollTo(isAtBottom ? 0 : 100);
                       }}
                       className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"

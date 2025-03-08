@@ -176,7 +176,7 @@ const AccTransactionFormContainer: React.FC<AccTransactionProps> = (props) => {
       };
       fetchData();
     } else {
-      debugger;
+      
       initializeVoucher(
         _input, {
           formType: _input.formType,

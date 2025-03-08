@@ -775,7 +775,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const memoizedItems = useMemo(() => items, [JSON.stringify(items)]);
     const memoizedFilteredItems = useMemo(() => filteredItems, [JSON.stringify(filteredItems)]);
     useEffect(() => {
-      debugger;
+      
       // if (triggerEffect) {
       const fieldKey = field?.id?.replaceAll("_id", "");
       const defaultValueKey = getNestedValue(

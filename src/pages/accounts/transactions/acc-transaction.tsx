@@ -596,7 +596,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       const templatesData = formState.templatesData;
       const template = formState.template;
       if (!isInvoker) {
-        debugger;
+        
         const voucher: AccTransactionData = accTransactionInitialData;
         _formState = {
           ...accTransactionFormStateInitialData,
@@ -658,7 +658,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           transactionMasterID
         );
       }
-      debugger;
+      
       _formState = {
         ..._formState,
         transactionType: transactionType ?? "",
@@ -3410,12 +3410,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           // disabled={formState.formElements.pnlMasters?.disabled}
           /> */}
 
-          <Link to="/" className="w-24">
             <ERPButton
               title={t("close")}
+              onClick={() => goToPreviousPage()}
               localInputBox={formState?.userConfig?.inputBoxStyle}
             />
-          </Link>
 
           <ERPButton
             localInputBox={formState?.userConfig?.inputBoxStyle}

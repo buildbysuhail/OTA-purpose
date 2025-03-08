@@ -24,7 +24,7 @@ interface ReportsCardProps {
 
 const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorites }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation('accountsReport');
   const dispatch = useAppDispatch();
   const columns = Math.max(1, data.columns || 1);
   const children = data.children || [];
@@ -148,8 +148,8 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
                       dispatch(route?.action({ isOpen: true }));
                     } else {
                       ERPToast.showWith(
-                        "This Feature is under development. Please try later!",
-                        "warning"
+                        t("feature_under_development_message"),
+                        t("warning")
                       );
                     }
                   }}
@@ -238,8 +238,8 @@ const Item: React.FC<ItemProps> = ({
             dispatch(route?.action({ isOpen: true }));
           } else {
             ERPToast.showWith(
-              "This Feature is under development. Please try later!",
-              "warning"
+              t("feature_under_development_message"),
+              t("warning")
             );
           }
         }}>

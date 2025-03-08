@@ -446,5 +446,20 @@
     "a/c_payable":"A/C Payable",
     "a/c_receivable":"A/C Receivable",
     "stock_flow_report":"Stock flow report",
-    "as_of":"as of"
+    "as_of":"as of",
+
+    "feature_under_development_message":"This feature is under development. Please try later!",
+    "warning":"Warning",
+
+    "final_reports":"Final Reports",
+    "accounts":"Accounts",
+    "income_and_expense":"Income And Expense",
+    "profit_&_loss_account": "Profit & Loss Account",
+    "profit_&_loss_account_detailed":"Profit & Loss Account Detailed",
+    "transaction_history_accounts": "Transaction History Accounts",
+    "transaction_history_inventory": "Transaction History Inventory",
+    "billwise_profit_report": "Billwise Profit Report",
+    "partywise_summary_report": "Partywise Summary Report",
+    "cash_summary_report": "Cash Summary Report",
+    "cash_summary_ledgerwise_report":"Cash Summary Ledgerwise Report"
 }

@@ -438,6 +438,21 @@
     "exclude_opening_income_&_expense": "استبعاد الدخل والمصروفات الافتتاحية",
     "profit_and_loss": "الأرباح والخسائر",
     "profit_and_loss_detailed": "الأرباح والخسائر المفصلة",
-    "balance_sheet_detailed": "الميزانية العمومية المفصلة"
+    "balance_sheet_detailed": "الميزانية العمومية المفصلة",
+
+    "feature_under_development_message": "هذه الميزة قيد التطوير. يرجى المحاولة لاحقًا!",
+    "warning": "تحذير",
+    
+    "final_reports": "التقارير النهائية",
+    "accounts": "الحسابات",
+    "income_and_expense": "الدخل والمصروفات",
+    "profit_&_loss_account": "حساب الأرباح والخسائر",
+    "profit_&_loss_account_detailed": "تفاصيل حساب الأرباح والخسائر",
+    "transaction_history_accounts": "تاريخ المعاملات - الحسابات",
+    "transaction_history_inventory": "تاريخ المعاملات - المخزون",
+    "billwise_profit_report": "تقرير الربح حسب الفاتورة",
+    "partywise_summary_report": "تقرير ملخص حسب الطرف",
+    "cash_summary_report": "تقرير ملخص النقد",
+    "cash_summary_ledgerwise_report": "تقرير ملخص النقد حسب الأستاذ"
   }
   

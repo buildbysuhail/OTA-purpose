@@ -30,14 +30,15 @@ const CustomerDetailsSidebar: React.FC<CustomerDetailsSidebarProps> = ({
 
   return (
     <div onClick={handleOutsideClick}>
-      <div ref={sidebarRef}>
-        <ERPResizableSidebar
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          children={<CustomerDetails setIsOpen={setIsOpen} />}
-        />
-      </div>
-
+      {isOpen && (
+        <div ref={sidebarRef}>
+          <ERPResizableSidebar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            children={<CustomerDetails setIsOpen={setIsOpen} />}
+          />
+        </div>
+      )}
       {displayType === "button" ? (
         <button
           className="fixed top-[3.5rem] right-[0px] p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"

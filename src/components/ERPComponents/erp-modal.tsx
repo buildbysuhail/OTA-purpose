@@ -277,6 +277,7 @@ const ERPModal = React.memo(
                 className="w-full"
                 type="button"
                 title={closeTitle}
+                onTouchEnd={handleClose}
                 onClick={handleClose}
                 tabIndex={-1}
               />
@@ -300,6 +301,7 @@ const ERPModal = React.memo(
             <button
               className="p-2 dark:hover:!text-dark-hover-text hover:bg-[#ff7373] rounded-full"
               onClick={handleClose}
+              onTouchEnd={handleClose} // Add this for mobile touch support
               aria-label="Close"
             >
               <X size={15} />

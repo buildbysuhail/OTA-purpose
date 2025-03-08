@@ -248,14 +248,14 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                       <History className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                     </button>
                   </div>
-
-                  <HistorySidebar
-                    transactionType={transactionType ?? ""}
-                    isOpen={isHistorySidebarOpen}
-                    onClose={() => setIsHistorySidebarOpen(false)}
-                  // data={historyData}
-                  />
-
+                  {transactionType !="" &&
+                    <HistorySidebar
+                      transactionType={transactionType ?? ""}
+                      isOpen={isHistorySidebarOpen}
+                      onClose={() => setIsHistorySidebarOpen(false)}
+                    // data={historyData}
+                    />
+                  }
                   {/* Settings  Button */}
                   <div>
                     {phone ? (

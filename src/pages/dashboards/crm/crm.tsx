@@ -33,44 +33,44 @@ const Crm: FC<CrmProps> = () => {
   const [topExpenses, setTopExpenses] = useState<[]>([]);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   useEffect(() => {
-    api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
-      setTopExpenses(res);
-    });
-    api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
-      setSalesSummary(res);
-    });
-    api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
-      setPurchaseSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
-      setIncomeSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
-      setExpenseSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
-      setReceivableSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
-      setPayableSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
-      setCashSummary(res);
-    });
-    api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
-      setBankSummary(res);
-    });
+    // api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
+    //   setTopExpenses(res);
+    // });
+    // api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
+    //   setSalesSummary(res);
+    // });
+    // api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
+    //   setPurchaseSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
+    //   setIncomeSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
+    //   setExpenseSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
+    //   setReceivableSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
+    //   setPayableSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
+    //   setCashSummary(res);
+    // });
+    // api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
+    //   setBankSummary(res);
+    // });
     /////
-    load();
+    // load();
   }, []);
   const load = async () => {
-    setSalesSummary(await  api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));    
-    setPurchaseSummary(await api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));
-    setIncomeSummary(await api.get('/Accounts/Dashboard/GetIncomeMonthly'));
-    setExpenseSummary(await api.get('/Accounts/Dashboard/GetExpenseMonthly'));    
-    setReceivableSummary(await api.get('/Accounts/Dashboard/GetReceivableMonthly'));
-    setPayableSummary(await api.get('/Accounts/Dashboard/GetPayableMonthly'));
-    setTopExpenses(await api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}));
+    // setSalesSummary(await  api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));    
+    // setPurchaseSummary(await api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary'));
+    // setIncomeSummary(await api.get('/Accounts/Dashboard/GetIncomeMonthly'));
+    // setExpenseSummary(await api.get('/Accounts/Dashboard/GetExpenseMonthly'));    
+    // setReceivableSummary(await api.get('/Accounts/Dashboard/GetReceivableMonthly'));
+    // setPayableSummary(await api.get('/Accounts/Dashboard/GetPayableMonthly'));
+    // setTopExpenses(await api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}));
   }
   const userdata: any = [];
 

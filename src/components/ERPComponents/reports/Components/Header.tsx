@@ -116,7 +116,7 @@ const SearchResultBar = ({ isOpen, searchResults }: any) => {
               return (
                 <div className="w-full p-1" key={`SR_${idx}`}>
                   <p className="text-[13px] hover:bg-accent hover:text-white rounded-lg p-2 cursor-pointer"
-                    onClick={() => { item?.path ? navigate(item?.path) : ERPToast.showWith("This Feature is under development. Please try later!", "warning"); }}>
+                    onClick={() => { item?.path ? navigate(item?.path) : ERPToast.showWith(t("feature_under_development_message"), t("warning")); }}>
                     {t(item?.title)}
                   </p>
                 </div>

@@ -15,7 +15,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation('main');
   const dispatch = useAppDispatch();
   const columns = Math.max(1, data.columns || 1);
   const [items, setItems] = useState<any>(data.children || []);
@@ -123,8 +123,8 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
                             : route?.action && route?.type === "popup"
                               ? dispatch(route?.action({ isOpen: true }))
                               : ERPToast.showWith(
-                                "This Feature is under development. Please try later!",
-                                "warning"
+                                t("feature_under_development_message"),
+                                t("warning")
                               );
                         }}>
                         {t(route?.title)}

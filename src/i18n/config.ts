@@ -20,6 +20,8 @@ import accountsReportEn from "./locales/en/accountsReport-En.json";
 import accountsReportAr from "./locales/ar/accountsReport-Ar.json";
 import transactionEn from "./locales/en/transaction-En.json";
 import transactionAr from "./locales/ar/transaction-Ar.json";
+import inventoryEn from "./locales/en/inventory-En.json";
+import inventoryAr from "./locales/ar/inventory-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
@@ -50,6 +52,7 @@ i18n.use(initReactI18next).init({
       labelDesigner: labelDesignerEn,
       accountsReport: accountsReportEn,
       transaction: transactionEn,
+      inventory: inventoryEn,
     },
     ar: {
       main: mainAr,
@@ -62,6 +65,7 @@ i18n.use(initReactI18next).init({
       labelDesigner: labelDesignerAr,
       accountsReport: accountsReportAr,
       transaction: transactionAr,
+      inventory: inventoryAr,
     },
   },
 });

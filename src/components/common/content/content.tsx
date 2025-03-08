@@ -166,6 +166,9 @@ const AccTransactionGrid = lazy(
 );
 
 // Inventory Masters
+const Products = lazy(
+  () => import("../../../pages/inventory/masters/products/products")
+);
 const ProductGroup = lazy(
   () => import("../../../pages/inventory/masters/product-group/product-group")
 );
@@ -696,6 +699,10 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
+        <Route
+          path="/inventory-masters/products"
+          element={<Products />}
+        />
         <Route
           path="/inventory-masters/product-group"
           element={<ProductGroup />}

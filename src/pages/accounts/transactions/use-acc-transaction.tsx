@@ -1340,6 +1340,25 @@ export const useAccTransaction = (
       );
     }
   };
+  const clearRow = async (
+    isEdit: boolean,
+    accTransactionMasterID: number
+  ) => {
+    await undoEditMode(isEdit, accTransactionMasterID);
+    dispatch(
+      clearState({
+        userSession,
+        applicationSettings,
+        softwareDate,
+        defaultCostCenterID:
+          applicationSettings.accountsSettings?.defaultCostCenterID,
+        counterwiseCashLedgerId: 0,
+        allowSalesCounter: 0,
+        voucherNo: 0,
+        rowOnly:true
+      })
+    );
+  }
   const clearControls = async (
     isEdit: boolean,
     accTransactionMasterID: number
@@ -2557,5 +2576,6 @@ export const useAccTransaction = (
     showBillwise,
     billWiseExcludedTransactions,
     getDrCr,
+    clearRow
   };
 };

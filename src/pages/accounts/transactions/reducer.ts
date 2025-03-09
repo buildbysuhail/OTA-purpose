@@ -47,6 +47,7 @@ const accTransactionSlice = createSlice({
         counterwiseCashLedgerId: number;
         allowSalesCounter: number;
         voucherNo: number | undefined;
+        rowOnly?: boolean | false;
       }>
     ) => {
       const {
@@ -57,29 +58,15 @@ const accTransactionSlice = createSlice({
         counterwiseCashLedgerId,
         allowSalesCounter,
         voucherNo,
+        rowOnly = false
       } = action.payload;
-      state.isBahamdoonPOSReceipt = false;
-      (state.transaction.master.accTransactionMasterID = 0),
-        (state.row.ledgerCode = "");
-      state.transaction.attachments = [];
+      (state.row.ledgerCode = "");
       state.row.ledgerID = null;
-      state.transaction.master.remarks = "";
       state.row.accTransactionDetailID = 0;
-      state.previousNarration = "";
       state.row.chequeStatus = "P";
-      state.transaction.master.currencyRate = 1;
       state.row.currencyID = 0;
-      state.transaction.master.referenceNumber = "";
-      state.transaction.master.commonNarration = "";
-      state.transaction.master.voucherNumber = voucherNo ?? 0;
       state.row.chqDate = moment().local().toISOString();
       state.row.bankDate = moment().local().toISOString();
-      state.transaction.master.transactionDate = moment(
-        softwareDate,
-        "DD/MM/YYYY"
-      )
-        .local()
-        .toISOString();
       state.row.narration = "";
       state.row.bankName = "";
       state.row.projectId = 0;
@@ -104,9 +91,39 @@ const accTransactionSlice = createSlice({
       state.row.taxableAmount = 0;
       state.row.invoiceDate = moment().local().toISOString();
 
+      if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
+        state.row.costCentreID = state.userConfig?.presetCostenterId ?? 0;
+      } else {
+        if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
+          state.row.costCentreID = 0;
+        } else {
+          state.row.costCentreID =
+            applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0;
+        }
+      }
+      state.formElements.btnAdd.label = "Add";
+      state.isRowEdit = false;
+      if(!rowOnly) {
+      state.isBahamdoonPOSReceipt = false;
+      (state.transaction.master.accTransactionMasterID = 0),
+      state.transaction.attachments = [];
+      state.transaction.master.remarks = "";
+      state.previousNarration = "";
+      state.transaction.master.currencyRate = 1;
+      state.transaction.master.referenceNumber = "";
+      state.transaction.master.commonNarration = "";
+      state.transaction.master.voucherNumber = voucherNo ?? 0;
+      state.transaction.master.transactionDate = moment(
+        softwareDate,
+        "DD/MM/YYYY"
+      )
+        .local()
+        .toISOString();
+        
+
+
       state.transaction.details = [];
       state.isEdit = false;
-      state.isRowEdit = false;
       state.printOnSave = true;
       state.transaction.master.isLocked = false;
       state.transaction.master.totalAmount = 0;
@@ -136,22 +153,15 @@ const accTransactionSlice = createSlice({
       state.formElements.linkEdit.visible = false;
 
       if ((state.userConfig?.presetCostenterId ?? 0) > 0) {
-        state.row.costCentreID = state.userConfig?.presetCostenterId ?? 0;
         state.formElements.costCentreID.disabled = true;
         state.formElements.linkEdit.visible = false;
-      } else {
-        if (userSession.dbIdValue == "SAMAPLASTICS2121212121212") {
-          state.row.costCentreID = 0;
-        } else {
-          state.row.costCentreID =
-            applicationSettings?.accountsSettings?.defaultCostCenterID ?? 0;
-        }
       }
-      state.formElements.btnAdd.label = "Add";
       state.prev = modelToBase64Unicode(setTransactionForHistory({
         transaction: { ...state.transaction },
         row: { ...state.row },
       }));
+
+    }
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (

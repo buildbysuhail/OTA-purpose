@@ -299,6 +299,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     showBillwise,
     billWiseExcludedTransactions,
     getDrCr,
+    clearRow
   } = useAccTransaction(
     transactionType ?? "",
     btnSaveRef,
@@ -2675,13 +2676,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
                 t={t}
               />
-              <AccVoucherNo
+            <AccVoucherNo
                 ref={voucherNumberRef}
                 formState={formState}
                 dispatch={dispatch}
                 handleKeyDown={handleKeyDown}
                 loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
                 t={t}
+                phone={true}
               />
             </div>
 
@@ -3149,18 +3151,21 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         )}
       <div>
         {isOpen && (
-          <ERPModal
-            isForm={true}
-            isOpen={isOpen}
-            closeButton="LeftArrow"
-            hasSubmit={false}
-            closeTitle={t("close")}
-            title={t("add_ledger")}
-            width={1000}
-            height={800}
-            isFullHeight={true}
-            isRemoveSomething={true}
-            closeModal={() => setIsOpen(false)}
+         <ERPModal
+         isForm={true}
+         isOpen={isOpen}
+         closeButton="LeftArrow"
+         hasSubmit={false}
+         closeTitle={t("close")}
+         title={t("add_ledger")}
+         width={1000}
+         height={800}
+         isFullHeight={true}
+         isRemoveSomething={true}
+         closeModal={() => {setIsOpen(false); clearRow(
+           formState.isEdit,
+           formState.transaction.master.accTransactionMasterID
+         )}}
             content={
               <div
                 className="flex flex-col gap-0 px-0  py-0 pb-[130px] h-screen overflow-y-auto   "
@@ -3247,9 +3252,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
                 <div></div>
                 <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
-                  <ERPButton
+                <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    title={t("save_&_new")}
+                    title={`${t(formState.formElements.btnAdd.label)} ${t('and_new')}`}
                     onClick={() => {
                       addOrEditRow();
                       handleClearControls();
@@ -3259,7 +3264,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   />
                   <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
-                    title={t("save")}
+                    title={t(formState.formElements.btnAdd.label)}
                     onClick={() => {
                       addOrEditRow();
                       setIsOpen(false);

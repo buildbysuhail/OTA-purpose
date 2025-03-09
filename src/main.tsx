@@ -7,11 +7,11 @@ import { Provider } from 'react-redux';
 import store from './redux/store'
 import App from './App'
 import { ToastContainer } from 'react-toastify'
-import { history } from './history';
+import { history as _history } from './history';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.Fragment>
-    <BrowserRouter history={history}>
+    <BrowserRouter >
       <div className="scrollbar-hide">
         <Provider store={store}>
           <App />

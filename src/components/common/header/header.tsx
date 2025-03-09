@@ -396,7 +396,7 @@ const Header: FC<HeaderProps> = () => {
                   </a>
                 </div>
               </div>
-              <div className="header-element md:px-[0.325rem] !items-center" onClick={() => toggleSidebar()}>
+              <div className="header-element md:px-[0.325rem] !items-center">
                 {/* <Link
                   aria-label="Hide Sidebar"
                   className="sidemenu-toggle animated-arrow  hor-toggle horizontal-navtoggle inline-flex items-center"

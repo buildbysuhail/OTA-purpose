@@ -139,21 +139,21 @@ export const useUnsavedChangesWarning = () => {
     
     const blockNavigation = async (e: MouseEvent) => {
       debugger
-      const target = e.target;
+      const target = e.target as any;
       const isNavigationLink =
-      target.tagName === "a" ||
-      target.tagName === "A" ||
-        target.closest("a") ||
-        target.hasAttribute("href") ||
-        target.role === "link" ;
+      target?.tagName === "a" ||
+      target?.tagName === "A" ||
+        target?.closest("a") ||
+        target?.hasAttribute("href") ||
+        target?.role === "link" ;
         console.log("🔹 Clicked Element:", target);
-        console.log("🔹 Tag Name:", target.tagName);
-        console.log("🔹 Attributes:", target.attributes);
-        console.log("🔹 Role:", target.getAttribute("role"));
-        console.log("🔹 Closest <a>:", target.closest("a"));
-        console.log("🔹 Closest [role='link']:", target.closest("[role='link']"));
-        console.log("🔹 Closest [role='button']:", target.closest("[role='button']"));
-        console.log("🔹 Closest [href]:", target.closest("[href]"));
+        console.log("🔹 Tag Name:", target?.tagName);
+        console.log("🔹 Attributes:", target?.attributes);
+        console.log("🔹 Role:", target?.getAttribute("role"));
+        console.log("🔹 Closest <a>:", target?.closest("a"));
+        console.log("🔹 Closest [role='link']:", target?.closest("[role='link']"));
+        console.log("🔹 Closest [role='button']:", target?.closest("[role='button']"));
+        console.log("🔹 Closest [href]:", target?.closest("[href]"));
       if (isNavigationLink) {
         // const unsavedChanges = await hasUnsavedChanges();
         hasUnsavedChanges().then((unsavedChanges) => {
@@ -162,7 +162,7 @@ export const useUnsavedChangesWarning = () => {
             e.stopPropagation();
             console.log('3');
             
-            const href = (target.closest('a')?.getAttribute('href') || target.getAttribute('href'));
+            const href = (target?.closest('a')?.getAttribute('href') || target?.getAttribute('href'));
             if (href) {
               console.log('4');
               
@@ -183,37 +183,37 @@ export const useUnsavedChangesWarning = () => {
   }, [hasUnsavedChanges]);
 
   // Handle history changes and location updates
-  useEffect(() => {
-    if (isInitialMount.current) {
-      console.log('5');
+  // useEffect(() => {
+  //   if (isInitialMount.current) {
+  //     console.log('5');
       
-      isInitialMount.current = false;
-      return;
-    }
+  //     isInitialMount.current = false;
+  //     return;
+  //   }
   
-    const now = Date.now();
-    if (now - lastNavigationTime.current < 100) {
-      console.log('6');
+  //   const now = Date.now();
+  //   if (now - lastNavigationTime.current < 100) {
+  //     console.log('6');
       
-      return;
-    }
-    lastNavigationTime.current = now;
+  //     return;
+  //   }
+  //   lastNavigationTime.current = now;
   
-    if (location.pathname !== currentPath.current && !navigationAttempted.current) {
-      console.log('7');
+  //   if (location.pathname !== currentPath.current && !navigationAttempted.current) {
+  //     console.log('7');
       
-      hasUnsavedChanges().then((unsavedChanges) => {
-        if (unsavedChanges) {
-          console.log('8');
+  //     hasUnsavedChanges().then((unsavedChanges) => {
+  //       if (unsavedChanges) {
+  //         console.log('8');
           
-          pendingLocation.current = location.pathname;
-          navigationAttempted.current = true;
-          // window.history.pushState(null, '', currentPath.current);
-          setIsLeavingPage(false);
-        }
-      });
-    }
-  }, [location, hasUnsavedChanges]);
+  //         pendingLocation.current = location.pathname;
+  //         navigationAttempted.current = true;
+  //         // window.history.pushState(null, '', currentPath.current);
+  //         setIsLeavingPage(false);
+  //       }
+  //     });
+  //   }
+  // }, [location, hasUnsavedChanges]);
 
   // Handle browser back/forward buttons
   // useEffect(() => {
@@ -274,8 +274,8 @@ export const useUnsavedChangesWarning = () => {
   useEffect(() => {
     const unlisten = _history.listen(({ action, location: newLocation }) => {
       debugger;
-      if (action === 'POP' || action === 'POP' || action === 'REPLACE') {
-        const intendedPath = newLocation.pathname;
+      if (action === 'POP' || action === 'PUSH' || action === 'REPLACE') {
+        const intendedPath = location.pathname ==  newLocation.pathname ? pendingLocation.current: newLocation.pathname;
 
         hasUnsavedChanges().then((unsavedChanges) => {
           debugger
@@ -286,10 +286,10 @@ export const useUnsavedChangesWarning = () => {
             // pendingLocation.current = `/accounts/transactions/${_formState.transactionType}`;
             setIsLeavingPage(false);
             setIsModalOpen(true);
-            pendingLocation.current = intendedPath;
+            pendingLocation.current = intendedPath == null ? pendingLocation.current: intendedPath;
           } else {
             // If no unsaved changes, allow navigation and update the previousPath ref
-            previousPath.current = intendedPath;
+            pendingLocation.current = intendedPath == null ? pendingLocation.current: intendedPath;
           }
         }).catch((error) => console.error(error));
       }
@@ -304,14 +304,14 @@ export const useUnsavedChangesWarning = () => {
     
     setIsModalOpen(false);
     setIsLeavingPage(false);
-    pendingLocation.current = null;
+    // pendingLocation.current = null;
     navigationAttempted.current = false;
     // window.history.pushState(null, '', currentPath.current);
   }, []);
 
   const handleLeave = useCallback(() => {
     console.log('11');
-    
+    debugger;
     if (isLeavingPage) {
       
       console.log('12');

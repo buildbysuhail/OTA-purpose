@@ -18,10 +18,10 @@ const Switcher: FC<SwitcherProps> = () => {
   }, []);
   const customStyles: any = `${local_varaiable?.colorPrimaryRgb != '' ? `--primary-rgb: ${local_varaiable?.colorPrimaryRgb}` : ''};
   ${local_varaiable?.colorPrimary != '' ? `--primary: ${local_varaiable?.colorPrimary}` : ''};
-  ${local_varaiable?.darkBg != '' ? `--dark-bg: ${local_varaiable?.darkBg}` : ''};
-  ${local_varaiable?.bodyBg != '' ? `--body-bg: ${local_varaiable?.bodyBg}` : ''};
-  ${local_varaiable?.inputBorder != '' ? `--input-border: ${local_varaiable?.inputBorder}` : ''};
-  ${local_varaiable?.Light != '' ? `--light: ${local_varaiable?.Light}` : ''};`;
+  ${local_varaiable?.darkBg != '' ? `--dark-bg: ${local_varaiable?.darkBg};` : ''}
+  ${local_varaiable?.bodyBg != '' ? `--body-bg: ${local_varaiable?.bodyBg};` : ''}
+  ${local_varaiable?.inputBorder != '' ? `--input-border: ${local_varaiable?.inputBorder};` : ''}
+  ${local_varaiable?.Light != '' ? `--light: ${local_varaiable?.Light};` : ''}`;
 
 
   return (
@@ -45,8 +45,8 @@ const Switcher: FC<SwitcherProps> = () => {
           icon-text={local_varaiable?.iconText}
 
           //Styles
-          style={customStyles
-          }
+          // style={customStyles
+          // }
         ></html>
       </Helmet>
       <div id="hs-overlay-switcher" className="hs-overlay hidden ti-offcanvas ti-offcanvas-right" tabIndex={-1}>

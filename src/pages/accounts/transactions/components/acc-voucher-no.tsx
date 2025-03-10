@@ -72,7 +72,7 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>
             disabled={formState.formElements.voucherNumber?.disabled}
             labelInfo={
               <button
-                className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-1.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
+                className={`pe-3`}
               >
                 <VoucherNumberDetailsSidebar displayType="link" />
               </button>

@@ -10,15 +10,16 @@ const api = new APIClient();
 
 interface AccVoucherNoPrefixProps extends AccVoucherElementProps {
   loadAndSetAccTransVoucher: (usingManualInvNumber?: boolean, voucherNumber?: number, voucherPrefix?: string, voucherType?: string, formType?: string, manualInvoiceNumber?: string, accTransactionMasterID?: number, mode?: "increment" | "decrement" | undefined, skipPrompt?: boolean | false, setVoucherNo?: boolean | false) => Promise<boolean>;
+  phone?: boolean;
 }
 
-const AccVoucherPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>(({
-
+const AccVoucherPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>(({ 
   formState,
   dispatch,
   handleKeyDown,
   loadAndSetAccTransVoucher,
   t,
+  phone,
 }, ref) => {
 
   return (
@@ -29,7 +30,7 @@ const AccVoucherPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixPr
           id="master_voucherPrefix"
           label={t(formState.formElements.voucherPrefix.label)}
           value={formState.transaction.master.voucherPrefix}
-          className="max-w-[100px]"
+          className={`max-w-[100px] ${phone? "!w-[90px]" : ""}`}
           onChange={(e) =>
             dispatch(
               accFormStateTransactionMasterHandleFieldChange({
@@ -43,12 +44,8 @@ const AccVoucherPrefix = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixPr
           }
         />
       )}
-
     </>
   );
 });
 
 export default React.memo(AccVoucherPrefix);
-
-
-

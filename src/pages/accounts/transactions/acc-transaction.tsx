@@ -2630,7 +2630,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       {deviceInfo?.isMobile && (
         <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
           {/* Sale Header */}
-          <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
+          <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-[50px]">
             <ERPPreviousUrlButton></ERPPreviousUrlButton>
             <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
               {t("cash_payment")}
@@ -2674,6 +2674,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 dispatch={dispatch}
                 handleKeyDown={handleKeyDown}
                 loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+                phone={true}
                 t={t}
               />
             <AccVoucherNo
@@ -2744,7 +2745,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
               <div className="flex justify-center mb-2">
                 <button
-                  className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
+                  className="w-full border border-gray-300 px-4 py-2 h-[35px]  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
                   onClick={() => setShowInputBox(!showInputBox)}
                 >
                   {showInputBox ? t("view_less") : t("view_more")}
@@ -2931,7 +2932,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <button
                 // onClick={addItem}
                 onClick={() => setIsOpen(true)}
-                className="flex justify-center items-center border-2 border-gray-400 bg-white mb-4 p-2 rounded w-full text-blue-500"
+                className="flex justify-center items-center border-2 border-gray-400 bg-white mb-2 p-2 rounded w-full text-blue-500 h-[35px]"
               >
                 {/* <Plus className="mr-2 text-blue-500" size={16} /> Add Items{" "} */}
                 <i

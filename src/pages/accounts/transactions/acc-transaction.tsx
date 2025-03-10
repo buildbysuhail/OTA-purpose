@@ -1656,30 +1656,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, []);
 
   const summaryItems: SummaryConfig[] = [
-    // {
-    //   column: "amount",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "amountFC",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "debit",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "credit",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "amountFC",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "debit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "discount",
       summaryType: "sum",

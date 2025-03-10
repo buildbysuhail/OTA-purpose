@@ -2567,7 +2567,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               GridPreferenceChooserAccTrance
               heightToAdjustOnWindows={
                 formState.userConfig?.gridHeight ??
-                (isChequeSectionVisible ? 650 : 600)
+                (isChequeSectionVisible ? 700 : 680)
               }
               summaryItems={summaryItems}
               ref={erpGridRef}

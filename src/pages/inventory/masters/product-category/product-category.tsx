@@ -10,155 +10,142 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { toggleProductCategory } from "../../../../redux/slices/popup-reducer";
 import { ProductCategoryManage } from "./product-category-manage";
 
-
 const ProductCategory = () => {
-  
-const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryManage), []);
-  const { t } = useTranslation();
+  const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryManage), []);
+  const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo( () => [
-      {
-        dataField: "siNo",
-        caption: t("SiNo"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "siNo",
+      caption: t("SiNo"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "productCategoryCode",
+      caption: t("category_code"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      visible: false
+    },
+    {
+      dataField: "productCategoryName",
+      caption: t("category_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "shortName",
+      caption: t("short_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("created_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "isCommon",
+      caption: t("is_common"),
+      dataType: "boolean",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "actions",
+      caption: t("actions"),
+      allowSearch: false,
+      allowFiltering: false,
+      fixed: true,
+      fixedPosition: "right",
+      width: 100,
+      cellRender: (cellElement: any) => {
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            delete={{
+              onSuccess: () => { dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true, })); },
+              confirmationRequired: true,
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+              url: Urls?.productCategory, key: cellElement?.data?.id
+            }}
+          />
+        )
       },
-      {
-        dataField: "id",
-        caption: t("id"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "productCategoryCode",
-        caption: t("category_code"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-        visible:false
-      },
-      {
-        dataField: "productCategoryName",
-        caption: t("category_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-      },
-      {
-        dataField: "shortName",
-        caption: t("short_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-
-
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "createdUser",
-        caption: t("created_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:150
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "modifiedUser",
-        caption: t("modified_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:150
-
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "isCommon",
-        caption: t("is_common"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "actions",
-        caption: t("actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              edit={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              delete={{
-                onSuccess: () => {
-                  dispatch(
-                    toggleProductCategory({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
-                },
-                confirmationRequired: true,
-                confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.productCategory,key:cellElement?.data?.id
-              }}
-            />
-          )
-        },
-      },
-    ],
-    []
+    },
+  ], []
   );
+
   useEffect(() => {
     dispatch(toggleProductCategory({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -173,29 +160,24 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
                   gridId="grd_productCategory"
                   popupAction={toggleProductCategory}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleProductCategory({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleProductCategory({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.productCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <ERPModal
         isOpen={rootState.PopupData.productCategory.isOpen || false}
         title={t("product_category")}
-    
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleProductCategory({ isOpen: false }));
-        }}
-        content={<MemoizedProductCategoryManage/>}
+        width={600}
+        height={240}
+        closeModal={() => { dispatch(toggleProductCategory({ isOpen: false })); }}
+        content={<MemoizedProductCategoryManage />}
       />
     </Fragment>
   );

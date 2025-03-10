@@ -13,7 +13,6 @@ import { toggleProductCategory } from "../../../../redux/slices/popup-reducer";
 export const ProductCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -24,18 +23,14 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<ProductCategoryManageData>({
     url: Urls.productCategory,
-    onClose:useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.productCategory.key,
     useApiClient: true,
     initialData: initialProductCategoryManageData
   });
+  const { t } = useTranslation('inventory');
 
-  const { t } = useTranslation();
-  
   return (
     <div className="w-full modal-content">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -47,27 +42,31 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("productCategoryCode", data.productCategoryCode);
           }}
         />
+
         <ERPInput
           {...getFieldProps("productCategoryName")}
           label={t("name")}
           placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("productCategoryName", data.productCategoryName)}
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPCheckbox
           {...getFieldProps('isCommon')}
-          label={t("common")}
+          label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
         />
       </div>

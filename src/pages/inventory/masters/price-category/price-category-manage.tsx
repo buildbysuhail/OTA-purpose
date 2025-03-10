@@ -12,7 +12,6 @@ import { togglePriceCategory } from "../../../../redux/slices/popup-reducer";
 export const PriceCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -23,7 +22,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<PriceCategoryData>({
     url: Urls.priceCategory,
-    onClose:useCallback(() => dispatch(togglePriceCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(togglePriceCategory({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(togglePriceCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -32,7 +31,8 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialPriceCategoryData
   });
-  const { t } = useTranslation();
+
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -41,28 +41,30 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
           {...getFieldProps("priceCategoryName")}
           label={t("name")}
           placeholder={t("name")}
-          onChangeData={(data: any) => {
-            handleFieldChange("priceCategoryName", data.priceCategoryName);
-          }}
+          onChangeData={(data: any) => { handleFieldChange("priceCategoryName", data.priceCategoryName); }}
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPInput
           {...getFieldProps("discountPerc")}
           label={t("discount_%")}
           placeholder={t("discount_%")}
           onChangeData={(data: any) => handleFieldChange("discountPerc", data.discountPerc)}
         />
+
         <ERPInput
           {...getFieldProps("marginPerc")}
           label={t("margin_%")}

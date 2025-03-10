@@ -1656,30 +1656,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, []);
 
   const summaryItems: SummaryConfig[] = [
-    // {
-    //   column: "amount",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "amountFC",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "debit",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
-    // {
-    //   column: "credit",
-    //   summaryType: "sum",
-    //   valueFormat: "currency",
-    //   customizeText: customizeSummaryRow,
-    // },
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "amountFC",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "debit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "credit",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "discount",
       summaryType: "sum",
@@ -2567,7 +2567,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               GridPreferenceChooserAccTrance
               heightToAdjustOnWindows={
                 formState.userConfig?.gridHeight ??
-                (isChequeSectionVisible ? 650 : 600)
+                (isChequeSectionVisible ? 700 : 680)
               }
               summaryItems={summaryItems}
               ref={erpGridRef}

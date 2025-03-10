@@ -11,150 +11,141 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { togglePriceCategory } from "../../../../redux/slices/popup-reducer";
 
 const PriceCategory = () => {
-  
-const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage), []);
-  const { t } = useTranslation();
+  const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage), []);
+  const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo( () => [
-      {
-        dataField: "siNo",
-        caption: t("SiNo"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "id",
-        caption: t("id"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "priceCategoryName",
-        caption: t("price_category_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-      },
-      {
-        dataField: "shortName",
-        caption: t("short_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "discountPerc",
-        caption: t("discount_%"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "marginPerc",
-        caption: t("margin_%"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "createdUser",
-        caption: t("created_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:200
-      },
-      {
-        dataField: "modifiedUser",
-        caption: t("modified_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:200
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "siNo",
+      caption: t("SiNo"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "priceCategoryName",
+      caption: t("price_category_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "shortName",
+      caption: t("short_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "discountPerc",
+      caption: t("discount_%"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "marginPerc",
+      caption: t("margin_%"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("created_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200
 
+    },
+    {
+      dataField: "actions",
+      caption: t("actions"),
+      allowSearch: false,
+      allowFiltering: false,
+      fixed: true,
+      fixedPosition: "right",
+      width: 100,
+      cellRender: (cellElement: any) => {
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            delete={{
+              onSuccess: () => { dispatch(togglePriceCategory({ isOpen: false, key: null, reload: true, })); },
+              confirmationRequired: true,
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+              url: Urls?.priceCategory, key: cellElement?.data?.id
+            }}
+          />
+        )
       },
-      {
-        dataField: "actions",
-        caption: t("actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id,reload: false })}}
-              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id,reload: false })}}
-              delete={{
-                onSuccess: () => {
-                  dispatch(
-                    togglePriceCategory({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
-                },
-                confirmationRequired: true,
-                confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.priceCategory,key:cellElement?.data?.id
-              }}
-            />
-          )
-        },
-      },
-    ],
-    []
+    },
+  ], []
   );
+
   useEffect(() => {
     dispatch(togglePriceCategory({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -169,15 +160,10 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
                   gridId="priceCategory"
                   popupAction={togglePriceCategory}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      togglePriceCategory({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(togglePriceCategory({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.priceCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -186,12 +172,11 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
       <ERPModal
         isOpen={rootState.PopupData.priceCategory.isOpen || false}
         title={t("price_category")}
-    
         isForm={true}
-        closeModal={() => {
-          dispatch(togglePriceCategory({ isOpen: false }));
-        }}
-        content={<MemoizedPriceCategoryManage/>}
+        width={600}
+        height={320}
+        closeModal={() => { dispatch(togglePriceCategory({ isOpen: false })); }}
+        content={<MemoizedPriceCategoryManage />}
       />
     </Fragment>
   );

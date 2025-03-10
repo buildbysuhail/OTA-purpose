@@ -62,9 +62,7 @@ export const useReportPrint = () => {
   
     const printStatement = async ({orientation,data}:printStatement) => {
       await handleDirectPrint({orientation,data});
-     
     };
-  
     return {
      printStatement,
     };

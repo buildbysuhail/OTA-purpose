@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   tableContainer: {
     width: "100%",
     flexGrow: 1,
+    padding:10
   },
   tableBody: {
     display: "flex",
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   tableHeader: {
     backgroundColor: "#f0f0f0",
     fontWeight: 700,
-    fontSize: 9,
+    fontSize: 10,
   },
   tableCell: {
     borderStyle: "solid",

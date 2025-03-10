@@ -63,6 +63,7 @@ export default function FontRegistration() {
         { src: PoppinsBold, fontWeight: 700, fontStyle: 'normal' },
         { src: PoppinsItalic, fontWeight: 400, fontStyle: 'italic' },
         { src: PoppinsMedium, fontWeight: 500, fontStyle: 'normal' },
+        { src: PoppinsMedium, fontWeight: 600, fontStyle: 'normal' },
         
       ],
     });

@@ -1,147 +1,125 @@
-// import { View, Text, StyleSheet } from "@react-pdf/renderer";
-// import { TemplateState } from "../../Designer/interfaces";
+import { View, Text, StyleSheet } from "@react-pdf/renderer"
+import React from "react"
 
-// // Helper function to get column styles based on width input
-// const getColumnStyle = (widthSetting: any) => {
-//   return (!widthSetting || widthSetting === "")
-//     ? { width: "auto", flexGrow: 1 }
-//     : { width: `${widthSetting}%`, flexGrow: 0 };
-// };
+const styles = StyleSheet.create({
+  tableContainer: {
+    width: "100%",
+    flexGrow: 1,
+  },
+  tableBody: {
+    display: "flex",
+    width: "auto",
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#bfbfbf",
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+  },
+  tableRow: {
+    flexDirection: "row",
+  },
+  tableRowEven: {
+    flexDirection: "row",
+    backgroundColor: "#f2f2f2",
+  },
+  tableHeader: {
+    backgroundColor: "#f0f0f0",
+    fontWeight: 700,
+    fontSize: 9,
+  },
+  tableCell: {
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#bfbfbf",
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    padding: 5,
+    fontSize: 8,
+    fontFamily: "Roboto",
+  },
+  dateCell: {
+    width: "12%",
+  },
+  voucherCell: {
+    width: "12%",
+  },
+  poNumberCell: {
+    width: "16%",
+  },
+  debitCell: {
+    width: "20%",
+    textAlign: "right",
+  },
+  creditCell: {
+    width: "20%",
+    textAlign: "right",
+  },
+  balanceCell: {
+    width: "20%",
+    textAlign: "right",
+  },
+  narrationRow: {
+    backgroundColor: "#f9f9f9",
+    fontStyle: "italic",
+    fontSize: 7,
+  },
+})
 
-// const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
-//   const adviceTableState = template?.adviceTableState;
-//   const propertiesState = template?.propertiesState;
+// Format currency
+const formatCurrency = (amount: number) => {
+  return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
 
-//   const labelStyles = {
-//     fontWeight: propertiesState?.label_font_weight,
-//     fontStyle: propertiesState?.label_font_style,
-//     fontFamily: propertiesState?.font_family,
-//   };
+const Table = ({ data }: { data: any }) => {
+  return (
+    <View style={styles.tableContainer}>
+      {/* Table Header */}
+      <View style={[styles.tableRow, styles.tableHeader]} fixed>
+        <Text style={[styles.tableCell, styles.dateCell]}>Date</Text>
+        <Text style={[styles.tableCell, styles.voucherCell]}>Voucher</Text>
+        <Text style={[styles.tableCell, styles.poNumberCell]}>PO Number</Text>
+        <Text style={[styles.tableCell, styles.debitCell]}>Debit</Text>
+        <Text style={[styles.tableCell, styles.creditCell]}>Credit</Text>
+        <Text style={[styles.tableCell, styles.balanceCell]}>Balance</Text>
+      </View>
 
-//   const styles = StyleSheet.create({
-//     table: {
-//       marginBottom: 10,
-//     },
-//     thead: {
-//       backgroundColor: adviceTableState?.showTableHeaderBg
-//         ? adviceTableState?.tableHeaderBgColor
-//         : "#fff",
-//       color: adviceTableState?.headerFontColor || "#000",
-//       fontSize: adviceTableState?.headerFontSize || 12,
-//       flexDirection: "row",
-//       flexWrap: "nowrap",
-//       borderBottom: `1px solid ${
-//         adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor : ""
-//       }`,
-//     },
-//     th: {
-//       padding: 5,
-//       textAlign: "center",
-//       flexGrow: 1,
-//     },
-//     tbody: {
-//       flexDirection: "column",
-//     },
-//     tr: {
-//       flexDirection: "row",
-//       flexWrap: "nowrap",
-//       borderBottom: `1px solid ${
-//         adviceTableState?.showTableBorder ? adviceTableState?.tableBorderColor : ""
-//       }`,
-//       backgroundColor: adviceTableState?.showRowBg
-//         ? adviceTableState?.itemRowBgColor
-//         : "#fff",
-//     },
-//     td: {
-//       padding: 5,
-//       textAlign: "center",
-//       color: adviceTableState?.itemRowFontColor || "#000",
-//       fontSize: adviceTableState?.itemRowFontSize || 12,
-//       fontWeight: propertiesState?.font_weight,
-//       flexGrow: 1,
-//     },
-//   });
+      {/* Table Body */}
+      <View style={styles.tableBody}>
+        {data.map((item: any, index: number) => {
+          // Determine if this is a narration row
+          const isNarrationRow = item.narration && item.narration.trim() !== ""
 
-//   return (
-//     <View>
-//       <View style={[styles.table, labelStyles]}>
-//         {/* Table Header */}
-//         <View
-//           style={styles.thead}
-//           {...(adviceTableState?.headerRepeatOnPage ? { fixed: true } : {})}
-//         >
-//           {adviceTableState?.showLineItemNumber && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.lineItemNumberWidth)]}>
-//               {adviceTableState?.lineItemNumberLabel || "Invoice Number"}
-//             </Text>
-//           )}
-//           {adviceTableState?.showInvoiceDate && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.InvoiceDateWidth)]}>
-//               {adviceTableState?.InvoiceDateLabel || "Invoice Date"}
-//             </Text>
-//           )}
-//           {adviceTableState?.showInvoiceAmount && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.InvoiceAmountWidth)]}>
-//               {adviceTableState?.InvoiceAmountLabel || "Invoice Amount"}
-//             </Text>
-//           )}
-//           {adviceTableState?.showWithholdingTax && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.WithholdingTaxWidth)]}>
-//               {adviceTableState?.WithholdingTaxLabel || "Withholding Tax"}
-//             </Text>
-//           )}
-//           {adviceTableState?.showTCSAmount && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.TCSAmountWidth)]}>
-//               {adviceTableState?.TCSAmountLabel || "TCS Amount"}
-//             </Text>
-//           )}
-//           {adviceTableState?.showPaymentAmount && (
-//             <Text style={[styles.th, getColumnStyle(adviceTableState?.PaymentAmountWidth)]}>
-//               {adviceTableState?.PaymentAmountLabel || "Payment Amount"}
-//             </Text>
-//           )}
-//         </View>
+          return (
+            <React.Fragment key={`${item.id}-${index}`}>
+              {/* Main transaction row */}
+              <View style={index % 2 === 0 ? styles.tableRow : styles.tableRowEven}>
+                <Text style={[styles.tableCell, styles.dateCell]}>{item.date}</Text>
+                <Text style={[styles.tableCell, styles.voucherCell]}>
+                  {item.form} {item.vchNo}
+                </Text>
+                <Text style={[styles.tableCell, styles.poNumberCell]}>{item.refNo}</Text>
+                <Text style={[styles.tableCell, styles.debitCell]}>
+                  {item.debit > 0 ? formatCurrency(item.debit) : "0.00"}
+                </Text>
+                <Text style={[styles.tableCell, styles.creditCell]}>
+                  {item.credit > 0 ? formatCurrency(item.credit) : "0.00"}
+                </Text>
+                <Text style={[styles.tableCell, styles.balanceCell]}>{formatCurrency(item.balance)} Dr</Text>
+              </View>
 
-//         {/* Table Body */}
-//         <View style={styles.tbody}>
-//           {data?.details.map((val: any, index: number) => (
-//             <View key={`tbr${index}`} style={styles.tr}>
-//               {adviceTableState?.showLineItemNumber && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.lineItemNumberWidth)]}>
-//                   INV-00{index + 1}
-//                 </Text>
-//               )}
-//               {adviceTableState?.showInvoiceDate && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.InvoiceDateWidth)]}>
-//                   2024-01-{10 + index}
-//                 </Text>
-//               )}
-//               {adviceTableState?.showInvoiceAmount && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.InvoiceAmountWidth)]}>
-//                   {1000 + index * 500}.00
-//                 </Text>
-//               )}
-//               {adviceTableState?.showWithholdingTax && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.WithholdingTaxWidth)]}>
-//                   {50 + index * 10}.00
-//                 </Text>
-//               )}
-//               {adviceTableState?.showTCSAmount && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.TCSAmountWidth)]}>
-//                   {20 + index * 5}.00
-//                 </Text>
-//               )}
-//               {adviceTableState?.showPaymentAmount && (
-//                 <Text style={[styles.td, getColumnStyle(adviceTableState?.PaymentAmountWidth)]}>
-//                   {800 + index * 200}.00
-//                 </Text>
-//               )}
-//             </View>
-//           ))}
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
+              {/* Narration row if exists */}
+              {isNarrationRow && (
+                <View style={[styles.tableRow, styles.narrationRow]}>
+                  <Text style={[styles.tableCell, { width: "100%" }]}>narration: {item.narration}</Text>
+                </View>
+              )}
+            </React.Fragment>
+          )
+        })}
+      </View>
+    </View>
+  )
+}
 
-// export default Table;
+export default Table
+

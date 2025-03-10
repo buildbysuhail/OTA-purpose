@@ -3172,7 +3172,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 className="flex flex-col gap-0 px-0  py-0 pb-[130px] h-screen overflow-y-auto   "
                 style={{}} // Inline styles for full screen
               >
-                <div className=" max-w-none flex-grow h-full px-5">
+                <div className=" max-w-none flex-grow h-full px-0">
                   {/* <div className="flex justify-between items-center mb-1">
                   <div className="text-gray-600"></div>
 
@@ -3252,7 +3252,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 </div>
 
                 <div></div>
-                <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
+                <div className="flex left-0 bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                 <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     title={`${t(formState.formElements.btnAdd.label)} ${t('and_new')}`}

@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 600,
     fontFamily: "Poppins",
-    fontStyle: "medium",
   },
 
   subheader2: {
@@ -57,7 +56,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 600,
     fontFamily: "Poppins",
-    fontStyle: "medium",
   },
 
   tableCell: {
@@ -72,7 +70,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 600,
     fontFamily: "Poppins",
-    fontStyle: "medium",
   },
 
   title: {
@@ -86,7 +83,6 @@ const styles = StyleSheet.create({
 
   bold: {
     fontWeight: 700,
-    fontStyle: "bold",
   },
 
   blue: {
@@ -97,7 +93,6 @@ const styles = StyleSheet.create({
 
   red: {
     fontWeight: 700,
-    fontStyle: "bold",
     color: "#FF0000",
     fontFamily: "Poppins",
     fontSize: 10,
@@ -105,7 +100,6 @@ const styles = StyleSheet.create({
 
   SaddleBrown: {
     fontWeight: 700,
-    fontStyle: "bold",
     color: "#8B4513",
     fontFamily: "Poppins",
     fontSize: 10,
@@ -165,7 +159,7 @@ const ProfitAndLossPDFTemplate: React.FC<{
                 fontSize: 14,
                 fontWeight: 600,
                 fontFamily: "Poppins",
-                fontStyle: "medium",
+                fontStyle: "normal",
               }}>
               {userSession.headerFooter?.heading7}
             </Text>

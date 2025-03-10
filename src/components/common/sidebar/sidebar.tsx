@@ -193,9 +193,23 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   }
 
   useEffect(() => {
-    const mainContent: any = document.querySelector(".main-content");
-    mainContent.addEventListener("click", menuClose);
-    window.addEventListener("resize", menuResizeFn);
+    window.addEventListener('resize', menuResizeFn);
+		// window.addEventListener('resize', checkHoriMenu);
+		const mainContent = document.querySelector(".main-content");
+		if (window.innerWidth <= 992) {
+			if (mainContent) {
+				const theme = store.getState();
+				updateAppState({ ...theme.AppState.appState, toggled: "close" });
+			}
+			else if (document.documentElement.getAttribute('data-nav-layout') == 'horizontal') {
+				// closeMenu();
+			}
+		}
+		mainContent!.addEventListener('click', menuClose);
+		return () => {
+			window.removeEventListener("resize", menuResizeFn);
+			// window.removeEventListener('resize', checkHoriMenu);
+		};
   }, []);
 
   // const location = useLocation();
@@ -248,36 +262,42 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     }
   }
 
-  const WindowPreSize = [window.innerWidth];
+	const WindowPreSize = typeof window !== 'undefined' ? [window.innerWidth] : [];
 
-  function menuResizeFn() {
-    WindowPreSize.push(window.innerWidth);
-    if (WindowPreSize.length > 2) {
-      WindowPreSize.shift();
-    }
-    const theme = appState;
-    if (WindowPreSize.length > 1) {
-      if (
-        WindowPreSize[WindowPreSize.length - 1] < 992 &&
-        WindowPreSize[WindowPreSize.length - 2] >= 992
-      ) {
-        // less than 992;
-        updateAppState({ ...theme, toggled: "close" });
-      }
+  const menuResizeFn =()=> {
+    debugger;
+		if (typeof window === 'undefined') {
+			// Handle the case where window is not available (server-side rendering)
+			return;
+		}
 
-      if (
-        WindowPreSize[WindowPreSize.length - 1] >= 992 &&
-        WindowPreSize[WindowPreSize.length - 2] < 992
-      ) {
-        // greater than 992
+		WindowPreSize.push(window.innerWidth);
+		if (WindowPreSize.length > 2) { WindowPreSize.shift() }
+
+		const theme = store.getState();
+		const currentWidth = WindowPreSize[WindowPreSize.length - 1];
+		const prevWidth = WindowPreSize[WindowPreSize.length - 2];
+debugger;
+
+		if (WindowPreSize.length > 1) {
+			if (currentWidth < 992 && prevWidth >= 992) {
+				// less than 992;
+        updateAppState({ ...theme.AppState.appState, toggled: "close" });
+				// ThemeChanger({ ...theme, dataToggled: "close" });
+			}
+
+			if (currentWidth >= 992 && prevWidth < 992) {
+				// greater than 992
+				// ThemeChanger({ ...theme, dataToggled: theme.dataVerticalStyle === "doublemenu" ? "double-menu-open" : "" });
         updateAppState({
-          ...theme,
+          ...theme.AppState.appState,
           toggled:
-            theme.dataVerticalStyle == "doublemenu" ? "double-menu-open" : "",
+          theme.AppState.appState.dataVerticalStyle == "doublemenu" ? "double-menu-open" : "",
         });
-      }
-    }
-  }
+
+			}
+		}
+	}
 
   function switcherArrowFn(): void {
     // Used to remove is-expanded class and remove class on clicking arrow buttons

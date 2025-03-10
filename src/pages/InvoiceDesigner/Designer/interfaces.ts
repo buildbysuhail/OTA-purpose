@@ -104,7 +104,7 @@ export interface PlacedComponent {
   y: number;
   textAlign?: "left" | "center" | "right";
   fontSize: number;
-  fontStyle: "normal" | "bold" | "italic";
+  fontStyle: "normal" | "italic";
   font: string;
   width: number;
   height: number;
@@ -161,7 +161,7 @@ export type AreaProps = {
     caption?: string;
     field: string;
     textAlign: "left" | "center" | "right";
-    fontStyle: "normal" | "bold" | "italic";
+    fontStyle: "normal" | "italic";
     font: string;
     fontSize: number;
     width: number;
@@ -197,7 +197,7 @@ export interface PropertiesState {
   font_size?: number;
   font_color?: string;
   font_weight?: number;
-  fontStyle?: "normal" | "bold" | "italic";
+  fontStyle?: "normal" | "italic";
 
   // font_style?: string;
 
@@ -205,7 +205,7 @@ export interface PropertiesState {
   label_font_size?: number;
   label_font_color?: string;
   label_font_weight?: number;
-  label_font_style?:"normal" | "bold" | "italic";
+  label_font_style?:"normal"|"italic";
 
   // Payment Stub
   showPaymentStubSettings?: boolean;

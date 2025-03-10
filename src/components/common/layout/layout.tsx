@@ -21,14 +21,14 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 992);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth > 992);
-    };
+    // const handleResize = () => {
+    //   setIsDesktop(window.innerWidth > 992);
+    // };
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    // window.addEventListener("resize", handleResize);
+    // return () => {
+    //   window.removeEventListener("resize", handleResize);
+    // };
   }, []);
 
   const Bodyclickk = () => {
@@ -58,7 +58,9 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
 
     <>
       <Header />
-      {isDesktop && <Sidebar type="erp" />}
+      {/* {isDesktop && */}
+       <Sidebar type="erp" />
+       {/* } */}
       {/* <div className="w-full h-16 bg-black fixed top-0 left-0">
       {isDesktop && <ERPAttachment />}
       </div> */}

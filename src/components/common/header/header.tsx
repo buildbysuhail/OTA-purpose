@@ -179,7 +179,21 @@ const Header: FC<HeaderProps> = () => {
     updatedNotifications.splice(index, 1);
     setNotifications(updatedNotifications);
   };
-
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     const windowObject = window;
+  //     if (windowObject.innerWidth <= 991) {
+  //       // ThemeChanger({ ...local_varaiable, "dataToggled": "close" })
+  //     } else {
+  //       // ThemeChanger({...local_varaiable,"dataToggled":""})
+  //     }
+  //   };
+  //   handleResize(); // Check on component mount
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
   function menuClose() {
     const theme = appState;
     if (window.innerWidth <= 992) {
@@ -955,10 +969,6 @@ const Header: FC<HeaderProps> = () => {
                   </div>
                 )
               }
-<>
-{_appState.toggled}
-{appState.toggled}
-</>
               {
                 deviceInfo?.isMobile && (
                   <div id="dropdown-profile" className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] ">

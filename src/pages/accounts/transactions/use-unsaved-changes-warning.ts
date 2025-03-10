@@ -178,8 +178,8 @@ export const useUnsavedChangesWarning = () => {
       }
     };
   
-    document.addEventListener('click', blockNavigation, true);
-    return () => document.removeEventListener('click', blockNavigation, true);
+    // document.addEventListener('click', blockNavigation, true);
+    // return () => document.removeEventListener('click', blockNavigation, true);
   }, [hasUnsavedChanges]);
 
   // Handle history changes and location updates

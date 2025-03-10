@@ -86,7 +86,7 @@ import { convertFileToBase64 } from "../../utilities/file-utils";
 // import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
-import { QRCodeSVG } from "qrcode.react";
+// import QRCodeSVG from "qrcode.react";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
 import { dir } from "i18next";
 import { useTranslation } from "react-i18next";
@@ -1332,15 +1332,15 @@ export default function PDFBarcodeDesigner() {
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-            <QRCodeSVG
+            {/* <QRCodeSVG
               value={component.qrCodeProps?.value || "skjhgfhsdjhg"}
               size={component.qrCodeProps?.size || 150}
               level={component.qrCodeProps?.level || "M"}
               bgColor={component.qrCodeProps?.bgColor || "black"}
               fgColor={component.qrCodeProps?.fgColor || "white"}
-              marginSize={component.qrCodeProps?.marginSize ||2}
+              // marginSize={component.qrCodeProps?.marginSize ||2}
               imageSettings={component.qrCodeProps?.imageSettings}
-            />
+            /> */}
             <DeleteButton
               id={component.id}
               isSelected={isSelected}
@@ -2393,7 +2393,7 @@ export default function PDFBarcodeDesigner() {
                             Font Style
                           </InputLabel>
                           <div className="flex justify-between space-x-2">
-                            <button
+                            {/* <button
                               className={`ti-btn ${
                                 selectedComponent.fontStyle === "bold"
                                   ? "ti-btn-primary-full"
@@ -2404,7 +2404,7 @@ export default function PDFBarcodeDesigner() {
                               }
                             >
                               Bold
-                            </button>
+                            </button> */}
                             <button
                               className={`ti-btn ${
                                 selectedComponent.fontStyle === "normal"

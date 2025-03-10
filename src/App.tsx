@@ -25,7 +25,7 @@ import TemplateDesignerLayout from "./components/common/layout/template-designer
 import { Device } from "@capacitor/device";
 import { useSelector } from "react-redux";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
-import { RootState } from "./redux/store";
+import store, { RootState } from "./redux/store";
 import MobileFooter from "./pages/dashboards/crm/mobile-footer";
 import RPosLayout from "./components/common/layout/rpos-layout";
 import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
@@ -40,6 +40,7 @@ import { ClientSessionModel, setSoftwareDate } from "./redux/slices/client-sessi
 import moment from "moment";
 import { useUnsavedChangesWarning } from "./pages/accounts/transactions/use-unsaved-changes-warning";
 import UnsavedChangesModal from "./pages/accounts/transactions/unsavedChangesModal";
+import { useAppState } from "./utilities/hooks/useAppState";
 // import 'devextreme/dist/css/dx.dark.css';  
 
 export const LoadingAnimation = () => {
@@ -51,6 +52,7 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
+  const { appState, updateAppState } = useAppState();
   useEffect(() => {
     const sd = moment().local(); // Ensure local time is used
     const asd = sd.format("DD/MM/YYYY");
@@ -184,7 +186,21 @@ function App() {
   useEffect(() => {
     import("preline");
   }, []);
+  useEffect(() => {
+    debugger;
+   if (typeof window === 'undefined') {
+			// Handle the case where window is not available (server-side rendering)
+			return;
+		}
 
+		const theme = store.getState();
+			if (window.innerWidth < 992) {
+				// less than 992;
+        updateAppState({ ...theme.AppState.appState, toggled: "close" });
+				// ThemeChanger({ ...theme, dataToggled: "close" });
+			}
+  },[])
+  
   const { t } = useTranslation('main')
   return (
     <Fragment>

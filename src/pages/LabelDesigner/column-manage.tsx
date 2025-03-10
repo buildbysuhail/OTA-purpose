@@ -194,7 +194,7 @@ interface AddColumnsManageProps {
     Font Style
     </InputLabel>
     <div className="flex justify-between space-x-1">
-    <button
+    {/* <button
         className={`ti-btn ${ColumnData.fontStyle ===
         "bold"
         ? "ti-btn-primary-full"
@@ -205,7 +205,7 @@ interface AddColumnsManageProps {
         }
     >
         Bold
-    </button>
+    </button> */}
     <button
         className={`ti-btn ${ColumnData.fontStyle  ===
         "normal"

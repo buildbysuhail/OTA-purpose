@@ -30,7 +30,7 @@ export default function FontRegistration() {
       family: 'Roboto',
       fonts: [
         { src: RobotoRegular, fontWeight: 400, fontStyle: 'normal' },
-        { src: RobotoBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: RobotoBold, fontWeight: 700, fontStyle: 'normal' },
         { src: RobotoItalic, fontWeight: 400, fontStyle: 'italic' },
       ],
     });
@@ -40,7 +40,7 @@ export default function FontRegistration() {
       family: 'FiraSans',
       fonts: [
         { src: FiraSansRegular, fontWeight: 400, fontStyle: 'normal' },
-        { src: FiraSansBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: FiraSansBold, fontWeight: 700, fontStyle: 'normal' },
         { src: FiraSansItalic, fontWeight: 400, fontStyle: 'italic' },
       ],
     });
@@ -50,7 +50,7 @@ export default function FontRegistration() {
       family: 'RobotoMono',
       fonts: [
         { src: RobotMonoRegular, fontWeight: 400, fontStyle: 'normal' },
-        { src: RobotMonoBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: RobotMonoBold, fontWeight: 700, fontStyle: 'normal' },
         { src: RobotMonoItalic, fontWeight: 400, fontStyle: 'italic' },
       ],
     });
@@ -60,9 +60,9 @@ export default function FontRegistration() {
       family: 'Poppins',
       fonts: [
         { src: PoppinsRegular, fontWeight: 400, fontStyle: 'normal' },
-        { src: PoppinsBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: PoppinsBold, fontWeight: 700, fontStyle: 'normal' },
         { src: PoppinsItalic, fontWeight: 400, fontStyle: 'italic' },
-        { src: PoppinsMedium, fontWeight: 500, fontStyle: 'medium' },
+        { src: PoppinsMedium, fontWeight: 500, fontStyle: 'normal' },
         
       ],
     });
@@ -72,7 +72,7 @@ export default function FontRegistration() {
       family: 'Amiri',
       fonts: [
         { src: AmiriRegular, fontWeight: 400, fontStyle: 'normal' },
-        { src: AmiriBold, fontWeight: 700, fontStyle: 'bold' },
+        { src: AmiriBold, fontWeight: 700, fontStyle: 'normal' },
         { src: AmiriItalic, fontWeight: 400, fontStyle: 'italic' },
       ],
     });

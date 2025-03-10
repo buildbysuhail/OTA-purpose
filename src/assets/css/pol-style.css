@@ -386,3 +386,12 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   width: -moz-available;
   width: fill-available;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -13,7 +13,6 @@ import { toggleBrands } from "../../../../redux/slices/popup-reducer";
 export const BrandsManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -24,19 +23,15 @@ export const BrandsManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<BrandsData>({
     url: Urls.brands,
-    onClose:useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.brands.key,
     keyField: 'brandID',
     useApiClient: true,
     initialData: initialBrandsData
   });
 
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -50,21 +45,24 @@ export const BrandsManage: React.FC = React.memo(() => {
             handleFieldChange("brandName", data.brandName);
           }}
         />
+
         <ERPInput
           {...getFieldProps("brandShortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("brandShortName", data.brandShortName)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPCheckbox
           {...getFieldProps('isCommon')}
-          label={t("common")}
+          label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
         />
       </div>

@@ -429,5 +429,23 @@
 
   "final_reports": "التقارير النهائية",
   "income_and_expense": "الدخل والمصروفات",
-  "cash_summary_ledgerwise_report": "تقرير ملخص النقد حسب دفتر الأستاذ"
+  "cash_summary_ledgerwise_report": "تقرير ملخص النقد حسب دفتر الأستاذ",
+
+  "inventory_masters": "أساتذة المخزون",
+  "products": "المنتجات",
+  "product_group": "مجموعة المنتجات",
+  "product_category": "فئة المنتج",
+  "brands": "العلامات التجارية",
+  "price_category": "فئة السعر",
+  "unit_of_measure": "وحدة القياس",
+  "vehicles": "المركبات",
+  "warehouse": "المستودع",
+  "tax_category": "فئة الضريبة",
+  "sales_man_route": "مسار مندوب المبيعات",
+  "section": "القسم",
+  "schemes": "الخطط",
+  "sales_route": "مسار المبيعات",
+  "group_category": "فئة المجموعة",
+  "special_schemes": "خطط خاصة",
+  "listed_product_prices": "أسعار المنتجات المدرجة"
 }

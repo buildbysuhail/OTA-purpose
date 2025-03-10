@@ -429,5 +429,23 @@
 
     "final_reports":"Final Reports",
     "income_and_expense":"Income And Expense",
-    "cash_summary_ledgerwise_report":"Cash Summary Ledgerwise Report"
+    "cash_summary_ledgerwise_report":"Cash Summary Ledgerwise Report",
+
+    "inventory_masters":"Inventory Masters",
+    "products":"Products",
+    "product_group":"Product Group",
+    "product_category":"Product Category",
+    "brands":"Brands",
+    "price_category":"Price Category",
+    "unit_of_measure":"Unit Of Measure",
+    "vehicles":"Vehicles",
+    "warehouse":"Warehouse",
+    "tax_category":"Tax Category",
+    "sales_man_route":"Salesman Route",
+    "section":"Section",
+    "schemes":"Schemes",
+    "sales_route":"Sales Route",
+    "group_category":"Group Category",
+    "special_schemes":"Special Schemes",
+    "listed_product_prices":"Listed Product Prices"
 }

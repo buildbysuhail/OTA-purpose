@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { Dispatch, SetStateAction, useMemo } from "react";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPResizableSidebar from "../../../components/ERPComponents/erp-resizable-sidebar";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Banknote, CalendarDays, X } from "lucide-react";
 
 interface HistorySidebarProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   onClose: () => void;
   transactionType: string;
@@ -17,6 +18,7 @@ interface HistorySidebarProps {
 }
 
 const HistorySidebar: React.FC<HistorySidebarProps> = ({
+  setIsOpen,
   isOpen,
   onClose,
   transactionType

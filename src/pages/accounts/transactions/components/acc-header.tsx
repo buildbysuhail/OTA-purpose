@@ -109,7 +109,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     }, []);
 
     return (
-      <div className={`flex items-center justify-end space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? 'p-[20px]' : ''} ${phone ? 'mt-[50px]' : ''}`}>
+      <div className={`flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
         {/* Load Temp Rows */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
           <button

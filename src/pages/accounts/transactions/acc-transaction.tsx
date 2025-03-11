@@ -1696,6 +1696,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
@@ -2627,460 +2628,300 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           )}
         </div>
       )}
-      {deviceInfo?.isMobile && (
-        <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
-          {/* Sale Header */}
-          <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-[50px]">
-            <ERPPreviousUrlButton></ERPPreviousUrlButton>
-            <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
-              {t("cash_payment")}
-            </h1>
-            {/* <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i> */}
-          </div>
-          <AccHeader
+{deviceInfo?.isMobile && (
+  <div className="fixed inset-0 z-50 flex flex-col bg-gray-100 w-full h-full font-sans overflow-hidden">
+    {/* Sale Header */}
+    <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50 h-12">
+      <ERPPreviousUrlButton />
+      <h1 className="flex-grow font-semibold text-lg text-zinc-800">
+        {t("cash_payment")}
+      </h1>
+    </div>
+
+    {/* Main Content */}
+    <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-16">
+      <AccHeader
+        formState={formState}
+        dispatch={dispatch}
+        handleKeyDown={handleKeyDown}
+        t={t}
+        loadTemporaryRows={loadTemporaryRows}
+        deleteAccTransVoucher={deleteAccTransVoucher}
+        handleRefresh={handleRefresh}
+        createNewVoucher={createNewVoucher}
+        handleEdit={handleEdit}
+        printVoucher={printVoucher}
+        handleClearControls={handleClearControls}
+        handleHistoryClick={handleHistoryClick}
+        setIsHistorySidebarOpen={setIsHistorySidebarOpen}
+        transactionType={formState.transactionType}
+        voucherType={formState.transaction.master.voucherType}
+        userSession={userSession}
+        unlockVoucher={unlockVoucher}
+        setShowValidation={setShowValidation}
+        showValidation={showValidation}
+        selectTemplates={selectTemplates}
+        goToPreviousPage={goToPreviousPage}
+        isHistorySidebarOpen={isHistorySidebarOpen}
+        setIsPrintModalOpen={setIsPrintModalOpen}
+        printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+        phone={true}
+      />
+
+      {/* Voucher Info */}
+      <div className="flex items-center justify-between gap-2 bg-white px-4 py-2 shadow-md text-gray-600 h-[70px]">
+        <div className="flex items-center gap-2 flex-1">
+          <AccVoucherPrefix
+            ref={voucherNumberRef}
             formState={formState}
             dispatch={dispatch}
-            handleKeyDown={handleKeyDown} // Replace with your actual keydown handler
-            t={t} // Replace with your translation function
-            loadTemporaryRows={loadTemporaryRows}
-            deleteAccTransVoucher={deleteAccTransVoucher}
-            handleRefresh={handleRefresh}
-            createNewVoucher={createNewVoucher}
-            handleEdit={handleEdit}
-            printVoucher={printVoucher}
-            handleClearControls={handleClearControls}
-            handleHistoryClick={handleHistoryClick}
-            setIsHistorySidebarOpen={setIsHistorySidebarOpen}
-            transactionType={formState.transactionType} // Replace with your actual transaction type
-            voucherType={formState.transaction.master.voucherType} // Replace with your actual voucher type
-            userSession={userSession} // Replace with your actual user session object
-            unlockVoucher={unlockVoucher}
-            setShowValidation={setShowValidation}
-            showValidation={showValidation}
-            selectTemplates={selectTemplates}
-            goToPreviousPage={goToPreviousPage}
-            isHistorySidebarOpen={isHistorySidebarOpen}
-            setIsPrintModalOpen={setIsPrintModalOpen}
-            printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+            handleKeyDown={handleKeyDown}
+            loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+            phone={true}
+            t={t}
+          />
+          <AccVoucherNo
+            ref={voucherNumberRef}
+            formState={formState}
+            dispatch={dispatch}
+            handleKeyDown={handleKeyDown}
+            loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
+            t={t}
             phone={true}
           />
-          {/* Scrollable Content */}
-          <div className="flex flex-col mt-[0px] w-full overflow-scroll"></div>
-          <div className="flex items-center justify-between gap-1 bg-white mb-0 px-4 rounded-none shadow-md text-gray-600">
-            <div className="flex items-center justify-center gap-1">
-              <AccVoucherPrefix
-                ref={voucherNumberRef}
-                formState={formState}
-                dispatch={dispatch}
-                handleKeyDown={handleKeyDown}
-                loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                phone={true}
-                t={t}
-              />
-            <AccVoucherNo
-                ref={voucherNumberRef}
-                formState={formState}
-                dispatch={dispatch}
-                handleKeyDown={handleKeyDown}
-                loadAndSetAccTransVoucher={loadAndSetAccTransVoucher}
-                t={t}
-                phone={true}
-              />
-            </div>
+        </div>
+        <AccTransactionDate
+          formState={formState}
+          dispatch={dispatch}
+          t={t}
+        />
+      </div>
 
-            {/* Centered divider */}
-            {/* <div className="border-gray-300 border-l h-12"></div> */}
+      {/* Form Section */}
+      <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto">
+        <div className="space-y-2">
+          <AccMasterAccount
+            ref={masterAccountRef}
+            formState={formState}
+            dispatch={dispatch}
+            getFormattedValue={getFormattedValue}
+            t={t}
+          />
+          <AccRemarks
+            ref={remarksRef}
+            dispatch={dispatch}
+            formState={formState}
+            t={t}
+          />
+        </div>
 
-            <div>
-              <AccTransactionDate
-                formState={formState}
-                dispatch={dispatch}
-                t={t}
-              />
-            </div>
+        {/* Toggleable Section */}
+        <div className="flex justify-center my-2">
+          <button
+            className="w-full border border-gray-300 px-4 py-2 text-gray-600 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            onClick={() => setShowInputBox(!showInputBox)}
+          >
+            {showInputBox ? t("view_less") : t("view_more")}
+          </button>
+        </div>
+
+        {showInputBox && (
+          <div className="space-y-2">
+            <AccReferenceNumber
+              formState={formState}
+              dispatch={dispatch}
+              handleLoadByRefNo={handleLoadByRefNo}
+              ref={refNoRef}
+              t={t}
+            />
+            <AccReferenceDate
+              dispatch={dispatch}
+              formState={formState}
+              t={t}
+            />
+            <AccEmployeeID
+              dispatch={dispatch}
+              formState={formState}
+              t={t}
+              handleKeyDown={handleKeyDown}
+            />
+            <AccDrCrJv
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <AccCurrencyID
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <AccCurrencyRate
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <AccEdit
+              formState={formState}
+              enableCombo={enableCombo}
+              t={t}
+              dispatch={dispatch}
+            />
+            <AccProject
+              dispatch={dispatch}
+              formState={formState}
+              t={t}
+            />
+            <AccNotes
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <NameOnCheque
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <BankName
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <ChequeNumber
+              ref={chequeNumberRef}
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <BankDate
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <ChequeStatus
+              handleKeyDown={handleKeyDown}
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+            />
+            <BankCharge
+              formState={formState}
+              dispatch={dispatch}
+              handleKeyDown={handleKeyDown}
+              t={t}
+            />
+            <AccTaxDetails
+              formState={formState}
+              dispatch={dispatch}
+              handleKeyDown={handleKeyDown}
+              t={t}
+              partyNameRef={partyNameRef}
+              taxNoRef={taxNoRef}
+              taxableAmountRef={taxableAmountRef}
+            />
           </div>
+        )}
 
-          <div className="pt-1 pb-[54px]">
-            <div className="bg-white mb-0 p-4 rounded-lg text-zinc-800 ">
-              {/* <div className="mb-4">
-          <label
-            htmlFor="cashacc"
-            className="block font-medium text-gray-700 text-sm"
-          >
-            Cash Account
-          </label>
-          <select
-            id="cashacc"
-            name="cashacc"
-            value={formData.cashacc}
-            onChange={handleInputChange}
-            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-          >
-            <option value="">Select Cash Account</option>
-            <option value="cash">cash</option>
-            <option value="bank">bank</option>
-            <option value="upi">upi</option>
-          </select>
-        </div> */}
-              <div className="mb-1">
-                <AccMasterAccount
-                  ref={masterAccountRef}
-                  formState={formState}
-                  dispatch={dispatch}
-                  getFormattedValue={getFormattedValue}
-                  t={t}
-                />
-              </div>
+        {/* Add Items Button */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="flex items-center justify-center w-full border-2 border-gray-400 bg-white p-2 rounded text-blue-500"
+        >
+          <i className="ri-add-circle-fill pr-2 text-lg" />
+          <span className="text-amber-700">{t("add_items")}</span>
+          <span className="pl-1 text-gray-500">{t("optional")}</span>
+        </button>
 
-              <div className="mb-1">
-                <AccRemarks
-                  ref={remarksRef}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                />
-              </div>
+        {/* Billed Items */}
+        <div className="bg-blue-500 mb-1 p-1 rounded-sm text-white">
+          <h2 className="font-light text-sm">{t("billed_items")}</h2>
+        </div>
 
-              <div className="mb-1"></div>
+        <ErpDevGrid
+          key={key}
+          GridPreferenceChooserAccTrance={false}
+          heightToAdjustOnWindows={
+            formState.userConfig?.gridHeight ?? (isChequeSectionVisible ? 650 : 600)
+          }
+          summaryItems={summaryItems}
+          ref={erpGridRef}
+          keyExpr="slNo"
+          columns={columns}
+          height="auto"
+          allowFiltering={false}
+          dataUrl={Urls.acc_reports_ledger}
+          hideGridAddButton={true}
+          hideDefaultExportButton={true}
+          hideDefaultSearchPanel={true}
+          allowSearching={false}
+          allowExport={false}
+          hideGridHeader={true}
+          enablefilter={false}
+          remoteOperations={false}
+          data={formState.transaction.details}
+          gridId={`${gridCode}-grid-mob`}
+          onClickByRootState={(e, state) => onSelectionChanged(e, state, true)}
+          showTotalCount={false}
+          onKeyDown={(e) => handleKeyDown("grid", e)}
+          onSelectionChangedByRootState={(e, state) => onSelectionChanged(e, state, false)}
+          enableScrollButton={false}
+          ShowGridPreferenceChooser={false}
+          showPrintButton={false}
+          className="HistorySidebadrcustom"
+          showColumnHeaderscustom={false}
+        />
 
-              <div className="flex justify-center mb-2">
-                <button
-                  className="w-full border border-gray-300 px-4 py-2 h-[35px]  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
-                  onClick={() => setShowInputBox(!showInputBox)}
-                >
-                  {showInputBox ? t("view_less") : t("view_more")}
-                </button>
-              </div>
-              {showInputBox && (
-                // <div className="flex justify-center">
-                <div>
-                  {/* <div className="mb-1">
-              <input
-                type="text"
-                placeholder="Ref No"
-                // className="bg-white p-2 border rounded w-full"
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-              />
-            </div> */}
-                  <div className="mb-1">
-                    <AccReferenceNumber
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      ref={refNoRef}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <AccReferenceDate
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                    />
-                  </div>
-                  {/* <div className="mb-4">
-              <label
-                htmlFor="cashacc"
-                className="block font-medium text-gray-700 text-sm"
-              >
-                Paid By
-              </label>
-              <select
-                id="cashacc"
-                name="cashacc"
-                value={formData.cashacc}
-                onChange={handleInputChange}
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-              >
-                <option value="">Select Paid By</option>
-                <option value="ajmal">ajmal</option>
-                <option value="vajid">vajid</option>
-                <option value="nizam">nizam</option>
-                <option value="safvan">safvan</option>
-                <option value="sreeram">sreeram</option>
-                <option value="javad">javad</option>
-              </select>
-            </div> */}
-                  <div className="mb-1">
-                    <AccEmployeeID
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <AccDrCrJv
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-
-                  <div className="mb-1">
-                    <AccCurrencyID
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <AccCurrencyRate
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <AccEdit
-                      formState={formState}
-                      enableCombo={enableCombo}
-                      t={t}
-                      dispatch={dispatch}
-                    />
-                  </div>
-
-                  <div className="mb-1"></div>
-
-                  <div className="mb-1">
-                    <AccProject
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                    />
-                  </div>
-                  {/* <div className="mb-1">
-              <input
-                type="text"
-                placeholder="Notes"
-                // className="bg-white p-2 border rounded w-full"
-                className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-              />
-            </div> */}
-                  <div className="mb-2">
-                    <AccNotes
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-
-                  <div className="mb-1">
-                    <NameOnCheque
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <BankName
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <ChequeNumber
-                      ref={chequeNumberRef}
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <BankDate
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <ChequeStatus
-                      handleKeyDown={handleKeyDown}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <BankCharge
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      t={t}
-                    />
-                  </div>
-                  <div className="mb-1">
-                    <AccTaxDetails
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      t={t}
-                      partyNameRef={partyNameRef}
-                      taxNoRef={taxNoRef}
-                      taxableAmountRef={taxableAmountRef}
-                    />
-                  </div>
-                </div>
+        {/* Total Summary */}
+        <div className="bg-white shadow-md p-4 rounded-lg mt-2">
+          <div className="flex justify-between mb-2 text-gray-600 text-sm">
+            <span>
+              {t("total_disc")}:{" "}
+              {getFormattedValue(
+                Number(
+                  formState.transaction.details.reduce(
+                    (total, item) => total + (item.discount ?? 0),
+                    0
+                  )
+                )
               )}
-
-              <button
-                // onClick={addItem}
-                onClick={() => setIsOpen(true)}
-                className="flex justify-center items-center border-2 border-gray-400 bg-white mb-2 p-2 rounded w-full text-blue-500 h-[35px]"
-              >
-                {/* <Plus className="mr-2 text-blue-500" size={16} /> Add Items{" "} */}
-                <i
-                  className="ri-add-circle-fill pr-2"
-                  style={{ fontSize: "18px" }}
-                ></i>
-                <div
-                  className="mr-2 text-amber-700"
-                  // size={16}
-                >
-                  {" "}
-                  {t("add_items")}{" "}
-                </div>
-                <div className="pl-1 text-gray-500">{t("optional")}</div>
-              </button>
-
-              {/* Billed Items Section */}
-              <div className="bg-custom-blue mb-1 p-1 rounded-sm text-white">
-                <h2 className="font-light text-sm">{t("billed_items")}</h2>
-              </div>
-              <div className="pt-1">
-                <ErpDevGrid
-                  key={key}
-                  GridPreferenceChooserAccTrance={false}
-                  heightToAdjustOnWindows={
-                    formState.userConfig?.gridHeight ??
-                    (isChequeSectionVisible ? 650 : 600)
-                  }
-                  summaryItems={summaryItems}
-                  ref={erpGridRef}
-                  keyExpr="slNo"
-                  columns={columns}
-                  // height={gridHeight}
-                  height="10px"
-                  allowFiltering={false}
-                  dataUrl={Urls.acc_reports_ledger}
-                  hideGridAddButton={true}
-                  hideDefaultExportButton={true}
-                  hideDefaultSearchPanel={true}
-                  allowSearching={false}
-                  allowExport={false}
-                  hideGridHeader={true}
-                  enablefilter={false}
-                  remoteOperations={false}
-                  data={formState.transaction.details}
-                  gridId={`${gridCode}-grid-mob`}
-                  onClickByRootState={(e: any, state: RootState) => {
-                    onSelectionChanged(e, state, true);
-                  }}
-                  showTotalCount={false}
-                  onKeyDown={(e) => handleKeyDown("grid", e)}
-                  onSelectionChangedByRootState={(e: any, state: RootState) =>
-                    onSelectionChanged(e, state, false)
-                  }
-                  enableScrollButton={false}
-                  ShowGridPreferenceChooser={false}
-                  showPrintButton={false}
-                  className=" HistorySidebadrcustom "
-                  showColumnHeaderscustom={false}
-                ></ErpDevGrid>
-
-                {/* Total Summary */}
-                <div className="bg-white shadow-md mb-4 p-4 rounded-lg">
-                  <div className="flex justify-between mb-2 text-gray-600 text-sm">
-                    {/* <span>
-                      {t("total_disc")}:{" "}
-                      {items
-                        .reduce((total, item) => total + item.discount, 0)
-                        .toFixed(1)}
-                    </span> */}
-                    <span>
-                      {t("total_disc")}:{" "}
-                      {getFormattedValue(
-                        Number(
-                          formState.transaction.details.reduce(
-                            (total, item) => total + (item.discount ?? 0),
-                            0
-                          )
-                        )
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex justify-between font-semibold text-sm">
-                    {/* <span>
-                      {t("total_qty")}: {calculateTotalQuantity().toFixed(1)}
-                    </span> */}
-                    <span>
-                      {t("subtotal")}: {getFormattedValue(
-                        Number(
-                          formState.transaction.master.totalAmount
-                        )
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Add Items Button */}
-              </div>
-
-              {/* Footer Buttons */}
-              {/* <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
-          <ERPButton
-            title="Save & New"
-            onClick={() => {
-         
-            }}
-            variant="primary"
-            className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
-          ></ERPButton>
-
-          <ERPButton
-            title="Save"
-            onClick={() => {
-             
-            }}
-            variant="primary"
-            className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
-          ></ERPButton>
-        </div> */}
-
-              {/* ======= */}
-            </div>
-            <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
-              <ERPButton
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                title={t("save_&_new")}
-                onClick={() => {
-                  save();
-                }}
-                // onTouchEnd={() => { save()}}
-                variant="secondary"
-                className="flex-1 !m-0 !rounded-none"
-              />
-              <ERPButton
-                localInputBox={formState?.userConfig?.inputBoxStyle}
-                title={t("save")}
-                onClick={() => {
-                  save();
-                  goToPreviousPage();
-                }}
-                // onTouchEnd={() => { save()}}
-                variant="primary"
-                className="flex-1 !m-0 !rounded-none"
-              />
-            </div>
+            </span>
+          </div>
+          <div className="flex justify-between font-semibold text-sm">
+            <span>
+              {t("subtotal")}:{" "}
+              {getFormattedValue(Number(formState.transaction.master.totalAmount))}
+            </span>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Footer Buttons */}
+      <div className="fixed bottom-0 left-0 w-full bg-white flex space-x-2 p-2 z-10">
+        <ERPButton
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          title={t("save_&_new")}
+          onClick={() => save()}
+          variant="secondary"
+          className="flex-1 rounded-none"
+        />
+        <ERPButton
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          title={t("save")}
+          onClick={() => {
+            save();
+            goToPreviousPage();
+          }}
+          variant="primary"
+          className="flex-1 rounded-none"
+        />
+      </div>
+    </div>
+  </div>
+)}
       {(() => {
         console.log("showbillwise:", formState.showbillwise);
         console.log("billwiseData:", formState.billwiseData);
@@ -3481,6 +3322,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         isOpen={isAttachmentOpen}
         setIsOpen={setIsAttachmentOpen}
         children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
+      ></ERPResizableSidebar>
+      <ERPResizableSidebar
+        minWidth={350}
+        isOpen={isHistoryOpen}
+        setIsOpen={setIsHistoryOpen}
+        children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
       ></ERPResizableSidebar>
       {formState.openUnsavedPrompt == true && (
         <UnsavedChangesModal

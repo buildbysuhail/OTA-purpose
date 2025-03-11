@@ -12,7 +12,7 @@ import { toggleUnitOfMeasure } from "../../../../redux/slices/popup-reducer";
 
 const UnitOfMeasure = () => {
   const MemoizedUnitOfMeasureManage = useMemo(() => React.memo(UnitOfMeasureManage), []);
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
@@ -42,7 +42,7 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "unitName",
@@ -51,12 +51,12 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:200
+      minWidth: 200
     },
     {
       dataField: "unitType",
       caption: t("unit_type"),
-      dataType: "string", 
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -79,8 +79,8 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width:140,
-      visible:false
+      width: 140,
+      visible: false
     },
     {
       dataField: "secondUnit",
@@ -89,7 +89,7 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:150
+      minWidth: 150
     },
     {
       dataField: "decimalPoint",
@@ -99,7 +99,6 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-
     },
     {
       dataField: "totalUnitInBaseUnit",
@@ -127,7 +126,6 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      
     },
     {
       dataField: "createdDate",
@@ -136,7 +134,7 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:150
+      minWidth: 150
     },
     {
       dataField: "modifiedUser",
@@ -146,7 +144,6 @@ const UnitOfMeasure = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      
     },
     {
       dataField: "modifiedDate",
@@ -155,7 +152,7 @@ const UnitOfMeasure = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:150
+      minWidth: 150
     },
     {
       dataField: "actions",
@@ -165,35 +162,27 @@ const UnitOfMeasure = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUnitOfMeasure({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             edit={{ type: "popup", action: () => toggleUnitOfMeasure({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             delete={{
-              onSuccess: () => {
-                dispatch(
-                  toggleUnitOfMeasure({
-                    isOpen: false,
-                    key: null,
-                    reload: true,
-                  })
-                );
-              },
+              onSuccess: () => { dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true, })); },
               confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
               url: Urls?.unitOfMeasure, key: cellElement?.data?.id
             }}
           />
         );
       },
     },
-  ],
-  []);
+  ], []);
+
   useEffect(() => {
     dispatch(toggleUnitOfMeasure({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -208,15 +197,10 @@ const UnitOfMeasure = () => {
                   gridId="grd_unitOfMeasure"
                   popupAction={toggleUnitOfMeasure}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleUnitOfMeasure({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleUnitOfMeasure({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.unitOfMeasure?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -225,11 +209,10 @@ const UnitOfMeasure = () => {
       <ERPModal
         isOpen={rootState.PopupData.unitOfMeasure.isOpen || false}
         title={t("unit_of_measure")}
-       
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleUnitOfMeasure({ isOpen: false }));
-        }}
+        width={600}
+        height={320}
+        closeModal={() => { dispatch(toggleUnitOfMeasure({ isOpen: false })); }}
         content={<MemoizedUnitOfMeasureManage />}
       />
     </Fragment>

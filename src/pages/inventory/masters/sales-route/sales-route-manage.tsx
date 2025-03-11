@@ -25,7 +25,6 @@ const initialState: SalesRouteRadio = {
 export const SalesRouteManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -36,19 +35,15 @@ export const SalesRouteManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<SalesRouteData>({
     url: Urls.salesRoute,
-    onClose:useCallback(() => dispatch(toggleSalesRoute({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleSalesRoute({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleSalesRoute({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleSalesRoute({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.salesRoute.key,
     useApiClient: true,
     initialData: initialSalesRouteData,
   });
 
   const [gridType, setGridType] = useState<SalesRouteRadio>(initialState);
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -60,12 +55,14 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("routeName", data.routeName)}
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("parentRoute")}
           id="parentRoute"
@@ -79,18 +76,21 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("parent_route")}
           onChangeData={(data: any) => handleFieldChange("parentRoute", data.parentRoute)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPInput
           {...getFieldProps("creditLimit")}
           label={t("credit_limit")}
           placeholder={t("credit_limit")}
           onChangeData={(data: any) => handleFieldChange("creditLimit", data.creditLimit)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("salesMan")}
           id="salesMan"
@@ -104,6 +104,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           label={t("salesman")}
           onChangeData={(data: any) => handleFieldChange("salesMan", data.salesMan)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("warehouse")}
           id="warehouse"
@@ -118,33 +119,33 @@ export const SalesRouteManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("warehouse", data.warehouse)}
         />
       </div>
-      <div className="grid grid-cols-2 mt-5 gap-6">
-        <div className="flex space-x-5 pr-5">
-          <ERPRadio
-            id="mainRoute"
-            name="mainRoute"
-            data={gridType}
-            checked={gridType.mainRoute}
-            onChange={() => setGridType({ mainRoute: true, subRoute: false })}
-            label={t("main_route")}
-          />
-          <ERPRadio
-            id="subRoute"
-            name="subRoute"
-            data={gridType}
-            checked={gridType.subRoute}
-            onChange={() => setGridType({ mainRoute: false, subRoute: true })}
-            label={t("sub_route")}
-          />
-        </div>
-        <div>
-          <ERPCheckbox
-            {...getFieldProps("isActive")}
-            label={t("is_active")}
-            onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
-          />
-        </div>
+
+      <div className="grid grid-cols-3 mt-5 gap-6">
+        <ERPRadio
+          id="mainRoute"
+          name="mainRoute"
+          data={gridType}
+          checked={gridType.mainRoute}
+          onChange={() => setGridType({ mainRoute: true, subRoute: false })}
+          label={t("main_route")}
+        />
+
+        <ERPRadio
+          id="subRoute"
+          name="subRoute"
+          data={gridType}
+          checked={gridType.subRoute}
+          onChange={() => setGridType({ mainRoute: false, subRoute: true })}
+          label={t("sub_route")}
+        />
+
+        <ERPCheckbox
+          {...getFieldProps("isActive")}
+          label={t("is_active")}
+          onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
+        />
       </div>
+
       <ERPFormButtons
         onClear={handleClear}
         isEdit={isEdit}

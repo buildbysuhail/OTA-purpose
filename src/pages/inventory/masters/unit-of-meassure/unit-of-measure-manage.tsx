@@ -13,7 +13,6 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 export const UnitOfMeasureManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -24,18 +23,14 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<MeasureData>({
     url: Urls.unitOfMeasure,
-    onClose:useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.unitOfMeasure.key,
     useApiClient: true,
     initialData: initialMeasureData
   });
 
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -49,6 +44,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
             handleFieldChange("unitCode", data.unitCode);
           }}
         />
+
         <ERPInput
           {...getFieldProps("unitName")}
           label={t("unit_name")}
@@ -56,6 +52,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("unitName", data.unitName)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("unitType")}
           field={{
@@ -70,6 +67,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
             { value: 'Inactive', label: t('inactive') },
           ]}
         />
+
         <ERPInput
           {...getFieldProps("decimalPoints")}
           type="number"
@@ -77,6 +75,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
           placeholder={t("decimal_points")}
           onChangeData={(data: any) => handleFieldChange("decimalPoints", data.decimalPoints)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}

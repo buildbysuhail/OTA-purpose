@@ -10,9 +10,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ProductMaster, { } from "./products-manage";
 
-
 const Products = () => {
-
   const MemoizedProductsManage = useMemo(() => React.memo(ProductMaster), []);
   const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
@@ -43,7 +41,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "product",
@@ -51,7 +50,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "groupName",
@@ -59,7 +59,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "category",
@@ -67,7 +68,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "taxCategory",
@@ -75,7 +77,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "unit",
@@ -83,7 +86,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "salesPrice",
@@ -91,7 +95,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "purchasePrice",
@@ -99,7 +104,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "brandName",
@@ -107,7 +113,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "arabicName",
@@ -115,7 +122,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "stock",
@@ -123,7 +131,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "isActive",
@@ -131,7 +140,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "reOrderLevel",
@@ -139,7 +149,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "reOrderQty",
@@ -147,7 +158,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "canSell",
@@ -155,7 +167,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "canPurchase",
@@ -163,7 +176,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "canManufacture",
@@ -171,7 +185,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "itemAlias",
@@ -179,7 +194,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "itemType",
@@ -187,7 +203,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "commodityCode",
@@ -195,7 +212,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "productGroupId",
@@ -203,7 +221,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "taxCategoryId",
@@ -211,7 +230,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "basicUnitId",
@@ -219,7 +239,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "productCategoryId",
@@ -227,7 +248,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "batchCriteria",
@@ -235,7 +257,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "hsnCode",
@@ -243,7 +266,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "mrp",
@@ -251,7 +275,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "stockMin",
@@ -259,7 +284,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "stockMax",
@@ -267,7 +293,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "isRawMaterial",
@@ -275,7 +302,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "isFinishedGood",
@@ -283,7 +311,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "unitQty",
@@ -291,7 +320,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "packingSlip",
@@ -299,7 +329,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "mannualBarcode",
@@ -307,7 +338,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "autoBarcode",
@@ -315,7 +347,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "isWeighingScale",
@@ -323,7 +356,8 @@ const Products = () => {
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "batchNo",
@@ -331,7 +365,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "netWt",
@@ -339,7 +374,8 @@ const Products = () => {
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "unitName",
@@ -347,7 +383,8 @@ const Products = () => {
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
-        allowFiltering: true
+        allowFiltering: true,
+        width: 100
       },
       {
         dataField: "actions",
@@ -357,22 +394,13 @@ const Products = () => {
         fixed: true,
         fixedPosition: "right",
         width: 100,
-
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
               view={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productId, reload: false }) }}
               edit={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productId, reload: false }) }}
               delete={{
-                onSuccess: () => {
-                  dispatch(
-                    toggleProducts({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
-                },
+                onSuccess: () => { dispatch(toggleProducts({ isOpen: false, key: null, reload: true, })); },
                 confirmationRequired: true,
                 confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
                 url: Urls?.products, key: cellElement?.data?.id
@@ -381,9 +409,7 @@ const Products = () => {
           )
         },
       },
-    ],
-    []
-  );
+    ], []);
 
   useEffect(() => {
     dispatch(toggleProducts({ ...rootState, reload: true }));

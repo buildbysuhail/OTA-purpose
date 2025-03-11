@@ -629,51 +629,51 @@ export const ProductMaster: React.FC = React.memo(() => {
           </div>
 
           <div>
-            {/* Multi Units content */}
+            Multi Units
           </div>
 
           <div>
-            {/* Multi Rates content */}
+            Multi Rates
           </div>
 
           <div>
-            {/* Image content */}
+            Image
           </div>
 
           <div>
-            {/* Others content */}
+            Others
           </div>
 
           <div>
-            {/* Sales content */}
+            Sales
           </div>
 
           <div>
-            {/* Purchase content */}
+            Purchase
           </div>
 
           <div>
-            {/* Stock content */}
+            Stock
           </div>
 
           <div>
-            {/* Suppliers content */}
+            Suppliers
           </div>
 
           <div>
-            {/* Re-Order content */}
+            Re-Order
           </div>
 
           <div>
-            {/* Promotion Details content */}
+            Promotion Details
           </div>
 
           <div>
-            {/* Search content */}
+            Search
           </div>
 
           <div>
-            {/* Nutrition Facts content */}
+            Nutrition Facts
           </div>
         </ERPTab>
       </div>

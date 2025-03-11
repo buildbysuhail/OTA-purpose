@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
@@ -13,7 +12,6 @@ import { initialTaxCategoryData, TaxCategoryData } from "./tax-category-type";
 export const TaxCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -24,19 +22,14 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<TaxCategoryData>({
     url: Urls.taxCategory,
-    onClose:useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleTaxCategory({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.taxCategory.key,
     useApiClient: true,
     initialData: initialTaxCategoryData
   });
 
-
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -50,6 +43,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
             handleFieldChange("taxCategoryName", data.taxCategoryName);
           }}
         />
+
         <ERPInput
           {...getFieldProps("sVatPerc")}
           type='number'
@@ -58,6 +52,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("sVatPerc", data.sVatPerc)}
         />
+
         <ERPInput
           {...getFieldProps("pVatPerc")}
           type='number'
@@ -65,6 +60,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("purchase_VAT_%")}
           onChangeData={(data: any) => handleFieldChange("pVatPerc", data.pVatPerc)}
         />
+
         <ERPInput
           {...getFieldProps("pcstPerc")}
           type='number'
@@ -72,6 +68,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
           placeholder={t("purchase_excise_tax_%")}
           onChangeData={(data: any) => handleFieldChange("pcstPerc", data.pcstPerc)}
         />
+
         <ERPInput
           {...getFieldProps("scstPerc")}
           type='number'

@@ -13,7 +13,6 @@ import { toggleVehicles } from "../../../../redux/slices/popup-reducer";
 export const VehiclesManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -24,18 +23,14 @@ export const VehiclesManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<VehiclesData>({
     url: Urls.vehicles,
-    onSuccess: useCallback(
-      () => dispatch(toggleVehicles({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
-    onClose:useCallback(() => dispatch(toggleVehicles({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleVehicles({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleVehicles({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.vehicles.key,
     useApiClient: true,
     initialData: initialvehiclesData
   });
 
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -49,6 +44,7 @@ export const VehiclesManage: React.FC = React.memo(() => {
             handleFieldChange("vehicleName", data.vehicleName);
           }}
         />
+
         <ERPInput
           {...getFieldProps("vehicleNumber")}
           label={t("vehicle_number")}
@@ -56,6 +52,7 @@ export const VehiclesManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("vehicleNumber", data.vehicleNumber)}
         />
+
         <ERPInput
           {...getFieldProps("noOfWheels")}
           label={t("no_of_wheels")}
@@ -63,50 +60,58 @@ export const VehiclesManage: React.FC = React.memo(() => {
           placeholder={t("no_of_wheels")}
           onChangeData={(data: any) => handleFieldChange("noOfWheels", data.noOfWheels)}
         />
+
         <ERPInput
           {...getFieldProps("model")}
           label={t("model")}
           placeholder={t("model")}
           onChangeData={(data: any) => handleFieldChange("model", data.model)}
         />
+
         <ERPInput
           {...getFieldProps("manufacture")}
           label={t("manufacture")}
           placeholder={t("manufacture")}
           onChangeData={(data: any) => handleFieldChange("manufacture", data.manufacture)}
         />
+
         <ERPInput
           {...getFieldProps("ownerName")}
           label={t("owner")}
           placeholder={t("owner_name")}
           onChangeData={(data: any) => handleFieldChange("ownerName", data.ownerName)}
         />
+
         <ERPInput
           {...getFieldProps("color")}
           label={t("color")}
           placeholder={t("color")}
           onChangeData={(data: any) => handleFieldChange("color", data.color)}
         />
+
         <ERPInput
           {...getFieldProps("odometer")}
           label={t("odo_meter")}
           placeholder={t("odo_meter")}
           onChangeData={(data: any) => handleFieldChange("odometer", data.odometer)}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPCheckbox
           {...getFieldProps('isRental')}
           label={t("rental")}
           onChangeData={(data: any) => handleFieldChange('isRental', data.isRental)}
         />
+
         <ERPCheckbox
           {...getFieldProps('isCommon')}
-          label={t("common")}
+          label={t("is_common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
         />
       </div>

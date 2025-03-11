@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleGroupCategory} from "../../../../redux/slices/popup-reducer";
+import { toggleGroupCategory } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -12,156 +12,142 @@ import { GroupCategoryManage } from "./group-category-manage";
 
 
 const GroupCategory = () => {
-  
-const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage), []);
-  const { t } = useTranslation();
+  const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage), []);
+  const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo( () => [
-      {
-        dataField: "siNo",
-        caption: t("SiNo"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "id",
-        caption: t("id"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      }, 
-      {
-        dataField: "categoryCode",
-        caption: t("category_code"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "siNo",
+      caption: t("SiNo"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "categoryCode",
+      caption: t("category_code"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "categoryName",
+      caption: t("category_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "shortName",
+      caption: t("short_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("created_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "date",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150
+    },
+    {
+      dataField: "isCommon",
+      caption: t("is_common"),
+      dataType: "boolean",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100
 
+    },
+    {
+      dataField: "actions",
+      caption: t("actions"),
+      allowSearch: false,
+      allowFiltering: false,
+      fixed: true,
+      fixedPosition: "right",
+      width: 100,
+      cellRender: (cellElement: any) => {
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            delete={{
+              onSuccess: () => {
+                dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: true, }));
+              },
+              confirmationRequired: true,
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+              url: Urls?.section, key: cellElement?.data?.id
+            }}
+          />
+        )
       },
-      {
-        dataField: "categoryName",
-        caption: t("category_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-      },
-      {
-        dataField: "shortName",
-        caption: t("short_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
+    },
+  ], []);
 
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "createdUser",
-        caption: t("created_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:150
-
-      },
-      {
-        dataField: "modifiedUser",
-        caption: t("modified_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:150
-
-      },
-      {
-        dataField: "isCommon",
-        caption: t("is_common"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:100
-
-      },
-      {
-        dataField: "actions",
-        caption: t("actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              edit={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              delete={{
-                onSuccess: () => {
-                  dispatch(
-                    toggleGroupCategory({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
-                },
-                confirmationRequired: true,
-                confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.section,key:cellElement?.data?.id
-              }}
-            />
-          )
-        },
-      },
-    ],
-    []
-  );
   useEffect(() => {
     dispatch(toggleGroupCategory({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -171,20 +157,15 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Group Category"
+                  gridHeader={t("group_category")}
                   dataUrl={Urls.group_category}
                   gridId="grd_group_category"
                   popupAction={toggleGroupCategory}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleGroupCategory({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleGroupCategory({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.groupCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -192,18 +173,14 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       </div>
       <ERPModal
         isOpen={rootState.PopupData?.groupCategory.isOpen || false}
-        title="Group Category"
-   
+        title={t("group_category")}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleGroupCategory({ isOpen: false }));
-        }}
-        content={<MemoizedGroupCategoryManage/>}
-       
+        width={600}
+        height={240}
+        closeModal={() => { dispatch(toggleGroupCategory({ isOpen: false })); }}
+        content={<MemoizedGroupCategoryManage />}
       />
-      
     </Fragment>
   );
 };
-
 export default React.memo(GroupCategory);

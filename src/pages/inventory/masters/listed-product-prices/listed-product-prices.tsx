@@ -22,8 +22,7 @@ export interface ListedProductData {
 
 const ListedProductPrices: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
-
+  const { t } = useTranslation('inventory');
   const [gridData, setGridData] = useState<ListedProductData[]>([]);
   const [formData, setFormData] = useState<ListedProductData>({
     party: "",
@@ -120,7 +119,7 @@ const ListedProductPrices: React.FC = React.memo(() => {
   return (
     <div className="px-4 pt-4 pb-2 ">
       <div className="border rounded-lg p-4">
-        <div className="grid grid-cols-3 gap-6 p-4">
+        <div className="grid grid-cols-4 gap-6 p-4">
           <ERPDataCombobox
             {...getFieldProps("party")}
             id="party"
@@ -135,6 +134,7 @@ const ListedProductPrices: React.FC = React.memo(() => {
             required={true}
             onChangeData={(data: any) => handleFieldChange("party", data.party)}
           />
+
           <ERPDataCombobox
             {...getFieldProps("type")}
             id="type"
@@ -148,34 +148,7 @@ const ListedProductPrices: React.FC = React.memo(() => {
             required={true}
             onChangeData={(data: any) => handleFieldChange("type", data.type)}
           />
-        </div>
-        <div className="grid grid-cols-3 gap-6">
-          <div className="grid grid-cols-3 gap-6">
-            <ERPCheckbox
-              {...getFieldProps('productCode')}
-              label={t("product_code")}
-              onChangeData={(data: any) => handleFieldChange('productCode', data.productCode)}
-            />
-            <ERPInput
-              {...getFieldProps("product")}
-              label={t("product")}
-              value={formData.product}
-              onChange={handleInputChange}
-            />
-            <ERPDataCombobox
-              {...getFieldProps("product")}
-              id="product"
-              field={{
-                id: "product",
-                getListUrl: Urls.data_warehouse,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              label={t("product")}
-              required={true}
-              onChangeData={(data: any) => handleFieldChange("product", data.product)}
-            />
-          </div>
+
           <ERPDataCombobox
             {...getFieldProps("unit")}
             field={{
@@ -189,6 +162,38 @@ const ListedProductPrices: React.FC = React.memo(() => {
               { value: 'PCs', label: t('2_mix_brand') },
             ]}
           />
+        </div>
+
+        <div className="grid grid-cols-4 gap-6">
+          <div className="flex items-end">
+            <ERPCheckbox
+              {...getFieldProps('productCode')}
+              label={t("product_code")}
+              onChangeData={(data: any) => handleFieldChange('productCode', data.productCode)}
+            />
+          </div>
+
+          <ERPInput
+            {...getFieldProps("product")}
+            label={t("product")}
+            value={formData.product}
+            onChange={handleInputChange}
+          />
+
+          <ERPDataCombobox
+            {...getFieldProps("product")}
+            id="product"
+            field={{
+              id: "product",
+              getListUrl: Urls.data_warehouse,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label={t("product")}
+            required={true}
+            onChangeData={(data: any) => handleFieldChange("product", data.product)}
+          />
+
           <ERPInput
             {...getFieldProps("price")}
             label={t("price")}
@@ -208,11 +213,7 @@ const ListedProductPrices: React.FC = React.memo(() => {
           gridHeader={t("listed_product_prices")}
           customToolbarItems={[{
             location: 'after',
-            item: (
-              <Button variant="contained" color="primary" onClick={handleAddToGrid}>
-                {t("add")}
-              </Button>
-            )
+            item: (<Button variant="contained" color="primary" onClick={handleAddToGrid}>  {t("add")}</Button>)
           }]}
         />
       </div>

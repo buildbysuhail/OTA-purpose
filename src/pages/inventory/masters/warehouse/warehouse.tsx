@@ -12,168 +12,158 @@ import { toggleWarehouse } from "../../../../redux/slices/popup-reducer";
 
 
 const WareHouse = () => {
-  
-const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
-  const { t } = useTranslation();
+
+  const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
+  const { t } = useTranslation('inventory');
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo( () => [
-      {
-        dataField: "siNo",
-        caption: t("SiNo"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
+  const columns: DevGridColumn[] = useMemo(() => [
+    {
+      dataField: "siNo",
+      caption: t("SiNo"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "warehouseName",
+      caption: t("warehouse_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200
+    },
+    {
+      dataField: "shortName",
+      caption: t("short_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "type",
+      caption: t("type"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "isStockWarehouse",
+      caption: t("is_stock_warehouse"),
+      dataType: "boolean",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "isCommon",
+      caption: t("is_common"),
+      dataType: "boolean",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("created_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "negativeStock",
+      caption: t("negative_stock"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "actions",
+      caption: t("actions"),
+      allowSearch: false,
+      allowFiltering: false,
+      fixed: true,
+      fixedPosition: "right",
+      width: 100,
+      cellRender: (cellElement: any) => {
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            delete={{
+              onSuccess: () => { dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true, })); },
+              confirmationRequired: true,
+              confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+              url: Urls?.Warehouse, key: cellElement?.data?.id
+            }}
+          />
+        )
       },
-      {
-        dataField: "id",
-        caption: t("id"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
-        dataField: "warehouseName",
-        caption: t("warehouse_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:200
-      },
-      {
-        dataField: "shortName",
-        caption: t("short_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "type",
-        caption: t("type"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "isStockWarehouse",
-        caption: t("is_stock_warehouse"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "isCommon",
-        caption: t("is_common"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-        
-      },
-      {
-        dataField: "createdUser",
-        caption: t("created_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "modifiedUser",
-        caption: t("modified_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "negativeStock",
-        caption: t("negative_stock"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 150,
-      },
-      {
-        dataField: "actions",
-        caption: t("actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
-              delete={{
-                onSuccess: () => {
-                  dispatch(
-                    toggleWarehouse({
-                      isOpen: false,
-                      key: null,
-                      reload: true,
-                    })
-                  );
-                },
-                confirmationRequired: true,
-                confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.Warehouse,key:cellElement?.data?.id
-              }}
-            />
-          )
-        },
-      },
-    ],
-    []
-  );
+    },
+  ], []);
+
   useEffect(() => {
     dispatch(toggleWarehouse({ ...rootState, reload: true }));
   }, []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -188,15 +178,10 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
                   gridId="grd_Warehouse"
                   popupAction={toggleWarehouse}
                   gridAddButtonType="popup"
-                  changeReload={(reload: any) => {
-                    dispatch(
-                      toggleWarehouse({ ...rootState, reload: reload })
-                    );
-                  }}
+                  changeReload={(reload: any) => { dispatch(toggleWarehouse({ ...rootState, reload: reload })); }}
                   reload={rootState?.PopupData?.warehouse?.reload}
                   gridAddButtonIcon="ri-add-line"
-                  
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -206,10 +191,10 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         isOpen={rootState.PopupData.warehouse.isOpen || false}
         title={t("warehouse")}
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleWarehouse({ isOpen: false }));
-        }}
-        content={<MemoizedWarehouseManage/>}
+        width={600}
+        height={320}
+        closeModal={() => { dispatch(toggleWarehouse({ isOpen: false })); }}
+        content={<MemoizedWarehouseManage />}
       />
     </Fragment>
   );

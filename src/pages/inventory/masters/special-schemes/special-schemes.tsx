@@ -2,7 +2,6 @@ import React, { useCallback, useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { toggleSpecialSchemes } from "../../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../../redux/types";
-import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
@@ -32,9 +31,8 @@ export interface SpecialSchemesData {
 
 const SpecialSchemes: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
   const rootState = useRootState();
-
   const [activeTab, setActiveTab] = useState('specialPrice');
   const [gridData, setGridData] = useState<SpecialSchemesData[]>([]);
   const [formData, setFormData] = useState<SpecialSchemesData>({
@@ -71,12 +69,11 @@ const SpecialSchemes: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<SpecialSchemesData>({
     url: Urls.CompanyProfiles,
-    onClose:useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
   });
-
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -107,7 +104,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
       return [
         {
           dataField: "name",
-          caption: t("names"),
+          caption: t("name"),
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
@@ -181,7 +178,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
       return [
         {
           dataField: "name",
-          caption: t("names"),
+          caption: t("name"),
           dataType: "string",
           allowSorting: true,
           allowSearch: true,
@@ -268,8 +265,8 @@ const SpecialSchemes: React.FC = React.memo(() => {
   return (
     <>
       <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
-        <Tab label="Special Price" value="specialPrice" />
-        <Tab label="FOC Scheme" value="FOCScheme" />
+        <Tab label={t("special_price")} value="specialPrice" />
+        <Tab label={t("foc_scheme")} value="FOCScheme" />
       </Tabs>
       <div className="px-4 pt-4 pb-2 ">
         {activeTab === 'specialPrice' &&
@@ -284,6 +281,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     value={formData.groupPrice}
                     onChange={handleInputChange}
                   />
+
                   <ERPDataCombobox
                     {...getFieldProps("groupCombo")}
                     field={{
@@ -297,6 +295,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                       { value: '2 Mix Brand', label: t('2_mix_brand') },
                     ]}
                   />
+
                   <ERPInput
                     {...getFieldProps("nameCode")}
                     label={t("name/code")}
@@ -304,6 +303,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     value={formData.nameCode}
                     onChange={handleInputChange}
                   />
+
                   <ERPInput
                     {...getFieldProps("barcode")}
                     label={t("barcode")}
@@ -311,6 +311,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     value={formData.barcode}
                     onChange={handleInputChange}
                   />
+
                   <ERPInput
                     {...getFieldProps("price")}
                     label={t("price")}
@@ -318,6 +319,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     value={formData.price}
                     onChange={handleInputChange}
                   />
+
                   <ERPInput
                     {...getFieldProps("unit")}
                     label={t("unit")}
@@ -325,18 +327,23 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     value={formData.unit}
                     onChange={handleInputChange}
                   />
+
                   <ERPInput
                     {...getFieldProps("standardSPrice")}
                     label={t("std.s.price")}
                     placeholder={t("std.s.price")}
                     value={formData.standardSPrice}
-                    onChange={handleInputChange} />
+                    onChange={handleInputChange}
+                  />
+
                   <ERPInput
                     {...getFieldProps("standardPPrice")}
                     label={t("std.p.price")}
                     placeholder={t("std.p.price")}
                     value={formData.standardPPrice}
-                    onChange={handleInputChange} />
+                    onChange={handleInputChange}
+                  />
+
                   <ERPDataCombobox
                     {...getFieldProps("groupCombo")}
                     field={{
@@ -350,6 +357,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                       { value: '2 Mix Brand', label: t('2_mix_brand') },
                     ]}
                   />
+
                   <ERPCheckbox
                     {...getFieldProps('group')}
                     label={t("group")}
@@ -358,6 +366,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   />
                 </div>
               </div>
+
               {/*  */}
               {/* Integrated Grid */}
               <div className="mt-4">
@@ -367,18 +376,13 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   data={gridData}
                   hideDefaultExportButton={true}
                   hideGridAddButton={true}
-                  customToolbarItems={[{
-                    location: 'after', item: (
-                      <Button variant="contained" color="primary" onClick={handleAddToGrid}>
-                        {t("add")}
-                      </Button>
-                    )
-                  }]}
+                  customToolbarItems={[{ location: 'after', item: (<Button variant="contained" color="primary" onClick={handleAddToGrid}>  {t("add")}</Button>) }]}
                 />
               </div>
             </div>
           </>
         }
+
         {activeTab === 'FOCScheme' &&
           <>
             <div className="border rounded-lg p-4">
@@ -396,6 +400,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     { value: '2 Mix Brand', label: t('2_mix_brand') },
                   ]}
                 />
+
                 <ERPInput
                   {...getFieldProps("quantity")}
                   label={t("quantity")}
@@ -403,48 +408,63 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   value={formData.quantity}
                   onChange={handleInputChange}
                 />
+
                 <ERPInput
                   {...getFieldProps("freeQuantity")}
                   label={t("free_quantity")}
                   placeholder={t("free_quantity")}
                   value={formData.freeQuantity}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("standardSPrice")}
                   label={t("std.s.price")}
                   placeholder={t("std.s.price")}
                   value={formData.standardSPrice}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("standardPPrice")}
                   label={t("std.p.price")}
                   placeholder={t("std.p.price")}
                   value={formData.standardPPrice}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("itemBarcode")}
                   label={t("item_barcode")}
                   placeholder={t("item_barcode")}
                   value={formData.itemBarcode}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("unit")}
                   label={t("unit")}
                   placeholder={t("unit")}
                   value={formData.unit}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("remarks")}
                   label={t("remarks")}
                   placeholder={t("remarks")}
                   value={formData.remarks}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPInput
                   {...getFieldProps("nameCode")}
                   label={t("name/code")}
                   placeholder={t("name/code")}
                   value={formData.nameCode}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
+
                 <ERPCheckbox
                   {...getFieldProps('code')}
                   label={t("code")}
@@ -452,6 +472,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   onChange={handleInputChange} />
               </div>
             </div>
+
             <div className="mt-4">
               <ErpDevGrid
                 columns={columns}
@@ -459,27 +480,12 @@ const SpecialSchemes: React.FC = React.memo(() => {
                 data={gridData}
                 hideDefaultExportButton={true}
                 hideGridAddButton={true}
-                customToolbarItems={[{
-                  location: 'after', item: (
-                    <Button variant="contained" color="primary" onClick={handleAddToGrid}>
-                      {t("add")}
-                    </Button>
-                  )
-                }]}
+                customToolbarItems={[{ location: 'after', item: (<Button variant="contained" color="primary" onClick={handleAddToGrid}>    {t("add")}  </Button>) }]}
               />
             </div>
           </>
         }
       </div>
-      {/* <div className="flex items-center justify-between">
-        <ERPFormButtons
-          onClear={handleClear}
-          isEdit={isEdit}
-          isLoading={isLoading}
-          onCancel={onClose}
-          onSubmit={handleSubmit}
-        />
-      </div> */}
     </>
   );
 });

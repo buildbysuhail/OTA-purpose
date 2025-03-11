@@ -14,7 +14,6 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 export const WarehouseManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -25,18 +24,14 @@ export const WarehouseManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<WarehouseData>({
     url: Urls.Warehouse,
-    onClose:useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(
-      () => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
+    onClose: useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.warehouse.key,
     useApiClient: true,
     initialData: initialWarehouseData
   });
 
-
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -50,6 +45,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
             handleFieldChange("warehouseName", data.warehouseName);
           }}
         />
+
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
@@ -57,11 +53,13 @@ export const WarehouseManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
+
         <ERPCheckbox
           {...getFieldProps('isStockWarehouse')}
           label={t("is_stock_warehouse")}
           onChangeData={(data: any) => handleFieldChange('isStockWarehouse', data.isStockWarehouse)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("warehouseType")}
           field={{
@@ -76,12 +74,14 @@ export const WarehouseManage: React.FC = React.memo(() => {
             { value: 'Van', label: t('van') },
           ]}
         />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("cashLedgerID")}
           id="cashLedgerID"

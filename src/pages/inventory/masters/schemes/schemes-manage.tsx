@@ -14,7 +14,6 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 export const SchemesManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -25,17 +24,14 @@ export const SchemesManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<SchemesData>({
     url: Urls.vehicles,
-    onSuccess: useCallback(
-      () => dispatch(toggleSchemes({ isOpen: false, key: null, reload: true })),
-      [dispatch]
-    ),
-    onClose:useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.vehicles.key,
     useApiClient: true,
     initialData: initialSchemesData
   });
 
-  const { t } = useTranslation();
+  const { t } = useTranslation('inventory');
 
   return (
     <div className="w-full modal-content">
@@ -49,6 +45,7 @@ export const SchemesManage: React.FC = React.memo(() => {
             handleFieldChange("schemeCode", data.schemeCode);
           }}
         />
+
         <ERPInput
           {...getFieldProps("schemeName")}
           label={t("scheme_name")}
@@ -56,18 +53,21 @@ export const SchemesManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("schemeName", data.schemeName)}
         />
+
         <ERPDateInput
           {...getFieldProps("fromDate")}
           label={t("from_date")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
         />
+
         <ERPDateInput
           {...getFieldProps("toDate")}
           label={t("to_date")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("schemeType")}
           id="schemeType"
@@ -82,24 +82,28 @@ export const SchemesManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("schemeType", data.schemeType)}
         />
+
         <ERPInput
           {...getFieldProps("discPec")}
           label={t("disc_%")}
           placeholder={t("disc_%")}
           onChangeData={(data: any) => handleFieldChange("discPec", data.discPec)}
         />
+
         <ERPInput
           {...getFieldProps("qtyLimit")}
           label={t("qty_limit")}
           placeholder={t("qty_limit")}
           onChangeData={(data: any) => handleFieldChange("qtyLimit", data.qtyLimit)}
         />
+
         <ERPInput
           {...getFieldProps("freeQty")}
           label={t("free_qty")}
           placeholder={t("free_qty")}
           onChangeData={(data: any) => handleFieldChange("freeQty", data.freeQty)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("status")}
           field={{
@@ -115,6 +119,7 @@ export const SchemesManage: React.FC = React.memo(() => {
           ]}
         />
       </div>
+
       <ERPFormButtons
         onClear={handleClear}
         isEdit={isEdit}

@@ -1711,7 +1711,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       // );
       // if (response.data && response.data.length > 0) {
       //   setHistoryData(response.data[0]);
-      setIsHistorySidebarOpen(true);
+      setIsHistorySidebarOpen((prev) =>  !prev);
       // }
     } catch (error) {
       console.error("Error fetching transaction history:", error);
@@ -2639,7 +2639,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     </div>
 
     {/* Main Content */}
-    <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-16">
+    <div className="flex flex-col w-full h-full mt-12 overflow-y-auto pb-[43px]">
       <AccHeader
         formState={formState}
         dispatch={dispatch}
@@ -2900,13 +2900,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div>
 
       {/* Footer Buttons */}
-      <div className="fixed bottom-0 left-0 w-full bg-white flex space-x-2 p-2 z-10">
+      <div className="fixed bottom-0 left-0 w-full bg-white flex  p-0 z-10">
         <ERPButton
           localInputBox={formState?.userConfig?.inputBoxStyle}
           title={t("save_&_new")}
           onClick={() => save()}
           variant="secondary"
-          className="flex-1 rounded-none"
+          className="flex-1 rounded-none !m-0"
         />
         <ERPButton
           localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2916,7 +2916,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             goToPreviousPage();
           }}
           variant="primary"
-          className="flex-1 rounded-none"
+          className="flex-1 rounded-none !m-0"
         />
       </div>
     </div>
@@ -3093,7 +3093,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 </div>
 
                 <div></div>
-                <div className="flex left-0 bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
+                <div className="flex left-0 bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 px-[5px] pb-[5px]">
                 <ERPButton
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     title={`${t(formState.formElements.btnAdd.label)} ${t('and_new')}`}
@@ -3366,6 +3366,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }}
         />
       )}
+       {transactionType !== "" && (
+                <HistorySidebar
+                  transactionType={transactionType ?? ""}
+                  isOpen={isHistorySidebarOpen}
+                  onClose={() => setIsHistorySidebarOpen(false)}
+                />
+              )}
+              
     </div>
   );
 };

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Banknote, CalendarDays, X } from "lucide-react";
 
 interface HistorySidebarProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   onClose: () => void;
   transactionType: string;

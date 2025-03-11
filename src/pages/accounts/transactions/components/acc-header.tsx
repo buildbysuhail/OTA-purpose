@@ -79,7 +79,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       isHistorySidebarOpen,
       setIsPrintModalOpen,
       phone = false,
-      printPaymentReceiptAdvice
+      printPaymentReceiptAdvice,
     },
     ref
   ) => {
@@ -109,7 +109,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
     }, []);
 
     return (
-      <div className={`flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
+      <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
         {/* Load Temp Rows */}
         <div className="group relative inline-flex flex-col items-center ps-[5px]" title="Load Details">
           <button
@@ -197,13 +197,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         </div>
 
         {/* History Sidebar */}
-        {transactionType !== "" && (
-          <HistorySidebar
-            transactionType={transactionType ?? ""}
-            isOpen={isHistorySidebarOpen}
-            onClose={() => setIsHistorySidebarOpen(false)}
-          />
-        )}
+       
 
         {/* Settings Button */}
         <div>
@@ -214,7 +208,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         <div className="relative">
           <button
             ref={buttonRef}
-            onClick={() => setIsPopupVisible(!isPopupVisible)}
+            onClick={() => setIsPopupVisible((prev: any) => !prev)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'}  rounded-md hover:bg-gray-200 transition-colors`}
             title={t("previous_page")}
           >

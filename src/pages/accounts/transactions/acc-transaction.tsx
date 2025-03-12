@@ -2698,7 +2698,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div>
 
       {/* Form Section */}
-      <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto">
+      <div className="flex-1 bg-white p-4 text-zinc-800 overflow-y-auto pt-0.5">
         <div className="space-y-2">
           <AccMasterAccount
             ref={masterAccountRef}
@@ -2726,7 +2726,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
 
         {showInputBox && (
-          <div className="space-y-2">
+          <div className="space-y-2 mb-[10px]">
             <AccReferenceNumber
               formState={formState}
               dispatch={dispatch}
@@ -2829,7 +2829,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         {/* Add Items Button */}
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center justify-center w-full border-2 border-gray-400 bg-white p-2 rounded text-blue-500"
+          className="flex items-center justify-center w-full border-2 border-gray-400 bg-white p-[2px] rounded text-blue-500"
         >
           <i className="ri-add-circle-fill pr-2 text-lg" />
           <span className="text-amber-700">{t("add_items")}</span>
@@ -2837,13 +2837,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </button>
 
         {/* Billed Items */}
-        <div className="bg-blue-500 mb-1 p-1 rounded-sm text-white">
+        <div className="bg-[#385080] mb-1 p-1 mt-[5px] rounded-sm text-white">
           <h2 className="font-light text-sm">{t("billed_items")}</h2>
         </div>
 
         <ErpDevGrid
           key={key}
-          GridPreferenceChooserAccTrance={false}
+          GridPreferenceChooserAccTrance={true}
           heightToAdjustOnWindows={
             formState.userConfig?.gridHeight ?? (isChequeSectionVisible ? 650 : 600)
           }
@@ -2855,6 +2855,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           allowFiltering={false}
           dataUrl={Urls.acc_reports_ledger}
           hideGridAddButton={true}
+          columnHidingEnabled={true}
           hideDefaultExportButton={true}
           hideDefaultSearchPanel={true}
           allowSearching={false}
@@ -2871,8 +2872,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           enableScrollButton={false}
           ShowGridPreferenceChooser={false}
           showPrintButton={false}
-          className="HistorySidebadrcustom"
-          showColumnHeaderscustom={false}
+          // className="HistorySidebadrcustom"
+          // showColumnHeaderscustom={false}
         />
 
         {/* Total Summary */}

@@ -1,0 +1,71 @@
+.isMobile{
+  .Toastify__toast-theme--light {
+    margin: 20px;
+    // margin-top: 50px;
+    margin-bottom: 0px;
+  }
+
+  .Toastify__toast-container .Toastify__toast:nth-of-type(1) {
+    margin-top: 50px;
+  }
+
+  .Toastify__toast-container .Toastify__toast:nth-of-type(n+2) {
+    margin-top: 3px;
+  }
+
+  // .Toastify__toast-body {
+  //   background-color: red;
+  // }
+
+  // s
+
+
+
+  .swal2-container.swal2-center.swal2-backdrop-show {
+    padding: 50px;
+  }
+
+ 
+
+//   .swal2-container .swal2-icon {
+//     height: 2rem;
+//     width: 2rem;
+// }
+
+// div:where(.swal2-icon) .swal2-icon-content {
+//   font-size: 1.75em;
+// }
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  padding: 6px;
+}
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+  padding: 1px;
+}
+
+
+// error
+
+// div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left] {
+//   left: -6px !important;
+//   transform: rotate(45deg) !important;
+//   width: 28px;
+// }
+
+
+// div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right] {
+//   right: 8px !important;
+//   transform: rotate(-45deg) !important;
+//   width: 28px;
+// }
+
+// div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line] {
+//   display: block;
+//   position: absolute;
+//   top: 19px;
+//   width: 2.9375em;
+//   height: .3125em;
+// }
+
+}

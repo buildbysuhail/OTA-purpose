@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement, } from "react";
+import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, cloneElement } from "react";
 import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, Typography } from "@mui/material";
 import { setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -156,26 +156,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
     const [initial, setInitial] = useState<Option | null>(initialValue);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
-      if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
-        return false;
-      }
-      if (type == "number") {
+      
+      if (type === "number") {
         const value = e.target.value;
-        if (/^\d*\.?\d*$|^\.$/.test(value)) {
-          onChangeData &&
-            data &&
-            onChangeData(setNestedValue(data, id, e.target?.value));
+        // Allow empty string, decimal point, or valid numbers
+        if (value === "" || /^\d*\.?\d*$/.test(value)) {
+          if (ds !== undefined && ds >= 0 && sd < 0) return;
+          onChangeData && data && onChangeData(setNestedValue(data, id, value));
           onChange && onChange(e);
         }
-      }
-      else {
-        onChangeData &&
-          data &&
-          onChangeData(setNestedValue(data, id, e.target?.value));
+      } else {
+        onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value));
         onChange && onChange(e);
       }
     };
@@ -526,9 +521,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         onFocus && onFocus(e);
       },
       onBlur,
-      pattern: type == "number" ? "[0-9]*" : undefined,
-      type:
-        type == undefined || type == "number" || type == "text" ? "text" : type,
       required,
       disabled,
       ...props,
@@ -540,9 +532,18 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     };
 
+    const numberInputProps = type === "number" ? {
+      type: "tel", // Use tel instead of number to have more control
+      inputMode: "decimal" as const, // Shows numeric keyboard with decimal support
+      pattern: "[0-9]*\\.?[0-9]*", // Allows numbers and decimal point
+    } : {
+      type: type === "text" || type === undefined ? "text" : type,
+    };
+
     if (_useMUI == true) {
       const muiProps: TextFieldProps = {
         ...commonProps,
+        ...numberInputProps,
         label: !noLabel ? iLabel : undefined,
         InputProps: {
           startAdornment: prefix ? (
@@ -591,7 +592,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "up",
                         } as any;
-
                         handleChange(event);
                       }
                     }}
@@ -624,7 +624,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "down",
                         } as any;
-
                         handleChange(event);
                       }
                     }}
@@ -652,13 +651,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           maxLength,
           min,
           max,
-          pattern,
           step,
           accept,
           "data-skip": skip,
           "data-jump-to": jumpTo,
           "data-jump-target": jumpTarget,
           style: { appearance: "none" },
+          ...(type === "number" && {
+            inputMode: "decimal",
+            pattern: "[0-9]*\\.?[0-9]*",
+          }),
         },
         sx: {
           ...sizeStyles.mui,
@@ -802,6 +804,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             <div className="relative flex-1">
               <input
                 {...commonProps}
+                {...numberInputProps}
                 placeholder={iPlaceholder}
                 ref={ref}
                 autoComplete="new-password"
@@ -860,7 +863,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 maxLength={maxLength}
                 min={min}
                 max={max}
-                pattern={pattern}
                 step={step}
                 accept={accept}
                 onKeyDown={(e) => {
@@ -914,7 +916,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "up",
                         } as any;
-
                         handleChange(event);
                       }
                     }}
@@ -947,7 +948,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           target: { value: newValue.toString() },
                           mode: "down",
                         } as any;
-
                         handleChange(event);
                       }
                     }}

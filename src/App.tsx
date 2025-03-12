@@ -200,6 +200,15 @@ function App() {
 				// ThemeChanger({ ...theme, dataToggled: "close" });
 			}
   },[])
+
+  useEffect(() => {
+    // Dynamically add or remove the 'isMobile' class on the body
+    if (deviceInfo?.isMobile) {
+      document.body.classList.add('isMobile');
+    } else {
+      document.body.classList.remove('isMobile');
+    }
+  }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   
   const { t } = useTranslation('main')
   return (
@@ -221,7 +230,7 @@ function App() {
         />
         <Switcher />
         <AutoClicker />
-        <div className="page dark:!bg-dark-bg" onClick={Bodyclickk}>
+        <div className={`page dark:!bg-dark-bg  `} onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
           
             <Routes>

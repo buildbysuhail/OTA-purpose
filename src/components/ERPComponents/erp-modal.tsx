@@ -293,6 +293,12 @@ const ERPModal = React.memo(
                   } 
                   setIsMaximized(!isMaximized);
                 }}
+                onTouchEnd={() => {
+                  if (isMaximized) {// Restore to previous position
+                    setPosition(initPosition);
+                  } 
+                  setIsMaximized(!isMaximized);
+                }}
                 aria-label={isMaximized ? "Restore" : "Maximize"}
               >
                 {isMaximized ? <Minimize2 size={15} /> : <Maximize2 size={15} />}

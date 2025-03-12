@@ -4,6 +4,8 @@ import "react-resizable/css/styles.css";
 import "./erp-resizable-sidebar.scss";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "./erp-scrollbar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface ERPResizableSidebarProps {
   children: React.ReactNode; // Content to render inside the sidebar
@@ -21,10 +23,11 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
   setIsOpen,
   minWidth = 200,
   maxWidth = 800,
-  initialWidth = 400,
+  initialWidth,
   childrenHeight = 800,
 }) => {
-  const [sidebarWidth, setSidebarWidth] = useState(initialWidth);
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+  const [sidebarWidth, setSidebarWidth] = useState(initialWidth ?? (deviceInfo.isMobile ? 350 : 400));
   const appState = useAppState();
 
   return (

@@ -145,7 +145,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
     <Fragment>
       {
         GridPreferenceChooserAccTrance ? (
-          <button onClick={() => setIsOpen(true)} className="mt-[15px]">
+          <button onClick={() => setIsOpen(true)} onTouchEnd={() => setIsOpen(true)} className="mt-[15px]">
             <Ellipsis className="text-[#0ea5e9]" />
           </button>
         ) : (
@@ -234,7 +234,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns
                       />
                       <input
                         type="checkbox"
-                        className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer mh-[27px]"
+                        className="dark:bg-dark-bg-card border dark:border-dark-border cursor-pointer mh-[27px] ms-[10px]"
                         disabled={column.isLocked}
                         checked={column.readOnly}
                         onChange={(e) => handleColumnPreferenceChange(column.dataField, 'readOnly', e.target.checked)}

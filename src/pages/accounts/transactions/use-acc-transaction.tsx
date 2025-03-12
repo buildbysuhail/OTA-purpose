@@ -1783,7 +1783,7 @@ export const useAccTransaction = (
     gridRef?: any,
     applicationSettings?: ApplicationSettingsType
   ) => {
-    
+    debugger;
     if (field === "test") {
       focusLedgerCombo();
     } else if (field === "grid") {
@@ -1894,15 +1894,16 @@ export const useAccTransaction = (
   const handleLedgerCodeKeyDown = async (e: any) => {
     if (e === "Enter" || e === "Tab") {
       try {
+        debugger;
         const response = await api.getAsync(
           `${Urls.get_ledgerId_by_code}${
             formState.row.ledgerCode == undefined ||
             formState.row.ledgerCode === ""
-              ? 0
+              ? '___'
               : formState.row.ledgerCode
           }`
         );
-
+debugger;
         if (response && response > 0) {
           dispatch(
             accFormStateRowHandleFieldChange({

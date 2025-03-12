@@ -12,52 +12,85 @@ export interface productDto {
 
 export interface DetailsDto {
   productID?: number
-  productCode?: string //
-  productName?: string//
-  productGroupId?: number
-  productCategoryID?: number
+  productCode?: string  //
+  productName?: string //
+  productGroupId?: number //
+  productCategoryID?: number //
   supplyMethod?: string
-  hsnCode?: string
-  commodityCode?: string
-  active?: boolean
+  hsnCode?: string //
+  commodityCode?: string //
+  active?: boolean //
   aliasItemCode?: string
-  aliasItemName?: string
+  aliasItemName?: string //
   remarks?: string
   unitID?: number
-  minimumStock?: number
-  maximumStock?: number
+  minimumStock?: number //
+  maximumStock?: number //
   reorderLevel?: number
-  reorderQty?: number
+  reorderQty?: number //
   secondLanguage?: string
   marginPercentage?: number
-  canSale?: boolean
-  canPurchase?: boolean
+  canSale?: boolean //
+  canPurchase?: boolean //
   canManufacture?: boolean
   itemType: string
   createdUserID?: number
   supplierID?: number
-  taxCategoryID?: number
-  batchCriteria?: string
-  isRawMaterial?: boolean
-  isFinishedGood?: boolean
-  isWeighingScale?: boolean
-  unitQty?: number
+  taxCategoryID?: number //
+  batchCriteria?: string //
+  isRawMaterial?: boolean //
+  isFinishedGood?: boolean //
+  isWeighingScale?: boolean //
+  unitQty?: number //
   packingSlip?: boolean
   financialYearID?: number
+  manual: boolean // newly added
+  groupCategory?: string // newly added
+  section: string // newly added
+  baseUnit: string // newly added
+  upcBarcode: boolean // newly added
+  mu: boolean // newly added
+  mr: boolean // newly added
+  purchasePrice: number // newly added
+  salesPrice: number // newly added
+  markup: number // newly added
+  displayCost: number // newly added
+  mrp: number // newly added
+  opStock: number // newly added
+  msp?: number // newly added
+  stock?: number // newly added
+  foreignLanguage?: string // newly added
+  batchCriteriaType?: string // newly added
+  productType?: string // newly added
+  details?: string // newly added
+  defaultVendor?: string // newly added
+  avgCost?: number // newly added
+  warehouseID?: number // newly added
+  brandID: number // newly added
+  specification: string // newly added
+  expiryDate?: Date // newly added
+  autoBarcode?: number // newly added
+  batchNo: string // newly added
+  netWeight: string // newly added
+  unitName: string // newly added
+  mfgDate?: Date // newly added
+  location: string // newly added
+  gatePass?: boolean // newly added
+  hold?: boolean // newly added
 }
 
 export interface ProductValidationDto {
   productName: string
-  productGroupId: string
-  unitID: string
+  productGroupId: number
+  unitID: number
   commodityCode: string
-  taxCategoryID: string
-  productCategoryID: string
+  taxCategoryID: number
+  productCategoryID: number
   // batch
-  defSalesUnitID: string
-  defPurchaseUnitID: string
-  defReportUnitID: string
-  brandID: string
+  defSalesUnitID: number
+  defPurchaseUnitID: number
+  defReportUnitID: number
+  brandID: number
   salesPrice: string
   stdSalesPrice: string
 }
@@ -182,14 +215,14 @@ export interface ProductPriceInputDto {
 }
 
 export interface ProductPriceValidationDto {
-  branchID: string
-  productBatchID: string
-  priceCategoryID: string
-  productMultiPriceID: string
+  branchID: number
+  productBatchID: number
+  priceCategoryID: number
+  productMultiPriceID: number
   salesPrice: string
   purchasePrice: string
   discountPerc: string
-  unitID: string
+  unitID: number
   profitAmt: string
   mrp: string
   msp: string

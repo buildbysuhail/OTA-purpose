@@ -5,168 +5,201 @@ const initialProductData: productDto = {
     productID: 1,
     productCode: "",
     productName: "",
-    productGroupId: 101,
-    productCategoryID: 201,
-    supplyMethod: "Direct",
+    productGroupId: 0,
+    productCategoryID: 0,
+    supplyMethod: "",
     hsnCode: "",
     commodityCode: "",
     active: true,
     aliasItemCode: "",
     aliasItemName: "",
     remarks: "",
-    unitID: 1,
-    minimumStock: 10,
-    maximumStock: 100,
-    reorderLevel: 20,
-    reorderQty: 30,
+    unitID: 0,
+    minimumStock: 0,
+    maximumStock: 0,
+    reorderLevel: 0,
+    reorderQty: 0,
     secondLanguage: "",
-    marginPercentage: 15,
+    marginPercentage: 0,
     canSale: true,
     canPurchase: true,
     canManufacture: false,
     itemType: "",
-    createdUserID: 1,
-    supplierID: 1,
-    taxCategoryID: 1,
-    batchCriteria: "FIFO",
+    createdUserID: 0,
+    supplierID: 0,
+    taxCategoryID: 0,
+    batchCriteria: "",
     isRawMaterial: false,
     isFinishedGood: true,
     isWeighingScale: false,
-    unitQty: 1,
+    unitQty: 0,
     packingSlip: true,
-    financialYearID: 2023
+    financialYearID: 0,
+    manual: true, // newly added
+    groupCategory: "", // newly added
+    section: "", // newly added
+    baseUnit: "", // newly added
+    upcBarcode: true, // newly added
+    mu: true, // newly added
+    mr: true, // newly added
+    purchasePrice: 0, // newly added
+    salesPrice: 0, // newly added
+    markup: 0, // newly added
+    displayCost: 0, // newly added
+    mrp: 0, // newly added
+    opStock: 0, // newly added
+    msp: 0, // newly added
+    stock: 0, // newly added
+    foreignLanguage: "", // newly added
+    batchCriteriaType: "", // newly added
+    productType: "", // newly added
+    details: "", // newly added
+    defaultVendor: "", // newly added
+    avgCost: 0, // newly added
+    warehouseID: 0, // newly added
+    brandID: 0, // newly added
+    specification: "", // newly added
+    expiryDate: new Date("2024-01-01"), // newly added
+    autoBarcode: 0, // newly added
+    batchNo: "", // newly added
+    netWeight: "", // newly added
+    unitName: "", // newly added
+    mfgDate: new Date("2023-01-01"), // newly added
+    location: "", // newly added
+    gatePass: true, // newly added
+    hold: true, // newly added
   },
   productValidation: {
     productName: "",
-    productGroupId: "101",
-    unitID: "1",
+    productGroupId: 0,
+    unitID: 0,
     commodityCode: "",
     taxCategoryID: 0,
-    productCategoryID: "201",
-    defSalesUnitID: "1",
-    defPurchaseUnitID: "1",
-    defReportUnitID: "1",
-    brandID: "1",
-    salesPrice: "100",
-    stdSalesPrice: "90"
+    productCategoryID: 0,
+    defSalesUnitID: 0,
+    defPurchaseUnitID: 0,
+    defReportUnitID: 0,
+    brandID: 0,
+    salesPrice: "",
+    stdSalesPrice: ""
   },
   batch: {
-    productID: 1,
-    productBatchID: 1,
-    manualBarcode: "BATCH001",
-    brandID: 1,
-    stdPurchasePrice: 80,
-    stdSalesPrice: 100,
-    mrp: 120,
-    warehouseID: 1,
-    shelfID: 1,
-    specification: "Sample Specification",
-    batchNo: "BATCH001",
-    modifiedUserID: 1,
+    productID: 0,
+    productBatchID: 0,
+    manualBarcode: "",
+    brandID: 0,
+    stdPurchasePrice: 0,
+    stdSalesPrice: 0,
+    mrp: 0,
+    warehouseID: 0,
+    shelfID: 0,
+    specification: "",
+    batchNo: "",
+    modifiedUserID: 0,
     isActive: true,
     mfgDate: new Date("2023-01-01"),
     expiryDate: new Date("2024-01-01"),
-    margingPerc: 20,
-    supplierLedgerID: 1,
-    voucherType: "Sales",
-    systemName: "System1",
-    unitID2: 2,
-    unit2Qty: 10,
-    unit2SalesRate: 95,
-    unit2MRP: 115,
-    autoBarcode: 123456,
-    unitMBarCode: "MBARCODE001",
-    unit3ID: 3,
-    unit3Qty: 5,
-    unit2Barcode: "BARCODE002",
-    unit3Barcode: "BARCODE003",
-    unit3SalesPrice: 90,
-    unit3MRP: 110,
-    unit2MinSalesRate: 85,
-    unit3MinSalesRate: 80,
-    basicUnitID: 1,
-    defSalesUnitID: 1,
-    defPurchaseUnitID: 1,
-    defReportUnitID: 1,
-    location: "Warehouse A",
-    displayCost: 75,
-    modelNumber: "MODEL001",
-    upcCode: "UPC001",
-    packing: 1,
-    packingUnitID: 1,
+    margingPerc: 0,
+    supplierLedgerID: 0,
+    voucherType: "",
+    systemName: "",
+    unitID2: 0,
+    unit2Qty: 0,
+    unit2SalesRate: 0,
+    unit2MRP: 0,
+    autoBarcode: 0,
+    unitMBarCode: "",
+    unit3ID: 0,
+    unit3Qty: 0,
+    unit2Barcode: "",
+    unit3Barcode: "",
+    unit3SalesPrice: 0,
+    unit3MRP: 0,
+    unit2MinSalesRate: 0,
+    unit3MinSalesRate: 0,
+    basicUnitID: 0,
+    defSalesUnitID: 0,
+    defPurchaseUnitID: 0,
+    defReportUnitID: 0,
+    location: "",
+    displayCost: 0,
+    modelNumber: "",
+    upcCode: "",
+    packing: 0,
+    packingUnitID: 0,
     onlineStatus: true,
-    openingStock: 50,
-    openingStockNOs: 50,
+    openingStock: 0,
+    openingStockNOs: 0,
     openingDate: new Date("2023-01-01"),
-    warrantyPeriod: "1 Year",
-    partNumber: "PART001",
-    refItemID: 1,
-    refItemName: "Reference Item",
-    landingCost: 70,
-    stockIN: 100,
-    createdUserID: 1,
+    warrantyPeriod: "",
+    partNumber: "",
+    refItemID: 0,
+    refItemName: "",
+    landingCost: 0,
+    stockIN: 0,
+    createdUserID: 0,
     isForm6_2: false,
-    freeBatchID: 1,
+    freeBatchID: 0,
     gatePass: true,
-    selectedProductBatchID: 1,
-    selectedUnitID: 1,
-    prevProductBatchID: 1,
+    selectedProductBatchID: 0,
+    selectedUnitID: 0,
+    prevProductBatchID: 0,
     supplierWiseBatchCreation: true,
-    baseUnitRemarks: "Base Unit Remarks"
+    baseUnitRemarks: ""
   },
   moreInfo: {
-    id: 1,
-    productId: 1,
-    notes1: "Note 1",
-    notes2: "Note 2",
-    notes3: "Note 3",
-    notes4: "Note 4",
-    notes5: "Note 5",
-    notes6: "Note 6",
-    notes7: "Note 7",
-    notes8: "Note 8",
-    notes9: "Note 9",
-    notes10: "Note 10"
+    id: 0,
+    productId: 0,
+    notes1: "",
+    notes2: "",
+    notes3: "",
+    notes4: "",
+    notes5: "",
+    notes6: "",
+    notes7: "",
+    notes8: "",
+    notes9: "",
+    notes10: ""
   },
   prices: [
     {
-      productMultiPriceID: 1,
-      productBatchID: 1,
-      priceCategoryID: 1,
-      salesPrice: 100,
-      purchasePrice: 80,
-      discountPerc: 10,
-      unitID: 1,
-      profitAmt: 20,
-      mrp: 120,
-      msp: 90
+      productMultiPriceID: 0,
+      productBatchID: 0,
+      priceCategoryID: 0,
+      salesPrice: 0,
+      purchasePrice: 0,
+      discountPerc: 0,
+      unitID: 0,
+      profitAmt: 0,
+      mrp: 0,
+      msp: 0
     }
   ],
   units: [
     {
-      productUnitID: 1,
-      productBatchID: 1,
-      unitID: 1,
-      multiFactor: 1,
-      barCode: "UNIT001",
-      sprice: 100,
-      description: "Unit Description",
-      descriptionFL: "Unit Description FL",
-      unitRemarks: "Unit Remarks",
+      productUnitID: 0,
+      productBatchID: 0,
+      unitID: 0,
+      multiFactor: 0,
+      barCode: "",
+      sprice: 0,
+      description: "",
+      descriptionFL: "",
+      unitRemarks: "",
       gatePass: true,
-      multiBarcodes: "MULTIBARCODE001"
+      multiBarcodes: ""
     }
   ],
   nutrients: [
     {
-      nutrients: "Protein",
-      valuePerServing: "10g"
+      nutrients: "",
+      valuePerServing: ""
     }
   ],
   supplierProducts: [
     {
-      ledgerID: 1,
-      refCode: "SUP001"
+      ledgerID: 0,
+      refCode: ""
     }
   ],
   config: {

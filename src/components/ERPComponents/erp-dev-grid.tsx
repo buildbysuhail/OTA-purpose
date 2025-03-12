@@ -565,10 +565,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const actionColumn = gridCols.find((col) => col.Actionswidth !== undefined);
     const actionsWidth = actionColumn?.Actionswidth || 123; // Default width if not found
     const [isMoreOptionVisible, setMoreOptionVisible] = useState(false);
+    const [clickedItem, setClickedItem] = useState<string | null>(null);
+
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
- const {printStatement} = useReportPrint()
+ const {printStatement,printCB} = useReportPrint()
     
     //  // Determine the Actionswidth value
     //  const actionsWidth = childPopupPropsDynamic
@@ -1783,7 +1785,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                                 onClick={() => printStatement(
                                   { 
                                     orientation: preferences?.orientation ?? "portrait",
-                                    data:memoizedStore
+                                    data:memoizedStore,
+                                    clickedItem:"statement"
                                    }                                
                                 )}
                               >
@@ -1797,7 +1800,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             <li>
                               <button
                                 className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                // onClick={}
+                                onClick={() => printCB(
+                                  { 
+                                    orientation: preferences?.orientation ?? "portrait",
+                                    data:memoizedStore,
+                                    clickedItem:"customer_balance"
+                                   }                                
+                                )}
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">

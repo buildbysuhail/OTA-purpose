@@ -3,4 +3,5 @@ export interface ReportRenderProps {
   currentBranch?: any;
   userSession?:any;
   orientation:"portrait"|"landscape";
+  printCase?:string
 }

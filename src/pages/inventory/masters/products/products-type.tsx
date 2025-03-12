@@ -1,200 +1,244 @@
-export interface ProductData {
-  // Product basic info
-  productCode: string;
-  productName: string;
-  productCategory: number | undefined;
-  productGroup: number | undefined;
-  groupCategory: number | undefined;
-  section: number | undefined;
-  baseUnit: number | undefined;
-  unitQty: number;
-  upcBarcode: boolean;
-  mu: boolean;
-  mr: boolean;
-  taxCategory: number | undefined;
-  isWeighingScaleItem: boolean;
-
-  // Price info
-  purchasePrice: number;
-  salesPrice: number;
-  markup: number;
-  displayCost: number;
-  mrp: number;
-  opStock: number;
-  msp: number;
-  stock: number;
-
-  // Additional info
-  foreignLanguage: string;
-  batchCriteria: boolean;
-  batchCriteriaType: string;
-  productType: string;
-  kit: boolean;
-  details: boolean;
-  defaultVendor: number | undefined;
-  avgCost: number;
-
-  // Stock info
-  stockMin: number;
-  stockMax: number;
-  reOrderQty: number;
-  warehouse: number | undefined;
-  brand: number | undefined;
-  commodityCode: string;
-  aliasName: string;
-  specification: string;
-  hsnCode: string;
-  autoBarcode: string;
-  batchNo: string;
-  expDate: Date | null;
-  mfgDate: Date | null;
-  netWeight: number;
-  unitName: string;
-  location: number | undefined;
-
-  // Checkboxes
-  canPurchase: boolean;
-  canSale: boolean;
-  isFinishedGood: boolean;
-  isRawMaterial: boolean;
-  isActiveBatch: boolean;
-  gatePass: boolean;
-  hold: boolean;
-
-  id?: number;
-  createdUser?: string;
-  createdDate?: string;
-  modifiedUser?: string;
-  modifiedDate?: string;
+export interface productDto {
+  product: DetailsDto
+  productValidation: ProductValidationDto
+  batch: ProductBatchInputDto
+  moreInfo: ProductMoreInfoInputDto
+  prices: ProductPriceInputDto[]
+  units: ProductUnitInputDto[]
+  nutrients: ProductNutrientsInputDto[]
+  supplierProducts: SupplierProductsInputDto[]
+  config: ProductLocalConfig
 }
 
-export const initialProductData = {
-  data: {
-    productCode: "",
-    productName: "",
-    productCategory: undefined,
-    productGroup: undefined,
-    groupCategory: undefined,
-    section: undefined,
-    baseUnit: undefined,
-    unitQty: 1,
-    upcBarcode: false,
-    mu: false,
-    mr: false,
-    taxCategory: undefined,
-    isWeighingScaleItem: false,
+export interface DetailsDto {
+  productID?: number
+  productCode?: string //
+  productName?: string//
+  productGroupId?: number
+  productCategoryID?: number
+  supplyMethod?: string
+  hsnCode?: string
+  commodityCode?: string
+  active?: boolean
+  aliasItemCode?: string
+  aliasItemName?: string
+  remarks?: string
+  unitID?: number
+  minimumStock?: number
+  maximumStock?: number
+  reorderLevel?: number
+  reorderQty?: number
+  secondLanguage?: string
+  marginPercentage?: number
+  canSale?: boolean
+  canPurchase?: boolean
+  canManufacture?: boolean
+  itemType: string
+  createdUserID?: number
+  supplierID?: number
+  taxCategoryID?: number
+  batchCriteria?: string
+  isRawMaterial?: boolean
+  isFinishedGood?: boolean
+  isWeighingScale?: boolean
+  unitQty?: number
+  packingSlip?: boolean
+  financialYearID?: number
+}
 
-    purchasePrice: 0,
-    salesPrice: 0,
-    markup: 0,
-    displayCost: 0,
-    mrp: 0,
-    opStock: 0,
-    msp: 0,
-    stock: 0,
+export interface ProductValidationDto {
+  productName: string
+  productGroupId: string
+  unitID: string
+  commodityCode: string
+  taxCategoryID: string
+  productCategoryID: string
+  // batch
+  defSalesUnitID: string
+  defPurchaseUnitID: string
+  defReportUnitID: string
+  brandID: string
+  salesPrice: string
+  stdSalesPrice: string
+}
 
-    foreignLanguage: "",
-    batchCriteria: false,
-    batchCriteriaType: "",
-    productType: "Inventory",
-    kit: false,
-    details: false,
-    defaultVendor: undefined,
-    avgCost: 0,
+export interface ProductLocalConfig {
+  showProductDuplicateWarning: boolean
+  showProductDetailesAfterSave: boolean
+  blockConvertProductNameToUpperCase: boolean
+  calculateMarkUpValue: boolean
+  showDisplayCost: boolean
+}
 
-    stockMin: 0,
-    stockMax: 0,
-    reOrderQty: 0,
-    warehouse: undefined,
-    brand: undefined,
-    commodityCode: "",
-    aliasName: "",
-    specification: "",
-    hsnCode: "",
-    autoBarcode: "",
-    batchNo: "",
-    expDate: new Date(),
-    mfgDate: new Date(),
-    netWeight: 0,
-    unitName: "",
-    location: undefined,
+export interface ProductBatchInputDto {
+  productID?: number
+  productBatchID?: number
+  manualBarcode: string
+  brandID?: number
+  stdPurchasePrice: number
+  stdSalesPrice: number
+  mrp: number
+  msp?: number
+  warehouseID?: number
+  shelfID?: number
+  specification: string
+  batchNo: string
+  modifiedUserID?: number
+  isActive?: boolean
+  mfgDate?: Date
+  expiryDate?: Date
+  margingPerc?: number
+  supplierLedgerID?: number
+  voucherType: string
+  systemName: string
+  unitID2?: number
+  unit2Qty?: number
+  unit2SalesRate?: number
+  unit2MRP?: number
+  autoBarcode?: number
+  unitMBarCode: string
+  unit3ID?: number
+  unit3Qty?: number
+  unit2Barcode: string
+  unit3Barcode: string
+  unit3SalesPrice?: number
+  unit3MRP?: number
+  unit2MinSalesRate?: number
+  unit3MinSalesRate?: number
+  basicUnitID: number
+  prevBasicUnitID?: number
+  defSalesUnitID?: number
+  defPurchaseUnitID?: number
+  defReportUnitID?: number
+  location: string
+  displayCost?: number
+  modelNumber: string
+  upcCode: string
+  packing?: number
+  packingUnitID?: number
+  onlineStatus?: boolean
+  openingStock?: number
+  openingStockNOs?: number
+  openingDate?: Date
+  warrantyPeriod: string
+  partNumber: string
+  refItemID?: number
+  refItemName: string
+  landingCost?: number
+  stockIN?: number
+  createdUserID?: number
+  isForm6_2?: boolean
+  freeBatchID?: number
+  gatePass?: boolean
+  selectedProductBatchID?: number
+  selectedUnitID?: number
+  prevProductBatchID?: number
+  supplierWiseBatchCreation?: boolean
+  baseUnitRemarks: string
+}
 
-    canPurchase: true,
-    canSale: true,
-    isFinishedGood: false,
-    isRawMaterial: false,
-    isActiveBatch: true,
-    gatePass: false,
-    hold: false,
+export type ProductBatchValidationDto = {}
 
-    id: undefined,
-    createdUser: undefined,
-    createdDate: undefined,
-    modifiedUser: undefined,
-    modifiedDate: undefined,
-  },
-  validations: {
-    productCode: "",
-    productName: "",
-    productCategory: "",
-    productGroup: "",
-    groupCategory: "",
-    section: "",
-    baseUnit: "",
-    unitQty: "",
-    upcBarcode: "",
-    mu: "",
-    mr: "",
-    taxCategory: "",
-    isWeighingScaleItem: "",
+export interface ProductMoreInfoInputDto {
+  id?: number
+  productId?: number
+  notes1?: string
+  notes2?: string
+  notes3?: string
+  notes4?: string
+  notes5?: string
+  notes6?: string
+  notes7?: string
+  notes8?: string
+  notes9?: string
+  notes10?: string
+}
 
-    purchasePrice: "",
-    salesPrice: "",
-    markup: "",
-    displayCost: "",
-    mrp: "",
-    opStock: "",
-    msp: "",
-    stock: "",
+export type ProductMoreInfoValidationDto = {}
 
-    foreignLanguage: "",
-    batchCriteria: "",
-    batchCriteriaType: "",
-    productType: "",
-    kit: "",
-    details: "",
-    defaultVendor: "",
-    avgCost: "",
+export interface ProductPriceOutputDto {
+  salesPrice: number
+  purchasePrice: number
+  discountPerc: number
+  categoryName: string
+  unitName: string
+  unitID: number
+  priceCategoryID: number
+  mrp: number
+  profitAmt: number
+}
 
-    stockMin: "",
-    stockMax: "",
-    reOrderQty: "",
-    warehouse: "",
-    brand: "",
-    commodityCode: "",
-    aliasName: "",
-    specification: "",
-    hsnCode: "",
-    autoBarcode: "",
-    batchNo: "",
-    expDate: "",
-    mfgDate: "",
-    netWeight: "",
-    unitName: "",
-    location: "",
+export interface ProductPriceInputDto {
+  productMultiPriceID: number
+  productBatchID: number
+  priceCategoryID: number
+  salesPrice: number
+  purchasePrice: number
+  discountPerc: number
+  unitID: number
+  profitAmt: number
+  mrp: number
+  msp: number
+}
 
-    canPurchase: "",
-    canSale: "",
-    isFinishedGood: "",
-    isRawMaterial: "",
-    isActiveBatch: "",
-    gatePass: "",
-    hold: "",
+export interface ProductPriceValidationDto {
+  branchID: string
+  productBatchID: string
+  priceCategoryID: string
+  productMultiPriceID: string
+  salesPrice: string
+  purchasePrice: string
+  discountPerc: string
+  unitID: string
+  profitAmt: string
+  mrp: string
+  msp: string
+}
 
-    id: "",
-    createdUser: "",
-    createdDate: "",
-    modifiedUser: "",
-    modifiedDate: "",
-  },
-};
+export interface ProductUnitInputDto {
+  productUnitID?: number
+  productBatchID?: number
+  unitID?: number
+  multiFactor?: number
+  barCode?: string
+  sprice?: number
+  description?: string
+  descriptionFL?: string
+  unitRemarks?: string
+  gatePass?: boolean
+  multiBarcodes?: string
+}
+
+export type ProductUnitValidationDto = {}
+
+export interface UnitExistDto {
+  productBatchID?: number
+  unit1?: number
+  unit2?: number
+  unit3?: number
+  unit4?: number
+  unit5?: number
+  unit6?: number
+  unit7?: number
+  unit8?: number
+  unit9?: number
+  unit10?: number
+}
+
+export interface UnitNameDto {
+  unitName: string
+}
+
+export interface ProductNutrientsInputDto {
+  nutrients?: string
+  valuePerServing?: string
+}
+
+export type ProductNutrientsValidationsDto = {}
+
+export interface SupplierProductsInputDto {
+  ledgerID: number
+  refCode: string
+}
+
+export type SupplierProductsValidationDto = {}

@@ -11,7 +11,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { toggleProducts } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { ProductData, initialProductData } from "./products-type";
+import { productDto, initialProductData } from "./products-type";
 import { Plus, RefreshCcw } from "lucide-react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 
@@ -53,11 +53,11 @@ export const ProductMaster: React.FC = React.memo(() => {
           <div className="grid grid-cols-1 gap-1 border border-[#ccc] rounded-md p-2 w-1/2">
             <div className="flex items-center gap-1">
               <ERPInput
-                {...getFieldProps("productCode")}
+                {...getFieldProps("product.productCode")}
                 label={t("product_code")}
                 placeholder={t("enter_product_code")}
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("productCode", data.productCode)}
+                onChangeData={(data: any) => handleFieldChange("product.productCode", data.productCode)}
               />
 
               <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">

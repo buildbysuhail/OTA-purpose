@@ -1,0 +1,359 @@
+import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+
+const SearchGrid = () => {
+    const { t } = useTranslation('inventory');
+
+    const columns: DevGridColumn[] = useMemo(() => [
+        {
+            dataField: "id",
+            caption: t("id"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 50,
+        },
+        {
+            dataField: "productCode",
+            caption: t("product_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 80,
+        },
+        {
+            dataField: "product",
+            caption: t("product"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 150,
+        },
+        {
+            dataField: "groupName",
+            caption: t("group_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "category",
+            caption: t("category"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "taxCategory",
+            caption: t("tax_category"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "unit",
+            caption: t("unit"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 40,
+        },
+        {
+            dataField: "salesPrice",
+            caption: t("sales_price"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "purchasePrice",
+            caption: t("purchase_price"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "mrp",
+            caption: t("mrp"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "stockMin",
+            caption: t("stock_min"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "stockMax",
+            caption: t("stock_max"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "isActive",
+            caption: t("is_active"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "reOrderLevel",
+            caption: t("re_order_level"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "reOrderQty",
+            caption: t("re_order_qty"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "canSell",
+            caption: t("can_sell"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "canPurchase",
+            caption: t("can_purchase"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "canManufacture",
+            caption: t("can_manufacture"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "itemAlias",
+            caption: t("item_alias"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "itemType",
+            caption: t("item_type"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "commodityCode",
+            caption: t("commodity_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "productGroupID",
+            caption: t("product_group_id"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "taxCategoryID",
+            caption: t("tax_category_id"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "basicUnitID",
+            caption: t("basic_unit_id"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "productCategoryID",
+            caption: t("product_category_id"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "batchCriteria",
+            caption: t("batch_criteria"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "HSNCode",
+            caption: t("hsn_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "itemNameInSecondLanguage",
+            caption: t("item_name_in_second_language"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "isRawMaterial",
+            caption: t("is_raw_material"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "isFinishedGood",
+            caption: t("is_finished_good"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "isWeighingScale",
+            caption: t("is_weighing_scale"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "unitQty",
+            caption: t("unit_qty"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "autoBarcode",
+            caption: t("auto_barcode"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "packingSlip",
+            caption: t("packing_slip"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "netWt",
+            caption: t("net_wt"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "unitName",
+            caption: t("unit_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+    ], [t]);
+
+    return (
+        <div className="grid grid-cols-1 gap-3">
+            <ErpDevGrid
+                columns={columns}
+                gridHeader={t("search")}
+                dataUrl={Urls.products}
+                gridId="grd_search"
+                heightToAdjustOnWindows={800}
+                hideDefaultExportButton={true}
+                hideDefaultSearchPanel={true}
+                hideGridAddButton={true}
+                hideGridHeader={true}
+                enableScrollButton={false}
+                ShowGridPreferenceChooser={false}
+                showPrintButton={false}
+                allowSearching={false}
+                allowExport={false}
+            />
+        </div>
+    );
+};
+
+export default SearchGrid;

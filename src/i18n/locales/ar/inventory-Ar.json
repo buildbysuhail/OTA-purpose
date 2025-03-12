@@ -243,5 +243,8 @@
     "quantity": "الكمية",
     "free_quantity": "الكمية المجانية",
     "item_barcode": "باركود العنصر",
-    "party": "الطرف"
+    "party": "الطرف",
+
+    "item_name_in_second_language": "اسم العنصر باللغة الثانية",
+    "notes": "ملاحظات"
 }

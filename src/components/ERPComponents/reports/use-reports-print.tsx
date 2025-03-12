@@ -8,6 +8,7 @@ import { renderReportSelectedTemplate } from "./Download-report-pdf/report-rende
 interface printStatement {
     orientation:"portrait"|"landscape";
     data?:any;
+    clickedItem?:string;
   }
 
 export const useReportPrint = () => {
@@ -18,7 +19,7 @@ export const useReportPrint = () => {
       (state: RootState) => state.ClientSession
     );
 
-  const handleDirectPrint = async ({orientation,data}:printStatement) => {
+  const handleDirectPrint = async ({orientation,data,clickedItem}:printStatement) => {
     let pdfDocument;
   console.log("data on ledger",data);
   
@@ -27,6 +28,7 @@ export const useReportPrint = () => {
         data: data,
         currentBranch: currentBranch,
         userSession: userSession,
+        printCase:clickedItem
       });
     try {
       // Create a PDF blob
@@ -60,10 +62,14 @@ export const useReportPrint = () => {
   
 
   
-    const printStatement = async ({orientation,data}:printStatement) => {
-      await handleDirectPrint({orientation,data});
+    const printStatement = async ({orientation,data,clickedItem}:printStatement) => {
+      await handleDirectPrint({orientation,data,clickedItem});
+    };
+    const printCB = async ({orientation,data,clickedItem}:printStatement) => {
+      await handleDirectPrint({orientation,data,clickedItem});
     };
     return {
      printStatement,
+     printCB
     };
   };

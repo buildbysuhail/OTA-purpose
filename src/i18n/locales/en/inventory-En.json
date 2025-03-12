@@ -243,5 +243,8 @@
     "quantity": "Quantity",
     "free_quantity": "Free quantity",
     "item_barcode": "Item barcode",
-    "party": "Party"
+    "party": "Party",
+
+    "item_name_in_second_language":"Item name in second language",
+    "notes":"Notes"
 }

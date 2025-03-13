@@ -204,9 +204,9 @@ function App() {
   useEffect(() => {
     // Dynamically add or remove the 'isMobile' class on the body
     if (deviceInfo?.isMobile) {
-      document.body.classList.add('isMobile');
+      document.body.classList.add('mobile-screen');
     } else {
-      document.body.classList.remove('isMobile');
+      document.body.classList.remove('mobile-screen');
     }
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   

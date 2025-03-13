@@ -395,3 +395,20 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.mobile-screen .combo-box-opened {
+
+  position: fixed;
+    width: 100%;
+    top: 35px;
+    padding-left: 10px;
+    padding-right: 10px;
+    left: 0;
+    background: #f1f1f1;
+    height: 100%;
+    z-index: 55
+}
+.combo-box-closed {
+
+  position: relative;
+}

@@ -1422,7 +1422,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     if (_useMUI == undefined || _useMUI == false) {
       return (
         <div
-          className={`${className} relative ${labelDirection === "vertical"
+          className={`${className} ${isOpen === true ? "combo-box-opened" : "combo-box-closed"}
+            ${labelDirection === "vertical" 
             ? "flex flex-col space-y-1"
             : "flex items-center space-x-2"
             }`}
@@ -1510,7 +1511,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 onChange={handleInputChange}
                 onClick={(e) => {
                   e.stopPropagation();
-                  !disabled && setIsOpen(!isOpen);
+                  !disabled && !isOpen && setIsOpen(true);
                 }}
                 onKeyDown={(e) => {
 

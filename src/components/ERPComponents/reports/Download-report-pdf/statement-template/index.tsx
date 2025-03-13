@@ -1815,7 +1815,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
   },
   contentWrapper: {
-    flex:1,
+    flex: 1, // This will make it take all available space
     display: "flex",
     flexDirection: "column",
     width: "100%",
@@ -1823,10 +1823,15 @@ const styles = StyleSheet.create({
   tableContainer: {
     flexGrow: 1,
   },
+  footerWrapper: {
+    // This wrapper ensures the footer is at the bottom
+    marginTop:10,
+    marginBottom:20 // Push to the bottom of the container
+  },
   footer: {
     borderTop: "1px solid #ccc",
     paddingTop: 5,
-    marginTop: 10,
+    marginVertical: 5,
     fontSize: 8,
     textAlign: "center",
     color: "#444",
@@ -1838,11 +1843,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   pageInfo: {
-    width: "100%",
+    marginBottom:5,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 5,
     fontSize: 8,
     color: "#444",
   },
@@ -1864,22 +1868,25 @@ const StatementTemplate = ({ data, orientation, currentBranch, userSession }: Re
           <View style={styles.tableContainer}>
             <Table data={dataDemo} />
           </View>
-
-          {/* Footer (Fixed at the bottom) */}
-          <View style={styles.footer} fixed>
-            <Text>{userSession.headerFooter?.heading7 || "Sama United Trading Company"}</Text>
-            <Text style={styles.companyDetails}>
-              {userSession.headerFooter?.heading8 || "VAT No : 310434406200003"}
-            </Text>
-            <Text style={styles.companyDetails}>{userSession.headerFooter?.heading10 || ""}</Text>
-          </View>
-
-          {/* Page Number */}
-          <View style={styles.pageInfo} fixed>
-            <Text>01/03/2025 09:52 AM</Text>
-            <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
-          </View>
         </View>
+
+             {/* Footer Wrapper - pushed to bottom with marginTop: auto */}
+             <View style={styles.footerWrapper} fixed>
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text>{userSession.headerFooter?.heading7 || "Sama United Trading Company"}</Text>
+              <Text style={styles.companyDetails}>
+                {userSession.headerFooter?.heading8 || "VAT No : 310434406200003"}
+              </Text>
+              <Text style={styles.companyDetails}>{userSession.headerFooter?.heading10 || ""}</Text>
+            </View>
+
+            {/* Page Number */}
+            <View style={styles.pageInfo}>
+              <Text>01/03/2025 09:52 AM</Text>
+              <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
+            </View>
+          </View>
       </Page>
     </Document>
   )

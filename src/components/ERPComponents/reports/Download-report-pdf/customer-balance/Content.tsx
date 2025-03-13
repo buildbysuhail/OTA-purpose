@@ -84,15 +84,16 @@ const styles = StyleSheet.create({
   },
   signatureField: {
    flexDirection:"row",
-   marginBottom: 5,
+   marginBottom: 10,
   },
   signatureLabel: {
     fontSize: 10,
-   
+    lineHeight: 1.4,
   },
   signatureLine: {
     borderBottom: "1px solid black",
     width: "60%",
+    
   },
 })
 
@@ -215,20 +216,19 @@ export const Content = ({
           
           </View>
           <View style={styles.rightColumn}>
-            <View style={styles.signatureField}>
-            <View style={styles.signatureLine} />
+            <View style={{...styles.signatureField,flexDirection:"row-reverse",}} >
               <Text style={[styles.signatureLabel, styles.arabicText]}>:الاسم</Text>
-            
+              <View style={{...styles.signatureLine}} />
             </View>
-            <View style={styles.signatureField}>
-             <View style={styles.signatureLine} />
-              <Text style={[styles.signatureLabel, styles.arabicText]}>:المنصب</Text>
+            <View style={{...styles.signatureField,flexDirection:"row-reverse",}}>
              
+              <Text style={[styles.signatureLabel, styles.arabicText]}>:المنصب</Text>
+              <View style={styles.signatureLine} />
             </View>
           </View>
         </View>
       </View>
-      <View style={styles.signatureSection}>
+      <View>
         <View style={styles.row}>
           <View style={{...styles.leftColumn,width:"40%"}}>
             <View style={styles.signatureField}>
@@ -246,10 +246,10 @@ export const Content = ({
            </View>
 
           <View style={{...styles.rightColumn,width:"40%"}}>
-            <View style={styles.signatureField}>
-             <View style={styles.signatureLine} />
+            <View style={{...styles.signatureField,flexDirection:"row-reverse",}}>
+            
               <Text style={[styles.signatureLabel, styles.arabicText]}>:التوقيع</Text>
-             
+              <View style={styles.signatureLine} />
             </View>
           </View>
         </View>

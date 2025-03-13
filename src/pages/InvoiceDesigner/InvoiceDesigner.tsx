@@ -37,6 +37,7 @@ import { useTranslation } from "react-i18next";
 import AdviceTemplate from "./DownloadPreview/advice-template";
 import AdviceTableDesigner from "./Designer/adviceTableDesigner";
 import { accTransaction } from "./constants/TemplateCategories";
+import ChequeTemplate from "./DownloadPreview/cheque-template";
 
 
 interface DesignSectionType {
@@ -580,13 +581,29 @@ const InvoiceDesigner = () => {
       }
 
       {
-        ["PARP","RARP","Cheque"].includes(templateGroup) && (
+        ["PARP","RARP"].includes(templateGroup) && (
           <PDFViewer
             className="pdf-viewer"
             width="100%"
             height="auto"
             style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}>
             <AdviceTemplate
+              template={templateData.activeTemplate}
+              data={DummyVoucherData}
+              currentBranch={currentBranch}
+            />
+          </PDFViewer>
+        )
+      }
+
+{
+        ["Cheque"].includes(templateGroup) && (
+          <PDFViewer
+            className="pdf-viewer"
+            width="100%"
+            height="auto"
+            style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}>
+            <ChequeTemplate
               template={templateData.activeTemplate}
               data={DummyVoucherData}
               currentBranch={currentBranch}

@@ -4,8 +4,8 @@ import React from "react"
 const styles = StyleSheet.create({
   tableContainer: {
     width: "100%",
-    flexGrow: 1,
-    padding:10
+    padding: 5,
+    marginVertical: 5, 
   },
   tableBody: {
     display: "flex",

@@ -183,10 +183,10 @@ $dark-grid-selection: #000000;
   // border
 
   /* Main grid borders */
-  .dx-datagrid {
-    // border: 1px solid #e60b0b;
-    /* Outer border */
-  }
+  // .dx-datagrid {
+  //   // border: 1px solid #e60b0b;
+  //   /* Outer border */
+  // }
 
   /* Header borders */
   .dx-datagrid-headers {
@@ -263,10 +263,10 @@ $dark-grid-selection: #000000;
   }
 
   /* Loading indicator color */
-  .dx-loadpanel-content .dx-loadindicator-icon {
-    // color: rgb(207, 14, 14) !important;
-    /* Makes the loading spinner white */
-  }
+  // .dx-loadpanel-content .dx-loadindicator-icon {
+  //   // color: rgb(207, 14, 14) !important;
+  //   /* Makes the loading spinner white */
+  // }
 
   /* Loading message text color */
   .dx-loadpanel-message {
@@ -280,9 +280,9 @@ $dark-grid-selection: #000000;
     // loading all background-color
   }
 
-  .dx-datagrid-action {
-    // border: 1px solid #ec1818 !important ;
-  }
+  // .dx-datagrid-action {
+  //   // border: 1px solid #ec1818 !important ;
+  // }
 
   /* Target all cells within the hovered row */
   .dx-datagrid-rowsview .dx-row:hover>td {
@@ -504,23 +504,23 @@ $dark-grid-selection: #000000;
     color: $dark-hover-text !important;
   }
 
-  /* Selection Background Color */
-  .dx-treelist-rowsview .dx-selection,
-  .dx-treelist-rowsview .dx-selection.dx-row:hover {
-    /* background-color: #000000 !important; Light blue for selected rows */
-  }
+  // /* Selection Background Color */
+  // .dx-treelist-rowsview .dx-selection,
+  // .dx-treelist-rowsview .dx-selection.dx-row:hover {
+  //   /* background-color: #000000 !important; Light blue for selected rows */
+  // }
 
-  /* Change the selection background color */
-  .dx-treelist-rowsview .dx-selection,
-  .dx-treelist-rowsview .dx-selection.dx-row:hover {
-    /* background-color: #000000 !important; Light blue for selected rows */
-  }
+  // /* Change the selection background color */
+  // .dx-treelist-rowsview .dx-selection,
+  // .dx-treelist-rowsview .dx-selection.dx-row:hover {
+  //   /* background-color: #000000 !important; Light blue for selected rows */
+  // }
 
-  /* Change the selection background color */
-  .dx-treelist-rowsview .dx-row.dx-selection,
-  .dx-treelist-rowsview .dx-row.dx-selection:hover {
-    /* background-color: #000000 !important; */
-  }
+  // /* Change the selection background color */
+  // .dx-treelist-rowsview .dx-row.dx-selection,
+  // .dx-treelist-rowsview .dx-row.dx-selection:hover {
+  //   /* background-color: #000000 !important; */
+  // }
 
   /* Target individual cells in the selected row */
   .dx-treelist-rowsview .dx-row.dx-selection td,
@@ -618,6 +618,10 @@ $dark-grid-selection: #000000;
 }
 
 .custom-data-grid {
+
+  .dx-datagrid-rowsview td:last-child {
+    padding-right: 21px !important;
+  }
 
   .dx-scrollbar-hoverable {
     background-color: #ffffff;

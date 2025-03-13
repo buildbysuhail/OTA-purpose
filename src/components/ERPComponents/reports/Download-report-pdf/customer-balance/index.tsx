@@ -32,7 +32,7 @@ const CustomerBalanceTemplate = ({ data, orientation, currentBranch, userSession
         {/* Main Container */}
         <View style={styles.contentWrapper}>
         <Header data={data} currentBranch={currentBranch} userSession={userSession}/>
-        <View style={{ border: "1px solid black",padding: 10}}>
+        <View style={{ border: "1px solid black",padding: 10 }}>
         <Content data={data} currentBranch={currentBranch} userSession={userSession} />
         </View>
         </View>

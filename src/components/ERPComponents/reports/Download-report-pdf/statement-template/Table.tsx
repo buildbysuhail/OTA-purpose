@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   tableContainer: {
     width: "100%",
     padding: 5,
-    marginBottom: 5, 
+    marginVertical: 5, 
   },
   tableBody: {
     display: "flex",

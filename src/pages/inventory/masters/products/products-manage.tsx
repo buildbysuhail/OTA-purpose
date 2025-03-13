@@ -14,6 +14,12 @@ import ProductDetailsIndia from "./products-india/product-details-india";
 import ProductManageIndia from "./products-india/products-manage-india";
 import ProductManageGcc from "./products-gcc/products-manage-gcc";
 import ProductDetailsGcc from "./products-gcc/product-details-gcc";
+import ProductReOrderIndia from "./products-india/product-re-order-india";
+import ProductOthersIndia from "./products-india/product-others-india";
+import ProductOthersGcc from "./products-gcc/product-others-gcc";
+import ProductNotesGcc from "./products-gcc/product-notes-gcc";
+import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
+import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
 
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -22,23 +28,26 @@ export const ProductMaster: React.FC = React.memo(() => {
   const { isEdit, handleSubmit, handleClear, isLoading, handleClose } =
     useFormManager<productDto>({
       url: Urls.products,
-      onClose: useCallback(() => dispatch(toggleProducts({ isOpen: false, key: null, reload: false })), [dispatch]),
-      onSuccess: useCallback(() => dispatch(toggleProducts({ isOpen: false, key: null, reload: true })), [dispatch]),
+      onClose: useCallback(
+        () => dispatch(toggleProducts({ isOpen: false, key: null, reload: false })),
+        [dispatch]
+      ),
+      onSuccess: useCallback(
+        () => dispatch(toggleProducts({ isOpen: false, key: null, reload: true })),
+        [dispatch]
+      ),
       key: rootState.PopupData.products?.key,
       useApiClient: true,
       initialData: initialProductData,
     });
 
   const [activeTab, setActiveTab] = React.useState(0);
-  const handleTabChange = (index: number) => {
-    setActiveTab(index);
-  };
-
+  const handleTabChange = (index: number) => { setActiveTab(index); };
   const userSession = rootState.UserSession;
   const isIndia = userSession.countryId === Countries.India;
   const isSaudi = userSession.countryId === Countries.Saudi;
 
-  // Define tabs based on country
+  // Define tab labels based on country
   const getTabs = () => {
     if (isSaudi) {
       return [
@@ -52,7 +61,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         t("purchase"),
         t("stock"),
         t("suppliers"),
-        t("notes")
+        t("notes"),
       ];
     } else if (isIndia) {
       return [
@@ -68,116 +77,52 @@ export const ProductMaster: React.FC = React.memo(() => {
         t("re_order"),
         t("promotion_details"),
         t("search"),
-        t("nutrition_facts")
+        t("nutrition_facts"),
       ];
     }
   };
 
+  // Define tab content in the desired order for each country
+  const tabContents = isIndia
+    ? [
+      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsIndia /></div>,
+      <div key="multi_units"><ProductMultiUnitsIndia /></div>,
+      <div key="multi_rates">Multi Rates</div>,
+      <div key="image">Image</div>,
+      <div key="others">  <ProductOthersIndia /></div>,
+      <div key="sales">Sales</div>,
+      <div key="purchase">Purchase</div>,
+      <div key="stock">Stock</div>,
+      <div key="suppliers">Suppliers</div>,
+      <div key="re_order">  <ProductReOrderIndia /></div>,
+      <div key="promotion_details">Promotion Details</div>,
+      <div key="search">Search</div>,
+      <div key="nutrition_facts">Nutrition Facts</div>,
+    ]
+    : [
+      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsGcc /></div>,
+      <div key="multi_units"><ProductMultiUnitsGCC /></div>,
+      <div key="multi_rates">Multi Rates</div>,
+      <div key="search">Search</div>,
+      <div key="image">Image</div>,
+      <div key="others"><ProductOthersGcc /></div>,
+      <div key="sales">Sales</div>,
+      <div key="purchase">Purchase</div>,
+      <div key="stock">Stock</div>,
+      <div key="suppliers">Suppliers</div>,
+      <div key="notes"><ProductNotesGcc /></div>,
+    ];
+
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        {isIndia ? (
-          <ProductManageIndia />
-        ) : (
-          <ProductManageGcc />
-        )}
-
+        {isIndia ? <ProductManageIndia /> : <ProductManageGcc />}
         <ERPTab
           tabs={getTabs()}
           activeTab={activeTab}
           onClickTabAt={handleTabChange}
           className="overflow-x-auto whitespace-nowrap scrollbar-hide">
-          <div className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-            {isIndia ? (
-              <ProductDetailsIndia />
-            ) : (
-              <ProductDetailsGcc />
-            )}
-          </div>
-
-          <div>
-            Multi Units
-          </div>
-
-          <div>
-            Multi Rates
-          </div>
-
-          {isSaudi ? (
-            // Saudi tab order content
-            <>
-              <div>
-                Search
-              </div>
-
-              <div>
-                Image
-              </div>
-
-              <div>
-                Others
-              </div>
-
-              <div>
-                Sales
-              </div>
-
-              <div>
-                Purchase
-              </div>
-
-              <div>
-                Stock
-              </div>
-
-              <div>
-                Suppliers
-              </div>
-            </>
-          ) : (
-            // India tab order content
-            <>
-              <div>
-                Image
-              </div>
-
-              <div>
-                Others
-              </div>
-
-              <div>
-                Sales
-              </div>
-
-              <div>
-                Purchase
-              </div>
-
-              <div>
-                Stock
-              </div>
-
-              <div>
-                Suppliers
-              </div>
-
-              <div>
-                Re-Order
-              </div>
-
-              <div>
-                Promotion Details
-              </div>
-
-              <div>
-                Search
-              </div>
-
-              <div>
-                Nutrition Facts
-              </div>
-            </>
-          )}
+          {tabContents}
         </ERPTab>
       </div>
 

@@ -68,6 +68,10 @@ const initialProductData: productDto = {
     location: "", // newly added
     gatePass: true, // newly added
     hold: true, // newly added
+    poFrequency: true, // newly added
+    poFrequencyData: "", // newly added
+    avgSales: "", // newly added
+    avgRate: "", // newly added
   },
   productValidation: {
     productName: "",

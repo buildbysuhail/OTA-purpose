@@ -62,7 +62,7 @@ return (
       wrap
     >
       {/* Main Container */}
-      <View style={{  flexDirection: 'column', width: '100%',}}>
+      <View style={{flex:1, flexDirection: 'column', width: '100%',}}>
         {/* Header */}
         <Header data={data} template={template} currentBranch={currentBranch} />
         {/* Main Content */}

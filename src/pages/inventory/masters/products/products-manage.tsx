@@ -20,6 +20,8 @@ import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
 import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
+import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
+import SearchGcc from "./products-gcc/product-search-gcc";
 
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -102,8 +104,8 @@ export const ProductMaster: React.FC = React.memo(() => {
     : [
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsGcc /></div>,
       <div key="multi_units"><ProductMultiUnitsGCC /></div>,
-      <div key="multi_rates">Multi Rates</div>,
-      <div key="search">Search</div>,
+      <div key="multi_rates"><MultiRatesGcc /></div>,
+      <div key="search"><SearchGcc /></div>,
       <div key="image">Image</div>,
       <div key="others"><ProductOthersGcc /></div>,
       <div key="sales">Sales</div>,

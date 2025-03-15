@@ -8,7 +8,7 @@ export interface productDto {
   nutrients: ProductNutrientsInputDto[]
   supplierProducts: SupplierProductsInputDto[]
   config: ProductLocalConfig
-  multiUnits: UnitExistDto // newly created
+  multiUnits: UnitExistDto[] // newly created
 }
 
 export interface DetailsDto {
@@ -82,6 +82,8 @@ export interface DetailsDto {
   poFrequencyData?: string // newly added
   avgSales?: string // newly added
   avgRate?: string // newly added
+  searchWith?: string // newly added
+  searchInactive?: string // newly added
 }
 
 export interface ProductValidationDto {

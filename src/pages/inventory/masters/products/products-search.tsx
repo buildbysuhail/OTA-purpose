@@ -6,7 +6,6 @@ import Urls from "../../../../redux/urls";
 
 const SearchGrid = () => {
     const { t } = useTranslation('inventory');
-
     const columns: DevGridColumn[] = useMemo(() => [
         {
             dataField: "id",

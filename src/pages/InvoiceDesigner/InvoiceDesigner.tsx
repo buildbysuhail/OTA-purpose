@@ -32,13 +32,11 @@ import * as pdfjsLib from 'pdfjs-dist'
 import 'pdfjs-dist/build/pdf.worker';
 import AccountTransactionDetailsDesigner from "./Designer/accDetailsDesigner";
 import AccountTransactionsUniversal from "./DownloadPreview/account_transaction-universal";
-import AdvancedPayment from "./DownloadPreview/advice-template";
 import { useTranslation } from "react-i18next";
 import AdviceTemplate from "./DownloadPreview/advice-template";
 import AdviceTableDesigner from "./Designer/adviceTableDesigner";
 import { accTransaction } from "./constants/TemplateCategories";
 import ChequeTemplate from "./DownloadPreview/cheque-template";
-
 
 interface DesignSectionType {
   id: number;
@@ -107,6 +105,7 @@ export interface TemplateImagesTypes {
 }
 
 const api = new APIClient();
+
 const InvoiceDesigner = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -245,10 +244,7 @@ const InvoiceDesigner = () => {
       navigate(`/templates?template_group=${templateGroup}`);
     });
   };
-
   /* ########################################################################################### */
-  /* ########################################################################################### */
-
   const manageSaveTemplate = async () => {
     if (id == "new" && !templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show(t("template_name_is_required"));
@@ -622,6 +618,7 @@ const InvoiceDesigner = () => {
       }
     </div>
   );
+  
 };
 
 export default InvoiceDesigner

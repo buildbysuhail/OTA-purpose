@@ -18,6 +18,7 @@ import { customJsonParse } from "../../../utilities/jsonConverter";
 import Urls from "../../../redux/urls";
 import VoucherType from "../../../enums/voucher-types";
 import AdviceTemplate from "../../InvoiceDesigner/DownloadPreview/advice-template";
+import ChequeTemplate from "../../InvoiceDesigner/DownloadPreview/cheque-template";
 const api = new APIClient();
 export const useAccPrint = () => {
   const currentBranch = useCurrentBranch();
@@ -30,7 +31,7 @@ export const useAccPrint = () => {
   );
 const {hasRight} = useUserRights();
 const voucherTypeSet = new Set(Object.values(VoucherType));
-const adviceTem = ["PARP","RARP","Cheque"]
+const adviceTem = ["PARP","RARP",]
 const handleDirectPrint = async (template:any) => {
   let pdfDocument;
   if (adviceTem.includes(template.templateGroup)) {
@@ -42,7 +43,16 @@ const handleDirectPrint = async (template:any) => {
         userSession={userSession}
       />
     );
-  } else {
+  }else if(template.templateGroup=="Cheque"){
+  pdfDocument=(
+    <ChequeTemplate
+    template={template}
+    data={formState.transaction}
+    currentBranch={currentBranch}
+  />
+  )
+  }
+   else {
     pdfDocument = renderSelectedTemplate({
       template: template,
       data: formState.transaction,
@@ -161,25 +171,35 @@ const handleDirectPrint = async (template:any) => {
     await handleDirectPrint(template);
    };
 
-    const printCheque = async (voucher?: AccTransactionFormState) => {
+    const printCheque = async (voucherType?:any,voucher?: AccTransactionFormState) => {
       try {
+      
+         let voucherTypes = ["BP","CQP"].includes(voucherType) ? "Cheque":""
         voucher = voucher == undefined ? formState : voucher
-        for (const detail of formState.transaction.details) {
+        for (const detail of voucher.transaction.details) {
           if (isNullOrUndefinedOrEmpty(detail.ledgerID)) break;
-  
-          const nameOnCheque = detail.nameOnCheque || detail.ledgerName;
-          
-          // Call your print service
-          
-          // await printCheque_AccTransaction(formState.masterAccountName, formState.row.nameOnCheque, formState.row.amount, formState.row.bankDate, formState.row.narration, formState.printPreview);;
-  
-          // Log user action
-          await logUserAction({
-            action: `User Printed Cheque ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-            module: "Cheque Print",
-            voucherType: formState.transaction.master.voucherType,
-            voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`
-          });
+          if(detail.chequeNumber !== undefined || detail.chequeNumber !== null){
+
+            const existingTemplate = voucher.templatesData?.find(
+              (template: any) => template.templateGroup === voucherTypes
+            );
+           
+            let  template 
+              if(existingTemplate){
+                template = existingTemplate
+              } else{
+                template = await fetchDefaultTemplates(voucherTypes)
+              }
+              console.log("Advice Template",template);
+            await handleDirectPrint(template);
+          }
+
+          // await logUserAction({
+          //   action: `User Printed Cheque ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+          //   module: "Cheque Print",
+          //   voucherType: formState.transaction.master.voucherType,
+          //   voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`
+          // });
         }
       } catch (error) {
         console.error('Error printing cheque:', error);

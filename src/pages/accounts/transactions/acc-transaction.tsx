@@ -180,9 +180,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   };
 
   const { t } = useTranslation("transaction");
-  const [gridCode, setGridCode] = useState<string>(
-    `grd_acc_transaction_${(voucherType ?? "") + (formType ?? "")}`
-  );
+ 
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -190,6 +188,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
+  );
+  const [gridCode, setGridCode] = useState<string>(
+    `grd_acc_transaction_${(formState.transaction.master?.voucherType ?? "") + (formType ?? "")}`
   );
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
@@ -1316,7 +1317,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     setIsTemplateOpen(true);
     try {
       const response = await api.getAsync(
-        `${Urls.templates}?template_group=${voucherType}`
+        `${Urls.templates}?template_group=${formState.transaction.master?.voucherType}`
       );
       dispatch(
         accFormStateHandleFieldChange({ fields: { templates: response } })
@@ -1325,7 +1326,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     } finally {
       setTemplateLoad(false);
     }
-  }, []);
+  }, [formState.transaction.master?.voucherType]);
   const selectAttachment = useCallback(async () => {
     setIsAttachmentOpen(true);
   }, []);
@@ -3182,9 +3183,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   title={t("print_cheque")}
                   variant="secondary"
-                  onClick={() => {
-                    /* Handle print cheque */
-                  }}
+                  disabled={formState.printCheque == false}              
+                   onClick={() => printCheque(formState.transaction.master?.voucherType)}
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
                 />
               </div>

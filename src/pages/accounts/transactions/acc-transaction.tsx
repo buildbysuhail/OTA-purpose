@@ -2875,12 +2875,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           showPrintButton={false}
           // className="HistorySidebadrcustom"
           // showColumnHeaderscustom={false}
+          ERPGridfilterrowhidestyle={true}
         />
 
-        {/* Total Summary */}
-        <div className="bg-white shadow-md p-4 rounded-lg mt-2">
+       {/* Total Summary */}
+       <div className="bg-white shadow-md p-[10px] rounded-lg mt-0">
           <div className="flex justify-between mb-2 text-gray-600 text-sm">
-            <span>
+            <span className="flex-1">
               {t("total_disc")}:{" "}
               {getFormattedValue(
                 Number(
@@ -2891,9 +2892,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )
               )}
             </span>
-          </div>
-          <div className="flex justify-between font-semibold text-sm">
-            <span>
+            <span className="flex-1 text-right font-semibold">
               {t("subtotal")}:{" "}
               {getFormattedValue(Number(formState.transaction.master.totalAmount))}
             </span>
@@ -3113,8 +3112,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       addOrEditRow();
                       setIsOpen(false);
                     }}
-                    variant="primary"
-                    className="flex-1 !m-0 !rounded-none"
+                     // variant="bg-[#e76262]"
+                     className="flex-1 !m-0 !rounded-none !bg-[#e76262]"
                   />
                 </div>
               </div>

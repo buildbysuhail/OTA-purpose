@@ -107,7 +107,7 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({
             allowSearching={false}
             hideGridAddButton={true}
             hideGridHeader={true}
-            showColumnHeaderscustom={false}
+            showColumnHeaders={false}
             className="HistorySidebarcustom "
             ShowGridPreferenceChooser={false}
           />

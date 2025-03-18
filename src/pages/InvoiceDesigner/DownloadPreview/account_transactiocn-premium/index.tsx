@@ -12,6 +12,7 @@ export interface AccountTransactionProps {
   template?: TemplateState;
   currentBranch?: any;
   userSession?:any;
+  currency?:any
 }
 
 

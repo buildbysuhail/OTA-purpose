@@ -32,7 +32,7 @@ export const useAccPrint = () => {
 const {hasRight} = useUserRights();
 const voucherTypeSet = new Set(Object.values(VoucherType));
 const adviceTem = ["PARP","RARP",]
-const handleDirectPrint = async (template:any) => {
+const handleDirectPrint = async (template: any, transaction?: any) => {
   let pdfDocument;
   if (adviceTem.includes(template.templateGroup)) {
     pdfDocument = (
@@ -47,7 +47,7 @@ const handleDirectPrint = async (template:any) => {
   pdfDocument=(
     <ChequeTemplate
     template={template}
-    data={formState.transaction}
+    data={transaction}
     currentBranch={currentBranch}
   />
   )
@@ -171,35 +171,64 @@ const handleDirectPrint = async (template:any) => {
     await handleDirectPrint(template);
    };
 
-    const printCheque = async (voucherType?:any,voucher?: AccTransactionFormState) => {
-      try {
+    // const printCheque = async (voucherType?:any,voucher?: AccTransactionFormState) => {
+    //   try {
       
-         let voucherTypes = ["BP","CQP"].includes(voucherType) ? "Cheque":""
-        voucher = voucher == undefined ? formState : voucher
-        for (const detail of voucher.transaction.details) {
-          if (isNullOrUndefinedOrEmpty(detail.ledgerID)) break;
-          if(detail.chequeNumber !== undefined || detail.chequeNumber !== null){
+    //     //  let voucherTypes = ["BP","CQP"].includes(voucherType) ? "Cheque":""
+    //      const voucherTypes =  "Cheque"
+    //     voucher = voucher == undefined ? formState : voucher
+    //     for (const detail of voucher.transaction.details) {
+    //       if (isNullOrUndefinedOrEmpty(detail.ledgerID)) break;
+    //       if(detail.chequeNumber !== undefined || detail.chequeNumber !== null){
 
-            const existingTemplate = voucher.templatesData?.find(
-              (template: any) => template.templateGroup === voucherTypes
-            );
+    //         const existingTemplate = voucher.templatesData?.find(
+    //           (template: any) => template.templateGroup === voucherTypes
+    //         );
            
-            let  template 
-              if(existingTemplate){
-                template = existingTemplate
-              } else{
-                template = await fetchDefaultTemplates(voucherTypes)
-              }
-              console.log("Advice Template",template);
-            await handleDirectPrint(template);
-          }
+    //         let  template 
+    //           if(existingTemplate){
+    //             template = existingTemplate
+    //           } else{
+    //             template = await fetchDefaultTemplates(voucherTypes)
+    //           }
+    //           console.log("Advice Template",template);
+    //         await handleDirectPrint(template);
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error('Error printing cheque:', error);
+    //     // Handle error appropriately
+    //   }
+    // };
 
-          // await logUserAction({
-          //   action: `User Printed Cheque ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-          //   module: "Cheque Print",
-          //   voucherType: formState.transaction.master.voucherType,
-          //   voucherNumber: `${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`
-          // });
+    const printCheque = async (voucherType?: any, voucher?: AccTransactionFormState) => {
+      try {
+        const voucherTypes = "Cheque";
+        voucher = voucher == undefined ? formState : voucher;
+    
+        // Filter details that satisfy the condition
+        const chequeDetails = voucher.transaction.details.filter(
+          (detail) => !isNullOrUndefinedOrEmpty(detail.ledgerID) && (detail.chequeNumber !== undefined || detail.chequeNumber !== null)
+        );
+    
+        // Process each cheque detail sequentially
+        for (const detail of chequeDetails) {
+          const existingTemplate = voucher.templatesData?.find(
+            (template: any) => template.templateGroup === voucherTypes
+          );
+    
+          let template;
+          if (existingTemplate) {
+            template = existingTemplate;
+          } else {
+            template = await fetchDefaultTemplates(voucherTypes);
+          }
+  
+    const currentTransaction = detail
+    console.log(currentTransaction,"chq detials");
+    
+          // Generate and print the PDF for the current detail
+          await handleDirectPrint(template, currentTransaction);
         }
       } catch (error) {
         console.error('Error printing cheque:', error);

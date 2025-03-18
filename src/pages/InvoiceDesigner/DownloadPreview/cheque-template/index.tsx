@@ -3,14 +3,29 @@ import { TemplateState } from "../../Designer/interfaces";
 import FontRegistration from "../../../LabelDesigner/fontRegister";
 
 import { AccountTransactionProps } from "../account_transactiocn-premium";
-import { Header } from "./Header";
-import { Content } from "./Content";
-import Table from "./Table";
-import { Footer } from "./Footer";
+import { getAmountInWords } from "../../../../utilities/Utils";
 // Create styles
 
-const ChequeTemplate = ({ data, template, currentBranch,userSession }: AccountTransactionProps) => {
-// Paddings
+const ChequeTemplate = ({ data, template, currentBranch,userSession,currency }: AccountTransactionProps) => {
+  // Parse the bankDate
+  const bankDate = new Date(data.bankDate);
+  const day = String(bankDate.getDate()).padStart(2, "0"); // Ensure two digits for day
+  const month = String(bankDate.getMonth() + 1).padStart(2, "0"); // Ensure two digits for month
+  const year = String(bankDate.getFullYear()); // Full year
+
+  // Split the date into individual characters for rendering
+  const dateParts = [
+    day[0], // First digit of day
+    day[1], // Second digit of day
+    month[0], // First digit of month
+    month[1], // Second digit of month
+    year[0], // Third digit of year (e.g., "2" in "2025")
+    year[1], 
+    year[2],
+    year[3],
+  ];
+
+
 const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
 const styles = StyleSheet.create({
   page: {
@@ -99,6 +114,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     flexDirection: "row",
     justifyContent: "space-between",
+    gap:10,
+    alignItems:"center"
   },
   sumLabel: {
     fontSize: 8,
@@ -109,37 +126,13 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E0E0E0",
     paddingBottom: 2,
     marginBottom: 2,
+    flexDirection:"row",
+    gap:10
   },
   sumLine2: {
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
     paddingBottom: 2,
-    marginTop: 20,
-  },
-  bottomSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  accNoSection: {
-    width: "45%",
-  },
-  accNoLabel: {
-    fontSize: 8,
-    marginBottom: 2,
-  },
-  accNoBox: {
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    height: 20,
-  },
-  amountSection: {
-    width: "45%",
-  },
-  amountBox: {
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    height: 20,
     marginTop: 20,
   },
   signatureSection: {
@@ -149,12 +142,7 @@ const styles = StyleSheet.create({
   signatureText: {
     fontSize: 6,
   },
-  micr: {
-    fontFamily: "Courier",
-    fontSize: 10,
-    letterSpacing: 2,
-    textAlign: "center",
-  },
+
 })
 return (
   <Document>
@@ -165,18 +153,17 @@ return (
           <View style={styles.header}>
             <View style={styles.bankName}>
              
-              <Text>BANK NAME</Text>
+              <Text>{data.bankName||"Bank Name"}</Text>
+            
             </View>
             <View>
-              <View style={styles.dateGrid}>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCell}></View>
-                <View style={styles.dateCellLast}></View>
+         
+                 <View style={styles.dateGrid}>
+                {dateParts.map((part, index) => (
+                  <View key={index} style={ styles.dateCell}>
+                    <Text>{part}</Text>
+                  </View>
+                ))}
               </View>
               <View style={styles.dateLabelRow}>
                 <Text style={styles.dateLabel}>D</Text>
@@ -201,19 +188,35 @@ return (
           {/* Sum Section */}
           <View style={styles.sumSection}>
             <View style={{width:"70%"}}>
+            <View style={styles.sumLine}>
             <Text style={styles.sumLabel}>SUM OF</Text>
-            <View style={styles.sumLine}></View>
+           
+               <Text style={styles.sumLabel}>
+                        {getAmountInWords(Number(data.amount), currency)}
+                </Text>
+            </View>
             <View style={styles.sumLine2}></View>
             </View>
-            <View>
-
+            <View style={{display:"flex",flexDirection:"row",border:"2px solid rgb(38, 37, 37)",borderRadius:5,width:"30%",height:30,alignSelf:'flex-end'}}>
+              <View style={{width:"30%",backgroundColor:"rgb(38, 37, 37)"}}>
+              <Text style={{color:"rgb(251, 250, 250)",fontSize:12,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>Rs:</Text>
+              </View>
+              <View style={{flex:1,backgroundColor:"rgb(246, 245, 245)"}}>
+              <Text style={{color:"rgb(61, 60, 60)",fontSize:12,fontStyle:"italic",fontFamily:"RobotoMono",textAlign:"center",padding:2}}>
+                {data.amount}
+              </Text>
+              </View>
             </View>
          
           </View>
 
           {/* Signature Section */}
           <View style={styles.signatureSection}>
+            <View style={{width:100,alignItems:"center"}}>
+            <View style={{...styles.sumLine2,width:80,marginVertical:10}}/>
             <Text style={styles.signatureText}>Please Sign Above</Text>
+            </View>
+         
           </View>
 
         </View>

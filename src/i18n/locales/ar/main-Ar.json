@@ -76,7 +76,9 @@
    "submit": "إرسال",
 
    "branches": "الفروع",
-
+    "statement":"بيان",
+     "billwise_details":"حسب الفاتورة",
+    "customer_balance":" رصيد العميل ",
    "ledger_report": "تقرير دفتر الأستاذ",
    "cash_book": "دفتر النقدية",
    "day_book_detailed": "تقرير دفتر اليومية التفصيلي",

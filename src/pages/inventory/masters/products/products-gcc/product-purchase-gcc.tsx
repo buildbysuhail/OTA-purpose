@@ -4,21 +4,12 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 
-const MultiRatesGcc = () => {
+const PurchaseGcc = () => {
     const { t } = useTranslation('inventory');
     const columns: DevGridColumn[] = useMemo(() => [
         {
-            dataField: "siNo",
-            caption: t("si_no"),
-            dataType: "string",
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            width: 100,
-        },
-        {
-            dataField: "priceCategory",
-            caption: t("price_category"),
+            dataField: "voucherNumber",
+            caption: t("voucher_number"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -26,35 +17,8 @@ const MultiRatesGcc = () => {
             // width: 100,
         },
         {
-            dataField: "unit",
-            caption: t("unit"),
-            dataType: "string",
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            width: 100,
-        },
-        {
-            dataField: "salesRate",
-            caption: t("sales_rate"),
-            dataType: "string",
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            width: 100,
-        },
-        {
-            dataField: "salesDisc%",
-            caption: t("sales_disc_%"),
-            dataType: "string",
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            width: 100,
-        },
-        {
-            dataField: "purchaseRate",
-            caption: t("purchase_rate"),
+            dataField: "voucherPrefix",
+            caption: t("voucher_prefix"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -62,8 +26,17 @@ const MultiRatesGcc = () => {
             // width: 100,
         },
         {
-            dataField: "unitID",
-            caption: t("unit_id"),
+            dataField: "transactionDate",
+            caption: t("transaction_date"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            // width: 100,
+        },
+        {
+            dataField: "partyName",
+            caption: t("party_name"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -71,22 +44,40 @@ const MultiRatesGcc = () => {
             width: 100,
         },
         {
-            dataField: "priceCategoryID",
-            caption: t("price_category_id"),
+            dataField: "unitPrice",
+            caption: t("unit_price"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            // width: 100,
+            width: 100,
         },
         {
-            dataField: "profitAddedToCost",
-            caption: t("profit_(added_to_cost)"),
+            dataField: "netAmount",
+            caption: t("net_amount"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            // width: 100,
+            width: 100,
+        },
+        {
+            dataField: "quantity",
+            caption: t("quantity"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
+        },
+        {
+            dataField: "unitName",
+            caption: t("unit_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100,
         },
     ], [t]);
 
@@ -94,9 +85,9 @@ const MultiRatesGcc = () => {
         <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
                 columns={columns}
-                gridHeader={t("multi_rates")}
+                gridHeader={t("purchase")}
                 dataUrl={Urls.products}
-                gridId="grd_multiRates"
+                gridId="grd_purchaseGcc"
                 heightToAdjustOnWindows={800}
                 hideDefaultExportButton={true}
                 hideDefaultSearchPanel={true}
@@ -112,4 +103,4 @@ const MultiRatesGcc = () => {
     );
 };
 
-export default MultiRatesGcc;
+export default PurchaseGcc;

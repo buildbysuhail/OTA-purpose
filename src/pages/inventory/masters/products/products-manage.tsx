@@ -22,6 +22,11 @@ import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
 import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 import SearchGcc from "./products-gcc/product-search-gcc";
+import ImageGcc from "./products-gcc/product-image-gcc";
+import SalesGcc from "./products-gcc/product-sales-gcc";
+import PurchaseGcc from "./products-gcc/product-purchase-gcc";
+import StockGcc from "./products-gcc/product-stock-gcc";
+import SuppliersGcc from "./products-gcc/product-suppliers-gcc";
 
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -102,23 +107,23 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="nutrition_facts">Nutrition Facts</div>,
     ]
     : [
-      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsGcc /></div>,
+      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2"><ProductManageGcc />  <ProductDetailsGcc /></div>,
       <div key="multi_units"><ProductMultiUnitsGCC /></div>,
       <div key="multi_rates"><MultiRatesGcc /></div>,
       <div key="search"><SearchGcc /></div>,
-      <div key="image">Image</div>,
+      <div key="image"><ImageGcc /></div>,
       <div key="others"><ProductOthersGcc /></div>,
-      <div key="sales">Sales</div>,
-      <div key="purchase">Purchase</div>,
-      <div key="stock">Stock</div>,
-      <div key="suppliers">Suppliers</div>,
+      <div key="sales"><SalesGcc /></div>,
+      <div key="purchase"><PurchaseGcc /></div>,
+      <div key="stock"><StockGcc /></div>,
+      <div key="suppliers"><SuppliersGcc /></div>,
       <div key="notes"><ProductNotesGcc /></div>,
     ];
 
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        {isIndia ? <ProductManageIndia /> : <ProductManageGcc />}
+        {isIndia ? <ProductManageIndia /> : ""}
         <ERPTab
           tabs={getTabs()}
           activeTab={activeTab}

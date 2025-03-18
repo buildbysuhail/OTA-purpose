@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
-import ERPButton from "../../../../../components/ERPComponents/erp-button"; 
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import DataGrid, { Column, Paging, Pager, FilterRow, HeaderFilter, Scrolling } from "devextreme-react/data-grid";
 
 const searchOptions = [
     { id: "Product", name: "Product" },
@@ -24,11 +25,31 @@ const SearchGcc: React.FC = () => {
     const { t } = useTranslation("inventory");
     const { handleFieldChange, getFieldProps } = useFormManager({ initialData: initialSearchData, });
 
+    // State to store grid data
+    const [gridData, setGridData] = useState([]);
+    const [gridVisible, setGridVisible] = useState(false);
+
     const handleShow = () => {
+        // Get current form values
+        const searchOption = getFieldProps("searchWith").value || initialSearchData.searchOption;
+        const searchText = getFieldProps("searchWith").value || '';
+        const searchInactive = getFieldProps("searchInactive").value || false;
+
         console.log("Show clicked");
-        console.log("Search Option:", getFieldProps("searchOption").value);
-        console.log("Search Text:", getFieldProps("searchText").value);
-        console.log("Search Inactive:", getFieldProps("searchInactive").value);
+        console.log("Search Option:", searchOption);
+        console.log("Search Text:", searchText);
+        console.log("Search Inactive:", searchInactive);
+
+        // Create a new entry for the grid
+        const newEntry = {
+            id: Date.now(), // Generate a unique ID
+            searchOption,
+            searchText,
+            searchInactive,
+            date: new Date().toLocaleString(),
+        };
+
+        setGridVisible(true);
     };
 
     const handleCreateBatch = () => {
@@ -83,6 +104,28 @@ const SearchGcc: React.FC = () => {
                     />
                 </div>
             </div>
+
+            {/* DevExtreme DataGrid */}
+            {gridVisible && (
+                <div className="mt-6">
+                    <DataGrid
+                        dataSource={gridData}
+                        showBorders={true}
+                        columnAutoWidth={true}
+                        rowAlternationEnabled={true}>
+                        <Paging defaultPageSize={10} />
+                        <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} showInfo={true} />
+                        <FilterRow visible={true} />
+                        <HeaderFilter visible={true} />
+                        <Scrolling mode="standard" />
+
+                        <Column dataField="id" caption="ID" width={70} />
+                        <Column dataField="searchWith" caption={t("search_with")} />
+                        <Column dataField="searchText" caption={t("search_text")} />
+                        <Column dataField="searchInactive" caption={t("search_inactive")} dataType="boolean" />
+                    </DataGrid>
+                </div>
+            )}
         </div>
     );
 };

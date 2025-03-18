@@ -1702,7 +1702,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
-  const [isPartySelectionModalOpen, setIsPartySelectionModalOpen] =
+  const [isPartyDetailsOpen, setIsPartyDetailsOpen] =
     useState(false);
 
   const handleHistoryClick = async () => {
@@ -2077,6 +2077,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState={formState}
                         dispatch={dispatch}
                         t={t}
+                        setIsPartyDetailsOpen={() => {setIsPartyDetailsOpen((prev: any) => {debugger; return !prev})}}
                       />
                       <Amount
                         ref={amountRef}
@@ -2371,6 +2372,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
+                      setIsPartyDetailsOpen={() => {setIsPartyDetailsOpen((prev: any) => {debugger; return !prev})}}
                     />
                     <Amount
                       ref={amountRef}
@@ -3040,6 +3042,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         formState={formState}
                         dispatch={dispatch}
                         t={t}
+                        setIsPartyDetailsOpen={() => {setIsPartyDetailsOpen((prev: any) => {debugger; return !prev})}}
                       />
                     </div>
                     <div className="mb-1">
@@ -3310,7 +3313,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }
         ></ERPModal>
       )}
-
+{isPartyDetailsOpen && 
+<CustomerDetailsSidebar displayType="none" isOpen={isPartyDetailsOpen} setIsOpen={setIsPartyDetailsOpen}/>
+}
       <ERPResizableSidebar
         minWidth={350}
         isOpen={isTemplateOpen}

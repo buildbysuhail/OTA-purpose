@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { useRef } from "react";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccVoucherElementProps } from "../acc-transaction-types";
 import { accFormStateRowHandleFieldChange, updateFormElement } from "../reducer";
@@ -9,7 +9,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface LedgerProps extends AccVoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
   triggerEffect: boolean;
-  // setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsPartyDetailsOpen: ()=> void;
 }
 
 const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
@@ -19,7 +19,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
   handleKeyDown,
   triggerEffect,
   handleFieldKeyDown,
-  // setIsOpen
+  setIsPartyDetailsOpen
 }, ref) => {
   const { getFormattedValue } = useNumberFormat();
   return (
@@ -71,9 +71,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
                 true ? null : (
                 <div>
                   <span className="text-primary">
-                    <button className="pe-3">
-                      <CustomerDetailsSidebar displayType="link" />
-                    </button>
+                    <a onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
                     {t("bal")}:{" "}
                     {`${getFormattedValue(
                       formState.ledgerBalance < 0

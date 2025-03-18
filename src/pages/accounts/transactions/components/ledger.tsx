@@ -9,6 +9,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface LedgerProps extends AccVoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
   triggerEffect: boolean;
+  setIsPartyDetailsOpen: ()=> void;
 }
 
 const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
@@ -17,7 +18,8 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
   t,
   handleKeyDown,
   triggerEffect,
-  handleFieldKeyDown
+  handleFieldKeyDown,
+  setIsPartyDetailsOpen
 }, ref) => {
   const { getFormattedValue } = useNumberFormat();
   return (
@@ -69,9 +71,7 @@ const Ledger = React.forwardRef<HTMLInputElement, LedgerProps>(({
                 true ? null : (
                 <div>
                   <span className="text-primary">
-                    <button className="pe-3">
-                      <CustomerDetailsSidebar displayType="link" />
-                    </button>
+                    <a onClick={setIsPartyDetailsOpen} className="hover:underline text-[#0ea5e9] capitalize ml-1 pe-3 cursor-pointer">details</a>
                     {t("bal")}:{" "}
                     {`${getFormattedValue(
                       formState.ledgerBalance < 0

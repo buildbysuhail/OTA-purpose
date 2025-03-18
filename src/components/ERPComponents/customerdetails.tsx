@@ -17,7 +17,7 @@ interface Activity {
 }
 
 interface CustomerDetailsProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (isOpen: boolean) => void;
   // activities: Activity[]
 }
 

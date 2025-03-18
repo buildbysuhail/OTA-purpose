@@ -404,9 +404,11 @@ div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip] {
     padding-left: 10px;
     padding-right: 10px;
     left: 0;
-    background: #f1f1f1;
+    /* background: #f1f1f1; */
     height: 100%;
-    z-index: 55
+    z-index: 55;
+    background-color: rgb(241 241 241 / 44%);
+    backdrop-filter: blur(3px);
 }
 .combo-box-closed {
 

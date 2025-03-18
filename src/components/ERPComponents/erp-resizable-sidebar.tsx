@@ -41,7 +41,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
       />
 
       {/* Resizable Sidebar */}
-      <div className={`fixed top-0 right-0 h-full z-50 bg-white shadow-xl transition-transform duration-500 ease-in-out ${ isOpen ? "translate-x-0" : "translate-x-full" }`} style={{ width: sidebarWidth }}>
+      <div className={`fixed top-0 right-0 h-full z-[53] bg-white shadow-xl transition-transform duration-500 ease-in-out ${ isOpen ? "translate-x-0" : "translate-x-full" }`} style={{ width: sidebarWidth }}>
         <ResizableBox
           width={sidebarWidth}
           height={Infinity}

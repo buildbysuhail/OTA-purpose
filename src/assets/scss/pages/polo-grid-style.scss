@@ -617,7 +617,19 @@ $dark-grid-selection: #000000;
   }
 }
 
+// .custom-data-grid {
+//   .ERPGridfilterrowhidestyle {
+//     & tr.dx-row.dx-datagrid-filter-row {
+//       display: none;
+//     }
+//   }
+// }
+
 .custom-data-grid {
+
+  // tr.dx-row.dx-datagrid-filter-row {
+  //   display: none;
+  // }
 
   .dx-datagrid-rowsview td:last-child {
     padding-right: 21px !important;

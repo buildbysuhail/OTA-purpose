@@ -119,8 +119,8 @@ interface ERPDevGridProps {
   showColumnLines?: boolean;
   ShowGridPreferenceChooser?: boolean;
   GridPreferenceChooserAccTrance?: boolean;
-  ERPGridActionsstyle?: boolean;
-  showColumnHeaderscustom?: boolean;
+  // ERPGridActionsstyle?: boolean;
+  showColumnHeaders?: boolean;
   showRowLines?: boolean;
   pageSize?: number;
   allowPaging?: boolean;
@@ -446,8 +446,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       showColumnLines = false,
       ShowGridPreferenceChooser = true,
       GridPreferenceChooserAccTrance = false,
-      ERPGridActionsstyle = false,
-      showColumnHeaderscustom = true,
+      // ERPGridActionsstyle = false,
+      showColumnHeaders = true,
       showRowLines = true,
       pageSize = 100,
       allowPaging = true,
@@ -1572,11 +1572,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         <div
           className={`custom-data-grid ${
             isPreferenceChooserVisible ? "toolbar-expanded" : ""
-          } ${
-            ERPGridActionsstyle
-              ? "ERPGridActionsstyleyesre"
-              : "ERPGridActionsstyleNore"
-          } ${className}`}
+          } 
+          ${className}`}
           style={gridStyle}
         >
           <DataGrid
@@ -1615,7 +1612,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             showColumnLines={showColumnLines}
             showRowLines={showRowLines}
             rowAlternationEnabled={true}
-            showColumnHeaders={showColumnHeaderscustom}
+            showColumnHeaders={showColumnHeaders}
             onCellClick={handleCellClick}
             onRowDblClick={onRowDblClick}
             onCellPrepared={onCellPrepared}

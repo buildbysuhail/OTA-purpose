@@ -10,11 +10,10 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 
-const StockGcc: React.FC = React.memo(() => {
+const StockCommon: React.FC = React.memo(() => {
     const { t } = useTranslation("inventory");
     const { handleFieldChange, getFieldProps } = useFormManager<productDto>({ initialData: initialProductData });
     const [showGrid, setShowGrid] = useState(false);
-
     const columns: DevGridColumn[] = useMemo(() => [
         {
             dataField: "siNo",
@@ -181,4 +180,4 @@ const StockGcc: React.FC = React.memo(() => {
     );
 });
 
-export default StockGcc;
+export default StockCommon;

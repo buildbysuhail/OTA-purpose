@@ -4,39 +4,66 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 
-const SalesGcc = () => {
+const MultiRatesIndia = () => {
     const { t } = useTranslation('inventory');
     const columns: DevGridColumn[] = useMemo(() => [
         {
-            dataField: "voucherNumber",
-            caption: t("voucher_number"),
+            dataField: "siNo",
+            caption: t("SiNo"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            // width: 100,
+            width: 40,
         },
         {
-            dataField: "voucherPrefix",
-            caption: t("voucher_prefix"),
+            dataField: "priceCategory",
+            caption: t("price_category"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            // width: 100,
+            width: 150,
         },
         {
-            dataField: "transactionDate",
-            caption: t("transaction_date"),
+            dataField: "unit",
+            caption: t("unit"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            // width: 100,
+            width: 80,
         },
         {
-            dataField: "partyName",
-            caption: t("party_name"),
+            dataField: "salesRate",
+            caption: t("sales_rate"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 80,
+        },
+        {
+            dataField: "salesDisc%",
+            caption: t("sales_disc_%"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 80,
+        },
+        {
+            dataField: "purchaseRate",
+            caption: t("purchase_rate"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 80,
+        },
+        {
+            dataField: "unitID",
+            caption: t("unit_id"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -44,8 +71,8 @@ const SalesGcc = () => {
             width: 100,
         },
         {
-            dataField: "unitPrice",
-            caption: t("unit_price"),
+            dataField: "profitAddedToCost",
+            caption: t("profit_(added_to_cost)"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -53,8 +80,8 @@ const SalesGcc = () => {
             width: 100,
         },
         {
-            dataField: "netAmount",
-            caption: t("net_amount"),
+            dataField: "MRP",
+            caption: t("mrp"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -62,17 +89,8 @@ const SalesGcc = () => {
             width: 100,
         },
         {
-            dataField: "quantity",
-            caption: t("quantity"),
-            dataType: "string",
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            width: 100,
-        },
-        {
-            dataField: "unitName",
-            caption: t("unit_name"),
+            dataField: "X",
+            caption: t("x"),
             dataType: "string",
             allowSorting: true,
             allowSearch: true,
@@ -85,9 +103,9 @@ const SalesGcc = () => {
         <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
                 columns={columns}
-                gridHeader={t("sales")}
+                gridHeader={t("multi_rates")}
                 dataUrl={Urls.products}
-                gridId="grd_salesGcc"
+                gridId="grd_multiRatesIndia"
                 heightToAdjustOnWindows={800}
                 hideDefaultExportButton={true}
                 hideDefaultSearchPanel={true}
@@ -103,4 +121,4 @@ const SalesGcc = () => {
     );
 };
 
-export default SalesGcc;
+export default MultiRatesIndia;

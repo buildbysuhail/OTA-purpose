@@ -23,7 +23,7 @@ const initialSupplierData: SupplierDto = {
   }
 };
 
-const SuppliersGcc: React.FC = () => {
+const SuppliersCommon: React.FC = () => {
   const { handleFieldChange, getFieldProps } = useFormManager<SupplierDto>({ initialData: initialSupplierData, });
   const [gridData, setGridData] = useState<any[]>([]);
   const onAdd = () => {
@@ -130,4 +130,4 @@ const SuppliersGcc: React.FC = () => {
   );
 };
 
-export default SuppliersGcc;
+export default SuppliersCommon;

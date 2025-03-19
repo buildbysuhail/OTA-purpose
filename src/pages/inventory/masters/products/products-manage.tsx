@@ -21,12 +21,14 @@ import ProductNotesGcc from "./products-gcc/product-notes-gcc";
 import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
 import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
-import SearchGcc from "./products-gcc/product-search-gcc";
-import ImageGcc from "./products-gcc/product-image-gcc";
-import SalesGcc from "./products-gcc/product-sales-gcc";
-import PurchaseGcc from "./products-gcc/product-purchase-gcc";
-import StockGcc from "./products-gcc/product-stock-gcc";
-import SuppliersGcc from "./products-gcc/product-suppliers-gcc";
+import MultiRatesIndia from "./products-india/product-multi-rates-india";
+import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
+import SearchCommon from "./common/product-search";
+import ImageCommon from "./common/product-image";
+import SalesCommon from "./common/product-sales";
+import PurchaseCommon from "./common/product-purchase";
+import StockCommon from "./common/product-stock";
+import SuppliersCommon from "./common/product-suppliers";
 
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -94,29 +96,29 @@ export const ProductMaster: React.FC = React.memo(() => {
     ? [
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsIndia /></div>,
       <div key="multi_units"><ProductMultiUnitsIndia /></div>,
-      <div key="multi_rates">Multi Rates</div>,
-      <div key="image">Image</div>,
+      <div key="multi_rates"><MultiRatesIndia /></div>,
+      <div key="image"><ImageCommon /></div>,
       <div key="others">  <ProductOthersIndia /></div>,
-      <div key="sales">Sales</div>,
-      <div key="purchase">Purchase</div>,
-      <div key="stock">Stock</div>,
-      <div key="suppliers">Suppliers</div>,
+      <div key="sales"><SalesCommon /></div>,
+      <div key="purchase"><PurchaseCommon /></div>,
+      <div key="stock"><StockCommon /></div>,
+      <div key="suppliers"><SuppliersCommon /></div>,
       <div key="re_order">  <ProductReOrderIndia /></div>,
       <div key="promotion_details">Promotion Details</div>,
-      <div key="search">Search</div>,
-      <div key="nutrition_facts">Nutrition Facts</div>,
+      <div key="search"><SearchCommon /></div>,
+      <div key="nutrition_facts"><NutritionFactsIndia /></div>,
     ]
     : [
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2"><ProductManageGcc />  <ProductDetailsGcc /></div>,
       <div key="multi_units"><ProductMultiUnitsGCC /></div>,
       <div key="multi_rates"><MultiRatesGcc /></div>,
-      <div key="search"><SearchGcc /></div>,
-      <div key="image"><ImageGcc /></div>,
+      <div key="search"><SearchCommon /></div>,
+      <div key="image"><ImageCommon /></div>,
       <div key="others"><ProductOthersGcc /></div>,
-      <div key="sales"><SalesGcc /></div>,
-      <div key="purchase"><PurchaseGcc /></div>,
-      <div key="stock"><StockGcc /></div>,
-      <div key="suppliers"><SuppliersGcc /></div>,
+      <div key="sales"><SalesCommon /></div>,
+      <div key="purchase"><PurchaseCommon /></div>,
+      <div key="stock"><StockCommon /></div>,
+      <div key="suppliers"><SuppliersCommon /></div>,
       <div key="notes"><ProductNotesGcc /></div>,
     ];
 

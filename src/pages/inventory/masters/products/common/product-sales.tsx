@@ -4,7 +4,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
 
-const PurchaseGcc = () => {
+const SalesCommon = () => {
     const { t } = useTranslation('inventory');
     const columns: DevGridColumn[] = useMemo(() => [
         {
@@ -85,9 +85,9 @@ const PurchaseGcc = () => {
         <div className="grid grid-cols-1 gap-3">
             <ErpDevGrid
                 columns={columns}
-                gridHeader={t("purchase")}
+                gridHeader={t("sales")}
                 dataUrl={Urls.products}
-                gridId="grd_purchaseGcc"
+                gridId="grd_salesGcc"
                 heightToAdjustOnWindows={800}
                 hideDefaultExportButton={true}
                 hideDefaultSearchPanel={true}
@@ -103,4 +103,4 @@ const PurchaseGcc = () => {
     );
 };
 
-export default PurchaseGcc;
+export default SalesCommon;

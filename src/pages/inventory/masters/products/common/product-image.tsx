@@ -7,7 +7,7 @@ interface ImageData {
     timestamp: number;
 }
 
-const ImageGcc: React.FC = () => {
+const ImageCommon: React.FC = () => {
     const [images, setImages] = useState<ImageData[]>([]);
     const [activeTab, setActiveTab] = useState<'upload' | 'webcam'>('upload');
     const [isStreamActive, setIsStreamActive] = useState(false);
@@ -239,4 +239,4 @@ const ImageGcc: React.FC = () => {
     );
 };
 
-export default ImageGcc;
+export default ImageCommon;

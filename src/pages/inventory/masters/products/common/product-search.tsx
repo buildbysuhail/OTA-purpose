@@ -21,7 +21,7 @@ const initialSearchData = {
     searchInactive: false,
 };
 
-const SearchGcc: React.FC = () => {
+const SearchCommon: React.FC = () => {
     const { t } = useTranslation("inventory");
     const { handleFieldChange, getFieldProps } = useFormManager({ initialData: initialSearchData, });
 
@@ -130,4 +130,4 @@ const SearchGcc: React.FC = () => {
     );
 };
 
-export default SearchGcc;
+export default SearchCommon;

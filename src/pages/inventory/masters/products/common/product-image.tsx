@@ -49,9 +49,13 @@ const ImageCommon: React.FC = () => {
                 streamRef.current = stream;
                 setIsStreamActive(true);
             }
-        } catch (err) {
+        } catch (err: unknown) {
+            let errorMessage = "Please ensure you've granted camera permissions and are on a secure connection.";
+            if (err instanceof Error) {
+                errorMessage = err.message;
+            }
             console.error("Error accessing webcam:", err);
-            alert("Failed to access webcam. Please ensure you've granted camera permissions.");
+            alert(`Failed to access webcam. ${errorMessage}`);
         }
     };
 
@@ -89,7 +93,13 @@ const ImageCommon: React.FC = () => {
     const handleTabChange = (tab: 'upload' | 'webcam') => {
         setActiveTab(tab);
         if (tab === 'webcam' && !isStreamActive) {
-            startWebcam();
+            // Ask the user with a custom confirmation message
+            const allowCamera = window.confirm(
+                "This application requires access to your camera. Do you want to allow it?"
+            );
+            if (allowCamera) {
+                startWebcam();
+            }
         } else if (tab === 'upload' && isStreamActive) {
             stopWebcam();
         }

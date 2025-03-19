@@ -1,34 +1,33 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import Urls from "../../../../../redux/urls";
+import DataGrid, { Column, FilterRow, HeaderFilter, Scrolling } from "devextreme-react/data-grid";
+import { data } from "react-router-dom";
 
 const MultiRatesIndia = () => {
-    const { t } = useTranslation('inventory');
-    const columns: DevGridColumn[] = useMemo(() => [
+    const { t } = useTranslation("inventory");
+    const columns = useMemo(() => [
         {
             dataField: "siNo",
             caption: t("SiNo"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 40,
+            // width: 40,
         },
         {
             dataField: "priceCategory",
             caption: t("price_category"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 150,
+            width: 120,
         },
         {
             dataField: "unit",
             caption: t("unit"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
@@ -37,34 +36,34 @@ const MultiRatesIndia = () => {
         {
             dataField: "salesRate",
             caption: t("sales_rate"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 80,
+            // width: 80,
         },
         {
             dataField: "salesDisc%",
             caption: t("sales_disc_%"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 80,
+            // width: 80,
         },
         {
             dataField: "purchaseRate",
             caption: t("purchase_rate"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 80,
+            // width: 80,
         },
         {
             dataField: "unitID",
             caption: t("unit_id"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
@@ -73,16 +72,16 @@ const MultiRatesIndia = () => {
         {
             dataField: "profitAddedToCost",
             caption: t("profit_(added_to_cost)"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 100,
+            // width: 100,
         },
         {
             dataField: "MRP",
             caption: t("mrp"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
@@ -91,32 +90,35 @@ const MultiRatesIndia = () => {
         {
             dataField: "X",
             caption: t("x"),
-            dataType: "string",
+            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 100,
+            width: 40,
         },
-    ], [t]);
+    ],
+        [t]
+    );
 
+    // Load data from API
     return (
-        <div className="grid grid-cols-1 gap-3">
-            <ErpDevGrid
-                columns={columns}
-                gridHeader={t("multi_rates")}
-                dataUrl={Urls.products}
-                gridId="grd_multiRatesIndia"
-                heightToAdjustOnWindows={800}
-                hideDefaultExportButton={true}
-                hideDefaultSearchPanel={true}
-                hideGridAddButton={true}
-                hideGridHeader={true}
-                enableScrollButton={false}
-                ShowGridPreferenceChooser={false}
-                showPrintButton={false}
-                allowSearching={false}
-                allowExport={false}
-            />
+        <div id="grd_multiRatesIndia" className="grid grid-cols-1 gap-3">
+            <DataGrid dataSource={data} columnAutoWidth={true} height={800} showBorders={true}>
+                <FilterRow visible={true} />
+                <HeaderFilter visible={true} />
+                <Scrolling mode="virtual" />
+                {columns.map((col, index) => (
+                    <Column
+                        key={index}
+                        dataField={col.dataField}
+                        caption={col.caption}
+                        dataType={col.dataType}
+                        width={col.width}
+                        allowSorting={true}
+                        allowFiltering={true}
+                    />
+                ))}
+            </DataGrid>
         </div>
     );
 };

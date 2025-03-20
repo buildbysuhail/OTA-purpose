@@ -343,6 +343,10 @@ const Urls = {
   inv_reports_stock_flow: "",
 
   //Report End
+//Inventory Reports Starts
+//Purchase
+inv_reports_purchase_summary: "/Inventory/RptPurchaseReport/PurchaseSummaryTest/",
+
 
   // Transaction
 

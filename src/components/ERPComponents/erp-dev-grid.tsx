@@ -285,6 +285,7 @@ const createStore = async (
     "requireTotalCount",
     "sort",
     "filter",
+    "totalSummary"
   ],
   bodyProps?: any,
   setFilterValidations?: any,
@@ -294,6 +295,7 @@ const createStore = async (
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
+      debugger;
       if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
         loadOptions.filter = initialFilters.map((f) => {
           if (f.value instanceof Date) {
@@ -310,7 +312,14 @@ const createStore = async (
       }
 
       const params = Object.fromEntries(
-        paramNames
+        [
+          "skip",
+          "take",
+          "requireTotalCount",
+          "sort",
+          "filter",
+          "totalSummary"
+        ]
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
           .map((paramName) => [
             paramName,

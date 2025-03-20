@@ -1,9 +1,10 @@
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface PurchaseSummaryReport {
   from: Date
@@ -293,18 +294,49 @@ const PurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
     },
+    
   ];
+      const { getFormattedValue } = useNumberFormat();
+   const customizeSummaryRow = useMemo(() => {
+        return (itemInfo: { value: any }) => {
+          const value = itemInfo.value;
+          if (
+            value === null ||
+            value === undefined ||
+            value === "" ||
+            isNaN(value)
+          ) {
+            return "0"; // Ensure "0" is displayed when value is missing
+          }
+          return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+        };
+      }, []);
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "netValue",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cashAmt",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    }];
   return (
     <Fragment>
+         
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                   summaryItems={summaryItems}
                   columns={columns}
                   gridHeader={t("purchase_summary_report")}
-                  dataUrl={Urls.acc_reports_ledger}
+                  dataUrl={Urls.inv_reports_purchase_summary}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   hideGridAddButton={true}

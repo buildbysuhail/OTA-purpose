@@ -341,11 +341,13 @@ const Urls = {
   inv_reports_balance_report: "",
   inv_reports_opening_stock: "",
   inv_reports_stock_flow: "",
-
+  purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",
+  purchase_register_report: "/Inventory/RptPurchaseReport/PurchaseRegister/",
+  party_wise_report: "/Inventory/RptPurchaseReport/PartywisePurchase/",
   //Report End
-//Inventory Reports Starts
-//Purchase
-inv_reports_purchase_summary: "/Inventory/RptPurchaseReport/PurchaseSummaryTest/",
+  //Inventory Reports Starts
+  //Purchase
+  inv_reports_purchase_summary: "/Inventory/RptPurchaseReport/PurchaseSummaryTest/",
 
 
   // Transaction

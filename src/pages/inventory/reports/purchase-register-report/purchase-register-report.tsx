@@ -1,24 +1,117 @@
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import PurchaseRegisterFilter, { PurchaseRegisterFilterInitialState } from "./purchase-register-report-filter";
 
 interface PurchaseRegisterReport {
-  from: Date
+  masterID: number;
+  date: string;
+  vchNo: string;
+  form: string;
+  party: string;
+  address1: string;
+  address2: string;
+  detailID: number;
+  unitPrice: number;
+  batchNo: string;
+  productCode: string;
+  product: string;
+  productGroup: string;
+  brand: string;
+  categoryCode: string;
+  category: string;
+  quantity: number;
+  free: number;
+  unitCode: string;
+  unitPrice1: number;
+  vat: number;
+  netAmount: number;
+  freeValue: number;
+  cost: number;
+  freeCost: number;
+  totalProfit: number;
+  specification: string;
+  counterName: string;
+  routeName: string;
+  financialYearID: number;
+  XRate: number;
+  autoBarcode: string;
+  additionalExpenses: number;
+  branchName: string;
+  productDescription: string;
+  color: string;
+  warranty: string;
+  qtyNos: number;
+  mrp: number;
+  groupCategory: string;
+  sectionName: string;
+  stdPurchasePrice: number;
+  stdSalesPrice: number;
+  employeeName: string;
+  expiryDate: Date | null;
+  batchNoAgain: string;
+  warrantyPeriod: string;
+  costCentreName: string;
+  totalDiscount: number;
+  netValue: number;
+  grossValue: number;
+  VATNumber: string;
+  autoBarcode1: string;
+  manualBarcode: string;
+  purchaseInvoice: string;
+  schemeDisc: number;
+  exciseTax: number;
+  from?: Date;
+  to?: Date;
+  branchId?: number;
+  productId?: number;
+  partyId?: number;
+  financialYearId?: number;
 }
+
 const PurchaseRegisterReport = () => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<PurchaseRegisterReport>({ from: new Date() });
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [filter, setFilter] = useState<any>(PurchaseRegisterFilterInitialState);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  const onCloseFilter = useCallback(() => {
+    if (filterShowCount === 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+    }
+    setShowFilter(false);
+  }, [filterShowCount]);
+
   const columns: DevGridColumn[] = [
     {
+      dataField: "masterID",
+      caption: t("master_ID"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
       dataField: "date",
-      caption: t('date'),
+      caption: t("date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 125,
+      width: 80,
+    },
+    {
+      dataField: "vchNo",
+      caption: t("voucher_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
     },
     {
       dataField: "form",
@@ -29,28 +122,53 @@ const PurchaseRegisterReport = () => {
       width: 80,
     },
     {
-      dataField: "manualBarcode",
-      caption: t("manual_barcode"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 90,
-    },
-    {
-      dataField: "vchNo",
-      caption: t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 88,
-    },
-    {
       dataField: "party",
       caption: t("party"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 165,
+      width: 150,
+    },
+    {
+      dataField: "address1",
+      caption: t("address1"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "address2",
+      caption: t("address2"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "detailID",
+      caption: t("detail_ID"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "unitPrice",
+      caption: t("unit_price"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "batchNo",
+      caption: t("batch_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
     },
     {
       dataField: "productCode",
@@ -58,7 +176,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 54,
+      width: 70,
     },
     {
       dataField: "product",
@@ -66,7 +184,15 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 183,
+      width: 100,
+    },
+    {
+      dataField: "productGroup",
+      caption: t("product_group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "brand",
@@ -74,19 +200,27 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 104,
+      width: 100,
     },
     {
-      dataField: "unitPrice1",
-      caption: t("unit_price_1"),
+      dataField: "categoryCode",
+      caption: t("category_code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 61,
+      width: 80,
+    },
+    {
+      dataField: "category",
+      caption: t("category"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "quantity",
-      caption: t('quantity'),
+      caption: t("quantity"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -103,77 +237,21 @@ const PurchaseRegisterReport = () => {
     {
       dataField: "unitCode",
       caption: t("unit_code"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 43,
-    },
-    {
-      dataField: "unitPrice",
-      caption: t("unit_price"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 92,
-    },
-    {
-      dataField: "routeName",
-      caption: t("route_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 86,
+      width: 100,
     },
     {
-      dataField: "stdSalesPrice",
-      caption: t("std_sales_price"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 87,
-    },
-    {
-      dataField: "costCentreName",
-      caption: t("cost_centre_name"),
+      dataField: "unitPrice1",
+      caption: t("unit_price_1"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
     {
-      dataField: "netValue",
-      caption: t("net_value"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 105,
-    },
-    {
-      dataField: "additionalExpenses",
-      caption: t("additional_expenses"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-    },
-    {
-      dataField: "grossValue",
-      caption: t("gross_value"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "warrantyPeriod",
-      caption: t("warranty_period"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "VAT",
+      dataField: "vat",
       caption: t("vat"),
       dataType: "number",
       allowSearch: true,
@@ -183,7 +261,7 @@ const PurchaseRegisterReport = () => {
     {
       dataField: "netAmount",
       caption: t("net_amount"),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
@@ -215,207 +293,14 @@ const PurchaseRegisterReport = () => {
     {
       dataField: "totalProfit",
       caption: t("total_profit"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-    },
-    {
-      dataField: "category",
-      caption: t("category"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "totalDiscount",
-      caption: t("total_discount"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "purchaseInvoice",
-      caption: t("purchase_invoice"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "color",
-      caption: t("color"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "expiryDate",
-      caption: t("expiry_date"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "employeeName",
-      caption: t("employee_name"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-    },
-    {
-      dataField: "qtyNos",
-      caption: t("qty_nos"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "branchName",
-      caption: t("branch_name"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "productDescription",
-      caption: t("product_description"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-
-    {
-      dataField: "sectionName",
-      caption: t("section_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "MRP",
-      caption: t("mrp"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-    },
-    {
-      dataField: "stdPurchasePrice",
-      caption: t("std_purchase_price"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "groupCategory",
-      caption: t("group_category"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "financialYearID",
-      caption: t("financial_year_ID"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "categoryCode",
-      caption: t("category_code"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-    },
-    {
-      dataField: "autoBarcode",
-      caption: t("autobarcode"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 90,
-    },
-    {
-      dataField: "productGroup",
-      caption: t("product_group"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "batchNo",
-      caption: t("batch_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "XRate",
-      caption: t("x_rate"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "detailID",
-      caption: t("detail_ID"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "VATNumber",
-      caption: t("vat_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "address1",
-      caption: t("address1"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "address2",
-      caption: t("address2"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "specification",
       caption: t("specification"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "autoBarcode1",
-      caption: t("autobarcode1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -430,16 +315,66 @@ const PurchaseRegisterReport = () => {
       width: 100,
     },
     {
-      dataField: "schemeDisc",
-      caption: t("scheme_disc"),
+      dataField: "routeName",
+      caption: t("route_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
     {
-      dataField: "batchNo",
-      caption: t("batch_no"),
+      dataField: "financialYearID",
+      caption: t("financial_year_ID"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "XRate",
+      caption: t("x_rate"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "autoBarcode",
+      caption: t("autobarcode"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 90,
+    },
+    {
+      dataField: "additionalExpenses",
+      caption: t("additional_expenses"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+    },
+    {
+      dataField: "branchName",
+      caption: t("branch_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "productDescription",
+      caption: t("product_description"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "color",
+      caption: t("color"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -454,39 +389,219 @@ const PurchaseRegisterReport = () => {
       width: 100,
     },
     {
-      dataField: "masterID",
-      caption: t("master_ID"),
+      dataField: "qtyNos",
+      caption: t("qty_nos"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "mrp",
+      caption: t("mrp"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+    },
+    {
+      dataField: "groupCategory",
+      caption: t("group_category_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
     {
-      dataField: "exciseTax",
-      caption: t("excise_tax"),
+      dataField: "sectionName",
+      caption: t("section_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
+    {
+      dataField: "stdPurchasePrice",
+      caption: t("std_purchase_price"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "stdSalesPrice",
+      caption: t("std_sales_price"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "employeeName",
+      caption: t("employee_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "expiryDate",
+      caption: t("expiry_date"),
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "batchNo",
+      caption: t("batch_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "warrantyPeriod",
+      caption: t("warranty_period"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "costCentreName",
+      caption: t("cost_centre_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "totalDiscount",
+      caption: t("total_discount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "netValue",
+      caption: t("net_value"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "grossValue",
+      caption: t("gross_value"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "VATNumber",
+      caption: t("vat_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "autoBarcode1",
+      caption: t("autobarcode1"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "manualBarcode",
+      caption: t("manual_barcode"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "purchaseInvoice",
+      caption: t("purchase_invoice_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "schemeDisc",
+      caption: t("scheme_disc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      visible: false,
+      width: 100,
+    },
+    {
+      dataField: "exciseTax",
+      caption: t("excise_tax"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
   ];
+
+  const { getFormattedValue } = useNumberFormat();
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
+        return "0";
+      }
+      return getFormattedValue(value) || "0";
+    };
+  }, [getFormattedValue]);
+
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "netValue",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cashAmt",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    }];
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="px-4 pt-4 pb-2 ">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("purchase_register_report")}
-                  dataUrl={Urls.acc_reports_ledger}
-                  method={ActionType.POST}
-                  gridId="grd_cost_centre"
-                  hideGridAddButton={true}
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
+          <div className="px-4 pt-4 pb-2">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                summaryItems={summaryItems}
+                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                columns={columns}
+                moreOption
+                gridHeader={t("purchase_register_report")}
+                dataUrl={Urls.purchase_register_report}
+                hideGridAddButton={true}
+                enablefilter={true}
+                showFilterInitially={true}
+                method={ActionType.POST}
+                filterContent={<PurchaseRegisterFilter />}
+                filterHeight={690}
+                filterWidth={700}
+                filterInitialData={PurchaseRegisterFilterInitialState}
+                onFilterChanged={(f: any) => setFilter(f)}
+                reload={true}
+                gridId="grd_purchase_register_report"
+              />
             </div>
           </div>
         </div>

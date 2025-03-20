@@ -77,6 +77,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         dataField: "voucherType",
         caption: t("voucher_type"),
         dataType: "string",
+        groupIndex:0,
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -329,6 +330,15 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         summaryType: "sum",
         valueFormat: "currency",
         customizeText: customizeSummaryRow,
+      },
+      {
+        column: "amount",
+        summaryType: "sum",
+        valueFormat: "currency",
+        isGroupItem: true,
+        showInGroupFooter:true,
+        displayFormat:"Total: {0}",
+        customizeText: customizeSummaryRow,
       }
     ];
   return (
@@ -339,7 +349,9 @@ const AccTransactionGrid: React.FC<{voucherType?: string
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
-                
+                allowGrouping={true}
+                groupPanelVisible={true}
+                remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
               summaryItems={summaryItems}
                 gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
                 columns={columns}

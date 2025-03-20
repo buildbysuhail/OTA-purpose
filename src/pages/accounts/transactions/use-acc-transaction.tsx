@@ -1555,12 +1555,23 @@ export const useAccTransaction = (
       focusCostCenterRef();
       return false;
     }
+    const updatedFields: Record<string, any> = {
+      employee: { disabled: true },
+      jvDrCr: { disabled: true },
+      masterAccount: { disabled: true },
+      // referenceNumber: { disabled: true },
+      referenceDate: { disabled: true },
+      transactionDate: { disabled: true },
+      btnEdit: { visible: true },
+      amount: { disabled: false },
+      linkEdit: { visible: true },
+    };
     if (
       formState.formElements.costCentreID.visible == false &&
       (applicationSettings.accountsSettings.maintainBillwiseAccount == true ||
         applicationSettings.accountsSettings.billwiseMandatory == true)
     ) {
-      formState.formElements.amount.disabled = false;
+      updatedFields.amount = {...formState.formElements.amount, disabled: false };
     }
     formState.formElements.btnAdd;
 
@@ -1595,21 +1606,11 @@ export const useAccTransaction = (
         userSession: userSession,
       })
     );
-    const updatedFields: Record<string, any> = {
-      employee: { disabled: true },
-      jvDrCr: { disabled: true },
-      masterAccount: { disabled: true },
-      // referenceNumber: { disabled: true },
-      referenceDate: { disabled: true },
-      transactionDate: { disabled: true },
-      btnEdit: { visible: true },
-      amount: { disabled: false },
-      linkEdit: { visible: true },
-    };
+    
 
     // Conditionally update costCentreID if needed
     if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
-      updatedFields.costCentreID = { disabled: true };
+      updatedFields.costCentreID = { ...formState.formElements.costCentreID, disabled: true };
     }
 
     // Dispatch the updateFormElement action

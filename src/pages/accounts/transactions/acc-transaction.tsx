@@ -3185,7 +3185,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   title={t("print_cheque")}
                   variant="secondary"
-                  disabled={formState.printCheque == false}              
+                  // disabled={formState.printCheque == false}              
                    onClick={() => printCheque(formState.transaction.master?.voucherType)}
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
                 />

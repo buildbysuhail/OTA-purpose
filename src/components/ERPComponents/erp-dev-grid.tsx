@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid, KeyboardNavigation } from "devextreme-react/data-grid";
+import { DataGrid, GroupItem, GroupPanel, KeyboardNavigation } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -77,7 +77,11 @@ export interface SummaryConfig {
   column: string;
   summaryType: "sum" | "min" | "max" | "avg" | "count" | "custom";
   valueFormat?: string;
+  displayFormat?: string;
   showInColumn?: string;
+  isGroupItem?: boolean;
+  showInGroupFooter?: boolean;
+  alignByColumn?: boolean;
   alignment?: "center" | "left" | "right";
   customizeText?: (itemInfo: { value: any }) => string;
 }
@@ -197,6 +201,7 @@ interface ERPDevGridProps {
   };
   scrollingMode?: "standard" | "virtual" | "infinite";
   allowGrouping?: boolean;
+  autoExpandAll?: boolean;
   groupPanelVisible?: boolean;
   allowEditing?: {
     allow: boolean;
@@ -318,7 +323,8 @@ const createStore = async (
           "requireTotalCount",
           "sort",
           "filter",
-          "totalSummary"
+          "totalSummary",
+          "group"
         ]
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
           .map((paramName) => [
@@ -513,6 +519,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       stateStoring,
       scrollingMode = "virtual",
       allowGrouping = false,
+      autoExpandAll = false,
       groupPanelVisible = false,
       allowEditing = {
         allow: false,
@@ -1558,6 +1565,21 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         <Summary recalculateWhileEditing={true} skipEmptyValues={false}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {
             return (
+              config.isGroupItem == true ? 
+              <GroupItem
+                key={`GroupItem_${index}`}
+                column={config.column}
+                summaryType={config.summaryType}
+                valueFormat={config.valueFormat}
+                showInColumn={config.showInColumn}
+                customizeText={config.customizeText}
+                skipEmptyValues={false}
+                alignByColumn={config.alignByColumn}
+                displayFormat={config.displayFormat}
+                showInGroupFooter={config.showInGroupFooter}
+              />
+              :
+
               <TotalItem
                 key={`summaryItem_${index}`}
                 column={config.column}
@@ -1680,9 +1702,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 showCheckBoxesMode={"always"}
               />
             )}
-            {allowGrouping && <Grouping />}
+            {allowGrouping && <Grouping autoExpandAll={autoExpandAll}/>}
             {groupPanelVisible && (
-              <Grouping contextMenuEnabled={true} expandMode="rowClick" />
+              <GroupPanel visible={true} />
             )}
             {allowEditing && allowEditing.allow && (
               <Editing

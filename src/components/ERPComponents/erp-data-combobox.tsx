@@ -1384,6 +1384,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                         {params.InputProps.endAdornment}
                       </React.Fragment>
                     ),
+                    inputRef: ref,
                   }}
                 />
               </>

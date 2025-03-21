@@ -8,7 +8,7 @@ export interface productDto {
   nutrients: ProductNutrientsInputDto[]
   supplierProducts: SupplierProductsInputDto[]
   config: ProductLocalConfig
-  multiUnits: UnitExistDto[] // newly created
+  multiUnits: ProductUnitDto[] // newly created
 }
 
 export interface DetailsDto {
@@ -250,6 +250,26 @@ export interface ProductUnitInputDto {
 }
 
 export type ProductUnitValidationDto = {}
+export class ProductUnitDto {
+  unitId?: number | null;
+  multiFactor?: number | null;
+  barCode?: string | null;
+  sprice: number = 0;
+  description: string = "";
+  descriptionFL: string = "";
+  unitRemarks: string = "";
+
+  productUnitId?: number | null;
+  productBatchId?: number | null;
+  gatePass?: boolean | null;
+  multiBarcodes?: string | null;
+
+  unitName?: string | null;
+
+  get unitDescription(): string {
+    return `${this.unitName}:${this.multiFactor}`;
+  }
+}
 
 export interface UnitExistDto {
   productBatchID?: number

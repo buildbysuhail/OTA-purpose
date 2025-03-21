@@ -1,5 +1,5 @@
 import { CircleStackIcon } from "@heroicons/react/24/outline";
-import { BookCopy, Calendar, CalendarClock, ChartNoAxesCombined, CircleUser, Clock1Icon, Component, LucideCreditCard, LucideDollarSign, Scale, TrendingUp } from "lucide-react";
+import { BookCopy, Boxes, Calendar, CalendarClock, ChartNoAxesCombined, CircleUser, Clock1Icon, Component, LucideCreditCard, LucideDollarSign, Scale, TrendingUp } from "lucide-react";
 import { IoBookOutline } from "react-icons/io5";
 import { BsCollection } from "react-icons/bs";
 import { FaScaleUnbalancedFlip } from "react-icons/fa6";
@@ -21,7 +21,15 @@ import { GrDocumentStore } from "react-icons/gr";
 import { FaSackDollar } from "react-icons/fa6";
 import { GiSwapBag } from "react-icons/gi";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { AiOutlineFileText } from "react-icons/ai";
+import { TbTag } from "react-icons/tb";
+import { HiOutlineClipboardList } from "react-icons/hi";
+import { PiPackageLight } from "react-icons/pi";
+import { GiCargoShip } from "react-icons/gi";
+import { MdOutlineAnalytics } from "react-icons/md";
+import { PiUsersThreeLight } from "react-icons/pi";
+import { IoScaleOutline } from "react-icons/io5";
 
 export const ReportsMenuItems = [
   {
@@ -114,30 +122,31 @@ export const ReportsMenuItems = [
     ]
   },
 
-  // {
-  //   icon: (<Boxes className="side-menu__icon side-menu" />),
-  //   type: 'sub',
-  //   Name: '',
-  //   active: false,
-  //   selected: false,
-  //   title: 'inventory',
-  //   badge: '',
-  //   badgetxt: '',
-  //   class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
-  //   columns: 2,
-  //   children: [
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_summary_report', icon: HiOutlineDocumentReport },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'purchase_register_report', icon: AiOutlineFileText },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_wise_report`, type: 'link', active: false, selected: false, title: 'party_wise_report', icon: PiUsersThreeLight },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger_report', icon: HiOutlineClipboardList },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock_report', icon: PiPackageLight },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
-  //     { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report', icon: MdOutlineAnalytics },
+  {
+    icon: (<Boxes className="side-menu__icon side-menu" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'purchase',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_summary_report', icon: HiOutlineDocumentReport },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'purchase_register_report', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_wise_report`, type: 'link', active: false, selected: false, title: 'party_wise_report', icon: PiUsersThreeLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger_report', icon: HiOutlineClipboardList },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock_report', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report', icon: MdOutlineAnalytics },
 
-  //   ]
-  // },
+    ]
+  },
+
   // {
   //   icon: (<BanknotesIcon className="side-menu__icon side-menu" />),
   //   type: 'sub',

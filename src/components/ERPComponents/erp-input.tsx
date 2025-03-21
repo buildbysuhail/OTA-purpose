@@ -644,6 +644,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               )}
             </>
           ),
+          inputRef: ref, // Add the ref attribute here
         },
         fullWidth: true,
         variant: _variant,
@@ -813,9 +814,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 onFocus={(e) => {
                   e.target.select();
                   setIsFocused(true);
-                  e.target.setAttribute("autocomplete", "off");
-                  e.target.setAttribute("readonly", "true");
-                  setTimeout(() => e.target.removeAttribute("readonly"), 100);
+                  // e.target.setAttribute("autocomplete", "off");
+                  // e.target.setAttribute("readonly", "true");
+                  // setTimeout(() => e.target.removeAttribute("readonly"), 100);
                   onFocus && onFocus(e);
                 }}
                 onBlur={(e) => {

@@ -5,7 +5,7 @@ import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../redux/types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { TransactionBase, transactionRoutes } from "../../../components/common/content/transaction-routes";
@@ -77,6 +77,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         dataField: "voucherType",
         caption: t("voucher_type"),
         dataType: "string",
+        groupIndex:0,
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -204,6 +205,16 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         alignment: "left",
         showInPdf: true,
       },
+       {
+        dataField: "discount",
+        caption: t("discount"),
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        allowSearch: true,
+        alignment: "left",
+        showInPdf: true,
+      },
       {
         dataField: "actions",
         caption: t("Actions"),
@@ -292,6 +303,44 @@ const AccTransactionGrid: React.FC<{voucherType?: string
   useEffect(() => {
     setReload(true);
   }, [location.pathname]); 
+  const customizeSummaryRow = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+        ) {
+          return "0"; // Ensure "0" is displayed when value is missing
+        }
+        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+      };
+    }, []);
+  
+   const summaryItems: SummaryConfig[] = [
+      {
+        column: "amount",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "discount",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "amount",
+        summaryType: "sum",
+        valueFormat: "currency",
+        isGroupItem: true,
+        showInGroupFooter:true,
+        displayFormat:"Total: {0}",
+        customizeText: customizeSummaryRow,
+      }
+    ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -300,6 +349,10 @@ const AccTransactionGrid: React.FC<{voucherType?: string
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
+                allowGrouping={true}
+                groupPanelVisible={true}
+                remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
+              summaryItems={summaryItems}
                 gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}

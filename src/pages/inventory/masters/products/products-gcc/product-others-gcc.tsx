@@ -11,26 +11,20 @@ const ProductOthersGcc: React.FC = React.memo(() => {
     const { handleFieldChange, getFieldProps } = useFormManager<productDto>({ initialData: initialProductData, });
     return (
         <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
-            <div className="grid grid-cols-3 items-center gap-4">
-                <div>
-                    <ERPButton
-                        title={t("change_autobarcode")}
-                        variant="secondary"
-                    />
-
-                </div>
-                <div>
-                    <ERPButton
-                        title={t("pos_fast_moving_items")}
-                        variant="secondary"
-                    />
-                </div>
-                <div>
-                    <ERPButton
-                        title={t("price_list_editor")}
-                        variant="secondary"
-                    />
-                </div>
+            <div className="flex items-center gap-4">
+                <ERPButton
+                    title={t("change_autobarcode")}
+                    variant="secondary"
+                />
+                <ERPButton
+                    title={t("pos_fast_moving_items")}
+                    variant="secondary"
+                    className="whitespace-nowrap"
+                />
+                <ERPButton
+                    title={t("price_list_editor")}
+                    variant="secondary"
+                />
             </div>
             <div className="flex flex-wrap gap-4">
                 <ERPCheckbox

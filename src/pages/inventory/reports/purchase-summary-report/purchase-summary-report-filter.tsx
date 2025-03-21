@@ -17,45 +17,48 @@ const PurchaseSummaryFilter = ({
             <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
                     <ERPDateInput
-                        label={t("from")}
+                        label={t("from_date")}
                         {...getFieldProps("fromDate")}
                         className="w-full"
                         onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
                     />
                     <ERPDateInput
-                        label={t("to")}
+                        label={t("to_date")}
                         {...getFieldProps("toDate")}
                         className="w-full"
                         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
                     />
                 </div>
                 <div className="flex items-center gap-2">
+                    <ERPCheckbox
+                        {...getFieldProps("isTimeBased")}
+                        label={t("consider_time")}
+                        onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
+                    />
                     <div>
-                        <ERPCheckbox
-                            {...getFieldProps("isTimeBased")}
-                            label={t("time_from")}
-                            onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
-                        />
+                        <label>{t("time_from")}</label>
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
                             value={formState.fromTime}
                             onChange={(e) => handleFieldChange("fromTime", e.target.value)}
+                            disabled={!getFieldProps("isTimeBased").value}
                         />
                     </div>
                     <div>
-                        <label>{t("to")}</label>
+                        <label>{t("time_to")}</label>
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
                             value={formState.toTime}
                             onChange={(e) => handleFieldChange("toTime", e.target.value)}
+                            disabled={!getFieldProps("isTimeBased").value}
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("voucherType")}
@@ -106,7 +109,7 @@ const PurchaseSummaryFilter = ({
                     {...getFieldProps("salesmanID")}
                     field={{
                         id: "salesmanID",
-                        // getListUrl: Urls.data_salesmen,
+                        getListUrl: Urls.data_employees,
                         valueKey: "id",
                         labelKey: "name",
                     }}

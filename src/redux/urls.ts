@@ -344,6 +344,10 @@ const Urls = {
   purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",
   purchase_register_report: "/Inventory/RptPurchaseReport/PurchaseRegister/",
   party_wise_report: "/Inventory/RptPurchaseReport/PartywisePurchase/",
+  purchase_tax_report_detailed: "/Inventory/RptPurchaseReport/TaxReportPurchaseDetailed/",
+  purchase_tax_report_summary: "/Inventory/RptPurchaseReport/TaxReportPurchaseSummary/",
+  purchase_return_summary: "/Inventory/RptPurchaseReport/PurchaseReturnSummary/",
+  purchase_return_register: "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
   //Report End
   //Inventory Reports Starts
   //Purchase

@@ -30,7 +30,7 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 120,
       showInPdf: true,
-      format:"dd-MMM-yyyy"
+      format:"dd-MMM-yyyy" 
       // cellRender: (
       //   cellElement: any,
       //   cellInfo: any,

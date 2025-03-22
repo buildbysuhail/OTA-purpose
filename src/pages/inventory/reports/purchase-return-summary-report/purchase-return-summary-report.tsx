@@ -4,11 +4,10 @@ import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
-import { APIClient } from "../../../../helpers/api-client";
-import PurchaseSummaryFilter, { PurchaseSummaryFilterInitialState } from "./purchase-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import PurchaseReturnSummaryFilter, { PurchaseReturnSummaryFilterInitialState } from "./purchase-return-summary-report-filter";
 
-interface PurchaseSummaryReport {
+interface PurchaseReturnSummary {
   date?: string;
   vchNo?: string;
   form?: string;
@@ -44,18 +43,16 @@ interface PurchaseSummaryReport {
   createdDate?: Date;
   remarks?: string;
   routeName?: string;
-  srAmount?: number;
   mobileNumber?: string;
   totalExciseTax?: number;
+  srAmount?: number;
   toWarehouseName?: string;
 }
 
-const api = new APIClient();
-
-const PurchaseSummaryReport = () => {
+const PurchaseReturnSummary = () => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
+  const [filter, setFilter] = useState<any>(PurchaseReturnSummaryFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
@@ -77,7 +74,7 @@ const PurchaseSummaryReport = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("voucher_no"),
+      caption: t("vchNo"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -216,7 +213,7 @@ const PurchaseSummaryReport = () => {
     },
     {
       dataField: "couponAmt",
-      caption: t("coupon_amt"),
+      caption: t("coupon_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -258,7 +255,7 @@ const PurchaseSummaryReport = () => {
     },
     {
       dataField: "refNo2",
-      caption: t("ref_no2"),
+      caption: t("ref_no_2"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -385,24 +382,18 @@ const PurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
     },
-
   ];
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
+      if (value === null || value === undefined || value === "" || isNaN(value)) {
         return "0";
       }
       return getFormattedValue(value) || "0";
     };
-  }, []);
+  }, [getFormattedValue]);
   const summaryItems: SummaryConfig[] = [
     {
       column: "netValue",
@@ -415,32 +406,33 @@ const PurchaseSummaryReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }];
-    
+    }
+  ];
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="px-4 pt-4 pb-2 ">
+          <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
                 moreOption
-                gridHeader={t("purchase_summary_report")}
-                dataUrl={Urls.purchase_summary_report}
+                gridHeader={t("purchase_return_summary_report")}
+                dataUrl={Urls.purchase_return_summary}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}
-                filterContent={<PurchaseSummaryFilter />}
-                filterHeight={450}
+                filterContent={<PurchaseReturnSummaryFilter />}
+                filterHeight={310}
                 filterWidth={790}
-                filterInitialData={PurchaseSummaryFilterInitialState}
-                onFilterChanged={(f: any) => { setFilter(f); }}
+                filterInitialData={PurchaseReturnSummaryFilterInitialState}
+                onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_purchase_summary_report"
+                gridId="grd_purchase_return_summary_report"
               />
             </div>
           </div>
@@ -450,4 +442,4 @@ const PurchaseSummaryReport = () => {
   );
 };
 
-export default PurchaseSummaryReport;
+export default PurchaseReturnSummary;

@@ -78,7 +78,6 @@ const handleDirectPrint = async (template: any, transaction?: any) => {
     printWindow.onload = () => {
       printWindow.print(); // Trigger print
     };
-
     // Log user action
     logUserAction({
       action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.formType}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,

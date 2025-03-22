@@ -1,15 +1,11 @@
 import { FC, lazy, Suspense, useState } from "react";
-import {  BrowserRouter as Router, Routes, Route  } from "react-router-dom";
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ApplicationSettings from "../../../pages/settings/system/application-settings";
-import ApplicationSettingsNew from "../../../pages/settings/system/application-settings-new";
+import { Routes, Route } from "react-router-dom";
 import ApplicationSettingsVirtual from "../../../pages/settings/system/app-new/application-settings-virtual";
 import Templates from "../../../pages/InvoiceDesigner/Templates";
 import Settings from "../../../pages/settings/AllSettings/Settings";
 import UserActionReport from "../../../pages/settings/system/user-action-report";
 import ReportList from "../../ERPComponents/reports/reports-list";
 import TemplateDesignerLayout from "../layout/template-designer-layout";
-
 import LedgerReport from "../../../pages/accounts/reports/ledger-report";
 import CashBookSummary from "../../../pages/accounts/reports/cashBook/cash-book-summary";
 import DayBookDetailed from "../../../pages/accounts/reports/dayBook/day-book-detailed";
@@ -17,9 +13,7 @@ import DayBookSummary from "../../../pages/accounts/reports/dayBook/dayBookSumma
 import PaymentReport from "../../../pages/accounts/reports/payment-report";
 import TransactionReport from "../../../pages/accounts/reports/transactionReport/transaction-report";
 import AccountsHistoryReport from "../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report";
-import DailySummary from "../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary";
 import BillwiseProfit from "../../../pages/accounts/reports/billwise-profit/billwise-profit";
-import PartySummaryBasicInfo from "../../../pages/accounts/reports/partywise-summary/party-summary-basic-info";
 import OutstandingAccountPayableReport from "../../../pages/accounts/reports/outStandingReports/outstanding-account-payable-report";
 import OutstandingAccountReceivableReport from "../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report";
 import OutstandingAccountPayableAgingReport from "../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report";
@@ -230,8 +224,10 @@ const PostDatedCheques = lazy(
 import PurchaseSummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
 import PurchaseRegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
 import PartyWiseReport from "../../../pages/inventory/reports/party-wise-report/party-wise-report";
-import AccTransaction from "../../../pages/accounts/transactions/acc-transaction";
-import GstrReport from "../../../pages/inventory/reports/GSTR1Filter/gstr-report";
+import PurchaseTaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
+import PurchaseTaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
+import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
+import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -239,7 +235,6 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 import ProfitAndLossReport from "../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report";
 import CashSummary from "../../../pages/accounts/reports/cashSummary/cash-summary";
 import CashSummaryLedgerwise from "../../../pages/accounts/reports/cashSummary/cash-summary-ledgerwise";
-import TrialBalancePeriodwiseReportFilter from "../../../pages/accounts/reports/trialBalance/trial-balance-report-filter-periodwise";
 import TrialBalancePeriodwise from "../../../pages/accounts/reports/trialBalance/trial-balance-detailed";
 import ProfitAndLossDetailedReport from "../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed";
 import BalancesheetVertical from "../../../pages/accounts/reports/balanceSheet/balancesheet-vertical";
@@ -288,7 +283,7 @@ const TransactionAnalysisReport = lazy(
     )
 );
 
-interface ContentProps {}
+interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
@@ -659,18 +654,13 @@ const Content: FC<ContentProps> = () => {
         {/* Reports - Accounts */}
 
         {/* Reports - Inventory */}
-        <Route
-          path="/inventory/purchase_summary_report"
-          element={<PurchaseSummaryReport />}
-        />
-        <Route
-          path="/inventory/purchase_register_report"
-          element={<PurchaseRegisterReport />}
-        />
-        <Route
-          path="/inventory/party_wise_report"
-          element={<PartyWiseReport />}
-        />
+        <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
+        <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
+        <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
+        <Route path="/inventory/purchase_tax_report_detailed" element={<PurchaseTaxReportDetailed />} />
+        <Route path="/inventory/purchase_tax_report_summary" element={<PurchaseTaxReportSummary />} />
+        <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
+        <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
         <Route
           path="/inventory/stock_ledger_report"

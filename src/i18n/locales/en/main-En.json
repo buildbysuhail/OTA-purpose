@@ -76,7 +76,9 @@
     "submit":"Submit",
 
     "branches": "Branches",
-
+    "statement":"Statement",
+    "customer_balance":"Customer Balance",
+    "billwise_details":"Billwise Details",
     "ledger_report":"Ledger Report",
     "cash_book": "Cash Book",
     "day_book_detailed": "Day Book Detailed Report",

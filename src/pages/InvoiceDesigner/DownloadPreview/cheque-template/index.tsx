@@ -16,7 +16,6 @@ const ChequeTemplate = ({
   currentBranch,
   userSession,
   currency,
-  singleItemPerPage = false, // Default to one cheque per page
 }: ExtendedAccountTransactionProps) => {
   // Convert data to array if it's not already an array
   const chequeDetails = Array.isArray(data) ? data : [data]
@@ -271,7 +270,7 @@ const ChequeTemplate = ({
   }
 
   // If singleItemPerPage is false, render one cheque per page
-  if (!singleItemPerPage) {
+  if (!template?.propertiesState?.print_on_same_page) {
     return (
       <Document>
         <FontRegistration />

@@ -348,6 +348,8 @@ const Urls = {
   purchase_tax_report_summary: "/Inventory/RptPurchaseReport/TaxReportPurchaseSummary/",
   purchase_return_summary: "/Inventory/RptPurchaseReport/PurchaseReturnSummary/",
   purchase_return_register: "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
+  purchase_estimate_summary: "/Inventory/RptPurchaseReport/PurchaseEstimateSummary/",
+  purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
   //Report End
   //Inventory Reports Starts
   //Purchase

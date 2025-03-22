@@ -228,6 +228,8 @@ import PurchaseTaxReportDetailed from "../../../pages/inventory/reports/purchase
 import PurchaseTaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
 import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
+import PurchaseEstimateSummary from "../../../pages/inventory/reports/purchase-estimate-summary-report/purchase-estimate-summary";
+import PurchaseOrderSummary from "../../../pages/inventory/reports/purchase-order-summary-report/purchase-order-summary";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -661,6 +663,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_tax_report_summary" element={<PurchaseTaxReportSummary />} />
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
         <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
+        <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
+        <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
         <Route
           path="/inventory/stock_ledger_report"

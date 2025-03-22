@@ -206,7 +206,8 @@ export interface PropertiesState {
   label_font_color?: string;
   label_font_weight?: number;
   label_font_style?:"normal"|"italic";
-
+ 
+  print_on_same_page?:boolean;
   // Payment Stub
   showPaymentStubSettings?: boolean;
   includePaymentStub?: boolean;
@@ -728,6 +729,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       payment_stub_label: "",
       amount_enclosed_label: "",
       payment_stub_position: "same_page",
+      print_on_same_page:false,
     },
     headerState: {
       showLogo: false,

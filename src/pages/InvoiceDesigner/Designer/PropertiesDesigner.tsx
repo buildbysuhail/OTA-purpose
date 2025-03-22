@@ -223,6 +223,15 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
       <div className="transition-all  flex flex-col gap-4  p-4">
         <div className="flex flex-col gap-2 mt-1">
+        {["Cheque"]?.includes(templateGroup!) &&
+         <ERPCheckbox
+         checked={propertiesState?.print_on_same_page}
+         id="printSamePage"
+         label={t("print_on_same_page")}
+        onChange={(e) => onChange?.({ ...propertiesState, print_on_same_page: e.target.checked })}
+       />
+        }
+           
           <ERPDataCombobox
             id="font_family"
             label={t("pdf_font")}
@@ -274,38 +283,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             max={28}
             step={1}
           />
-          {/* <div className="flex items-center space-x-3">
-              <div className="basis-2/3 ">
-                <ERPSlider
-                  id="font_weight"
-                  label="Font Weight"
-                  // className="bg-slate-300"
-                  value={propertiesState?.font_weight}
-                  onChange={(e) =>
-                      onChange?.({ ...propertiesState, font_weight: parseInt(e.target.value,10) })
-                  }
-                  min={300}
-                  max={700}
-                  step={100}
-                />
-              </div>
-              <div className="basis-1/3 translate-y-3">
-                <ERPInput
-                  id="font_weight"
-                  type="number"
-                  noLabel
-                  value={propertiesState?.font_weight}
-                  data={propertiesState}
-                  onChange={(e) =>
-                    onChange?.({ ...propertiesState, font_weight: parseInt(e.target.value,10) })
-                  }
-                  min={300}
-                  max={700}
-                  step={100}
-                />
-
-              </div>
-            </div> */}
+         
         </div>
         <div className="flex flex-col gap-2 mt-1">
           <ERPDataCombobox

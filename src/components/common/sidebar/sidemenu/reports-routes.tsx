@@ -141,6 +141,8 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_tax_report_summary`, type: 'link', active: false, selected: false, title: 'purchase_tax_report_summary', icon: PiUsersThreeLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_summary`, type: 'link', active: false, selected: false, title: 'purchase_return_summary', icon: PiUsersThreeLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_register`, type: 'link', active: false, selected: false, title: 'purchase_return_register', icon: PiUsersThreeLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_estimate_summary`, type: 'link', active: false, selected: false, title: 'purchase_estimate_summary', icon: PiUsersThreeLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_order_summary`, type: 'link', active: false, selected: false, title: 'purchase_order_summary', icon: PiUsersThreeLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report', icon: TbTag },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger_report', icon: HiOutlineClipboardList },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },

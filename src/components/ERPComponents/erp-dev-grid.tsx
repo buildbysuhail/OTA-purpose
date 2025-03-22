@@ -324,7 +324,8 @@ const createStore = async (
           "sort",
           "filter",
           "totalSummary",
-          "group"
+          "group",
+          "groupSummary"
         ]
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
           .map((paramName) => [

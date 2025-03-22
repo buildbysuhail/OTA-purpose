@@ -350,6 +350,12 @@ const Urls = {
   purchase_return_register: "/Inventory/RptPurchaseReport/PurchaseReturnRegister/",
   purchase_estimate_summary: "/Inventory/RptPurchaseReport/PurchaseEstimateSummary/",
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
+  acc_reports_Purchase_Tax: "/Inventory/RptPurchaseReport/MonthlyVATPurchaseStatement",
+  inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
+  data_warehouses: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
+  data_warehouse_types: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
+  party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
+  Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
   //Report End
   //Inventory Reports Starts
   //Purchase

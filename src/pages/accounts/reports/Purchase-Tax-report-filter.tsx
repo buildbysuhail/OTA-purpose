@@ -1,0 +1,60 @@
+import ERPDateInput from "../../../components/ERPComponents/erp-date-input"
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
+import Urls from "../../../redux/urls"
+import { useTranslation } from "react-i18next"
+import { LedgerType } from "../../../enums/ledger-types"
+import moment from "moment"
+
+// Updated interface to match C# properties
+// interface ReportFilterProps {
+//   getFieldProps: (field: string) => any
+//   handleFieldChange: (field: string | object, value?: any) => void
+// }
+
+const PurchaseTaxReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
+  const { t } = useTranslation("accountsReport")
+
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      {/* Date Range Section */}
+      <div className="flex items-center gap-4">
+        <ERPDateInput
+          {...getFieldProps("fromDate")} // Changed from dateFrom to FromDate
+          label={t("date_from")}
+          className="w-full"
+          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)} // Updated field name
+          autoFocus={true}
+        />
+        <ERPDateInput
+          {...getFieldProps("toDate")} // Changed from dateTo to ToDate
+          label={t("date_to")}
+          className="w-full"
+          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)} // Updated field name
+        />
+      </div>
+      {/* <ERPDataCombobox
+        {...getFieldProps("bankLedgerID")}
+        label={t("bank_ledger")}
+        field={{
+          id: "bankLedgerID",
+          getListUrl: Urls.data_acc_ledgers,
+          params: `ledgerType=${LedgerType.BankAccount}`,
+          valueKey: "id",
+          labelKey: "name",
+          nameKey: "alias",
+        }}
+        onSelectItem={(data) => handleFieldChange({ bankLedgerID: data.value, BankLedgerName: data.label })}
+      /> */}
+    </div>
+  )
+}
+
+export default PurchaseTaxReportFilter
+
+// Updated initial state to match C# property names
+export const PurchaseTaxReportFilterInitialState = {
+  fromDate: moment().local().subtract(45, "days").toDate(),
+  toDate: new Date(), // Default empty string
+  // bankLedgerID: 0,
+}
+

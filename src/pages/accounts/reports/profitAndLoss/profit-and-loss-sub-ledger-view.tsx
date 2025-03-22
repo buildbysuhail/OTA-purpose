@@ -41,36 +41,13 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
 
   const columns: DevGridColumn[] = [
     {
-      dataField: "branchID",
-      caption: t("branchId"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "branch",
-      caption: t("branch"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "accGroupName",
-      caption: t("acc_group_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 140,
-      showInPdf: true,
-    },
-    {
       dataField: "ledgerID",
       caption: t("ledger_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "ledgerName",
@@ -78,7 +55,6 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
       showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any) => {
         return cellElement.data.ledgerName === "TOTAL" ? (
@@ -132,7 +108,7 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
     },
     {
       dataField: "balance",
-      caption: t("balance"),
+      caption: t("closing_balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -149,6 +125,32 @@ const ProfitAndLossSubledgerwiseView: FC<ProfitAndLossSubledgerwiseViewProps> = 
           }`}
         </span>
       ),
+    },
+    {
+      dataField: "accGroupName",
+      caption: t("acc_group_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 140,
+      showInPdf: true,
+    },
+    {
+      dataField: "branchID",
+      caption: t("branchId"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      visible:false,
+      width: 80,
+    },
+    {
+      dataField: "branch",
+      caption: t("branch"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
     },
   ];
   // const ProfitAndLossDrillDownRow: React.FC<{

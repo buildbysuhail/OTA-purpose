@@ -355,6 +355,7 @@ const BankStatementReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  remoteOperations={{ filtering: false, paging: false, sorting: false }}
                   columns={columns}
                   filterText="from {dateFrom} to {dateTo} {bankLedgerID > 0 && , Bank Ledger: [BankLedgerName]}"
                   gridHeader={t("bank_statement")}

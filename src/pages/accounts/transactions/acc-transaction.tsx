@@ -4,10 +4,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import ERPInput from "../../../components/ERPComponents/erp-input";
+} from "react";  import { useNavigate } from 'react-router-dom';
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import Urls from "../../../redux/urls";
@@ -34,7 +31,6 @@ import { RootState } from "../../../redux/store";
 import {
   accFormStateHandleFieldChange,
   accFormStateRowHandleFieldChange,
-  accFormStateTransactionMasterHandleFieldChange,
   setUserRight,
   updateFormElement,
 } from "./reducer";
@@ -49,7 +45,6 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import { isNullOrUndefinedOrZero } from "../../../utilities/Utils";
@@ -59,26 +54,7 @@ import TemplatesView from "./acc-templates";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import useFormComponent from "./use-form-components";
 import { useUserRights } from "../../../helpers/user-right-helper";
-import { Link } from "react-router-dom";
-import {
-  Ellipsis,
-  EllipsisVertical,
-  KeyRound,
-  Pencil,
-  Printer,
-  RefreshCw,
-  Trash2,
-  ChevronUp,
-  BadgePlusIcon,
-  Eraser,
-  X,
-  FileUp,
-  History,
-  Search,
-  AlignHorizontalSpaceBetween,
-} from "lucide-react";
 import { LedgerType } from "../../../enums/ledger-types";
-import AccExcelImport from "./acc-Excel-Import";
 import { PDFViewer } from "@react-pdf/renderer";
 import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { renderSelectedTemplate } from "./acc-renderSelected-template";
@@ -87,13 +63,9 @@ import ERPAttachment from "../../../components/ERPComponents/erp-attachment";
 import VoucherType from "../../../enums/voucher-types";
 import HistorySidebar from "./historySidebar";
 import {
-  customJsonParse,
-  modelToBase64,
   modelToBase64Unicode,
 } from "../../../utilities/jsonConverter";
-import VoucherNumberDetailsSidebar from "../../transaction-base/Voucher-number-details";
 import UnsavedChangesModal from "./unsavedChangesModal";
-import PartySelectionModal from "./party-selection-modal";
 import { Countries } from "../../../redux/slices/user-session/user-branches-reducer";
 import AccMasterAccount from "./components/acc-master-account";
 import AccDrCrJv from "./components/acc-drcr-jv";
@@ -242,6 +214,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   };
   const handleKeyDown = (e: any, field: string) => {
+    debugger;
     handleFieldKeyDown(
       field,
       e?.key ?? e?.event?.originalEvent?.key,
@@ -355,6 +328,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [financialYearID]);
 
   useEffect(() => {
+    debugger;
     billwiseChanged(formState.showbillwise);
   }, [formState.showbillwise]);
 
@@ -832,11 +806,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             bankName: {
               ...fieldsToUpdate.bankName,
-              visible: !clientSession.isAppGlobal,
+              visible: false,
             },
             nameOnCheque: {
               ...fieldsToUpdate.nameOnCheque,
-              visible: !clientSession.isAppGlobal,
+              visible: false,
             },
             gridColumns: {
               ...fieldsToUpdate.gridColumns,
@@ -881,7 +855,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             bankCharge: {
               ...fieldsToUpdate.bankCharge,
-              visible: true,
+              visible: false,
             },
             chequeStatus: {
               ...fieldsToUpdate.chequeStatus,
@@ -889,11 +863,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             bankName: {
               ...fieldsToUpdate.bankName,
-              visible: true,
+              visible: false,
             },
             nameOnCheque: {
               ...fieldsToUpdate.nameOnCheque,
-              visible: true,
+              visible: false,
             },
             gridColumns: {
               ...fieldsToUpdate.gridColumns,
@@ -999,7 +973,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             bankCharge: {
               ...fieldsToUpdate.bankCharge,
-              visible: true,
+              visible: false,
             },
             chequeStatus: {
               ...fieldsToUpdate.chequeStatus,
@@ -1039,11 +1013,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             chequeNumber: {
               ...fieldsToUpdate.chequeNumber,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
             bankDate: {
               ...fieldsToUpdate.bankDate,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
           };
           break;
@@ -1079,11 +1053,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             chequeNumber: {
               ...fieldsToUpdate.chequeNumber,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
             bankDate: {
               ...fieldsToUpdate.bankDate,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
           };
           break;
@@ -1121,11 +1095,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             chequeNumber: {
               ...fieldsToUpdate.chequeNumber,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
             bankDate: {
               ...fieldsToUpdate.bankDate,
-              visible: true,
+              visible: userSession.countryId != Countries.India,
             },
           };
           break;
@@ -1155,11 +1129,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             },
             chequeNumber: {
               ...fieldsToUpdate.chequeNumber,
-              visible: true,
+              visible: false,
             },
             bankDate: {
               ...fieldsToUpdate.bankDate,
-              visible: true,
+              visible: false,
             },
             bankName: {
               ...fieldsToUpdate.bankName,
@@ -1699,7 +1673,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [templateLoad, setTemplateLoad] = useState(false);
-  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [historyData, setHistoryData] = useState<any>(null);
   const [isPartyDetailsOpen, setIsPartyDetailsOpen] =
@@ -1820,8 +1793,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const handleChange = (selectedOption: { value: string; label: string }) => { };
 
+
+  const navigate = useNavigate();
   const goToPreviousPage = () => {
-    window.history.back();
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      navigate('/');
+    }
   };
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -1918,7 +1897,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   selectTemplates={selectTemplates}
                   goToPreviousPage={goToPreviousPage}
                   isHistorySidebarOpen={isHistorySidebarOpen}
-                  setIsPrintModalOpen={setIsPrintModalOpen}
                   printPaymentReceiptAdvice={printPaymentReceiptAdvice}
                 />
               </div>
@@ -2172,7 +2150,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
                     <div className="flex items-center justify-between mt-[-1.5rem]">
                       <div className="flex gap-4">
-                        <span className="text-[#2563eb] font-bold self-center">
+                        <span className="text-[#2563eb] text-[11px] self-center">
                           {t("group_name")}:{" "}
                           {formState.ledgerData?.accGroupName}
                         </span>
@@ -2395,7 +2373,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   </div>
                   <div className="grid grid-cols-3">
                     <div className="flex flex-wrap gap-4">
-                      <span className="text-[#2563eb] font-bold self-center">
+                    <span className="text-[#2563eb] text-[11px] self-center">
                         {t("group_name")}: {formState.ledgerData?.accGroupName}
                       </span>
                     </div>
@@ -2666,7 +2644,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               selectTemplates={selectTemplates}
               goToPreviousPage={goToPreviousPage}
               isHistorySidebarOpen={isHistorySidebarOpen}
-              setIsPrintModalOpen={setIsPrintModalOpen}
               printPaymentReceiptAdvice={printPaymentReceiptAdvice}
               phone={true}
             />
@@ -3287,15 +3264,14 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
       {formState.transaction && formState.template && (
         <ERPModal
-          isOpen={formState.printPreview && isPrintModalOpen}
+          isOpen={formState.printPreview && formState.isPrintModalOpen}
           title={t("Template")}
           width={1000}
           height={700}
           isForm={true}
           closeModal={() => {
-            setIsPrintModalOpen(false);
             dispatch(
-              accFormStateHandleFieldChange({ fields: { printPreview: false } })
+              accFormStateHandleFieldChange({ fields: { printPreview: false, isPrintModalOpen: false } })
             );
           }}
           content={

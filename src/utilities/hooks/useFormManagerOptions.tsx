@@ -21,7 +21,7 @@ import { FormField } from "../form-types";
 import { getFieldPropsAdvGlob, getFieldPropsGlobal, handleFieldChangeGlobal } from "../form-utils";
 import { useTranslation } from "react-i18next";
 
-interface UseFormManagerOptions { 
+export interface UseFormManagerOptions { 
   url?: string;
   onSuccess?: () => void;
   onClose?: () => void;

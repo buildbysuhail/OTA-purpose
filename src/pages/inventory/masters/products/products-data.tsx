@@ -209,19 +209,19 @@ const initialProductData: productDto = {
     }
   ],
   multiUnits: [
-    {
-      productBatchID: 0,
-      unit1: 0,
-      unit2: 0,
-      unit3: 0,
-      unit4: 0,
-      unit5: 0,
-      unit6: 0,
-      unit7: 0,
-      unit8: 0,
-      unit9: 0,
-      unit10: 0,
-    }
+    // {
+    //   productBatchID: 0,
+    //   unit1: 0,
+    //   unit2: 0,
+    //   unit3: 0,
+    //   unit4: 0,
+    //   unit5: 0,
+    //   unit6: 0,
+    //   unit7: 0,
+    //   unit8: 0,
+    //   unit9: 0,
+    //   unit10: 0,
+    // }
   ],
   config: {
     showProductDuplicateWarning: true,

@@ -34,7 +34,7 @@ interface AccHeaderProps extends AccVoucherElementProps {
   handleRefresh: () => void;
   createNewVoucher: () => void;
   handleEdit: () => void;
-  printVoucher: (setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>, voucherType: string) => void;
+  printVoucher: (voucherType: string) => void;
   handleClearControls: () => void;
   handleHistoryClick: () => void;
   setIsHistorySidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,7 +48,6 @@ interface AccHeaderProps extends AccVoucherElementProps {
   goToPreviousPage: () => void;
   isHistorySidebarOpen: boolean;
   phone?: boolean;
-  setIsPrintModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   printPaymentReceiptAdvice: (voucher?: AccTransactionFormState, voucherType?: any) => Promise<void>
 }
 
@@ -77,15 +76,14 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       selectTemplates,
       goToPreviousPage,
       isHistorySidebarOpen,
-      setIsPrintModalOpen,
       phone = false,
       printPaymentReceiptAdvice,
     },
     ref
   ) => {
-    debugger;
+    
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    debugger;
+    
 
     const popupRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -170,7 +168,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
           <button
             disabled={formState.transaction.master.accTransactionMasterID < 1 || (formState.transaction.master.accTransactionMasterID > 0 && formState.formElements.pnlMasters.disabled !== true)}
             className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 ${phone ? 'p-0.5' : 'p-3'} rounded-md hover:bg-gray-200 transition-colors`}
-            onClick={() => printVoucher(setIsPrintModalOpen, voucherType)}
+            onClick={() => printVoucher(voucherType)}
           >
             <Printer className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
           </button>

@@ -462,6 +462,7 @@ export interface AccTransactionFormState {
   total: number;
   printOnSave: boolean
   printPreview: boolean
+  isPrintModalOpen: boolean
   printCheque: boolean
   keepNarration: boolean
   amountInWords: string,
@@ -513,13 +514,13 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   exchangeRate: { visible: true, disabled: false, label: "exchange_rate" },
   hasDiscount: { visible: true, disabled: false, label: "discount" },
   discount: { visible: true, disabled: false, label: "discount" },
-  chequeNumber: { visible: true, disabled: false, label: "cheque_number" },
+  chequeNumber: { visible: false, disabled: false, label: "cheque_number" },
   paymentType: { visible: false, disabled: false, label: "payment_type" },
   chequeStatus: { visible: false, disabled: false, label: "check_status" },
   bankCharge: { visible: false, disabled: false, label: "bank_charge" },
   bankDate: { visible: false, disabled: false, label: "cheque_date" },
-  nameOnCheque: { visible: true, disabled: false, label: "name_on_cheque" },
-  bankName: { visible: true, disabled: false, label: "bank_name" },
+  nameOnCheque: { visible: false, disabled: false, label: "name_on_cheque" },
+  bankName: { visible: false, disabled: false, label: "bank_name" },
   projectId: { visible: false, disabled: false, label: "project" },
   costCentreID: { visible: false, disabled: false, label: "cost_centre" },
   lblGroupName: { visible: true, disabled: false, label: "group_name" },
@@ -639,7 +640,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   templatesData: [],
   transactionType: "",
   prev: "",
-  showPartySelection: false
+  showPartySelection: false,
+  isPrintModalOpen: false
 }
 export interface PrintTransProps {
   masterAccount: string;

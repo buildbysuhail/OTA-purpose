@@ -121,7 +121,6 @@ export const useAccTransaction = (
     }
   };
   const focusAmount = () => {
-    
     if (amountRef.current) {
       amountRef.current?.select();
       amountRef.current?.focus();
@@ -246,7 +245,6 @@ export const useAccTransaction = (
     skipPrompt?: boolean | false,
     setVoucherNo?: boolean | false
   ) => {
-    
     const _s_isDirty = isDirtyAccTransaction(formState.prev, {
       transaction: { ...formState.transaction },
       row: { ...formState.row },
@@ -1248,6 +1246,8 @@ export const useAccTransaction = (
             value: undefined,
           })
         );
+        console.log(`userSession.dbIdValue?.trim()${userSession.dbIdValue?.trim()}`);
+        
         if (formState.printOnSave == true) {
           if (
             userSession.dbIdValue?.trim() == "BAHAMDOON" &&
@@ -1257,6 +1257,10 @@ export const useAccTransaction = (
           } else {
             printVoucher();
           }
+        }
+
+        if (formState.printCheque) {
+          printCheque();
         }
         if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
           clearControls(
@@ -1340,10 +1344,7 @@ export const useAccTransaction = (
       );
     }
   };
-  const clearRow = async (
-    isEdit: boolean,
-    accTransactionMasterID: number
-  ) => {
+  const clearRow = async (isEdit: boolean, accTransactionMasterID: number) => {
     await undoEditMode(isEdit, accTransactionMasterID);
     dispatch(
       clearState({
@@ -1355,10 +1356,10 @@ export const useAccTransaction = (
         counterwiseCashLedgerId: 0,
         allowSalesCounter: 0,
         voucherNo: 0,
-        rowOnly:true
+        rowOnly: true,
       })
     );
-  }
+  };
   const clearControls = async (
     isEdit: boolean,
     accTransactionMasterID: number
@@ -1540,8 +1541,11 @@ export const useAccTransaction = (
         icon: "info",
         // title: t("select_master_account"),
         title: "Please Select " + formState.formElements.masterAccount.label,
+        onConfirm: (result: any) => {
+          focusMasterAccount();
+          return false;
+        },
       });
-      focusMasterAccount();
       return false;
     }
     if (
@@ -1571,7 +1575,10 @@ export const useAccTransaction = (
       (applicationSettings.accountsSettings.maintainBillwiseAccount == true ||
         applicationSettings.accountsSettings.billwiseMandatory == true)
     ) {
-      updatedFields.amount = {...formState.formElements.amount, disabled: false };
+      updatedFields.amount = {
+        ...formState.formElements.amount,
+        disabled: false,
+      };
     }
     formState.formElements.btnAdd;
 
@@ -1606,11 +1613,13 @@ export const useAccTransaction = (
         userSession: userSession,
       })
     );
-    
 
     // Conditionally update costCentreID if needed
     if (formState.userConfig?.presetCostenterId ?? 0 > 0) {
-      updatedFields.costCentreID = { ...formState.formElements.costCentreID, disabled: true };
+      updatedFields.costCentreID = {
+        ...formState.formElements.costCentreID,
+        disabled: true,
+      };
     }
 
     // Dispatch the updateFormElement action
@@ -1900,11 +1909,11 @@ export const useAccTransaction = (
           `${Urls.get_ledgerId_by_code}${
             formState.row.ledgerCode == undefined ||
             formState.row.ledgerCode === ""
-              ? '___'
+              ? "___"
               : formState.row.ledgerCode
           }`
         );
-debugger;
+        debugger;
         if (response && response > 0) {
           dispatch(
             accFormStateRowHandleFieldChange({
@@ -1970,6 +1979,7 @@ debugger;
     focusLedgerCode();
   };
   const handleNarrationKeyDown = (e: any) => {
+    debugger;
     // Handle Enter key
     if (e === "Enter") {
       const isChequeVoucher =
@@ -1981,7 +1991,10 @@ debugger;
 
       if (
         applicationSettings.accountsSettings?.maintainBillwiseAccount &&
-        formState.formElements.btnBillWise.visible == true
+        // formState.formElements.btnBillWise.visible == true
+                            !billWiseExcludedTransactions.includes(
+                              formState.transaction.master.voucherType
+                            ) 
       ) {
         if (
           (clientSession.isAppGlobal == true && !isChequeVoucher) ||
@@ -2578,6 +2591,6 @@ debugger;
     showBillwise,
     billWiseExcludedTransactions,
     getDrCr,
-    clearRow
+    clearRow,
   };
 };

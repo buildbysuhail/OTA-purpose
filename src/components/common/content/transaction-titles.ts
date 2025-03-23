@@ -16,6 +16,8 @@ export enum TransactionTitles {
   TaxOnExpensePayment = "tax_on_expense_payment",
   BankReconciliation = "bank_reconciliation",
   PostDatedCheques = "post_dated_cheques",
+
+  PurchaseInvoice = "purchase_invoice",
 }
 export enum TransactionListTitles {
   CashPayment = "cash_payments",
@@ -35,4 +37,6 @@ export enum TransactionListTitles {
   TaxOnExpensePayment = "tax_on_expense_payments",
   BankReconciliation = "bank_reconciliations",
   PostDatedCheques = "post_dated_cheques",
+
+  PurchaseInvoices = "purchase_invoices",
 }

@@ -8,7 +8,12 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
-import { initialPartiesData, initialProjectOrJobData, PartiesData, ProjectOrJob } from "./parties-manage-type";
+import {
+  initialPartiesData,
+  initialProjectOrJobData,
+  PartiesData,
+  ProjectOrJob,
+} from "./parties-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
@@ -19,6 +24,13 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { convertFileToBase64 } from "../../../../utilities/file-utils";
 import ErpCropper from "../../../../components/ERPComponents/erp-cropper";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
+import { DataGrid } from "devextreme-react";
+import { Paging, Pager, Column } from "devextreme-react/cjs/data-grid";
+import customers from "./customers";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
@@ -30,10 +42,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const rootState = useRootState();
     const dispatch = useDispatch();
     const userSession = useSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
     const isIndianCompany = userSession.countryId === Countries.India;
     const [isTCSApplicable, setIsTCSApplicable] = useState(false);
-    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(initialProjectOrJobData.data);
+    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(
+      initialProjectOrJobData.data
+    );
     const [image, setImage] = useState<string>("#");
 
     const {
@@ -48,7 +64,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(
-        () => dispatch(toggleParties({ isOpen: false, key: null, reload: false })),
+        () =>
+          dispatch(toggleParties({ isOpen: false, key: null, reload: false })),
         [dispatch]
       ),
       onSuccess: useCallback(
@@ -121,7 +138,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleDownload = async (fileData: number) => {
       ERPToast.show("Download started...", "success");
       try {
-        const url = `${Urls.acc_attachmentInfo_download}?fileKey=${encodeURIComponent(fileData)}`;
+        const url = `${
+          Urls.acc_attachmentInfo_download
+        }?fileKey=${encodeURIComponent(fileData)}`;
         const res = await api.getNativeAsync(url, undefined, {
           responseType: "blob", // Ensure the response is treated as a binary blob
         });
@@ -145,7 +164,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         } else {
           throw new Error("Invalid response from server");
         }
-
       } catch (error) {
         console.error("Error downloading file:", error);
         ERPToast.show("Download failed.", "error");
@@ -153,7 +171,160 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         setFileLoading(false);
       }
     };
+    const projectsColumns: DevGridColumn[] = useMemo(
+      () => [
+        {
+          dataField: "projectId",
+          caption: t("Project ID"),
+          dataType: "number",
+          width: 80,
+          allowSorting: true,
+          allowFiltering: true,
+          isLocked: false,
+          showInPdf: true,
+        },
+        {
+          dataField: "projectName",
+          caption: t("Project Name"),
+          dataType: "string",
+          allowSorting: true,
+          allowFiltering: true,
+          isLocked: false,
+          showInPdf: true,
+        },
+        {
+          dataField: "address1",
+          caption: t("Address 1"),
+          dataType: "string",
+          allowSorting: false,
+          allowFiltering: true,
+          isLocked: false,
+          showInPdf: true,
+        },
+        {
+          dataField: "address2",
+          caption: t("Address 2"),
+          dataType: "string",
+          allowSorting: false,
+          allowFiltering: true,
+          isLocked: false,
+          showInPdf: true,
+        },
+        {
+          dataField: "address3",
+          caption: t("Address 3"),
+          dataType: "string",
+          allowSorting: false,
+          allowFiltering: true,
+          isLocked: false,
+          showInPdf: true,
+        },
+        {
+          dataField: "actions",
+          caption: t("actions"),
+          isLocked: true,
+          
+          allowSearch: false,
+          allowFiltering: false,
+          fixed: true,
+          fixedPosition: "right",
+          width: 100,
+          
+          cellRender: (cellElement: any, cellInfo: any) => {
+            return (
+              <ERPGridActions
+                
+                delete={
+                  {
+                    onSuccess: () => { setProjectsLoad(true)},
+                    visible: true,
+                    confirmationRequired: true,
+                    confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
+                    url: Urls?.party_projects,
+                    key: cellElement?.data?.projectId,
+                  }
+                }
+              />
+            );
+          },
+        },
+      ],
+      [t]
+    );
+    const [projectOnAction, setProjectOnAction] = useState<boolean>(false);
+    const [projectsLoad, setProjectsLoad] = useState<boolean>(true);
+    const [project, setProject] = useState<{
+      projectId: number;
+      projectName: string;
+      address1: string;
+      address2: string;
+      address3: string;
+    }>({
+    projectId: 0,
+      projectName: "",
+      address1: "",
+      address2: "",
+      address3: "",
+    });
+    const loadProject = async (event: any) => {
+      try {
+        setProject(event.data);
+      } catch (error) {}
+    };
+    const saveProject = async () => {
+      try {
+        
+        setProjectOnAction(true);
+        const response = await api.postAsync(Urls.party_projects, project);
+        
+        setProjectOnAction(false);
+        handleResponse(response, () => {
+          setProjectsLoad(true);
+          clearForm();
+        });
+      } catch (error) {
+        console.error(error);
+        alert("Error saving project.");
+      }
+    };
 
+    // API: Delete Project
+    const deleteProject = async () => {
+      if (!project.projectId) {
+        alert("No project selected to delete.");
+        return;
+      }
+
+      if (!window.confirm("Are you sure you want to delete this project?"))
+        return;
+
+      try {
+        
+        setProjectOnAction(true);
+        const response = await api.delete(`${Urls.party_projects}${project.projectId}`);
+        
+        setProjectOnAction(false);
+        handleResponse(response, () => {
+          setProjectsLoad(true);
+          clearForm();
+        });
+       
+      } catch (error) {
+        console.error(error);
+        alert("Error deleting project.");
+      }
+    };
+
+    // Clear Form
+    const clearForm = () => {
+      setProject({
+        projectId: 0,
+        projectName: "",
+        address1: "",
+        address2: "",
+        address3: "",
+      });
+    };
     return (
       <div className="w-full bordered-tab relative">
         <div className="mt-[1.5rem]">
@@ -191,7 +362,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("displayName", data.displayName)
               }
             />
-            
+
             <ERPInput
               {...getFieldProps("arabicName")}
               label={t("arabic_name")}
@@ -224,7 +395,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCategoryID", data.partyCategoryID);
               }}
               label={t("party_category")}
-            // disabled={true}
+              // disabled={true}
             />
             <ERPDataCombobox
               {...getFieldProps("accGroupID")}
@@ -438,15 +609,36 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     { value: "Composite", label: "Composite" },
                     { value: "Unregistered", label: "Unregistered" },
                     { value: "Unregistered+RCM", label: "Unregistered+RCM" },
-                    { value: "Foreign non-Resident Taxpayer", label: "Foreign non-Resident Taxpayer", },
-                    { value: "Input Service distributor", label: "Input Service distributor", },
+                    {
+                      value: "Foreign non-Resident Taxpayer",
+                      label: "Foreign non-Resident Taxpayer",
+                    },
+                    {
+                      value: "Input Service distributor",
+                      label: "Input Service distributor",
+                    },
                     { value: "Tax Deductor", label: "Tax Deductor" },
-                    { value: "E-commerce Operator", label: "E-commerce Operator", },
-                    { value: "Government Departments", label: "Government Departments", },
-                    { value: "SEZ supplies with payment", label: "SEZ supplies with payment", },
-                    { value: "SEZ supplies without payment", label: "SEZ supplies without payment", },
+                    {
+                      value: "E-commerce Operator",
+                      label: "E-commerce Operator",
+                    },
+                    {
+                      value: "Government Departments",
+                      label: "Government Departments",
+                    },
+                    {
+                      value: "SEZ supplies with payment",
+                      label: "SEZ supplies with payment",
+                    },
+                    {
+                      value: "SEZ supplies without payment",
+                      label: "SEZ supplies without payment",
+                    },
                     { value: "Deemed Export", label: "Deemed Export" },
-                    { value: "Intra-State supplies attracting IGST", label: "Intra-State supplies attracting IGST", },
+                    {
+                      value: "Intra-State supplies attracting IGST",
+                      label: "Intra-State supplies attracting IGST",
+                    },
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
                 />
@@ -463,14 +655,28 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         </div>
 
         <Tabs value={activeTab} onChange={handleTabChange}>
-          <Tab label={t("address")} value="address" className="dark:text-dark-text" />
+          <Tab
+            label={t("address")}
+            value="address"
+            className="dark:text-dark-text"
+          />
           <Tab label={t("bank")} value="bank" className="dark:text-dark-text" />
-          <Tab label={t("details")} value="details" className="dark:text-dark-text" />
+          <Tab
+            label={t("details")}
+            value="details"
+            className="dark:text-dark-text"
+          />
           <Tab label={t("more")} value="more" className="dark:text-dark-text" />
-          {/* <Tab label="Project/Job" value="project_job" /> */}
+          <Tab label="Project/Job" value="project_job" />
           {userSession.countryId != Countries.India &&
             applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
-            true && <Tab label={t("other")} value="other_details" className="dark:text-dark-text" />}
+              true && (
+              <Tab
+                label={t("other")}
+                value="other_details"
+                className="dark:text-dark-text"
+              />
+            )}
         </Tabs>
 
         <div className="pt-4 mb-[71px]">
@@ -678,7 +884,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }
                 />
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="fileInput" className="text-sm  dark:text-dark-text  text-gray-700">
+                  <label
+                    htmlFor="fileInput"
+                    className="text-sm  dark:text-dark-text  text-gray-700"
+                  >
                     {t("document_1")}
                   </label>
 
@@ -714,7 +923,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       <span className="text-sm dark:text-dark-text  text-gray-700">
                         {t("uploaded_file")}
                       </span>
-                      <a href="#" onClick={() => handleDownload(formState?.data?.document1Key)} download className="text-blue-600 hover:text-blue-800 underline">
+                      <a
+                        href="#"
+                        onClick={() =>
+                          handleDownload(formState?.data?.document1Key)
+                        }
+                        download
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
                         {t("download")}
                       </a>
                     </div>
@@ -722,7 +938,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="fileInput" className="text-sm dark:text-dark-text  text-gray-700">
+                  <label
+                    htmlFor="fileInput"
+                    className="text-sm dark:text-dark-text  text-gray-700"
+                  >
                     {t("document_2")}
                   </label>
                   <input
@@ -744,7 +963,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       <span className="text-sm dark:text-dark-text  text-gray-700">
                         {t("uploaded_file")}
                       </span>
-                      <a href="#" onClick={() => handleDownload(formState?.data?.document2Key)} download className="text-blue-600 hover:text-blue-800 underline">
+                      <a
+                        href="#"
+                        onClick={() =>
+                          handleDownload(formState?.data?.document2Key)
+                        }
+                        download
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
                         {t("download")}
                       </a>
                     </div>
@@ -941,36 +1167,98 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               </div>
             </>
           )}
-          {/* {activeTab === 'project_job' && <div className="grid grid-cols-4 gap-6">
-            <ERPInput
-              {...getFieldProps("projectName")}
-              label={t("project_name")}
-              placeholder={t("project_name")}
-              required={false}
-              onChangeData={(data: any) =>
-                handleFieldChange("projectName", data.projectName)
-              }
-            />
-            <ERPInput
-              {...getFieldProps("address1")}
-              label={t("address1")}
-              placeholder={t("address1")}
-              required={false}
-              onChangeData={(data: any) =>
-                handleFieldChange("address1", data.address1)
-              }
-            />
-            <ERPInput
-              {...getFieldProps("address2")}
-              label={t("address2")}
-              placeholder={t("address2")}
-              required={false}
-              onChangeData={(data: any) =>
-                handleFieldChange("address2", data.address2)
-              }
-            />
+          {activeTab === "project_job" && (
+            <div className="grid grid-cols-1 gap-6">
+              <div className="flex flex-col md:flex-row w-full gap-6 p-4">
+                {/* Left aligned div with form inputs */}
+                <div className="w-full md:w-1/3 flex flex-col items-start">
+                  {/* <h2 className="text-xl font-bold mb-4">Project Information</h2> */}
+                  <div className="w-full">
+                    <ERPInput
+                      id="projectName"
+                      label={t("project_name")}
+                      placeholder={t("project_name")}
+                      required={false}
+                      value={project.projectName}
+                      data={project}
+                      onChangeData={(data: any) =>
+                        setProject((prev: any) => {
+                          return { ...prev, projectName: data.projectName };
+                        })
+                      }
+                    />
+                    <ERPInput
+                      id="address1"
+                      value={project.address1}
+                      data={project}
+                      label={t("address1")}
+                      placeholder={t("address1")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        setProject((prev: any) => {
+                          return { ...prev, address1: data.address1 };
+                        })
+                      }
+                    />
+                    <ERPInput
+                      id="address2"
+                      value={project.address2}
+                      data={project}
+                      label={t("address2")}
+                      placeholder={t("address2")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        setProject((prev: any) => {
+                          return { ...prev, address2: data.address2 };
+                        })
+                      }
+                    />
+                    <ERPButton
+            type="button"
+            title={t("clear")}
+            variant="secondary"
+            onClick={() => {
+              clearForm();
+            }}
+            disabled={projectOnAction}
+          />
+          <ERPButton
+            type="button"
+            disabled={projectOnAction}
+            variant="primary"
+            onClick={saveProject}
+            loading={projectOnAction}
+            title={
+              project && project.projectId > 0
+                ? t("update")
+                : t("Save")
+            }
+          />
+                  </div>
+                </div>
 
-          </div>} */}
+                {/* Right aligned div with DevExtreme DataGrid */}
+                <div className="w-full md:w-2/3">
+                  {/* <h2 className="text-xl font-bold mb-4">Data Grid</h2> */}
+                  <div className="w-full border rounded-md shadow">
+                     <ErpDevGrid
+                                    columns={projectsColumns}
+                                    onRowClick={loadProject}
+                                    gridHeader={t("")}
+                                    dataUrl={`${Urls.party_projects}'GetAll/'${formState.data.partyID}`}
+                                    gridId="party_projects"
+                                    changeReload={(reload: any) => { setProjectsLoad(false) }}
+                                    reload={projectsLoad}
+                                    gridAddButtonIcon="ri-add-line"
+                                    pageSize={40}
+                                    hideGridAddButton={true}
+                                  />
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {activeTab === "other_details" && (
             <div className="grid grid-cols-4 gap-6">
               <ERPDataCombobox
@@ -1012,7 +1300,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 placeholder={t("additional_number")}
                 required={false}
                 onChangeData={(data) =>
-                  handleFieldChange("plotIdentificationNumber", data.plotIdentificationNumber)
+                  handleFieldChange(
+                    "plotIdentificationNumber",
+                    data.plotIdentificationNumber
+                  )
                 }
               />
               <ERPInput
@@ -1052,10 +1343,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 placeholder={t("country_sub_division")}
                 required={false}
                 onChangeData={(data) =>
-                  handleFieldChange(
-                    "countrySubEntity",
-                    data.countrySubEntity
-                  )
+                  handleFieldChange("countrySubEntity", data.countrySubEntity)
                 }
               />
             </div>

@@ -34,7 +34,7 @@ export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("inventory");
-  const { isEdit, handleSubmit, handleClear, isLoading, handleClose } =
+  const { isEdit, handleSubmit, handleClear, isLoading, handleClose, formState, handleFieldChange, getFieldProps } =
     useFormManager<productDto>({
       url: Urls.products,
       onClose: useCallback(
@@ -94,7 +94,8 @@ export const ProductMaster: React.FC = React.memo(() => {
   // Define tab content in the desired order for each country
   const tabContents = isIndia
     ? [
-      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">  <ProductDetailsIndia /></div>,
+      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
+          <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
       <div key="multi_units"><ProductMultiUnitsIndia /></div>,
       <div key="multi_rates"><MultiRatesIndia /></div>,
       <div key="image"><ImageCommon /></div>,

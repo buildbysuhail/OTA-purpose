@@ -1,5 +1,5 @@
 import { Landmark } from "lucide-react";
-import { transactionRoutes } from "../../content/transaction-routes";
+import { TransactionBase, transactionRoutes } from "../../content/transaction-routes";
 import { TransactionTitles } from "../../content/transaction-titles";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 
@@ -377,7 +377,7 @@ export const MENUITEMS = [
     rights: "",
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
     children: [
-      ...transactionRoutes.map((route) => ({
+      ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Accounts).map((route) => ({
         path: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}List`,
         addPath: `${import.meta.env.BASE_URL}accounts/transactions/${route.transactionType}`,
         type: "link",
@@ -407,6 +407,48 @@ export const MENUITEMS = [
       },
     ],
   },
+  // {
+  //   icon: <i className="side-menu__icon ri-coins-fill"></i>,
+  //   type: "sub",
+  //   Name: "",
+  //   active: false,
+  //   selected: false,
+  //   title: "accounts",
+  //   badge: "",
+  //   badgetxt: "",
+  //   rights: "",
+  //   class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
+  //   children: [
+  //     ...transactionRoutes.filter(x => x.transactionBase == TransactionBase.Purchase).map((route) => ({
+  //       path: `${import.meta.env.BASE_URL}purchase/transactions/${route.transactionType}List`,
+  //       addPath: `${import.meta.env.BASE_URL}purchase/transactions/${route.transactionType}`,
+  //       type: "link",
+  //       active: false,
+  //       selected: false,
+  //       title: route.title,
+  //       rights: route.formCode,
+  //       icon: route.icon,
+  //     })),
+  //     // {
+  //     //   path: `${import.meta.env.BASE_URL}purchase/transactions/BankReconciliation`,
+  //     //   type: "link",
+  //     //   active: false,
+  //     //   selected: false,
+  //     //   title: TransactionTitles.BankReconciliation,
+  //     //   rights: "BRC",
+  //     //   icon: Landmark
+  //     // },
+  //     // {
+  //     //   path: `${import.meta.env.BASE_URL}purchase/transactions/PostDatedCheques`,
+  //     //   type: "link",
+  //     //   active: false,
+  //     //   selected: false,
+  //     //   title: TransactionTitles.PostDatedCheques,
+  //     //   rights: "PDC",
+  //     //   icon: BanknotesIcon
+  //     // },
+  //   ],
+  // },
   {
     icon: <i className="side-menu__icon ri-line-chart-line"></i>,
     type: "link",

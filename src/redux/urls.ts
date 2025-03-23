@@ -224,6 +224,7 @@ const Urls = {
   chart_of_accounts_new: "/Accounts/ChartofAccounts/chartOfAccounts",
   parties: "/Accounts/Parties/",
   get_next_party_code: "/Accounts/Parties/GetNextPartyCode/",
+  party_projects: "/Accounts/PartyProjects/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
@@ -406,7 +407,7 @@ const Urls = {
   salesRoute: "/Inventory/SalesRoute/",
   section: "/Inventory/Section/",
   group_category: "/Inventory/GroupCategory/",
-
+  payment_receipt_billwise_advice_for_print: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
   //Transaction
   // common
 

@@ -1262,32 +1262,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   }, [voucherType, voucherPrefix]);
 
-  // useEffect(() => {
-  //   if (!voucherType) return;
-  //   const updateFormElementsBasedOnVoucherType = () => {
-
-  //     // Dispatch the update action with all the required fields
-  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
-  //     focusLedgerCode();
-  //   };
-  //   updateFormElementsBasedOnVoucherType();
-  // }, [voucherType]);
-  // const fetchVoucherNumber = useCallback(async () => {
-  //   const nextVoucherNumber = await getNextVoucherNumber(
-  //     formType ?? "",
-  //     voucherType ?? "",
-  //     voucherPrefix ?? "",
-  //     false
-  //   );
-
-  // //   dispatch(
-  // //     accFormStateTransactionMasterHandleFieldChange({
-  // //       fields: {
-  // //         voucherNumber: nextVoucherNumber,
-  // //       },
-  // //     })
-  // //   );
-  // // }, [formType, voucherType, voucherPrefix]);
+  
   const handleUserConfigFieldChange = (field: keyof AccUserConfig, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,

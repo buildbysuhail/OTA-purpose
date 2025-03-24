@@ -1,6 +1,6 @@
 import { APIClient } from "../../../../helpers/api-client";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { AccTransactionFormState, AccVoucherElementProps } from "../acc-transaction-types";
+import { AccTransactionFormState, AccUserConfig, AccVoucherElementProps } from "../acc-transaction-types";
 import { accFormStateHandleFieldChange, accFormStateTransactionMasterHandleFieldChange } from "../reducer";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
@@ -105,7 +105,14 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
-
+    
+  const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      [field]: value,
+    };
+    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
     return (
       <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
         {/* Load Temp Rows */}
@@ -300,18 +307,11 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
                         id="printPreview"
                         className="test23 w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
                         label={t(formState.formElements.printPreview.label)}
-                        checked={formState.printPreview}
-                        onChange={(e) =>
-                          dispatch(
-                            accFormStateHandleFieldChange({
-                              fields: {
-                                printPreview: e.target.checked,
-                              },
-                            })
-                          )
-                        }
+                        checked={formState.userConfig?.printPreview}
+                        onChange={(e) => handleFieldChange("printPreview", e.target.checked)}
                         disabled={formState.formElements.printPreview?.disabled}
                       />
+                      
                     </li>
                   )}
                 </ul>

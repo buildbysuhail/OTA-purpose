@@ -367,7 +367,7 @@ const  ItemwisePurchaseSummaryReport = () => {
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
                   gridHeader={t("invoice_transaction_report")}
-                  dataUrl={Urls.Credit_purchase_summary}
+                  dataUrl={Urls.itemwise_purchase_summary}
                   method={ActionType.POST}
                   gridId={GridId.grid_id}
                   enablefilter={true}

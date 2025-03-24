@@ -1261,32 +1261,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   }, [voucherType, voucherPrefix]);
 
-  // useEffect(() => {
-  //   if (!voucherType) return;
-  //   const updateFormElementsBasedOnVoucherType = () => {
-
-  //     // Dispatch the update action with all the required fields
-  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
-  //     focusLedgerCode();
-  //   };
-  //   updateFormElementsBasedOnVoucherType();
-  // }, [voucherType]);
-  // const fetchVoucherNumber = useCallback(async () => {
-  //   const nextVoucherNumber = await getNextVoucherNumber(
-  //     formType ?? "",
-  //     voucherType ?? "",
-  //     voucherPrefix ?? "",
-  //     false
-  //   );
-
-  // //   dispatch(
-  // //     accFormStateTransactionMasterHandleFieldChange({
-  // //       fields: {
-  // //         voucherNumber: nextVoucherNumber,
-  // //       },
-  // //     })
-  // //   );
-  // // }, [formType, voucherType, voucherPrefix]);
 
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
@@ -1734,12 +1708,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }));
   };
 
-  // const handleFieldChange = (keys: any, value: any) => {
-  //   setFormData((prevSettings = {} as FormData) => ({
-  //     ...prevSettings,
-  //     [keys]: value ?? "",
-  //   }));
-  // };
+ 
   const handleFieldChange = (settingName: any, value: any) => {
     setSettings((prevSettings = {} as ApplicationMainSettings) => ({
       ...prevSettings,
@@ -1747,21 +1716,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }));
   };
 
-  // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
-
-  // useEffect(() => {
-  //   function handleClickOutside(event: MouseEvent) {
-  //     if (popupRef && !popupRef.contains(event.target as Node)) {
-  //       setShowPopup(false);
-  //       setIsHovered(false);
-  //     }
-  //   }
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [popupRef]);
+  
 
   const [showTotalsPopup, setShowTotalsPopup] = useState(false); // State for showing totals popup
 
@@ -1807,24 +1762,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  // useEffect(() => {
-  //   function handleClickOutside(event: MouseEvent) {
-  //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-  //       setIsPopupVisible(false);
-  //     }
-  //   }
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
-
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // const toggleMenu = () => {
-  //   setIsMenuOpen(!isMenuOpen);
-  // };
+  
   const isChequeSectionVisible =
     formState.formElements.nameOnCheque.visible ||
     formState.formElements.bankName.visible ||
@@ -2341,7 +2279,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       dispatch={dispatch}
                       t={t}
                     />
-                    {formState?.row.ledgerID?.toString()}
                     <Ledger
                       ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}

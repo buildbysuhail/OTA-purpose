@@ -57,13 +57,7 @@ import { useAccPrint } from "./use-print";
 import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
-// export interface AccUserConfig {
-//   keepNarrationForJV: boolean;
-//   clearDetailsAfterSaveAccounts: boolean;
-//   mnuShowConfirmationForEditOnAccounts: boolean;
-//   maximizeBillwiseScreenInitially: boolean;
-//   alignment: "left" | "center" | "right";
-// }
+
 
 interface FormElementState {
   visible: boolean;
@@ -546,14 +540,6 @@ export const useAccTransaction = (
         formState.transaction.master.accTransactionMasterID
     );
 
-    // voucher.formElements.btnAdd = {
-    //   ...voucher.formElements.btnAdd,
-    //   text: "Add",
-    // };
-    // voucher.formElements.amount = {
-    //   ...voucher.formElements.amount,
-    //   disabled: false,
-    // };
     voucher.transaction = {
       ...(vch || {}),
       attachments: [...(vch.transaction?.attachments || [])],
@@ -572,9 +558,7 @@ export const useAccTransaction = (
       };
       voucher.transaction.master = updatedMaster;
     }
-    // if (voucher.transaction.master.isLocked === true) {
-    //   voucher.formElements.lnkUnlockVoucher.visible = true;
-    // }
+   
     if (vch?.details) {
       if (voucher.transaction.details?.length > 0) {
         voucher.total = voucher.transaction.details.reduce((total, detail) => {
@@ -1271,28 +1255,12 @@ export const useAccTransaction = (
           const isFinancialYearClosed =
             userSession.financialYearStatus === "Closed";
           const fieldsToUpdate: Record<string, any> = {
-            // employee: { disabled: false },
-            // jvDrCr: { disabled: false },
-            // masterAccount: { disabled: false },
-            // referenceDate: { disabled: false },
-            // referenceNumber: { disabled: false },
-            // transactionDate: { disabled: false },
-            // linkEdit: { visible: false },
+            
 
             pnlMasters: { disabled: true },
 
             linkEdit: { visible: false },
-            // dxGrid: { disabled: false },
-            // btnSave: { disabled: true },
-            // btnEdit: {
-            //   disabled:
-            //     !isFinancialYearClosed &&
-            //     hasRight(formState.formCode, UserAction.Edit)
-            //       ? false
-            //       : true,
-            // },
-            // btnDelete: { disabled: true },
-            // btnPrint: { disabled: true },
+           
           };
 
           // Dispatch the update action with all the required fields
@@ -2509,36 +2477,7 @@ export const useAccTransaction = (
     try {
       let drCr = "";
       const loadLedgerData = async () => {
-        // switch (formState.transaction.master.voucherType) {
-        //   case "CP":
-        //   case "BP":
-        //   case "DN":
-        //   case "CQP":
-        //   case "SV":
-        //   case "SRV":
-        //   case "PBP":
-        //     drCr = "Dr";
-        //     break;
-
-        //   case "CR":
-        //   case "BR":
-        //   case "CN":
-        //   case "CQR":
-        //   case "PV":
-        //   case "PBR":
-        //     drCr = "Cr";
-        //     break;
-
-        //   case "OB":
-        //   case "MJV":
-        //     drCr = formState.row.drCr == "Dr" ? "Dr" : "Cr";
-        //     break;
-
-        //   case "JV":
-        //     drCr = formState.row.drCr == "Dr" ? "Cr" : "Dr";
-        //     break;
-        // }
-
+     
         if (
           formState.showbillwise === true &&
           formState.row.ledgerID &&

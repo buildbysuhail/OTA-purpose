@@ -357,8 +357,6 @@ const Urls = {
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
   acc_reports_Purchase_Tax: "/Inventory/RptPurchaseReport/MonthlyVATPurchaseStatement",
   inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
-  data_warehouses: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
-  data_warehouse_types: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
   itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",

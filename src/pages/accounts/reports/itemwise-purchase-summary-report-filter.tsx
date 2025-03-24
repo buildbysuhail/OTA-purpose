@@ -107,7 +107,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("warehouse")}
         field={{
           id: "warehouseID",
-          getListUrl: Urls.data_warehouses,
+          getListUrl: Urls.data_warehouse,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -212,7 +212,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("to_warehouse")}
         field={{
           id: "toWarehouseID",
-          getListUrl: Urls.data_warehouses,
+          getListUrl: Urls.data_warehouse,
           params: "",
           valueKey: "id",
           labelKey: "name",

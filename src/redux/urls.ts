@@ -80,6 +80,8 @@ const Urls = {
   data_groupcategory: "/Inventory/Data/GroupCategory",
   data_locations: "/Inventory/Data/Locations",
   data_productcategory: "/Inventory/Data/ProductCategory",
+  data_services: "/Inventory/Data/Services",
+  data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
  
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",

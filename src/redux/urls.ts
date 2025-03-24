@@ -68,19 +68,19 @@ const Urls = {
   data_BranchRecPayAccount: "/Accounts/Data/BranchRecPayAccount/",
   data_CustSupp: "/Accounts/Data/CustomerAndSupplier/",
   data_party_color: "",
+  data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",
-  // data_productCode: "/Inventory/Data/productCode",
-  // data_toBranchID: "/Inventory/Data/toBranchID",
-  // data_location: "/Inventory/Data/location",
-  // data_salesmanID: "/Accounts/Data/salesmanID",
+  data_productCode: "/Inventory/Data/productCode",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",
   data_sections: "/Inventory/Data/Sections",
   data_groupcategory: "/Inventory/Data/GroupCategory",
-  data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
+  data_locations: "/Inventory/Data/Locations",
+  data_productcategory: "/Inventory/Data/ProductCategory",
+ 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
 

@@ -3,6 +3,7 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import Urls from "../../../redux/urls"
 import { useTranslation } from "react-i18next"
 import moment from "moment"
+import ERPInput from "../../../components/ERPComponents/erp-input";
 
 const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport")
@@ -92,7 +93,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("salesman")}
         field={{
           id: "salesmanID",
-          getListUrl: Urls.data_salesmanID,
+          getListUrl: Urls.data_employees,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -107,7 +108,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("warehouse")}
         field={{
           id: "warehouseID",
-          getListUrl: Urls.data_warehouses,
+          getListUrl: Urls.data_warehouse,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -177,18 +178,13 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
       />
 
       {/* Product Code Selection */}
-      <ERPDataCombobox
-        {...getFieldProps("productCode")}
-        label={t("product_code")}
-        field={{
-          id: "productCode",
-          getListUrl: Urls.data_productCode,
-          params: "",
-          valueKey: "code",
-          labelKey: "code",
-          nameKey: "description",
-        }}
-        onSelectItem={(data) => handleFieldChange({ productCode: data.value })}
+
+      <ERPInput
+          {...getFieldProps("productCode")}
+          label={t("product_code")}
+          type="number"
+          defaultValue="0"
+          onChangeData={({ productCode }: any) => handleFieldChange("productCode", Number.parseInt(productCode) || 0)}
       />
 
       {/* To Branch Selection */}
@@ -197,7 +193,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("to_branch")}
         field={{
           id: "toBranchID",
-          getListUrl: Urls.data_toBranchID,
+          getListUrl: Urls.data_acc_Branches_All,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -212,7 +208,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("to_warehouse")}
         field={{
           id: "toWarehouseID",
-          getListUrl: Urls.data_warehouses,
+          getListUrl: Urls.data_warehouse,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -227,7 +223,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("location")}
         field={{
           id: "location",
-          getListUrl: Urls.data_location,
+          getListUrl: Urls.data_locations,
           params: "",
           valueKey: "code",
           labelKey: "name",

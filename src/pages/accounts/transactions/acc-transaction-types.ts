@@ -409,6 +409,9 @@ export interface AccUserConfig {
   innerPageBg?: string;
   inputBoxStyle?: inputBox
   isExpanded?: boolean;
+  printPreview?:boolean,
+  printCheque?:boolean,
+  printOnSave?:boolean,
 }
 export interface AccTransactionFormState {
   store: any;
@@ -585,6 +588,9 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     keepNarrationForJV: true,
     mnuShowConfirmationForEditOnAccounts: true,
     maximizeBillwiseScreenInitially: true,
+    printPreview:false,
+    printCheque:false,
+    printOnSave:false,
     alignment: "center",
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,

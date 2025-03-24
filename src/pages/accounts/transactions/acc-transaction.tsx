@@ -21,6 +21,7 @@ import {
   AccTransactionProps,
   AccTransactionRow,
   AccTransactionRowInitialData,
+  AccUserConfig,
   initialFormElements,
 } from "./acc-transaction-types";
 import {
@@ -623,7 +624,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 : applicationSettings.accountsSettings?.defaultCostCenterID,
           },
 
-          printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
+          // printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
       } else {
         _formState = await loadAccTransVoucher(
@@ -1261,7 +1262,39 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }
   }, [voucherType, voucherPrefix]);
 
+  // useEffect(() => {
+  //   if (!voucherType) return;
+  //   const updateFormElementsBasedOnVoucherType = () => {
 
+  //     // Dispatch the update action with all the required fields
+  //     dispatch(updateFormElement({ fields: fieldsToUpdate }));
+  //     focusLedgerCode();
+  //   };
+  //   updateFormElementsBasedOnVoucherType();
+  // }, [voucherType]);
+  // const fetchVoucherNumber = useCallback(async () => {
+  //   const nextVoucherNumber = await getNextVoucherNumber(
+  //     formType ?? "",
+  //     voucherType ?? "",
+  //     voucherPrefix ?? "",
+  //     false
+  //   );
+
+  // //   dispatch(
+  // //     accFormStateTransactionMasterHandleFieldChange({
+  // //       fields: {
+  // //         voucherNumber: nextVoucherNumber,
+  // //       },
+  // //     })
+  // //   );
+  // // }, [formType, voucherType, voucherPrefix]);
+  const handleUserConfigFieldChange = (field: keyof AccUserConfig, value: any) => {
+    const updatedUserConfig = {
+      ...formState.userConfig,
+      [field]: value,
+    };
+    dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+  };
   const selectTemplates = useCallback(async () => {
     setTemplateLoad(true);
     setIsTemplateOpen(true);
@@ -1708,13 +1741,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     }));
   };
 
- 
-  const handleFieldChange = (settingName: any, value: any) => {
-    setSettings((prevSettings = {} as ApplicationMainSettings) => ({
-      ...prevSettings,
-      [settingName]: value ?? "",
-    }));
-  };
+
+
 
   
 
@@ -3078,14 +3106,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 localInputBox={formState?.userConfig?.inputBoxStyle}
                 id="printOnSave"
                 label={t(formState.formElements.printOnSave.label)}
-                checked={formState.printOnSave}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateHandleFieldChange({
-                      fields: { printOnSave: e.target.checked },
-                    })
-                  )
-                }
+                checked={formState.userConfig?.printOnSave}
+                onChange={(e) => handleUserConfigFieldChange("printOnSave", e.target.checked)}
                 disabled={formState.formElements.printOnSave?.disabled}
               />
             )}
@@ -3094,16 +3116,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               formState.formElements.printCheque.visible && (
                 <ERPCheckbox
                   localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="p-rintCheque"
+                  id="printCheque"
                   label={t(formState.formElements.printCheque.label)}
-                  checked={formState.printCheque}
-                  onChange={(e) =>
-                    dispatch(
-                      accFormStateHandleFieldChange({
-                        fields: { printCheque: e.target.checked },
-                      })
-                    )
-                  }
+                  checked={formState.userConfig?.printCheque}
+                  onChange={(e) => handleUserConfigFieldChange("printCheque", e.target.checked)}
                   disabled={
                     formState.formElements.printCheque?.disabled ||
                     formState.formElements.pnlMasters?.disabled
@@ -3219,19 +3235,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div>
 
       {formState.transaction && formState.template && (
-        <ERPModal
-          isOpen={formState.printPreview && formState.isPrintModalOpen}
-          title={t("Template")}
-          width={1000}
-          height={700}
-          isForm={true}
-          closeModal={() => {
-            dispatch(
-              accFormStateHandleFieldChange({
-                fields: { printPreview: false, isPrintModalOpen: false },
-              })
-            );
-          }}
+       <ERPModal
+       isOpen={(formState.userConfig?.printPreview??false)&& formState.isPrintModalOpen}
+       title={t("Template")}
+       width={1000}
+       height={700}
+       isForm={true}
+       closeModal={() => {
+         dispatch(
+           accFormStateHandleFieldChange({
+             fields: { printPreview: false, isPrintModalOpen: false },
+           })
+         );
+       }}
           content={
             <PDFViewer
               className="pdf-viewer"
@@ -3321,5 +3337,4 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     </div>
   );
 };
-
 export default AccTransactionForm;

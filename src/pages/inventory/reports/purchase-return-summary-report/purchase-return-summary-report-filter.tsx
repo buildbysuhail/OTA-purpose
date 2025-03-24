@@ -100,11 +100,14 @@ const PurchaseReturnSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucher_forms,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => handleFieldChange("voucherForm", data.value)}
                 />

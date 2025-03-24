@@ -62,10 +62,14 @@ const PurchaseEstimateFilter = ({
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("transferVoucher")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "transferVoucher",
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange("transferVoucher", data.value);
@@ -91,6 +95,7 @@ const PurchaseEstimateFilter = ({
                     {...getFieldProps("salesRouteID")}
                     field={{
                         id: "salesRouteID",
+                        getListUrl: Urls.data_salesRoute,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -104,6 +109,7 @@ const PurchaseEstimateFilter = ({
                     {...getFieldProps("salesmanID")}
                     field={{
                         id: "salesmanID",
+                        getListUrl: Urls.data_employees,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -117,6 +123,7 @@ const PurchaseEstimateFilter = ({
                     {...getFieldProps("counterID")}
                     field={{
                         id: "counterID",
+                        getListUrl: Urls.data_counters,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -144,6 +151,7 @@ const PurchaseEstimateFilter = ({
                     {...getFieldProps("partyCategoryID")}
                     field={{
                         id: "partyCategoryID",
+                        getListUrl: Urls.data_party_categories,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -157,6 +165,7 @@ const PurchaseEstimateFilter = ({
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
+                        getListUrl: Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -193,26 +202,20 @@ const PurchaseEstimateFilter = ({
                     }}
                 />
 
-                <ERPDataCombobox
-                    label={t("transaction_type")}
-                    {...getFieldProps("voucherType")}
-                    field={{
-                        id: "voucherType",
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("voucherType", data.value);
-                    }}
-                />
 
                 <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
+                    options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'credit', label: 'Credit' },
+                        { value: 'cash', label: 'Cash' },
+                        { value: 'card', label: 'Card' }
+                    ]}
                     field={{
                         id: "reportOf",
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange("reportOf", data.value);

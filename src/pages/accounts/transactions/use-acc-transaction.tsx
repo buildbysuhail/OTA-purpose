@@ -1232,7 +1232,7 @@ export const useAccTransaction = (
         );
         console.log(`userSession.dbIdValue?.trim()${userSession.dbIdValue?.trim()}`);
         
-        if (formState.printOnSave == true) {
+        if (formState.userConfig?.printOnSave == true) {
           if (
             userSession.dbIdValue?.trim() == "BAHAMDOON" &&
             formState.isBahamdoonPOSReceipt != true
@@ -1243,7 +1243,7 @@ export const useAccTransaction = (
           }
         }
 
-        if (formState.printCheque) {
+        if (formState.userConfig?.printCheque) {
           printCheque();
         }
         if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {

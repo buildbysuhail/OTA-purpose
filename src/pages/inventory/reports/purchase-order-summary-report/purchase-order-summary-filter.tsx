@@ -63,9 +63,12 @@ const PurchaseOrderSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("transferVoucher")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "transferVoucher",
-                        // getListUrl: Urls.transfer_voucher,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -93,7 +96,7 @@ const PurchaseOrderSummaryFilter = ({
                     {...getFieldProps("salesRouteID")}
                     field={{
                         id: "salesRouteID",
-                        // getListUrl: Urls.data_sales_routes,
+                        getListUrl: Urls.data_salesRoute,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -107,7 +110,7 @@ const PurchaseOrderSummaryFilter = ({
                     {...getFieldProps("salesmanID")}
                     field={{
                         id: "salesmanID",
-                        // getListUrl: Urls.data_salesmen,
+                        getListUrl: Urls.data_employees,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -163,7 +166,7 @@ const PurchaseOrderSummaryFilter = ({
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucher_forms,
+                        getListUrl: Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -201,27 +204,18 @@ const PurchaseOrderSummaryFilter = ({
                 />
 
                 <ERPDataCombobox
-                    label={t("transaction_type")}
-                    {...getFieldProps("transactionType")}
-                    field={{
-                        id: "transactionType",
-                        // getListUrl: Urls.data_transaction_types,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("transactionType", data.value);
-                    }}
-                />
-
-                <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
+                    options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'credit', label: 'Credit' },
+                        { value: 'cash', label: 'Cash' },
+                        { value: 'card', label: 'Card' }
+                    ]}
                     field={{
                         id: "reportOf",
-                        // getListUrl: Urls.data_reports,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange("reportOf", data.value);

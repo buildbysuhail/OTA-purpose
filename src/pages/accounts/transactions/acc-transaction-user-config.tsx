@@ -24,7 +24,7 @@ const api = new APIClient();
 interface pageBgColor {
   pageBgColor: string;
 }
-interface AccTransactionUserConfigProps {
+interface AccTransactionUserConfigProps{
   phone?: boolean;
 }
 
@@ -176,6 +176,28 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
                 onChangeData={(e) => handleFieldChange("maximizeBillwiseScreenInitially", e.maximizeBillwiseScreenInitially)}
               />
 
+              <ERPCheckbox
+                id="printPreview"
+                label={t("print_preview")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.printPreview}
+                onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+              />
+                <ERPCheckbox
+                id="printOnSave"
+                label={t("print_onSave")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.printOnSave}
+                onChangeData={(e) => handleFieldChange("printOnSave", e.printOnSave)}
+              />
+                <ERPCheckbox
+                id="printCheque"
+                label={t("print_cheque")}
+                data={formState.userConfig}
+                checked={formState?.userConfig?.printCheque}
+                onChangeData={(e) => handleFieldChange("printCheque", e.printCheque)}
+               />
+
               <ERPDataCombobox
                 id="presetCostenterId"
                 data={formState.userConfig}
@@ -303,6 +325,7 @@ export const AccTransactionUserConfig: React.FC<AccTransactionUserConfigProps> =
             </div>
           </>
         }
+
         footer={
           <div className="h-[42px] pt-[4px] pb-[2px] w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
             <ERPButton title={t("reset")} onClick={resetThemeChange} type="reset" />

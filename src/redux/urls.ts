@@ -72,7 +72,6 @@ const Urls = {
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",
-  data_productCode: "/Inventory/Data/productCode",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",

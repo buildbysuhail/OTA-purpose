@@ -92,7 +92,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         label={t("salesman")}
         field={{
           id: "salesmanID",
-          getListUrl: Urls.data_salesmanID,
+          getListUrl: Urls.data_employees,
           params: "",
           valueKey: "id",
           labelKey: "name",

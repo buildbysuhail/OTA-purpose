@@ -129,7 +129,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
         label={t("warehouse")}
         field={{
           id: "warehouseID",
-          getListUrl: Urls.data_warehouses,
+          getListUrl: Urls.data_warehouse,
           params: "",
           valueKey: "id",
           labelKey: "name",

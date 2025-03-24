@@ -149,13 +149,11 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock_report', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report', icon: MdOutlineAnalytics },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_register`, type: 'link', active: false, selected: false, title: 'purchase_return_register', icon: PiUsersThreeLight },   
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_return_summary`, type: 'link', active: false, selected: false, title: 'mahir start', icon: PiUsersThreeLight },  
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/Purchase_Tax`, type: 'link', active: false, selected: false, title: 'Purchase_Tax', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/Purchase_Order_Transit_Report`, type: 'link', active: false, selected: false, title: 'Purchase_Order_Transit_Report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/Credit_purchase_summary`, type: 'link', active: false, selected: false, title: 'Credit_purchase_summary', icon: AiOutlineFileText },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'mahir end', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/Itemwise_Purchase_Summary`, type: 'link', active: false, selected: false, title: 'Itemwise_Purchase_Summary', icon: AiOutlineFileText },
 
 
     ]

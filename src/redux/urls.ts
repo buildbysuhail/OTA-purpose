@@ -38,6 +38,7 @@ const Urls = {
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
+  data_acc_Branches_All: "/Data/Branches",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   // data_acc_ledgers_Code: "/Accounts/Data/LedgerCode/",
   data_costcentres: "/Accounts/Data/CostCentres/",
@@ -70,6 +71,10 @@ const Urls = {
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",
+  // data_productCode: "/Inventory/Data/productCode",
+  // data_toBranchID: "/Inventory/Data/toBranchID",
+  // data_location: "/Inventory/Data/location",
+  // data_salesmanID: "/Accounts/Data/salesmanID",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",
@@ -353,10 +358,9 @@ const Urls = {
   purchase_order_summary: "/Inventory/RptPurchaseReport/PurchaseOrderSummary/",
   acc_reports_Purchase_Tax: "/Inventory/RptPurchaseReport/MonthlyVATPurchaseStatement",
   inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
-  data_warehouses: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
-  data_warehouse_types: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
+  itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",
   //Report End
   //Inventory Reports Starts
   //Purchase

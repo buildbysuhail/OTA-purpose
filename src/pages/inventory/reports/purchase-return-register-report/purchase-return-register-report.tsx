@@ -587,7 +587,7 @@ const PurchaseReturnRegister = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseReturnRegisterFilter />}
-                filterHeight={790}
+                filterHeight={690}
                 filterWidth={790}
                 filterInitialData={PurchaseReturnRegisterFilterInitialState}
                 onFilterChanged={(f: any) => setFilter(f)}

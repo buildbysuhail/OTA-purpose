@@ -167,11 +167,14 @@ const PurchaseSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucher_forms,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange({
@@ -227,11 +230,16 @@ const PurchaseSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
+                    options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'credit', label: 'Credit' },
+                        { value: 'cash', label: 'Cash' },
+                        { value: 'card', label: 'Card' }
+                    ]}
                     field={{
                         id: "reportOf",
-                        // getListUrl: Urls.data_report_types,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange({

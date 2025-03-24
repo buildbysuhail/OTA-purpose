@@ -75,9 +75,9 @@ const CounterSettings = lazy(
 
 // Inventory Starts
 
-const InvTransactionMobile = lazy(
-  () => import("../../../pages/inventory/inv-transaction-mobile")
-);
+// const InvTransactionMobile = lazy(
+//   () => import("../../../pages/inventory/inv-transaction-mobile")
+// );
 
 // Inventory End
 // Acc Starts
@@ -227,7 +227,7 @@ import PartyWiseReport from "../../../pages/inventory/reports/party-wise-report/
 import PurchaseTaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 import PurchaseTaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
-import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
+// import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
 import PurchaseEstimateSummary from "../../../pages/inventory/reports/purchase-estimate-summary-report/purchase-estimate-summary";
 import PurchaseOrderSummary from "../../../pages/inventory/reports/purchase-order-summary-report/purchase-order-summary";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
@@ -400,7 +400,7 @@ const Content: FC<ContentProps> = () => {
         {/* Templates ends */}
         {/* Inventory Starts */}
 
-        <Route path="sales/new" element={<InvTransactionMobile />} />
+        {/* <Route path="sales/new" element={<InvTransactionMobile />} /> */}
 
         {/* Inventory End */}
         {/* Accounts Start */}
@@ -466,6 +466,60 @@ const Content: FC<ContentProps> = () => {
         {transactionRoutes.map((route, index) => (
           <>
             {route.transactionBase == TransactionBase.Accounts && (
+              <>
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}List`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionGrid
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        title={route.listTitle}
+                        addTitle={route.title}
+                      />
+                    </RouteGuard>
+                  }
+                />
+                <Route
+                  key={index}
+                  path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
+                  element={
+                    <RouteGuard formCode={route.formCode} action={route.action}>
+                      <AccTransactionFormContainer
+                        voucherType={route.voucherType}
+                        transactionType={route.transactionType}
+                        formCode={route.formCode}
+                        voucherPrefix={""}
+                        formType={route.formType}
+                        title={route.title}
+                        drCr={route.drCr}
+                        voucherNo={0}
+                      />
+                    </RouteGuard>
+                  }
+                />
+              </>
+            )}
+            {route.transactionBase == TransactionBase.Purchase && (
               <>
                 <Route
                   key={index}
@@ -667,7 +721,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_tax_report_detailed" element={<PurchaseTaxReportDetailed />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<PurchaseTaxReportSummary />} />
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
-        <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
+        {/* <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} /> */}
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />

@@ -154,6 +154,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/Purchase_Order_Transit_Report`, type: 'link', active: false, selected: false, title: 'Purchase_Order_Transit_Report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/Credit_purchase_summary`, type: 'link', active: false, selected: false, title: 'Credit_purchase_summary', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/Itemwise_Purchase_Summary`, type: 'link', active: false, selected: false, title: 'Itemwise_Purchase_Summary', icon: AiOutlineFileText },
 
 
     ]

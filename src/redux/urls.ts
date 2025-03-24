@@ -70,6 +70,10 @@ const Urls = {
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",
+  data_productCode: "/Inventory/Data/productCode",
+  data_toBranchID: "/Inventory/Data/toBranchID",
+  data_location: "/Inventory/Data/location",
+  data_salesmanID: "/Accounts/Data/salesmanID",
   data_brands: "/Inventory/Data/Brands",
   data_color: "/Inventory/Data/Color",
   data_warranty: "/Inventory/Data/Warranty",
@@ -357,6 +361,7 @@ const Urls = {
   data_warehouse_types: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
+  itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",
   //Report End
   //Inventory Reports Starts
   //Purchase

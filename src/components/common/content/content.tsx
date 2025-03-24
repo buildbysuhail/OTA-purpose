@@ -260,6 +260,7 @@ import CreditPurchaseSummaryReport from "../../../pages/accounts/reports/credit-
 import PartyMonthwisePurchaseSummaryReport from "../../../pages/accounts/reports/Party-monthwise-purchase-summary-report";
 import PurchaseOrderTransitReport from "../../../pages/accounts/reports/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/accounts/reports/Purchase-Tax-report";
+import ItemwisePurchaseSummaryReport from "../../../pages/accounts/reports/itemwise-purchase-summary-report";
 const PriceList = lazy(
   () => import("../../../pages/inventory/reports/price-list/price-list-report")
 );
@@ -713,6 +714,10 @@ const Content: FC<ContentProps> = () => {
         <Route
           path="/inventory/Credit_purchase_summary"
           element={<CreditPurchaseSummaryReport />}
+        />
+        <Route
+          path="/inventory/Itemwise_Purchase_Summary"
+          element={<ItemwisePurchaseSummaryReport />}
         />
         <Route
           path="/inventory-masters/products"

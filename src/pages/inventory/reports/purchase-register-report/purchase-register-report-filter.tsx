@@ -34,11 +34,14 @@ const PurchaseRegisterFilter = ({
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("transferVoucher")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "transferVoucher",
-                        //  getListUrl: Urls.transfer_voucher,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange("transferVoucher", data.value);
@@ -50,7 +53,7 @@ const PurchaseRegisterFilter = ({
                     {...getFieldProps("productCategoryID")}
                     field={{
                         id: "productCategoryID",
-                        //getListUrl: Urls.data_product_categories,
+                        getListUrl: Urls.productCategory,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -64,7 +67,7 @@ const PurchaseRegisterFilter = ({
                     {...getFieldProps("productGroupID")}
                     field={{
                         id: "productGroupID",
-                        // getListUrl: Urls.data_product_groups,
+                        getListUrl: Urls.productGroup,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -113,7 +116,7 @@ const PurchaseRegisterFilter = ({
                     {...getFieldProps("salesmanID")}
                     field={{
                         id: "salesmanID",
-                        // getListUrl: Urls.data_salesmen,
+                        getListUrl: Urls.data_employees,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -127,7 +130,7 @@ const PurchaseRegisterFilter = ({
                     {...getFieldProps("salesRouteID")}
                     field={{
                         id: "salesRouteID",
-                        // getListUrl: Urls.data_sales_routes,
+                        getListUrl: Urls.data_salesRoute,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -155,12 +158,12 @@ const PurchaseRegisterFilter = ({
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        //getListUrl: Urls.data_voucher_forms,
+                        getListUrl: Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("voucherForm", data.value);
+                        handleFieldChange("voucherForm", data.value.toString());
                     }}
                 />
 
@@ -297,7 +300,7 @@ const PurchaseRegisterFilter = ({
                     onChangeData={(val: string) => handleFieldChange("vatPerc", val)}
                 />
 
-                <ERPDataCombobox
+                {/* <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
                     field={{
@@ -305,6 +308,25 @@ const PurchaseRegisterFilter = ({
                         // getListUrl: Urls.data_reports,
                         valueKey: "id",
                         labelKey: "name",
+                    }}
+                    onSelectItem={(data) => {
+                        handleFieldChange("reportOf", data.value);
+                    }}
+                /> */}
+                
+                <ERPDataCombobox
+                    label={t("report_of")}
+                    {...getFieldProps("reportOf")}
+                    options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'credit', label: 'Credit' },
+                        { value: 'cash', label: 'Cash' },
+                        { value: 'card', label: 'Card' }
+                    ]}
+                    field={{
+                        id: "reportOf",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange("reportOf", data.value);

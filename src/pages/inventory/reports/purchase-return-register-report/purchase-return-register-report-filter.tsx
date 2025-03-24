@@ -36,13 +36,18 @@ const PurchaseReturnRegisterFilter = ({
                 <ERPDataCombobox
                     label={t("transfer_voucher")}
                     {...getFieldProps("transferVoucher")}
+                    options={[
+                        { value: 'si-bt', label: 'SI-BT' },
+                        { value: 'se-bt', label: 'SE-BT' }
+                    ]}
                     field={{
                         id: "transferVoucher",
-                        // getListUrl: Urls.data_transfer_vouchers,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
-                    onSelectItem={(data) => handleFieldChange("transferVoucher", data.value)}
+                    onSelectItem={(data) => {
+                        handleFieldChange("transferVoucher", data.value);
+                    }}
                 />
 
                 <ERPDataCombobox
@@ -50,7 +55,7 @@ const PurchaseReturnRegisterFilter = ({
                     {...getFieldProps("productCategoryID")}
                     field={{
                         id: "productCategoryID",
-                        // getListUrl: Urls.data_product_categories,
+                        getListUrl: Urls.productCategory,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -142,7 +147,7 @@ const PurchaseReturnRegisterFilter = ({
                     {...getFieldProps("voucherForm")}
                     field={{
                         id: "voucherForm",
-                        // getListUrl: Urls.data_voucher_forms,
+                        getListUrl: Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -154,7 +159,7 @@ const PurchaseReturnRegisterFilter = ({
                     {...getFieldProps("groupCategoryID")}
                     field={{
                         id: "groupCategoryID",
-                        // getListUrl: Urls.data_group_categories,
+                        getListUrl: Urls.data_groupcategory,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -178,7 +183,7 @@ const PurchaseReturnRegisterFilter = ({
                     {...getFieldProps("priceCategoryID")}
                     field={{
                         id: "priceCategoryID",
-                        // getListUrl: Urls.data_price_categories,
+                        getListUrl: Urls.data_pricectegory,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -244,7 +249,7 @@ const PurchaseReturnRegisterFilter = ({
                     }}
                     onSelectItem={(data) => handleFieldChange("voucherType", data.value)}
                 />
-                <div className="flex items-center">
+                <div>
                     <ERPCheckbox
                         {...getFieldProps("showVAT")}
                         label={t("vat_%")}
@@ -263,30 +268,35 @@ const PurchaseReturnRegisterFilter = ({
                 <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
+                    options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'below-cost', label: 'Below Cost' },
+                    ]}
                     field={{
                         id: "reportOf",
-                        // getListUrl: Urls.data_report_types,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "value",
+                        labelKey: "label",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange({
-                            reportOf: data.value,
-                        });
+                        handleFieldChange("reportOf", data.value);
                     }}
                 />
 
-                <ERPCheckbox
-                    {...getFieldProps("exportToExcel")}
-                    label={t("export_data_to_excel")}
-                    onChangeData={(data) => handleFieldChange("exportToExcel", data.exportToExcel)}
-                />
+                <div className="flex items-center">
+                    <ERPCheckbox
+                        {...getFieldProps("exportToExcel")}
+                        label={t("export_data_to_excel")}
+                        onChangeData={(data) => handleFieldChange("exportToExcel", data.exportToExcel)}
+                    />
+                </div>
 
-                <ERPCheckbox
-                    {...getFieldProps("standardFormat")}
-                    label={t("standard_format")}
-                    onChangeData={(data) => handleFieldChange("standardFormat", data.standardFormat)}
-                />
+                <div className="flex items-center">
+                    <ERPCheckbox
+                        {...getFieldProps("standardFormat")}
+                        label={t("standard_format")}
+                        onChangeData={(data) => handleFieldChange("standardFormat", data.standardFormat)}
+                    />
+                </div>
             </div>
         </div>
     );

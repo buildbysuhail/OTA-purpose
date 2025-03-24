@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid, GroupItem, GroupPanel, KeyboardNavigation } from "devextreme-react/data-grid";
+import { DataGrid, GroupItem, GroupPanel, KeyboardNavigation, StateStoring } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -1656,6 +1656,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             hoverStateEnabled={hoverStateEnabled}
             {...props} // Spread additional props to DataGrid
           >
+            {stateStoring && stateStoring.enabled &&
+            <StateStoring
+            enabled={stateStoring.enabled}
+            type={stateStoring.type}
+            storageKey={stateStoring.storageKey}
+            customLoad={stateStoring.type === "custom" ? stateStoring.customLoad : undefined}
+            customSave={stateStoring.type === "custom" ? stateStoring.customSave : undefined}
+          />
+            }
             {MemoizedSummary}
             <ColumnFixing enabled={true} />
             <Scrolling

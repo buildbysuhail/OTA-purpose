@@ -16,6 +16,10 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { LedgerType } from "../../../enums/ledger-types";
+import { DataGrid } from "devextreme-react";
+import { Paging, Editing, Column, 
+  Selection,
+  Scrolling, } from "devextreme-react/cjs/data-grid";
 
 interface FormState {
   showReconciled: boolean;
@@ -193,9 +197,7 @@ const BankReconciliation = () => {
           text: t("changes_saved_successfully"),
           title: t("success"),
         });
-        setKey((prev: number) => {
-          return prev + 1;
-        });
+        handleShow();
       });
     } catch (error) {
       console.error("Error saving changes:", error);
@@ -457,7 +459,7 @@ const BankReconciliation = () => {
       allowFiltering: false,
       width: 100,
       cellRender: (cellInfo: any) => (
-        !cellInfo.data.isSummary ?
+        !cellInfo.data.isSummary && cellInfo.data.checkStatus != "p" && cellInfo.data.checkStatus != "P" ?
           (
             <a onClick={() => handleSetPending(cellInfo, data)} title={t("set_pending")} className="text-blue hover:text-blue font-medium cursor-pointer transition duration-200">
               {t("set_pending")}
@@ -559,9 +561,10 @@ const BankReconciliation = () => {
                     <ERPButton
                       title={t("show")}
                       onClick={()=> {
-                        setKey((prev: number) => {
-                          return prev + 1;
-                        });
+                        handleShow();
+                        // setKey((prev: number) => {
+                        //   return prev + 1;
+                        // });
                       }}
                       loading={loading.show}
                       variant="secondary"
@@ -586,6 +589,7 @@ const BankReconciliation = () => {
               heightToAdjustOnWindows={300}
               data={data}
               keyExpr="id"
+              stateStoring={{enabled: true, type:"localStorage",storageKey:"grd_bank_reconciliation"}}
               selectedRowKeys={selectedKeys}
               allowEditing={{ allow: true, config: { edit: true } }}
               remoteOperations={{
@@ -598,6 +602,40 @@ const BankReconciliation = () => {
               allowSelection={true}
               selectionMode={"multiple"}
             />
+{/* 
+<DataGrid
+  dataSource={data}
+  keyExpr="id"
+  showBorders={true}
+  selectedRowKeys={selectedKeys}
+  onSelectionChanged={handleSelectionChange}
+  allowColumnResizing={true}
+  columnAutoWidth={true}
+  height={600}
+>
+  <Selection  mode="multiple" showCheckBoxesMode="always" />
+  <Paging enabled={true} defaultPageSize={40} />
+  <Scrolling  mode="virtual"></Scrolling>
+  <Editing
+    mode="cell"
+    allowUpdating={true}
+  />
+
+  {columns.map((col) => (
+    <Column
+      key={col.dataField}
+      dataField={col.dataField}
+      caption={col.caption}
+      dataType={col.dataType}
+      width={col.width}
+      allowEditing={col.allowEditing}
+      format={col.format}
+      cellRender={col.cellRender}
+      visible={col.visible !== false}
+    />
+  ))}
+
+</DataGrid> */}
 
             <div className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
               style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)" }}>

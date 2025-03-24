@@ -35,6 +35,9 @@ const adviceTem = ["PARP","RARP",]
 const handleDirectPrint = async (template: any, transaction?: any) => {
   let pdfDocument;
   if (adviceTem.includes(template.templateGroup)) {
+    debugger;
+    const data = await api.getAsync(`${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`);
+
     pdfDocument = (
       <AdviceTemplate
         template={template}
@@ -130,13 +133,15 @@ const handleDirectPrint = async (template: any, transaction?: any) => {
       }
     };
 
-  const printVoucher = async (setIsPrintModalOpen?:any,voucherType?:any,voucher?: AccTransactionFormState) => {
+  const printVoucher = async (voucherType?:any,voucher?: AccTransactionFormState) => {
    const existingTemplate = formState.templatesData?.find(
     (template: any) => template.templateGroup === voucherType
   );
+  debugger;
+  voucherType = isNullOrUndefinedOrEmpty(voucherType) ? formState.transaction.master.voucherType: voucherType;
   let template = formState.template;
  
-    if(formState.template == undefined || formState.template == null)
+    if(formState.template == undefined || formState.template == null  || formState.template.id == 0 )
     {
       if(existingTemplate){
         dispatch(accFormStateHandleFieldChange({fields:{template:existingTemplate}}));
@@ -145,10 +150,15 @@ const handleDirectPrint = async (template: any, transaction?: any) => {
         template = await fetchDefaultTemplates(voucherType)
       }
     }
- 
+ if(template.id == 0) {
+  ERPAlert.show({title:"Please Set Template For Print"});
+  return;
+ }
   // If template is valid, proceed with printing
   if (formState.printPreview) {
-    setIsPrintModalOpen(true);
+    dispatch(
+                  accFormStateHandleFieldChange({ fields: { isPrintModalOpen: true } })
+                );
   } else {
     await handleDirectPrint(template);
   }

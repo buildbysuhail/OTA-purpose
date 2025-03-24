@@ -797,7 +797,7 @@ export const isEnterKey = (key: string | number) => {
   return (
     key === "Enter" || 
     key === "enter" || 
-    key === "E" || 
+    // key === "E" || 
     key === 13 || // Numeric key code for Enter
     key === "NumpadEnter" // Numpad Enter key (for numeric keypad)
   );

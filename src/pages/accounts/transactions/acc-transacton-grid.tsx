@@ -77,7 +77,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
         dataField: "voucherType",
         caption: t("voucher_type"),
         dataType: "string",
-        groupIndex:0,
+        // groupIndex:0,
         allowSorting: true,
         allowFiltering: true,
         allowSearch: true,
@@ -349,10 +349,10 @@ const AccTransactionGrid: React.FC<{voucherType?: string
             <div className="grid grid-cols-1 gap-3">
               <ERPDevGrid
                 gridAddButtonType={"link"}
-                allowGrouping={true}
-                groupPanelVisible={true}
+                // allowGrouping={true}
+                // groupPanelVisible={true}
                 remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
-              summaryItems={summaryItems}
+              // summaryItems={summaryItems}
                 gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}
                 columns={columns}
                 dataUrl={`${urls.acc_transaction_base}${transactionType}/List/`}

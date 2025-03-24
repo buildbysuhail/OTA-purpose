@@ -8,6 +8,7 @@ import { TbReceipt } from "react-icons/tb";
 
 export enum TransactionBase {
   Accounts = "/accounts/transactions",
+  Purchase = "/purchase/transactions",
 }
 
 export interface TransactionRoute {
@@ -181,6 +182,19 @@ export const transactionRoutes: TransactionRoute[] = [
     drCr: "Dr",
     listTitle: TransactionListTitles.TaxOnExpensePayment,
     visibleFn: (userSession: UserModel) => userSession.countryId == Countries.Saudi,
+    icon: HandCoins,
+  },
+  {
+    transactionBase: TransactionBase.Purchase,
+    formCode: "PI",
+    action: UserAction.Show,
+    voucherType: VoucherType.PurchaseInvoice,
+    transactionType: "PurchaseInvoice",
+    formType: "",
+    title: TransactionTitles.PurchaseInvoice,
+    drCr: "Dr",
+    listTitle: TransactionListTitles.PurchaseInvoices,
+    visibleFn: (userSession: UserModel) => userSession.countryId !== Countries.Saudi,
     icon: HandCoins,
   },
 ];

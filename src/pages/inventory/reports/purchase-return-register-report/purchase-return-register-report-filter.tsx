@@ -5,6 +5,7 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
+import { LedgerType } from "../../../../enums/ledger-types";
 
 const PurchaseReturnRegisterFilter = ({
     getFieldProps,
@@ -207,7 +208,8 @@ const PurchaseReturnRegisterFilter = ({
                     {...getFieldProps("supplierID")}
                     field={{
                         id: "supplierID",
-                        // getListUrl: Urls.data_suppliers,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Supplier}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -238,17 +240,6 @@ const PurchaseReturnRegisterFilter = ({
                     onSelectItem={(data) => handleFieldChange("manufactureID", data.value)}
                 />
 
-                <ERPDataCombobox
-                    label="transaction_type"
-                    {...getFieldProps("voucherType")}
-                    field={{
-                        id: "voucherType",
-                        getListUrl: Urls.data_vouchertype,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => handleFieldChange("voucherType", data.value)}
-                />
                 <div>
                     <ERPCheckbox
                         {...getFieldProps("showVAT")}

@@ -153,7 +153,7 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ data, toggleFavorite, favorit
                       );
                     }
                   }}
-                  className="text-sm text-[#4B8BF4] cursor-pointer hover:font-medium transition-all duration-300 ease-in-out">
+                  className="text-sm text-[#4B8BF4]  cursor-pointer hover:font-medium transition-all duration-300 ease-in-out truncate" title={t(route.title)}>
                   {t(route.title)}
                 </span>
               </li>

@@ -213,21 +213,6 @@ const PurchaseSummaryFilter = ({
                     }}
                 />
                 <ERPDataCombobox
-                    label={t("transaction_type")}
-                    {...getFieldProps("transactionType")}
-                    field={{
-                        id: "transactionType",
-                        // getListUrl: Urls.data_transaction_types,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange({
-                            transactionType: data.value,
-                        });
-                    }}
-                />
-                <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
                     options={[

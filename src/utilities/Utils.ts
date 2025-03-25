@@ -827,3 +827,10 @@ if (!subtleCrypto) throw new Error("Web Crypto API not available");
 
   return new TextDecoder().decode(decryptedBuffer);
 }
+export const getApLocalData = (key: string) => {
+  const df = localStorage.getItem(key);
+  if(df == null) {
+    return null;
+  }
+  return JSON.parse(df);
+}

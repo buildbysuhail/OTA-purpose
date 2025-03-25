@@ -42,6 +42,7 @@ import {
   BillwiseData,
 } from "./acc-transaction-types";
 import {
+  getApLocalData,
   isEnterKey,
   isNullOrUndefinedOrEmpty,
   isNullOrUndefinedOrZero,
@@ -57,6 +58,7 @@ import { useAccPrint } from "./use-print";
 import moment from "moment";
 import VoucherType from "../../../enums/voucher-types";
 import { useTranslation } from "react-i18next";
+import localData from "../../../enums/local-datas";
 
 
 interface FormElementState {
@@ -88,7 +90,6 @@ export const useAccTransaction = (
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
-  const dataContainer = useAppSelector((state: RootState) => state.Data);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
@@ -372,8 +373,8 @@ export const useAccTransaction = (
       }
 
       // Fetch Ledger ID
-      let id = dataContainer?.ledgers?.find(
-        (x) => x.alias == _formState.row.ledgerCode
+      let id = getApLocalData(localData.ledgers)?.find(
+        (x: any) => x.alias == _formState.row.ledgerCode
       )?.id;
       if (!(id > 0)) {
         const sds = await api.getAsync(Urls.data_acc_ledgers);
@@ -1108,16 +1109,16 @@ export const useAccTransaction = (
       particulars:
         formState.transaction.master.voucherType != "MJV" &&
         formState.transaction.master.voucherType != "OB"
-          ? dataContainer.ledgers?.find(
-              (x) => x.id == formState.masterAccountID
+          ? getApLocalData(localData.ledgers)?.find(
+              (x: any) => x.id == formState.masterAccountID
             )?.name ?? ""
           : formState.transaction.master.voucherType == "OB"
-          ? dataContainer.ledgers?.find(
-              (x) =>
+          ? getApLocalData(localData.ledgers)?.find(
+              (x: any) =>
                 x.id == applicationSettings.accountsSettings.defaultSuspenseAcc
             )?.name ?? ""
           : formState.transaction.master.voucherType == "MJV"
-          ? dataContainer.ledgers?.find((x) => x.id == firstCreditLedgerID)
+          ? getApLocalData(localData.ledgers)?.find((x: any) => x.id == firstCreditLedgerID)
               ?.name ?? ""
           : "",
     };
@@ -1552,8 +1553,8 @@ export const useAccTransaction = (
 
     const costCentreName =
       formState.row.costCentreID ?? 0 > 0
-        ? dataContainer.costCentres?.find(
-            (x) => x.id == formState.row.costCentreID
+        ? getApLocalData(localData.costCenters)?.find(
+            (x: any) => x.id == formState.row.costCentreID
           )?.name
         : "";
     dispatch(
@@ -1565,8 +1566,8 @@ export const useAccTransaction = (
             formState.row.ledgerName == undefined ||
             formState.row.ledgerName == null ||
             formState.row.ledgerName == ""
-              ? dataContainer.ledgers?.find(
-                  (x) => x.id == formState.row.ledgerID
+              ? getApLocalData(localData.ledgers)?.find(
+                  (x: any) => x.id == formState.row.ledgerID
                 )?.name
               : formState.row.ledgerName,
           amount: totalAmount ?? formState.row.amount,

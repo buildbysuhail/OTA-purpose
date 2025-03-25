@@ -28,6 +28,7 @@ const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
   { label: "Letter", value: "LETTER" },
+  { label: "Custom", value: "CUSTOM" },
 ];
 
 const retailPageSizes = [
@@ -97,6 +98,75 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
           label={t("page_size")}
         />
+        {
+          propertiesState?.pageSize == "CUSTOM" &&(
+            <>
+            <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                id="pageWidth"
+                label={t("page_width")}
+                className="bg-slate-300"
+                value={propertiesState?.width??500}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, width: parseInt(e.target.value, 10) })
+                }
+                min={200}
+                max={1000}
+                step={10}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                id="pageWidth"
+                type="number"
+                noLabel
+                value={propertiesState?.width??500}
+                data={propertiesState}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, width: parseInt(e.target.value, 10) })
+                }
+                min={200}
+                max={1000}
+                step={10}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <div className="basis-2/3 ">
+              <ERPSlider
+                id="pageHeight"
+                label={t("page_height")}
+                className="bg-slate-300"
+                value={propertiesState?.height??500}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, height: parseInt(e.target.value, 10) })
+                }
+                min={200}
+                max={1000}
+                step={10}
+              />
+            </div>
+            <div className="basis-1/3 translate-y-3">
+              <ERPInput
+                id="pageHeight"
+                type="number"
+                noLabel
+                value={propertiesState?.height??500}
+                data={propertiesState}
+                onChange={(e) =>
+                  onChange?.({ ...propertiesState, height: parseInt(e.target.value, 10) })
+                }
+                min={200}
+                max={1000}
+                step={10}
+              />
+            </div>
+          </div>
+            </>
+          )
+        }
         <ERPDataCombobox
           id="orientation"
           field={{

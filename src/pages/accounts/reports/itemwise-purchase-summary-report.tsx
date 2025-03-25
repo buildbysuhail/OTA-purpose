@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import type { DevGridColumn } from "../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
@@ -46,6 +46,7 @@ const  ItemwisePurchaseSummaryReport = () => {
     },
     {
       dataField: "productName",
+      groupIndex:0,
       caption: t("product"),
       dataType: "string",
       allowSearch: true,
@@ -355,7 +356,43 @@ const  ItemwisePurchaseSummaryReport = () => {
       showInPdf: true,
     },
   ]
+  const customizeSummaryRow = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0"; // Ensure "0" is displayed when value is missing
+      }
+      return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+    };
+  }, []);
 
+  const summaryItems: SummaryConfig[] = [
+    {
+      column: "totGross",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totNetAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totQty",
+      summaryType: "count",
+      isGroupItem: true,
+      showInGroupFooter:true,
+      displayFormat:"Total: {0}",
+      customizeText: customizeSummaryRow,
+    }
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -366,13 +403,17 @@ const  ItemwisePurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("invoice_transaction_report")}
+                  allowGrouping={true}
+                groupPanelVisible={true}
+                remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
+              summaryItems={summaryItems}
+                  gridHeader={t("itemwise_purchase_summary")}
                   dataUrl={Urls.itemwise_purchase_summary}
                   method={ActionType.POST}
                   gridId={GridId.grid_id}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={550}
+                  filterWidth={750}
                   filterHeight={650}
                   filterContent={<ItemwisePurchaseSummaryReportFilter />}
                   filterInitialData={ItemwisePurchaseSummaryReportFilterInitialState}

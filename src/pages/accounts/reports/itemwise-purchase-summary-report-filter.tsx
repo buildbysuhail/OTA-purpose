@@ -27,6 +27,39 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         />
       </div>
 
+       {/* <ERPDataCombobox
+                {...getFieldProps("salesRouteID")}
+                label={t("route_name")}
+                field={{
+                  id: "salesRouteID",
+                  getListUrl: Urls.data_salesRoute,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onSelectItem={(data) =>
+                  handleFieldChange({
+                    salesRouteID: data.value,
+                    salesRouteName: data.name,
+                  })
+                }
+              />
+
+                              <ERPDataCombobox
+                                  label={t("transfer_voucher")}
+                                  {...getFieldProps("voucherType")}
+                                  field={{
+                                      id: "voucherType",
+                                      getListUrl: Urls.data_vouchertype,
+                                      valueKey: "id",
+                                      labelKey: "name",
+                                  }}
+                                  onSelectItem={(data) => {
+                                      handleFieldChange({
+                                          voucherType: data.value,
+                                      });
+                                  }}
+                              /> */}
+      <div className="grid grid-cols-3 gap-4">
       {/* Product Group Selection */}
       <ERPDataCombobox
         {...getFieldProps("productGroupID")}
@@ -34,12 +67,10 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         field={{
           id: "productGroupID",
           getListUrl: Urls.data_productgroup,
-          params: "",
           valueKey: "id",
           labelKey: "name",
-          nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ productGroupID: data.value, ProductGroupName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ productGroupID: data.value,})}
       />
 
       {/* Brand Selection */}
@@ -231,6 +262,7 @@ const  ItemwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange
         }}
         onSelectItem={(data) => handleFieldChange({ location: data.value, LocationName: data.label })}
       />
+      </div>
     </div>
   )
 }

@@ -30,7 +30,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           onChangeData={(data: any) => handleFieldChange("ToDate", data.ToDate)}
         />
       </div>
-
+      <div className="grid grid-cols-3 gap-4">
       {/* Sales Route Selection */}
       <ERPDataCombobox
         {...getFieldProps("salesRouteID")}
@@ -137,6 +137,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
         }}
         onSelectItem={(data) => handleFieldChange({ WarehouseID: data.value, WarehouseName: data.label })}
       />
+      </div>
     </div>
   )
 }

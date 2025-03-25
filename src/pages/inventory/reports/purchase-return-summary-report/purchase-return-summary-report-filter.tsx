@@ -5,8 +5,6 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 
-
-
 const PurchaseReturnSummaryFilter = ({
     getFieldProps,
     handleFieldChange,

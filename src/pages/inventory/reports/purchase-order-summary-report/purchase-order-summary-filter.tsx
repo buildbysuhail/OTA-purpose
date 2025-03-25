@@ -4,7 +4,6 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
 
 const PurchaseOrderSummaryFilter = ({
     getFieldProps,
@@ -34,7 +33,7 @@ const PurchaseOrderSummaryFilter = ({
                     <ERPCheckbox
                         label={t("consider_time")}
                         {...getFieldProps("isTimeBased")}
-                        onChangeData={(val: boolean) => handleFieldChange("isTimeBased", val ? 1 : 0)}
+                        onChangeData={(data) => handleFieldChange("isTimeBased", data.isTimeBased)}
                     />
                     <div>
                         <label>{t("time_from")}</label>

@@ -279,20 +279,6 @@ const PurchaseRegisterFilter = ({
                     }}
                 />
 
-                <ERPDataCombobox
-                    label={t("transaction_type")}
-                    {...getFieldProps("transactionType")}
-                    field={{
-                        id: "transactionType",
-                        // getListUrl: Urls.data_transaction_type,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onSelectItem={(data) => {
-                        handleFieldChange("transactionType", data.value);
-                    }}
-                />
-
                 <ERPInput
                     label={t("vat_percentage")}
                     {...getFieldProps("vatPerc")}
@@ -313,7 +299,7 @@ const PurchaseRegisterFilter = ({
                         handleFieldChange("reportOf", data.value);
                     }}
                 /> */}
-                
+
                 <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
@@ -336,12 +322,12 @@ const PurchaseRegisterFilter = ({
                 <ERPCheckbox
                     label={t("export_data_to_excel")}
                     {...getFieldProps("exportDataToExcel")}
-                    onChangeData={(val: boolean) => handleFieldChange("exportDataToExcel", val)}
+                    onChangeData={(data: any) => handleFieldChange("exportDataToExcel", data.exportDataToExcel)}
                 />
                 <ERPCheckbox
                     label={t("standard_format")}
                     {...getFieldProps("standardFormat")}
-                    onChangeData={(val: boolean) => handleFieldChange("standardFormat", val)}
+                    onChangeData={(data: any) => handleFieldChange("standardFormat", data.standardFormat)}
                 />
             </div>
         </div>

@@ -287,12 +287,12 @@ const ReportList = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-4 gap-x-6 gap-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3">
             {favoriteItems.length > 0 &&
               favoriteItems.map((favoriteItem) => (
                 <div
                   key={`${favoriteItem.id}-${favoriteItem.id}`}
-                  className="flex items-center"
+                  className="flex items-center min-w-0"
                 >
                   <svg
                     className="w-[15px] h-[15px] mr-2 transition-colors duration-300 fill-[#FFC107]"
@@ -312,7 +312,7 @@ const ReportList = () => {
                     </g>
                   </svg>
 
-                  <span className="text-sm text-[#4B8BF4]">
+                  <span className="text-sm text-[#4B8BF4] truncate" title={t(favoriteItem.title)}>
                     {t(favoriteItem.title)}
                   </span>
                 </div>
@@ -320,7 +320,7 @@ const ReportList = () => {
           </div>
         </div>
         <div className="px-6 py-4">
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {settingsRoutes?.map((item: any, idx: number) => {
               return (
                 <ReportsCard

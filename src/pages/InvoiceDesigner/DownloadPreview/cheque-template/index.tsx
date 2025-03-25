@@ -3,53 +3,54 @@ import FontRegistration from "../../../LabelDesigner/fontRegister"
 
 import type { AccountTransactionProps } from "../account_transactiocn-premium"
 import { getAmountInWords } from "../../../../utilities/Utils"
+import { calculateContentHeight, calculateItemsPerPage, getPageDimensions, getPageSizeForPDF, groupItemsIntoPages } from "../../utils/pdf-util"
 
-// Modified AccountTransactionProps interface to include singleItemPerPage option
-interface ExtendedAccountTransactionProps extends AccountTransactionProps {
-  singleItemPerPage?: boolean
-}
 
-// Modified to handle an array of data items with dynamic page layout
 const ChequeTemplate = ({
   data,
   template,
   currentBranch,
   userSession,
   currency,
-}: ExtendedAccountTransactionProps) => {
+}: AccountTransactionProps) => {
   // Convert data to array if it's not already an array
   const chequeDetails = Array.isArray(data) ? data : [data]
+  const pageSize = template?.propertiesState?.pageSize ?? "A4"
 
   const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
 
   // FIXED: Increased the height of each cheque to ensure proper spacing
-  const CHEQUE_HEIGHT = 220 // Height in points (increased from 200)
+  const CHEQUE_HEIGHT = 200 // Height in points (increased from 200)
 
   // FIXED: Added margin between cheques
   const CHEQUE_MARGIN = 10 // Margin between cheques in points
 
-  // Calculate total height needed for each cheque including margin
-  const TOTAL_CHEQUE_HEIGHT = CHEQUE_HEIGHT + CHEQUE_MARGIN
+  // Get the actual page dimensions based on the selected page size
+  const selectedPageSize = getPageDimensions(
+    pageSize,
+    template?.propertiesState?.width,
+    template?.propertiesState?.height,
+  )
 
-  // Calculate page dimensions based on orientation
-  const PAGE_HEIGHT = pageOrientation === "landscape" ? 595 : 842 // A4 dimensions in points
-  const CONTENT_HEIGHT =
-    PAGE_HEIGHT - (template?.propertiesState?.padding?.top || 10) - (template?.propertiesState?.padding?.bottom || 10)
+  // Calculate page height based on orientation
+  const PAGE_HEIGHT = pageOrientation === "landscape" ? selectedPageSize.width : selectedPageSize.height
 
-  // FIXED: Calculate how many cheques can fit on a page, accounting for margins
-  const chequesPerPage = Math.floor(CONTENT_HEIGHT / TOTAL_CHEQUE_HEIGHT)
+  const paddingTop = template?.propertiesState?.padding?.top || 10
+  const paddingBottom = template?.propertiesState?.padding?.bottom || 10
 
-  // FIXED: Limit to a maximum of 3 cheques per page for better readability
+  const CONTENT_HEIGHT = calculateContentHeight(PAGE_HEIGHT, paddingTop, paddingBottom)
+
+  // Calculate how many cheques can fit on a page, accounting for margins
   const MAX_CHEQUES_PER_PAGE = 3
-  const actualChequesPerPage = Math.min(chequesPerPage, MAX_CHEQUES_PER_PAGE)
+  const actualChequesPerPage = calculateItemsPerPage(CONTENT_HEIGHT, CHEQUE_HEIGHT, CHEQUE_MARGIN, MAX_CHEQUES_PER_PAGE)
 
   const styles = StyleSheet.create({
     page: {
       flexDirection: "column",
       backgroundColor: "#F5F5F5",
       paddingLeft: template?.propertiesState?.padding?.left || 10,
-      paddingTop: template?.propertiesState?.padding?.top || 10,
-      paddingBottom: template?.propertiesState?.padding?.bottom || 10,
+      paddingTop: paddingTop,
+      paddingBottom: paddingBottom,
       paddingRight: template?.propertiesState?.padding?.right || 10,
       fontFamily: template?.propertiesState?.font_family || "Roboto",
     },
@@ -62,7 +63,7 @@ const ChequeTemplate = ({
       borderRadius: 4,
       padding: 20,
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-      marginBottom: CHEQUE_MARGIN, // FIXED: Added proper margin between cheques
+      marginBottom: CHEQUE_MARGIN, // Added proper margin between cheques
     },
     header: {
       flexDirection: "row",
@@ -153,7 +154,6 @@ const ChequeTemplate = ({
     signatureText: {
       fontSize: 6,
     },
-    // FIXED: Added a page divider style
     pageDivider: {
       borderTopWidth: 1,
       borderTopStyle: "dashed",
@@ -269,13 +269,16 @@ const ChequeTemplate = ({
     )
   }
 
+  // Get the page size for the PDF
+  const pdfPageSize = getPageSizeForPDF(pageSize, selectedPageSize)
+
   // If singleItemPerPage is false, render one cheque per page
   if (!template?.propertiesState?.print_on_same_page) {
     return (
       <Document>
         <FontRegistration />
         {chequeDetails.map((chequeDetail, index) => (
-          <Page key={index} size="A4" orientation={pageOrientation} style={styles.page}>
+          <Page key={index} size={pdfPageSize} orientation={pageOrientation} style={styles.page}>
             {renderCheque(chequeDetail, index)}
           </Page>
         ))}
@@ -284,23 +287,15 @@ const ChequeTemplate = ({
   }
 
   // Otherwise (if singleItemPerPage is true), fit multiple cheques per page
-  // FIXED: Improved grouping logic to ensure proper page breaks
-  const pages: any = []
-
   // Group cheques into pages with a maximum of actualChequesPerPage per page
-  for (let i = 0; i < chequeDetails.length; i += actualChequesPerPage) {
-    const pageItems = chequeDetails.slice(i, i + actualChequesPerPage)
-    pages.push(pageItems)
-  }
+  const pages = groupItemsIntoPages(chequeDetails, actualChequesPerPage)
 
   return (
     <Document>
       <FontRegistration />
-      {pages.map((pageItems: any, pageIndex: any) => (
-        <Page key={pageIndex} size="A4" orientation={pageOrientation} style={styles.page}>
-          {pageItems.map((chequeDetail: any, itemIndex: any) =>
-            renderCheque(chequeDetail, `${pageIndex}-${itemIndex}`),
-          )}
+      {pages.map((pageItems:any, pageIndex:number) => (
+        <Page key={pageIndex} size={pdfPageSize} orientation={pageOrientation} style={styles.page}>
+          {pageItems.map((chequeDetail:any, itemIndex:number) => renderCheque(chequeDetail, `${pageIndex}-${itemIndex}`))}
         </Page>
       ))}
     </Document>

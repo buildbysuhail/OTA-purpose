@@ -413,6 +413,14 @@ const createStore = async (
                   result.loadResult != undefined
                     ? result.loadResult.totalCount
                     : result.totalCount,
+                    groupCount:
+                  result.loadResult != undefined
+                    ? result.loadResult.groupCount
+                    : result.groupCount,
+                summary:
+                  result.loadResult != undefined
+                    ? result.loadResult.summary
+                    : result.summary,
               }
           : {
               data: [],

@@ -321,7 +321,6 @@ const propsAreEqual = (
 };
 
 // Cache map for API requests
-const apiRequestCache = new Map<string, Promise<any>>();
 
 const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
   (
@@ -635,7 +634,6 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               // name: await decryptAES(x.name),
           }))
       );
-  
       if (!queryString) return decryptedLedgers;
   
       const queryParams = new URLSearchParams(queryString);
@@ -648,9 +646,10 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       
     }
       
-    return decryptedLedgers.filter((ledger) => {
+    const dsds =  decryptedLedgers.filter((ledger) => {
       for (const [key, value] of queryParams.entries()) {
-          if (key === "ledgerID") {
+        
+          if (key === "ledgerID" && value !== " 0 " && value !== "00" && value !== "0" && value !== "" && value !== "" && value !== null ) {
               if (ledger.id === undefined || String(ledger.id) !== value) {
                   return false;
               }
@@ -665,9 +664,21 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
       }
       return true;
   });
-  
+  if (queryParams.get("ledgerID") === "00" ){
+    console.log(`"ledgerID") === "00"`);
+    console.log(dsds);
+    
+    
+  }
+  return dsds;
   };
-
+const fromLocal = async(key: string)=> {
+  const _fromLocal = localStorage.getItem(key);
+  if(_fromLocal == null) {
+    return null;
+  }
+  return JSON.parse(_fromLocal);
+}
   const fetchData = useCallback(async () => {
     let params = "";
     if (field?.params != undefined && Object.keys(field?.params).length > 0) {
@@ -677,15 +688,17 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
     const cacheKey = `${url}`;
   
     // 1. Check Cache for ongoing or completed API requests
-    if (apiRequestCache.has(cacheKey)) {
-      return filterLedgers(await apiRequestCache.get(cacheKey),field?.params)
+    const _fromLocal = await fromLocal(cacheKey);
+
+    if (_fromLocal != null) {
+      return filterLedgers(_fromLocal,field?.params)
       // return apiRequestCache.get(cacheKey);
     }
   
     // 2. Fetch Data (Cache Miss)
     const promise = api.getAsync(url, params).then((_res) => {
       // 3. Update Redux After Fetch
-      
+     
       if (url.includes("/Accounts/Data/AccLedgers/")) {
         console.log('Accounts/Data/AccLedgers');
         console.log(params);
@@ -696,12 +709,12 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
         dispatch(setData({ key: "costCentres", value: _res }));
         return _res;
       }
+      localStorage.setItem(cacheKey, JSON.stringify(_res));
       return _res;
+      
     }).finally(() => {
-      apiRequestCache.delete(cacheKey);
     });
   
-    apiRequestCache.set(cacheKey, promise);
     return promise;
   }, [field?.params, field?.getListUrlDynamic, field?.getListUrl, dispatch, data]);
   
@@ -712,7 +725,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
        let _items;
 
     // Check if data is available in Redux
-    
+   
     if (field?.getListUrl?.includes("/Accounts/Data/AccLedgers/") && reduxState?.ledgers?.length && reload != true) {
       console.log('Accounts/Data/AccLedgers2');
         console.log(field?.params);

@@ -51,7 +51,8 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
           label={t("default_cash_account")}
           field={{
             id: "defaultCashAcc",
-            getListUrl: Urls.data_CashLedgers,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=00&ledgerType=${LedgerType.CashInHand}`,
             valueKey: "id",
             labelKey: "name",
           }}

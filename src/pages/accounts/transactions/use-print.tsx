@@ -17,6 +17,7 @@ import Urls from "../../../redux/urls"
 import VoucherType from "../../../enums/voucher-types"
 import AdviceTemplate from "../../InvoiceDesigner/DownloadPreview/advice-template"
 import ChequeTemplate from "../../InvoiceDesigner/DownloadPreview/cheque-template"
+import ERPToast from "../../../components/ERPComponents/erp-toast"
 const api = new APIClient()
 export const useAccPrint = () => {
   const currentBranch = useCurrentBranch()
@@ -94,7 +95,6 @@ export const useAccPrint = () => {
   }
 
   const fetchDefaultTemplates = async (voucherType: any) => {
-    // Create a set of all possible VoucherType values
     try {
       const res = await api.getAsync(`${Urls.default_template}?template_group=${voucherType}`)
       const cc: TemplateState = customJsonParse(res.content)
@@ -147,8 +147,9 @@ export const useAccPrint = () => {
       template = await getOrFetchTemplate(voucherType)
       dispatch(accFormStateHandleFieldChange({ fields: { template: template } }))
     }
-    if (template.id == 0) {
-      ERPAlert.show({ title: "Please Set Template For Print" })
+    if (template?.id == 0) {
+      // ERPAlert.show({ title: "Please Set Template For Print" })
+      ERPToast.showWith("Please Set Template For Print", "warning");
       return
     }
     // If template is valid, proceed with printing
@@ -168,7 +169,10 @@ export const useAccPrint = () => {
         ? "RARP"
         : ""
     const template = await getOrFetchTemplate(voucherTypes,voucher)
-    console.log("Advice Template", template)
+    if (template?.id == 0) {
+      ERPToast.showWith("Please Set Template For Print", "warning");
+      return
+    }
     await handleDirectPrint(template)
   }
 
@@ -188,6 +192,10 @@ export const useAccPrint = () => {
       const template = await getOrFetchTemplate(voucherTypes, voucher)
 
       // Pass all cheque details at once to handleDirectPrint
+      if (template?.id == 0) {
+        ERPToast.showWith("Please Set Template For Print", "warning");
+        return
+      }
       await handleDirectPrint(template, chequeDetails)
     }
   }

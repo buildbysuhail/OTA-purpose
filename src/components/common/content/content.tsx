@@ -227,7 +227,7 @@ import PartyWiseReport from "../../../pages/inventory/reports/party-wise-report/
 import PurchaseTaxReportDetailed from "../../../pages/inventory/reports/purchase-tax-report-detailed/purchase-tax-report-detailed";
 import PurchaseTaxReportSummary from "../../../pages/inventory/reports/purchase-tax-report-summary/purchase-tax-report-summary";
 import PurchaseReturnSummary from "../../../pages/inventory/reports/purchase-return-summary-report/purchase-return-summary-report";
-// import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
+import PurchaseReturnRegister from "../../../pages/inventory/reports/purchase-return-register-report/purchase-return-register-report";
 import PurchaseEstimateSummary from "../../../pages/inventory/reports/purchase-estimate-summary-report/purchase-estimate-summary";
 import PurchaseOrderSummary from "../../../pages/inventory/reports/purchase-order-summary-report/purchase-order-summary";
 import DailySummaryGlobal from "../../../pages/accounts/reports/dailySummary/daily-summary-global";
@@ -261,6 +261,10 @@ import PartyMonthwisePurchaseSummaryReport from "../../../pages/accounts/reports
 import PurchaseOrderTransitReport from "../../../pages/accounts/reports/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/accounts/reports/Purchase-Tax-report";
 import ItemwisePurchaseSummaryReport from "../../../pages/accounts/reports/itemwise-purchase-summary-report";
+import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
+import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
+import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
+import ItemWisePurchaseQuotationSummary from "../../../pages/inventory/reports/itemwise-purchase-quotation-summary-report/itemwise-purchase-quotation-summary";
 const PriceList = lazy(
   () => import("../../../pages/inventory/reports/price-list/price-list-report")
 );
@@ -721,10 +725,15 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_tax_report_detailed" element={<PurchaseTaxReportDetailed />} />
         <Route path="/inventory/purchase_tax_report_summary" element={<PurchaseTaxReportSummary />} />
         <Route path="/inventory/purchase_return_summary" element={<PurchaseReturnSummary />} />
-        {/* <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} /> */}
+        <Route path="/inventory/purchase_return_register" element={<PurchaseReturnRegister />} />
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
+        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary />} />
+        <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
+        <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
+        <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWisePurchaseQuotationSummary />} />
+
         <Route
           path="/inventory/stock_ledger_report"
           element={<StockLedger />}

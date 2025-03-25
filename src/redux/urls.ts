@@ -362,6 +362,10 @@ const Urls = {
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
   itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",
+  item_wise_purchase_return_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseReturnSummary/",
+  item_wise_purchase_order_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
+  item_wise_purchase_estimate_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
+  item_wise_purchase_quotation_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
   //Report End
   //Inventory Reports Starts
   //Purchase

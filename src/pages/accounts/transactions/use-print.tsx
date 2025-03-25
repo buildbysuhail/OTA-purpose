@@ -36,6 +36,7 @@ export const useAccPrint = () => {
   const { hasRight } = useUserRights()
   const voucherTypeSet = new Set(Object.values(VoucherType))
   const adviceTem = ["PARP", "RARP"]
+
   const handleDirectPrint = async (template: any, transaction?: any) => {
     let pdfDocument
     if (adviceTem.includes(template.templateGroup)) {
@@ -47,7 +48,7 @@ export const useAccPrint = () => {
       pdfDocument = (
         <AdviceTemplate
           template={template}
-          data={formState.transaction}
+          data={data}
           currentBranch={currentBranch}
           userSession={userSession}
         />

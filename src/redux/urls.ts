@@ -223,7 +223,7 @@ const Urls = {
   chart_of_accounts_new: "/Accounts/ChartofAccounts/chartOfAccounts",
   parties: "/Accounts/Parties/",
   get_next_party_code: "/Accounts/Parties/GetNextPartyCode/",
-  party_projects: "/Accounts/PartyProjects/",
+  party_projects: "/Accounts/Project/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",

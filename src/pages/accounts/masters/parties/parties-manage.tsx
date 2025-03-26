@@ -236,6 +236,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 
                 delete={
                   {
+                    action:() => {deleteProject} ,
                     onSuccess: () => { setProjectsLoad(true)},
                     visible: true,
                     confirmationRequired: true,
@@ -1245,7 +1246,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                                     columns={projectsColumns}
                                     onRowClick={loadProject}
                                     gridHeader={t("")}
-                                    dataUrl={`${Urls.party_projects}'GetAll/'${formState.data.partyID}`}
+                                    dataUrl={`${Urls.party_projects}GetAll/${formState.data.partyID}`}
                                     gridId="party_projects"
                                     changeReload={(reload: any) => { setProjectsLoad(false) }}
                                     reload={projectsLoad}

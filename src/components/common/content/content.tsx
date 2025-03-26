@@ -147,6 +147,7 @@ import DamageStock from "../../../pages/inventory/reports/damage-stock-report/da
 import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
 import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
 import DailyStatementAllReport from "../../../pages/accounts/reports/daily-statement-all-report ";
+import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
@@ -449,6 +450,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
         <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} />
+        <Route path="/inventory/branch_transfer_out_filter" element={<BranchTransferOut />} />
+
         <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />

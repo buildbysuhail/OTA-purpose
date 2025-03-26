@@ -179,6 +179,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/damage_stock_report`, type: 'link', active: false, selected: false, title: 'damage_stock', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/excess_stock_report`, type: 'link', active: false, selected: false, title: 'excess_stock', icon: PiPackageLight },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/shortage_stock_report`, type: 'link', active: false, selected: false, title: 'shortage_stock', icon: PiPackageLight },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/branch_transfer_out_filter`, type: 'link', active: false, selected: false, title: 'branch_transfer_out', icon: PiPackageLight },
     ]
   },
 

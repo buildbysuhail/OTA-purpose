@@ -425,7 +425,7 @@ const PurchaseSummaryReport = () => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{ filtering: true, paging: true, sorting: true, summary: true }}
                 columns={columns}
                 moreOption
                 gridHeader={t("purchase_summary_report")}

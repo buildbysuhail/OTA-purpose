@@ -405,7 +405,7 @@ const  ItemwisePurchaseSummaryReport = () => {
                   filterText="from {fromDate} to {toDate}"
                   allowGrouping={true}
                 groupPanelVisible={true}
-                remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
+                remoteOperations={{filtering: false,grouping: false,groupPaging: false,paging: false,sorting: false}}
               summaryItems={summaryItems}
                   gridHeader={t("itemwise_purchase_summary")}
                   dataUrl={Urls.itemwise_purchase_summary}

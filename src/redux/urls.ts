@@ -360,6 +360,8 @@ const Urls = {
   inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
+  Purchase_Order_Transit_And_Stock_Details: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",  
+  daily_statement_all: "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportAll",  
   itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",
   item_wise_purchase_return_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseReturnSummary/",
   item_wise_purchase_order_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",

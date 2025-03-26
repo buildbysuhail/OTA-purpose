@@ -20,14 +20,14 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           {...getFieldProps("fromDate")}
           label={t("date_from")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("FromDate", data.FromDate)}
+          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
           autoFocus={true}
         />
         <ERPDateInput
           {...getFieldProps("toDate")}
           label={t("date_to")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("ToDate", data.ToDate)}
+          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>
       <div className="grid grid-cols-3 gap-4">
@@ -43,7 +43,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ SalesRouteID: data.value, SalesRouteName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ salesRouteID: data.value, SalesRouteName: data.label })}
       />
 
       {/* Counter Selection */}
@@ -58,7 +58,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ CounterID: data.value, CounterName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ counterID: data.value, CounterName: data.label })}
       />
 
       {/* Saleman Selection */}
@@ -73,7 +73,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ SalemanID: data.value, SalemanName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ salemanID: data.value, SalemanName: data.label })}
       />
 
       {/* Product Selection */}
@@ -88,7 +88,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ ProductID: data.value, ProductName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ productID: data.value, ProductName: data.label })}
       />
 
       {/* Party Selection */}
@@ -103,7 +103,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ PartyID: data.value, PartyName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ partyID: data.value, PartyName: data.label })}
       />
 
       {/* Voucher Form Input */}
@@ -119,7 +119,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
               labelKey: "name",
               nameKey: "alias",
             }}
-            onSelectItem={(data) => handleFieldChange({ VoucherForm: data.value, VoucherFormName: data.label })}
+            onSelectItem={(data) => handleFieldChange({ voucherForm: data.value, VoucherFormName: data.label })}
           />
 
 
@@ -135,7 +135,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ WarehouseID: data.value, WarehouseName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ warehouseID: data.value, WarehouseName: data.label })}
       />
       </div>
     </div>
@@ -148,12 +148,12 @@ export default CreditPurchaseSummaryReportFilter
 export const CreditPurchaseSummaryReportFilterInitialState = {
   fromDate: moment().local().subtract(30, "days").toDate(),
   toDate: new Date(),
-  SalesRouteID: 0,
-  CounterID: 0,
-  SalemanID: 0,
-  ProductID: 0,
-  PartyID: 0,
-  VoucherForm: "",
-  WarehouseID: 0
+  salesRouteID: 0,
+  counterID: 0,
+  salemanID: 0,
+  productID: 0,
+  partyID: 0,
+  voucherForm: "",
+  warehouseID: 0
 }
 

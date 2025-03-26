@@ -60,10 +60,8 @@ const Urls = {
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
-  data_SelectAccGroupsUnderAccGroupIDForCombo:
-    "/Accounts/Data/SelectAccGroupsUnderAccGroupIDForCombo/",
-  data_SelectAccLedgersByAccGroupIDForCombo:
-    "/Accounts/Data/SelectAccLedgersByAccGroupIDForCombo/",
+  data_SelectAccGroupsUnderAccGroupIDForCombo: "/Accounts/Data/SelectAccGroupsUnderAccGroupIDForCombo/",
+  data_SelectAccLedgersByAccGroupIDForCombo: "/Accounts/Data/SelectAccLedgersByAccGroupIDForCombo/",
   data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
   data_BranchRecPayAccount: "/Accounts/Data/BranchRecPayAccount/",
   data_CustSupp: "/Accounts/Data/CustomerAndSupplier/",
@@ -81,10 +79,9 @@ const Urls = {
   data_productcategory: "/Inventory/Data/ProductCategory",
   data_services: "/Inventory/Data/Services",
   data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
- 
+
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
-
   data_company_id: "/Core/Branch/GetBranchData",
 
   // Auth
@@ -124,10 +121,8 @@ const Urls = {
   uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
   changeEmailRequest_workspace: "/Subscription/WorkSpace/ChangeEmailRequest/",
   verifyEmail_workspace: "/Subscription/WorkSpace/VerifyEmail/",
-  updateCompanyEmail_workspace:
-    "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
-  UpdateCompanyPhone_workspace:
-    "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
+  updateCompanyEmail_workspace: "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
+  UpdateCompanyPhone_workspace: "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
   changePhoneRequest_workspace: "/Subscription/WorkSpace/ChangePhoneRequest/",
   changePhone_workspace: "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
   verifyPhone_workspace: "/Subscription/WorkSpace/VerifyPhone/",
@@ -193,14 +188,12 @@ const Urls = {
   application_settings: "/Core/ApplicationSettings/",
   application_settings_virtual: "/Core/ApplicationSettings/Virtual/",
   application_settings_GetSettingsScreen: "/Core/Preferences/GetSettingsScreen",
-  application_settings_UpdateSettingsScreen:
-    "/Core/Preferences/UpdateSettingsScreen",
+  application_settings_UpdateSettingsScreen: "/Core/Preferences/UpdateSettingsScreen",
   sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/GetAllByChannel/",
   notification_provider_update: "/Core/NotificationProvider/UpdateConfig/",
   notification_provider_set_as_default: "/Core/NotificationProvider/SetAsDefault/",
   notification_provider_test: "/Core/NotificationProvider/TestConnection/",
-
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate/",
   headers_footers: "/Core/HeaderFooter/",
@@ -242,111 +235,70 @@ const Urls = {
   //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
-  acc_reports_cash_book_monthwise:
-    "/Accounts/RptCashBook/CashBookMonthwiseSummary/",
-  acc_reports_cash_book_daywise:
-    "/Accounts/RptCashBook/CashBookDaywiseSummary/",
-  acc_reports_cash_book_transactionwise:
-    "/Accounts/RptCashBook/CashBookDetailed/",
+  acc_reports_cash_book_monthwise: "/Accounts/RptCashBook/CashBookMonthwiseSummary/",
+  acc_reports_cash_book_daywise: "/Accounts/RptCashBook/CashBookDaywiseSummary/",
+  acc_reports_cash_book_transactionwise: "/Accounts/RptCashBook/CashBookDetailed/",
   acc_reports_day_book_detailed: "/Accounts/RptDayBook/DayBookDetailed/",
   acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary/",
   acc_reports_day_book_billwise: "/Accounts/RptDayBook/DayBookSummaryBillwise/",
   acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport/",
   acc_reports_collection: "/Accounts/RptCollectionReport/CollectionReport/",
   acc_reports_cash_summary: "/Accounts/RptCashSummaryReport/CashSummary/",
-  acc_reports_cash_summary_ledgerwise:
-    "/Accounts/RptCashSummaryReport/CashSummaryLedgerwise/",
+  acc_reports_cash_summary_ledgerwise: "/Accounts/RptCashSummaryReport/CashSummaryLedgerwise/",
   acc_reports_transaction: "/Accounts/RptTransactionReport/TransactionReport/",
-  acc_reports_inventory_history:
-    "/Accounts/RptTransactionHistory/TransactionHistoryInventory/",
-  acc_reports_inventory_history_popup:
-    "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryPopUp/",
-  acc_reports_inventory_history_details:
-    "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryDetails/",
-  acc_reports_accounts_history:
-    "/Accounts/RptTransactionHistory/TransactionHistoryAccounts/",
-  acc_reports_accounts_history_popup:
-    "/Accounts/RptTransactionHistory/ShowTransHistoryAccountsPopUp/",
-  acc_reports_daily_summary_global:
-    "/Accounts/RptDailySummaryReport/DailySummaryReportGlobal/",
-  acc_reports_daily_summary:
-    "/Accounts/RptDailySummaryReport/DailySummaryReport/",
-  acc_reports_daily_summary_detailed:
-    "/Accounts/RptDailySummaryReport/DailySummaryDetailedReport/",
-  acc_reports_daily_summary_credit_details:
-    "/Accounts/RptDailySummaryReport/CreditSalesReportDaily/",
-  acc_reports_daily_summary_receipt_details:
-    "/Accounts/RptDailySummaryReport/SelectCashReceiptReportDaily/",
-  acc_reports_billwise_profit:
-    "/Accounts/RptBillWsieProfitReport/BillwiseProfit/",
-  acc_reports_billwise_profit_global:
-    "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal/",
-  acc_reports_party_summary_basic_info:
-    "/Accounts/RptPartyWiseSummary/BasicInfo/",
+  acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory/",
+  acc_reports_inventory_history_popup: "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryPopUp/",
+  acc_reports_inventory_history_details: "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryDetails/",
+  acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts/",
+  acc_reports_accounts_history_popup: "/Accounts/RptTransactionHistory/ShowTransHistoryAccountsPopUp/",
+  acc_reports_daily_summary_global: "/Accounts/RptDailySummaryReport/DailySummaryReportGlobal/",
+  acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport/",
+  acc_reports_daily_summary_detailed: "/Accounts/RptDailySummaryReport/DailySummaryDetailedReport/",
+  acc_reports_daily_summary_credit_details: "/Accounts/RptDailySummaryReport/CreditSalesReportDaily/",
+  acc_reports_daily_summary_receipt_details: "/Accounts/RptDailySummaryReport/SelectCashReceiptReportDaily/",
+  acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit/",
+  acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal/",
+  acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo/",
   acc_reports_party_summary_ledger: "/Accounts/RptPartyWiseSummary/Ledger/",
   acc_reports_party_summary_payment: "/Accounts/RptPartyWiseSummary/Payment/",
-  acc_reports_party_summary_collections:
-    "/Accounts/RptPartyWiseSummary/collections/",
+  acc_reports_party_summary_collections: "/Accounts/RptPartyWiseSummary/collections/",
   acc_reports_party_summary_purchase: "/Accounts/RptPartyWiseSummary/Purchase/",
   acc_reports_party_summary_sales: "/Accounts/RptPartyWiseSummary/Sales/",
-  acc_reports_party_summary_purchase_return:
-    "/Accounts/RptPartyWiseSummary/PurchaseReturn/",
-  acc_reports_party_summary_purchase_order:
-    "/Accounts/RptPartyWiseSummary/PurchaseOrder/",
-  acc_reports_party_summary_sales_return:
-    "/Accounts/RptPartyWiseSummary/SalesReturn/",
-  acc_reports_party_summary_sales_order:
-    "/Accounts/RptPartyWiseSummary/SalesOrder/",
+  acc_reports_party_summary_purchase_return: "/Accounts/RptPartyWiseSummary/PurchaseReturn/",
+  acc_reports_party_summary_purchase_order: "/Accounts/RptPartyWiseSummary/PurchaseOrder/",
+  acc_reports_party_summary_sales_return: "/Accounts/RptPartyWiseSummary/SalesReturn/",
+  acc_reports_party_summary_sales_order: "/Accounts/RptPartyWiseSummary/SalesOrder/",
   acc_reports_bank_statement: "/Accounts/RptBankStatement/BankStatement/",
-
   acc_reports_payable: "/Accounts/RptOutstandingReport/Payable/",
   acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable/",
-
   // acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   // acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-
   acc_reports_trial_balance: "/Accounts/RptTrialBalance/TrialBalance/",
-  acc_reports_trial_balance_detailed:
-    "/Accounts/RptTrialBalance/TrialBalancePeriodwise/",
+  acc_reports_trial_balance_detailed: "/Accounts/RptTrialBalance/TrialBalancePeriodwise/",
   acc_reports_balance_sheet: "/Accounts/RptBalanceSheet/BalanceSheet/",
-  acc_reports_balance_sheet_vertical:
-    "/Accounts/RptBalanceSheet/BalanceSheetDetailed/",
-  acc_reports_account_ledger_balance_view:
-    "/Accounts/RptBalanceSheet/AccountLedgerBalanceView/",
+  acc_reports_balance_sheet_vertical: "/Accounts/RptBalanceSheet/BalanceSheetDetailed/",
+  acc_reports_account_ledger_balance_view: "/Accounts/RptBalanceSheet/AccountLedgerBalanceView/",
   acc_reports_profit_and_loss: "/Accounts/RptProfitAndLoss/ProfitAndLoss/",
-  acc_reports_profit_and_loss_detailed:
-    "/Accounts/RptProfitAndLoss/ProfitAndLossDetailed/",
-  acc_reports_account_ledger_balance_view_sub_group_inc:
-    "/Accounts/RptProfitAndLoss/AccountLedgerBalanceViewSubGroupIncluded/",
-  acc_reports_closing_stock_details:
-    "/Accounts/RptProfitAndLoss/ClosingStockDetails/",
+  acc_reports_profit_and_loss_detailed: "/Accounts/RptProfitAndLoss/ProfitAndLossDetailed/",
+  acc_reports_account_ledger_balance_view_sub_group_inc: "/Accounts/RptProfitAndLoss/AccountLedgerBalanceViewSubGroupIncluded/",
+  acc_reports_closing_stock_details: "/Accounts/RptProfitAndLoss/ClosingStockDetails/",
   acc_reports_income_expense_report: "/Accounts/RptIncomeExpense/Expense/",
-  acc_reports_income_expense_report_detailed:
-    "/Accounts/RptIncomeExpense/ExpenseDetailed/",
-  acc_reports_income_expense_statement:
-    "/Accounts/RptIncomeExpense/IncomeExpenseStmt/",
+  acc_reports_income_expense_report_detailed: "/Accounts/RptIncomeExpense/ExpenseDetailed/",
+  acc_reports_income_expense_statement: "/Accounts/RptIncomeExpense/IncomeExpenseStmt/",
   acc_reports_cash_flow: "/Accounts/RptCashFlowBankFlow/CashFlow/",
   acc_reports_bank_flow: "/Accounts/RptCashFlowBankFlow/BankFlow/",
-  acc_reports_cash_bank_flow_detailed:
-    "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",
-  acc_reports_cash_bank_flow_detailed_summary:
-    "/Accounts/RptCashFlowBankFlow/CashBankFlowNewDrilldown/",
-  acc_reports_cash_bank_flow_detailed_summary_in:
-    "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownIN/",
-  acc_reports_cash_bank_flow_detailed_summary_out:
-    "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownOut/",
-
-  acc_reports_outstanding_aging_receivable:
-    "/Accounts/RptAging/OutstandingAgingReceivable/",
-  acc_reports_outstanding_aging_payable:
-    "/Accounts/RptAging/OutstandingAgingPayable/",
+  acc_reports_cash_bank_flow_detailed: "/Accounts/RptCashFlowBankFlow/CashBankFlowDetailed/",
+  acc_reports_cash_bank_flow_detailed_summary: "/Accounts/RptCashFlowBankFlow/CashBankFlowNewDrilldown/",
+  acc_reports_cash_bank_flow_detailed_summary_in: "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownIN/",
+  acc_reports_cash_bank_flow_detailed_summary_out: "/Accounts/RptCashFlowBankFlow/CashBankFlowdetailedDrilldownOut/",
+  acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
+  acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
   acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
 
   //inventory
   inv_reports_price_list: "",
   inv_reports_stock_ledger: "",
   inv_reports_balance_report: "",
-  inv_reports_opening_stock: "",
   inv_reports_stock_flow: "",
   purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",
   purchase_register_report: "/Inventory/RptPurchaseReport/PurchaseRegister/",
@@ -361,23 +313,29 @@ const Urls = {
   inventory_reports_product_inventory: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
   party_monthwise_purchase_summary: "/Inventory/RptPurchaseReport/PartyMonthwisePurchaseSummary",
   Credit_purchase_summary: "/Inventory/RptPurchaseReport/CreditPurchaseSummary",
+  Purchase_Order_Transit_And_Stock_Details: "/Inventory/RptPurchaseReport/PurchaseOrderTransitAndStockDetails",
+  daily_statement_all: "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportAll",
   itemwise_purchase_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseSummary",
-  item_wise_purchase_return_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseReturnSummary/",
-  item_wise_purchase_order_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
-  item_wise_purchase_estimate_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
-  item_wise_purchase_quotation_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
+  item_wise_purchase_return_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseReturnSummary/",
+  item_wise_purchase_order_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
+  item_wise_purchase_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
+  item_wise_purchase_quotation_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
+  product_summary: "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/{voucherType}/",
+  opening_stock: "/Inventory/RptStockReport/OpeningStockReport/",
+  stock_transfer: "/Inventory/RptStockReport/StockTransferReport/",
+  damage_stock: "/Inventory/RptStockReport/DamageStockReport/",
+  excess_stock: "/Inventory/RptStockReport/ExcessStockReport/",
+  shortage_stock: "/Inventory/RptStockReport/ShortageStockReport/",
+  branch_transfer_out: "/Inventory/RptStockReport/BranchTransferOut/",
   //Report End
   //Inventory Reports Starts
   //Purchase
   inv_reports_purchase_summary: "/Inventory/RptPurchaseReport/PurchaseSummaryTest/",
-
-
   // Transaction
 
   acc_transaction_base: "/Accounts/",
   acc_transaction_ledger_bill_wise: "/Accounts/BillwiseMaster",
-  acc_transaction_is_bill_wise_trans_adjustment_exists:
-    "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
+  acc_transaction_is_bill_wise_trans_adjustment_exists: "/Accounts/BillwiseMaster/IsBillwiseTransAdjustmentExists",
   acc_transaction_grid: "/Accounts/CashPayment/List Page",
   acc_transaction_parties_tax_on_expense: "/Accounts/TXPayment/SearchParty/",
 
@@ -389,7 +347,6 @@ const Urls = {
   templates: "/Core/Template/",
   default_template: "Core/Template/Default",
   crm_templates: "/Core/Template/CRM/",
-
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",
 
@@ -399,8 +356,7 @@ const Urls = {
   download_party_format: "/Accounts/Import/DownloadPartyFormat/",
   import_privilegeCards: "/Accounts/Import/PrivilegeCards/",
   import_privilegeCards_Excel: "/Accounts/Import/PrivilegeCardsExcel/",
-  download_privilegeCards_format:
-    "/Accounts/Import/DownloadPrivilegeCardsFormat/",
+  download_privilegeCards_format: "/Accounts/Import/DownloadPrivilegeCardsFormat/",
 
   // Inventory
   products: "/Inventory/Products/",
@@ -423,23 +379,18 @@ const Urls = {
   log_user_action: "/Core/UserAction/",
   get_last_voucher_no: "/Core/TransactionBase/GetNextVoucherNumber/",
   get_ledger_balance: "/Core/TransactionBase/GetLedgerBalance/",
-  get_and_set_transaction_edit_mode:
-    "/Core/TransactionBase/GetAndSetTransactionEditMode/",
+  get_and_set_transaction_edit_mode: "/Core/TransactionBase/GetAndSetTransactionEditMode/",
   get_ledgerId_by_code: "/Core/TransactionBase/GetLedgerIdByCode/",
   get_ledgerCode_by_id: "/Core/TransactionBase/GetLedgerCodeById/",
-  upsert_bill_modified_history:
-    "/Core/TransactionBase/UpsertBillModifiedHistory/",
-  unlock_acc_transaction_master:
-    "/Core/TransactionBase/UnlockAccTransactionMaster/",
+  upsert_bill_modified_history: "/Core/TransactionBase/UpsertBillModifiedHistory/",
+  unlock_acc_transaction_master: "/Core/TransactionBase/UnlockAccTransactionMaster/",
   ledgerDataForTransaction: "/Core/TransactionBase/ledgerDataForTransaction/",
   voucher_history: "/Core/UserAction/GetByVoucher/",
   voucher_selector: "/Core/VoucherSelector/",
   partiesBankNames: "/Core/TransactionBase/SelectPartiesBankNames",
   validate_cheque_status: "/Core/TransactionBase/ValidateChequeStatus/",
   get_currency_exchange_rate: "/Core/TransactionBase/GetCurrencyExchangeRate",
-  is_ledger_billwise_applicable:
-    "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
-
+  is_ledger_billwise_applicable: "/Core/TransactionBase/IsLedgerBillwiseApplicable/",
   pdc: "/Accounts/PDC/",
   bankReconciliation: "/Accounts/BankReconciliation/",
 

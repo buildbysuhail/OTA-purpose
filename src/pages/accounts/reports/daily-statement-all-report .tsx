@@ -6,13 +6,9 @@ import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
 import GridId from "../../../redux/gridId"
-import PurchaseOrderTransitReportFilter, { PurchaseOrderTransitReportInitialState } from "./Purchase-order-transit-report-filter"
-// import ProductInventoryReportFilter, {
-//   ProductInventoryReportFilterInitialState,
-// } from "./product-inventory-report-filter"
+import DailyStatementAllReportFilter, { DailyStatementAllReportInitialState } from "./daily-statement-all-report -filter"
 
-const PurchaseOrderTransitReport = () => {
-  // const { t } = useTranslation("inventoryReport")
+const DailyStatementAllReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
 
@@ -28,8 +24,8 @@ const PurchaseOrderTransitReport = () => {
       showInPdf: true,
     },
     {
-      dataField: "productCode",
-      caption: t("product_code"),
+      dataField: "form",
+      caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -38,22 +34,52 @@ const PurchaseOrderTransitReport = () => {
       showInPdf: true,
     },
     {
-      dataField: "productName",
-      caption: t("product_name"),
+      dataField: "vchNo",
+      caption: t("vch_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      // width: 100,
+      width: 70,
       visible: true,
       showInPdf: true,
     },
     {
-      dataField: "stockInWareHouse",
-      caption: t("stock_in_warehouse"),
-      dataType: "number",
+      dataField: "formType",
+      caption: t("form_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 90,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "party",
+      caption: t("party"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "address1",
+      caption: t("address"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "cash",
+      caption: t("cash"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -61,9 +87,7 @@ const PurchaseOrderTransitReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.stockInWarehouse == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse))
+            cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))
           return {
             ...exportCell,
             text: value,
@@ -73,21 +97,19 @@ const PurchaseOrderTransitReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.stockInWarehouse == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse))}
+              {cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))}
             </span>
           )
         }
       },
     },
     {
-      dataField: "stockInTransit",
-      caption: t("stock_in_transit"),
+      dataField: "bank",
+      caption: t("bank"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -95,9 +117,7 @@ const PurchaseOrderTransitReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.stockInTransit == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit))
+            cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))
           return {
             ...exportCell,
             text: value,
@@ -107,21 +127,19 @@ const PurchaseOrderTransitReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.stockInTransit == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit))}
+              {cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))}
             </span>
           )
         }
       },
     },
     {
-      dataField: "orderPending",
-      caption: t("order_pending"),
+      dataField: "credit",
+      caption: t("credit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -129,9 +147,7 @@ const PurchaseOrderTransitReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.orderPending == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderPending))
+            cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))
           return {
             ...exportCell,
             text: value,
@@ -141,9 +157,7 @@ const PurchaseOrderTransitReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.orderPending == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.orderPending))}
+              {cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))}
             </span>
           )
         }
@@ -155,7 +169,7 @@ const PurchaseOrderTransitReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -180,38 +194,14 @@ const PurchaseOrderTransitReport = () => {
       },
     },
     {
-      dataField: "orderManual",
-      caption: t("order_manual"),
-      dataType: "number",
+      dataField: "voucherType",
+      caption: t("voucher_type"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
-      visible: true,
+      width: 80,
+      visible: false,
       showInPdf: true,
-      alignment: "right",
-      format: "fixedPoint",
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.orderManual == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.orderManual))
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          }
-        } else {
-          return (
-            <span>
-              {cellElement.data?.orderManual == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.orderManual))}
-            </span>
-          )
-        }
-      },
     },
   ]
 
@@ -224,17 +214,17 @@ const PurchaseOrderTransitReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="from {dateFrom} to {dateTo}"
-                  gridHeader={t("Purchase_Order_Transit_Report")}
-                  dataUrl={Urls.Purchase_Order_Transit_And_Stock_Details}
+                  filterText="daily_statement_all"
+                  gridHeader={t("daily_statement_all")}
+                  dataUrl={Urls.daily_statement_all}
                   method={ActionType.POST}
                   gridId={GridId.grid_id}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}
                   filterHeight={350}
-                  filterContent={<PurchaseOrderTransitReportFilter />}
-                  filterInitialData={PurchaseOrderTransitReportInitialState}
+                  filterContent={<DailyStatementAllReportFilter />}
+                  filterInitialData={DailyStatementAllReportInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />
@@ -247,5 +237,5 @@ const PurchaseOrderTransitReport = () => {
   )
 }
 
-export default PurchaseOrderTransitReport
+export default DailyStatementAllReport
 

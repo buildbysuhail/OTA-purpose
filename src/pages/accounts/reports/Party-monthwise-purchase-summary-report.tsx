@@ -249,7 +249,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("sales_report")}
+                  gridHeader={t("party_monthwise_purchase_summary")}
                   dataUrl={Urls.party_monthwise_purchase_summary}
                   method={ActionType.POST}
                   gridId={GridId.party_monthwise_purchase_summary}

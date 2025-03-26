@@ -23,203 +23,79 @@ import BalanceSheet from "../../../pages/accounts/reports/balanceSheet/balace-sh
 import InventoryHistoryReport from "../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report";
 import BillwiseProfitGlobal from "../../../pages/accounts/reports/billwise-profit/billwise-profit-global";
 
-const AccountSettingsSecurity = lazy(
-  () => import("../../../pages/account-settings/account-settings-security")
-);
-const AccountSettingsPreference = lazy(
-  () => import("../../../pages/account-settings/account-settings-preference")
-);
-const WorkSpaceSettings = lazy(
-  () => import("../../../pages/work-space/workspace-settings")
-);
-const AccountSettingsSessions = lazy(
-  () => import("../../../pages/account-settings/account-settings-sessions")
-);
-const AccountSettingsProfile = lazy(
-  () => import("../../../pages/account-settings/account-settings-profile")
-);
-const WorkspaceSettingsMembers = lazy(
-  () => import("../../../pages/work-space/workspace-settings-members")
-);
-const WorkspaceSettingsSecurity = lazy(
-  () => import("../../../pages/work-space/workspace-settings-security")
-);
-const UserTypes = lazy(
-  () => import("../../../pages/settings/userManagement/user-types")
-);
-const Users = lazy(
-  () => import("../../../pages/settings/userManagement/Users")
-);
-const SystemCounters = lazy(
-  () => import("../../../pages/settings/system/counters")
-);
-const SystemVoucher = lazy(
-  () => import("../../../pages/settings/system/vouchers")
-);
-const FinancialYear = lazy(
-  () => import("../../../pages/settings/system/financial-year")
-);
+const AccountSettingsSecurity = lazy(() => import("../../../pages/account-settings/account-settings-security"));
+const AccountSettingsPreference = lazy(() => import("../../../pages/account-settings/account-settings-preference"));
+const WorkSpaceSettings = lazy(() => import("../../../pages/work-space/workspace-settings"));
+const AccountSettingsSessions = lazy(() => import("../../../pages/account-settings/account-settings-sessions"));
+const AccountSettingsProfile = lazy(() => import("../../../pages/account-settings/account-settings-profile"));
+const WorkspaceSettingsMembers = lazy(() => import("../../../pages/work-space/workspace-settings-members"));
+const WorkspaceSettingsSecurity = lazy(() => import("../../../pages/work-space/workspace-settings-security"));
+const UserTypes = lazy(() => import("../../../pages/settings/userManagement/user-types"));
+const Users = lazy(() => import("../../../pages/settings/userManagement/Users"));
+const SystemCounters = lazy(() => import("../../../pages/settings/system/counters"));
+const SystemVoucher = lazy(() => import("../../../pages/settings/system/vouchers"));
+const FinancialYear = lazy(() => import("../../../pages/settings/system/financial-year"));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
-const Reminders = lazy(
-  () => import("../../../pages/settings/system/remainder")
-);
-const BranchGrid = lazy(
-  () => import("../../../pages/settings/Administration/branch")
-);
-const NotificationSettings = lazy(
-  () => import("../../../pages/settings/system/notification-settings")
-);
-const CounterSettings = lazy(
-  () => import("../../../pages/settings/system/counter-settings")
-);
+const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
+const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
+const NotificationSettings = lazy(() => import("../../../pages/settings/system/notification-settings"));
+const CounterSettings = lazy(() => import("../../../pages/settings/system/counter-settings"));
 
 // Inventory Starts
-
 // const InvTransactionMobile = lazy(
 //   () => import("../../../pages/inventory/inv-transaction-mobile")
 // );
-
 // Inventory End
 // Acc Starts
-const AccountsMasters = lazy(
-  () => import("../../../pages/accounts/masters/account-groups/account-group")
-);
-const BankCards = lazy(
-  () => import("../../../pages/accounts/masters/bank-cards/bank-cards")
-);
+
+const AccountsMasters = lazy(() => import("../../../pages/accounts/masters/account-groups/account-group"));
+const BankCards = lazy(() => import("../../../pages/accounts/masters/bank-cards/bank-cards"));
 const Upi = lazy(() => import("../../../pages/accounts/masters/upi/upi"));
-const AccountsLedger = lazy(
-  () => import("../../../pages/accounts/masters/account-ledgers/account-ledger")
-);
-const CostCenter = lazy(
-  () => import("../../../pages/accounts/masters/cost centre/cost-centre")
-);
-const BranchLedger = lazy(
-  () => import("../../../pages/accounts/masters/branch ledger/branch-ledger")
-);
-const PartyCategory = lazy(
-  () =>
-    import(
-      "../../../pages/accounts/masters/account-party-category/party-category"
-    )
-);
-const PrivilegeCard = lazy(
-  () =>
-    import(
-      "../../../pages/accounts/masters/account-privilege-card/privilege-card"
-    )
-);
-const CurrencyMaster = lazy(
-  () =>
-    import("../../../pages/accounts/masters/currency-master/currency-master")
-);
-const RevertBillModifications = lazy(
-  () => import("../../../pages/settings/system/revert-bill-modifications")
-);
-const ChartOfAccounts = lazy(
-  () =>
-    import(
-      "../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts"
-    )
-);
-const Customers = lazy(
-  () => import("../../../pages/accounts/masters/parties/customers")
-);
-const Suppliers = lazy(
-  () => import("../../../pages/accounts/masters/parties/suppliers")
-);
-const CustomerSupplierLedger = lazy(
-  () =>
-    import(
-      "../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger"
-    )
-);
+const AccountsLedger = lazy(() => import("../../../pages/accounts/masters/account-ledgers/account-ledger"));
+const CostCenter = lazy(() => import("../../../pages/accounts/masters/cost centre/cost-centre"));
+const BranchLedger = lazy(() => import("../../../pages/accounts/masters/branch ledger/branch-ledger"));
+const PartyCategory = lazy(() => import("../../../pages/accounts/masters/account-party-category/party-category"));
+const PrivilegeCard = lazy(() => import("../../../pages/accounts/masters/account-privilege-card/privilege-card"));
+const CurrencyMaster = lazy(() => import("../../../pages/accounts/masters/currency-master/currency-master"));
+const RevertBillModifications = lazy(() => import("../../../pages/settings/system/revert-bill-modifications"));
+const ChartOfAccounts = lazy(() => import("../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts"));
+const Customers = lazy(() => import("../../../pages/accounts/masters/parties/customers"));
+const Suppliers = lazy(() => import("../../../pages/accounts/masters/parties/suppliers"));
+const CustomerSupplierLedger = lazy(() => import("../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger"));
 // Acc End
 
 //side menu account
-const AccTransactionMobile = lazy(
-  () => import("../../../pages/accounts/transactions/acc-transaction-mobile")
-);
+const AccTransactionMobile = lazy(() => import("../../../pages/accounts/transactions/acc-transaction-mobile"));
 //integration
-const SmsIntegration = lazy(
-  () => import("../../../pages/settings/Integration/sms-integration")
-);
-const EmailIntegration = lazy(
-  () => import("../../../pages/settings/Integration/email-integration")
-);
-const WhatsappIntegration = lazy(
-  () => import("../../../pages/settings/Integration/whatsapp-integration")
-);
+const SmsIntegration = lazy(() => import("../../../pages/settings/Integration/sms-integration"));
+const EmailIntegration = lazy(() => import("../../../pages/settings/Integration/email-integration"));
+const WhatsappIntegration = lazy(() => import("../../../pages/settings/Integration/whatsapp-integration"));
 const Test = lazy(() => import("../../../pages/test"));
 // const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const ShortkeysSettings = lazy(() => import("../../../pages/settings/Integration/shortkeysSettings"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
-const AccTransactionGrid = lazy(
-  () => import("../../../pages/accounts/transactions/acc-transacton-grid")
-);
+const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
 
 // Inventory Masters
-const Products = lazy(
-  () => import("../../../pages/inventory/masters/products/products")
-);
-const ProductGroup = lazy(
-  () => import("../../../pages/inventory/masters/product-group/product-group")
-);
-const ProductCategory = lazy(
-  () =>
-    import("../../../pages/inventory/masters/product-category/product-category")
-);
-const Brands = lazy(
-  () => import("../../../pages/inventory/masters/brands/brands")
-);
-const PriceCategory = lazy(
-  () => import("../../../pages/inventory/masters/price-category/price-category")
-);
-const UnitOfMeasure = lazy(
-  () =>
-    import("../../../pages/inventory/masters/unit-of-meassure/unit-of-measure")
-);
-const Vehicles = lazy(
-  () => import("../../../pages/inventory/masters/vehicles/vehicles")
-);
-const WareHouse = lazy(
-  () => import("../../../pages/inventory/masters/warehouse/warehouse")
-);
-const TaxCategory = lazy(
-  () => import("../../../pages/inventory/masters/tax-category/tax-category")
-);
-const SalesmanRoute = lazy(
-  () => import("../../../pages/inventory/masters/salesman-route/salesman-route")
-);
-const Schemes = lazy(
-  () => import("../../../pages/inventory/masters/schemes/schemes")
-);
-const SalesRoute = lazy(
-  () => import("../../../pages/inventory/masters/sales-route/sales-route")
-);
-const Section = lazy(
-  () => import("../../../pages/inventory/masters/section/section")
-);
-const GroupCategory = lazy(
-  () => import("../../../pages/inventory/masters/group-category/group-category")
-);
-const SpecialSchemes = lazy(
-  () =>
-    import("../../../pages/inventory/masters/special-schemes/special-schemes")
-);
-const ListedProductPrices = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/masters/listed-product-prices/listed-product-prices"
-    )
-);
-
+const Products = lazy(() => import("../../../pages/inventory/masters/products/products"));
+const ProductGroup = lazy(() => import("../../../pages/inventory/masters/product-group/product-group"));
+const ProductCategory = lazy(() => import("../../../pages/inventory/masters/product-category/product-category"));
+const Brands = lazy(() => import("../../../pages/inventory/masters/brands/brands"));
+const PriceCategory = lazy(() => import("../../../pages/inventory/masters/price-category/price-category"));
+const UnitOfMeasure = lazy(() => import("../../../pages/inventory/masters/unit-of-meassure/unit-of-measure"));
+const Vehicles = lazy(() => import("../../../pages/inventory/masters/vehicles/vehicles"));
+const WareHouse = lazy(() => import("../../../pages/inventory/masters/warehouse/warehouse"));
+const TaxCategory = lazy(() => import("../../../pages/inventory/masters/tax-category/tax-category"));
+const SalesmanRoute = lazy(() => import("../../../pages/inventory/masters/salesman-route/salesman-route"));
+const Schemes = lazy(() => import("../../../pages/inventory/masters/schemes/schemes"));
+const SalesRoute = lazy(() => import("../../../pages/inventory/masters/sales-route/sales-route"));
+const Section = lazy(() => import("../../../pages/inventory/masters/section/section"));
+const GroupCategory = lazy(() => import("../../../pages/inventory/masters/group-category/group-category"));
+const SpecialSchemes = lazy(() => import("../../../pages/inventory/masters/special-schemes/special-schemes"));
+const ListedProductPrices = lazy(() => import("../../../pages/inventory/masters/listed-product-prices/listed-product-prices"));
 //transaction
-const PostDatedCheques = lazy(
-  () => import("../../../pages/accounts/transactions/acc-post-dated-cheques")
-);
-
+const PostDatedCheques = lazy(() => import("../../../pages/accounts/transactions/acc-post-dated-cheques"));
 // Inventory Reports
 import PurchaseSummaryReport from "../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report";
 import PurchaseRegisterReport from "../../../pages/inventory/reports/purchase-register-report/purchase-register-report";
@@ -265,34 +141,19 @@ import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/item
 import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
 import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
 import ItemWisePurchaseQuotationSummary from "../../../pages/inventory/reports/itemwise-purchase-quotation-summary-report/itemwise-purchase-quotation-summary";
-const PriceList = lazy(
-  () => import("../../../pages/inventory/reports/price-list/price-list-report")
-);
-const StockLedger = lazy(
-  () =>
-    import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report")
-);
-const DailyBalanceAmount = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/reports/daily-balance/daily-balance-report"
-    )
-);
-const OpeningStock = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/reports/opening-stock/opening-stock-report"
-    )
-);
-const StockFlow = lazy(
-  () => import("../../../pages/inventory/reports/stock-flow/stock-flow-report")
-);
-const TransactionAnalysisReport = lazy(
-  () =>
-    import(
-      "../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report"
-    )
-);
+import ProductSummary from "../../../pages/inventory/reports/product-summary-report/product-summary";
+import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
+import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
+import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
+import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
+import DailyStatementAllReport from "../../../pages/accounts/reports/daily-statement-all-report ";
+import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
+const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
+const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
+const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
+const OpeningStock = lazy(() => import("../../../pages/inventory/reports/opening-stock-report/opening-stock"));
+const StockFlow = lazy(() => import("../../../pages/inventory/reports/stock-flow/stock-flow-report"));
+const TransactionAnalysisReport = lazy(() => import("../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report"));
 
 interface ContentProps { }
 const loading = (
@@ -300,6 +161,7 @@ const loading = (
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
   </div>
 );
+
 const Content: FC<ContentProps> = () => {
   const [myClass, setMyClass] = useState("");
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -308,74 +170,37 @@ const Content: FC<ContentProps> = () => {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
-        <Route
-          path="/profile/basic-information"
-          element={<AccountSettingsProfile />}
-        />
-        <Route
-          path="/profile/email-address"
-          element={<AccountSettingsProfile />}
-        />
-        <Route
-          path="/profile/phone-number"
-          element={<AccountSettingsProfile />}
-        />
-        <Route
-          path="/security/password"
-          element={<AccountSettingsSecurity />}
-        />
-        <Route
-          path="/preferences/theme"
-          element={<AccountSettingsPreference />}
-        />
-        <Route
-          path="/preferences/language"
-          element={<AccountSettingsPreference />}
-        />
-        <Route
-          path="/preferences/system-preferences"
-          element={<AccountSettingsPreference />}
-        />
+        <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
+        <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
+        <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
+        <Route path="/security/password" element={<AccountSettingsSecurity />} />
+        <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
+        <Route path="/preferences/language" element={<AccountSettingsPreference />} />
+        <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
         <Route path="/sessions" element={<AccountSettingsSessions />} />
-
         <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
-        <Route
-          path="/profile/workspace-basic-information"
-          element={<WorkSpaceSettings />}
-        />
+        <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
         <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
-        <Route
-          path="/profile/business-number"
-          element={<WorkSpaceSettings />}
-        />
-        <Route
-          path="/security/deleteWorkspace"
-          element={<WorkspaceSettingsSecurity />}
-        />
+        <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
+        <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
         <Route path="/members" element={<WorkspaceSettingsMembers />} />
+
         {/* settings user */}
         <Route path="/user-management/users" element={<Users />} />
         <Route path="/user-management/userstypes" element={<UserTypes />} />
+
         {/* settings Administer*/}
         <Route path="/administration/branch" element={<BranchGrid />} />
+
         {/* settings Systems */}
         <Route path="/system/counters" element={<SystemCounters />} />
         <Route path="/system/vouchers" element={<SystemVoucher />} />
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
-        <Route
-          path="/system/application-settings"
-          element={<ApplicationSettingsVirtual />}
-        />
-        <Route
-          path="/system/revert-bill-modifications"
-          element={<RevertBillModifications />}
-        />
-        <Route
-          path="/system/notification-settings"
-          element={<NotificationSettings />}
-        />
+        <Route path="/system/application-settings" element={<ApplicationSettingsVirtual />} />
+        <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
+        <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />
         <Route path="settings" element={<Settings />} />
 
@@ -387,65 +212,33 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
         <Route path="/integration/shortkeys_settings" element={<ShortkeysSettings defaultShortcuts={[]} />} />
-        <Route
-          path="/integration/test-input-button"
-          element={<TestInputButton />}
-        />
+        <Route path="/integration/test-input-button" element={<TestInputButton />} />
         {/* Integration End */}
 
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
-
-        <Route
-          path="/templates/invoice_designer/*"
-          element={<TemplateDesignerLayout />}
-        />
-
+        <Route path="/templates/invoice_designer/*" element={<TemplateDesignerLayout />} />
         {/* Templates ends */}
+
         {/* Inventory Starts */}
-
         {/* <Route path="sales/new" element={<InvTransactionMobile />} /> */}
-
         {/* Inventory End */}
+
         {/* Accounts Start */}
         {/* Accounts Masters */}
-        <Route
-          path="account-masters/account-group"
-          element={<AccountsMasters />}
-        />
+        <Route path="account-masters/account-group" element={<AccountsMasters />} />
         <Route path="account-masters/Bank-Cards" element={<BankCards />} />
         <Route path="account-masters/upi" element={<Upi />} />
-        <Route
-          path="account-masters/privilege-cards"
-          element={<PrivilegeCard />}
-        />
-        <Route
-          path="account-masters/account-ledger"
-          element={<AccountsLedger />}
-        />
-        <Route
-          path="account-masters/party-category"
-          element={<PartyCategory />}
-        />
-        <Route
-          path="/account-masters/currency-master"
-          element={<CurrencyMaster />}
-        />
+        <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
+        <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
+        <Route path="account-masters/party-category" element={<PartyCategory />} />
+        <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
-        <Route
-          path="account-masters/branch-ledgers"
-          element={<BranchLedger />}
-        />
-        <Route
-          path="account-masters/chart-of-accounts"
-          element={<ChartOfAccounts />}
-        />
+        <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
+        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         <Route path="account-masters/suppliers" element={<Suppliers />} />
         <Route path="account-masters/customers" element={<Customers />} />
-        <Route
-          path="/account-masters/customer-supplier-ledger"
-          element={<CustomerSupplierLedger />}
-        />
+        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
         {/* Accounts Masters End */}
 
         {/* Accounts Transaction */}
@@ -467,6 +260,7 @@ const Content: FC<ContentProps> = () => {
               </RouteGuard>
             }
           /> */}
+
         {transactionRoutes.map((route, index) => (
           <>
             {route.transactionBase == TransactionBase.Accounts && (
@@ -595,7 +389,6 @@ const Content: FC<ContentProps> = () => {
             </RouteGuard>
           }
         />
-
         {/* Accounts Masters End */}
 
         {/* Reports */}
@@ -603,121 +396,40 @@ const Content: FC<ContentProps> = () => {
         {/* Reports - Accounts */}
         <Route path="/accounts/ledger_report" element={<LedgerReport />} />
         <Route path="/accounts/cash_book" element={<CashBookSummary />} />
-        <Route
-          path="/accounts/day_book_detailed"
-          element={<DayBookDetailed />}
-        />
+        <Route path="/accounts/day_book_detailed" element={<DayBookDetailed />} />
         <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />
         <Route path="/accounts/payment_report" element={<PaymentReport />} />
-        <Route
-          path="/accounts/collection_report"
-          element={<CollectionReport />}
-        />
+        <Route path="/accounts/collection_report" element={<CollectionReport />} />
         <Route path="/accounts/cash_summary" element={<CashSummary />} />
-        <Route
-          path="/accounts/cash_summary_ledgerwise"
-          element={<CashSummaryLedgerwise />}
-        />
+        <Route path="/accounts/cash_summary_ledgerwise" element={<CashSummaryLedgerwise />} />
         <Route path="/accounts/income_report" element={<IncomeReport />} />
-        <Route
-          path="/accounts/income_report_detailed"
-          element={<IncomeReportDetailed />}
-        />
+        <Route path="/accounts/income_report_detailed" element={<IncomeReportDetailed />} />
         <Route path="/accounts/expense_report" element={<ExpenseReport />} />
-        <Route
-          path="/accounts/expense_report_detailed"
-          element={<ExpenseReportDetailed />}
-        />
-        <Route
-          path="/accounts/income_expense_statement"
-          element={<IncomExpenseStatement />}
-        />
+        <Route path="/accounts/expense_report_detailed" element={<ExpenseReportDetailed />} />
+        <Route path="/accounts/income_expense_statement" element={<IncomExpenseStatement />} />
         <Route path="/accounts/cash_flow" element={<CashFlowReport />} />
         <Route path="/accounts/bank_flow" element={<BankFlowReport />} />
-        <Route
-          path="/accounts/bank_statement"
-          element={<BankStatementReport />}
-        />
-        <Route
-          path="/accounts/transaction_report"
-          element={<TransactionReport />}
-        />
-        <Route
-          path="/accounts/transaction_history_accounts"
-          element={<AccountsHistoryReport />}
-        />
-        <Route
-          path="/accounts/transaction_history_inventory"
-          element={<InventoryHistoryReport />}
-        />
-        <Route
-          path="/accounts/daily_summary_report"
-          element={
-            userSession.countryId === Countries.India ? (
-              <DailySummaryGlobal />
-            ) : (
-              <DailySummaryMaster />
-            )
-          }
-        />
-        <Route
-          path="/accounts/billwise_profit"
-          element={
-            userSession.countryId === Countries.India ? (
-              <BillwiseProfitGlobal />
-            ) : (
-              <BillwiseProfit />
-            )
-          }
-        />
-        <Route
-          path="/accounts/partywise_summary"
-          element={<PartySummaryMaster />}
-        />
-        <Route
-          path="/accounts/outstanding_payable"
-          element={<OutstandingAccountPayableReport />}
-        />
-        <Route
-          path="/accounts/outstanding_receivable"
-          element={<OutstandingAccountReceivableReport />}
-        />
-        <Route
-          path="/accounts/outstanding_aging_payable"
-          element={<OutstandingAccountPayableAgingReport />}
-        />
-        <Route
-          path="/accounts/outstanding_aging_receivable"
-          element={<OutstandingAccountReceivableAgingReport />}
-        />
+        <Route path="/accounts/bank_statement" element={<BankStatementReport />} />
+        <Route path="/accounts/transaction_report" element={<TransactionReport />} />
+        <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
+        <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
+        <Route path="/accounts/daily_summary_report" element={userSession.countryId === Countries.India ? (<DailySummaryGlobal />) : (<DailySummaryMaster />)} />
+        <Route path="/accounts/billwise_profit" element={userSession.countryId === Countries.India ? (<BillwiseProfitGlobal />) : (<BillwiseProfit />)} />
+        <Route path="/accounts/partywise_summary" element={<PartySummaryMaster />} />
+        <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport />} />
+        <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport />} />
+        <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport />} />
+        <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport />} />
         <Route path="/accounts/trial_balance" element={<TrialBalance />} />
-        <Route
-          path="/accounts/trial_balance_period_wise"
-          element={<TrialBalancePeriodwise />}
-        />
-        <Route
-          path="/accounts/profit_and_loss"
-          element={<ProfitAndLossReport />}
-        />
-        <Route
-          path="/accounts/profit_and_loss_detailed"
-          element={<ProfitAndLossDetailedReport />}
-        />
+        <Route path="/accounts/trial_balance_period_wise" element={<TrialBalancePeriodwise />} />
+        <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
+        <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
-        <Route
-          path="/accounts/balance_sheet_detailed"
-          element={<BalancesheetVertical />}
-        />
-        {/* <Route
-          path="/accounts/payable_aging"
-          element={<AccountPayableAgingReport />}
-        />
-        <Route
-          path="/accounts/receivable_aging"
-          element={<AccountReceivableAgingReport />}
-        /> */}
-        {/* Reports - Accounts */}
+        <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} />
+        {/* <Route  path="/accounts/payable_aging"  element={<AccountPayableAgingReport />}/>
+        <Route  path="/accounts/receivable_aging"  element={<AccountReceivableAgingReport />}/> */}
 
+        {/* Reports - Accounts */}
         {/* Reports - Inventory */}
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
@@ -733,24 +445,18 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWisePurchaseQuotationSummary />} />
+        <Route path="/inventory/product_summary" element={<ProductSummary />} />
+        <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
+        <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
+        <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />
+        <Route path="/inventory/shortage_stock_report" element={<ShortageStock />} />
+        <Route path="/inventory/branch_transfer_out_filter" element={<BranchTransferOut />} />
 
-        <Route
-          path="/inventory/stock_ledger_report"
-          element={<StockLedger />}
-        />
-        <Route
-          path="/inventory/daily_balance_report"
-          element={<DailyBalanceAmount />}
-        />
-        <Route
-          path="/inventory/opening_stock_report"
-          element={<OpeningStock />}
-        />
+        <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
+        <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
+        <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
-        <Route
-          path="/inventory/transaction_analysis_report"
-          element={<TransactionAnalysisReport />}
-        />
+        <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
 
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
@@ -761,73 +467,28 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        
-        <Route
-          path="/inventory/Purchase_Tax"
-          element={<PurchaseTaxReport />}
-        />
-        <Route
-          path="/inventory/Purchase_Order_Transit_Report"
-          element={<PurchaseOrderTransitReport />}
-        />
-        <Route
-          path="/inventory/party_monthwise_purchase_summary"
-          element={<PartyMonthwisePurchaseSummaryReport />}
-        />
-        <Route
-          path="/inventory/Credit_purchase_summary"
-          element={<CreditPurchaseSummaryReport />}
-        />
-        <Route
-          path="/inventory/Itemwise_Purchase_Summary"
-          element={<ItemwisePurchaseSummaryReport />}
-        />
-        <Route
-          path="/inventory-masters/products"
-          element={<Products />}
-        />
-        <Route
-          path="/inventory-masters/product-group"
-          element={<ProductGroup />}
-        />
-        <Route
-          path="/inventory-masters/product-category"
-          element={<ProductCategory />}
-        />
+        <Route path="/inventory/Purchase_Tax" element={<PurchaseTaxReport />} />
+        <Route path="/inventory/Purchase_Order_Transit_Report" element={<PurchaseOrderTransitReport />} />
+        <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwisePurchaseSummaryReport />} />
+        <Route path="/inventory/Credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
+        <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
+        <Route path="/inventory/Itemwise_Purchase_Summary" element={<ItemwisePurchaseSummaryReport />} />
+        <Route path="/inventory-masters/products" element={<Products />} />
+        <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
+        <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
         <Route path="/inventory-masters/brands" element={<Brands />} />
-        <Route
-          path="/inventory-masters/price-category"
-          element={<PriceCategory />}
-        />
-        <Route
-          path="/inventory-masters/unit-of-measure"
-          element={<UnitOfMeasure />}
-        />
+        <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
+        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
         <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
-        <Route
-          path="/inventory-masters/tax-category"
-          element={<TaxCategory />}
-        />
-        <Route
-          path="/inventory-masters/salesman-route"
-          element={<SalesmanRoute />}
-        />
+        <Route path="/inventory-masters/tax-category" element={<TaxCategory />} />
+        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
         <Route path="/inventory-masters/section" element={<Section />} />
         <Route path="/inventory-masters/schemes" element={<Schemes />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
-        <Route
-          path="/inventory-masters/group-category"
-          element={<GroupCategory />}
-        />
-        <Route
-          path="/inventory-masters/special-schemes"
-          element={<SpecialSchemes />}
-        />
-        <Route
-          path="/inventory-masters/listed-product-prices"
-          element={<ListedProductPrices />}
-        />
+        <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
+        <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
+        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
       </Routes>
     </Suspense>
   );

@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
  
   });
   
-  export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: AccTransactionData; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
+  export const Content = ({ data, template, currentBranch, docIDKey, currency }: { data: any; template?: TemplateState; currentBranch: any, docIDKey?: string; currency?: string; }) => {
     const headerState = template?.headerState;
     const fontFamily = template?.propertiesState?.font_family || "Roboto";
     const fontSize = template?.propertiesState?.font_size || 12;
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     const labelFontWeight = template?.propertiesState?.label_font_weight || 400;
     const labelFontStyle = template?.propertiesState?.label_font_style || "normal";
 
-    const custNameFontColor = headerState?.customerNameFontColor;
-    const custNameFontSize = headerState?.customerNameFontSize || 12;
+    const custNameFontColor = headerState?.venderNameFontColor;
+    const custNameFontSize = headerState?.venderNameFontSize || 12;
     const labelStyles = {
       color: labelColor,
       fontSize: labelFontSize,
@@ -82,60 +82,15 @@ const styles = StyleSheet.create({
               <View style={{
                 display: "flex", flexDirection: "column",gap:2,border:2,borderColor:"rgb(104, 101, 101)",borderStyle:"solid",padding:10,width:"50%"
               }} wrap>
-                  {/* {headerState?.showReceivedFrom && (
-                          <View>
-                            <Text style={labelStyles}>{headerState?.receivedFromLabel ?? "Received From"}</Text>
-                          </View>
-                        )} */}
-                      
-                            <Text style={{
-                              ...fontStyles,
-                              color: custNameFontColor, fontSize: custNameFontSize
-                            }}>
-                              "Nizam Karippali "
-                            </Text>
-
-                            {headerState?.hasBillTo && (
-                              <View style={styles.customer}>
-                             <View style={{flexBasis:"30%"}}>
-                             <Text style={labelStyles}>{`${headerState?.billTo ?? "Bill T0"}` }</Text>
-                             </View>
-                             <View style={{flexBasis:"10%"}}>
-                             <Text style={labelStyles}>{`:` }</Text>
-                             </View>
-                                <View style={styles.customerInfo}>
-                                  <Text style={fontStyles}>Dubai</Text>
-                                  <Text style={fontStyles}>Karama 123ft</Text>
-                                  <Text style={fontStyles}>Ho No:1223</Text>
-                                </View>
-                              
-                              </View>
-                            )} 
-
-                        {headerState?.hasShipTo && (
-                        <>
-                          <View style={styles.customer}>
-                          <View style={{flexBasis:"30%"}}>
-                          <Text style={labelStyles}>{`${headerState?.shipTo ??  "Ship To"}` }</Text>
-                             </View>
-                             <View style={{flexBasis:"10%"}}>
-                             <Text style={labelStyles}>{`:` }</Text>
-                             </View>
-                                
-                           
-                                <View style={styles.customerInfo}>
-                                  <Text style={fontStyles}>Dubai</Text>
-                                  <Text style={fontStyles}>Karama 123ft</Text>
-                                
-                                </View>
-                              
-                              </View>
-                       
-
-                        </>
-                      )}
-                           
-               
+                  {headerState?.showVender && (
+                               <Text style={{
+                                ...fontStyles,
+                                color: custNameFontColor, fontSize: custNameFontSize
+                              }}>
+                              {data.master?.ledgerName || "MARKET ALIYA"}
+                              </Text>
+                        )}
+ 
               </View>
            
     
@@ -171,8 +126,7 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {/* {data.master?.date || "12/5/2024"} */}
-                        {dateTrimmer(data.master?.transactionDate)}
+                        {data.master?.referenceNumber}
                       </Text>
                       </View>
                     </View>
@@ -221,8 +175,7 @@ const styles = StyleSheet.create({
                       </View>
                       <View style={{...styles.customerInfo,flexBasis:"45%"}}>
                       <Text style={fontStyles}>
-                        {/* {data.master?.date || "12/5/2024"} */}
-                        {dateTrimmer(data.master?.transactionDate)}
+                        {data.master?.bankAccName}
                       </Text>
                       </View>
                     </View>

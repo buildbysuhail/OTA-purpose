@@ -27,8 +27,8 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
   const templateGroup = searchParams?.get("template_group");
 
   const headerState = template?.headerState;
-  const isCustomer = !["purchase_order", "vendor", "payment_made"]?.includes(templateGroup!)
 
+  const isCustomer = typeof templateGroup === 'string' && !["PARP","RARP"].includes(templateGroup);
   return (
     <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
 
@@ -45,10 +45,49 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
       {currentTab === "cust_detail" && <div className="flex flex-col gap-3 bg-white p-4">
 
         <div className="text-sm">{isCustomer ? "Customer" : "Vendor"} name</div>
+      {!isCustomer && (
+        <>
+         <ERPCheckbox
+              id="showVender"
+              label={ "Show Vendor"}
+              checked={headerState?.showVender}
+              onChange={(e) => onChange({ ...headerState, showVender: e.target.checked })}
+            />
 
-            <ERPCheckbox
+          {headerState?.showVender &&(
+            <>
+              <ERPInput
+              type="color"
+              id="bg_color"
+              placeholder=""
+              label="Font Color"
+              value={headerState?.venderNameFontColor}
+              onChange={(e) => onChange?.({ ...headerState, venderNameFontColor: e.target?.value })}
+            />
+    
+            <ERPStepInput
+              min={8}
+              step={1}
+              max={28}
+              placeholder=" "
+              id="font_size"
+              label="Font Size (pts)"
+              value={headerState?.venderNameFontSize ?? 12}
+              onChange={(font_size) => onChange?.({ ...headerState, venderNameFontSize: font_size })}
+            />
+            </>
+          
+          )}
+          
+   
+
+        </>
+      )}
+       {isCustomer && (
+        <>
+         <ERPCheckbox
               id="showReceivedFrom"
-              label={["payment_made"]?.includes(templateGroup!) ? "Paid To" : "Received From"}
+              label={ "Received From"}
               checked={headerState?.showReceivedFrom}
               onChange={(e) => onChange({ ...headerState, showReceivedFrom: e.target.checked })}
             />
@@ -112,10 +151,13 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
             value={headerState?.shipTo ?? "Ship To"}
             onChange={(e) => onChange({ ...headerState, shipTo: e.target?.value })}
           />
-    
-
+        </>
+       )}
+          
       </div>
       }
+
+    
 
       <div
         className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"

@@ -12,6 +12,7 @@ import { CounterData, initialDataCounter } from "./counters-manage-type";
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
+import { LedgerType } from "../../../enums/ledger-types";
 
 export const CounterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -78,8 +79,9 @@ export const CounterManage: React.FC = React.memo(() => {
           noXMarkIcon={true}
           field={{
             id: "cashLedgerID",
-            required: true,
-            getListUrl: Urls.data_CashLedgers,
+            // required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=00&ledgerType=${LedgerType.CashInHand}`,
             valueKey: "id",
             labelKey: "name",
           }}

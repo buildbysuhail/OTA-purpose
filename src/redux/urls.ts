@@ -346,7 +346,6 @@ const Urls = {
   inv_reports_price_list: "",
   inv_reports_stock_ledger: "",
   inv_reports_balance_report: "",
-  inv_reports_opening_stock: "",
   inv_reports_stock_flow: "",
   purchase_summary_report: "/Inventory/RptPurchaseReport/PurchaseSummary/",
   purchase_register_report: "/Inventory/RptPurchaseReport/PurchaseRegister/",
@@ -366,6 +365,12 @@ const Urls = {
   item_wise_purchase_order_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
   item_wise_purchase_estimate_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
   item_wise_purchase_quotation_summary:"/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
+  product_summary:"/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/{voucherType}/",
+  opening_stock:"/Inventory/RptStockReport/OpeningStockReport/",
+  stock_transfer:"/Inventory/RptStockReport/StockTransferReport/",
+  damage_stock:"/Inventory/RptStockReport/DamageStockReport/",
+  excess_stock:"/Inventory/RptStockReport/ExcessStockReport/",
+  shortage_stock:"/Inventory/RptStockReport/ShortageStockReport/",
   //Report End
   //Inventory Reports Starts
   //Purchase

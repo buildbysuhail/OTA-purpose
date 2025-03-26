@@ -45,7 +45,6 @@ export const useAccPrint = () => {
       const data = await api.getAsync(
         `${Urls.payment_receipt_billwise_advice_for_print}?masterId=${formState.transaction.master.accTransactionMasterID}`,
       )
-
       pdfDocument = (
         <AdviceTemplate
           template={template}

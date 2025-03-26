@@ -255,7 +255,10 @@ export interface HeaderState {
   // for payment reciept
   showReceivedFrom?: boolean;
   receivedFromLabel?: string;
-
+  /// Vender Name
+  showVender?: boolean;
+  venderNameFontSize?: number;
+  venderNameFontColor?: string;
   /// Customer Name
   customerNameFontSize?: number;
   customerNameFontColor?: string;
@@ -757,6 +760,9 @@ export const initialTemplateState: ActionState<TemplateState> = {
       show_balance_due: false,
       showStatusStamp: false,
       showReceivedFrom: false,
+      showVender: false,
+      venderNameFontSize: 11,
+      venderNameFontColor : "#000000",
       receivedFromLabel: "",
       customerNameFontSize: 12,
       customerNameFontColor: "#000000",

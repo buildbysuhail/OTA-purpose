@@ -18,9 +18,11 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
   
     // Update the WarehouseType value when radio selection changes
     useEffect(() => {
-      const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van"
-      handleFieldChange("WarehouseType", warehouseType)
-    }, [warehouseTypeRadio, handleFieldChange])
+      if (warehouseTypeRadio.physical || warehouseTypeRadio.van) {
+        const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van";
+        handleFieldChange("WarehouseType", warehouseType);
+      }
+    }, [warehouseTypeRadio, handleFieldChange]);
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -37,13 +39,13 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
           {...getFieldProps("dateTo")}
           label={t("date_to")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("DateTo", data.dateTo)}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
       </div>
 
       {/* Warehouse Selection */}
       <ERPDataCombobox
-        {...getFieldProps("warehouseID")}
+        {...getFieldProps("warehosueID")}
         label={t("warehouse")}
         field={{
           id: "warehouseID",
@@ -53,7 +55,7 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ WarehouseID: data.value, WarehouseName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ warehouseID: data.value, WarehouseName: data.label })}
       />
 
       {/* Party Selection */}
@@ -68,7 +70,7 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
           labelKey: "name",
           nameKey: "alias",
         }}
-        onSelectItem={(data) => handleFieldChange({ PartyID: data.value, PartyName: data.label })}
+        onSelectItem={(data) => handleFieldChange({ partyID: data.value, PartyName: data.label })}
       />
 
       {/* Warehouse Type Radio Buttons */}

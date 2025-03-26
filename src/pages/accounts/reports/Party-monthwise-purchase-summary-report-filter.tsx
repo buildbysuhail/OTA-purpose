@@ -20,14 +20,14 @@ const PartyMonthwisePurchaseSummaryReportFilter = ({ getFieldProps, handleFieldC
           {...getFieldProps("fromDate")}
           label={t("date_from")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("DateFrom", data.DateFrom)}
+          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
           autoFocus={true}
         />
         <ERPDateInput
           {...getFieldProps("toDate")}
           label={t("date_to")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("DateTo", data.DateTo)}
+          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
       </div>
     </div>

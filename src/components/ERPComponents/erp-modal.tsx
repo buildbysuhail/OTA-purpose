@@ -236,6 +236,18 @@ const ERPModal = React.memo(
   onDragStart={(e) => {
     e.stopPropagation(); 
   }}
+  onMouseDown={(e) => {
+    e.stopPropagation(); 
+  }}
+  onDrag={(e) => {
+    e.stopPropagation(); 
+  }}
+  onMouseUp={(e) => {
+    e.stopPropagation(); 
+  }}
+  onResizeStart={(e) => {
+    e.stopPropagation(); 
+  }}
  onDragStop={(_, d) => {
   if (!isMaximized) setPosition({ x: d.x, y: d.y });
        
@@ -267,10 +279,10 @@ const ERPModal = React.memo(
       >
         <DialogTitle
           as="h3"
-          className={`drag-handle ${isMaximized ?"cursor-pointer":"cursor-move"}  place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900`}
+          className={` ${isMaximized ?"cursor-pointer":"cursor-move"}  place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900`}
           style={{ flex: "0 0 auto" }}
         >
-          <div className="flex items-center dark:text-dark-text">{title}</div>
+          <div  className=" drag-handle flex items-center dark:text-dark-text">{title}</div>
           {closeButton === "Button" && (
             <div className="max-w-[200px] inline-block">
               <ERPButton

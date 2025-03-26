@@ -77,16 +77,21 @@ const ProfitAndLossRow: React.FC<{
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}
       >
-        <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
+        {/* <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
           {item.groupName}
-        </a>
+        </a> */}
+        <a
+      onClick={handleClick}
+      className={item.groupID === 0 || item.groupID === -400 ? "cursor-default" : "hover:text-[#e74862] cursor-pointer"}
+    >
+      {item.groupName}
+    </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
           <a
-            href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${
+            className={`py-2  cursor-default ${
               item.title == "M"
                 ? "text-[#8B4513]"
                 : item.title == "L" || item.title == "G"
@@ -183,7 +188,7 @@ const HorizontalProfitAndLoss: React.FC<{
           </table>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 cursor-default">
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
           <h6 className="text-sm font-bold text-[#f00]">Total</h6>
           <h6 className="text-sm font-bold text-[#f00] text-right">

@@ -63,7 +63,7 @@ const ProfitAndLossRow: React.FC<{
             : item.title == "L"
               ? ""
               : item.groupName == "TOTAL"
-                ? "text-sm font-bold text-[#f00]"
+                ? "text-sm font-bold text-[#0e0d0d]"
                 : ""
           }`}
         style={{
@@ -89,7 +89,7 @@ const ProfitAndLossRow: React.FC<{
                 : item.title == "L"
                   ? ""
                   : item.groupName == "TOTAL"
-                    ? "text-sm font-bold text-[#f00]"
+                    ? "text-sm font-bold text-[#0e0d0d]"
                     : ""
               }`}
             style={{
@@ -106,7 +106,8 @@ const ProfitAndLossRow: React.FC<{
           >
             { item.total < 0
               ? "(-)" +getFormattedValue(-1*item.total)
-              :parseFloat(getFormattedValue(item.total)) === 0
+              :item.title=="M"?getFormattedValue(item.total)
+              :parseFloat(getFormattedValue(item.total))==0
               ? ''
               : getFormattedValue(item.total)}
           </a>
@@ -177,24 +178,24 @@ const HorizontalProfitAndLoss: React.FC<{
       </div>
       <div className="grid grid-cols-2 gap-4 cursor-default">
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
-          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-          <h6 className="text-sm font-bold text-[#f00] text-right">
+          <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+          <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
             {getFormattedValue(
               data?.find(
                 (item: any) =>
                   item?.transType === "E" && item?.groupName === "TOTAL"
-              )?.total || 0
+              )?.total || ""
             )}
           </h6>
         </div>
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
-          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-          <h6 className="text-sm font-bold text-[#f00] text-right">
+          <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+          <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
             {getFormattedValue(
               data?.find(
                 (item: any) =>
                   item?.transType === "I" && item?.groupName === "TOTAL"
-              )?.total || 0
+              )?.total || ""
             )}
           </h6>
         </div>
@@ -359,7 +360,7 @@ const ProfitAndLossReport = () => {
       if (expense[i]) {
         worksheet.getCell(`A${currentRow}`).value = expense[i].groupName;
         worksheet.getCell(`B${currentRow}`).value =   expense[i].total < 0
-        ? "(-)" +getFormattedValue(-1*expense[i].total)
+        ? "(-)" +getFormattedValue(-1*expense[i].total) 
         : parseFloat(getFormattedValue(expense[i].total)) === 0
         ? ''
         : getFormattedValue(expense[i].total);

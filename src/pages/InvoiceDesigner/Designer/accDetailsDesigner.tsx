@@ -214,6 +214,40 @@ const AccountTransactionDetailsDesigner = ({ template, onChange }: HeaderDesigne
           {/*  */}
        {["PARP","RARP","Cheque"].includes(templateGroup as string)&&(
         <>
+         <div className="flex flex-col gap-2">
+              <ERPCheckbox
+              id="showVoucherNumber"
+                label="Voucher Number"
+                checked={headerState?.adviceTransInfo?.showVoucherNumber}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showVoucherNumber: e.target.checked } })}
+              />
+
+              {headerState?.adviceTransInfo?.showVoucherNumber && (
+                <ERPInput
+                  noLabel
+                  id="voucherNumber"
+                  value={headerState?.adviceTransInfo?.voucherNumber}
+                  onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, voucherNumber: e.target?.value } })}
+                />
+              )}
+          </div>
+
+          <div className="flex items-center gap-2">
+              <ERPCheckbox
+              id="showPrefix"
+                label="show prefix"
+                checked={headerState?.adviceTransInfo?.showPrefix}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showPrefix: e.target.checked } })}
+              />
+
+              <ERPCheckbox
+              id="showFormType"
+                label="show formType"
+                checked={headerState?.adviceTransInfo?.showFormType}
+                onChange={(e) => onChange({ ...headerState, adviceTransInfo: { ...headerState?.adviceTransInfo, showFormType: e.target.checked } })}
+              />
+          </div>
+
           <div className="flex flex-col gap-2">
               <ERPCheckbox
               id="showPaymentMode"

@@ -25,16 +25,16 @@ return (
     wrap
   >
     {/* Main Container */}
-    <View style={{ width: '100%',flex: 1, flexDirection: 'column',
+    <View style={{ width: '100%',flex:1, flexDirection: 'column',
      padding: `${paddingTop}pt ${paddingRight}pt ${paddingBottom}pt ${paddingLeft}pt`,
     }}>
    
         {/* Header */}
        <Header data={data} template={template} currentBranch={currentBranch} />
-        {/* Content */}
+        
         <Content data={data} template={template} currentBranch={currentBranch} />
         {/* Table */}
-        <View style={{flex:1}}>
+        <View style={{flexGrow:1}}>
         <Table data={data} template={template} />
         </View>
       

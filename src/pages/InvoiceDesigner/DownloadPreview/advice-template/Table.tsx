@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { TemplateState } from "../../Designer/interfaces";
+import { dateTrimmer } from "../../../../utilities/Utils";
 
 // Helper function to get column styles based on width input
 const getColumnStyle = (widthSetting: any) => {
@@ -20,7 +21,7 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
 
   const styles = StyleSheet.create({
     table: {
-      marginBottom: 10,
+      marginVertical: 20,
     },
     thead: {
       backgroundColor: adviceTableState?.showTableHeaderBg
@@ -75,70 +76,82 @@ const Table = ({ data, template }: { data: any; template?: TemplateState }) => {
               {adviceTableState?.lineItemNumberLabel || "Invoice Number"}
             </Text>
           )}
-          {adviceTableState?.showInvoiceDate && (
-            <Text style={[styles.th, getColumnStyle(adviceTableState?.InvoiceDateWidth)]}>
-              {adviceTableState?.InvoiceDateLabel || "Invoice Date"}
+          {adviceTableState?.showDate && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.DateWidth)]}>
+              {adviceTableState?.DateLabel || "Date"}
             </Text>
           )}
-          {adviceTableState?.showInvoiceAmount && (
-            <Text style={[styles.th, getColumnStyle(adviceTableState?.InvoiceAmountWidth)]}>
-              {adviceTableState?.InvoiceAmountLabel || "Invoice Amount"}
+          {adviceTableState?.showAmount && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.AmountWidth)]}>
+              {adviceTableState?.AmountLabel || "Amount"}
             </Text>
           )}
-          {adviceTableState?.showWithholdingTax && (
-            <Text style={[styles.th, getColumnStyle(adviceTableState?.WithholdingTaxWidth)]}>
-              {adviceTableState?.WithholdingTaxLabel || "Withholding Tax"}
+          {adviceTableState?.showDueAmount && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.DueAmountWidth)]}>
+              {adviceTableState?.DueAmountLabel || "Due Amount"}
             </Text>
           )}
-          {adviceTableState?.showTCSAmount && (
-            <Text style={[styles.th, getColumnStyle(adviceTableState?.TCSAmountWidth)]}>
-              {adviceTableState?.TCSAmountLabel || "TCS Amount"}
+          {adviceTableState?.showPayment && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.PaymentWidth)]}>
+              {adviceTableState?.PaymentLabel || "Payment"}
             </Text>
           )}
-          {adviceTableState?.showPaymentAmount && (
-            <Text style={[styles.th, getColumnStyle(adviceTableState?.PaymentAmountWidth)]}>
-              {adviceTableState?.PaymentAmountLabel || "Payment Amount"}
+          {adviceTableState?.showBalance && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.BalanceWidth)]}>
+              {adviceTableState?.BalanceLabel || "Balance"}
+            </Text>
+          )}
+            {adviceTableState?.showPaidStatement && (
+            <Text style={[styles.th, getColumnStyle(adviceTableState?.PaidStatementWidth)]}>
+              {adviceTableState?.PaidStatementLabel || "Full paid"}
             </Text>
           )}
         </View>
 
-        {/* Table Body */}
+      {   /* Table Body */}
+      {data?.details?.length > 0 && (
         <View style={styles.tbody}>
-          {data?.details.map((val: any, index: number) => (
+        { data?.details.map((val: any, index: number) => (
             <View key={`tbr${index}`} style={styles.tr}>
               {adviceTableState?.showLineItemNumber && (
                 <Text style={[styles.td, getColumnStyle(adviceTableState?.lineItemNumberWidth)]}>
-                  INV-00{index + 1}
+                  {`${val.voucherType} ${val.voucherNumber}`}
                 </Text>
               )}
-              {adviceTableState?.showInvoiceDate && (
-                <Text style={[styles.td, getColumnStyle(adviceTableState?.InvoiceDateWidth)]}>
-                  2024-01-{10 + index}
+              {adviceTableState?.showDate && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.DateWidth)]}>
+                  {dateTrimmer(val.transactionDate)}
                 </Text>
               )}
-              {adviceTableState?.showInvoiceAmount && (
-                <Text style={[styles.td, getColumnStyle(adviceTableState?.InvoiceAmountWidth)]}>
-                  {1000 + index * 500}.00
+              {adviceTableState?.showAmount && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.AmountWidth)]}>
+                  {val.amount}
                 </Text>
               )}
-              {adviceTableState?.showWithholdingTax && (
-                <Text style={[styles.td, getColumnStyle(adviceTableState?.WithholdingTaxWidth)]}>
-                  {50 + index * 10}.00
+              {adviceTableState?.showDueAmount && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.DueAmountWidth)]}>
+                  {val.amountDue}
                 </Text>
               )}
-              {adviceTableState?.showTCSAmount && (
-                <Text style={[styles.td, getColumnStyle(adviceTableState?.TCSAmountWidth)]}>
-                  {20 + index * 5}.00
+              {adviceTableState?.showPayment && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.PaymentWidth)]}>
+                  {val.payment}
                 </Text>
               )}
-              {adviceTableState?.showPaymentAmount && (
-                <Text style={[styles.td, getColumnStyle(adviceTableState?.PaymentAmountWidth)]}>
-                  {800 + index * 200}.00
+              {adviceTableState?.showBalance && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.BalanceWidth)]}>
+                 {val.balance}
+                </Text>
+              )}
+              {adviceTableState?.showPaidStatement && (
+                <Text style={[styles.td, getColumnStyle(adviceTableState?.PaidStatementWidth)]}>
+                  {val.fullAmountPaid ? "Yes": "No"}
                 </Text>
               )}
             </View>
           ))}
         </View>
+        )}
       </View>
     </View>
   );

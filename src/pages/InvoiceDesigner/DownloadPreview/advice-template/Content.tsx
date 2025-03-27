@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
                     </View>
                   )}
 
-    {headerState?.adviceTransInfo?.showReferenceField && (
+            {headerState?.adviceTransInfo?.showReferenceField && (
                    <View style={styles.customer}>
                      <View style={{flexBasis:"50%"}}>
                           <Text style={labelStyles}>{headerState?.adviceTransInfo?.referenceField || "Reference No"}</Text>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
                       </View>
                     </View>
                   )}
-{headerState?.adviceTransInfo?.showPaymentAmount && (
+            {headerState?.adviceTransInfo?.showPaymentAmount && (
                    <View style={styles.customer}>
                      <View style={{flexBasis:"50%"}}>
                           <Text style={labelStyles}>{headerState?.adviceTransInfo?.paymentAmount || "Payment Amount"}</Text>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
                       </View>
                     </View>
                   )}
-{headerState?.adviceTransInfo?.showPaymentMode && (
+              {headerState?.adviceTransInfo?.showPaymentMode && (
                    <View style={styles.customer}>
                      <View style={{flexBasis:"50%"}}>
                           <Text style={labelStyles}>{headerState?.adviceTransInfo?.paymentMode || "Payment Method"}</Text>

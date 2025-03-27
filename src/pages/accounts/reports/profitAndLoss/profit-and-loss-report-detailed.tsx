@@ -68,7 +68,7 @@ const ProfitAndLossRow: React.FC<{
             : item.title == "L" || item.title == "G"
             ? ""
             : item.groupName == "TOTAL"
-            ? "text-sm font-bold text-[#f00]"
+            ? "text-sm font-bold text-[#0e0d0d]"
             : "text-[#3b82f6]"
         }`}
         style={{
@@ -77,22 +77,27 @@ const ProfitAndLossRow: React.FC<{
           fontWeight: item.title == "M" ? "bold" : "normal",
         }}
       >
-        <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
+        {/* <a href="#" onClick={handleClick} className="hover:text-[#1d4ed8]">
           {item.groupName}
-        </a>
+        </a> */}
+        <a
+      onClick={handleClick}
+      className={item.groupID === 0 || item.groupID === -400 ? "cursor-default" : "hover:text-[#e74862] cursor-pointer"}
+    >
+      {item.groupName}
+    </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-end">
           <a
-            href="#"
             // onClick={handleClick}
-            className={`py-2 hover:text-[#1d4ed8] ${
+            className={`py-2  cursor-default ${
               item.title == "M"
                 ? "text-[#8B4513]"
                 : item.title == "L" || item.title == "G"
                 ? ""
                 : item.groupName == "TOTAL"
-                ? "text-sm font-bold text-[#f00]"
+                ? "text-sm font-bold text-[#0e0d0d]"
                 : "text-[#3b82f6]"
             }`}
             style={{
@@ -110,6 +115,7 @@ const ProfitAndLossRow: React.FC<{
           >
            { item.total < 0
               ? "(-)" +getFormattedValue(-1*item.total)
+              :item.title=="M"?getFormattedValue(item.total)
               :parseFloat(getFormattedValue(item.total)) === 0
               ? ''
               : getFormattedValue(item.total)}
@@ -183,26 +189,26 @@ const HorizontalProfitAndLoss: React.FC<{
           </table>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 cursor-default">
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
-          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-          <h6 className="text-sm font-bold text-[#f00] text-right">
+          <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+          <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
             {getFormattedValue(
               data?.find(
                 (item: any) =>
                   item?.transType === "E" && item?.groupName === "TOTAL"
-              )?.total || 0
+              )?.total || ""
             )}
           </h6>
         </div>
         <div className="grid grid-cols-2 dark:bg-dark-bg-header bg-gray-50 p-2">
-          <h6 className="text-sm font-bold text-[#f00]">Total</h6>
-          <h6 className="text-sm font-bold text-[#f00] text-right">
+          <h6 className="text-sm font-bold text-[#0e0d0d]">Total</h6>
+          <h6 className="text-sm font-bold text-[#0e0d0d] text-right">
             {getFormattedValue(
               data?.find(
                 (item: any) =>
                   item?.transType === "I" && item?.groupName === "TOTAL"
-              )?.total || 0
+              )?.total || ""
             )}
           </h6>
         </div>

@@ -225,6 +225,7 @@ interface ERPDevGridProps {
   ) => React.ReactNode;
   locale?: string;
   columnRenderingMode?: any;
+  columnResizingMode?: "nextColumn"|"widget";
   rowRenderingMode?: "standard" | "virtual";
   keyExpr?: string | string[];
   dateSerializationFormat?: string;
@@ -547,6 +548,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       cellRenderDynamic,
       locale,
       columnRenderingMode = "standard",
+      columnResizingMode = "widget",
+      
       rowRenderingMode = "standard",
       keyExpr,
       dateSerializationFormat,
@@ -1494,52 +1497,56 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [isAtBottom, setIsAtBottom] = useState(false);
 
     // Handle scroll events
-    const handleScroll = useCallback(() => {
+    // const handleScroll = useCallback(() => {
+    //   if (gridRef.current) {
+    //     const gridInstance = gridRef.current.instance();
+    //     const scrollable = gridInstance.getScrollable();
+
+    //     if (!scrollable) return;
+
+    //     const scrollTop = scrollable.scrollTop(); // Current scroll position
+    //     const scrollHeight = scrollable.scrollHeight(); // Total scrollable height
+    //     const clientHeight = scrollable.clientHeight(); // Visible portion of the grid
+
+    //     const buffer = 5; // Small buffer to ensure detection (adjust if necessary)
+
+    //     if (scrollTop + clientHeight >= scrollHeight - buffer) {
+    //       setIsAtBottom(true);
+    //     } else {
+    //       setIsAtBottom(false);
+    //     }
+    //   }
+    // }, []);
+
+    const scrollTo = useCallback(() => {
       if (gridRef.current) {
-        const gridInstance = gridRef.current.instance();
-        const scrollable = gridInstance.getScrollable();
-
-        if (!scrollable) return;
-
-        const scrollTop = scrollable.scrollTop(); // Current scroll position
-        const scrollHeight = scrollable.scrollHeight(); // Total scrollable height
-        const clientHeight = scrollable.clientHeight(); // Visible portion of the grid
-
-        const buffer = 5; // Small buffer to ensure detection (adjust if necessary)
-
-        if (scrollTop + clientHeight >= scrollHeight - buffer) {
-          setIsAtBottom(true);
-        } else {
-          setIsAtBottom(false);
-        }
-      }
-    }, []);
-
-    const scrollTo = useCallback((position: number) => {
-      if (gridRef.current) {
-        const gridInstance = gridRef.current.instance();
-        const scrollable = gridInstance.getScrollable();
-        const scrollHeight = scrollable.scrollHeight();
-        const clientHeight = scrollable.clientHeight(); // Get visible area height
-
-        // Ensure scrolling reaches the real bottom
-        scrollable.scrollTo({
-          top: position === 0 ? 0 : scrollHeight - clientHeight,
-        });
+        setIsAtBottom((prev: any) => {
+          const gridInstance = gridRef.current.instance();
+          const scrollable = gridInstance.getScrollable();
+          const scrollHeight = scrollable.scrollHeight();
+          const clientHeight = scrollable.clientHeight(); // Get visible area height
+  
+          // Ensure scrolling reaches the real bottom
+          scrollable.scrollTo({
+            top: prev === true ? 0 : scrollHeight - clientHeight,
+          });
+          return !prev;
+        })
+        
       }
     }, []);
 
     // Attach scroll event listener
-    useEffect(() => {
-      if (gridRef.current && enableScrollButton) {
-        const gridInstance = gridRef.current.instance();
-        gridInstance.getScrollable()?.on("scroll", handleScroll);
+    // useEffect(() => {
+    //   if (gridRef.current && enableScrollButton) {
+    //     const gridInstance = gridRef.current.instance();
+    //     gridInstance.getScrollable()?.on("scroll", handleScroll);
 
-        return () => {
-          gridInstance.getScrollable()?.off("scroll", handleScroll);
-        };
-      }
-    }, [enableScrollButton, handleScroll]);
+    //     return () => {
+    //       gridInstance.getScrollable()?.off("scroll", handleScroll);
+    //     };
+    //   }
+    // }, [enableScrollButton, handleScroll]);
 
     // Memoize the customizeText function
     const customizeDate = useMemo(() => {
@@ -1656,6 +1663,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onCellClick={handleCellClick}
             onRowDblClick={onRowDblClick}
             onCellPrepared={onCellPrepared}
+            columnResizingMode="widget"
+            
             // columnRenderingMode={columnRenderingMode}
             // rowRenderingMode={rowRenderingMode}
             keyExpr={keyExpr}
@@ -1778,7 +1787,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                       type="button"
                       onClick={() => {
                         
-                        scrollTo(isAtBottom ? 0 : 100);
+                        scrollTo();
                       }}
                       className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"
                     >

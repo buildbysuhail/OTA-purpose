@@ -9,30 +9,35 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         showLineItemNumber: true,
         lineItemNumberLabel: "Invoice Number",
         lineItemNumberWidth: "",
-            // Invoice Date Fields
-        showInvoiceDate: true,
-        InvoiceDateLabel: "Invoice Date",
-        InvoiceDateWidth: "",
+
+        showDate: true,
+        DateLabel: "Date",
+        DateWidth: "",
       
-        // Invoice Amount Fields
-        showInvoiceAmount: true,
-        InvoiceAmountLabel: "Invoice Amount",
-        InvoiceAmountWidth: "",
+        // Amount Fields
+        showAmount: true,
+        AmountLabel: "Amount",
+        AmountWidth: "",
       
-        // Withholding Tax Fields
-        showWithholdingTax: true,
-        WithholdingTaxLabel: "Withholding Tax",
-        WithholdingTaxWidth: "",
+        // Due Amount Fields
+        showDueAmount: true,
+        DueAmountLabel: "Due Amount",
+        DueAmountWidth: "",
       
-        // TCS Amount Fields
-        showTCSAmount: true,
-        TCSAmountLabel: "TCS Amount",
-        TCSAmountWidth: "",
+        // Payment Fields
+        showPayment: true,
+        PaymentLabel: "Payment",
+        PaymentWidth: "",
       
-        // Payment Amount Fields
-        showPaymentAmount: true,
-        PaymentAmountLabel: "Payment Amount",
-        PaymentAmountWidth: "",
+        // Balance Fields
+        showBalance: true,
+        BalanceLabel: "Balance",
+        BalanceWidth: "",
+      
+        // Paid Statement Fields
+        showPaidStatement: true,
+        PaidStatementLabel: "Full Paid",
+        PaidStatementWidth: "",
       },
       accTableState:{
         showLineItemNumber: true,
@@ -190,31 +195,36 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
     
         showLineItemNumber: true,
         lineItemNumberLabel: "Invoice Number",
-        lineItemNumberWidth: "15%",
-            // Invoice Date Fields
-        showInvoiceDate: true,
-        InvoiceDateLabel: "Invoice Date",
-        InvoiceDateWidth: "15%",
+        lineItemNumberWidth: "",
+
+        showDate: true,
+        DateLabel: "Date",
+        DateWidth: "",
       
-        // Invoice Amount Fields
-        showInvoiceAmount: true,
-        InvoiceAmountLabel: "Invoice Amount",
-        InvoiceAmountWidth: "20%",
+        // Amount Fields
+        showAmount: true,
+        AmountLabel: "Amount",
+        AmountWidth: "",
       
-        // Withholding Tax Fields
-        showWithholdingTax: true,
-        WithholdingTaxLabel: "Withholding Tax",
-        WithholdingTaxWidth: "15%",
+        // Due Amount Fields
+        showDueAmount: true,
+        DueAmountLabel: "Due Amount",
+        DueAmountWidth: "",
       
-        // TCS Amount Fields
-        showTCSAmount: true,
-        TCSAmountLabel: "TCS Amount",
-        TCSAmountWidth: "15%",
+        // Payment Fields
+        showPayment: true,
+        PaymentLabel: "Payment",
+        PaymentWidth: "",
       
-        // Payment Amount Fields
-        showPaymentAmount: true,
-        PaymentAmountLabel: "Payment Amount",
-        PaymentAmountWidth: "20%",
+        // Balance Fields
+        showBalance: true,
+        BalanceLabel: "Balance",
+        BalanceWidth: "",
+      
+        // Paid Statement Fields
+        showPaidStatement: true,
+        PaidStatementLabel: "Full Paid",
+        PaidStatementWidth: "",
       },
       accTableState:{
         showLineItemNumber: true,

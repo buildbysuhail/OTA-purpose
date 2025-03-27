@@ -409,6 +409,11 @@ export interface accountTransactionInfo {
    
 }
 export interface adviceTransInfo {
+  showVoucherNumber?: boolean;
+  voucherNumber?: string;
+
+  showPrefix?: boolean;
+  showFormType?: boolean;
 
   showPaymentMode?: boolean;
   paymentMode?: string;
@@ -486,30 +491,29 @@ export interface accTableState extends ItemTableMasterState{
 }
 export interface adviceTableState extends ItemTableMasterState{
 
-  showInvoiceDate?:boolean;
-  InvoiceDateLabel?: string;
-  InvoiceDateWidth?: string;
+  showDate?:boolean;
+  DateLabel?: string;
+  DateWidth?: string;
 
-  // Invoice Amount Fields
-  showInvoiceAmount?: boolean;
-  InvoiceAmountLabel?: string;
-  InvoiceAmountWidth?: string;
+  showAmount?: boolean;
+  AmountLabel?: string;
+  AmountWidth?: string;
 
-  // Withholding Tax Fields
-  showWithholdingTax?: boolean;
-  WithholdingTaxLabel?: string;
-  WithholdingTaxWidth?: string;
+  showDueAmount?: boolean;
+  DueAmountLabel?: string;
+  DueAmountWidth?: string;
 
-  // TCS Amount Fields
-  showTCSAmount?: boolean;
-  showTCSSection?:boolean;
-  TCSAmountLabel?: string;
-  TCSAmountWidth?: string;
+  showPayment?: boolean;
+  PaymentLabel?: string;
+  PaymentWidth?: string;
 
-  // Payment Amount Fields
-  showPaymentAmount?: boolean;
-  PaymentAmountLabel?: string;
-  PaymentAmountWidth?: string;
+  showBalance?: boolean;
+  BalanceLabel?: string;
+  BalanceWidth?: string;
+
+  showPaidStatement?: boolean;
+  PaidStatementLabel?: string;
+  PaidStatementWidth?: string;
 }
 export interface ItemTableState extends ItemTableMasterState {
   // Item Description
@@ -1032,30 +1036,35 @@ export const initialTemplateState: ActionState<TemplateState> = {
       showLineItemNumber: true,
       lineItemNumberLabel: "Invoice Number",
       lineItemNumberWidth: "auto",
-          // Invoice Date Fields
-      showInvoiceDate: true,
-      InvoiceDateLabel: "Invoice Date",
-      InvoiceDateWidth: "auto",
-    
-      // Invoice Amount Fields
-      showInvoiceAmount: true,
-      InvoiceAmountLabel: "Invoice Amount",
-      InvoiceAmountWidth: "auto",
-    
-      // Withholding Tax Fields
-      showWithholdingTax: true,
-      WithholdingTaxLabel: "Withholding Tax",
-      WithholdingTaxWidth: "auto",
-    
-      // TCS Amount Fields
-      showTCSAmount: true,
-      TCSAmountLabel: "TCS Amount",
-      TCSAmountWidth: "auto",
-    
-      // Payment Amount Fields
-      showPaymentAmount: true,
-      PaymentAmountLabel: "Payment Amount",
-      PaymentAmountWidth: "auto",
+    // Date Fields
+    showDate: true,
+    DateLabel: "Date",
+    DateWidth: "auto",
+  
+    // Amount Fields
+    showAmount: true,
+    AmountLabel: "Amount",
+    AmountWidth: "auto",
+  
+    // Due Amount Fields
+    showDueAmount: true,
+    DueAmountLabel: "Due Amount",
+    DueAmountWidth: "auto",
+  
+    // Payment Fields
+    showPayment: true,
+    PaymentLabel: "Payment",
+    PaymentWidth: "auto",
+  
+    // Balance Fields
+    showBalance: true,
+    BalanceLabel: "Balance",
+    BalanceWidth: "auto",
+  
+    // Paid Statement Fields
+    showPaidStatement: true,
+    PaidStatementLabel: "Full Paid",
+    PaidStatementWidth: "auto",
     }
   },
 };

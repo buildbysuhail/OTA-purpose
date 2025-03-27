@@ -282,9 +282,9 @@ const ERPModal = React.memo(
           className={` ${isMaximized ?"cursor-pointer":"cursor-move"}  place-items-center px-4 rounded-t-md bg-[#f6f6f6] h-[40px]  top-0 z-10 flex justify-between text-[16px] dark:border-dark-border border-b py-3 font-medium leading-6 dark:bg-dark-bg dark:text-dark-text text-gray-900`}
           style={{ flex: "0 0 auto" }}
         >
-          <div  className=" drag-handle flex items-center dark:text-dark-text">{title}</div>
+          <div  className=" drag-handle flex items-center dark:text-dark-text flex-1">{title}</div>
           {closeButton === "Button" && (
-            <div className="max-w-[200px] inline-block">
+            <div className="max-w-[200px] inline-block ">
               <ERPButton
                 className="w-full"
                 type="button"

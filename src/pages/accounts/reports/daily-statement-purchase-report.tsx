@@ -218,7 +218,7 @@ const DailyStatementPurchaseReport = () => {
                   gridHeader={t("daily_statement_purchase")}
                   dataUrl={Urls.daily_statement_purchase}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.daily_statement_purchase}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}

@@ -39,9 +39,12 @@ return (
         </View>
       
         {/* Footer */}
-        <Footer data={data} template={template}  />
-      <View style={{ width: '100%',display:"flex", flexDirection: 'row',justifyContent:"space-between",marginVertical:2
-     }}fixed>
+        {/* <Footer data={data} template={template}/> */}
+
+        {template?.footerState?.show_page_number && (
+          <>
+            <View style={{ width: '100%',display:"flex", flexDirection: 'row',justifyContent:"space-between",marginVertical:2
+      }}fixed>
         <Text style={{fontSize: 8}}>01/03/2025 09:52 AM </Text>
         <Text
           style={{
@@ -51,6 +54,11 @@ return (
           render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
         />
         </View>
+          </>
+        )
+    
+        }
+    
       
     </View>
   </Page>

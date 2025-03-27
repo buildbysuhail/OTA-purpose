@@ -190,12 +190,11 @@ const styles = StyleSheet.create({
        <Text style={labelStyles}>Dear Sir,</Text>
     
         <Text style={fontStyles}>
-          We have cleared the below invoices with document number 3
+          {`We have cleared the below invoices with document number ${data.master?.voucherNumber}`}
         </Text>
+
         </View> 
-     
-      
-          
+
         </View>
         </View>
     );

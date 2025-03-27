@@ -14,16 +14,16 @@ const CreditPurchaseSummaryReport = () => {
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "iD",
+    //   caption: t("id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    //   visible: false,
+    //   showInPdf: true,
+    // },
     {
       dataField: "date",
       caption: t("date"),
@@ -42,7 +42,7 @@ const CreditPurchaseSummaryReport = () => {
     {
       dataField: "vchNo",
       caption: t("voucher_no"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
@@ -462,7 +462,7 @@ const CreditPurchaseSummaryReport = () => {
                   gridHeader={t("Credit_purchase_summary")}
                   dataUrl={Urls.Credit_purchase_summary}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.Credit_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={550}

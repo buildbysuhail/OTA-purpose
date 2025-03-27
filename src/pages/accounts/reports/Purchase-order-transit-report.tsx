@@ -17,16 +17,16 @@ const PurchaseOrderTransitReport = () => {
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "iD",
+    //   caption: t("id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    //   visible: false,
+    //   showInPdf: true,
+    // },
     {
       dataField: "productCode",
       caption: t("product_code"),
@@ -228,7 +228,7 @@ const PurchaseOrderTransitReport = () => {
                   gridHeader={t("Purchase_Order_Transit_Report")}
                   dataUrl={Urls.Purchase_Order_Transit_And_Stock_Details}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.Purchase_Order_Transit_Report}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}

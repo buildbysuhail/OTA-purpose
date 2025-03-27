@@ -225,6 +225,7 @@ interface ERPDevGridProps {
   ) => React.ReactNode;
   locale?: string;
   columnRenderingMode?: any;
+  columnResizingMode?: "nextColumn"|"widget";
   rowRenderingMode?: "standard" | "virtual";
   keyExpr?: string | string[];
   dateSerializationFormat?: string;
@@ -547,6 +548,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       cellRenderDynamic,
       locale,
       columnRenderingMode = "standard",
+      columnResizingMode = "widget",
+      
       rowRenderingMode = "standard",
       keyExpr,
       dateSerializationFormat,
@@ -1660,6 +1663,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onCellClick={handleCellClick}
             onRowDblClick={onRowDblClick}
             onCellPrepared={onCellPrepared}
+            columnResizingMode="widget"
+            
             // columnRenderingMode={columnRenderingMode}
             // rowRenderingMode={rowRenderingMode}
             keyExpr={keyExpr}

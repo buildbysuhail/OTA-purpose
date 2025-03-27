@@ -2,6 +2,7 @@ import { Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { APIClient } from "../../../../helpers/api-client";
@@ -73,7 +74,15 @@ const PurchaseSummaryReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 75,
+      width: 100,
+      cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+             return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+          }
     },
     {
       dataField: "vchNo",
@@ -404,6 +413,12 @@ const PurchaseSummaryReport = () => {
     };
   }, []);
   const summaryItems: SummaryConfig[] = [
+     {
+      column: "address2",
+      summaryType: "custom",
+      valueFormat: "string",
+      displayFormat:"TOTAL"
+    },
     {
       column: "netValue",
       summaryType: "sum",
@@ -415,7 +430,8 @@ const PurchaseSummaryReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }];
+    }
+  ];
     
   return (
     <Fragment>
@@ -424,8 +440,10 @@ const PurchaseSummaryReport = () => {
           <div className="px-4 pt-4 pb-2 ">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+              groupPanelVisible={true}
+              // autoExpandAll={true}
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: true, paging: true, sorting: true, summary: true }}
+                remoteOperations={{ filtering: true, paging: true, sorting: false, summary: true }}
                 columns={columns}
                 moreOption
                 gridHeader={t("purchase_summary_report")}
@@ -435,6 +453,7 @@ const PurchaseSummaryReport = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseSummaryFilter />}
+                columnResizingMode={"widget"}
                 filterHeight={450}
                 filterWidth={790}
                 filterInitialData={PurchaseSummaryFilterInitialState}

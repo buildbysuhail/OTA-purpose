@@ -4,44 +4,47 @@ import Urls from "../../../redux/urls"
 import { useTranslation } from "react-i18next"
 import { LedgerType } from "../../../enums/ledger-types"
 import moment from "moment"
-import { useEffect, useState } from "react"
-import ERPRadio from "../../../components/ERPComponents/erp-radio"
+
+// Updated interface to match C# properties
+// interface ReportFilterProps {
+//   getFieldProps: (field: string) => any
+//   handleFieldChange: (field: string | object, value?: any) => void
+// }
 
 const DailyStatementAllReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
   const { t } = useTranslation("accountsReport")
-
-    // State for warehouse type radio buttons
-    const [warehouseTypeRadio, setWarehouseTypeRadio] = useState({
-      physical: false,
-      van: false,
-    })
-  
-    // Update the WarehouseType value when radio selection changes
-    useEffect(() => {
-      if (warehouseTypeRadio.physical || warehouseTypeRadio.van) {
-        const warehouseType = warehouseTypeRadio.physical ? "Physical" : "Van";
-        handleFieldChange("WarehouseType", warehouseType);
-      }
-    }, [warehouseTypeRadio, handleFieldChange]);
 
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Date Range Section */}
       <div className="flex items-center gap-4">
         <ERPDateInput
-          {...getFieldProps("fromDate ")}
+          {...getFieldProps("fromDate")} // Changed from dateFrom to FromDate
           label={t("date_from")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("fromDate ", data.fromDate )}
+          onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)} // Updated field name
           autoFocus={true}
         />
         <ERPDateInput
-          {...getFieldProps("toDate ")}
+          {...getFieldProps("toDate")} // Changed from dateTo to ToDate
           label={t("date_to")}
           className="w-full"
-          onChangeData={(data: any) => handleFieldChange("toDate ", data.toDate )}
+          onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)} // Updated field name
         />
       </div>
+      {/* <ERPDataCombobox
+        {...getFieldProps("bankLedgerID")}
+        label={t("bank_ledger")}
+        field={{
+          id: "bankLedgerID",
+          getListUrl: Urls.data_acc_ledgers,
+          params: `ledgerType=${LedgerType.BankAccount}`,
+          valueKey: "id",
+          labelKey: "name",
+          nameKey: "alias",
+        }}
+        onSelectItem={(data) => handleFieldChange({ bankLedgerID: data.value, BankLedgerName: data.label })}
+      /> */}
     </div>
   )
 }
@@ -50,6 +53,8 @@ export default DailyStatementAllReportFilter
 
 // Updated initial state to match C# property names
 export const DailyStatementAllReportInitialState = {
-  fromDate : moment().local().subtract(30, "days").toDate(),
-  toDate : new Date(),
+  fromDate: moment().local().subtract(45, "days").toDate(),
+  toDate: new Date(), // Default empty string
+  // bankLedgerID: 0,
 }
+

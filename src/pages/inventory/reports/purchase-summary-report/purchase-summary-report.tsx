@@ -8,64 +8,67 @@ import { ActionType } from "../../../../redux/types";
 import { APIClient } from "../../../../helpers/api-client";
 import PurchaseSummaryFilter, { PurchaseSummaryFilterInitialState } from "./purchase-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
-interface PurchaseSummaryReport {
-  date?: string;
-  vchNo?: string;
-  form?: string;
-  party?: string;
-  address1?: string;
-  address2?: string;
-  gross?: number;
-  disc?: number;
-  billDiscount?: number;
-  vat?: number;
-  grandTotal?: number;
-  cashDiscount?: number;
-  adjustmentAmount?: number;
-  cashAmt?: number;
-  creditAmt?: number;
-  bankAmt?: number;
-  financialYearID?: number;
-  exchangeRate?: number;
-  couponAmt?: number;
-  masterID?: number;
-  branch?: string;
-  mInvoiceNo?: string;
-  refNo?: string;
-  refNo2?: string;
-  refDate?: Date;
-  salesmanName?: string;
-  warehouseName?: string;
-  roundAmount?: number;
-  taxNumber?: string;
-  taxOnDiscount?: number;
-  netValue?: number;
-  si?: number;
-  createdDate?: Date;
-  remarks?: string;
-  routeName?: string;
-  srAmount?: number;
-  mobileNumber?: string;
-  totalExciseTax?: number;
-  toWarehouseName?: string;
-}
+// interface PurchaseSummaryReport {
+//   date?: string;
+//   vchNo?: string;
+//   form?: string;
+//   party?: string;
+//   address1?: string;
+//   address2?: string;
+//   gross?: number;
+//   disc?: number;
+//   billDiscount?: number;
+//   vat?: number;
+//   grandTotal?: number;
+//   cashDiscount?: number;
+//   adjustmentAmount?: number;
+//   cashAmt?: number;
+//   creditAmt?: number;
+//   bankAmt?: number;
+//   financialYearID?: number;
+//   exchangeRate?: number;
+//   couponAmt?: number;
+//   masterID?: number;
+//   branch?: string;
+//   mInvoiceNo?: string;
+//   refNo?: string;
+//   refNo2?: string;
+//   refDate?: Date;
+//   salesmanName?: string;
+//   warehouseName?: string;
+//   roundAmount?: number;
+//   taxNumber?: string;
+//   taxOnDiscount?: number;
+//   netValue?: number;
+//   si?: number;
+//   createdDate?: Date;
+//   remarks?: string;
+//   routeName?: string;
+//   srAmount?: number;
+//   mobileNumber?: string;
+//   totalExciseTax?: number;
+//   toWarehouseName?: string;
+// }
 
-const api = new APIClient();
+// const api = new APIClient();
 
 const PurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport");
-  const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
-  const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
-  const onCloseFilter = useCallback(() => {
-    if (filterShowCount === 0) {
-      setFilter({});
-      setFilterShowCount((prev) => prev + 1);
-    }
-    setShowFilter(false);
-  }, [filterShowCount]);
+
+  // const [showFilter, setShowFilter] = useState<boolean>(false);
+  // const [filter, setFilter] = useState<any>(PurchaseSummaryFilterInitialState);
+  // const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  // const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  // const onCloseFilter = useCallback(() => {
+  //   if (filterShowCount === 0) {
+  //     setFilter({});
+  //     setFilterShowCount((prev) => prev + 1);
+  //   }
+  //   setShowFilter(false);
+  // }, [filterShowCount]);
 
   const columns: DevGridColumn[] = [
     {
@@ -214,6 +217,10 @@ const PurchaseSummaryReport = () => {
       visible: false,
       width: 100,
     },
+    // if (this.VoucherForm != "Import")
+  //   {
+  //     dgvReport.Columns["ExchangeRate"].Visible = false;
+  // }
     {
       dataField: "exchangeRate",
       caption: t("exchange_rate"),
@@ -223,6 +230,7 @@ const PurchaseSummaryReport = () => {
       visible: false,
       width: 100,
     },
+    //do not calculate CouponAmt summary on dbidvalue =543140180640
     {
       dataField: "couponAmt",
       caption: t("coupon_amt"),
@@ -394,6 +402,91 @@ const PurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
     },
+    {
+      dataField: "salesAmount",
+      caption: t("sales_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "totalProfit",
+      caption: t("total_profit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "totalProfitPercentage",
+      caption: t("total_profit_percentage"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "costCentreName",
+      caption: t("cost_centre_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "deliveryStatus",
+      caption: t("delivery_status"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "paidStatus",
+      caption: t("paid_status"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "orderNumber",
+      caption: t("order_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+
+
+    //if AccountsSettings.AllowMultiPayments start
+    {
+      dataField: "uPI",
+      caption: t("UPI or QRpay"),//appglobal UPI else QRpay
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "cardAmt",
+      caption: t("CardAmt"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    //////// end
+    // show when dbidvalue=543140180640
+    {
+      dataField: "printCount",
+      caption: t("print_count"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
 
   ];
 
@@ -412,7 +505,9 @@ const PurchaseSummaryReport = () => {
       return getFormattedValue(value) || "0";
     };
   }, []);
+  const usersession = useSelector((state: RootState) => state.UserSession);
   const summaryItems: SummaryConfig[] = [
+    
      {
       column: "address2",
       summaryType: "custom",
@@ -420,7 +515,37 @@ const PurchaseSummaryReport = () => {
       displayFormat:"TOTAL"
     },
     {
-      column: "netValue",
+      column: "gross",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "vAT",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+     {
+      column: "disc",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "grandTotal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "billDiscount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cashDiscount",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -430,7 +555,87 @@ const PurchaseSummaryReport = () => {
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
+    {
+      column: "creditAmt",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "bankAmt",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+
+    {
+      column: "adjustmentAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    //only in multipayment and inventorysumary
+    {
+      column: "netValue",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    //only in multipayment and inventorysumary
+    {
+      column: "sRAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    //not in inactive and nahla
+    // usersession.dbIdValue!== "543140180640"&&(
+    //   {
+    //     column: "couponAmt",
+    //     summaryType: "sum",
+    //     valueFormat: "currency",
+    //     customizeText: customizeSummaryRow,
+    //   },
+    // )
+    //not in inactive
+    {
+      column: "taxOnDiscount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    //not in inactive
+   {
+      column: "roundAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+
+    //dbid value="489995732270"
+    //asmari only
+//  {
+//       column: "salesAmount",
+//       summaryType: "sum",
+//       valueFormat: "currency",
+//       customizeText: customizeSummaryRow,
+//     },
+//asmari only
+//    {
+//       column: "totalProfit",
+//       summaryType: "sum",
+//       valueFormat: "currency",
+//       customizeText: customizeSummaryRow,
+//     },
+
+//inventory summary only
+    {
+      column: "totalExciseTax", 
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
   ];
     
   return (
@@ -445,7 +650,8 @@ const PurchaseSummaryReport = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: true, paging: true, sorting: false, summary: true }}
                 columns={columns}
-                moreOption
+                // moreOption
+                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} {productID > 0 && , Product Name : [productName]} {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
                 gridHeader={t("purchase_summary_report")}
                 dataUrl={Urls.purchase_summary_report}
                 hideGridAddButton={true}
@@ -453,11 +659,11 @@ const PurchaseSummaryReport = () => {
                 showFilterInitially={true}
                 method={ActionType.POST}
                 filterContent={<PurchaseSummaryFilter />}
-                columnResizingMode={"widget"}
+                // columnResizingMode={"widget"}
                 filterHeight={450}
                 filterWidth={790}
                 filterInitialData={PurchaseSummaryFilterInitialState}
-                onFilterChanged={(f: any) => { setFilter(f); }}
+                // onFilterChanged={(f: any) => { setFilter(f); }}
                 reload={true}
                 gridId="grd_purchase_summary_report"
               />

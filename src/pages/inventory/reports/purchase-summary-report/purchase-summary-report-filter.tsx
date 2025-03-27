@@ -1,15 +1,19 @@
+import { useSelector } from "react-redux";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
 
 const PurchaseSummaryFilter = ({
     getFieldProps,
     handleFieldChange,
     formState,
 }: any) => {
+      const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+      const usersession = useSelector((state: RootState) => state.UserSession);
     const { t } = useTranslation("accountsReport");
 
     return (
@@ -40,17 +44,20 @@ const PurchaseSummaryFilter = ({
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
-                            value={formState.fromTime}
+                            // value={formState.fromTime}
+                            // {...getFieldProps("fromTime")}
+                            value={formState.fromTime || moment().local().format("HH:mm")}
                             onChange={(e) => handleFieldChange("fromTime", e.target.value)}
                             disabled={!getFieldProps("isTimeBased").value}
                         />
-                    </div>
-                    <div>
+                    {/* </div>
+                    <div> */}
                         <label>{t("time_to")}</label>
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
                             value={formState.toTime}
+                            // value={formState.toTime || moment().local().format("HH:mm")}
                             onChange={(e) => handleFieldChange("toTime", e.target.value)}
                             disabled={!getFieldProps("isTimeBased").value}
                         />
@@ -59,7 +66,8 @@ const PurchaseSummaryFilter = ({
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-                <ERPDataCombobox
+                
+                {/* <ERPDataCombobox     shown only  SI-BT
                     label={t("transfer_voucher")}
                     {...getFieldProps("voucherType")}
                     field={{
@@ -73,8 +81,8 @@ const PurchaseSummaryFilter = ({
                             voucherType: data.value,
                         });
                     }}
-                />
-                <ERPDataCombobox
+                /> */}
+                {/* <ERPDataCombobox
                     label={t("product")}
                     {...getFieldProps("productID")}
                     field={{
@@ -86,9 +94,13 @@ const PurchaseSummaryFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange({
                             productID: data.value,
+                             productName: data.label,
+
                         });
                     }}
-                />
+                /> */}
+                 {
+        applicationSettings.mainSettings?.allowSalesRouteArea == true && (
                 <ERPDataCombobox
                     label={t("sales_route")}
                     {...getFieldProps("salesRouteID")}
@@ -103,7 +115,7 @@ const PurchaseSummaryFilter = ({
                             salesRouteID: data.value,
                         });
                     }}
-                />
+                />)}
                 <ERPDataCombobox
                     label={t("sales_man")}
                     {...getFieldProps("salesmanID")}
@@ -119,6 +131,8 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
+                  {
+        applicationSettings.accountsSettings?.allowSalesCounter == true && (
                 <ERPDataCombobox
                     label={t("counter")}
                     {...getFieldProps("counterID")}
@@ -133,7 +147,7 @@ const PurchaseSummaryFilter = ({
                             counterID: data.value,
                         });
                     }}
-                />
+                />)}
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("partyID")}
@@ -167,14 +181,15 @@ const PurchaseSummaryFilter = ({
                 <ERPDataCombobox
                     label={t("voucher_form")}
                     {...getFieldProps("voucherForm")}
-                    options={[
-                        { value: 'si-bt', label: 'SI-BT' },
-                        { value: 'se-bt', label: 'SE-BT' }
-                    ]}
+                    // options={[
+                    //     { value: 'si-bt', label: 'SI-BT' },
+                    //     { value: 'se-bt', label: 'SE-BT' }
+                    // ]}
                     field={{
                         id: "voucherForm",
-                        valueKey: "value",
-                        labelKey: "label",
+                        getListUrl: Urls.data_form_type,
+                        valueKey: "id",
+                        labelKey: "name",
                     }}
                     onSelectItem={(data) => {
                         handleFieldChange({
@@ -197,6 +212,8 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
+                   {
+        usersession.dbIdValue== "489995732270" && (
                 <ERPDataCombobox
                     label={t("cost_center")}
                     {...getFieldProps("costCenterID")}
@@ -212,7 +229,9 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
-                <ERPDataCombobox
+        )}
+        {/* shows on SI,SR,SI-BT  */}
+                {/* <ERPDataCombobox    
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
                     options={[
@@ -231,7 +250,7 @@ const PurchaseSummaryFilter = ({
                             reportOf: data.value,
                         });
                     }}
-                />
+                /> */}
             </div>
         </div>
     );
@@ -240,20 +259,21 @@ const PurchaseSummaryFilter = ({
 export default PurchaseSummaryFilter;
 
 export const PurchaseSummaryFilterInitialState = {
-    fromDate: moment().local().startOf("day").toDate(),
+    fromDate: moment().local().startOf("day").toDate(),//software date as initial
     toDate: moment().local().endOf("day").toDate(),
-    voucherType: "",
+    voucherType: "PI",
     salesRouteID: 0,
     counterID: 0,
     salesmanID: 0,
     productID: 0,
     partyID: 0,
-    voucherForm: "",
-    warehouseID: 0,
+    voucherForm: "@",
+    warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
     partyCategoryID: 0,
     isTimeBased: 0,
-    fromTime: moment().local().format("HH:mm"),
-    toTime: moment().local().format("HH:mm"),
+    fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
+    toTime: moment().local().format("hh:mm"),
     transactionType: "",
     reportOf: "",
+    IsInactive:false//true on in shortcut NPIR
 };

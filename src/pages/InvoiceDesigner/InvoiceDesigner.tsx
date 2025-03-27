@@ -585,7 +585,7 @@ const InvoiceDesigner = () => {
             style={{ maxHeight: `${maxHeight}px`, margin: "20px", border: "1px solid #DFDFDF" }}>
             <AdviceTemplate
               template={templateData.activeTemplate}
-              data={DummyVoucherData}
+              data={[]}
               currentBranch={currentBranch}
             />
           </PDFViewer>

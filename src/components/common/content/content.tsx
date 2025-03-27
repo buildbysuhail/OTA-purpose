@@ -148,6 +148,8 @@ import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/ex
 import ShortageStock from "../../../pages/inventory/reports/shortage-stock-report/shortage-stock";
 import DailyStatementAllReport from "../../../pages/accounts/reports/daily-statement-all-report ";
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
+import DailyStatementPurchaseReport from "../../../pages/accounts/reports/daily-statement-purchase-report";
+import DailySalesStatementReport from "../../../pages/accounts/reports/daily-statement-sales-report";
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
@@ -477,6 +479,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
         <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
         <Route path="/inventory-masters/brands" element={<Brands />} />
+        <Route path="/inventory/daily_statement_sales" element={<DailySalesStatementReport />} />
+        <Route path="/inventory/daily_statement_purchase" element={<DailyStatementPurchaseReport />} />
         <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles />} />

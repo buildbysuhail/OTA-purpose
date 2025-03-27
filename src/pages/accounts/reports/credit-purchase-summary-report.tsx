@@ -462,7 +462,7 @@ const CreditPurchaseSummaryReport = () => {
                   gridHeader={t("Credit_purchase_summary")}
                   dataUrl={Urls.Credit_purchase_summary}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.Credit_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={550}

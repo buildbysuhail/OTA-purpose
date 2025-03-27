@@ -218,7 +218,7 @@ const DailyStatementAllReport = () => {
                   gridHeader={t("daily_statement_all")}
                   dataUrl={Urls.daily_statement_all}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.daily_statement_all}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}

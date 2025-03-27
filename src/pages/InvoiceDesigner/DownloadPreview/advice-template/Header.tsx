@@ -101,7 +101,7 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           src={template?.background_image_header}
           style={[
             styles.bgImage,
-            { objectPosition: headerState?.bg_image_header_position || 'center' } // Control image position
+            { objectPosition: headerState?.bg_image_header_position || 'center' } 
           ]}
         />
       )}
@@ -133,8 +133,18 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
           {headerState?.docTitle }
         </Text>
          }
+           <View style={{flexDirection:"row",gap:5,}}>
+           {headerState?.adviceTransInfo?.showPrefix &&
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{data.master?.voucherPrefix}</Text>
+          }
+           {headerState?.adviceTransInfo?.showVoucherNumber &&
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`${headerState?.adviceTransInfo?.voucherNumber ??"Payment No"} : ${data.master?.voucherNumber}`}</Text>
+          }
+           {headerState?.adviceTransInfo?.showFormType && data.master?.formType  &&
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data.master.formType}]`}</Text>
+          }
+           </View>
            
-            <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{"Payment No:3"}</Text>
         </View>
         <View style={[styles.orgAddress,{flexBasis:"33.33%",}]}>
           {headerState?.showOrgAddress &&

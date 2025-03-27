@@ -272,10 +272,10 @@ const PurchaseTaxReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("Purchase_Tax")}
-                  dataUrl={Urls.acc_reports_Purchase_Tax}
+                  gridHeader={t("Purchase_tax")}
+                  dataUrl={Urls.Purchase_tax}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.Purchase_tax}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}

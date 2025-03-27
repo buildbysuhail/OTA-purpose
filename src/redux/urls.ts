@@ -370,6 +370,8 @@ const Urls = {
   taxCategory: "/Inventory/TaxCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
+  daily_statement_sales:"/Inventory/RptInventoryDailyStatementReport/DailyStatementReportSales",
+  daily_statement_purchase:"/Inventory/RptInventoryDailyStatementReport/DailyStatementReportPurchase",
   section: "/Inventory/Section/",
   group_category: "/Inventory/GroupCategory/",
   payment_receipt_billwise_advice_for_print: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",

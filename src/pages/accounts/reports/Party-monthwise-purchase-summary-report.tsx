@@ -13,16 +13,16 @@ const PartyMonthwisePurchaseSummaryReport = () => {
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "iD",
+    //   caption: t("id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    //   visible: false,
+    //   showInPdf: true,
+    // },
     {
       dataField: "branch",
       caption: t("branch"),

@@ -140,8 +140,8 @@ export  const Header = ({ data, template, currentBranch,}: { data: any; template
            {headerState?.adviceTransInfo?.showVoucherNumber &&
            <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`${headerState?.adviceTransInfo?.voucherNumber ??"Payment No"} : ${data.master?.voucherNumber}`}</Text>
           }
-           {headerState?.adviceTransInfo?.showFormType && data.master?.formType  &&
-           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data.master.formType}]`}</Text>
+           {headerState?.adviceTransInfo?.showFormType && data.master?.formType ||  data.master?.formType !== " "  &&
+           <Text style={[labelStyles,{fontSize:8,fontWeight:700}]}>{`[${data.master?.formType}]`}</Text>
           }
            </View>
            

@@ -52,7 +52,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
         label={t("counter")}
         field={{
           id: "counterID",
-          getListUrl: Urls.data_counters, // Assuming this URL exists
+          getListUrl: Urls.data_counters,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -67,7 +67,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
         label={t("saleman")}
         field={{
           id: "salemanID",
-          getListUrl: Urls.data_salesRoute, // Assuming this URL exists
+          getListUrl: Urls.data_employees, 
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -97,7 +97,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
         label={t("party")}
         field={{
           id: "partyID",
-          getListUrl: Urls.data_parties,
+          getListUrl: Urls.data_acc_ledgers,
           params: "",
           valueKey: "id",
           labelKey: "name",
@@ -113,7 +113,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
             label={t("voucher_form")}
             field={{
               id: "voucherForm",
-              getListUrl: Urls.data_vouchertype, // Assuming this URL exists
+              getListUrl: Urls.data_form_type,
               params: "",
               valueKey: "id",
               labelKey: "name",

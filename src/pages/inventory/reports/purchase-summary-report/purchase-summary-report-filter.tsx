@@ -14,6 +14,7 @@ const PurchaseSummaryFilter = ({
 }: any) => {
       const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
       const usersession = useSelector((state: RootState) => state.UserSession);
+      const clientSession = useSelector((state: RootState) => state.ClientSession);
     const { t } = useTranslation("accountsReport");
 
     return (
@@ -44,27 +45,24 @@ const PurchaseSummaryFilter = ({
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
-                            // value={formState.fromTime}
-                            // {...getFieldProps("fromTime")}
-                            value={formState.fromTime || moment().local().format("HH:mm")}
+                            value={formState.data.fromTime || moment().local().format("HH:mm")}
                             onChange={(e) => handleFieldChange("fromTime", e.target.value)}
-                            disabled={!getFieldProps("isTimeBased").value}
-                        />
+                            disabled={!formState.data.isTimeBased}
+                            />
                     {/* </div>
                     <div> */}
                         <label>{t("time_to")}</label>
                         <input
                             type="time"
                             className="form-control w-full border rounded px-2 py-1"
-                            value={formState.toTime}
+                            value={formState.data.toTime}
                             // value={formState.toTime || moment().local().format("HH:mm")}
                             onChange={(e) => handleFieldChange("toTime", e.target.value)}
-                            disabled={!getFieldProps("isTimeBased").value}
+                            disabled={!formState.data.isTimeBased}
                         />
                     </div>
                 </div>
             </div>
-
             <div className="grid grid-cols-3 gap-4">
                 
                 {/* <ERPDataCombobox     shown only  SI-BT
@@ -190,7 +188,7 @@ const PurchaseSummaryFilter = ({
                     // ]}
                     field={{
                         id: "voucherForm",
-                        getListUrl: Urls.data_form_type,
+                        getListUrl: clientSession.isAppGlobal? Urls.data_FormTypeByPI:Urls.data_form_type,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -273,7 +271,7 @@ export const PurchaseSummaryFilterInitialState = {
     voucherForm: "@",
     warehouseID: 0, //PRESETWAREHOUSEID>0 disable with that value
     partyCategoryID: 0,
-    isTimeBased: 0,
+    isTimeBased: false,
     fromTime: moment().local().format("hh:mm"), // 12-hour format without seconds
     toTime: moment().local().format("hh:mm"),
     transactionType: "",

@@ -141,7 +141,7 @@ import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/item
 import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
 import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
 import ItemWisePurchaseQuotationSummary from "../../../pages/inventory/reports/itemwise-purchase-quotation-summary-report/itemwise-purchase-quotation-summary";
-import ProductSummary from "../../../pages/inventory/reports/product-summary-report/product-summary";
+import ProductSummaryMaster from "../../../pages/inventory/reports/product-summary/product-summary-master";
 import StockTransfer from "../../../pages/inventory/reports/stock-transfer-report/stock-transfer";
 import DamageStock from "../../../pages/inventory/reports/damage-stock-report/damage-stock";
 import ExcessStock from "../../../pages/inventory/reports/excess-stock-report/excess-stock";
@@ -447,7 +447,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWisePurchaseQuotationSummary />} />
-        <Route path="/inventory/product_summary" element={<ProductSummary />} />
+        <Route path="/inventory/product_summary_master" element={<ProductSummaryMaster />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
         <Route path="/inventory/excess_stock_report" element={<ExcessStock />} />

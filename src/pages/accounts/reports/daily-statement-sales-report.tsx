@@ -36,7 +36,7 @@ const DailySalesStatementReport = () => {
     // },
     {
       dataField: "vchNo",
-      caption: t("vch_no"),
+      caption: t("voucherNo"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

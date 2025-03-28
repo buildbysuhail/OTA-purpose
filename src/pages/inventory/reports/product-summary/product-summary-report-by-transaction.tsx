@@ -1,13 +1,13 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import ProductSummaryFilter, { ProductSummaryFilterInitialState } from "./product-summary-filter";
+import { ProductSummaryFilter } from "./product-summary-master";
 
-interface ProductSummary {
+interface ProductSummaryReportByTransaction {
   vNo: string;
   vPrefix: string;
   voucherType: string;
@@ -26,9 +26,8 @@ interface ProductSummary {
   netAmount: number;
 }
 
-const ProductSummary = () => {
+const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ filter }) => {
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] = useState<any>(ProductSummaryFilterInitialState);
 
   const columns: DevGridColumn[] = [
     {
@@ -195,20 +194,15 @@ const ProductSummary = () => {
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption
-                gridHeader={t("product_summary")}
-                dataUrl={Urls.product_summary}
-                hideGridAddButton={true}
-                enablefilter={true}
-                showFilterInitially={true}
+                gridHeader={t("product_summary_report_by_transaction")}
+                dataUrl={Urls.product_summary_transaction}
                 method={ActionType.POST}
-                filterContent={<ProductSummaryFilter />}
+                gridId="grd_product_summary_report_by_transaction"
+                hideGridAddButton={true}
+                postData={filter}
                 filterHeight={270}
                 filterWidth={600}
-                filterInitialData={ProductSummaryFilterInitialState}
-                onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
-                gridId="grd_product_summary"
               />
             </div>
           </div>
@@ -218,4 +212,4 @@ const ProductSummary = () => {
   );
 };
 
-export default ProductSummary;
+export default ProductSummaryReportByTransaction;

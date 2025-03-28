@@ -134,6 +134,36 @@ const PurchaseSummaryReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
+        if (exportCell != undefined) {
+          const balance = cellElement.data?.gross;
+          const isDebit = balance >= 0;
+          const value =
+            balance == null
+              ? 0
+              : getFormattedValue(balance)
+          return {
+            ...exportCell,
+            text: value,
+            bold: true,
+            alignment: "right",
+            alignmentExcel: { horizontal: 'right' },
+            textColor: cellElement.data.address2 === "TOTAL" ? '#FF0000' :'',
+            font: {
+              ...exportCell.font,
+              color: cellElement.data.address2 === "TOTAL" ? { argb: 'FFFF0000' } :"",
+              size: 10,
+              style:cellElement.data.address2 === "TOTAL" ?'bold':'normal',
+              bold: cellElement.data.address2 === "TOTAL" ?true:false,
+            },
+          };
+        }
+        else {
+          return (<span className={`${cellElement.data.address2 === "TOTAL" ? 'font-bold text-[#DC143C]':''}`}>
+            {`${ cellElement.data?.gross == null ? '': getFormattedValue(cellElement.data.gross)}`}
+          </span>)
+        }
+      }
     },
     {
       dataField: "disc",
@@ -620,7 +650,7 @@ const PurchaseSummaryReport = () => {
 //       summaryType: "sum",
 //       valueFormat: "currency",
 //       customizeText: customizeSummaryRow,
-//     },
+//     },k
 //asmari only
 //    {
 //       column: "totalProfit",
@@ -643,7 +673,7 @@ const PurchaseSummaryReport = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="px-4 pt-4 pb-2 ">
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-3"> 
               <ErpDevGrid
               groupPanelVisible={true}
               // autoExpandAll={true}
@@ -651,7 +681,9 @@ const PurchaseSummaryReport = () => {
                 remoteOperations={{ filtering: true, paging: true, sorting: false, summary: true }}
                 columns={columns}
                 // moreOption
-                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} {productID > 0 && , Product Name : [productName]} {showAll == true && All} {showAll == false && [ledgerName] ([ledgerCode])}, from {dateFrom} to {dateTo} {costCentreID > 0 && , Cost Center: [CostCenterName]}"
+                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} {productID > 0 && , Product Name : [productName]} {salesRouteID > 0 && , Route Name : [routeName]} 
+                {counterID > 0 && , Counter : [counterName]} {salesmanID > 0 && , Sales Man : [salesMan]} 
+                {salesmanID > 0 && , Sales Man : [salesMan]} From Date : {dateFrom} To Date : {dateTo} {isTimeBased == true &&  , Time between  : [fromTime] And [toTime]}"
                 gridHeader={t("purchase_summary_report")}
                 dataUrl={Urls.purchase_summary_report}
                 hideGridAddButton={true}

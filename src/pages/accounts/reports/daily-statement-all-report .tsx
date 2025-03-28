@@ -35,7 +35,7 @@ const DailyStatementAllReport = () => {
     },
     {
       dataField: "vchNo",
-      caption: t("vch_no"),
+      caption: t("voucherNo"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -59,7 +59,7 @@ const DailyStatementAllReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      // width: 130,
       visible: true,
       showInPdf: true,
     },

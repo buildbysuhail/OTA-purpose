@@ -113,6 +113,7 @@ const PurchaseSummaryFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange({
                             salesRouteID: data.value,
+                            routeName: data.label,
                         });
                     }}
                 />)}
@@ -128,6 +129,7 @@ const PurchaseSummaryFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange({
                             salesmanID: data.value,
+                            salesMan: data.label,
                         });
                     }}
                 />
@@ -145,6 +147,7 @@ const PurchaseSummaryFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange({
                             counterID: data.value,
+                            counterName: data.label,
                         });
                     }}
                 />)}

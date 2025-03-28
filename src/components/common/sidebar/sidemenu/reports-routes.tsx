@@ -160,7 +160,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_purchase_order_summary`, type: 'link', active: false, selected: false, title: 'itemwise_purchase_order_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_purchase_estimate_summary`, type: 'link', active: false, selected: false, title: 'itemwise_purchase_estimate_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/itemwise_purchase_quotation_summary`, type: 'link', active: false, selected: false, title: 'itemwise_purchase_quotation_summary', icon: AiOutlineFileText },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary`, type: 'link', active: false, selected: false, title: 'product_summary', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/product_summary_master`, type: 'link', active: false, selected: false, title: 'product_summary_master', icon: AiOutlineFileText },
     ]
   },
 

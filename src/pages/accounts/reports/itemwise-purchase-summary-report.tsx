@@ -247,7 +247,7 @@ const  ItemwisePurchaseSummaryReport = () => {
     },
     {
       dataField: "productID",
-      caption: t("product_id"),
+      caption: t("productId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,

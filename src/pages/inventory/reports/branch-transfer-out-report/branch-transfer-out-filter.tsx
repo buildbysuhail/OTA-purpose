@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import moment from "moment";
+import Urls from "../../../../redux/urls";
 
 const BranchTransferOutFilter = ({ getFieldProps, handleFieldChange, formState }: any) => {
   const { t } = useTranslation('accountsReport')
@@ -27,7 +28,7 @@ const BranchTransferOutFilter = ({ getFieldProps, handleFieldChange, formState }
         {...getFieldProps("toBranchID")}
         field={{
           id: "toBranchID",
-          // getListUrl: Urls.data_branches,
+          getListUrl: Urls.Branch,
           valueKey: "id",
           labelKey: "name",
         }}

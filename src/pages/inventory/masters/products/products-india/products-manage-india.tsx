@@ -8,14 +8,25 @@ import { RefreshCcw, Plus } from "lucide-react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import initialProductData from "../products-data";
 import { productDto } from "../products-type";
+import { FormField } from "../../../../../utilities/form-types";
+export const ProductManageIndia: React.FC<{
+  formState: any;
+  handleFieldChange: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
 
-export const ProductManageIndia: React.FC = React.memo(() => {
+  getFieldProps: (fieldId: string, type?: any) => FormField;
+}> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+
   const { t } = useTranslation("inventory");
-  const { handleFieldChange, getFieldProps, } = useFormManager<productDto>({ initialData: initialProductData, });
 
   return (
     <div className="w-full modal-content">
-      {/* <div className="text-center text-xl font-bold mb-4">PRODUCTS</div> */}
 
       <div className="flex flex-col gap-1">
         <div className="flex justify-end">
@@ -38,7 +49,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                   placeholder={t("enter_product_code")}
                   required={false}
                   className="w-full"
-                  onChangeData={(data: any) => handleFieldChange("product.productCode", data.productCode)}
+                  onChangeData={(data: any) => handleFieldChange("product.productCode", data.product.productCode)}
                 />
 
                 <button className="bg-gray-300 p-2 rounded-md mt-5 hover:shadow-md transition duration-300">
@@ -47,13 +58,11 @@ export const ProductManageIndia: React.FC = React.memo(() => {
               </div>
 
               <div className="flex items-center gap-4">
-                <ERPCheckbox
-                  {...getFieldProps("product.manual")}
-                  label={t("manual")}
-                  onChangeData={(data: any) => handleFieldChange("product.manual", data.manual)}
-                  className="flex"
+              <ERPCheckbox
+                  {...getFieldProps("product.manual")} // Notice the type hint
+                  label={t("manual")}       
+                  onChange={(e) => handleFieldChange('product.manual', e.target.checked)}
                 />
-
                 <ERPButton
                   title={t("create_new")}
                   variant="secondary"
@@ -65,12 +74,13 @@ export const ProductManageIndia: React.FC = React.memo(() => {
             <div className="flex items-center gap-1">
               <ERPDataCombobox
                 {...getFieldProps("product.productName")}
+                id="productName"
                 field={{
                   id: "productName",
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
+                onChangeData={(data: any) => handleFieldChange("product.productName", data.product.productName)}
                 label={t("product_name")}
                 className="w-full"
                 required={true}
@@ -91,7 +101,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
+                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.product.productCategoryID)}
                   label={t("product_category")}
                   className="w-full"
                   required={true}
@@ -111,7 +121,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productGroupId", data.productGroupId)}
+                  onChangeData={(data: any) => handleFieldChange("product.productGroupId", data.product.productGroupId)}
                   label={t("product_group")}
                   className="w-full"
                   required={true}
@@ -132,7 +142,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.groupCategory)}
+                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.product.groupCategory)}
                 label={t("group_category")}
                 options={[]}
               />
@@ -144,7 +154,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.section", data.section)}
+                onChangeData={(data: any) => handleFieldChange("product.section", data.product.section)}
                 label={t("section")}
                 options={[]}
               />
@@ -159,7 +169,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.baseUnit)}
+                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.product.baseUnit)}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
@@ -178,7 +188,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 type="number"
                 required={false}
                 className="w-full"
-                onChangeData={(data: any) => handleFieldChange("product.unitQty", data.unitQty)}
+                onChangeData={(data: any) => handleFieldChange("product.unitQty", data.product.unitQty)}
               />
             </div>
 
@@ -186,19 +196,22 @@ export const ProductManageIndia: React.FC = React.memo(() => {
               <ERPCheckbox
                 {...getFieldProps("product.upcBarcode")}
                 label={t("upc_barcode")}
-                onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.upcBarcode)}
+                // onChangeData={(data: any) => handleFieldChange("product.upcBarcode", data.product.upcBarcode)}
+                onChange={(e) => handleFieldChange('product.upcBarcode', e.target.checked)}
               />
 
               <ERPCheckbox
                 {...getFieldProps("product.mu")}
                 label={t("mu")}
-                onChangeData={(data: any) => handleFieldChange("product.mu", data.mu)}
+                // onChangeData={(data: any) => handleFieldChange("product.mu", data.product.mu)}
+                onChange={(e) => handleFieldChange('product.mu', e.target.checked)}
               />
 
               <ERPCheckbox
                 {...getFieldProps("product.mr")}
                 label={t("mr")}
-                onChangeData={(data: any) => handleFieldChange("product.mr", data.mr)}
+                // onChangeData={(data: any) => handleFieldChange("product.mr", data.product.mr)}
+                onChange={(e) => handleFieldChange('product.mr', e.target.checked)}
               />
             </div>
 
@@ -211,7 +224,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.taxCategoryID)}
+                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.product.taxCategoryID)}
                   label={t("tax_category")}
                   className="w-full"
                   options={[]}
@@ -225,7 +238,8 @@ export const ProductManageIndia: React.FC = React.memo(() => {
               <ERPCheckbox
                 {...getFieldProps("product.isWeighingScaleItem")}
                 label={t("is_weighing_scale_item")}
-                onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.isWeighingScaleItem)}
+                onChange={(e) => handleFieldChange('product.isWeighingScaleItem', e.target.checked)}
+                // onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.product.isWeighingScaleItem)}
               />
             </div>
           </div>
@@ -238,7 +252,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.purchasePrice", data.purchasePrice)}
+                onChangeData={(data: any) => handleFieldChange("product.purchasePrice", data.product.purchasePrice)}
               />
 
               <ERPInput
@@ -247,7 +261,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.salesPrice", data.salesPrice)}
+                onChangeData={(data: any) => handleFieldChange("product.salesPrice", data.product.salesPrice)}
               />
 
               <ERPInput
@@ -256,7 +270,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.markup", data.markup)}
+                onChangeData={(data: any) => handleFieldChange("product.markup", data.product.markup)}
               />
 
               <ERPInput
@@ -265,7 +279,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.displayCost", data.displayCost)}
+                onChangeData={(data: any) => handleFieldChange("product.displayCost", data.product.displayCost)}
               />
 
               <ERPInput
@@ -274,7 +288,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.mrp", data.mrp)}
+                onChangeData={(data: any) => handleFieldChange("product.mrp", data.product.mrp)}
               />
 
               <ERPInput
@@ -283,7 +297,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.opStock", data.opStock)}
+                onChangeData={(data: any) => handleFieldChange("product.opStock", data.product.opStock)}
               />
 
               <ERPInput
@@ -292,7 +306,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.msp", data.msp)}
+                onChangeData={(data: any) => handleFieldChange("product.msp", data.product.msp)}
               />
 
               <ERPInput
@@ -301,7 +315,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 placeholder="0.00"
                 type="number"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("product.stock", data.stock)}
+                onChangeData={(data: any) => handleFieldChange("product.stock", data.product.stock)}
               />
             </div>
 
@@ -310,7 +324,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
               label={t("foreign_language")}
               placeholder=""
               required={false}
-              onChangeData={(data: any) => handleFieldChange("product.foreignLanguage", data.foreignLanguage)}
+              onChangeData={(data: any) => handleFieldChange("product.foreignLanguage", data.product.foreignLanguage)}
             />
 
             <div className="flex items-center gap-1">
@@ -318,7 +332,8 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 {...getFieldProps("product.batchCriteria")}
                 label={t("batch_criteria")}
                 className="w-1/4"
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.batchCriteria)}
+                onChange={(e) => handleFieldChange('product.batchCriteria', e.target.checked)}
+                // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
               />
 
               <ERPDataCombobox
@@ -330,7 +345,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 }}
                 className="w-full"
                 noLabel={true}
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.batchCriteriaType)}
+                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.product.batchCriteriaType)}
                 options={[]}
               />
             </div>
@@ -338,12 +353,13 @@ export const ProductManageIndia: React.FC = React.memo(() => {
             <div className="grid grid-cols-2 items-end gap-2">
               <ERPDataCombobox
                 {...getFieldProps("product.productType")}
+                id= "productType"
                 field={{
                   id: "productType",
                   valueKey: "value",
                   labelKey: "label",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productType", data.productType)}
+                onChangeData={(data: any) => handleFieldChange("product.productType", data.product.productType)}
                 label={t("product_type")}
                 options={[{ value: "Inventory", label: t("inventory") }]}
               />
@@ -354,9 +370,11 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                   variant="secondary"
                 />
                 <ERPCheckbox
+
                   {...getFieldProps("product.details")}
                   label={t("details")}
-                  onChangeData={(data: any) => handleFieldChange("product.details", data.details)}
+                  onChange={(e) => handleFieldChange('product.details', e.target.checked)}
+                  // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
                 />
               </div>
             </div>
@@ -370,7 +388,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                   labelKey: "name",
                 }}
                 className="w-full"
-                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.defaultVendor)}
+                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.product.defaultVendor)}
                 label={t("default_vendor")}
                 options={[]}
               />
@@ -382,7 +400,7 @@ export const ProductManageIndia: React.FC = React.memo(() => {
                 type="number"
                 required={false}
                 disabled={true}
-                onChangeData={(data: any) => handleFieldChange("product.avgCost", data.avgCost)}
+                onChangeData={(data: any) => handleFieldChange("product.avgCost", data.product.avgCost)}
                 className="w-full"
               />
             </div>

@@ -47,6 +47,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       ),
       key: rootState.PopupData.products?.key,
       useApiClient: true,
+      keyField: 'productID',
       initialData: initialProductData,
     });
 
@@ -126,7 +127,7 @@ export const ProductMaster: React.FC = React.memo(() => {
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        {isIndia ? <ProductManageIndia /> : ""}
+        {isIndia ? <ProductManageIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/> : ""}
         <ERPTab
           tabs={getTabs()}
           activeTab={activeTab}

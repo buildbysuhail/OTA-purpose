@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import type { DevGridColumn } from "../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
@@ -71,13 +71,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.stockInWarehouse == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse))}
-            </span>
-          )
+          return ( cellElement.data?.stockInWarehouse == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInWarehouse)))
         }
       },
     },
@@ -105,13 +99,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.stockInTransit == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit))}
-            </span>
-          )
+          return ( cellElement.data?.stockInTransit == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.stockInTransit)))
         }
       },
     },
@@ -139,13 +127,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.orderPending == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.orderPending))}
-            </span>
-          )
+          return ( cellElement.data?.orderPending == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderPending)))
         }
       },
     },
@@ -171,11 +153,7 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
-            </span>
-          )
+          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
         }
       },
     },
@@ -203,18 +181,64 @@ const PurchaseOrderTransitReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.orderManual == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.orderManual))}
-            </span>
-          )
+          return ( cellElement.data?.orderManual == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.orderManual)))
         }
       },
     },
   ]
-
+   const customizeSummaryRow = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+        ) {
+          return "0"; // Ensure "0" is displayed when value is missing
+        }
+        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+      };
+    }, []);
+  
+const summaryItems: SummaryConfig[] = [
+    {
+      column: "productName",
+      summaryType: "custom",
+      valueFormat: "string",
+      displayFormat:"TOTAL"
+    },
+    {
+      column: "stockInWareHouse",
+      summaryType: "sum",
+      valueFormat: "number",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "stockInTransit",
+      summaryType: "sum",
+      valueFormat: "number",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "orderPending",
+      summaryType: "sum",
+      valueFormat: "number",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "total",
+      summaryType: "sum",
+      valueFormat: "number",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "orderManual",
+      summaryType: "sum",
+      valueFormat: "number",
+      customizeText: customizeSummaryRow,
+    }
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -224,6 +248,7 @@ const PurchaseOrderTransitReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  summaryItems={summaryItems}
                   filterText="from {dateFrom} to {dateTo}"
                   gridHeader={t("Purchase_Order_Transit_Report")}
                   dataUrl={Urls.Purchase_Order_Transit_And_Stock_Details}

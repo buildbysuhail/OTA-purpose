@@ -185,11 +185,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
-            </span>
-          )
+          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
         }
       },
     },
@@ -227,13 +223,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.grandTotal == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))}
-            </span>
-          )
+          return ( cellElement.data?.grandTotal == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
         }
       },
     },

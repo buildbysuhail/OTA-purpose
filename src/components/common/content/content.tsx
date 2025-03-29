@@ -469,12 +469,12 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        <Route path="/inventory/Purchase_Tax" element={<PurchaseTaxReport />} />
-        <Route path="/inventory/Purchase_Order_Transit_Report" element={<PurchaseOrderTransitReport />} />
+        <Route path="/inventory/purchase_tax" element={<PurchaseTaxReport />} />
+        <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
         <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwisePurchaseSummaryReport />} />
-        <Route path="/inventory/Credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
+        <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
-        <Route path="/inventory/Itemwise_Purchase_Summary" element={<ItemwisePurchaseSummaryReport />} />
+        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
         <Route path="/inventory-masters/product-category" element={<ProductCategory />} />

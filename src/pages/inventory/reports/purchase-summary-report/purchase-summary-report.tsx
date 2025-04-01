@@ -1140,10 +1140,10 @@ const PurchaseSummaryReport = () => {
                 // autoExpandAll={true}
                 summaryItems={summaryItems}
                 remoteOperations={{
-                  filtering: true,
-                  paging: true,
+                  filtering: false,
+                  paging: false,
                   sorting: false,
-                  summary: true,
+                  summary: false,
                 }}
                 columns={columns}
                 // moreOption

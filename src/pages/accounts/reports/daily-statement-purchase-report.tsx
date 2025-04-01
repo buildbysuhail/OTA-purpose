@@ -5,12 +5,10 @@ import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
-import moment from "moment"
-import AccTransactionForm from "../transactions/acc-transaction"
 import GridId from "../../../redux/gridId"
-import PurchaseTaxReportFilter, { PurchaseTaxReportFilterInitialState } from "./Purchase-Tax-report-filter"
+import DailyStatementPurchaseReportFilter, { DailyStatementPurchaseReportFilterInitialState } from "./daily-statement-purchase-report-filter"
 
-const PurchaseTaxReport = () => {
+const DailyStatementPurchaseReport = () => {
   const { t } = useTranslation("accountsReport")
   const { getFormattedValue } = useNumberFormat()
 
@@ -25,48 +23,63 @@ const PurchaseTaxReport = () => {
       visible: false,
       showInPdf: true,
     },
+    // {
+    //   dataField: "form",
+    //   caption: t("form"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    //   visible: true,
+    //   showInPdf: true,
+    // },
     {
-      dataField: "date",
-      caption: t("date"),
-      dataType: "date",
+      dataField: "vchNo",
+      caption: t("vch_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 70,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "formType",
+      caption: t("form_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 90,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "party",
+      caption: t("party"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      // width: 130,
+      visible: true,
+      showInPdf: true,
+    },
+    {
+      dataField: "address1",
+      caption: t("address"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
       visible: true,
       showInPdf: true,
-      cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
-        return cellElement.data.date == null || cellElement.data.date == ""
-          ? ""
-          : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")
-      },
     },
     {
-      dataField: "customerName",
-      caption: t("customer_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      // width: 200,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "invoiceNumber",
-      caption: t("invoice_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "taxableAmount",
-      caption: t("taxable_amount"),
+      dataField: "cash",
+      caption: t("cash"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -74,9 +87,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.taxableAmount == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))
+            cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))
           return {
             ...exportCell,
             text: value,
@@ -86,21 +97,19 @@ const PurchaseTaxReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.taxableAmount == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.taxableAmount))}
+              {cellElement.data?.cash == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.cash))}
             </span>
           )
         }
       },
     },
     {
-      dataField: "vatPercentage",
-      caption: t("vat_percentage"),
+      dataField: "credit",
+      caption: t("credit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -108,9 +117,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatPercentage == null
-              ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage))
+            cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))
           return {
             ...exportCell,
             text: value,
@@ -120,21 +127,19 @@ const PurchaseTaxReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.vatPercentage == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatPercentage))}
+              {cellElement.data?.credit == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.credit))}
             </span>
           )
         }
       },
     },
     {
-      dataField: "vatAmount",
-      caption: t("vat_amount"),
+      dataField: "bank",
+      caption: t("bank"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -142,7 +147,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.vatAmount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))
+            cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))
           return {
             ...exportCell,
             text: value,
@@ -152,21 +157,19 @@ const PurchaseTaxReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.vatAmount == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.vatAmount))}
+              {cellElement.data?.bank == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.bank))}
             </span>
           )
         }
       },
     },
     {
-      dataField: "amount",
-      caption: t("amount"),
+      dataField: "total",
+      caption: t("total"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
       visible: true,
       showInPdf: true,
       alignment: "right",
@@ -174,7 +177,7 @@ const PurchaseTaxReport = () => {
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         if (exportCell != undefined) {
           const value =
-            cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))
+            cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))
           return {
             ...exportCell,
             text: value,
@@ -184,51 +187,11 @@ const PurchaseTaxReport = () => {
         } else {
           return (
             <span>
-              {cellElement.data?.amount == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.amount))}
+              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
             </span>
           )
         }
       },
-    },
-    {
-      dataField: "taxNumber",
-      caption: t("tax_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "crNumber",
-      caption: t("cr_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "creditOrCash",
-      caption: t("credit_or_cash"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "branchName",
-      caption: t("branch_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
     },
     {
       dataField: "voucherType",
@@ -236,28 +199,8 @@ const PurchaseTaxReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "transactionType",
-      caption: t("transaction_type"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
-      showInPdf: true,
-    },
-    {
-      dataField: "voucherNumber",
-      caption: t("voucher_number"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: true,
+      width: 80,
+      visible: false,
       showInPdf: true,
     },
   ]
@@ -271,17 +214,17 @@ const PurchaseTaxReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("purchase_tax")}
-                  dataUrl={Urls.Purchase_tax}
+                  filterText="Daily Sales Statement"
+                  gridHeader={t("daily_statement_purchase")}
+                  dataUrl={Urls.daily_statement_purchase}
                   method={ActionType.POST}
-                  gridId={GridId.Purchase_tax}
+                  gridId={GridId.daily_statement_purchase}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={335}
-                  filterHeight={230}
-                  filterContent={<PurchaseTaxReportFilter/>}
-                  filterInitialData={PurchaseTaxReportFilterInitialState}
+                  filterHeight={350}
+                  filterContent={<DailyStatementPurchaseReportFilter />}
+                  filterInitialData={DailyStatementPurchaseReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />
@@ -294,5 +237,5 @@ const PurchaseTaxReport = () => {
   )
 }
 
-export default PurchaseTaxReport
+export default DailyStatementPurchaseReport
 

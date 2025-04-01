@@ -13,16 +13,16 @@ const PartyMonthwisePurchaseSummaryReport = () => {
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "iD",
+    //   caption: t("id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    //   visible: false,
+    //   showInPdf: true,
+    // },
     {
       dataField: "branch",
       caption: t("branch"),
@@ -185,11 +185,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.total == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.total))}
-            </span>
-          )
+          return ( cellElement.data?.total == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.total)))
         }
       },
     },
@@ -227,13 +223,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.grandTotal == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))}
-            </span>
-          )
+          return ( cellElement.data?.grandTotal == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
         }
       },
     },
@@ -255,7 +245,7 @@ const PartyMonthwisePurchaseSummaryReport = () => {
                   gridId={GridId.party_monthwise_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterWidth={335}
+                  filterWidth={500}
                   filterHeight={230}
                   filterContent={<PartyMonthwisePurchaseSummaryReportFilter />}
                   filterInitialData={PartyMonthwisePurchaseSummaryReportFilterInitialState}

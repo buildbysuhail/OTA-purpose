@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import type { DevGridColumn } from "../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
@@ -14,16 +14,16 @@ const CreditPurchaseSummaryReport = () => {
   const { getFormattedValue } = useNumberFormat()
 
   const columns: DevGridColumn[] = [
-    {
-      dataField: "iD",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      visible: false,
-      showInPdf: true,
-    },
+    // {
+    //   dataField: "iD",
+    //   caption: t("id"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    //   visible: false,
+    //   showInPdf: true,
+    // },
     {
       dataField: "date",
       caption: t("date"),
@@ -42,7 +42,7 @@ const CreditPurchaseSummaryReport = () => {
     {
       dataField: "vchNo",
       caption: t("voucher_no"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
@@ -111,11 +111,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.gross == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.gross))}
-            </span>
-          )
+          return ( cellElement.data?.gross == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.gross)))
         }
       },
     },
@@ -141,11 +137,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.disc == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.disc))}
-            </span>
-          )
+          return ( cellElement.data?.disc == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.disc)))
         }
       },
     },
@@ -165,7 +157,7 @@ const CreditPurchaseSummaryReport = () => {
           const value =
             cellElement.data?.billDiscount == null
               ? ""
-              : getFormattedValue(Number.parseFloat(cellElement.data.billDiscount))
+              : getFormattedValue(Number.parseFloat(cellElement.data.billDiscount),)
           return {
             ...exportCell,
             text: value,
@@ -173,13 +165,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.billDiscount == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.billDiscount))}
-            </span>
-          )
+          return ( cellElement.data?.billDiscount == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.billDiscount)))
         }
       },
     },
@@ -204,11 +190,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.vat == null ? "" : getFormattedValue(Number.parseFloat(cellElement.data.vat))}
-            </span>
-          )
+          return ( cellElement.data?.vat == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.vat)))
         }
       },
     },
@@ -236,13 +218,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.grandTotal == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal))}
-            </span>
-          )
+          return ( cellElement.data?.grandTotal == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.grandTotal)))
         }
       },
     },
@@ -270,13 +246,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.cashDiscount == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.cashDiscount))}
-            </span>
-          )
+          return ( cellElement.data?.cashDiscount == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.cashDiscount)))
         }
       },
     },
@@ -304,13 +274,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.adjustmentAmount == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.adjustmentAmount))}
-            </span>
-          )
+          return ( cellElement.data?.adjustmentAmount == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.adjustmentAmount)))
         }
       },
     },
@@ -338,13 +302,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.cashReceived == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.cashReceived))}
-            </span>
-          )
+          return ( cellElement.data?.cashReceived == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.cashReceived)))
         }
       },
     },
@@ -382,13 +340,7 @@ const CreditPurchaseSummaryReport = () => {
             alignmentExcel: { horizontal: "right" },
           }
         } else {
-          return (
-            <span>
-              {cellElement.data?.exchangeRate == null
-                ? ""
-                : getFormattedValue(Number.parseFloat(cellElement.data.exchangeRate))}
-            </span>
-          )
+          return ( cellElement.data?.exchangeRate == null? "" : getFormattedValue(Number.parseFloat(cellElement.data.exchangeRate)))
         }
       },
     },
@@ -414,7 +366,7 @@ const CreditPurchaseSummaryReport = () => {
     },
     {
       dataField: "mInvoiceNo",
-      caption: t("m_invoice_no"),
+      caption: t("m_invoice_number"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -448,7 +400,78 @@ const CreditPurchaseSummaryReport = () => {
       },
     },
   ]
+   const customizeSummaryRow = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+        ) {
+          return "0"; // Ensure "0" is displayed when value is missing
+        }
+        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+      };
+    }, []);
+  
+const summaryItems: SummaryConfig[] = [
+    {
+      column: "address2",
+      summaryType: "custom",
+      valueFormat: "string",
+      displayFormat:"TOTAL"
+    },
+    {
+      column: "gross",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "disc",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "vAT",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "grandTotal",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "billDiscount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cashDiscount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "cashReceived",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "adjustmentAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
 
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -457,12 +480,13 @@ const CreditPurchaseSummaryReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  columns={columns}
+                  columns={columns} 
+                  summaryItems={summaryItems}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("Credit_purchase_summary")}
+                  gridHeader={t("credit_purchase_summary")}
                   dataUrl={Urls.Credit_purchase_summary}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.Credit_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={550}

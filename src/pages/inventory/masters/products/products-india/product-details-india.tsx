@@ -34,7 +34,7 @@ const ProductDetailsIndia: React.FC<{
             type="number"
             required={false}
             onChangeData={(data) =>
-              handleFieldChange("product.minimumStock", data.minimumStock)
+              handleFieldChange("product.minimumStock", data.product.minimumStock)
             }
           />
 
@@ -45,7 +45,7 @@ const ProductDetailsIndia: React.FC<{
             type="number"
             required={false}
             onChangeData={(data) =>
-              handleFieldChange("product.maximumStock", data.maximumStock)
+              handleFieldChange("product.maximumStock", data.product.maximumStock)
             }
           />
           <ERPInput
@@ -55,7 +55,7 @@ const ProductDetailsIndia: React.FC<{
             type="number"
             required={false}
             onChangeData={(data) =>
-              handleFieldChange("product.reorderQty", data.reorderQty)
+              handleFieldChange("product.reorderQty", data.product.reorderQty)
             }
           />
         </div>
@@ -63,13 +63,15 @@ const ProductDetailsIndia: React.FC<{
         <div className="flex items-center gap-1">
           <ERPDataCombobox
             {...getFieldProps("product.warehouseID")}
+            id= "warehouseID"
             field={{
               id: "warehouseID",
               valueKey: "id",
+              // getListUrl: Urls.data_user_types,
               labelKey: "name",
             }}
             onChangeData={(data) =>
-              handleFieldChange("product.warehouseID", data.warehouseID)
+              handleFieldChange("product.warehouseID", data.product.warehouseID)
             }
             className="w-full"
             label={t("warehouse")}
@@ -84,13 +86,15 @@ const ProductDetailsIndia: React.FC<{
         <div className="flex items-center gap-1">
           <ERPDataCombobox
             {...getFieldProps("product.brandID")}
+            id= "brandID"
             field={{
               id: "brandID",
               valueKey: "id",
+              // getListUrl: Urls.data_user_types,
               labelKey: "name",
             }}
             onChangeData={(data) =>
-              handleFieldChange("product.brandID", data.brandID)
+              handleFieldChange("product.brandID", data.product.brandID)
             }
             className="w-full"
             label={t("brand_mfg")}
@@ -108,7 +112,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.commodityCode", data.commodityCode)
+            handleFieldChange("product.commodityCode", data.product.commodityCode)
           }
         />
 
@@ -118,7 +122,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.aliasItemName", data.aliasItemName)
+            handleFieldChange("product.aliasItemName", data.product.aliasItemName)
           }
         />
 
@@ -128,7 +132,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.specification", data.specification)
+            handleFieldChange("product.specification", data.product.specification)
           }
         />
 
@@ -138,7 +142,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.hsnCode", data.hsnCode)
+            handleFieldChange("product.hsnCode", data.product.hsnCode)
           }
         />
 
@@ -147,7 +151,7 @@ const ProductDetailsIndia: React.FC<{
           label={t("exp_date")}
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.expiryDate", data.expiryDate)
+            handleFieldChange("product.expiryDate", data.product.expiryDate)
           }
         />
 
@@ -157,7 +161,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.autoBarcode", data.autoBarcode)
+            handleFieldChange("product.autoBarcode", data.product.autoBarcode)
           }
         />
 
@@ -167,7 +171,7 @@ const ProductDetailsIndia: React.FC<{
           placeholder=""
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.batchNo", data.batchNo)
+            handleFieldChange("product.batchNo", data.product.batchNo)
           }
         />
 
@@ -179,7 +183,7 @@ const ProductDetailsIndia: React.FC<{
             type="number"
             required={false}
             onChangeData={(data) =>
-              handleFieldChange("product.netWeight", data.netWeight)
+              handleFieldChange("product.netWeight", data.product.netWeight)
             }
           />
 
@@ -189,17 +193,18 @@ const ProductDetailsIndia: React.FC<{
             placeholder={t("eg:gm/ml")}
             required={false}
             onChangeData={(data) =>
-              handleFieldChange("product.unitName", data.unitName)
+              handleFieldChange("product.unitName", data.product.unitName)
             }
           />
         </div>
 
         <ERPDateInput
           {...getFieldProps("product.mfgDate")}
+          id="mfgDate"
           label={t("mfg_date")}
           required={false}
           onChangeData={(data) =>
-            handleFieldChange("product.mfgDate", data.mfgDate)
+            handleFieldChange("product.mfgDate", data.product.mfgDate)
           }
         />
 
@@ -211,7 +216,7 @@ const ProductDetailsIndia: React.FC<{
             labelKey: "name",
           }}
           onChangeData={(data) =>
-            handleFieldChange("product.location", data.location)
+            handleFieldChange("product.location", data.product.location)
           }
           label={t("location")}
           options={[]}
@@ -226,57 +231,62 @@ const ProductDetailsIndia: React.FC<{
           <ERPCheckbox
             {...getFieldProps("product.canPurchase")}
             label={t("purchase")}
-            onChangeData={(data) =>
-              handleFieldChange("product.canPurchase", data.canPurchase)
-            }
+            onChange={(e) => handleFieldChange('product.canPurchase', e.target.checked)}
           />
 
           <ERPCheckbox
             {...getFieldProps("product.canSale")}
             label={t("sales")}
-            onChangeData={(data) =>
-              handleFieldChange("product.canSale", data.canSale)
-            }
+            onChange={(e) => handleFieldChange('product.canSale', e.target.checked)}
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.canSale", data.canSale)
+            // }
           />
 
           <ERPCheckbox
             {...getFieldProps("product.isFinishedGood")}
             label={t("finished_goods")}
-            onChangeData={(data) =>
-              handleFieldChange("product.isFinishedGood", data.isFinishedGood)
-            }
+            onChange={(e) => handleFieldChange('product.isFinishedGood', e.target.checked)}
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.isFinishedGood", data.isFinishedGood)
+            // }
           />
 
           <ERPCheckbox
             {...getFieldProps("product.isRawMaterial")}
             label={t("raw_material")}
-            onChangeData={(data) =>
-              handleFieldChange("product.isRawMaterial", data.isRawMaterial)
-            }
+            onChange={(e) => handleFieldChange('product.isRawMaterial', e.target.checked)}
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.isRawMaterial", data.isRawMaterial)
+            // }
           />
 
           <ERPCheckbox
             {...getFieldProps("product.active")}
             label={t("is_active_batch")}
-            onChangeData={(data) =>
-              handleFieldChange("product.active", data.active)
-            }
+            onChange={(e) => handleFieldChange('product.active', e.target.checked)}
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.active", data.active)
+            // }
           />
 
           <ERPCheckbox
             {...getFieldProps("product.gatePass")}
             label={t("gate_pass")}
-            onChangeData={(data) =>
-              handleFieldChange("product.gatePass", data.gatePass)
-            }
+            onChange={(e) => handleFieldChange('product.gatePass', e.target.checked)}
+
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.gatePass", data.gatePass)
+            // }
           />
 
           <ERPCheckbox
             {...getFieldProps("product.hold")}
             label={t("hold")}
-            onChangeData={(data) =>
-              handleFieldChange("product.hold", data.hold)
-            }
+            onChange={(e) => handleFieldChange('product.hold', e.target.checked)}
+            // onChangeData={(data) =>
+            //   handleFieldChange("product.hold", data.hold)
+            // }
           />
         </div>
       </div>

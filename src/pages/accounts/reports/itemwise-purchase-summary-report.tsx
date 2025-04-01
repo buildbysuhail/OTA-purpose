@@ -247,7 +247,7 @@ const  ItemwisePurchaseSummaryReport = () => {
     },
     {
       dataField: "productID",
-      caption: t("product_id"),
+      caption: t("productId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -410,7 +410,7 @@ const  ItemwisePurchaseSummaryReport = () => {
                   gridHeader={t("itemwise_purchase_summary")}
                   dataUrl={Urls.itemwise_purchase_summary}
                   method={ActionType.POST}
-                  gridId={GridId.grid_id}
+                  gridId={GridId.itemwise_purchase_summary}
                   enablefilter={true}
                   showFilterInitially={true}
                   filterWidth={750}

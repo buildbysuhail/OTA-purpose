@@ -276,7 +276,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       try {
         
         setProjectOnAction(true);
-        const response = await api.postAsync(Urls.party_projects, project);
+        const response = await api.postAsync(Urls.party_projects, {...project,partyId: formState.data.partyID});
         
         setProjectOnAction(false);
         handleResponse(response, () => {

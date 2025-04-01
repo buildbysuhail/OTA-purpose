@@ -2408,6 +2408,8 @@ export const useAccTransaction = (
 
         break;
     }
+    
+    const _ledgerID  = ["CN","DN"].includes(formState.transaction.master.voucherType) ? formState.masterAccountID : formState.row.ledgerID;
     const billwise = await api.getAsync(
       `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=${accTransactionDetailID}`
     );

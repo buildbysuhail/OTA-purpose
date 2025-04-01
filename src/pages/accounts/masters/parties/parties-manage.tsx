@@ -228,21 +228,22 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           allowFiltering: false,
           fixed: true,
           fixedPosition: "right",
-          width: 100,
+          width: 50,
           
           cellRender: (cellElement: any, cellInfo: any) => {
+            debugger;
             return (
               <ERPGridActions
-                
+                view={{visible: false, type:"link"}}
+                edit={{visible: false, type:"link"}}
                 delete={
                   {
-                    action:() => {deleteProject} ,
                     onSuccess: () => { setProjectsLoad(true)},
                     visible: true,
                     confirmationRequired: true,
                     confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
                     url: Urls?.party_projects,
-                    key: cellElement?.data?.projectId,
+                    key: cellElement?.data?.projectID,
                   }
                 }
               />
@@ -289,32 +290,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       }
     };
 
-    // API: Delete Project
-    const deleteProject = async () => {
-      if (!project.projectId) {
-        alert("No project selected to delete.");
-        return;
-      }
-
-      if (!window.confirm("Are you sure you want to delete this project?"))
-        return;
-
-      try {
-        
-        setProjectOnAction(true);
-        const response = await api.delete(`${Urls.party_projects}${project.projectId}`);
-        
-        setProjectOnAction(false);
-        handleResponse(response, () => {
-          setProjectsLoad(true);
-          clearForm();
-        });
-       
-      } catch (error) {
-        console.error(error);
-        alert("Error deleting project.");
-      }
-    };
+    
 
     // Clear Form
     const clearForm = () => {
@@ -1214,10 +1190,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         })
                       }
                     />
-                    <ERPButton
+                  <div className="pt-2 text-right">
+                  <ERPButton
             type="button"
             title={t("clear")}
             variant="secondary"
+            className="mr-2"
             onClick={() => {
               clearForm();
             }}
@@ -1236,6 +1214,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             }
           />
                   </div>
+                  </div>
                 </div>
 
                 {/* Right aligned div with DevExtreme DataGrid */}
@@ -1244,6 +1223,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   <div className="w-full border rounded-md shadow">
                      <ErpDevGrid
                                     columns={projectsColumns}
+                                    height={400}
                                     onRowClick={loadProject}
                                     gridHeader={t("")}
                                     dataUrl={`${Urls.party_projects}GetAll/${formState.data.partyID}`}

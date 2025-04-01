@@ -655,7 +655,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           : wh - heightToAdjustOnWindows < 300
           ? 300
           : wh - heightToAdjustOnWindows;
-      setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+      setGridHeight({ mobile: height != undefined ? height :gridHeightMobile, windows: height != undefined ? height : gridHeightWindows });
     }, [
       heightToAdjustOnMobile,
       heightToAdjustOnWindows,
@@ -1983,7 +1983,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 // allowResizing={column.allowResizing}
                 // allowResizing={column.allowResizing}
                 allowFiltering={column.allowFiltering ?? false}
-                width={column.width}
+                // width={column.width}
                 // width={
                 //   column.fixed && column.Actionswidth
                 //     ? column.Actionswidth + 44 // Add 15px to Actionswidth

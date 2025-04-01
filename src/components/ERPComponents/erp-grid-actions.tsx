@@ -63,6 +63,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   const dispatch = useDispatch();
   const { t } = useTranslation('main')
   const handleDelete = async () => {
+    debugger;
     setIsDeleting(true);
     try {
       if (deleteAction.action) {

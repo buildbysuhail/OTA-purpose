@@ -2411,7 +2411,7 @@ export const useAccTransaction = (
     
     const _ledgerID  = ["CN","DN"].includes(formState.transaction.master.voucherType) ? formState.masterAccountID : formState.row.ledgerID;
     const billwise = await api.getAsync(
-      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${formState.row.ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=${accTransactionDetailID}`
+      `${Urls.acc_transaction_ledger_bill_wise}?LedgerId=${_ledgerID}&DrCr=${_drcr}&AccTransactionDetailID=${accTransactionDetailID}`
     );
     if (accTransactionDetailID > 0) {
       billwise.map((x: BillwiseData) => {

@@ -523,5 +523,6 @@
   "billwise_profit_report": "Billwise Profit Report",
   "partywise_summary_report": "Partywise Summary Report",
   "cash_summary_report": "Cash Summary Report",
-  "cash_summary_ledgerwise_report": "Cash Summary Ledgerwise Report"
+  "cash_summary_ledgerwise_report": "Cash Summary Ledgerwise Report",
+  "daily_statement": "Daily Statement"
 }

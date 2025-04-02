@@ -61,7 +61,6 @@ const PartyMonthwisePurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "partyCode",
@@ -71,7 +70,6 @@ const PartyMonthwisePurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "partyName",
@@ -101,7 +99,6 @@ const PartyMonthwisePurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "addressDistrict",
@@ -111,7 +108,6 @@ const PartyMonthwisePurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "route",

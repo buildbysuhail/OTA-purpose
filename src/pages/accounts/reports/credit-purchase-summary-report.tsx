@@ -87,7 +87,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 150,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "gross",
@@ -314,7 +313,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "exchangeRate",
@@ -324,7 +322,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
       alignment: "right",
       format: "fixedPoint",
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
@@ -352,7 +349,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "branch",
@@ -362,7 +358,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "mInvoiceNo",
@@ -372,7 +367,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 120,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "refNo",
@@ -382,7 +376,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "refDate",
@@ -392,7 +385,6 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
       cellRender: (cellElement: any, cellInfo: any, filter: any, exportCell: any) => {
         return cellElement.data.refDate == null || cellElement.data.refDate == ""
           ? ""

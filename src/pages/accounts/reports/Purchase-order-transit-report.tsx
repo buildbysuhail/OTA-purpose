@@ -35,7 +35,6 @@ const PurchaseOrderTransitReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "productName",

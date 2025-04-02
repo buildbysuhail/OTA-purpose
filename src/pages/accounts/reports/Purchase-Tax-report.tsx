@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import type { DevGridColumn } from "../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
@@ -262,6 +262,46 @@ const PurchaseTaxReport = () => {
     },
   ]
 
+  const customizeSummaryRow = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+        ) {
+          return "0"; // Ensure "0" is displayed when value is missing
+        }
+        return getFormattedValue(value) || "0"; // Ensure formatted output or fallback to "0"
+      };
+    }, []);
+const summaryItems: SummaryConfig[] = [
+    {
+      column: "customerName",
+      summaryType: "custom",
+      valueFormat: "string",
+      displayFormat:"TOTAL"
+    },
+    {
+      column: "taxableAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "vatAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "amount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    }
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -271,8 +311,9 @@ const PurchaseTaxReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  summaryItems={summaryItems}
                   filterText="from {fromDate} to {toDate}"
-                  gridHeader={t("purchase_tax")}
+                  gridHeader={t("purchase_tax_report")}
                   dataUrl={Urls.Purchase_tax}
                   method={ActionType.POST}
                   gridId={GridId.Purchase_tax}

@@ -292,6 +292,7 @@
     "voucher_type":"Voucher type",
     "form":"Form",
     "voucher_no":"Voucher no",
+    "voucher_form":"Voucher form",
     "inward_qty":"Inward qty",
     "outward_qty":"Outward qty",
     "balance":"Balance",

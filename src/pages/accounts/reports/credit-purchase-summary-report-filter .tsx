@@ -9,7 +9,7 @@ import moment from "moment"
 import { useState, useEffect } from "react"
 
 const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
-  const { t } = useTranslation("accountsReport")
+  const { t } = useTranslation("inventory")
 
 
   return (
@@ -115,7 +115,7 @@ const CreditPurchaseSummaryReportFilter = ({ getFieldProps, handleFieldChange }:
               id: "voucherForm",
               getListUrl: Urls.data_form_type,
               params: "",
-              valueKey: "id",
+              valueKey: "name",
               labelKey: "name",
               nameKey: "alias",
             }}

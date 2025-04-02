@@ -249,7 +249,7 @@ const summaryItems: SummaryConfig[] = [
                 <ErpDevGrid
                   columns={columns}
                   summaryItems={summaryItems}
-                  filterText="from {dateFrom} to {dateTo}"
+                  filterText="from {dateFrom} to {dateTo} {partyID > 0 && , Party Name : [PartyName]}"
                   gridHeader={t("purchase_order_transit_report")}
                   dataUrl={Urls.Purchase_Order_Transit_And_Stock_Details}
                   method={ActionType.POST}

@@ -953,7 +953,11 @@ const PurchaseSummaryReport = () => {
 
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
+    return (itemInfo: any) => {
+      console.log('itemInfo');
+      
+      console.log(itemInfo);
+      
       const value = itemInfo.value;
       if (
         value === null ||
@@ -966,13 +970,13 @@ const PurchaseSummaryReport = () => {
       return getFormattedValue(value) || "0";
     };
   }, []);
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = useMemo(() => {
     const _summaryItems: SummaryConfig[] = [
       {
-        column: "address2",
-        summaryType: "custom",
-        valueFormat: "string",
-        displayFormat: "TOTAL",
+        column:"address2",
+        summaryType:"max",  
+        customizeText: customizeDate,
       },
       {
         column: "gross",

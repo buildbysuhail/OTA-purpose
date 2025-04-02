@@ -485,5 +485,7 @@
     "sales_route":"Sales Route",
     "group_category":"Group Category",
     "special_schemes":"Special Schemes",
-    "listed_product_prices":"Listed Product Prices"
+    "listed_product_prices":"Listed Product Prices",
+    "cash_summary_ledgerwise_report": "Cash Summary Ledgerwise Report",
+    "daily_statement": "Daily Statement"
 }

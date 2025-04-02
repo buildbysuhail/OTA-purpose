@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PurchaseRegisterFilter, { PurchaseRegisterFilterInitialState } from "./purchase-register-report-filter";
+import moment from "moment";
 
 interface PurchaseRegisterReport {
   masterID: number;
@@ -104,7 +105,17 @@ const PurchaseRegisterReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-    },
+    cellRender: (
+            cellElement: any,
+            cellInfo: any,
+            filter: any,
+            exportCell: any
+          ) => {
+            return cellElement.data.date == null || cellElement.data.date == ""
+              ? ""
+              : moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY"); // Ensures proper formatting
+          },
+        },
     {
       dataField: "vchNo",
       caption: t("voucher_no"),
@@ -525,7 +536,7 @@ const PurchaseRegisterReport = () => {
       width: 100,
     },
     {
-      dataField: "purchaseInvoice",
+      dataField: "purchaseInvoiceNumber",
       caption: t("purchase_invoice_number"),
       dataType: "string",
       allowSearch: true,
@@ -550,6 +561,16 @@ const PurchaseRegisterReport = () => {
       allowFiltering: true,
       width: 100,
     },
+
+    {
+      dataField: "VNUM",
+      caption: t("VNUM"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+
   ];
 
   const { getFormattedValue } = useNumberFormat();
@@ -584,6 +605,15 @@ const PurchaseRegisterReport = () => {
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+                   filterText=" From : {fromDate} - {toDate} 
+                  {productID > 0 && , Product Name : [productName]}
+                  {productGroupID > 0 && , Group Name : [groupName]}
+                  {brandID > 0 && , Brand : [brand]}
+                  {salesRouteID > 0 && , Route Name : [routeName]} 
+                  {salesmanID > 0 && , Sales Man : [salesMan]} 
+                  {warehouseID > 0 && ,  Warehouse : [warehouse]} 
+                  {supplierID > 0 && , Supplier :[supplier]} "
+                 
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}

@@ -81,7 +81,10 @@ const PurchaseRegisterFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productGroupID", data.value);
+            handleFieldChange({
+              productGroupID: data.value,
+              groupName: data.label,
+          });
           }}
         />
 
@@ -95,7 +98,10 @@ const PurchaseRegisterFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("brandID", data.value);
+            handleFieldChange({
+              brandID: data.value,
+              brand: data.label,
+          });
           }}
         />
 
@@ -109,7 +115,10 @@ const PurchaseRegisterFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("productID", data.value);
+            handleFieldChange({
+              productID: data.value,
+               productName: data.label,
+          });
           }}
         />
 
@@ -130,7 +139,10 @@ const PurchaseRegisterFilter = ({
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("salesmanID", data.value);
+            handleFieldChange({
+              salesmanID: data.value,
+              salesMan: data.label,
+          });
           }}
         />
         {applicationSettings.mainSettings?.allowSalesRouteArea == true && (
@@ -144,7 +156,10 @@ const PurchaseRegisterFilter = ({
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("salesRouteID", data.value);
+              handleFieldChange({
+                salesRouteID: data.value,
+                routeName: data.label,
+            });
             }}
           />
         )}
@@ -159,7 +174,10 @@ const PurchaseRegisterFilter = ({
               labelKey: "name",
             }}
             onSelectItem={(data) => {
-              handleFieldChange("warehouseID", data.value);
+              handleFieldChange({
+                warehouseID: data.value,
+                warehouse: data.label,
+            });
             }}
           />
         )}
@@ -244,12 +262,16 @@ const PurchaseRegisterFilter = ({
           field={{
             id: "supplierID",
             getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.Supplier}`,
+            params: `ledgerType=${LedgerType.Supplier}`,
+            // params: `ledgerID = 0 & ledgerType=${LedgerType.Supplier}`,
             valueKey: "id",
             labelKey: "name",
           }}
           onSelectItem={(data) => {
-            handleFieldChange("supplierID", data.value);
+            handleFieldChange({
+              supplierID: data.value,
+              supplier: data.label,
+          });
           }}
         />
         {applicationSettings.accountsSettings?.maintainCostCenter == true && (
@@ -317,14 +339,12 @@ const PurchaseRegisterFilter = ({
                     }}
                 /> */}
 
-        {/* <ERPDataCombobox
+        <ERPDataCombobox
                     label={t("report_of")}
                     {...getFieldProps("reportOf")}
                     options={[
-                        { value: 'all', label: 'All' },
-                        { value: 'credit', label: 'Credit' },
-                        { value: 'cash', label: 'Cash' },
-                        { value: 'card', label: 'Card' }
+                        { value: 'All', label: 'All' },
+                        { value: 'Below Cost', label: 'Below Cost' },
                     ]}
                     field={{
                         id: "reportOf",
@@ -334,8 +354,8 @@ const PurchaseRegisterFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange("reportOf", data.value);
                     }}
-                /> */}
-        {clientSession.isAppGlobal == true && (
+                />
+        {/* {clientSession.isAppGlobal == true && (
           <ERPCheckbox
             label={t("export_data_to_excel")}
             {...getFieldProps("exportDataToExcel")}
@@ -343,7 +363,7 @@ const PurchaseRegisterFilter = ({
               handleFieldChange("exportDataToExcel", data.exportDataToExcel)
             }
           />
-        )}
+        )} */}
 
         {/* same procedure with dev grid not needed in web */}
         {/* <ERPCheckbox
@@ -363,7 +383,7 @@ export default PurchaseRegisterFilter;
 export const PurchaseRegisterFilterInitialState = {
   fromDate: moment().local().startOf("day").toDate(),
   toDate: moment().local().endOf("day").toDate(),
-  voucherType: "",
+  voucherType: "PI",
   productGroupID: 0,
   brandID: 0,
   productID: 0,
@@ -379,11 +399,11 @@ export const PurchaseRegisterFilterInitialState = {
   costCenterID: 0,
   supplierID: 0,
   // Newly added fields to match the UI
-  transferVoucher: "",
+  // transferVoucher: "",
   productCategoryID: 0,
   priceCategory: 0,
-  reportOf: "",
-  exportDataToExcel: false,
-  transactionType: "",
+  reportOf: 'All',
+  // exportDataToExcel: false, 
+  // transactionType: "",
   manufactureID: 0,
 };

@@ -53,7 +53,8 @@ export default DailyStatementAllReportFilter
 
 // Updated initial state to match C# property names
 export const DailyStatementAllReportInitialState = {
-  fromDate: moment().local().subtract(45, "days").toDate(),
+  // fromDate: moment().local().subtract(45, "days").toDate(),
+  fromDate: new Date(),
   toDate: new Date(), // Default empty string
   // bankLedgerID: 0,
 }

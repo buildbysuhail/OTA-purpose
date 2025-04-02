@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
-import { Fragment } from "react"
+import { Fragment, useMemo } from "react"
 import type { DevGridColumn } from "../../../components/types/dev-grid-column"
-import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import ErpDevGrid, { SummaryConfig } from "../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../redux/urls"
 import { ActionType } from "../../../redux/types"
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format"
@@ -205,6 +205,53 @@ const DailyStatementPurchaseReport = () => {
     },
   ]
 
+  const customizeSummaryRow = useMemo(() => {
+      return (itemInfo: { value: any }) => {
+        const value = itemInfo.value;
+        if (
+          value === null ||
+          value === undefined ||
+          value === "" ||
+          isNaN(value)
+        ) {
+          return "0"; // Ensure "0" is displayed when value is missing
+        }
+        return value>=0? getFormattedValue(value): getFormattedValue(-1*value)|| "0"; // Ensure formatted output or fallback to "0"
+      };
+    }, []);
+    const customizeDate = (itemInfo: any) => `TOTAL`;
+  const summaryItems: SummaryConfig[] = [
+      {
+        column: "party",
+        summaryType: "max",
+        customizeText: customizeDate,
+      },
+      {
+        column: "cash",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "credit",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "bank",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+      {
+        column: "total",
+        summaryType: "sum",
+        valueFormat: "currency",
+        customizeText: customizeSummaryRow,
+      },
+    ];
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -217,6 +264,10 @@ const DailyStatementPurchaseReport = () => {
                   filterText="Daily Sales Statement"
                   gridHeader={t("daily_statement_purchase")}
                   dataUrl={Urls.daily_statement_purchase}
+                  summaryItems={summaryItems}
+                  remoteOperations={{ filtering: false, paging: false, sorting: false ,summary:false,grouping:false,groupPaging:false}}
+                  allowGrouping={true}
+                  groupPanelVisible={true}
                   method={ActionType.POST}
                   gridId={GridId.daily_statement_purchase}
                   enablefilter={true}

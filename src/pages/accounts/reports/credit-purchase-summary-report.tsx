@@ -87,6 +87,7 @@ const CreditPurchaseSummaryReport = () => {
       allowFiltering: true,
       width: 150,
       visible: true,
+      showInPdf:true
     },
     {
       dataField: "gross",

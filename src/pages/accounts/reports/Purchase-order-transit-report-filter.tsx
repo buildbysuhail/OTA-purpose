@@ -12,7 +12,7 @@ const PurchaseOrderTransitReportFilter = ({ getFieldProps, handleFieldChange }: 
 
     // State for warehouse type radio buttons
     const [warehouseTypeRadio, setWarehouseTypeRadio] = useState({
-      physical: false,
+      physical: true,
       van: false,
     })
   

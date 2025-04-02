@@ -27,7 +27,8 @@ const DailyStatementPurchaseReportFilter = ({ getFieldProps, handleFieldChange }
 }
 export default DailyStatementPurchaseReportFilter;
 export const DailyStatementPurchaseReportFilterInitialState = {
-  fromDate:moment().local().subtract(30, "days").toDate(),
+  // fromDate:moment().local().subtract(30, "days").toDate(),
+  fromDate:new Date(),
   // dateFrom: new Date(),
   toDate:new Date(),
 };

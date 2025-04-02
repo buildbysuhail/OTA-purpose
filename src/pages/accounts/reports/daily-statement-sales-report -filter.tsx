@@ -30,7 +30,8 @@ const DailySalesStatementReportFilter = ({ getFieldProps, handleFieldChange }: a
 }
 export default DailySalesStatementReportFilter;
 export const DailySalesStatementReportFilterInitialState = {
-  fromDate:moment().local().subtract(30, "days").toDate(),
+  // fromDate:moment().local().subtract(30, "days").toDate(),
+  fromDate:new Date(),
   // dateFrom: new Date(),
   toDate:new Date(),
 };

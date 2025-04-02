@@ -23,7 +23,6 @@ const PurchaseTaxReport = () => {
       allowFiltering: true,
       width: 80,
       visible: false,
-      showInPdf: true,
     },
     {
       dataField: "date",
@@ -58,7 +57,6 @@ const PurchaseTaxReport = () => {
       allowFiltering: true,
       width: 100,
       visible: true,
-      showInPdf: true,
     },
     {
       dataField: "taxableAmount",

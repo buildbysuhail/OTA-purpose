@@ -64,7 +64,6 @@ const PartyWiseReportFilter = ({
                                 valueKey: "id",
                                 labelKey: "name",
                             }}
-                            disabled={!getFieldProps("isProductChecked").value}
                             onSelectItem={(data) => {
                                 handleFieldChange("productID", data.value);
                             }}
@@ -84,5 +83,4 @@ export const PartyWiseReportFilterInitialState = {
     toDate: moment().endOf("day").toDate(),
     ledgerID: 0,
     productID: 0,
-    isProductChecked: false,
 };

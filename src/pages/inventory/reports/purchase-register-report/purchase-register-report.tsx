@@ -1744,6 +1744,62 @@ const PurchaseRegisterReport = () => {
       if (column.column == "vat") {
         return !clientSession.isAppGlobal;
       }
+      if (column.column == "CGSTPerc" || column.column == "CGST") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "SGSTPerc" || column.column == "SGST") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "IGSTPerc" || column.column == "IGST") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "GSTPercent" || column.column == "GSTAmt") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "HSNCode") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "GSTIN") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "SalesPrice") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "Remarks") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "CessPerc" || column.column == "CessAmt") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "AdditionalCessPerc" || column.column == "AdditionalCess") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "TaxNo" || column.column == "GSTNo") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "Sl") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "UnitName") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "PriceCategoryID") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "TotalProfitPercent") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "AvgPrice") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "ReferenceNumber") {
+        return clientSession.isAppGlobal;
+    }
+    if (column.column == "BaseUnitQuantity") {
+        return clientSession.isAppGlobal;
+    }
+    
+   
       return true;
     });
   }, [t, filter, userSession.dbIdValue]);

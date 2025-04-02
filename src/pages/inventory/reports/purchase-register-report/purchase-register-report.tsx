@@ -142,14 +142,6 @@ const PurchaseRegisterReport = () => {
         },
       },
       {
-        dataField: "batchNo",
-        caption: t("batch_no"),
-        dataType: "string",
-        allowSearch: true,
-        allowFiltering: true,
-        width: 50,
-      },
-      {
         dataField: "productCode",
         caption: t("product_code"),
         dataType: "string",

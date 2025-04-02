@@ -820,7 +820,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const evaluateExpression = (expression: string, data: any): boolean => {
         // Create a safer scope for evaluating the expression by passing 'data' as an argument
         try {
-         if(data && data.length > 0) {
+          console.log(Object.keys(data));
+          const keys = Object.keys(data)
+         if(keys && keys.length > 0) {
           return new Function(...Object.keys(data), `return ${expression};`)(
             ...Object.values(data)
           );

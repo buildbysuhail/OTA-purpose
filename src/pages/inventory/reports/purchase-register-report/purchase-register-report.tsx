@@ -1587,7 +1587,36 @@ const PurchaseRegisterReport = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return getFormattedValue(parseFloat(value)) || "0";
+    };
+  }, [getFormattedValue]);
+  const customizeSummaryRow4 = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return getFormattedValue(parseFloat(value),false,4) || "0";
+    };
+  }, [getFormattedValue]);
+
+  const customizeSummaryRowString = useMemo(() => {
+    return (itemInfo: { value: any }) => {
+      const value = itemInfo.value;
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
+        return "0";
+      }
+      return (value).toString() || "0";
     };
   }, [getFormattedValue]);
 
@@ -1622,7 +1651,7 @@ const PurchaseRegisterReport = () => {
         column: "vat",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRow4,
       },
       {
         column: "stdPurchasePrice",
@@ -1640,37 +1669,37 @@ const PurchaseRegisterReport = () => {
         column: "quantity",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "free",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "freeValue",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "freeCost",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "qtyNos",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "xRate",
         summaryType: "sum",
         valueFormat: "currency",
-        customizeText: customizeSummaryRow,
+        customizeText: customizeSummaryRowString,
       },
       {
         column: "additionalExpense",

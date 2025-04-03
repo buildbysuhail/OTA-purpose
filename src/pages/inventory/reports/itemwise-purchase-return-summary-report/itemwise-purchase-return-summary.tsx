@@ -344,14 +344,15 @@ const ItemWisePurchaseReturnSummary = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-  const customizeDate = (itemInfo: any) =>  `TOTAL`;
+  const customizeDate = (itemInfo: any) =>  `Net Total`;
+  const customizeGroup = (itemInfo: any) =>  `Group Total`;
   const summaryItems: SummaryConfig[] = [
     {
       column:"productName",
       summaryType:"max",  
       isGroupItem: true,
       showInGroupFooter:true,
-      customizeText: customizeDate,
+      customizeText: customizeGroup,
     },
     {
       column: "totQty",
@@ -376,7 +377,31 @@ const ItemWisePurchaseReturnSummary = () => {
       isGroupItem: true,
       showInGroupFooter:true,
       customizeText: customizeSummaryRow,
+    },
+    {
+      column:"productName",
+      summaryType:"max",  
+      customizeText: customizeDate,
+    },
+    {
+      column: "totQty",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totNetAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totFree",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
     }
+   
   ];
 
   return (

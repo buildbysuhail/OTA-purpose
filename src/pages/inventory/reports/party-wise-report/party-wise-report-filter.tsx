@@ -4,6 +4,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../../redux/urls";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { LedgerType } from "../../../../enums/ledger-types";
 
 const PartyWiseReportFilter = ({
     getFieldProps,
@@ -37,7 +38,8 @@ const PartyWiseReportFilter = ({
                     {...getFieldProps("ledgerID")}
                     field={{
                         id: "ledgerID",
-                        getListUrl: Urls.data_parties,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}

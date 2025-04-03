@@ -150,9 +150,10 @@ const ProductDetailsIndia: React.FC<{
           {...getFieldProps("product.expiryDate")}
           label={t("exp_date")}
           required={false}
-          onChangeData={(data) =>
-            handleFieldChange("product.expiryDate", data.product.expiryDate)
-          }
+          onChange={(e) => handleFieldChange('product.expiryDate', e.target.value)}
+          // onChangeData={(data) =>
+          //   handleFieldChange("product.expiryDate", data.product.expiryDate)
+          // }
         />
 
         <ERPInput
@@ -203,9 +204,10 @@ const ProductDetailsIndia: React.FC<{
           id="mfgDate"
           label={t("mfg_date")}
           required={false}
-          onChangeData={(data) =>
-            handleFieldChange("product.mfgDate", data.product.mfgDate)
-          }
+          onChange={(e) => handleFieldChange('product.mfgDate', e.target.value)}
+          // onChangeData={(data) =>
+          //   handleFieldChange("product.mfgDate", data.product.mfgDate)
+          // }
         />
 
         <ERPDataCombobox

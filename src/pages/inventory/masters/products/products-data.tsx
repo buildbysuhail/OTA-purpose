@@ -35,45 +35,7 @@ const initialProductData: productDto = {
     unitQty: 0,
     packingSlip: true,
     financialYearID: 0,
-    manual: true, // newly added
-    groupCategory: "", // newly added
-    section: "", // newly added
-    baseUnit: "", // newly added
-    upcBarcode: true, // newly added
-    mu: true, // newly added
-    mr: true, // newly added
-    purchasePrice: 0, // newly added
-    salesPrice: 0, // newly added
-    markup: 0, // newly added
-    displayCost: 0, // newly added
-    mrp: 0, // newly added
-    opStock: 0, // newly added
-    msp: 0, // newly added
-    stock: 0, // newly added
-    foreignLanguage: "", // newly added
-    batchCriteriaType: "", // newly added
-    productType: "", // newly added
-    details: "", // newly added
-    defaultVendor: "", // newly added
-    avgCost: 0, // newly added
-    warehouseID: 0, // newly added
-    brandID: 0, // newly added
-    specification: "", // newly added
-    expiryDate: new Date("2024-01-01"), // newly added
-    autoBarcode: 0, // newly added
-    batchNo: "", // newly added
-    netWeight: "", // newly added
-    unitName: "", // newly added
-    mfgDate: new Date("2023-01-01"), // newly added
-    location: "", // newly added
-    gatePass: true, // newly added
-    hold: true, // newly added
-    poFrequency: true, // newly added
-    poFrequencyData: "", // newly added
-    avgSales: "", // newly added
-    avgRate: "", // newly added
-    searchWith: "", // newly added
-    searchInactive: "", // newly added
+    basicUnitID: ""
   },
   productValidation: {
     productName: "",

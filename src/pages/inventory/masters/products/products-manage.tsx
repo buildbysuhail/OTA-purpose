@@ -48,7 +48,10 @@ export const ProductMaster: React.FC = React.memo(() => {
       key: rootState.PopupData.products?.key,
       useApiClient: true,
       keyField: 'productID',
-      initialData: initialProductData,
+      initialData: {
+        data: initialProductData,
+        
+      },
     });
 
   const [activeTab, setActiveTab] = React.useState(0);

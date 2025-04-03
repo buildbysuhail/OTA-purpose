@@ -48,7 +48,10 @@ export const ProductMaster: React.FC = React.memo(() => {
       key: rootState.PopupData.products?.key,
       useApiClient: true,
       keyField: 'productID',
-      initialData: initialProductData,
+      initialData: {
+        data: initialProductData,
+        
+      },
     });
 
   const [activeTab, setActiveTab] = React.useState(0);
@@ -111,7 +114,10 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="nutrition_facts"><NutritionFactsIndia /></div>,
     ]
     : [
-      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2"><ProductManageGcc />  <ProductDetailsGcc /></div>,
+      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
+        <ProductManageGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/> 
+        <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/>
+        </div>,
       <div key="multi_units"><ProductMultiUnitsGCC /></div>,
       <div key="multi_rates"><MultiRatesGcc /></div>,
       <div key="search"><SearchCommon /></div>,

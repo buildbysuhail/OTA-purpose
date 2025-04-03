@@ -8,11 +8,33 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import Urls from "../../../../../redux/urls";
 import { productDto } from "../products-type";
 import initialProductData from "../products-data";
-
-const ProductMultiUnitsIndia: React.FC = () => {
-    const { handleFieldChange, getFieldProps } = useFormManager<productDto>({
-        initialData: initialProductData,
-    });
+import { FormField } from "../../../../../utilities/form-types";
+// const ProductDetailsIndia: React.FC<{
+//   formState: any;
+//   handleFieldChange: (
+//     fields:
+//       | string
+//       | {
+//           [fieldId: string]: any;
+//         },
+//     value?: any
+//   ) => void;
+//   t: any;
+//   getFieldProps: (fieldId: string, type?: string) => FormField;
+// }> = React.memo(({formState,handleFieldChange,t,getFieldProps}) => {
+const ProductMultiUnitsIndia: React.FC<{
+    formState: any;
+    handleFieldChange: (
+      fields:
+        | string
+        | {
+            [fieldId: string]: any;
+          },
+      value?: any
+    ) => void;
+    t?: any;
+    getFieldProps: (fieldId: string, type?: string) => FormField;
+  }> = React.memo(({formState,handleFieldChange,t,getFieldProps}) => {
     // State to store the grid data
     const [gridData, setGridData] = useState<any[]>([]);
 
@@ -39,8 +61,10 @@ const ProductMultiUnitsIndia: React.FC = () => {
                 <div className="flex items-end gap-4">
                     <ERPDataCombobox
                         {...getFieldProps("units.unitID")}
+                        id="unitID"
                         label="Unit"
                         field={{
+                            id:"unitID",
                             getListUrl: Urls.unitOfMeasure,
                             labelKey: "label",
                             valueKey: "value",
@@ -58,17 +82,18 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         type="number"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("units.multiFactor", data.multiFactor)
+                            handleFieldChange("units.multiFactor", data.units.multiFactor)
                         }
                         className="w-full"
                     />
+                  
                     <ERPInput
                         {...getFieldProps("units.barCode")}
                         label="Barcode"
                         placeholder="Barcode"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("units.barCode", data.barCode)
+                            handleFieldChange("units.barCode", data.units.barCode)
                         }
                         className="w-full"
                     />
@@ -79,7 +104,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         type="number"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("units.sprice", data.sprice)
+                            handleFieldChange("units.sprice", data.units.sprice)
                         }
                         className="w-full"
                     />
@@ -90,7 +115,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         type="number"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("batch.mrp", data.mrp)
+                            handleFieldChange("batch.mrp", data.batch.mrp)
                         }
                         className="w-full"
                     />
@@ -101,7 +126,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         type="number"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("batch.msp", data.msp)
+                            handleFieldChange("batch.msp", data.batch.msp)
                         }
                         className="w-full"
                     />
@@ -111,7 +136,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         placeholder="Description"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("units.description", data.description)
+                            handleFieldChange("units.description", data.units.description)
                         }
                         className="w-full"
                     />
@@ -121,7 +146,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         placeholder="Description FL"
                         required={false}
                         onChangeData={(data) =>
-                            handleFieldChange("units.descriptionFL", data.descriptionFL)
+                            handleFieldChange("units.descriptionFL", data.units.descriptionFL)
                         }
                         className="w-full"
                     />
@@ -201,10 +226,13 @@ const ProductMultiUnitsIndia: React.FC = () => {
                 <div className="p-4 rounded-md shadow">
                     <h2 className="text-xl font-semibold mb-4">Default Units</h2>
                     <div className="grid grid-cols-6 gap-4">
+            
                         <ERPDataCombobox
                             {...getFieldProps("batch.defSalesUnitID")}
+                            id='defSalesUnitID'
                             label="Sales"
                             field={{
+                                id:'defSalesUnitID',
                                 getListUrl: Urls.salesRoute,
                                 labelKey: "label",
                                 valueKey: "value",
@@ -216,8 +244,10 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         />
                         <ERPDataCombobox
                             {...getFieldProps("batch.defPurchaseUnitID")}
+                            id="defPurchaseUnitID"
                             label="Purchase"
                             field={{
+                                id:"defPurchaseUnitID",
                                 getListUrl: "vajid",
                                 labelKey: "label",
                                 valueKey: "value",
@@ -229,8 +259,10 @@ const ProductMultiUnitsIndia: React.FC = () => {
                         />
                         <ERPDataCombobox
                             {...getFieldProps("batch.defReportUnitID")}
+                            id="defReportUnitID"
                             label="Report"
                             field={{
+                                id:"defReportUnitID",
                                 getListUrl: "vajid",
                                 labelKey: "label",
                                 valueKey: "value",
@@ -245,6 +277,7 @@ const ProductMultiUnitsIndia: React.FC = () => {
             </div>
         </div>
     );
-};
+}
+  );
 
 export default ProductMultiUnitsIndia;

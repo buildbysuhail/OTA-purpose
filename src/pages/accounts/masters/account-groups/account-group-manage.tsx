@@ -87,6 +87,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         />
 
         <ERPInput
+          // labelDirection="horizontal"
           {...getFieldProps("arabicName")}
           label={t("name_in_arabic")}
           placeholder={t("name_in_arabic")}

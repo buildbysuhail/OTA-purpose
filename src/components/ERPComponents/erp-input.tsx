@@ -752,9 +752,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       }px) scale(1)`
                       : ``,
                 }} >
-                {`${iLabel} ${labelDirection === "horizontal" ? ":" : ""}`}
-                <span className="dark:text-red text-red">
-                  {required && !noLabel && "*"}
+                <span style={{ whiteSpace: "nowrap" }}>
+                  {`${iLabel}${labelDirection === "horizontal" ? "" : ""}`}
+                  {required && !noLabel && <span className="dark:text-red text-red">*</span>}
+                  {labelDirection === "horizontal" && ":"}
                 </span>
               </label>
               <label

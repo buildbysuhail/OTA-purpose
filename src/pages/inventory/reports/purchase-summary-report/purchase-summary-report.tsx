@@ -1111,19 +1111,19 @@ const PurchaseSummaryReport = () => {
           userSession.dbIdValue !== "489995732270" &&
           userSession.dbIdValue !== "543140180640" &&
           !applicationSettings.accountsSettings.allowMultiPayments &&
-          filter.IsInactive
+          !filter.IsInactive
         );
       }
-      if (column.column == "netValue" || column.column == "sRAmount") {
+      if (column.column == "netValue" || column.column == "srAmount") {
         return (
           !clientSession.isAppGlobal &&
           userSession.dbIdValue !== "489995732270" &&
           userSession.dbIdValue !== "543140180640" &&
-          filter.IsInactive
+          !filter.IsInactive
         );
       }
       if (column.column == "couponAmt") {
-        return userSession.dbIdValue !== "543140180640" && filter.IsInactive;
+        return userSession.dbIdValue !== "543140180640" && !filter.IsInactive;
       }
       if (column.column == "taxOnDiscount" || column.column == "roundAmount") {
         return filter.IsInactive;
@@ -1151,9 +1151,14 @@ const PurchaseSummaryReport = () => {
                 }}
                 columns={columns}
                 // moreOption
-                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]} {productID > 0 && , Product Name : [productName]} {salesRouteID > 0 && , Route Name : [routeName]} 
-                {counterID > 0 && , Counter : [counterName]} {salesmanID > 0 && , Sales Man : [salesMan]} 
-                {salesmanID > 0 && , Sales Man : [salesMan]} From Date : {fromDate} To Date : {toDate} {isTimeBased == true &&  , Time between  : [fromTime] And [toTime]}"
+                filterText="of {voucherForm!=''&& , Voucher Form : [voucherForm]}
+                 {productID > 0 && , Product Name : [productName]} 
+                 {salesRouteID > 0 && , Route Name : [routeName]} 
+                {counterID > 0 && , Counter : [counterName]} 
+                {salesmanID > 0 && , Sales Man : [salesMan]} 
+                From Date : {fromDate} To Date : {toDate} 
+                {isTimeBased == true &&  , Time between  :
+                 [fromTime] And [toTime]}"
                 gridHeader={t("purchase_summary_report")}
                 dataUrl={Urls.purchase_summary_report}
                 hideGridAddButton={true}

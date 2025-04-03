@@ -7,27 +7,6 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ItemWisePurchaseReturnSummaryFilter, { ItemWisePurchaseReturnSummaryFilterInitialState } from "./itemwise-purchase-return-summary-filter";
 
-interface ItemWisePurchaseReturnSummary {
-  siNo: number;
-  productCode: string;
-  productID: number;
-  productName: string;
-  groupName: string;
-  totQty: number;
-  totFree: number;
-  unitCode: string;
-  totGross: number;
-  totDisc: number;
-  totNetValue: number;
-  totVat: number;
-  totNetAmount: number;
-  warehouseName: string;
-  branchName: string;
-  qtyDetails: string;
-  groupCategoryName: string;
-  sectionName: string;
-}
-
 const ItemWisePurchaseReturnSummary = () => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -59,6 +38,7 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      groupIndex:0,
     },
     {
       dataField: "productName",
@@ -75,6 +55,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totQty == null
+              ? 0
+              : getFormattedValue(cellElement.data.totQty);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totQty == null
+            ? 0
+            : getFormattedValue(cellElement.data.totQty);
+        }
+      },
     },
     {
       dataField: "totGross",
@@ -83,6 +86,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totGross == null
+              ? 0
+              : getFormattedValue(cellElement.data.totGross);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totGross == null
+            ? 0
+            : getFormattedValue(cellElement.data.totGross);
+        }
+      },
     },
     {
       dataField: "totDisc",
@@ -91,6 +117,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totDisc == null
+              ? 0
+              : getFormattedValue(cellElement.data.totDisc);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totDisc == null
+            ? 0
+            : getFormattedValue(cellElement.data.totDisc);
+        }
+      },
     },
     {
       dataField: "totNetValue",
@@ -99,6 +148,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totNetValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.totNetValue);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totNetValue == null
+            ? 0
+            : getFormattedValue(cellElement.data.totNetValue);
+        }
+      },
     },
     {
       dataField: "totVat",
@@ -107,6 +179,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 85,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totVat == null
+              ? 0
+              : getFormattedValue(cellElement.data.totVat);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totVat == null
+            ? 0
+            : getFormattedValue(cellElement.data.totVat);
+        }
+      },
     },
     {
       dataField: "totNetAmount",
@@ -115,6 +210,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 85,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totNetAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.totNetAmount);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totNetAmount == null
+            ? 0
+            : getFormattedValue(cellElement.data.totNetAmount);
+        }
+      },
     },
     {
       dataField: "productID",
@@ -140,6 +258,29 @@ const ItemWisePurchaseReturnSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 70,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totFree == null
+              ? 0
+              : getFormattedValue(cellElement.data.totFree);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totFree == null
+            ? 0
+            : getFormattedValue(cellElement.data.totFree);
+        }
+      },
     },
     {
       dataField: "productCode",
@@ -203,16 +344,27 @@ const ItemWisePurchaseReturnSummary = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
-      column: "totNetValue",
+      column:"productName",
+      summaryType:"max",  
+      customizeText: customizeDate,
+    },
+    {
+      column: "totQty",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     },
     {
       column: "totNetAmount",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
+    {
+      column: "totFree",
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
@@ -230,6 +382,8 @@ const ItemWisePurchaseReturnSummary = () => {
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
                 moreOption
+                allowGrouping={true}
+                groupPanelVisible={true}
                 gridHeader={t("item_wise_purchase_return_summary")}
                 dataUrl={Urls.item_wise_purchase_return_summary}
                 hideGridAddButton={true}

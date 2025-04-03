@@ -6,6 +6,8 @@ import Urls from "../../../../redux/urls";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../../enums/ledger-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const ItemWisePurchaseReturnSummaryFilter = ({
     getFieldProps,
@@ -13,7 +15,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
     formState,
 }: any) => {
     const { t } = useTranslation("accountsReport");
-
+    const clientSession = useSelector((state: RootState) => state.ClientSession);
     return (
         <div className="grid grid-cols-1 gap-4">
             <div className="grid grid-cols-1 gap-4">
@@ -34,6 +36,8 @@ const ItemWisePurchaseReturnSummaryFilter = ({
             </div>
 
             <div className="grid grid-cols-3 gap-4">
+            {
+        clientSession.isAppGlobal== true && (
                 <ERPDataCombobox
                     label={t("product_category")}
                     {...getFieldProps("productCategoryID")}
@@ -47,13 +51,14 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("productCategoryID", data.value);
                     }}
                 />
-
+                )}
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("partyID")}
                     field={{
                         id: "partyID",
-                        getListUrl: Urls.data_parties,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -124,7 +129,8 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("salesmanID", data.value);
                     }}
                 />
-
+  {/* PRESETWAREHOUSEID>0 is from source txt file
+                set that value and disable the combobox */}
                 <ERPDataCombobox
                     label={t("warehouse")}
                     {...getFieldProps("warehouseID")}
@@ -138,8 +144,9 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("warehouseID", data.value);
                     }}
                 />
-
+            
                 <ERPDataCombobox
+                     disabled={true}//enable on SI-BT,BTO,BTI(From Branch),
                     label={t("to_branch")}
                     {...getFieldProps("toBranchID")}
                     field={{
@@ -154,6 +161,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                 />
 
                 <ERPDataCombobox
+                disabled={true}//enable on SI-BT,BTO,BTI(From Warehouse)
                     label={t("to_warehouse")}
                     {...getFieldProps("toWarehouseID")}
                     field={{
@@ -166,8 +174,8 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("toWarehouseID", data.value);
                     }}
                 />
-
-                <ERPDataCombobox
+                   {/* always visible false */}
+                {/* <ERPDataCombobox
                     label={t("sales_route")}
                     {...getFieldProps("salesRouteID")}
                     field={{
@@ -179,7 +187,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                     onSelectItem={(data) => {
                         handleFieldChange("salesRouteID", data.value);
                     }}
-                />
+                /> */}
 
                 <ERPDataCombobox
                     label={t("supplier")}
@@ -187,7 +195,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                     field={{
                         id: "supplierID",
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Supplier}`,
+                        params: `ledgerType=${LedgerType.Supplier}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -237,12 +245,13 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         handleFieldChange("location", data.value);
                     }}
                 />
-                
+                     {
+        clientSession.isAppGlobal== true && (
                 <ERPCheckbox
                     label={t("category_wise_summary")}
                     {...getFieldProps("IsCategoryWise")}
                     onChangeData={(data: any) => handleFieldChange("IsCategoryWise", data.IsCategoryWise)}
-                />
+                />)}
             </div>
         </div>
     );

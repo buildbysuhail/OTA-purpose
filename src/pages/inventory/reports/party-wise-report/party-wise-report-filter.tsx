@@ -50,13 +50,13 @@ const PartyWiseReportFilter = ({
 
                 <div className="flex items-center gap-2">
                     <div className="flex flex-col">
-                        <ERPCheckbox
+                        {/* <ERPCheckbox
                             {...getFieldProps("isProductChecked")}
                             label={t("products")}
                             onChangeData={(data) =>
                                 handleFieldChange("isProductChecked", data.isProductChecked)
                             }
-                        />
+                        /> */}
                         <ERPDataCombobox
                             noLabel={true}
                             {...getFieldProps("productID")}

@@ -11,7 +11,6 @@ const PurchaseReturnSummaryFilter = ({
     formState,
 }: any) => {
     const { t } = useTranslation("accountsReport");
-
     return (
         <div className="grid grid-cols-1 gap-4">
             <div className="grid grid-cols-2 gap-4">

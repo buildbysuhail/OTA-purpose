@@ -200,6 +200,8 @@ const PurchaseSummaryFilter = ({
                         });
                     }}
                 />
+                {/* PRESETWAREHOUSEID>0 is from source txt file
+                set that value and disable the combobox */}
                 <ERPDataCombobox
                     label={t("warehouse")}
                     {...getFieldProps("warehouseID")}

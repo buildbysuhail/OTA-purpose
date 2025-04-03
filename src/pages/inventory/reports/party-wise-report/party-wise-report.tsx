@@ -7,6 +7,7 @@ import { ActionType } from "../../../../redux/types";
 import { APIClient } from "../../../../helpers/api-client";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import PartyWiseReportFilter, { PartyWiseReportFilterInitialState, } from "./party-wise-report-filter";
+import moment from "moment";
 
 interface PartyWiseReport {
   date?: string;
@@ -51,7 +52,15 @@ const PartyWiseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
-    },
+     cellRender: (
+                  cellElement: any,
+                  cellInfo: any,
+                  filter: any,
+                  exportCell: any
+                ) => {
+                  return  (cellElement.data.date==null||cellElement.data.date==""?"":moment(cellElement.data.date, "DD-MM-YYYY").format("DD-MMM-YYYY")) ; // Ensures proper formatting
+                }
+        },
     {
       dataField: "vchNo",
       caption: t("voucher_no"),
@@ -107,6 +116,29 @@ const PartyWiseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netAmount == null
+              ? ""
+              : getFormattedValue(cellElement.data.netAmount,false,4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netAmount == null
+            ? ""
+            : getFormattedValue(cellElement.data.netAmount,false,4);
+        }
+      },
     },
     {
       dataField: "quantity",
@@ -115,6 +147,29 @@ const PartyWiseReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.quantity == null
+              ? ""
+              : getFormattedValue(cellElement.data.quantity,false,4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.quantity == null
+            ? ""
+            : getFormattedValue(cellElement.data.quantity,false,4);
+        }
+      },
     },
     {
       dataField: "refNo",
@@ -149,11 +204,16 @@ const PartyWiseReport = () => {
       if (value === null || value === undefined || value === "" || isNaN(value)) {
         return "0";
       }
-      return getFormattedValue(value) || "0";
+      return (value).toString() || "0";
     };
   }, [getFormattedValue]);
-
+  const customizeDate = (itemInfo: any) => `TOTAL`;
   const summaryItems: SummaryConfig[] = [
+    {
+      column:"address2",
+      summaryType:"max",  
+      customizeText: customizeDate,
+    },
     {
       column: "netAmount",
       summaryType: "sum",

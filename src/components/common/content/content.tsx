@@ -137,7 +137,6 @@ import CreditPurchaseSummaryReport from "../../../pages/accounts/reports/credit-
 import PartyMonthwisePurchaseSummaryReport from "../../../pages/accounts/reports/Party-monthwise-purchase-summary-report";
 import PurchaseOrderTransitReport from "../../../pages/accounts/reports/Purchase-order-transit-report";
 import PurchaseTaxReport from "../../../pages/accounts/reports/Purchase-Tax-report";
-import ItemwisePurchaseSummaryReport from "../../../pages/accounts/reports/itemwise-purchase-summary-report";
 import ItemWisePurchaseReturnSummary from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 import ItemWisePurchaseOrderSummary from "../../../pages/inventory/reports/itemwise-purchase-order-summary-report/itemwise-purchase-order-summary";
 import ItemWisePurchaseEstimateSummary from "../../../pages/inventory/reports/itemwise-purchase-estimate-summary/itemwise-purchase-estimate-summary";
@@ -152,6 +151,7 @@ import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-
 import DailyStatementPurchaseReport from "../../../pages/accounts/reports/daily-statement-purchase-report";
 import DailySalesStatementReport from "../../../pages/accounts/reports/daily-statement-sales-report";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
+import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
@@ -445,6 +445,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
+        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport/>} />
+      
         <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary />} />
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
@@ -476,7 +478,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwisePurchaseSummaryReport />} />
         <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />
         <Route path="/inventory/daily_statement_all" element={<DailyStatementAllReport />} />
-        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport />} />
         <Route path="/inventory-masters/products" element={<Products />} />
         <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
         <Route path="/inventory-masters/product-category" element={<ProductCategory />} />

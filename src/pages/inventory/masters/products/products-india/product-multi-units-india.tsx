@@ -9,19 +9,7 @@ import Urls from "../../../../../redux/urls";
 import { productDto } from "../products-type";
 import initialProductData from "../products-data";
 import { FormField } from "../../../../../utilities/form-types";
-// const ProductDetailsIndia: React.FC<{
-//   formState: any;
-//   handleFieldChange: (
-//     fields:
-//       | string
-//       | {
-//           [fieldId: string]: any;
-//         },
-//     value?: any
-//   ) => void;
-//   t: any;
-//   getFieldProps: (fieldId: string, type?: string) => FormField;
-// }> = React.memo(({formState,handleFieldChange,t,getFieldProps}) => {
+
 const ProductMultiUnitsIndia: React.FC<{
     formState: any;
     handleFieldChange: (
@@ -32,9 +20,9 @@ const ProductMultiUnitsIndia: React.FC<{
           },
       value?: any
     ) => void;
-    t?: any;
+    
     getFieldProps: (fieldId: string, type?: string) => FormField;
-  }> = React.memo(({formState,handleFieldChange,t,getFieldProps}) => {
+  }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
     // State to store the grid data
     const [gridData, setGridData] = useState<any[]>([]);
 

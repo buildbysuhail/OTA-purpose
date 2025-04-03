@@ -5,10 +5,23 @@ import initialProductData from "../products-data";
 import { productDto } from "../products-type";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import { FormField } from "../../../../../utilities/form-types";
 
-const ProductOthersIndia: React.FC = React.memo(() => {
+const ProductOthersIndia: React.FC<{
+  formState: any;
+  handleFieldChange: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
+ 
+  getFieldProps: (fieldId: string, type?: string) => FormField;
+}> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+
     const { t } = useTranslation("inventory");
-    const { handleFieldChange, getFieldProps } = useFormManager<productDto>({ initialData: initialProductData, });
     return (
         <div className="grid grid-cols-2 gap-4 border border-[#ccc] inline-block rounded-md p-4">
             <div className="grid grid-cols-3 items-center gap-4">
@@ -35,27 +48,27 @@ const ProductOthersIndia: React.FC = React.memo(() => {
                 <ERPCheckbox
                     {...getFieldProps("config.blockConvertProductNameToUpperCase")}
                     label={t("block_convert_product_name_to_upper_case")}
-                    onChangeData={(data) => handleFieldChange("config.blockConvertProductNameToUpperCase", data.blockConvertProductNameToUpperCase)}
+                    onChange={(e:any) => handleFieldChange("config.blockConvertProductNameToUpperCase", e.target.checked)}
                 />
                 <ERPCheckbox
                     {...getFieldProps("config.calculateMarkUpValue")}
                     label={t("calculate_markup_value")}
-                    onChangeData={(data) => handleFieldChange("config.calculateMarkUpValue", data.calculateMarkUpValue)}
+                    onChange={(e:any) => handleFieldChange("config.calculateMarkUpValue", e.target.checked)}
                 />
                 <ERPCheckbox
                     {...getFieldProps("config.showDisplayCost")}
                     label={t("show_display_cost")}
-                    onChangeData={(data) => handleFieldChange("config.showDisplayCost", data.showDisplayCost)}
+                    onChange={(e:any) => handleFieldChange("config.showDisplayCost", e.target.checked)}
                 />
                 <ERPCheckbox
                     {...getFieldProps("config.showProductDuplicateWarning")}
                     label={t("show_product_duplicate_warning_message")}
-                    onChangeData={(data) => handleFieldChange("config.showProductDuplicateWarning", data.showProductDuplicateWarning)}
+                    onChange={(e:any) => handleFieldChange("config.showProductDuplicateWarning", e.target.checked)}
                 />
                 <ERPCheckbox
                     {...getFieldProps("config.showProductDetailesAfterSave")}
                     label={t("show_product_details_after_save")}
-                    onChangeData={(data) => handleFieldChange("config.showProductDetailesAfterSave", data.showProductDetailesAfterSave)}
+                    onChange={(e:any) => handleFieldChange("config.showProductDetailesAfterSave", e.target.checked)}
                 />
             </div>
         </div>

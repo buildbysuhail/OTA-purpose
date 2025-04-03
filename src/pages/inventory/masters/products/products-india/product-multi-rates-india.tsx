@@ -2,8 +2,21 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import DataGrid, { Column, FilterRow, HeaderFilter, Scrolling } from "devextreme-react/data-grid";
 import { data } from "react-router-dom";
+import React from "react";
+import { FormField } from "../../../../../utilities/form-types";
 
-const MultiRatesIndia = () => {
+const MultiRatesIndia : React.FC<{
+  formState?: any;
+  handleFieldChange?: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
+  getFieldProps?: (fieldId: string, type?: string) => FormField;
+}> = React.memo(() => {
     const { t } = useTranslation("inventory");
     const columns = useMemo(() => [
         {
@@ -121,6 +134,6 @@ const MultiRatesIndia = () => {
             </DataGrid>
         </div>
     );
-};
+});
 
 export default MultiRatesIndia;

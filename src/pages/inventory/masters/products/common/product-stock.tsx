@@ -9,10 +9,22 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import Urls from "../../../../../redux/urls";
+import { FormField } from "../../../../../utilities/form-types";
+const StockCommon: React.FC<{
+  formState: any;
+  handleFieldChange: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
+ 
+  getFieldProps: (fieldId: string, type?: string) => FormField;
+}> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
 
-const StockCommon: React.FC = React.memo(() => {
     const { t } = useTranslation("inventory");
-    const { handleFieldChange, getFieldProps } = useFormManager<productDto>({ initialData: initialProductData });
     const [showGrid, setShowGrid] = useState(false);
     const columns: DevGridColumn[] = useMemo(() => [
         {
@@ -127,10 +139,11 @@ const StockCommon: React.FC = React.memo(() => {
                     <ERPCheckbox
                         {...getFieldProps("product.warehouse")}
                         label={t("warehouse")}
-                        onChangeData={(data) => handleFieldChange("product.warehouse", data.warehouse)}
+                        onChange={(data) => handleFieldChange("product.warehouse", data.target.checked)}
                     />
                     <ERPDataCombobox
                         {...getFieldProps("product.warehouse")}
+                        id="warehouse"
                         field={{
                             id: "warehouse",
                             valueKey: "id",
@@ -138,8 +151,9 @@ const StockCommon: React.FC = React.memo(() => {
                         }}
                         onChangeData={(data) => handleFieldChange("product.warehouse", data.warehouse)}
                         noLabel={true}
-                        options={[]}
+                        options={[{id:"1",name:"nizam"}]}
                     />
+            
                 </div>
                 <div className="flex items-center gap-4">
                     <ERPButton

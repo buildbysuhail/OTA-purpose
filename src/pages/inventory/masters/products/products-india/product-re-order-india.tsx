@@ -7,20 +7,35 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import initialProductData from "../products-data";
 import { productDto } from "../products-type";
 import { useTranslation } from "react-i18next";
+import { FormField } from "../../../../../utilities/form-types";
 
-const ProductReOrderIndia: React.FC = React.memo(() => {
+const ProductReOrderIndia: React.FC<{
+  formState: any;
+  handleFieldChange: (
+    fields:
+      | string
+      | {
+          [fieldId: string]: any;
+        },
+    value?: any
+  ) => void;
+ 
+  getFieldProps: (fieldId: string, type?: string) => FormField;
+}> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+
     const { t } = useTranslation("inventory");
-    const { handleFieldChange, getFieldProps } = useFormManager<productDto>({ initialData: initialProductData, });
+  
     return (
         <div className="border border-[#ccc] inline-block rounded-md p-4">
             <div className="flex items-center gap-4">
                 <ERPCheckbox
                     {...getFieldProps("product.poFrequency")}
                     label={t("po_frequency")}
-                    onChangeData={(data) => handleFieldChange("product.poFrequency", data.poFrequency)}
+                    onChange={(data) => handleFieldChange("product.poFrequency", data.target.checked)}
                 />
                 <ERPDataCombobox
                     {...getFieldProps("product.poFrequencyData")}
+                    id="poFrequencyData"
                     field={{
                         id: "poFrequencyData",
                         valueKey: "id",
@@ -42,7 +57,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.minimumStock", data.minimumStock)}
+                    onChangeData={(data) => handleFieldChange("product.minimumStock", data.product.minimumStock)}
                 />
                 <ERPInput
                     {...getFieldProps("product.maximumStock")}
@@ -50,7 +65,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.maximumStock", data.maximumStock)}
+                    onChangeData={(data) => handleFieldChange("product.maximumStock", data.product.maximumStock)}
                 />
                 <ERPInput
                     {...getFieldProps("product.reorderQty")}
@@ -58,7 +73,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.reorderQty", data.reorderQty)}
+                    onChangeData={(data) => handleFieldChange("product.reorderQty", data.product.reorderQty)}
                 />
                 <ERPInput
                     {...getFieldProps("product.reorderLevel")}
@@ -66,7 +81,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.reorderLevel", data.reorderLevel)}
+                    onChangeData={(data) => handleFieldChange("product.reorderLevel", data.product.reorderLevel)}
                 />
                 <ERPInput
                     {...getFieldProps("product.avgSales")}
@@ -74,7 +89,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.avgSales", data.avgSales)}
+                    onChangeData={(data) => handleFieldChange("product.avgSales", data.product.avgSales)}
                 />
                 <ERPInput
                     {...getFieldProps("product.avgCost")}
@@ -82,7 +97,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.avgCost", data.avgCost)}
+                    onChangeData={(data) => handleFieldChange("product.avgCost", data.product.avgCost)}
                 />
                 <ERPInput
                     {...getFieldProps("product.avgRate")}
@@ -90,7 +105,7 @@ const ProductReOrderIndia: React.FC = React.memo(() => {
                     placeholder="0.00"
                     type="number"
                     required={false}
-                    onChangeData={(data) => handleFieldChange("product.avgRate", data.avgRate)}
+                    onChangeData={(data) => handleFieldChange("product.avgRate", data.product.avgRate)}
                 />
             </div>
         </div>

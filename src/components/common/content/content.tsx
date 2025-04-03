@@ -152,6 +152,8 @@ import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-
 import DailyStatementPurchaseReport from "../../../pages/accounts/reports/daily-statement-purchase-report";
 import DailySalesStatementReport from "../../../pages/accounts/reports/daily-statement-sales-report";
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
+import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
+
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
@@ -495,6 +497,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
         <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
+        <Route path="/inventory-masters/test-page" element={<TestInvMaster />} />
       </Routes>
     </Suspense>
   );

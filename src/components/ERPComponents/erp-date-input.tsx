@@ -22,6 +22,7 @@ interface ERPDateInputProps {
   disabled?: boolean;
   required?: boolean;
   readonly?: boolean;
+  noLabel?:boolean;
   minDate?: string;
   maxDate?: string;
   minDateKey?: string;
@@ -69,6 +70,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       defaultValue,
       value,
       type = "date",
+      noLabel=false,
       data,
       validation,
       className,
@@ -373,7 +375,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
         >
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePicker
-              label={label}
+              label={!noLabel && label}
               disabled={disabled || readonly}
               value={value ? moment(value).local() : null}
               onChange={handleChange}
@@ -447,6 +449,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
                 ? customSize
                 : inputBoxState?.inputSize
             }
+            noLabel={noLabel}
             localInputBox={inputBoxState}
             label={label}
             placeholder={placeholder}

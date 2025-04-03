@@ -76,6 +76,7 @@ const TotalSummary = lazy(() => import("../../../pages/total-summary"));
 const ShortkeysSettings = lazy(() => import("../../../pages/settings/Integration/shortkeysSettings"));
 const TestInputButton = lazy(() => import("../../../pages/test-input-button"));
 const AccTransactionGrid = lazy(() => import("../../../pages/accounts/transactions/acc-transacton-grid"));
+const TransactionGrid = lazy(() => import("../../../pages/inventory/transactions/purchase/transacton-grid"));
 
 // Inventory Masters
 const Products = lazy(() => import("../../../pages/inventory/masters/products/products"));
@@ -150,6 +151,7 @@ import DailyStatementAllReport from "../../../pages/accounts/reports/daily-state
 import BranchTransferOut from "../../../pages/inventory/reports/branch-transfer-out-report/branch-tranfer-out";
 import DailyStatementPurchaseReport from "../../../pages/accounts/reports/daily-statement-purchase-report";
 import DailySalesStatementReport from "../../../pages/accounts/reports/daily-statement-sales-report";
+import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
 const DailyBalanceAmount = lazy(() => import("../../../pages/inventory/reports/daily-balance/daily-balance-report"));
@@ -326,7 +328,7 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
-                      <AccTransactionFormContainer
+                      <TransactionFormContainer
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         formCode={route.formCode}
@@ -344,7 +346,7 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}List`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
-                      <AccTransactionGrid
+                      <TransactionGrid
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         title={route.listTitle}
@@ -358,7 +360,7 @@ const Content: FC<ContentProps> = () => {
                   path={`${route.transactionBase}/${route.transactionType}/:voucherNo`}
                   element={
                     <RouteGuard formCode={route.formCode} action={route.action}>
-                      <AccTransactionFormContainer
+                      <TransactionFormContainer
                         voucherType={route.voucherType}
                         transactionType={route.transactionType}
                         formCode={route.formCode}

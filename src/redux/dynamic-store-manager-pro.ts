@@ -23,6 +23,7 @@ import PopupDataReducer from "../redux/slices/popup-reducer";
 import TemplateReducer from "../redux/slices/templates/reducer";
 import DeviceStateReducer from "../redux/slices/device/reducer";
 import ApplicationSettingsReducer from "../redux/slices/app/application-settings-reducer";
+import InvTransactionReducer from "../pages/inventory/transactions/purchase/reducer";
 import AccTransactionReducer from "../pages/accounts/transactions/reducer";
 import DataContainerReducer from "../redux/slices/data/reducer";
 
@@ -215,6 +216,7 @@ class DynamicReduxManager {
       DeviceInfo: DeviceStateReducer,
       ApplicationSettings: ApplicationSettingsReducer,
       AccTransaction: AccTransactionReducer,
+      InventoryTransaction: InvTransactionReducer,
       Data: DataContainerReducer,
 
       ...reducerMap,

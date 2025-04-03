@@ -127,7 +127,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.unitPrice == null
                 ? ""
-                : getFormattedValue(cellElement.data.unitPrice,false,3);
+                : getFormattedValue(cellElement.data.unitPrice, false, 3);
             return {
               ...exportCell,
               text: value,
@@ -137,7 +137,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.unitPrice == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.unitPrice),false,3);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.unitPrice),
+                  false,
+                  3
+                );
           }
         },
       },
@@ -206,7 +210,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.quantity == null
                 ? ""
-                : getFormattedValue(cellElement.data.quantity,false,4);
+                : getFormattedValue(cellElement.data.quantity, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -216,7 +220,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.quantity == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.quantity),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.quantity),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -237,7 +245,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.free == null
                 ? ""
-                : getFormattedValue(cellElement.data.free,false,4);
+                : getFormattedValue(cellElement.data.free, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -247,7 +255,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.free == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.free),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.free), false, 4);
           }
         },
       },
@@ -276,7 +284,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.unitPrice1 == null
                 ? ""
-                : getFormattedValue(cellElement.data.unitPrice1,false,3);
+                : getFormattedValue(cellElement.data.unitPrice1, false, 3);
             return {
               ...exportCell,
               text: value,
@@ -286,7 +294,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.unitPrice1 == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.unitPrice1),false,3);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.unitPrice1),
+                  false,
+                  3
+                );
           }
         },
       },
@@ -307,7 +319,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.vat == null
                 ? ""
-                : getFormattedValue(cellElement.data.vat,false,4);
+                : getFormattedValue(cellElement.data.vat, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -317,7 +329,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.vat == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.vat),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.vat), false, 4);
           }
         },
       },
@@ -369,7 +381,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.freeValue == null
                 ? ""
-                : getFormattedValue(cellElement.data.freeValue,false,7);
+                : getFormattedValue(cellElement.data.freeValue, false, 7);
             return {
               ...exportCell,
               text: value,
@@ -379,7 +391,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.freeValue == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.freeValue),false,7);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.freeValue),
+                  false,
+                  7
+                );
           }
         },
       },
@@ -400,7 +416,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.cost == null
                 ? ""
-                : getFormattedValue(cellElement.data.cost,false,4);
+                : getFormattedValue(cellElement.data.cost, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -410,7 +426,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.cost == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cost),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.cost), false, 4);
           }
         },
       },
@@ -431,7 +447,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.freeCost == null
                 ? ""
-                : getFormattedValue(cellElement.data.freeCost,false,8);
+                : getFormattedValue(cellElement.data.freeCost, false, 8);
             return {
               ...exportCell,
               text: value,
@@ -441,7 +457,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.freeCost == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.freeCost),false,8);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.freeCost),
+                  false,
+                  8
+                );
           }
         },
       },
@@ -527,7 +547,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.xRate == null
                 ? ""
-                : getFormattedValue(cellElement.data.xRate,false,6);
+                : getFormattedValue(cellElement.data.xRate, false, 6);
             return {
               ...exportCell,
               text: value,
@@ -537,7 +557,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.xRate == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.xRate),false,6);
+              : getFormattedValue(parseFloat(cellElement.data.xRate), false, 6);
           }
         },
       },
@@ -576,7 +596,9 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.additionalExpenses == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.additionalExpenses));
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalExpenses)
+                );
           }
         },
       },
@@ -629,7 +651,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.qtyNos == null
                 ? "0"
-                : (cellElement.data.qtyNos).toString();
+                : cellElement.data.qtyNos.toString();
             return {
               ...exportCell,
               text: value,
@@ -639,7 +661,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.qtyNos == null
               ? ""
-              : (cellElement.data.qtyNos).toString();
+              : cellElement.data.qtyNos.toString();
           }
         },
       },
@@ -660,7 +682,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.mrp == null
                 ? ""
-                : getFormattedValue(cellElement.data.mrp,false,3);
+                : getFormattedValue(cellElement.data.mrp, false, 3);
             return {
               ...exportCell,
               text: value,
@@ -670,7 +692,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.mrp == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.mrp),false,3);
+              : getFormattedValue(parseFloat(cellElement.data.mrp), false, 3);
           }
         },
       },
@@ -717,7 +739,9 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.stdPurchasePrice == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.stdPurchasePrice));
+              : getFormattedValue(
+                  parseFloat(cellElement.data.stdPurchasePrice)
+                );
           }
         },
       },
@@ -982,7 +1006,7 @@ const PurchaseRegisterReport = () => {
         },
       },
       {
-        dataField: "VNUM",
+        dataField: "vNUM",
         caption: t("VNUM"),
         dataType: "number",
         allowSearch: true,
@@ -1007,7 +1031,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.cgstPerc == null
                 ? ""
-                : getFormattedValue(cellElement.data.cgstPerc,false,4);
+                : getFormattedValue(cellElement.data.cgstPerc, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1017,7 +1041,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.cgstPerc == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cgstPerc),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cgstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1038,7 +1066,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.cgst == null
                 ? ""
-                : getFormattedValue(cellElement.data.cgst,false,4);
+                : getFormattedValue(cellElement.data.cgst, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1048,7 +1076,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.cgst == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cgst),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.cgst), false, 4);
           }
         },
       },
@@ -1069,7 +1097,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.sgstPerc == null
                 ? ""
-                : getFormattedValue(cellElement.data.sgstPerc,false,4);
+                : getFormattedValue(cellElement.data.sgstPerc, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1079,7 +1107,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.sgstPerc == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.sgstPerc),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.sgstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1100,7 +1132,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.sgst == null
                 ? ""
-                : getFormattedValue(cellElement.data.sgst,false,4);
+                : getFormattedValue(cellElement.data.sgst, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1110,7 +1142,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.sgst == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.sgst),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.sgst), false, 4);
           }
         },
       },
@@ -1131,7 +1163,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.igstPerc == null
                 ? ""
-                : getFormattedValue(cellElement.data.igstPerc,false,4);
+                : getFormattedValue(cellElement.data.igstPerc, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1141,7 +1173,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.igstPerc == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.igstPerc),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.igstPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1162,7 +1198,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.igst == null
                 ? ""
-                : getFormattedValue(cellElement.data.igst,false,4);
+                : getFormattedValue(cellElement.data.igst, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1172,7 +1208,7 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.igst == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.igst),false,4);
+              : getFormattedValue(parseFloat(cellElement.data.igst), false, 4);
           }
         },
       },
@@ -1193,7 +1229,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.gstPercent == null
                 ? ""
-                : getFormattedValue(cellElement.data.gstPercent,false,4);
+                : getFormattedValue(cellElement.data.gstPercent, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1203,7 +1239,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.gstPercent == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.gstPercent),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.gstPercent),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1224,7 +1264,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.gstAmt == null
                 ? ""
-                : getFormattedValue(cellElement.data.gstAmt,false,4);
+                : getFormattedValue(cellElement.data.gstAmt, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1234,7 +1274,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.gstAmt == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.gstAmt),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.gstAmt),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1310,7 +1354,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.cessPerc == null
                 ? ""
-                : getFormattedValue(cellElement.data.cessPerc,false,2);
+                : getFormattedValue(cellElement.data.cessPerc, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -1320,7 +1364,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.cessPerc == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cessPerc),false,2);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cessPerc),
+                  false,
+                  2
+                );
           }
         },
       },
@@ -1341,7 +1389,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.cessAmt == null
                 ? ""
-                : getFormattedValue(cellElement.data.cessAmt,false,4);
+                : getFormattedValue(cellElement.data.cessAmt, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1351,7 +1399,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.cessAmt == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.cessAmt),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.cessAmt),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1372,7 +1424,11 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.additionalCessPerc == null
                 ? ""
-                : getFormattedValue(cellElement.data.additionalCessPerc,false,4);
+                : getFormattedValue(
+                    cellElement.data.additionalCessPerc,
+                    false,
+                    4
+                  );
             return {
               ...exportCell,
               text: value,
@@ -1382,7 +1438,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.additionalCessPerc == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.additionalCessPerc),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalCessPerc),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1403,7 +1463,7 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.additionalCess == null
                 ? ""
-                : getFormattedValue(cellElement.data.additionalCess,false,4);
+                : getFormattedValue(cellElement.data.additionalCess, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -1413,7 +1473,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.additionalCess == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.additionalCess),false,4);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.additionalCess),
+                  false,
+                  4
+                );
           }
         },
       },
@@ -1474,7 +1538,11 @@ const PurchaseRegisterReport = () => {
             const value =
               cellElement.data?.totalProfitPercent == null
                 ? ""
-                : getFormattedValue(cellElement.data.totalProfitPercent,false,2);
+                : getFormattedValue(
+                    cellElement.data.totalProfitPercent,
+                    false,
+                    2
+                  );
             return {
               ...exportCell,
               text: value,
@@ -1484,7 +1552,11 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.totalProfitPercent == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.totalProfitPercent),false,2);
+              : getFormattedValue(
+                  parseFloat(cellElement.data.totalProfitPercent),
+                  false,
+                  2
+                );
           }
         },
       },
@@ -1554,19 +1626,62 @@ const PurchaseRegisterReport = () => {
           } else {
             return cellElement.data?.baseUnitQuantity == null
               ? ""
-              : getFormattedValue(parseFloat(cellElement.data.baseUnitQuantity));
+              : getFormattedValue(
+                  parseFloat(cellElement.data.baseUnitQuantity)
+                );
           }
         },
       },
     ];
+      // Filter columns based on the `visible` property
+      return baseColumns
+      .filter((column) => {
+        if (column.dataField == "xRate") {
+          return filter.voucherForm == "Import";
+        }
+        if (column.dataField == "baseUnitQuantity") {
+          return userSession.dbIdValue == "543140180640";
+        }
+        if (column.dataField == "vat") {
+          return !clientSession.isAppGlobal;
+        }
+        if (["cgstPerc", "cgst", "sgstPerc", "sgst", "igstPerc", "igst", "gstPercent", "gstAmt", 
+          "hsnCode", "gstin", "vNUM", "remarks", "cessPerc", "cessAmt", "additionalCessPerc", 
+          "additionalCess", "gstNo", "priceCategoryID", "referenceNumber"].includes(column.dataField??"")) {
+         return clientSession.isAppGlobal;
+     }
+        return true;
+      })
+      .map((column) => {
+        if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
+          return {
+            ...column,
+            caption: "QRPay",
+          };
+        }
+        return column;
+      });
+  }, [t, filter, userSession.dbIdValue]);
     // Filter columns based on the `visible` property
-    return baseColumns.filter((column) => {
-      if (column.dataField == "xRate") {
-        return filter.voucherForm == "Import";
-      }
-      return true;
-    });
-  }, [t,filter]);
+  //   return baseColumns.filter((column) => {
+  //     if (column.dataField == "xRate") {
+  //       return filter.voucherForm == "Import";
+  //     }
+  //     if (column.dataField == "baseUnitQuantity") {
+  //       return userSession.dbIdValue == "543140180640";
+  //     }
+  //     if (column.dataField == "vat") {
+  //       return !clientSession.isAppGlobal;
+  //     }
+  //     if (["CGSTPerc", "CGST", "SGSTPerc", "SGST", "IGSTPerc", "IGST", "GSTPercent", "GSTAmt", 
+  //       "HSNCode", "GSTIN", "SalesPrice", "Remarks", "CessPerc", "CessAmt", "AdditionalCessPerc", 
+  //       "AdditionalCess", "TaxNo", "GSTNo", "Sl", "UnitName", "PriceCategoryID", "TotalProfitPercent", 
+  //       "AvgPrice", "ReferenceNumber", "BaseUnitQuantity"].includes(column.dataField??"")) {
+  //      return false;
+  //  }
+  //     return true;
+  //   });
+  // }, [t, filter]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -1593,7 +1708,7 @@ const PurchaseRegisterReport = () => {
       ) {
         return "0";
       }
-      return getFormattedValue(parseFloat(value),false,4) || "0";
+      return getFormattedValue(parseFloat(value), false, 4) || "0";
     };
   }, [getFormattedValue]);
 
@@ -1608,7 +1723,7 @@ const PurchaseRegisterReport = () => {
       ) {
         return "0";
       }
-      return (value).toString() || "0";
+      return value.toString() || "0";
     };
   }, [getFormattedValue]);
 
@@ -1738,68 +1853,6 @@ const PurchaseRegisterReport = () => {
       },
     ];
     return _summaryItems.filter((column) => {
-      if (column.column == "baseUnitQuantity") {
-        return userSession.dbIdValue == "543140180640";
-      }
-      if (column.column == "vat") {
-        return !clientSession.isAppGlobal;
-      }
-      if (column.column == "CGSTPerc" || column.column == "CGST") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "SGSTPerc" || column.column == "SGST") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "IGSTPerc" || column.column == "IGST") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "GSTPercent" || column.column == "GSTAmt") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "HSNCode") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "GSTIN") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "SalesPrice") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "Remarks") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "CessPerc" || column.column == "CessAmt") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "AdditionalCessPerc" || column.column == "AdditionalCess") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "TaxNo" || column.column == "GSTNo") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "Sl") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "UnitName") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "PriceCategoryID") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "TotalProfitPercent") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "AvgPrice") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "ReferenceNumber") {
-        return clientSession.isAppGlobal;
-    }
-    if (column.column == "BaseUnitQuantity") {
-        return clientSession.isAppGlobal;
-    }
-    
-   
       return true;
     });
   }, [t, filter, userSession.dbIdValue]);

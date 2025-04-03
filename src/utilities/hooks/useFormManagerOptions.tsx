@@ -311,7 +311,6 @@ export function useFormManager<T>({
       
       // Update the nested fields for all provided fieldIds
       const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
-  
       if (useApiClient) {
         setLocalFormState((prevState: any) => ({
           ...prevState,

@@ -9,6 +9,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import initialProductData from "../products-data";
 import { productDto } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
+import Urls from "../../../../../redux/urls";
 export const ProductManageIndia: React.FC<{
   formState: any;
   handleFieldChange: (
@@ -18,7 +19,7 @@ export const ProductManageIndia: React.FC<{
           [fieldId: string]: any;
         },
     value?: any
-  ) => void;
+  )=> void;
 
   getFieldProps: (fieldId: string, type?: any) => FormField;
 }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
@@ -80,7 +81,7 @@ export const ProductManageIndia: React.FC<{
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productName", data.product.productName)}
+                onChangeData={(data: any) => handleFieldChange("product.productName", data.productName)}
                 label={t("product_name")}
                 className="w-full"
                 required={true}
@@ -101,7 +102,7 @@ export const ProductManageIndia: React.FC<{
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.product.productCategoryID)}
+                  onChangeData={(data: any) => handleFieldChange("product.productCategoryID", data.productCategoryID)}
                   label={t("product_category")}
                   className="w-full"
                   required={true}
@@ -121,7 +122,7 @@ export const ProductManageIndia: React.FC<{
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productGroupId", data.product.productGroupId)}
+                  onChangeData={(data: any) => handleFieldChange("product.productGroupId", data.productGroupId)}
                   label={t("product_group")}
                   className="w-full"
                   required={true}
@@ -142,7 +143,7 @@ export const ProductManageIndia: React.FC<{
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.product.groupCategory)}
+                onChangeData={(data: any) => handleFieldChange("product.groupCategory", data.groupCategory)}
                 label={t("group_category")}
                 options={[]}
               />
@@ -154,7 +155,7 @@ export const ProductManageIndia: React.FC<{
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.section", data.product.section)}
+                onChangeData={(data: any) => handleFieldChange("product.section", data.section)}
                 label={t("section")}
                 options={[]}
               />
@@ -169,7 +170,7 @@ export const ProductManageIndia: React.FC<{
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.product.baseUnit)}
+                  onChangeData={(data: any) => handleFieldChange("product.baseUnit", data.baseUnit)}
                   label={t("base_unit")}
                   className="w-full"
                   required={true}
@@ -224,7 +225,7 @@ export const ProductManageIndia: React.FC<{
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.product.taxCategoryID)}
+                  onChangeData={(data: any) => handleFieldChange("product.taxCategoryID", data.taxCategoryID)}
                   label={t("tax_category")}
                   className="w-full"
                   options={[]}
@@ -345,23 +346,26 @@ export const ProductManageIndia: React.FC<{
                 }}
                 className="w-full"
                 noLabel={true}
-                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.product.batchCriteriaType)}
+                onChangeData={(data: any) => handleFieldChange("product.batchCriteriaType", data.batchCriteriaType)}
                 options={[]}
               />
             </div>
 
             <div className="grid grid-cols-2 items-end gap-2">
+             
               <ERPDataCombobox
                 {...getFieldProps("product.productType")}
                 id= "productType"
                 field={{
                   id: "productType",
+                  required: true,
+                  // getListUrl: Urls.data_warehouse,
                   valueKey: "value",
                   labelKey: "label",
                 }}
-                onChangeData={(data: any) => handleFieldChange("product.productType", data.product.productType)}
+                onChangeData={(data: any) => {handleFieldChange("product.productType", data.productType)}}
                 label={t("product_type")}
-                options={[{ value: "Inventory", label: t("inventory") }]}
+                options={[{ value: "Inventory", label: t("inventory") },]} 
               />
 
               <div className="flex items-center gap-2">
@@ -388,7 +392,7 @@ export const ProductManageIndia: React.FC<{
                   labelKey: "name",
                 }}
                 className="w-full"
-                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.product.defaultVendor)}
+                onChangeData={(data: any) => handleFieldChange("product.defaultVendor", data.defaultVendor)}
                 label={t("default_vendor")}
                 options={[]}
               />

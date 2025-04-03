@@ -344,29 +344,37 @@ const ItemWisePurchaseReturnSummary = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-  const customizeDate = (itemInfo: any) => `TOTAL`;
+  const customizeDate = (itemInfo: any) =>  `TOTAL`;
   const summaryItems: SummaryConfig[] = [
     {
       column:"productName",
       summaryType:"max",  
+      isGroupItem: true,
+      showInGroupFooter:true,
       customizeText: customizeDate,
     },
     {
       column: "totQty",
       summaryType: "sum",
       valueFormat: "currency",
+      isGroupItem: true,
+      showInGroupFooter:true,
       customizeText: customizeSummaryRow,
     },
     {
       column: "totNetAmount",
       summaryType: "sum",
       valueFormat: "currency",
+      isGroupItem: true,
+      showInGroupFooter:true,
       customizeText: customizeSummaryRow,
     },
     {
       column: "totFree",
       summaryType: "sum",
       valueFormat: "currency",
+      isGroupItem: true,
+      showInGroupFooter:true,
       customizeText: customizeSummaryRow,
     }
   ];
@@ -384,6 +392,7 @@ const ItemWisePurchaseReturnSummary = () => {
                 moreOption
                 allowGrouping={true}
                 groupPanelVisible={true}
+                autoExpandAll={true}
                 gridHeader={t("item_wise_purchase_return_summary")}
                 dataUrl={Urls.item_wise_purchase_return_summary}
                 hideGridAddButton={true}

@@ -10,15 +10,40 @@ import { productDto } from "../products-type";
 import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
 
+// Primitive types we don’t recurse into
+type Primitive = string | number | boolean | null | undefined | symbol | bigint;
+
+// Limit recursion to 5 levels max (safe for TS)
+type Prev = [never, 0, 1, 2, 3, 4, 5];
+
+// Get dot notation keys safely
+type DotNestedKeys<T, Depth extends number = 5> = [Depth] extends [never]
+  ? never
+  : T extends object
+    ? {
+        [K in keyof T & string]: T[K] extends Primitive | Array<any>
+          ? K
+          : K | `${K}.${DotNestedKeys<T[K], Prev[Depth]>}`
+      }[keyof T & string]
+    : never;
+
+// Get value by dot path
+type PathValue<T, P extends string> =
+  P extends `${infer K}.${infer Rest}`
+    ? K extends keyof T
+      ? PathValue<T[K], Rest>
+      : never
+    : P extends keyof T
+      ? T[P]
+      : never;
+      type ProductFieldPath = DotNestedKeys<productDto>;
+     
 const ProductDetailsIndia: React.FC<{
+  
   formState: any;
-  handleFieldChange: (
-    fields:
-      | string
-      | {
-          [fieldId: string]: any;
-        },
-    value?: any
+  handleFieldChange: <Path extends ProductFieldPath>(
+    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+    value?: PathValue<productDto, Path>
   ) => void;
   t: any;
   getFieldProps: (fieldId: string, type?: string) => FormField;
@@ -33,7 +58,7 @@ const ProductDetailsIndia: React.FC<{
             placeholder="0.00"
             type="number"
             required={false}
-            onChangeData={(data) =>
+            onChangeData={(data: productDto) =>
               handleFieldChange("product.minimumStock", data.product.minimumStock)
             }
           />
@@ -44,7 +69,7 @@ const ProductDetailsIndia: React.FC<{
             placeholder="0.00"
             type="number"
             required={false}
-            onChangeData={(data) =>
+            onChangeData={(data: productDto) =>
               handleFieldChange("product.maximumStock", data.product.maximumStock)
             }
           />
@@ -54,7 +79,7 @@ const ProductDetailsIndia: React.FC<{
             placeholder="0.00"
             type="number"
             required={false}
-            onChangeData={(data) =>
+            onChangeData={(data: productDto) =>
               handleFieldChange("product.reorderQty", data.product.reorderQty)
             }
           />
@@ -62,7 +87,7 @@ const ProductDetailsIndia: React.FC<{
 
         <div className="flex items-center gap-1">
           <ERPDataCombobox
-            {...getFieldProps("product.warehouseID")}
+            {...getFieldProps("batch.warehouseID")}
             id= "warehouseID"
             field={{
               id: "warehouseID",
@@ -70,8 +95,8 @@ const ProductDetailsIndia: React.FC<{
               // getListUrl: Urls.data_user_types,
               labelKey: "name",
             }}
-            onChangeData={(data) =>
-              handleFieldChange("product.warehouseID", data.product.warehouseID)
+            onChangeData={(data: productDto) =>
+              handleFieldChange("batch.warehouseID", data.batch.warehouseID)
             }
             className="w-full"
             label={t("warehouse")}
@@ -85,7 +110,7 @@ const ProductDetailsIndia: React.FC<{
 
         <div className="flex items-center gap-1">
           <ERPDataCombobox
-            {...getFieldProps("product.brandID")}
+            {...getFieldProps("batch.brandID")}
             id= "brandID"
             field={{
               id: "brandID",
@@ -93,8 +118,8 @@ const ProductDetailsIndia: React.FC<{
               // getListUrl: Urls.data_user_types,
               labelKey: "name",
             }}
-            onChangeData={(data) =>
-              handleFieldChange("product.brandID", data.product.brandID)
+            onChangeData={(data: productDto) =>
+              handleFieldChange("batch.brandID", data.batch.brandID)
             }
             className="w-full"
             label={t("brand_mfg")}
@@ -111,7 +136,7 @@ const ProductDetailsIndia: React.FC<{
           label={t("commodity_plu")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
+          onChangeData={(data: productDto) =>
             handleFieldChange("product.commodityCode", data.product.commodityCode)
           }
         />
@@ -121,18 +146,18 @@ const ProductDetailsIndia: React.FC<{
           label={t("alias_name")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
+          onChangeData={(data: productDto) =>
             handleFieldChange("product.aliasItemName", data.product.aliasItemName)
           }
         />
 
         <ERPInput
-          {...getFieldProps("product.specification")}
+          {...getFieldProps("batch.specification")}
           label={t("specification")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
-            handleFieldChange("product.specification", data.product.specification)
+          onChangeData={(data: productDto) =>
+            handleFieldChange("batch.specification", data.batch.specification)
           }
         />
 
@@ -141,17 +166,17 @@ const ProductDetailsIndia: React.FC<{
           label={t("hsn_code")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
+          onChangeData={(data: productDto) =>
             handleFieldChange("product.hsnCode", data.product.hsnCode)
           }
         />
 
         <ERPDateInput
-          {...getFieldProps("product.expiryDate")}
+          {...getFieldProps("batch.expiryDate")}
           label={t("exp_date")}
           required={false}
-          onChange={(e) => handleFieldChange('product.expiryDate', e.target.value)}
-          // onChangeData={(data) =>
+          onChange={(e) => handleFieldChange('batch.expiryDate', e.target.value as any)}
+          // onChangeData={(data: productDto) =>
           //   handleFieldChange("product.expiryDate", data.product.expiryDate)
           // }
         />
@@ -161,18 +186,18 @@ const ProductDetailsIndia: React.FC<{
           label={t("auto_barcode")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
+          onChangeData={(data: productDto) =>
             handleFieldChange("product.autoBarcode", data.product.autoBarcode)
           }
         />
 
         <ERPInput
-          {...getFieldProps("product.batchNo")}
+          {...getFieldProps("batch.batchNo")}
           label={t("batch_no")}
           placeholder=""
           required={false}
-          onChangeData={(data) =>
-            handleFieldChange("product.batchNo", data.product.batchNo)
+          onChangeData={(data: productDto) =>
+            handleFieldChange("batch.batchNo", data.batch.batchNo)
           }
         />
 
@@ -183,8 +208,8 @@ const ProductDetailsIndia: React.FC<{
             placeholder="0.00"
             type="number"
             required={false}
-            onChangeData={(data) =>
-              handleFieldChange("product.netWeight", data.product.netWeight)
+            onChangeData={(data: productDto) =>
+              handleFieldChange("product.marginPercentage", data.product.marginPercentage)
             }
           />
 
@@ -193,32 +218,32 @@ const ProductDetailsIndia: React.FC<{
             label={t("unit_name")}
             placeholder={t("eg:gm/ml")}
             required={false}
-            onChangeData={(data) =>
+            onChangeData={(data: productDto) =>
               handleFieldChange("product.unitName", data.product.unitName)
             }
           />
         </div>
 
         <ERPDateInput
-          {...getFieldProps("product.mfgDate")}
+          {...getFieldProps("batch.mfgDate")}
           id="mfgDate"
           label={t("mfg_date")}
           required={false}
-          onChange={(e) => handleFieldChange('product.mfgDate', e.target.value)}
-          // onChangeData={(data) =>
+          onChange={(e) => handleFieldChange('batch.mfgDate', e.target.value as any)}
+          // onChangeData={(data: productDto) =>
           //   handleFieldChange("product.mfgDate", data.product.mfgDate)
           // }
         />
 
         <ERPDataCombobox
-          {...getFieldProps("product.location")}
+          {...getFieldProps("batch.location")}
           field={{
             id: "location",
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) =>
-            handleFieldChange("product.location", data.product.location)
+          onChangeData={(data: productDto) =>
+            handleFieldChange("batch.location", data.batch.location)
           }
           label={t("location")}
           options={[]}
@@ -240,7 +265,7 @@ const ProductDetailsIndia: React.FC<{
             {...getFieldProps("product.canSale")}
             label={t("sales")}
             onChange={(e) => handleFieldChange('product.canSale', e.target.checked)}
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.canSale", data.canSale)
             // }
           />
@@ -249,7 +274,7 @@ const ProductDetailsIndia: React.FC<{
             {...getFieldProps("product.isFinishedGood")}
             label={t("finished_goods")}
             onChange={(e) => handleFieldChange('product.isFinishedGood', e.target.checked)}
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.isFinishedGood", data.isFinishedGood)
             // }
           />
@@ -258,7 +283,7 @@ const ProductDetailsIndia: React.FC<{
             {...getFieldProps("product.isRawMaterial")}
             label={t("raw_material")}
             onChange={(e) => handleFieldChange('product.isRawMaterial', e.target.checked)}
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.isRawMaterial", data.isRawMaterial)
             // }
           />
@@ -267,17 +292,17 @@ const ProductDetailsIndia: React.FC<{
             {...getFieldProps("product.active")}
             label={t("is_active_batch")}
             onChange={(e) => handleFieldChange('product.active', e.target.checked)}
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.active", data.active)
             // }
           />
 
           <ERPCheckbox
-            {...getFieldProps("product.gatePass")}
+            {...getFieldProps("batch.gatePass")}
             label={t("gate_pass")}
-            onChange={(e) => handleFieldChange('product.gatePass', e.target.checked)}
+            onChange={(e) => handleFieldChange('batch.gatePass', e.target.checked)}
 
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.gatePass", data.gatePass)
             // }
           />
@@ -286,7 +311,7 @@ const ProductDetailsIndia: React.FC<{
             {...getFieldProps("product.hold")}
             label={t("hold")}
             onChange={(e) => handleFieldChange('product.hold', e.target.checked)}
-            // onChangeData={(data) =>
+            // onChangeData={(data: productDto) =>
             //   handleFieldChange("product.hold", data.hold)
             // }
           />

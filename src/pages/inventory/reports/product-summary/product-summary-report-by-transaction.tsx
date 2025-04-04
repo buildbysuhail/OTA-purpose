@@ -49,10 +49,11 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
     {
       dataField: "date",
       caption: t("date"),
-      dataType: "string",
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 75,
+      format: "dd-MMM-yyyy"
     },
     {
       dataField: "ledgerName",
@@ -93,6 +94,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 48,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.quantity == null
+              ? ""
+              : getFormattedValue(cellElement.data.quantity, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.quantity == null
+            ? ""
+            : getFormattedValue(cellElement.data.quantity, false, 4);
+        }
+      },
     },
     {
       dataField: "unitName",
@@ -109,6 +133,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 60,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.unitPrice == null
+              ? ""
+              : getFormattedValue(cellElement.data.unitPrice, false, 3);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.unitPrice == null
+            ? ""
+            : getFormattedValue(cellElement.data.unitPrice, false, 3);
+        }
+      },
     },
     {
       dataField: "grossValue",
@@ -117,6 +164,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 70,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.grossValue == null
+              ? ""
+              : getFormattedValue(cellElement.data.grossValue, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.grossValue == null
+            ? ""
+            : getFormattedValue(cellElement.data.grossValue, false, 4);
+        }
+      },
     },
     {
       dataField: "rateWithTax",
@@ -125,6 +195,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 70,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.rateWithTax == null
+              ? ""
+              : getFormattedValue(cellElement.data.rateWithTax, false, 3);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.rateWithTax == null
+            ? ""
+            : getFormattedValue(cellElement.data.rateWithTax, false, 3);
+        }
+      },
     },
     {
       dataField: "netValue",
@@ -133,6 +226,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 70,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netValue == null
+              ? ""
+              : getFormattedValue(cellElement.data.netValue, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netValue == null
+            ? ""
+            : getFormattedValue(cellElement.data.netValue, false, 4);
+        }
+      },
     },
     {
       dataField: "totalVatAmount",
@@ -141,6 +257,29 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.totalVatAmount == null
+              ? ""
+              : getFormattedValue(cellElement.data.totalVatAmount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.totalVatAmount == null
+            ? ""
+            : getFormattedValue(cellElement.data.totalVatAmount, false, 4);
+        }
+      },
     },
     {
       dataField: "netAmount",
@@ -149,7 +288,63 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.netAmount == null
+              ? ""
+              : getFormattedValue(cellElement.data.netAmount, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.netAmount == null
+            ? ""
+            : getFormattedValue(cellElement.data.netAmount, false, 4);
+        }
+      },
     },
+    //not seen in time of OT
+    {
+      dataField: "xRate",
+      caption: t("xRate"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.xRate == null
+              ? ""
+              : getFormattedValue(cellElement.data.xRate, false, 6);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.xRate == null
+            ? ""
+            : getFormattedValue(cellElement.data.xRate, false, 6);
+        }
+      },
+    },
+    //only seen in time of OT
     {
       dataField: "voucherType",
       caption: t("voucher_type"),
@@ -166,10 +361,20 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
     if (value === null || value === undefined || value === "" || isNaN(value)) {
       return "0";
     }
-    return getFormattedValue(value) || "0";
+    return getFormattedValue(value,false,2) || "0";
   };
 
   const summaryItems: SummaryConfig[] = [
+    {
+      column: "ledgerName",
+      summaryType: "custom",
+    },
+    {
+      column: "quantity",
+      summaryType: "sum",
+      valueFormat: "currency",
+      customizeText: customizeSummaryRow,
+    },
     {
       column: "netValue",
       summaryType: "sum",
@@ -192,7 +397,7 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{ filtering: true, paging: false, sorting: true,summary:true }}
                 columns={columns}
                 gridHeader={t("product_summary_report_by_transaction")}
                 dataUrl={Urls.product_summary_transaction}

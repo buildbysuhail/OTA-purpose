@@ -401,7 +401,6 @@ const ItemWisePurchaseReturnSummary = () => {
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
     }
-   
   ];
 
   return (
@@ -411,10 +410,19 @@ const ItemWisePurchaseReturnSummary = () => {
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+
                 summaryItems={summaryItems}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={columns}
-                moreOption
+                // moreOption
+                filterText=" From : {fromDate} - {toDate} 
+                {partyID > 0 && , Party :[party]} 
+                {supplierID > 0 && ,  Supplier :[supplier]} 
+                {productGroupID > 0 && , Product Group: [productGroup]} 
+                {warehouseID > 0 && , Warehouse: [warehouse]} 
+                {brandID > 0 && , Brand: [brand]}
+                {salesmanID > 0 && , Sales Man: [salesman]}"
+               // {salesRouteID > 0 && , Route: [salesRoute]} salesRouteID is always visible false
                 allowGrouping={true}
                 groupPanelVisible={true}
                 autoExpandAll={true}

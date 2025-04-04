@@ -149,7 +149,8 @@ const PurchaseSummaryFilter = ({
                             counterName: data.label,
                         });
                     }}
-                />)}
+                />
+                )}
                 <ERPDataCombobox
                     label={t("party")}
                     {...getFieldProps("partyID")}

@@ -12,13 +12,15 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ProductSummaryReportByTransaction from "./product-summary-report-by-transaction";
 import ProductSummaryReport from "./product-summary-report-basic-info";
 import ProductSummaryReportStockLedger from "./product-summary-report-stock-ledger";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 export interface ProductSummaryFilter {
   filter: {
     dateFrom: Date;
     dateTo: Date;
     productID: number;
-    productBatchID: string;
+    productBatchID: number;
     warehouseID: number;
     showBatchWise: boolean;
   };
@@ -34,14 +36,16 @@ const ProductSummaryMaster = ({
   formState,
 }: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
+const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+      
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<ProductSummaryFilter>({
     filter: {
-      dateFrom: moment().local().subtract(30, "days").toDate(),
+      dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
       productID: 0,
-      productBatchID: '',
+      productBatchID: 0,
       warehouseID: 0,
       showBatchWise: false,
     },
@@ -138,6 +142,8 @@ const ProductSummaryMaster = ({
                     }))
                   }
                 />
+  {
+        applicationSettings.inventorySettings?.maintainWarehouse == true && (
                 <ERPDataCombobox
                   id="warehouseID"
                   value={filter.filter.warehouseID}
@@ -161,6 +167,7 @@ const ProductSummaryMaster = ({
                     }))
                   }
                 />
+              )}
                 <ERPCheckbox
                   id="showBatchWise"
                   label={t("show_batch_wise")}

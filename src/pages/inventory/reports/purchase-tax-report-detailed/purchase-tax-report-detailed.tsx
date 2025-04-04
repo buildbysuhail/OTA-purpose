@@ -364,8 +364,8 @@ const PurchaseTaxReportDetailed = () => {
   const summaryItems: SummaryConfig[] = [
     {
       column: "party",
-      summaryType: "max",
-      customizeText: customizeDate,
+      summaryType: "custom",
+      // customizeText: customizeDate,
     },
     {
       column: "taxableValue",
@@ -396,9 +396,10 @@ const PurchaseTaxReportDetailed = () => {
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{
-                  filtering: false,
-                  paging: false,
+                  filtering: true,
+                  paging: true,
                   sorting: false,
+                  summary:true
                 }}
                 columns={columns}
                 moreOption

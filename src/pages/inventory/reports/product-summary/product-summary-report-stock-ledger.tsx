@@ -7,20 +7,6 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
 
-interface ProductSummaryReportStockLedger {
-  siNo: number;
-  date: string;
-  particulars: string;
-  voucherType: string;
-  form: string;
-  voucherNo: string;
-  inwardQty: number;
-  outwardQty: number;
-  balance: number;
-  unit: string;
-  prefix: string;
-}
-
 const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filter }) => {
   const { t } = useTranslation("accountsReport");
 
@@ -80,6 +66,29 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.inwardQty == null
+              ? ""
+              : getFormattedValue(cellElement.data.inwardQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.inwardQty == null
+            ? ""
+            : getFormattedValue(cellElement.data.inwardQty, false, 4);
+        }
+      },
     },
     {
       dataField: "outwardQty",
@@ -88,6 +97,29 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.outwardQty == null
+              ? ""
+              : getFormattedValue(cellElement.data.outwardQty, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.outwardQty == null
+            ? ""
+            : getFormattedValue(cellElement.data.outwardQty, false, 4);
+        }
+      },
     },
     {
       dataField: "balance",
@@ -96,6 +128,29 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (
+        cellElement: any,
+        cellInfo: any,
+        filter: any,
+        exportCell: any
+      ) => {
+        if (exportCell != undefined) {
+          const value =
+            cellElement.data?.balance == null
+              ? ""
+              : getFormattedValue(cellElement.data.balance, false, 4);
+          return {
+            ...exportCell,
+            text: value,
+            alignment: "right",
+            alignmentExcel: { horizontal: "right" },
+          };
+        } else {
+          return cellElement.data?.balance == null
+            ? ""
+            : getFormattedValue(cellElement.data.balance, false, 4);
+        }
+      },
     },
     {
       dataField: "unit",
@@ -126,6 +181,10 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
 
   const summaryItems: SummaryConfig[] = [
     {
+      column: "voucherType",
+      summaryType: "custom",
+    },
+    {
       column: "inwardQty",
       summaryType: "sum",
       valueFormat: "currency",
@@ -153,7 +212,7 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{ filtering: true, paging: false, sorting: false,summary:true }}
                 columns={columns}
                 gridHeader={t("product_summary_stock_ledger")}
                 dataUrl={Urls.product_summary_stock_ledger}

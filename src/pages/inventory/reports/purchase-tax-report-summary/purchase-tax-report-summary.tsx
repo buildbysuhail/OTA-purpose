@@ -231,9 +231,10 @@ const PurchaseTaxReportSummary = () => {
               <ErpDevGrid
                 summaryItems={summaryItems}
                 remoteOperations={{
-                  filtering: false,
-                  paging: false,
+                  filtering: true,
+                  paging: true,
                   sorting: false,
+                  summary:true
                 }}
                 columns={columns}
                 moreOption

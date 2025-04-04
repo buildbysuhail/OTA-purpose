@@ -63,7 +63,10 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("partyID", data.value);
+                        handleFieldChange({
+                            partyID: data.value,
+                            party: data.label,
+                        });
                     }}
                 />
 
@@ -77,10 +80,12 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("productGroupID", data.value);
+                        handleFieldChange({
+                            productGroupID: data.value,
+                            productGroup: data.label,
+                        });
                     }}
                 />
-
                 <ERPDataCombobox
                     label={t("brand")}
                     {...getFieldProps("brandID")}
@@ -91,7 +96,10 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("brandID", data.value);
+                        handleFieldChange({
+                            brandID: data.value,
+                            brand: data.label,
+                        });
                     }}
                 />
 
@@ -126,7 +134,10 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("salesmanID", data.value);
+                        handleFieldChange({
+                            salesmanID: data.value,
+                            salesman: data.label,
+                        });
                     }}
                 />
   {/* PRESETWAREHOUSEID>0 is from source txt file
@@ -141,7 +152,10 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("warehouseID", data.value);
+                        handleFieldChange({
+                            warehouseID: data.value,
+                            warehouse: data.label,
+                        });
                     }}
                 />
             
@@ -200,7 +214,10 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                         labelKey: "name",
                     }}
                     onSelectItem={(data) => {
-                        handleFieldChange("supplierID", data.value);
+                        handleFieldChange({
+                            supplierID: data.value,
+                            supplier: data.label,
+                        });
                     }}
                 />
 

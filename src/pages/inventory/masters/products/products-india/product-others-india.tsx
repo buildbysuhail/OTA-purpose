@@ -72,7 +72,7 @@ const ProductOthersIndia: React.FC<{
             </div>
 
             {/* Popup for Fast Moving Items */}
-            {activePopup === "fastMoving" && (
+            {activePopup === "fastMoving" && ( 
                 <div className="fixed inset-0 rounded-md flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
                         <h2 className="text-xl font-bold mb-4">{t("pos_fast_moving_items")}</h2>

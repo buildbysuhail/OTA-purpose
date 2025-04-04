@@ -191,7 +191,7 @@ export const ProductManageIndia: React.FC<{
                 className="w-full"
                 onChangeData={(data: any) => handleFieldChange("product.unitQty", data.product.unitQty)}
               />
-            </div>
+            </div> 
 
             <div className="flex items-center justify-between mt-2">
               <ERPCheckbox

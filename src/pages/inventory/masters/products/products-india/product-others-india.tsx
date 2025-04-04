@@ -3,6 +3,7 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import { FormField } from "../../../../../utilities/form-types";
+import POSFastMovingItems from "../common/fast-mooving";
 
 const ProductOthersIndia: React.FC<{
     formState: any;
@@ -75,6 +76,7 @@ const ProductOthersIndia: React.FC<{
                 <div className="fixed inset-0 rounded-md flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
                         <h2 className="text-xl font-bold mb-4">{t("pos_fast_moving_items")}</h2>
+                        <POSFastMovingItems></POSFastMovingItems>
                         <ERPButton title="Close" variant="primary" onClick={closePopup} />
                     </div>
                 </div>

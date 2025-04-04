@@ -1,4 +1,31 @@
-export interface productDto {
+
+export type Primitive = string | number | boolean | null | undefined | symbol | bigint;
+
+// Limit recursion to 5 levels max (safe for TS)
+export type Prev = [never, 0, 1, 2, 3, 4, 5];
+
+// Get dot notation keys safely
+export type DotNestedKeys<T, Depth extends number = 5> = [Depth] extends [never]
+  ? never
+  : T extends object
+    ? {
+        [K in keyof T & string]: T[K] extends Primitive | Array<any>
+          ? K
+          : K | `${K}.${DotNestedKeys<T[K], Prev[Depth]>}`
+      }[keyof T & string]
+    : never;
+
+// Get value by dot path
+export type PathValue<T, P extends string> =
+  P extends `${infer K}.${infer Rest}`
+    ? K extends keyof T
+      ? PathValue<T[K], Rest>
+      : never
+    : P extends keyof T
+      ? T[P]
+      : never;
+      export type ProductFieldPath = DotNestedKeys<productDto>;
+      export interface productDto {
   product: DetailsDto;
   productValidation: ProductValidationDto;
   batch: ProductBatchInputDto;
@@ -270,6 +297,9 @@ export type ProductNutrientsValidationsDto = {};
 export interface SupplierProductsInputDto {
   ledgerID: number;
   refCode: string;
+
+  supplierCode: string;
+  supplier: string;
 }
 
 export type SupplierProductsValidationDto = {};

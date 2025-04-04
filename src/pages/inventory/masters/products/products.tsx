@@ -397,13 +397,14 @@ const Products = () => {
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productId, reload: false }) }}
-              edit={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productId, reload: false }) }}
+              view={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleProducts({ isOpen: true, key: cellElement?.data?.productID, reload: false }) }}
               delete={{
+                
                 onSuccess: () => { dispatch(toggleProducts({ isOpen: false, key: null, reload: true, })); },
                 confirmationRequired: true,
                 confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
-                url: Urls?.products, key: cellElement?.data?.id
+                url: Urls?.products, key: cellElement?.data?.productID
               }}
             />
           )

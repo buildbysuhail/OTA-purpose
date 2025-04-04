@@ -4,16 +4,13 @@ import DataGrid, { Column, FilterRow, HeaderFilter, Scrolling } from "devextreme
 import { data } from "react-router-dom";
 import React from "react";
 import { FormField } from "../../../../../utilities/form-types";
+import { PathValue, productDto, ProductFieldPath } from "../products-type";
 
 const MultiRatesIndia : React.FC<{
   formState?: any;
-  handleFieldChange?: (
-    fields:
-      | string
-      | {
-          [fieldId: string]: any;
-        },
-    value?: any
+  handleFieldChange: <Path extends ProductFieldPath>(
+    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+    value?: PathValue<productDto, Path>
   ) => void;
   getFieldProps?: (fieldId: string, type?: string) => FormField;
 }> = React.memo(() => {

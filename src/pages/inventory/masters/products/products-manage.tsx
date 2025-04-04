@@ -29,13 +29,15 @@ import SalesCommon from "./common/product-sales";
 import PurchaseCommon from "./common/product-purchase";
 import StockCommon from "./common/product-stock";
 import SuppliersCommon from "./common/product-suppliers";
+import PromotionCommon from "./common/product-promotion";
 
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { t } = useTranslation("inventory");
+  const { t } = useTranslation("inventory");debugger;  
   const { isEdit, handleSubmit, handleClear, isLoading, handleClose, formState, handleFieldChange, getFieldProps } =
-    useFormManager<productDto>({
+  
+  useFormManager<productDto>({
       url: Urls.products,
       onClose: useCallback(
         () => dispatch(toggleProducts({ isOpen: false, key: null, reload: false })),
@@ -49,8 +51,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       useApiClient: true,
       keyField: 'productID',
       initialData: {
-        data: initialProductData,
-        
+        data: initialProductData,        
       },
     });
 
@@ -101,17 +102,17 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
           <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
       <div key="multi_units"><ProductMultiUnitsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="multi_rates"><MultiRatesIndia/></div>,
+      <div key="multi_rates"><MultiRatesIndia  formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="image"><ImageCommon /></div>,
       <div key="others">  <ProductOthersIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="sales"><SalesCommon /></div>,
-      <div key="purchase"><PurchaseCommon /></div>,
+      <div key="sales"><SalesCommon getFieldProps={getFieldProps}/></div>,
+      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps}/></div>,
       <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="suppliers"><SuppliersCommon /></div>,
-      <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="promotion_details">Promotion Details</div>,
+      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+      <div key="promotion_details"><PromotionCommon getFieldProps={getFieldProps}></PromotionCommon></div>,
       <div key="search"><SearchCommon /></div>,
-      <div key="nutrition_facts"><NutritionFactsIndia /></div>,
+      <div key="nutrition_facts"><NutritionFactsIndia   formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
     ]
     : [
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
@@ -123,10 +124,10 @@ export const ProductMaster: React.FC = React.memo(() => {
       <div key="search"><SearchCommon /></div>,
       <div key="image"><ImageCommon /></div>,
       <div key="others"><ProductOthersGcc /></div>,
-      <div key="sales"><SalesCommon /></div>,
-      <div key="purchase"><PurchaseCommon /></div>,
+      <div key="sales"><SalesCommon getFieldProps={getFieldProps}/></div>,
+      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps}/></div>,
       <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="suppliers"><SuppliersCommon /></div>,
+      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="notes"><ProductNotesGcc /></div>,
     ];
 

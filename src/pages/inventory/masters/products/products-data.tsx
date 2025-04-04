@@ -165,10 +165,7 @@ const initialProductData: productDto = {
     }
   ],
   supplierProducts: [
-    {
-      ledgerID: 0,
-      refCode: ""
-    }
+    
   ],
   multiUnits: [
     // {

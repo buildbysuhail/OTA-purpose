@@ -6,20 +6,16 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../../redux/urls";
-import { productDto } from "../products-type";
+import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import initialProductData from "../products-data";
 import { FormField } from "../../../../../utilities/form-types";
 
 const ProductMultiUnitsIndia: React.FC<{
     formState: any;
-    handleFieldChange: (
-      fields:
-        | string
-        | {
-            [fieldId: string]: any;
-          },
-      value?: any
-    ) => void;
+    handleFieldChange: <Path extends ProductFieldPath>(
+        fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+        value?: PathValue<productDto, Path>
+      ) => void;
     
     getFieldProps: (fieldId: string, type?: string) => FormField;
   }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { FormField } from "../../../../../utilities/form-types";
 import POSFastMovingItems from "../common/fast-mooving";
 
@@ -38,7 +39,10 @@ const ProductOthersIndia: React.FC<{
                     {...getFieldProps("config.blockConvertProductNameToUpperCase")}
                     label={t("block_convert_product_name_to_upper_case")}
                     onChange={(e: any) =>
-                        handleFieldChange("config.blockConvertProductNameToUpperCase", e.target.checked)
+                        handleFieldChange(
+                            "config.blockConvertProductNameToUpperCase",
+                            e.target.checked
+                        )
                     }
                 />
                 <ERPCheckbox
@@ -71,25 +75,29 @@ const ProductOthersIndia: React.FC<{
                 />
             </div>
 
-            {/* Popup for Fast Moving Items */}
-            {activePopup === "fastMoving" && ( 
-                <div className="fixed inset-0 rounded-md flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
-                        <h2 className="text-xl font-bold mb-4">{t("pos_fast_moving_items")}</h2>
-                        <POSFastMovingItems></POSFastMovingItems>
-                        <ERPButton title="Close" variant="primary" onClick={closePopup} />
-                    </div>
-                </div>
+            {activePopup === "fastMoving" && (
+                <ERPModal
+                    isOpen={true}
+                    closeModal={(reload: boolean) => closePopup()}
+                    title={t("pos_fast_moving_items")}
+                    content={<POSFastMovingItems />}
+                    width={780}
+                    height={570}
+                    disableOutsideClickClose={false}
+                />
             )}
 
-            {/* Popup for Change Auto Barcode */}
+            {/* Modal for Change Auto Barcode */}
             {activePopup === "autoBarcode" && (
-                <div className="fixed inset-0 rounded-md flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
-                        <h2 className="text-xl font-bold mb-4">{t("change_autobarcode")}</h2>
-                        <ERPButton title="Close" variant="primary" onClick={closePopup} />
-                    </div>
-                </div>
+                <ERPModal
+                    isOpen={true}
+                    closeModal={(reload: boolean) => closePopup()}
+                    title={t("change_autobarcode")}
+                    content={<div>Hello</div>}
+                    width={780}
+                    height={570}
+                    disableOutsideClickClose={false}
+                />
             )}
         </div>
     );

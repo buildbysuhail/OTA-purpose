@@ -301,14 +301,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const [gridHeight, setGridHeight] = useState(200);
   const { hasRight } = useUserRights();
-
-  useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightWindows = wh - 800;
-    setGridHeight(gridHeightWindows);
-  }, [window.innerHeight]);
   useEffect(() => {
     dispatch(
       accFormStateHandleFieldChange({
@@ -2455,7 +2448,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             )}
           </div>
           <div
-            className="relative"
+            className=""
             style={{
               maxWidth: formState.userConfig?.gridMaxWidth
                 ? `${formState.userConfig?.gridMaxWidth}px`
@@ -2492,20 +2485,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ? "none"
                   : "0",
             }}
-          >
-            {/* <div className="w-full h-full absolute bg-transparent z-9"></div> */}
+          >  
             <ErpDevGrid
               key={key}
               GridPreferenceChooserAccTrance
               heightToAdjustOnWindows={
-                formState.userConfig?.gridHeight ??
-                (isChequeSectionVisible ? 700 : 680)
+                formState.userConfig?.gridHeight !== undefined && formState.userConfig?.gridHeight !== null && formState.userConfig?.gridHeight !== '' 
+                  ? formState.userConfig?.gridHeight 
+                  : (isChequeSectionVisible ? 550 : 530)
               }
               summaryItems={summaryItems}
               ref={erpGridRef}
               keyExpr="slNo"
               columns={columns}
-              height={gridHeight}
               allowFiltering={false}
               dataUrl={Urls.acc_reports_ledger}
               hideGridAddButton={true}
@@ -2766,7 +2758,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               <ErpDevGrid
                 key={key}
                 GridPreferenceChooserAccTrance={true}
-                heightToAdjustOnWindows={
+                heightToAdjustOnMobile={
                   formState.userConfig?.gridHeight ??
                   (isChequeSectionVisible ? 650 : 600)
                 }
@@ -2774,7 +2766,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ref={erpGridRef}
                 keyExpr="slNo"
                 columns={columns}
-                height="auto"
                 allowFiltering={false}
                 dataUrl={Urls.acc_reports_ledger}
                 hideGridAddButton={true}

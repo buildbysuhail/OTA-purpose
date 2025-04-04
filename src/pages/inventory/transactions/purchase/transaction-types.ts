@@ -20,7 +20,7 @@ export interface TransactionProps {
 }
 export interface TransactionData {
   master: TransactionMaster;
-  master3: TransactionMaster3;
+  // master3: TransactionMaster3;
   masterValidations?: TransactionValidationsData;
   details: TransactionDetail[];
   attachments: any[];
@@ -40,7 +40,7 @@ export interface Attachments {
 }
 export interface TransactionValidationsData {
   master: TransactionMasterValidations;
-  master3: TransactionMaster3Validations;
+  // master3: TransactionMaster3Validations;
   details: TransactionDetail[];
   attachments: Attachments[];
 }
@@ -155,6 +155,7 @@ export interface TransactionMaster {
   referenceDate: string; //new
   referenceNumber: string; //new
   particulars: string;//new
+  other: TransactionMaster3;
 }
 export interface TransactionMaster3 {
   invTransactionMasterId: number; 
@@ -362,11 +363,31 @@ export const initialTransactionDetailData: TransactionDetail = {
 // Initial object with default values
 export const initialTransactionMasterValidations: TransactionValidationsData = {
   master: {},
-  master3: {},
+  // master3: {},
   details: [],
   attachments: []
 };
-
+export const TransactionMaster3InitialData: TransactionMaster3 = {
+  totSchemeDiscount: 0.0,
+  totSGST: 0.0,
+  totCGST: 0.0,
+  totIGST: 0.0,
+  totCess: 10.0,
+  totAdditionalCess: 0.0,
+  totCalamityCess: 0.0,
+  totTCS: 0.0,
+  totTDS: 0.0,
+  shipLegalName: "",
+  shipTradeName: "",
+  shipGstIn: "",
+  shipPinCode: 0,
+  shipAddress1: "0",
+  shipAddress2: "0",
+  shipLocation: "0",
+  shipStateCode: 0,
+  invTransactionMasterId: 0,
+  branchId: 0
+}
 
 
 export const TransactionMasterInitialData: TransactionMaster = {
@@ -469,32 +490,12 @@ export const TransactionMasterInitialData: TransactionMaster = {
   notes2: "",
   referenceDate: new Date().toISOString(),
   referenceNumber: "",
-  particulars: ""
+  particulars: "",
+  other: TransactionMaster3InitialData
 }
-export const TransactionMaster3InitialData: TransactionMaster3 = {
-  totSchemeDiscount: 0.0,
-  totSGST: 0.0,
-  totCGST: 0.0,
-  totIGST: 0.0,
-  totCess: 10.0,
-  totAdditionalCess: 0.0,
-  totCalamityCess: 0.0,
-  totTCS: 0.0,
-  totTDS: 0.0,
-  shipLegalName: "",
-  shipTradeName: "",
-  shipGstIn: "",
-  shipPinCode: 0,
-  shipAddress1: "0",
-  shipAddress2: "0",
-  shipLocation: "0",
-  shipStateCode: 0,
-  invTransactionMasterId: 0,
-  branchId: 0
-}
+
 export const transactionInitialData: TransactionData = {
   master: TransactionMasterInitialData,
-  master3: TransactionMaster3InitialData,
   details: [],
   attachments: [],
   masterValidations: initialTransactionMasterValidations

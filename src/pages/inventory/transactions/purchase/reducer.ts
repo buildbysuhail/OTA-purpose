@@ -134,7 +134,32 @@ const InvTransactionSlice = createSlice({
           : fieldValue;
       });
     },
+    formStateTransactionMaster3HandleFieldChange: (
+      state,
+      action: PayloadAction<{
+        fields: { [fieldId in keyof TransactionMaster3]?: any };
+      }>
+    ) => {
+      const { fields } = action.payload;
 
+      // Check if 'fields' is an object (multiple fields)
+      Object.keys(fields).forEach((key) => {
+        // Update the corresponding field in the state
+        const fieldValue = fields[key as keyof TransactionMaster3];
+        const isDateField =
+          (state.transaction.master.other[
+            key as keyof TransactionMaster3
+          ] as typeof fieldValue) instanceof Date;
+        if (isDateField) {
+        }
+        // Convert Date fields to ISO strings
+        (state.transaction.master.other[
+          key as keyof TransactionMaster3
+        ] as typeof fieldValue) = isDateField
+          ? new Date(fieldValue).toISOString()
+          : fieldValue;
+      });
+    },
     // Add multiple rows to the transaction details
     formStateTransactionDetailsSetSlNo: (
       state,

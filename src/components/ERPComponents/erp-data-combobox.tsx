@@ -1159,7 +1159,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               },
             } as SxProps<Theme>,
             regular: {
-              height: "1.6rem",
+              height: "1.4rem",
               fontSize: "12px",
               color:
                 appState?.mode == "dark"
@@ -1577,7 +1577,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
                           inputBoxState?.adjustB ?? 10
                         }px) scale(1)`
-                      : `translate( 1px,4px) scale(1)`,
+                      : `translate( 1px,3px) scale(1)`,
                 }}
               >
                 {`${label || id?.replaceAll("_", " ")} ${

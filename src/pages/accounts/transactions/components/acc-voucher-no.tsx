@@ -71,11 +71,14 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, AccVoucherNoPrefixProps>
             }}
             disabled={formState.formElements.voucherNumber?.disabled}
             labelInfo={
+              <div className="relative">
               <button
-                className={`pe-3`}
+                className={`absolute right-0 top-0 pe-2`}
               >
                 <VoucherNumberDetailsSidebar displayType="link" />
               </button>
+              </div>
+           
             }
           />
         )}

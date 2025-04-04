@@ -362,6 +362,7 @@ const Urls = {
 
   // Inventory
   products: "/Inventory/Product/",
+  product_scheme_details: "/Inventory/Schemes/GetProductSchemeDetailes/",
   productGroup: "/Inventory/ProductGroup/",
   productCategory: "/Inventory/ProductCategory/",
   brands: "/Inventory/Brands/",

@@ -595,6 +595,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
     presetCostenterId: 0,
     counterAssignedCashLedgerId: 0,
     maxWidth: "",
+    gridHeight:null,
     outerPageBg: "",
     innerPageBg: "",
     inputBoxStyle: {

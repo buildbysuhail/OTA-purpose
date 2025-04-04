@@ -144,19 +144,7 @@ const initialProductData: productDto = {
     }
   ],
   units: [
-    {
-      productUnitID: 0,
-      productBatchID: 0,
-      unitID: 0,
-      multiFactor: 0,
-      barCode: "",
-      sprice: 0,
-      description: "",
-      descriptionFL: "",
-      unitRemarks: "",
-      gatePass: true,
-      multiBarcodes: ""
-    }
+    
   ],
   nutrients: [
     {
@@ -165,10 +153,7 @@ const initialProductData: productDto = {
     }
   ],
   supplierProducts: [
-    {
-      ledgerID: 0,
-      refCode: ""
-    }
+    
   ],
   multiUnits: [
     // {

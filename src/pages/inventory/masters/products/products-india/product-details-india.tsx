@@ -6,37 +6,12 @@ import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { Plus } from "lucide-react";
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import initialProductData from "../products-data";
-import { productDto } from "../products-type";
+import { PathValue, productDto, ProductFieldPath } from "../products-type";
 import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
 
 // Primitive types we don’t recurse into
-type Primitive = string | number | boolean | null | undefined | symbol | bigint;
 
-// Limit recursion to 5 levels max (safe for TS)
-type Prev = [never, 0, 1, 2, 3, 4, 5];
-
-// Get dot notation keys safely
-type DotNestedKeys<T, Depth extends number = 5> = [Depth] extends [never]
-  ? never
-  : T extends object
-    ? {
-        [K in keyof T & string]: T[K] extends Primitive | Array<any>
-          ? K
-          : K | `${K}.${DotNestedKeys<T[K], Prev[Depth]>}`
-      }[keyof T & string]
-    : never;
-
-// Get value by dot path
-type PathValue<T, P extends string> =
-  P extends `${infer K}.${infer Rest}`
-    ? K extends keyof T
-      ? PathValue<T[K], Rest>
-      : never
-    : P extends keyof T
-      ? T[P]
-      : never;
-      type ProductFieldPath = DotNestedKeys<productDto>;
      
 const ProductDetailsIndia: React.FC<{
   

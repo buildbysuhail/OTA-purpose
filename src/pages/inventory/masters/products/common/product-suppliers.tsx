@@ -6,45 +6,35 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
+import initialProductData from "../products-data";
+import { PathValue, productDto, ProductFieldPath, SupplierProductsInputDto } from "../products-type";
+import { FormField } from "../../../../../utilities/form-types";
 
-interface SupplierDto {
-  supplier: {
-    code: string;
-    name: string;
-    productCode: string;
-  };
-}
-
-const initialSupplierData: SupplierDto = {
-  supplier: {
-    code: "",
-    name: "",
-    productCode: ""
-  }
+const SuppliersCommon: React.FC<{
+    formState: any;
+    handleFieldChange: <Path extends ProductFieldPath>(
+        fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+        value?: PathValue<productDto, Path>
+      ) => void;
+    
+    getFieldProps: (fieldId: string, type?: string) => FormField;
+  }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+    const supplierProducts = 
+      {
+        ledgerID: 0,
+        refCode: "",
+        supplierCode: '',
+        supplier: '',
+      };
+  const [data, setData] = useState<SupplierProductsInputDto>(supplierProducts);
+  const handleAdd = () => {
+    let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
+    handleFieldChange("supplierProducts",[...nutritionData, data])
+    setData(supplierProducts);
 };
-
-const SuppliersCommon: React.FC = () => {
-  const { handleFieldChange, getFieldProps } = useFormManager<SupplierDto>({ initialData: initialSupplierData, });
-  const [gridData, setGridData] = useState<any[]>([]);
-  const onAdd = () => {
-    const newRow = {
-      si: gridData.length + 1,
-      supplierCode: getFieldProps("supplier.code").value,
-      supplier: getFieldProps("supplier.name").value,
-      referenceCode: getFieldProps("supplier.productCode").value,
-    };
-    setGridData([...gridData, newRow]);
-    handleFieldChange("supplier.code", "");
-    handleFieldChange("supplier.productCode", "");
-  };
-
-  const handleRemoveRow = (rowKey: any) => {
-    const updatedData = gridData.filter(row => row.si !== rowKey);
-    const reindexedData = updatedData.map((row, index) => ({
-      ...row,
-      si: index + 1
-    }));
-    setGridData(reindexedData);
+const handleRemove = (rowId: number) => {
+    let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
+    handleFieldChange("supplierProducts",[...nutritionData?.filter((_, index) => index !== rowId)])
   };
 
   const { t } = useTranslation('inventory')
@@ -54,47 +44,68 @@ const SuppliersCommon: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-end gap-4">
           <ERPInput
-            {...getFieldProps("supplier.code")}
+            id="nutrient"
+            value={data.supplierCode}
             label={t("supplier_code")}
             placeholder={t("enter_supplier_code")}
             required={false}
-            onChangeData={(data) => handleFieldChange("supplier.code", data.code)}
+            onChange={(e) =>
+              setData((prev: any) => ({
+                  ...prev,
+                  supplierCode: e.target.value,
+                }))
+          }
             className="w-full"
           />
 
           <ERPDataCombobox
-            {...getFieldProps("supplier.name")}
+            id="supplier_name"
+            value={data.ledgerID}
             label={t("supplier_name")}
             field={{
               getListUrl: Urls.data_CustSupp,
-              labelKey: "label",
-              valueKey: "value",
+              valueKey: "id",
+              labelKey: "name",
             }}
-            onChangeData={(data) => handleFieldChange("supplier.name", data.name)}
+            onChange={(e) =>
+              setData((prev: any) => {
+                debugger;
+                return {
+                  ...prev,
+                  ledgerID: e.value,
+                  supplier: e.name,
+                }
+              })
+              }
             className="w-full"
           />
 
           <ERPInput
-            {...getFieldProps("supplier.productCode")}
+           id="supplier_product_code"
+           value={data.refCode}
             label={t("supplier_product_code")}
             placeholder={t("enter_product_code")}
             required={false}
-            onChangeData={(data) => handleFieldChange("supplier.productCode", data.productCode)}
+            onChange={(e) =>
+              setData((prev: any) => ({
+                  ...prev,
+                  refCode: e.target.value,
+                }))
+              }
             className="w-full"
           />
 
           <ERPButton
             title={t("add")}
             variant="primary"
-            onClick={onAdd}
+            onClick={handleAdd}
           />
         </div>
 
         {/* DataGrid Section */}
         <div className="p-4 rounded-md shadow">
           <DataGrid
-            dataSource={gridData}
-            keyExpr="si"
+             dataSource={getFieldProps("supplierProducts").value }
             showBorders={true}
             rowAlternationEnabled={true}
             className="w-full">
@@ -108,19 +119,20 @@ const SuppliersCommon: React.FC = () => {
               allowAdding={false}
             />
 
-            <Column dataField="si" caption={t("si")} width={60} allowEditing={false} />
             <Column dataField="supplierCode" caption={t("supplier_code")} />
             <Column dataField="supplier" caption={t("supplier")} />
-            <Column dataField="referenceCode" caption={t("reference_code")} />
+            <Column dataField="refCode" caption={t("reference_code")} />
 
             <Column
               caption={t("remove")}
               width={80}
               cellRender={(cellData) => (
-                <ERPButton
-                  title="X"
-                  onClick={() => handleRemoveRow(cellData.data.si)}
-                />
+                <a
+                className="cursor-pointer text-red-600 hover:text-red-800 font-semibold"
+                onClick={() => handleRemove(cellData.rowIndex)}
+              >
+                X
+              </a>
               )}
             />
           </DataGrid>
@@ -128,6 +140,6 @@ const SuppliersCommon: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default SuppliersCommon;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
@@ -6,6 +6,10 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import DataGrid, { Column, Paging, Pager, FilterRow, HeaderFilter, Scrolling } from "devextreme-react/data-grid";
+import Products from "../products";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../../redux/urls";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 
 const searchOptions = [
     { id: "Product", name: "Product" },
@@ -23,109 +27,391 @@ const initialSearchData = {
 
 const SearchCommon: React.FC = () => {
     const { t } = useTranslation("inventory");
-    const { handleFieldChange, getFieldProps } = useFormManager({ initialData: initialSearchData, });
-
-    // State to store grid data
-    const [gridData, setGridData] = useState([]);
-    const [gridVisible, setGridVisible] = useState(false);
-
-    const handleShow = () => {
-        // Get current form values
-        const searchOption = getFieldProps("searchWith").value || initialSearchData.searchOption;
-        const searchText = getFieldProps("searchWith").value || '';
-        const searchInactive = getFieldProps("searchInactive").value || false;
-
-        console.log("Show clicked");
-        console.log("Search Option:", searchOption);
-        console.log("Search Text:", searchText);
-        console.log("Search Inactive:", searchInactive);
-
-        // Create a new entry for the grid
-        const newEntry = {
-            id: Date.now(), // Generate a unique ID
-            searchOption,
-            searchText,
-            searchInactive,
-            date: new Date().toLocaleString(),
-        };
-
-        setGridVisible(true);
-    };
-
-    const handleCreateBatch = () => {
-        console.log("Create batch clicked");
-    };
+    const columns: DevGridColumn[] = useMemo(() =>
+        [
+          {
+            dataField: "siNo",
+            caption: t("si_no"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 50,
+          },
+          {
+            dataField: "productId",
+            caption: t("product_id"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 50,
+          },
+          {
+            dataField: "productCode",
+            caption: t("product_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "product",
+            caption: t("product"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "groupName",
+            caption: t("group_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "category",
+            caption: t("category"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "taxCategory",
+            caption: t("tax_category"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "unit",
+            caption: t("unit"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "salesPrice",
+            caption: t("sales_price"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "purchasePrice",
+            caption: t("purchase_price"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "brandName",
+            caption: t("brand_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "arabicName",
+            caption: t("arabic_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "stock",
+            caption: t("stock"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "isActive",
+            caption: t("is_active"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "reOrderLevel",
+            caption: t("re_order_level"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "reOrderQty",
+            caption: t("re_order_qty"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "canSell",
+            caption: t("can_sell"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "canPurchase",
+            caption: t("can_purchase"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "canManufacture",
+            caption: t("can_manufacture"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "itemAlias",
+            caption: t("item_alias"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "itemType",
+            caption: t("item_type"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "commodityCode",
+            caption: t("commodity_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "productGroupId",
+            caption: t("product_group_id"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "taxCategoryId",
+            caption: t("tax_category_id"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "basicUnitId",
+            caption: t("basic_unit_id"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "productCategoryId",
+            caption: t("product_category_id"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "batchCriteria",
+            caption: t("batch_criteria"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "hsnCode",
+            caption: t("hsn_code"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "mrp",
+            caption: t("mrp"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "stockMin",
+            caption: t("stock_min"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "stockMax",
+            caption: t("stock_max"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "isRawMaterial",
+            caption: t("is_raw_material"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "isFinishedGood",
+            caption: t("is_finished_good"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "unitQty",
+            caption: t("unit_qty"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "packingSlip",
+            caption: t("packing_slip"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "mannualBarcode",
+            caption: t("manual_barcode"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "autoBarcode",
+            caption: t("auto_barcode"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "isWeighingScale",
+            caption: t("is_weighing_scale"),
+            dataType: "boolean",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "batchNo",
+            caption: t("batch_no"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "netWt",
+            caption: t("net_wt"),
+            dataType: "number",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          },
+          {
+            dataField: "unitName",
+            caption: t("unit_name"),
+            dataType: "string",
+            allowSorting: true,
+            allowSearch: true,
+            allowFiltering: true,
+            width: 100
+          }
+        
+        ], []);
 
     return (
         <div className="border border-gray-200 rounded-md p-4">
-            <div className="flex items-center justify-between">
-                <div className="grid items-end grid-cols-3 gap-4">
-                    <ERPDataCombobox
-                        {...getFieldProps("searchWith")}
-                        field={{
-                            id: "searchWith",
-                            valueKey: "id",
-                            labelKey: "name",
-                        }}
-                        label={t("search_with")}
-                        options={searchOptions}
-                        onChangeData={(data) =>
-                            handleFieldChange("searchWith", data.searchWith)
-                        }
-                    />
-
-                    <ERPInput
-                        {...getFieldProps("searchWith")}
-                        noLabel={true}
-                        onChangeData={(data) => handleFieldChange("searchWith", data.searchWith)}
-                    />
-
-                    <ERPCheckbox
-                        {...getFieldProps("searchInactive")}
-                        label={t("search_inactive")}
-                        onChangeData={(data) =>
-                            handleFieldChange("searchInactive", data.searchInactive)
-                        }
-                    />
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <ERPButton
-                        onClick={handleShow}
-                        title={t("show")}
-                        variant="secondary"
-                        className="mt-5"
-                    />
-                    <ERPButton
-                        onClick={handleCreateBatch}
-                        title={t("create_batch")}
-                        variant="primary"
-                        className="mt-5"
-                    />
-                </div>
-            </div>
-
-            {/* DevExtreme DataGrid */}
-            {gridVisible && (
-                <div className="mt-6">
-                    <DataGrid
-                        dataSource={gridData}
-                        showBorders={true}
-                        columnAutoWidth={true}
-                        rowAlternationEnabled={true}>
-                        <Paging defaultPageSize={10} />
-                        <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} showInfo={true} />
-                        <FilterRow visible={true} />
-                        <HeaderFilter visible={true} />
-                        <Scrolling mode="standard" />
-
-                        <Column dataField="id" caption="ID" width={70} />
-                        <Column dataField="searchWith" caption={t("search_with")} />
-                        <Column dataField="searchText" caption={t("search_text")} />
-                        <Column dataField="searchInactive" caption={t("search_inactive")} dataType="boolean" />
-                    </DataGrid>
-                </div>
-            )}
+          <ErpDevGrid
+                           columns={columns}
+                           gridHeader={t("products")}
+                           dataUrl={Urls.products}
+                           gridId="grd_products"
+                           hideGridAddButton
+                           gridAddButtonType="popup"
+                           gridAddButtonIcon="ri-add-line"
+                         />
         </div>
     );
 };

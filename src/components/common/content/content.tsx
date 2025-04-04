@@ -90,6 +90,7 @@ const WareHouse = lazy(() => import("../../../pages/inventory/masters/warehouse/
 const TaxCategory = lazy(() => import("../../../pages/inventory/masters/tax-category/tax-category"));
 const SalesmanRoute = lazy(() => import("../../../pages/inventory/masters/salesman-route/salesman-route"));
 const Schemes = lazy(() => import("../../../pages/inventory/masters/schemes/schemes"));
+const SchemeSettingsMaster = lazy(() => import("../../../pages/inventory/masters/schemes-settings/scheme-settings-master"));
 const SalesRoute = lazy(() => import("../../../pages/inventory/masters/sales-route/sales-route"));
 const Section = lazy(() => import("../../../pages/inventory/masters/section/section"));
 const GroupCategory = lazy(() => import("../../../pages/inventory/masters/group-category/group-category"));
@@ -447,8 +448,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
-        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport/>} />
-      
+        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport />} />
+
         <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary />} />
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
@@ -494,6 +495,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
         <Route path="/inventory-masters/section" element={<Section />} />
         <Route path="/inventory-masters/schemes" element={<Schemes />} />
+        <Route path="/inventory-masters/scheme_settings_master" element={<SchemeSettingsMaster />} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />

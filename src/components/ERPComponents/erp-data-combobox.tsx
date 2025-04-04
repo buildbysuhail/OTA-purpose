@@ -1159,7 +1159,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               },
             } as SxProps<Theme>,
             regular: {
-              height: "2rem",
+              height: "1.6rem",
               fontSize: "12px",
               color:
                 appState?.mode == "dark"
@@ -1200,8 +1200,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               },
             } as SxProps<Theme>,
             regular: {
-              height: "2.5rem",
-              fontSize: "14px",
+              height: "2rem",
+              fontSize: "13px",
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
@@ -1241,8 +1241,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               },
             } as SxProps<Theme>,
             regular: {
-              height: "3rem",
-              fontSize: "16px",
+              height: "2.5rem",
+              fontSize: "14px",
               color:
                 appState?.mode == "dark"
                   ? "#ffffff"
@@ -1297,8 +1297,8 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               },
             } as SxProps<Theme>,
             regular: {
-              height: `${inputBoxState?.inputHeight ?? 2.5}rem`,
-              fontSize: `${inputBoxState?.fontSize ?? 15}px`,
+              height: `${inputBoxState?.inputHeight ?? 2}rem`,
+              fontSize: `${inputBoxState?.fontSize ?? 14}px`,
               fontWeight: inputBoxState?.fontWeight,
               color:
                 appState?.mode == "dark"
@@ -1374,15 +1374,15 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
             };
           case "md":
             return {
-              fontSize: "14px",
+              fontSize: "13px",
             };
           case "lg":
             return {
-              fontSize: "16px",
+              fontSize: "14px",
             };
           case "customize":
             return {
-              fontSize: `${inputBoxState?.fontSize ?? 15}px`,
+              fontSize: `${inputBoxState?.fontSize ?? 14}px`,
             };
           default:
             return {};
@@ -1559,11 +1559,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                 style={{
                   fontSize: _customSize
                     ? _customSize === "sm"
-                      ? "12px"
+                      ? "11px"
                       : _customSize === "md"
-                      ? "14px"
+                      ? "13px"
                       : _customSize === "lg"
-                      ? "16px"
+                      ? "14px"
                       : `${inputBoxState?.labelFontSize}px`
                     : `14px`,
                   color:
@@ -1577,7 +1577,7 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
                       ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
                           inputBoxState?.adjustB ?? 10
                         }px) scale(1)`
-                      : ``,
+                      : `translate( 1px,4px) scale(1)`,
                 }}
               >
                 {`${label || id?.replaceAll("_", " ")} ${
@@ -1591,11 +1591,11 @@ const ERPDataCombobox = forwardRef<HTMLInputElement, ERPDataComboboxProps>(
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
-                    ? "12px"
+                    ? "11px"
                     : _customSize === "md"
-                    ? "14px"
+                    ? "13px"
                     : _customSize === "lg"
-                    ? "16px"
+                    ? "14px"
                     : `${inputBoxState?.labelFontSize}px`
                   : `14px`,
               }}

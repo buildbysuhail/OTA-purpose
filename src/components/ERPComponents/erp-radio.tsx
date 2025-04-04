@@ -74,6 +74,17 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
         case "sm":
           return {
             radio: {
+              width: "12px",
+              height: "12px",
+            },
+            label: {
+              fontSize: "10px",
+              lineHeight: "12px",
+            },
+          };
+        case "md":
+          return {
+            radio: {
               width: "14px",
               height: "14px",
             },
@@ -82,7 +93,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
               lineHeight: "14px",
             },
           };
-        case "md":
+        case "lg":
           return {
             radio: {
               width: "1rem",
@@ -91,17 +102,6 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
             label: {
               fontSize: "14px",
               lineHeight: "1rem",
-            },
-          };
-        case "lg":
-          return {
-            radio: {
-              width: "1.25rem",
-              height: "1.25rem",
-            },
-            label: {
-              fontSize: "16px",
-              lineHeight: "1.25rem",
             },
           };
         default:
@@ -161,8 +161,8 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(
                 ? `rgb(${inputBoxState.labelColor})`
                 : "#1f2937", // Default label color
             }}
-            className={`form-check-label ${labelClassName} ${
-              _customSize == "sm" ? "-translate-y-[2.5px]" : "-translate-y-[1px]"
+            className={`form-check-label ${labelClassName}  ${
+              _customSize == "sm" ? "-translate-y-[4.5px]" :_customSize == "md" ? "-translate-y-[3px]": "-translate-y-[1px]"
             } 
               capitalize rtl:text-right select-none ${inputBoxState.bold? "font-bold":"font-normal"}
               ${disabled ? "text-gray-400" : "dark:!text-dark-text text-gray-900"}`}

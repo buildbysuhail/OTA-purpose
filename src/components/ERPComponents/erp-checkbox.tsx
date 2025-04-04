@@ -76,6 +76,17 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
         case "sm":
           return {
             checkbox: {
+              width: "12px",
+              height: "12px",
+            },
+            label: {
+              fontSize: "10px",
+              lineHeight: "12px",
+            },
+          };
+        case "md":
+          return {
+            checkbox: {
               width: "14px",
               height: "14px",
             },
@@ -84,7 +95,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
               lineHeight: "14px",
             },
           };
-        case "md":
+        case "lg":
           return {
             checkbox: {
               width: "1rem",
@@ -93,17 +104,6 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
             label: {
               fontSize: "14px",
               lineHeight: "1rem",
-            },
-          };
-        case "lg":
-          return {
-            checkbox: {
-              width: "1.25rem",
-              height: "1.25rem",
-            },
-            label: {
-              fontSize: "16px",
-              lineHeight: "1.25rem",
             },
           };
         default:

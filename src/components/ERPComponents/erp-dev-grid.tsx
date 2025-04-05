@@ -177,6 +177,7 @@ interface ERPDevGridProps {
   onKeyDown?: (e: any) => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
+  onInitialDataLoad?: (e: any) => void;
   customToolbarItems?: ToolbarItem[];
   hideDefaultExportButton?: boolean;
   hideDefaultSearchPanel?: boolean;
@@ -304,7 +305,8 @@ const createStore = async (
   bodyProps?: any,
   setFilterValidations?: any,
   setShowFilter?: any,
-  setTotalRowCount?: any
+  setTotalRowCount?: any,  
+  onInitialDataLoad?: (e: any) => void
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -408,38 +410,43 @@ debugger;
               : result.totalCount
             : prev
         );
-        return result != undefined
-          ? result.isOk != undefined && result.isOk == false
-            ? {
-                data: [],
-                totalCount: -1,
-                summary: {},
-                groupCount: 0,
-              }
-            : {
-                data:
-                  result.loadResult != undefined
-                    ? result.loadResult
-                    : result.data,
-                totalCount:
-                  result.loadResult != undefined
-                    ? result.loadResult.totalCount
-                    : result.totalCount,
-                groupCount:
-                  result.loadResult != undefined
-                    ? result.loadResult.groupCount
-                    : result.groupCount,
-                summary:
-                  result.loadResult != undefined
-                    ? result.loadResult.summary
-                    : result.summary,
-              }
-          : {
+        const data = result != undefined
+        ? result.isOk != undefined && result.isOk == false
+          ? {
               data: [],
               totalCount: -1,
               summary: {},
               groupCount: 0,
-            };
+            }
+          : {
+              data:
+                result.loadResult != undefined
+                  ? result.loadResult
+                  : result.data,
+              totalCount:
+                result.loadResult != undefined
+                  ? result.loadResult.totalCount
+                  : result.totalCount,
+              groupCount:
+                result.loadResult != undefined
+                  ? result.loadResult.groupCount
+                  : result.groupCount,
+              summary:
+                result.loadResult != undefined
+                  ? result.loadResult.summary
+                  : result.summary,
+            }
+        : {
+            data: [],
+            totalCount: -1,
+            summary: {},
+            groupCount: 0,
+          }
+        debugger;
+        if(onInitialDataLoad && loadOptions.skip == 0) {
+          onInitialDataLoad(data.data);
+        }
+        return data;
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -518,6 +525,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       onClickByRootState,
       onKeyDown,
       onExporting,
+      onInitialDataLoad,
       onContentReady,
       customToolbarItems = [],
       hideDefaultExportButton = false,
@@ -784,7 +792,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             bodyProps,
             setFilterValidations,
             setShowFilter,
-            setTotalRowCount
+            setTotalRowCount,
+            onInitialDataLoad
           );
           setCurrentStore(newStore);
           setStore(newStore);

@@ -7,90 +7,25 @@ import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOpt
 import Urls from "../../../../../redux/urls"
 import initialProductData from "../products-data"
 import { useTranslation } from "react-i18next"
+import React from "react"
+import { FormField } from "../../../../../utilities/form-types"
+import { ProductFieldPath, PathValue, productDto, ProductUnitInputDto } from "../products-type"
 
-const ProductMultiUnitsGCC = () => {
-    const { handleFieldChange, getFieldProps } = useFormManager({
-        initialData: {
-            ...initialProductData,
-            multiUnits: {
-                unit1: "",
-                unit2: "",
-                unit3: "",
-                unit4: "",
-                unit5: "",
-                unit6: "",
-                unit7: "",
-                unit8: "",
-                unit9: "",
-                unit10: "",
-            },
-            quantities: {
-                unit1Qty1: "1",
-                unit1Qty2: "",
-                unit2Qty1: "0",
-                unit2Qty2: "0",
-                unit3Qty1: "0",
-                unit3Qty2: "0",
-                unit4Qty1: "0",
-                unit4Qty2: "0",
-                unit5Qty1: "0",
-                unit5Qty2: "0",
-                unit6Qty1: "0",
-                unit6Qty2: "0",
-                unit7Qty1: "0",
-                unit7Qty2: "0",
-                unit8Qty1: "0",
-                unit8Qty2: "0",
-                unit9Qty1: "0",
-                unit9Qty2: "0",
-                unit10Qty1: "0",
-                unit10Qty2: "0",
-            },
-            prices: {
-                unit1Price: "0.00",
-                unit2Price: "0.00",
-                unit3Price: "0.00",
-                unit4Price: "0.00",
-                unit5Price: "0.00",
-                unit6Price: "0.00",
-                unit7Price: "0.00",
-                unit8Price: "0.00",
-                unit9Price: "0.00",
-                unit10Price: "0.00",
-            },
-            barcodes: {
-                unit1Barcode: "",
-                unit2Barcode: "",
-                unit3Barcode: "",
-                unit4Barcode: "",
-                unit5Barcode: "",
-                unit6Barcode: "",
-                unit7Barcode: "",
-                unit8Barcode: "",
-                unit9Barcode: "",
-                unit10Barcode: "",
-            },
-            remarks: {
-                unit1Remark: "",
-                unit2Remark: "",
-                unit3Remark: "",
-                unit4Remark: "",
-                unit5Remark: "",
-                unit6Remark: "",
-                unit7Remark: "",
-                unit8Remark: "",
-                unit9Remark: "",
-                unit10Remark: "",
-            },
-            config: {
-                enableBarcodes: false,
-            },
-        },
-    })
+const ProductMultiUnitsGCC  : React.FC<{
+  t: any;
+  handleFieldChange: <Path extends ProductFieldPath>(
+    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+    value?: PathValue<productDto, Path>
+  ) => void;
+
+  getFieldProps: (fieldId: string, type?: string) => FormField;
+}> = React.memo(({ t, handleFieldChange, getFieldProps }) => {
+   
 
     const renderUnitRows = () => {
+        const responseData = getFieldProps("units").value as ProductUnitInputDto[];
+          
         const units = Array.from({ length: 10 }, (_, i) => i + 1)
-        const { t } = useTranslation("inventory")
         return units.map((num) => (
             <tr key={`unit-${num}`} className="h-10">
                 <td className="pr-2">
@@ -166,7 +101,6 @@ const ProductMultiUnitsGCC = () => {
         ))
     }
 
-    const { t } = useTranslation("inventory")
     return (
         <div className="flex flex-col gap-4">
             <div className="w-full">
@@ -237,7 +171,7 @@ const ProductMultiUnitsGCC = () => {
             </div>
         </div>
     )
-}
+})
 
 export default ProductMultiUnitsGCC
 

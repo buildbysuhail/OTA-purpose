@@ -39,7 +39,7 @@ interface ProductSummaryReport {
   batchNo: string;
 }
 
-const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
+const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>}> = ({ filter, setFilter }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
@@ -258,7 +258,25 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
       width: 100,
     }
   ];
-
+  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => {
+    updateFilterWithBatchID(loadedData);
+  };
+  const onRowClick = (e: any) => {
+    updateFilterWithBatchID(undefined, e.data);
+  };
+  const updateFilterWithBatchID = (loadedData?: ProductSummaryReport[], rowData?: ProductSummaryReport) => {
+    const productBatchID = rowData?.productBatchID || loadedData?.[0]?.productBatchID;
+  
+    if (productBatchID) {
+      setFilter((prev: any) => ({
+        ...prev,
+        filter: {
+          ...prev.filter,
+          productBatchID,
+        },
+      }));
+    }
+  };
   const customizeSummaryRow = (itemInfo: { value: any }) => {
     const value = itemInfo.value;
     if (value === null || value === undefined || value === "" || isNaN(value)) {
@@ -317,6 +335,7 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={basicInfoSummaryItems}
+
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={basicInfoColumns}
                 gridHeader={t("product_summary_basic_info")}
@@ -336,6 +355,8 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={batchInfoSummaryItems}
+                onInitialDataLoad={onInitialDataLoad}
+                onRowClick={onRowClick}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={batchInfoColumns}
                 dataUrl={Urls.product_summary_basic_info}

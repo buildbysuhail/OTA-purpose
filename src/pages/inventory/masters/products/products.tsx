@@ -24,16 +24,18 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 50,
       },
       {
-        dataField: "productId",
+        dataField: "productID",
         caption: t("product_id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        visible:false,
+        width: 50
       },
       {
         dataField: "productCode",
@@ -42,7 +44,8 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100
+        showInPdf:true,
+        width: 100,
       },
       {
         dataField: "product",
@@ -51,6 +54,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -60,6 +64,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -69,6 +74,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -78,6 +84,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -87,6 +94,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -96,6 +104,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -105,6 +114,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -114,6 +124,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -132,6 +143,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -141,6 +153,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -150,6 +163,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -159,6 +173,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -168,6 +183,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -177,6 +193,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -186,6 +203,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -195,6 +213,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -204,6 +223,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -213,6 +233,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -222,6 +243,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -231,6 +253,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -240,6 +263,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -249,6 +273,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -258,6 +283,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -267,6 +293,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -276,6 +303,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -285,6 +313,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -294,6 +323,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -303,6 +333,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -312,6 +343,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -321,6 +353,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -330,6 +363,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -339,6 +373,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -348,6 +383,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {
@@ -357,6 +393,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -366,6 +403,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -375,6 +413,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        visible:false,
         width: 100
       },
       {
@@ -384,6 +423,7 @@ const Products = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
         width: 100
       },
       {

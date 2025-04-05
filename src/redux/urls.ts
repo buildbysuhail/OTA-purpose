@@ -321,7 +321,7 @@ const Urls = {
   item_wise_purchase_order_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseOrderSummary/",
   item_wise_purchase_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
   item_wise_purchase_quotation_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
-  product_summary_transaction: "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/{voucherType}/",
+  product_summary_transaction: "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/",
   product_summary_basic_info:"/Inventory/RptInventoryReport/ProductSummaryReportBasicInfo/",
   product_summary_basic_info_batch_details:"/Inventory/RptInventoryReport/ProductSummaryReportBasicInfoBatchDetails/",
   product_summary_stock_ledger:"/Inventory/RptInventoryReport/ProductSummaryReportStockLedger/",

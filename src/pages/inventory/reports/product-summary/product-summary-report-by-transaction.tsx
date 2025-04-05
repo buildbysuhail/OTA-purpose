@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -29,7 +29,8 @@ interface ProductSummaryReportByTransaction {
 const ProductSummaryReportByTransaction: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean; voucherType: string}> = ({ filter, setFilter, onReloadChange, reloadBase, voucherType }) => {
   const { t } = useTranslation("accountsReport");
 
-  const columns: DevGridColumn[] = [
+ const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
     {
       dataField: "vNo",
       caption: t("vno"),
@@ -354,7 +355,27 @@ const ProductSummaryReportByTransaction: React.FC<{filter:ProductSummaryFilter; 
       width: 100,
     }
   ];
-
+  return baseColumns
+      .filter((column) => {
+        if (column.dataField == "voucherType") {
+          return voucherType =="OT";
+        }
+        if (column.dataField == "xRate") {
+          return voucherType!== "OT";
+        }
+     
+        return true;
+      })
+      // .map((column) => {
+      //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
+      //     return {
+      //       ...column,
+      //       caption: "QRPay",
+      //     };
+      //   }
+      //   return column;
+      // });
+  }, [t, filter]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = (itemInfo: { value: any }) => {
     const value = itemInfo.value;

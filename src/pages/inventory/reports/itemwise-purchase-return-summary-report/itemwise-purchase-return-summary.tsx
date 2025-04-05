@@ -1,25 +1,33 @@
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-import ItemWisePurchaseReturnSummaryFilter, { ItemWisePurchaseReturnSummaryFilterInitialState } from "./itemwise-purchase-return-summary-filter";
+import ItemWisePurchaseReturnSummaryFilter, {
+  ItemWisePurchaseReturnSummaryFilterInitialState,
+} from "./itemwise-purchase-return-summary-filter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
 const ItemWisePurchaseReturnSummary = () => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [filter, setFilter] = useState<any>(ItemWisePurchaseReturnSummaryFilterInitialState);
+  const [filter, setFilter] = useState<any>(
+    ItemWisePurchaseReturnSummaryFilterInitialState
+  );
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-    const userSession = useSelector((state: RootState) => state.UserSession);
-    const clientSession = useSelector((state: RootState) => state.ClientSession);
-    const applicationSettings = useSelector(
-      (state: RootState) => state.ApplicationSettings
-    );
-  const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
+  const userSession = useSelector((state: RootState) => state.UserSession);
+  const clientSession = useSelector((state: RootState) => state.ClientSession);
+  const applicationSettings = useSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+  }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
       setFilter({});
@@ -30,359 +38,393 @@ const ItemWisePurchaseReturnSummary = () => {
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-    {
-      dataField: "siNo",
-      caption: t("si_no"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 100,
-    },
-    {
-      dataField: "groupName",
-      caption: t("group_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      groupIndex:0,
-    },
-    {
-      dataField: "productName",
-      caption: t("product"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "totQty",
-      caption: t("total_qty"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totQty == null
+      //iscategorywise  groupindex =0 for
+      {
+        dataField: "groupName",
+        caption: t("group_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+        groupIndex: 0,
+      },
+      {
+        dataField: "siNo",
+        caption: t("si_no"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "productCode",
+        caption: t("code"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 70,
+      },
+      {
+        dataField: "productID",
+        caption: t("product_id"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "productName",
+        caption: t("product"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 200,
+      },
+      {
+        dataField: "totQty",
+        caption: t("total_qty"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totQty == null
+                ? 0
+                : getFormattedValue(cellElement.data.totQty);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totQty == null
               ? 0
               : getFormattedValue(cellElement.data.totQty);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totQty == null
-            ? 0
-            : getFormattedValue(cellElement.data.totQty);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "totGross",
-      caption: t("total_gross"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totGross == null
-              ? 0
-              : getFormattedValue(cellElement.data.totGross);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totGross == null
-            ? 0
-            : getFormattedValue(cellElement.data.totGross);
-        }
-      },
-    },
-    {
-      dataField: "totDisc",
-      caption: t("total_discount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totDisc == null
-              ? 0
-              : getFormattedValue(cellElement.data.totDisc);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totDisc == null
-            ? 0
-            : getFormattedValue(cellElement.data.totDisc);
-        }
-      },
-    },
-    {
-      dataField: "totNetValue",
-      caption: t("total_net_value"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 80,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totNetValue == null
-              ? 0
-              : getFormattedValue(cellElement.data.totNetValue);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totNetValue == null
-            ? 0
-            : getFormattedValue(cellElement.data.totNetValue);
-        }
-      },
-    },
-    {
-      dataField: "totVat",
-      caption: t("total_vat"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 85,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totVat == null
-              ? 0
-              : getFormattedValue(cellElement.data.totVat);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totVat == null
-            ? 0
-            : getFormattedValue(cellElement.data.totVat);
-        }
-      },
-    },
-    {
-      dataField: "totNetAmount",
-      caption: t("total_net_amount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 85,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totNetAmount == null
-              ? 0
-              : getFormattedValue(cellElement.data.totNetAmount);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totNetAmount == null
-            ? 0
-            : getFormattedValue(cellElement.data.totNetAmount);
-        }
-      },
-    },
-    {
-      dataField: "productID",
-      caption: t("product_id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 100,
-    },
-    {
-      dataField: "unitCode",
-      caption: t("unit"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 70,
-    },
-    {
-      dataField: "totFree",
-      caption: t("free"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 70,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-        if (exportCell != undefined) {
-          const value =
-            cellElement.data?.totFree == null
+      {
+        dataField: "totFree",
+        caption: t("free"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 70,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totFree == null
+                ? 0
+                : getFormattedValue(cellElement.data.totFree);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totFree == null
               ? 0
               : getFormattedValue(cellElement.data.totFree);
-          return {
-            ...exportCell,
-            text: value,
-            alignment: "right",
-            alignmentExcel: { horizontal: "right" },
-          };
-        } else {
-          return cellElement.data?.totFree == null
-            ? 0
-            : getFormattedValue(cellElement.data.totFree);
-        }
+          }
+        },
       },
-    },
-    {
-      dataField: "productCode",
-      caption: t("code"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 70,
-    },
-    {
-      dataField: "branchName",
-      caption: t("branch_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 70,
-    },
-    {
-      dataField: "qtyDetails",
-      caption: t("qty_details"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "groupCategoryName",
-      caption: t("group_category_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "sectionName",
-      caption: t("section_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "warehouseName",
-      caption: t("warehouse"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 100,
-    },
-  ];
-// Filter columns based on the `visible` property
-return baseColumns
-  .filter((column) => {
-    // if (column.dataField == "exchangeRate") {
-    //   return filter.voucher_form !== "Import";
-    // }
-    // if (column.dataField == "uPI" || column.dataField == "cardAmt") {
-    //   return applicationSettings.accountsSettings.allowMultiPayments;
-    // }
-    // if (column.dataField == "printCount") {
-    //   return userSession.dbIdValue == "543140180640";
-    // }
-    return true;
-  });
-  // .map((column) => {
-  //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
-  //     return {
-  //       ...column,
-  //       caption: "QRPay",
-  //     };
-  //   }
-  //   return column;
-  // });
-}, [t, filter, userSession.dbIdValue]);
+      {
+        dataField: "unitCode",
+        caption: t("unit"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 70,
+      },
+      {
+        dataField: "totGross",
+        caption: t("total_gross"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totGross == null
+                ? 0
+                : getFormattedValue(cellElement.data.totGross);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totGross == null
+              ? 0
+              : getFormattedValue(cellElement.data.totGross);
+          }
+        },
+      },
+      {
+        dataField: "totDisc",
+        caption: t("total_discount"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totDisc == null
+                ? 0
+                : getFormattedValue(cellElement.data.totDisc);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totDisc == null
+              ? 0
+              : getFormattedValue(cellElement.data.totDisc);
+          }
+        },
+      },
+      {
+        dataField: "totNetValue",
+        caption: t("total_net_value"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 80,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totNetValue == null
+                ? 0
+                : getFormattedValue(cellElement.data.totNetValue);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totNetValue == null
+              ? 0
+              : getFormattedValue(cellElement.data.totNetValue);
+          }
+        },
+      },
+
+      {
+        dataField: "totVat",
+        caption: t("total_vat"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 85,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totVat == null
+                ? 0
+                : getFormattedValue(cellElement.data.totVat);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totVat == null
+              ? 0
+              : getFormattedValue(cellElement.data.totVat);
+          }
+        },
+      },
+      {
+        dataField: "totNetAmount",
+        caption: t("total_net_amount"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 85,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.totNetAmount == null
+                ? 0
+                : getFormattedValue(cellElement.data.totNetAmount);
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.totNetAmount == null
+              ? 0
+              : getFormattedValue(cellElement.data.totNetAmount);
+          }
+        },
+      },
+      {
+        dataField: "warehouseName",
+        caption: t("warehouse"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "branchName",
+        caption: t("branch_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 70,
+      },
+      {
+        dataField: "qtyDetails",
+        caption: t("qty_details"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+
+      {
+        dataField: "groupCategoryName",
+        caption: t("group_category_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "sectionName",
+        caption: t("section_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "category",
+        caption: t("category"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "brandName",
+        caption: t("brand_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+      {
+        dataField: "totalTaxAmount",
+        caption: t("total_tax_amount"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        width: 100,
+      },
+    ];
+    // Filter columns based on the `visible` property
+    return baseColumns.filter((column) => {
+      // if (column.dataField == "exchangeRate") {
+      //   return filter.voucher_form !== "Import";
+      // }
+      // if (column.dataField == "uPI" || column.dataField == "cardAmt") {
+      //   return applicationSettings.accountsSettings.allowMultiPayments;
+      // }
+      // if (column.dataField == "printCount") {
+      //   return userSession.dbIdValue == "543140180640";
+      // }
+      return true;
+    });
+    // .map((column) => {
+    //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
+    //     return {
+    //       ...column,
+    //       caption: "QRPay",
+    //     };
+    //   }
+    //   return column;
+    // });
+  }, [t, filter, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
       const value = itemInfo.value;
-      if (value === null || value === undefined || value === "" || isNaN(value)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        isNaN(value)
+      ) {
         return "0";
       }
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
-  const customizeDate = (itemInfo: any) =>  `Net Total`;
-  const customizeGroup = (itemInfo: any) =>  `Group Total`;
+  const customizeDate = (itemInfo: any) => `Net Total`;
+  const customizeGroup = (itemInfo: any) => `Group Total`;
   const summaryItems: SummaryConfig[] = [
     {
-      column:"productName",
-      summaryType:"max",  
+      column: "productName",
+      summaryType: "max",
       isGroupItem: true,
-      showInGroupFooter:true,
+      showInGroupFooter: true,
       customizeText: customizeGroup,
     },
     {
@@ -390,7 +432,7 @@ return baseColumns
       summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
-      showInGroupFooter:true,
+      showInGroupFooter: true,
       customizeText: customizeSummaryRow,
     },
     {
@@ -398,7 +440,7 @@ return baseColumns
       summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
-      showInGroupFooter:true,
+      showInGroupFooter: true,
       customizeText: customizeSummaryRow,
     },
     {
@@ -406,12 +448,12 @@ return baseColumns
       summaryType: "sum",
       valueFormat: "currency",
       isGroupItem: true,
-      showInGroupFooter:true,
+      showInGroupFooter: true,
       customizeText: customizeSummaryRow,
     },
     {
-      column:"productName",
-      summaryType:"max",  
+      column: "productName",
+      summaryType: "max",
       customizeText: customizeDate,
     },
     {
@@ -431,7 +473,7 @@ return baseColumns
       summaryType: "sum",
       valueFormat: "currency",
       customizeText: customizeSummaryRow,
-    }
+    },
   ];
 
   return (
@@ -441,9 +483,12 @@ return baseColumns
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
-
                 summaryItems={summaryItems}
-                remoteOperations={{ filtering: false, paging: false, sorting: false }}
+                remoteOperations={{
+                  filtering: false,
+                  paging: false,
+                  sorting: false,
+                }}
                 columns={columns}
                 // moreOption
                 filterText=" From : {fromDate} - {toDate} 
@@ -453,7 +498,7 @@ return baseColumns
                 {warehouseID > 0 && , Warehouse: [warehouse]} 
                 {brandID > 0 && , Brand: [brand]}
                 {salesmanID > 0 && , Sales Man: [salesman]}"
-               // {salesRouteID > 0 && , Route: [salesRoute]} salesRouteID is always visible false
+                // {salesRouteID > 0 && , Route: [salesRoute]} salesRouteID is always visible false
                 allowGrouping={true}
                 groupPanelVisible={true}
                 autoExpandAll={true}
@@ -466,7 +511,9 @@ return baseColumns
                 filterContent={<ItemWisePurchaseReturnSummaryFilter />}
                 filterHeight={550}
                 filterWidth={700}
-                filterInitialData={ItemWisePurchaseReturnSummaryFilterInitialState}
+                filterInitialData={
+                  ItemWisePurchaseReturnSummaryFilterInitialState
+                }
                 onFilterChanged={(f: any) => setFilter(f)}
                 reload={true}
                 gridId="grd_item_wise_purchase_return_summary"

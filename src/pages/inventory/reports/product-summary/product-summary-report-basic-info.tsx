@@ -359,7 +359,7 @@ const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: R
                 onRowClick={onRowClick}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={batchInfoColumns}
-                dataUrl={Urls.product_summary_basic_info}
+                dataUrl={Urls.product_summary_basic_info_batch_details}
                 method={ActionType.POST}
                 gridId="grd_product_summary_batch_info"
                 hideGridAddButton={true}
@@ -370,7 +370,7 @@ const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: R
                 enableScrollButton={false}
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}
-                // postData={filter}
+                postData={filter}
                 reload={true}
               />
             </div>

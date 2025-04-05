@@ -21,6 +21,7 @@ import {
 import initialProductData from "../products-data";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
 
 const ProductMultiUnitsIndia: React.FC<{
   t: any;
@@ -46,6 +47,7 @@ const ProductMultiUnitsIndia: React.FC<{
     mrp: 0,
     msp: 0,
   };
+
   const [unit, setUnit] = useState<ProductUnitInputDto>(unitDAta);
   const [openMB, setOpenMB] = useState<{
     index: number;
@@ -82,9 +84,9 @@ const ProductMultiUnitsIndia: React.FC<{
       barcodeArray == undefined ||
       barcodeArray == null ||
       barcodeArray.length == 0
-        ? [{ unit: openMB.unit, barcode: "" }]
+        ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
         : barcodeArray.map((barcode: any) => ({
-            unit: openMB.unit,
+            unit: units[rowId].unit ?? "",
             barcode,
           }));
     setOpenMB({
@@ -389,39 +391,46 @@ const ProductMultiUnitsIndia: React.FC<{
           }
           title={t("multi_barcode")}
           content={
-            <div>
-              <DataGrid
+            <div>   
+             <DataGrid
                 dataSource={openMB.data}
                 height={300}
                 key="barcode"
                 showBorders={true}
                 showRowLines={true}
-                onRowUpdating={(e) => {
-                  // Check if 'rate' is being updated
-                  if (e.newData.unit !== undefined && e.newData.unit !== "") {
-                    setOpenMB((prev: any) => {
-                      const df = [
-                        ...prev.data,
-                        { unit: openMB.unit, barcode: "" },
-                      ];
-                      return { ...prev, data: df };
-                    });
+                onFocusedCellChanging={onFocusedCellChanging}
+                onEditorPrepared={(e) => {
+                  if (e.parentType === "dataRow") {
+                    const currentRowData = e.row?.data;
+                    if (!currentRowData || !currentRowData.unit || currentRowData.unit.trim() === "" ) {
+                      e.editorElement.setAttribute("disabled", "true");
+                      e.editorElement.setAttribute("title", "Enter a valid unit to enable editing.");
+                    } else {
+                      e.editorElement.removeEventListener("keydown", (e.editorElement as any)._onBarcodeKeyDown);
+
+                      const barcodeKeyDownHandler = (event: KeyboardEvent) => {
+                        if (event.key === "Enter") {
+                          setOpenMB((prev: any) => {
+                            const newRow = { unit: prev.unit, barcode: "" };
+                            return { ...prev, data: [...prev.data, newRow] };
+                          });
+                        }
+                      };
+                      (e.editorElement as any)._onBarcodeKeyDown = barcodeKeyDownHandler;
+                      e.editorElement.addEventListener("keydown", barcodeKeyDownHandler);
+                    }
                   }
                 }}
-                onFocusedCellChanging={onFocusedCellChanging}
+                
               >
                 <KeyboardNavigation
                   editOnKeyPress={true}
-                  enterKeyAction={"startEdit"}
-                  enterKeyDirection={"row"}
+                  enterKeyAction={"moveFocus"}
+                  enterKeyDirection={"column"}
                 />
-                <Paging pageSize={100}></Paging>
+                <Paging pageSize={100} />
                 <Scrolling mode="standard" />
-                <RemoteOperations
-                  filtering={false}
-                  sorting={false}
-                  paging={false}
-                />
+                <RemoteOperations filtering={false} sorting={false} paging={false} />
                 <Column
                   dataField="unit"
                   caption={t("unit")}
@@ -448,6 +457,19 @@ const ProductMultiUnitsIndia: React.FC<{
           width={780}
           height={570}
           disableOutsideClickClose={false}
+            footer={(
+              <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
+                <ERPSubmitButton type="reset" onClick={() =>   setOpenMB({ index: 0, open: false, unit: "", data: [] })} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
+                  {t("cancel")}
+                </ERPSubmitButton>
+                <ERPSubmitButton type="button" className=" max-w-[115px]"
+                  variant="primary"
+                  // onClick={handleApplyPreferences}
+                  >
+                  {t("save")}
+                </ERPSubmitButton>
+              </div>
+            )}
         />
       )}
     </div>

@@ -88,7 +88,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         t("purchase"),
         t("stock"),
         t("suppliers"),
-        t("re_order"),
+        // t("re_order"),
         t("promotion_details"),
         t("search"),
         t("nutrition_facts"),

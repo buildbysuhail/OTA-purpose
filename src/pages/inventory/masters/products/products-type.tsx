@@ -52,12 +52,12 @@ export interface DetailsDto {
   productID?: number; // ProductID: long?
   productCode?: string; // ProductCode: string?
   productName?: string; // ProductName: string?
-  productGroupId?: number; // ProductGroupId: long?
+  productGroupID?: number; // ProductGroupId: long?
   productCategoryID?: number; // ProductCategoryID: long?
   supplyMethod?: string; // SupplyMethod: string?
   hsnCode?: string; // HSNCode: string?
   commodityCode?: string; // CommodityCode: string?
-  active?: boolean; // Active: bool?
+  isActive?: boolean; // Active: bool?
   aliasItemCode?: string; // AliasItemCode: string?
   aliasItemName?: string; // AliasItemName: string?
   remarks?: string; // Remarks: string?
@@ -87,23 +87,23 @@ export interface DetailsDto {
   autoBarcode?: string; // UnitName: string?
   stdPurchasePrice?: number; // MRP: decimal?
   stdSalesPrice?: number; // MRP: decimal?
-  basicUnitID: string;
+  basicUnitID: number;
 
   hold?: boolean; // newly added
 }
 
 export interface ProductValidationDto {
   productName: string;
-  productGroupId: number;
-  unitID: number;
+  productGroupId: string;
+  unitID: string;
   commodityCode: string;
-  taxCategoryID: number;
-  productCategoryID: number;
+  taxCategoryID: string;
+  productCategoryID: string;
   // batch
-  defSalesUnitID: number;
-  defPurchaseUnitID: number;
-  defReportUnitID: number;
-  brandID: number;
+  defSalesUnitID: string;
+  defPurchaseUnitID: string;
+  defReportUnitID: string;
+  brandID: string;
   salesPrice: string;
   stdSalesPrice: string;
 }
@@ -300,7 +300,7 @@ export interface UnitNameDto {
 
 export interface ProductNutrientsInputDto {
   nutrients?: string;
-  valuePerServing?: string;
+  valuePerServing?: number;
 }
 
 export type ProductNutrientsValidationsDto = {};

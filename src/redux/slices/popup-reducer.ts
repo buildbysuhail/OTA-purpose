@@ -67,6 +67,7 @@ interface popupData {
   groupOrder: popupDataProps
   testPopup: popupDataProps
   products: popupDataProps
+  productSummaryReport: popupDataProps
 }
 const initialState: popupData = {
   onCloseWithUnsavedChange: { warn: false, succeeded: false, canceled: false },
@@ -129,6 +130,7 @@ const initialState: popupData = {
   salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
   specialSchemes: { isOpen: false, key: null, mode: "edit", reload: true },
   products: { isOpen: false, key: null, mode: "edit", reload: true },
+  productSummaryReport: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -331,6 +333,9 @@ const popupDataSlice = createSlice({
     toggleTestPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.testPopup = action.payload;
     },
+    updateProductSummaryData: (state, action: PayloadAction<popupDataProps>) => {
+      state.productSummaryReport = action.payload;
+    },
     // togglePriceListPopup: (state, action: PayloadAction<popupDataProps>) => {
     //   state.priceList = action.payload;
     // },
@@ -399,7 +404,8 @@ export const {
   toggleSchemes,
   toggleSalesRoute,
   toggleSpecialSchemes,
-  toggleProducts
+  toggleProducts,
+  updateProductSummaryData
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

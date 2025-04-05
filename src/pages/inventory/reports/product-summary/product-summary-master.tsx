@@ -14,6 +14,8 @@ import ProductSummaryReport from "./product-summary-report-basic-info";
 import ProductSummaryReportStockLedger from "./product-summary-report-stock-ledger";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import React from "react";
+import { updateProductSummaryData } from "../../../../redux/slices/popup-reducer";
 
 export interface ProductSummaryFilter {
   filter: {
@@ -24,6 +26,7 @@ export interface ProductSummaryFilter {
     warehouseID: number;
     showBatchWise: boolean;
     voucherType: string;
+    productCode: string;
   };
 }
 
@@ -39,7 +42,8 @@ const ProductSummaryMaster = ({
   const childRef = useRef<ProductSummaryRef>(null);
 const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
-  const [reload, setReload] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(true);
+  const [reload2, setReload2] = useState<boolean>(true);
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<ProductSummaryFilter>({
     filter: {
@@ -48,17 +52,47 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
       productID: 1,
       productBatchID: 0,
       voucherType:"PI",
+      productCode:"",
+      warehouseID: 0,
+      showBatchWise: false,
+    },
+  });
+  const [_filter, _setFilter] = useState<ProductSummaryFilter>({
+    filter: {
+      dateFrom: moment().local().subtract(90, "days").toDate(),
+      dateTo: new Date(),
+      productID: 1,
+      productBatchID: 0,
+      voucherType:"PI",
+      productCode:"",
       warehouseID: 0,
       showBatchWise: false,
     },
   });
 
+const [batchID, setBatchID] = useState<number|null>(null);
   const [activeTab, setActiveTab] = useState("basicInfo");
+  const [activeId, setActiveId] = useState(0);
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    if(newValue == "basicInfo") {
+      setReload(true)
+                      setReload2(true)
+    }
     setActiveTab(newValue);
   };
 
+    const popupData = useSelector((state: RootState) => state.PopupData);
+  // const onKeyChange = (id: any) => {
+  //   setActiveId(id);
+  //   // dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id} ));
+  // }
+  const activeIdRef = useRef<number | null>(null);
 
+const onKeyChange = (id: any) => {
+  activeIdRef.current = id;
+  // Optionally, call any side effects here without causing a re-render
+  // e.g., dispatch(updateProductSummaryData({...popupData.productSummaryReport, key: id}));
+};
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -101,17 +135,18 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   }
                 />
                 <ERPInput
-                  id="productBatchID"
-                  value={filter.filter.productBatchID}
+                  id="productCode"
+                  value={filter.filter.productCode}
                   customSize="sm"
+                  data={filter.filter}
                   className="max-w-[200px]"
                   label={t("product_code")}
-                  onChangeData={(val: string) =>
+                  onChangeData={(val: any) =>
                     setFilter((prev: any) => ({
                       ...prev,
                       filter: {
                         ...prev.filter,
-                        productBatchID: val,
+                        productCode: val.productCode,
                       },
                     }))
                   }
@@ -169,14 +204,18 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   id="showBatchWise"
                   label={t("show_batch_wise")}
                   checked={filter.filter.showBatchWise}
+                  data={filter.filter}
                   onChangeData={(data: any) =>
-                    setFilter((prev: any) => ({
+                  {
+                    debugger;
+                    return setFilter((prev: any) => ({
                       ...prev,
                       filter: {
                         ...prev.filter,
                         showBatchWise: data.showBatchWise,
                       },
                     }))
+                  }
                   }
                 />
                 <div className="mt-[24px]">
@@ -186,6 +225,10 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                     className="h-[32px]"
                     onClick={() =>{ 
                       setReload(true)
+                      setReload2(true)
+                     // First, turn the reload flags off
+                     _setFilter(filter);
+                    //  Promise.resolve().then(() => setReload(true));
                     }}
                     title={t("show")}
                   />
@@ -212,24 +255,36 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   <Tab className="dark:text-dark-text" label={t("purchase_estimate")} value="purchase_estimate" />
                   <Tab className="dark:text-dark-text" label={t("others")} value="others" />
                 </Tabs>
+
+
+
                 <div className="pt-2">
                   {
                     activeTab === "basicInfo" && (
-                      <ProductSummaryReport
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      <>
+                      <ProductSummaryReport onKeyChange={onKeyChange}
+                      filter={_filter}
+                       onReloadChange={()=> {console.log('onReloadChange');
+                       setReload(false)}} 
+                      reloadBase={reload} onReloadChange2={()=> setReload2(false)} reloadBase2={reload2}
                       />
+                      </>
+                      
                     )
                   }
 
                   {
                     activeTab === "stockLedger" && (
                       <ProductSummaryReportStockLedger
-                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      filter={{...filter, filter: {
+                        ...filter.filter,
+                        productBatchID: activeIdRef.current??0
+                      }}} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
                       />
                     )
                   }
 
-                  {
+{
                     activeTab === "purchase" && (
                       <ProductSummaryReportByTransaction
                       filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
@@ -335,4 +390,4 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
   );
 };
 
-export default ProductSummaryMaster;
+export default React.memo(ProductSummaryMaster);

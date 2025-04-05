@@ -311,7 +311,7 @@ const createStore = async (
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
-      debugger;
+      
       if (!loadOptions.sort || (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)) {
         loadOptions.sort = initialSort;
       }
@@ -347,7 +347,7 @@ const createStore = async (
             JSON.stringify(loadOptions[paramName]),
           ])
       );
-debugger;
+
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach((x: any) => {
@@ -442,8 +442,8 @@ debugger;
             summary: {},
             groupCount: 0,
           }
-        debugger;
-        if(onInitialDataLoad && loadOptions.skip == 0) {
+        
+        if(onInitialDataLoad && (loadOptions.skip == undefined || loadOptions.skip == null || loadOptions.skip == 0)) {
           onInitialDataLoad(data.data);
         }
         return data;
@@ -759,6 +759,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const [store, setStore] = useState<CustomStore | null>(null);
     useEffect(() => {
       const fetchStore = async () => {
+        debugger;
         if (data) {
           setStore(data);
           changeReload && changeReload(false);
@@ -797,6 +798,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           );
           setCurrentStore(newStore);
           setStore(newStore);
+          debugger;
           if (_reload === true) {
             changeReload && changeReload(false);
           }

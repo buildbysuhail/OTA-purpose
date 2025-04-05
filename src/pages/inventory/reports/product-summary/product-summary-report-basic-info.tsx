@@ -349,7 +349,7 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
                 enableScrollButton={false}
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}
-                postData={filter}
+                // postData={filter}
                 reload={true}
               />
             </div>

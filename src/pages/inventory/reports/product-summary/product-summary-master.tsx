@@ -23,6 +23,7 @@ export interface ProductSummaryFilter {
     productBatchID: number;
     warehouseID: number;
     showBatchWise: boolean;
+    voucherType: string;
   };
 }
 
@@ -37,7 +38,6 @@ const ProductSummaryMaster = ({
 }: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
 const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
-      
   const dispatch = useAppDispatch();
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<ProductSummaryFilter>({
@@ -46,6 +46,7 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
       dateTo: new Date(),
       productID: 0,
       productBatchID: 0,
+      voucherType:"PI",
       warehouseID: 0,
       showBatchWise: false,
     },

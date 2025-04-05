@@ -39,12 +39,13 @@ const ProductSummaryMaster = ({
   const childRef = useRef<ProductSummaryRef>(null);
 const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();
+  const [reload, setReload] = useState<boolean>(false);
   const { t } = useTranslation("accountsReport");
   const [filter, setFilter] = useState<ProductSummaryFilter>({
     filter: {
       dateFrom: moment().local().subtract(90, "days").toDate(),
       dateTo: new Date(),
-      productID: 0,
+      productID: 1,
       productBatchID: 0,
       voucherType:"PI",
       warehouseID: 0,
@@ -57,11 +58,6 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
     setActiveTab(newValue);
   };
 
-  const handleShowButtonClick = () => {
-    if (childRef.current) {
-      childRef.current.reloadData();
-    }
-  };
 
   return (
     <Fragment>
@@ -188,7 +184,9 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                     type="button"
                     variant="primary"
                     className="h-[32px]"
-                    onClick={handleShowButtonClick}
+                    onClick={() =>{ 
+                      setReload(true)
+                    }}
                     title={t("show")}
                   />
                 </div>
@@ -207,7 +205,7 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   {
                     activeTab === "basicInfo" && (
                       <ProductSummaryReport
-                        filter={filter.filter}
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
                       />
                     )
                   }
@@ -215,7 +213,7 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   {
                     activeTab === "stockLedger" && (
                       <ProductSummaryReportStockLedger
-                        filter={filter.filter}
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
                       />
                     )
                   }
@@ -223,7 +221,8 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   {
                     activeTab === "transaction" && (
                       <ProductSummaryReportByTransaction
-                        filter={filter.filter}
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"PI"}
                       />
                     )
                   }

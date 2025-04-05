@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -39,7 +39,7 @@ interface ProductSummaryReport {
   batchNo: string;
 }
 
-const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>}> = ({ filter, setFilter }) => {
+const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean}> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
@@ -326,7 +326,6 @@ const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: R
       customizeText: customizeSummaryRow,
     }
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12">
@@ -343,8 +342,11 @@ const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: R
                 method={ActionType.POST}
                 gridId="grd_product_summary_basic_info"
                 hideGridAddButton={true}
-                postData={filter}
-                reload={true}
+                postData={filter.filter}
+                reload={reloadBase}
+                changeReload={() => {
+                  onReloadChange && onReloadChange();
+                }}
                 heightToAdjustOnWindows={800}
               />
             </div>
@@ -370,8 +372,11 @@ const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: R
                 enableScrollButton={false}
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}
-                postData={filter}
-                reload={true}
+                postData={filter.filter}
+                reload={reloadBase}
+                changeReload={() => {
+                  onReloadChange && onReloadChange();
+                }}
               />
             </div>
           </div>

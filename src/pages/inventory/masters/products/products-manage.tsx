@@ -119,7 +119,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         <ProductManageGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/> 
         <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/>
         </div>,
-      <div key="multi_units"><ProductMultiUnitsGCC /></div>,
+      <div key="multi_units"><ProductMultiUnitsGCC t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="multi_rates"><MultiRatesIndia t={t}  getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="search"><SearchCommon /></div>,
       <div key="image"><ImageCommon /></div>,

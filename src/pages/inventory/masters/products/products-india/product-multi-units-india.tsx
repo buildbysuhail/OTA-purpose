@@ -99,7 +99,27 @@ const ProductMultiUnitsIndia: React.FC<{
   const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
     e.isHighlighted = true;
   };
-
+  const getBarcodeStringFromArray = (barcodeArray: any[]): string => {
+    return barcodeArray
+      .map((item) => item.barcode.trim())
+      .filter((barcode) => barcode.length > 0) // remove empty barcodes
+      .join(",");
+  };
+  const handleSaveMB = () => {
+    const barcodeString = getBarcodeStringFromArray(openMB.data);
+    const units = getFieldProps("units").value
+    // Assuming units state or form update
+    const updatedUnits = [...units];
+    updatedUnits[openMB.index].multiBarcodes = barcodeString;
+  
+    handleFieldChange("units", updatedUnits);
+    setOpenMB((prev: any) => ({
+        data: [],
+        index:0,
+        open: false,
+        unit:""
+    }))
+  };
   return (
     <div className="border border-[#ccc] inline-block rounded-md p-4">
       <div className="flex flex-col gap-4">
@@ -464,7 +484,7 @@ const ProductMultiUnitsIndia: React.FC<{
                 </ERPSubmitButton>
                 <ERPSubmitButton type="button" className=" max-w-[115px]"
                   variant="primary"
-                  // onClick={handleApplyPreferences}
+                  onClick={handleSaveMB}
                   >
                   {t("save")}
                 </ERPSubmitButton>

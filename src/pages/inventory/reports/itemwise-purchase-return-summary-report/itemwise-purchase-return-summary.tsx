@@ -6,12 +6,19 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import ItemWisePurchaseReturnSummaryFilter, { ItemWisePurchaseReturnSummaryFilterInitialState } from "./itemwise-purchase-return-summary-filter";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const ItemWisePurchaseReturnSummary = () => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(ItemWisePurchaseReturnSummaryFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
+    const userSession = useSelector((state: RootState) => state.UserSession);
+    const clientSession = useSelector((state: RootState) => state.ClientSession);
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
   const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
@@ -21,7 +28,8 @@ const ItemWisePurchaseReturnSummary = () => {
     setShowFilter(false);
   }, [filterShowCount]);
 
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] = useMemo(() => {
+    const baseColumns: DevGridColumn[] = [
     {
       dataField: "siNo",
       caption: t("si_no"),
@@ -333,7 +341,30 @@ const ItemWisePurchaseReturnSummary = () => {
       width: 100,
     },
   ];
-
+// Filter columns based on the `visible` property
+return baseColumns
+  .filter((column) => {
+    // if (column.dataField == "exchangeRate") {
+    //   return filter.voucher_form !== "Import";
+    // }
+    // if (column.dataField == "uPI" || column.dataField == "cardAmt") {
+    //   return applicationSettings.accountsSettings.allowMultiPayments;
+    // }
+    // if (column.dataField == "printCount") {
+    //   return userSession.dbIdValue == "543140180640";
+    // }
+    return true;
+  });
+  // .map((column) => {
+  //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
+  //     return {
+  //       ...column,
+  //       caption: "QRPay",
+  //     };
+  //   }
+  //   return column;
+  // });
+}, [t, filter, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {

@@ -27,43 +27,39 @@ const MultiRatesIndia : React.FC<{
             // width: 40,
         },
         {
-            dataField: "priceCategory",
+            dataField: "categoryName",
             caption: t("price_category"),
-            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             width: 120,
         },
         {
-            dataField: "unit",
+            dataField: "unitName",
             caption: t("unit"),
-            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             width: 80,
         },
         {
-            dataField: "salesRate",
+            dataField: "salesPrice",
             caption: t("sales_rate"),
-            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             // width: 80,
         },
         {
-            dataField: "salesDisc%",
+            dataField: "discountPerc",
             caption: t("sales_disc_%"),
-            dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
             // width: 80,
         },
         {
-            dataField: "purchaseRate",
+            dataField: "purchasePrice",
             caption: t("purchase_rate"),
             dataType: "string" as const,
             allowSorting: true,
@@ -78,19 +74,11 @@ const MultiRatesIndia : React.FC<{
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
+            visible: false,
             width: 100,
         },
         {
-            dataField: "profitAddedToCost",
-            caption: t("profit_(added_to_cost)"),
-            dataType: "string" as const,
-            allowSorting: true,
-            allowSearch: true,
-            allowFiltering: true,
-            // width: 100,
-        },
-        {
-            dataField: "MRP",
+            dataField: "mrp",
             caption: t("mrp"),
             dataType: "string" as const,
             allowSorting: true,
@@ -99,19 +87,20 @@ const MultiRatesIndia : React.FC<{
             width: 100,
         },
         {
-            dataField: "X",
-            caption: t("x"),
+            dataField: "msp",
+            caption: t("mrp"),
             dataType: "string" as const,
             allowSorting: true,
             allowSearch: true,
             allowFiltering: true,
-            width: 40,
+            width: 100,
         },
     ],
         [t]
     );
     const fetchData = async () => {
-        const responseData = getFieldProps("units").value as ProductPriceInputDto[];
+        debugger;
+        const responseData = getFieldProps("prices").value as ProductPriceInputDto[];
   
         // Add slNo field to each item
         const updatedData = responseData.map((item, index) => ({
@@ -143,7 +132,7 @@ const MultiRatesIndia : React.FC<{
                       ...changes.data,
                     };
                     // setUnits(updatedUnits);
-                    handleFieldChange("units",[...updatedUnits])
+                    handleFieldChange("prices",[...updatedUnits])
                   }
                 }
               }}

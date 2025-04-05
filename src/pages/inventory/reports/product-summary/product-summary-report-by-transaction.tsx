@@ -363,7 +363,6 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
     }
     return getFormattedValue(value,false,2) || "0";
   };
-
   const summaryItems: SummaryConfig[] = [
     {
       column: "ledgerName",
@@ -405,8 +404,8 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
                 gridId="grd_product_summary_report_by_transaction"
                 hideGridAddButton={true}
                 postData={filter}
-                filterHeight={270}
-                filterWidth={600}
+                // filterHeight={270}
+                // filterWidth={600}
                 reload={true}
               />
             </div>

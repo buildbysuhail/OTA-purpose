@@ -5,12 +5,12 @@ const initialProductData: productDto = {
     productID: 1,
     productCode: "",
     productName: "",
-    productGroupId: 0,
+    productGroupID: 0,
     productCategoryID: 0,
     supplyMethod: "",
     hsnCode: "",
     commodityCode: "",
-    active: true,
+    isActive: true,
     aliasItemCode: "",
     aliasItemName: "",
     remarks: "",
@@ -35,19 +35,19 @@ const initialProductData: productDto = {
     unitQty: 0,
     packingSlip: true,
     financialYearID: 0,
-    basicUnitID: ""
+    basicUnitID: 0
   },
   productValidation: {
     productName: "",
-    productGroupId: 0,
-    unitID: 0,
+    productGroupId: "",
+    unitID: "",
     commodityCode: "",
-    taxCategoryID: 0,
-    productCategoryID: 0,
-    defSalesUnitID: 0,
-    defPurchaseUnitID: 0,
-    defReportUnitID: 0,
-    brandID: 0,
+    taxCategoryID: "",
+    productCategoryID: "",
+    defSalesUnitID: "",
+    defPurchaseUnitID: "",
+    defReportUnitID: "",
+    brandID: "",
     salesPrice: "",
     stdSalesPrice: ""
   },
@@ -137,7 +137,7 @@ const initialProductData: productDto = {
       salesPrice: 0,
       purchasePrice: 0,
       discountPerc: 0,
-      unitID: 0,
+      unitID: 1,
       profitAmt: 0,
       mrp: 0,
       msp: 0
@@ -149,7 +149,7 @@ const initialProductData: productDto = {
   nutrients: [
     {
       nutrients: "",
-      valuePerServing: ""
+      valuePerServing: 0
     }
   ],
   supplierProducts: [

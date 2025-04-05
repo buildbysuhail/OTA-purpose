@@ -23,8 +23,9 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 import {
   formStateHandleFieldChange,
-  formStateMaster3HandleFieldChange,
+  // formStateMaster3HandleFieldChange,
   formStateMasterHandleFieldChange,
+  formStateTransactionMaster3HandleFieldChange,
   formStateTransactionMasterHandleFieldChange,
   setUserRight,
   updateFormElement,
@@ -99,9 +100,15 @@ import AccVoucherNo from "./components/voucher-no";
 import BtnAdd from "./components/btn-add";
 import AccHeader from "./components/header";
 import Urls from "../../../../redux/urls";
-import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
+import ErpDevGrid, {
+  SummaryConfig,
+} from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import ERPLabel from "../../../../components/ERPComponents/erp-label";
+
 interface BilledItem {
   id?: number;
   name: string;
@@ -190,8 +197,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
 
-  
-    const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
+  const [isPartyDetailsOpen, setIsPartyDetailsOpen] = useState(false);
 
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
@@ -514,7 +520,10 @@ const TransactionForm: React.FC<TransactionProps> = ({
       let fieldsToUpdate = {
         ...initialFormElements,
         pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
-        chkTaxNumber: { ...initialFormElements.chkTaxNumber, label: clientSession.isAppGlobal ? "GSTIN": "VAT" },
+        chkTaxNumber: {
+          ...initialFormElements.chkTaxNumber,
+          label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
+        },
       } as any;
       switch (voucherType) {
         case "PI":
@@ -1526,7 +1535,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const [settings, setSettings] = useState<ApplicationMainSettings>(
     ApplicationMainSettingsInitialState
   );
- 
 
   const handleChange = (selectedOption: { value: string; label: string }) => {};
 
@@ -1556,7 +1564,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   // const toggleMenu = () => {
   //   setIsMenuOpen(!isMenuOpen);
   // };
- 
+
   return (
     <div className="relative">
       {/* <h1>SAFVAN{transactionType}</h1> */}
@@ -1779,8 +1787,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 </>
               
             </div>
-
-            
           </div>
           <div
             className="relative"
@@ -1887,9 +1893,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
           )}
         </div>
       )}
-     
+
       <div
-        className="flex items-center justify-between h-[65px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+        className="flex items-center justify-between h-[500px] z-10 fixed bottom-0 dark:bg-dark-bg bg-[#f8f8ff] shadow-lg full-available-width lg:px-8 py-2 md:px-2"
         style={{
           boxShadow:
             "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
@@ -1950,10 +1956,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
               </div>
             )}
 
-           
-
-            
-
             <button className="text-blue-600">
               <span
                 className="hover:underline text-[#0ea5e9] capitalize"
@@ -1962,6 +1964,414 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 {t("attachment")}
               </span>
             </button>
+            <ERPDataCombobox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              enableClearOption={false}
+              // ref={ref}
+              id="warehouseID"
+              className="min-w-[180px]"
+              label={t(formState.formElements.cbWarehouseID.label)}
+              data={formState.transaction.master}
+              onSelectItem={(e) => {
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: {
+                      fromWarehouseID: e.value,
+                    },
+                  })
+                );
+                handleFieldKeyDown("warehouseID", "Enter");
+              }}
+              value={formState.transaction.master.fromWarehouseID}
+              field={{
+                id: "warehouseID",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_warehouse,
+              }}
+              disabled={
+                formState.formElements.cbWarehouseID.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              disableEnterNavigation
+              onKeyDown={(e: any) => {
+                handleKeyDown && handleKeyDown(e, "warehouse");
+              }}
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="remarks"
+              className=""
+              required={true}
+              label={t(formState.formElements.remarks.label)}
+              value={formState.transaction.master.remarks}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "remarks");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { remarks: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.remarks?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="isLocked"
+              label={t(formState.formElements.lb.label)}
+              checked={formState.transaction.master.isLocked}
+              onChange={(e) =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { lb: e.target.checked },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.isLocked?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              className="text-sm xl:text-base"
+            />
+            {/* <ERPCheckbox
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
+                  id="autoCalculation"
+                  label={t(formState.formElements.lb.label)}
+                  checked={formState.transaction.master.autoCalculation}
+                  onChange={(e) =>
+                    dispatch(
+                      formStateHandleFieldChange({
+                        fields: { lb: e.target.checked },
+                      })
+                    )
+                  }
+                  disabled={
+                    formState.formElements.isLocked?.disabled ||
+                    formState.formElements.pnlMasters?.disabled
+                  }
+                  className="text-sm xl:text-base"
+                /> */}
+
+            <ERPDataCombobox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              enableClearOption={false}
+              // ref={ref}
+              id="priceCategoryID"
+              className="min-w-[180px]"
+              label={t(formState.formElements.priceCategory.label)}
+              data={formState.transaction.master}
+              onSelectItem={(e) => {
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: {
+                      fromWarehouseID: e.value,
+                    },
+                  })
+                );
+                handleFieldKeyDown("priceCategoryID", "Enter");
+              }}
+              value={formState.transaction.master.priceCategoryID}
+              field={{
+                id: "priceCategoryID",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_pricectegory,
+              }}
+              disabled={
+                formState.formElements.priceCategory.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              disableEnterNavigation
+              onKeyDown={(e: any) => {
+                handleKeyDown && handleKeyDown(e, "warehouse");
+              }}
+            />
+            <ERPDataCombobox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              enableClearOption={false}
+              // ref={ref}
+              id="costCentreID"
+              className="min-w-[180px]"
+              label={t(formState.formElements.costCentreID.label)}
+              data={formState.transaction.master}
+              onSelectItem={(e) => {
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: {
+                      fromWarehouseID: e.value,
+                    },
+                  })
+                );
+                handleFieldKeyDown("costCentreID", "Enter");
+              }}
+              value={formState.transaction.master.costCentreID}
+              field={{
+                id: "costCentreID",
+                valueKey: "id",
+                labelKey: "name",
+                getListUrl: Urls.data_costcentres,
+              }}
+              disabled={
+                formState.formElements.costCentreID.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              disableEnterNavigation
+              onKeyDown={(e: any) => {
+                handleKeyDown && handleKeyDown(e, "costCentreID");
+              }}
+            />
+            <ERPDataCombobox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              enableClearOption={false}
+              // ref={ref}
+              id="costCentreID"
+              className="min-w-[180px]"
+              label={t(formState.formElements.costCentreID.label)}
+              // data={formState.transaction.master}
+              onSelectItem={(e) => {
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: {
+                      fromWarehouseID: e.value,
+                    },
+                  })
+                );
+                handleFieldKeyDown("costCentreID", "Enter");
+              }}
+              value={formState.transaction.master.costCentreID}
+              field={{
+                id: "costCentreID",
+                valueKey: "id",
+                labelKey: "name",
+                // getListUrl: Urls.data_costcentres,
+              }}
+              disabled={
+                formState.formElements.costCentreID.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              options={[
+                { value: "Dr", label: t("Dr") },
+                { value: "Cr", label: t("Cr") },
+              ]}
+              disableEnterNavigation
+              onKeyDown={(e: any) => {
+                handleKeyDown && handleKeyDown(e, "costCentreID");
+              }}
+            />
+            {/* <ERPDataCombobox
+                                        {...getFieldProps("drCr")}
+                                        field={{
+                                          id: "drCr",
+                                          valueKey: "value",
+                                          labelKey: "label",
+                                        }}
+                                        onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
+                                        label={t("drcr")}
+                                        enableClearOption={false}
+                                        options={[
+                                          { value: "Dr", label: t("Dr") },
+                                          { value: "Cr", label: t("Cr") },
+                                        ]}
+                                      /> */}
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="adjustmentAmount"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.adjustmentAmount.label)}
+              value={formState.transaction.master.adjustmentAmount}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "adjustmentAmount");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: { adjustmentAmount: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.adjustmentAmount?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="roundAmount"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.roundOff.label)}
+              value={formState.transaction.master.roundAmount}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "roundAmount");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: { roundAmount: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.roundAmount?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="totTCS"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.totTCS.label)}
+              value={formState.transaction.master.other.totTCS}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "totTCS");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateTransactionMaster3HandleFieldChange({
+                    fields: { totTCS: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.totTCS?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="grandTotalFc"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.grandTotalFc.label)}
+              value={formState.transaction.master.grandTotalFc}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "grandTotalFc");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: { grandTotalFc: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.grandTotalFc?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="netAmount"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.netAmount.label)}
+              value={formState.netAmount}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "netAmount");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { netAmount: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.netAmount?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="billDiscount"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.billDiscount.label)}
+              value={formState.transaction.master.billDiscount}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "billDiscount");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: { billDiscount: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.billDiscount?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            />
+            {/* <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="grandTotal"
+              className=""
+              type="number"
+              //  required={true}
+              label={t(formState.formElements.grandTotal.label)}
+              value={formState.transaction.master.billDiscount}
+              //  ref={ref}
+              disableEnterNavigation={true}
+              onKeyDown={(e) => {
+                handleKeyDown && handleKeyDown(e, "billDiscount");
+              }}
+              onChange={(e) =>
+                dispatch(
+                  formStateMasterHandleFieldChange({
+                    fields: { billDiscount: e.target?.value },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.billDiscount?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+            /> */}
+            <ERPLabel 
+            id="grandTotal"
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+            value={formState.transaction.master.billDiscount}
+            type="number"
+            boxed
+            textAlign="right"
+            />
+            <ERPLabel 
+            id="netAmount"
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+            value={formState.netAmount}
+            type="number"
+            boxed
+            textAlign="right"
+            />
+           
           </div>
         </div>
 
@@ -2035,7 +2445,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           }
         ></ERPModal>
       )}
-{isPartyDetailsOpen && (
+      {isPartyDetailsOpen && (
         <CustomerDetailsSidebar
           displayType="none"
           isOpen={isPartyDetailsOpen}

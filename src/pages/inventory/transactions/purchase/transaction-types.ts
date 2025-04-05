@@ -102,6 +102,7 @@ export interface TransactionMaster {
   totalDiscount: number;
   billDiscount: number;
   grandTotal: number;
+  grandTotalFc: number;
   totalProfit: number;
   roundAmount: number;
   cashReceived: number;
@@ -438,6 +439,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   totalDiscount: 0,
   billDiscount: 0,
   grandTotal: 0,
+  grandTotalFc: 0,
   totalProfit: 0,
   roundAmount: 0,
   cashReceived: 0,
@@ -559,6 +561,11 @@ export interface TransactionFormState {
   enableTaxNumber: boolean
   tmpVoucherNo?: number
   dummyCode?: any
+  remarks?: string;
+  lb?: boolean;
+  autoCalculation?: boolean;
+  priceCategory: string;
+  netAmount: number;
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -641,6 +648,18 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   printOnSave: { visible: false, disabled: false, label: "print_on_save" },
   lnkUnlockVoucher: { visible: false, disabled: false, label: "Unlock" },
   asasa: { visible: true, disabled: false, label: "dfdf" },
+  cbWarehouseID: { visible: true, disabled: false, label: "warehouse" },
+  remarks: { visible: true, disabled: false, label: "remarks" },
+  lb: { visible: true, disabled: false, label: "lb" },
+  autoCalculation: { visible: true, disabled: false, label: "lb" },
+  priceCategory: { visible: true, disabled: false, label: "price_category" },
+  adjustmentAmount: { visible: true, disabled: false, label: "add_amount_or_jv" },
+  roundOff: { visible: true, disabled: false, label: "round_off" },
+  totTCS: { visible: true, disabled: false, label: "tot_tcs" },
+  grandTotalFc: { visible: true, disabled: false, label: "grand_total_fc" },
+  netAmount: { visible: true, disabled: false, label: "net_amount" },
+  billDiscount: { visible: true, disabled: false, label: "bill_discount" },
+
 };
 export type FormElementsState = {
   [key in keyof typeof initialFormElements]: FormElementState;
@@ -662,6 +681,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   printCheque: false,
   amountInWords: 'Zero Only',
   openUnsavedPrompt: false,
+  priceCategory: "",
+  remarks: "",
   userConfig: {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,
@@ -721,7 +742,8 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   partyId: "",
   foreignCurrency: false,
   enableDebitAccount: false,
-  enableTaxNumber: false
+  enableTaxNumber: false,
+  netAmount: 0
 }
 export interface PrintTransProps {
   masterAccount: string;

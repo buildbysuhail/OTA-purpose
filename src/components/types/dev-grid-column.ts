@@ -40,6 +40,8 @@ export interface DevGridColumn {
     cssClass?:string;
     editorOptions?: any;
     validationRules?: any;
+    sortOrder?: "asc" | "desc";
+    sortIndex?: number;
     customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => any;
     cellRenderDynamic?: (cellElement: any, cellInfo: any, filter?: any, pdfCell?: any) => React.ReactNode;

@@ -10,7 +10,13 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid, GroupItem, GroupPanel, KeyboardNavigation, StateStoring } from "devextreme-react/data-grid";
+import {
+  DataGrid,
+  GroupItem,
+  GroupPanel,
+  KeyboardNavigation,
+  StateStoring,
+} from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -68,7 +74,7 @@ import { transactionRoutes } from "../common/content/transaction-routes";
 import { EllipsisVertical, FileUp, Plus, Printer } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import { formatDate } from "devextreme/localization";
-import {useReportPrint} from "./reports/use-reports-print"
+import { useReportPrint } from "./reports/use-reports-print";
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -111,6 +117,7 @@ interface ERPDevGridProps {
   dataUrl?: string;
   filterInitialData?: any;
   enablefilter?: boolean;
+  initialSort?: any;
   filterContent?: React.ReactNode;
   filterWidth?: number;
   filterHeight?: number;
@@ -225,7 +232,7 @@ interface ERPDevGridProps {
   ) => React.ReactNode;
   locale?: string;
   columnRenderingMode?: any;
-  columnResizingMode?: "nextColumn"|"widget";
+  columnResizingMode?: "nextColumn" | "widget";
   rowRenderingMode?: "standard" | "virtual";
   keyExpr?: string | string[];
   dateSerializationFormat?: string;
@@ -280,6 +287,7 @@ const createStore = async (
   method?: ActionType,
   postData?: any,
   filterData?: any,
+  initialSort = [],
   initialFilters?: Array<{
     field: string;
     value: any;
@@ -291,7 +299,7 @@ const createStore = async (
     "requireTotalCount",
     "sort",
     "filter",
-    "totalSummary"
+    "totalSummary",
   ],
   bodyProps?: any,
   setFilterValidations?: any,
@@ -302,6 +310,9 @@ const createStore = async (
     key: keyExpr,
     load: async (loadOptions: any) => {
       debugger;
+      if (!loadOptions.sort || (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)) {
+        loadOptions.sort = initialSort;
+      }
       if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
         loadOptions.filter = initialFilters.map((f) => {
           if (f.value instanceof Date) {
@@ -326,7 +337,7 @@ const createStore = async (
           "filter",
           "totalSummary",
           "group",
-          "groupSummary"
+          "groupSummary",
         ]
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
           .map((paramName) => [
@@ -334,7 +345,7 @@ const createStore = async (
             JSON.stringify(loadOptions[paramName]),
           ])
       );
-
+debugger;
       // Append filterData to params
       if (enablefilter && filterData) {
         Object.entries(filterData).forEach((x: any) => {
@@ -414,7 +425,7 @@ const createStore = async (
                   result.loadResult != undefined
                     ? result.loadResult.totalCount
                     : result.totalCount,
-                    groupCount:
+                groupCount:
                   result.loadResult != undefined
                     ? result.loadResult.groupCount
                     : result.groupCount,
@@ -486,6 +497,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowColumnChooser = false,
       allowFiltering = true,
       initialFilters = [],
+      initialSort = [],
       allowSorting = true,
       allowSearching = true,
       allowResizing = true,
@@ -549,7 +561,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       locale,
       columnRenderingMode = "standard",
       columnResizingMode = "widget",
-      
+
       rowRenderingMode = "standard",
       keyExpr,
       dateSerializationFormat,
@@ -598,8 +610,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     const gridStyle: React.CSSProperties = {
       ["--actions-width" as any]: `${actionsWidth}px`,
     };
- const {printStatement,printCB} = useReportPrint()
-    
+    const { printStatement, printCB } = useReportPrint();
+
     //  // Determine the Actionswidth value
     //  const actionsWidth = childPopupPropsDynamic
     //   ? childPopupPropsDynamic().Actionswidth
@@ -655,7 +667,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           : wh - heightToAdjustOnWindows < 300
           ? 300
           : wh - heightToAdjustOnWindows;
-      setGridHeight({ mobile: height != undefined ? height :gridHeightMobile, windows: height != undefined ? height : gridHeightWindows });
+      setGridHeight({
+        mobile: height != undefined ? height : gridHeightMobile,
+        windows: height != undefined ? height : gridHeightWindows,
+      });
     }, [
       heightToAdjustOnMobile,
       heightToAdjustOnWindows,
@@ -763,7 +778,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             enablefilter,
             method,
             postData,
-            filter,
+            filter,initialSort,
             initialFilters,
             paramNames,
             bodyProps,
@@ -821,14 +836,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         // Create a safer scope for evaluating the expression by passing 'data' as an argument
         try {
           console.log(Object.keys(data));
-          const keys = Object.keys(data)
-         if(keys && keys.length > 0) {
-          return new Function(...Object.keys(data), `return ${expression};`)(
-            ...Object.values(data)
-          );
-         }
-         return false;
-         
+          const keys = Object.keys(data);
+          if (keys && keys.length > 0) {
+            return new Function(...Object.keys(data), `return ${expression};`)(
+              ...Object.values(data)
+            );
+          }
+          return false;
         } catch (error) {
           console.error("Error evaluating expression:", error);
           return false; // Return false in case of error
@@ -956,7 +970,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       const totalRows = gridInstance.totalCount(); // or gridInstance.getDataSource().totalCount()
       if (totalRows > 500) {
         const userConfirmed = window.confirm(
-          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${(totalRows??0)/25} pages, Please click 'Wait' if the application becomes unresponsive.`
+          `The document contains ${totalRows} Rows of data. Are you sure you want to download it?. approximate more than ${
+            (totalRows ?? 0) / 25
+          } pages, Please click 'Wait' if the application becomes unresponsive.`
         );
         if (!userConfirmed) {
           return;
@@ -1077,7 +1093,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       // Customize the export to PDF to use rendered values
       const customizeCell = (options: any) => {
         if (options.gridCell.rowType != "data") return;
-        
+
         const column = gridCols.find(
           (x) => x.dataField == options.gridCell.column.dataField
         );
@@ -1531,14 +1547,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           const scrollable = gridInstance.getScrollable();
           const scrollHeight = scrollable.scrollHeight();
           const clientHeight = scrollable.clientHeight(); // Get visible area height
-  
+
           // Ensure scrolling reaches the real bottom
           scrollable.scrollTo({
             top: prev === true ? 0 : scrollHeight - clientHeight,
           });
           return !prev;
-        })
-        
+        });
       }
     }, []);
 
@@ -1586,8 +1601,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       return (
         <Summary recalculateWhileEditing={true} skipEmptyValues={false}>
           {summaryItems?.map((config: SummaryConfig, index: number) => {
-            return (
-              config.isGroupItem == true ? 
+            return config.isGroupItem == true ? (
               <GroupItem
                 key={`GroupItem_${index}`}
                 column={config.column}
@@ -1600,8 +1614,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 displayFormat={config.displayFormat}
                 showInGroupFooter={config.showInGroupFooter}
               />
-              :
-
+            ) : (
               <TotalItem
                 key={`summaryItem_${index}`}
                 column={config.column}
@@ -1670,7 +1683,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             onRowDblClick={onRowDblClick}
             onCellPrepared={onCellPrepared}
             columnResizingMode="widget"
-            
             // columnRenderingMode={columnRenderingMode}
             // rowRenderingMode={rowRenderingMode}
             keyExpr={keyExpr}
@@ -1679,15 +1691,23 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             hoverStateEnabled={hoverStateEnabled}
             {...props} // Spread additional props to DataGrid
           >
-            {stateStoring && stateStoring.enabled &&
-            <StateStoring
-            enabled={stateStoring.enabled}
-            type={stateStoring.type}
-            storageKey={stateStoring.storageKey}
-            customLoad={stateStoring.type === "custom" ? stateStoring.customLoad : undefined}
-            customSave={stateStoring.type === "custom" ? stateStoring.customSave : undefined}
-          />
-            }
+            {stateStoring && stateStoring.enabled && (
+              <StateStoring
+                enabled={stateStoring.enabled}
+                type={stateStoring.type}
+                storageKey={stateStoring.storageKey}
+                customLoad={
+                  stateStoring.type === "custom"
+                    ? stateStoring.customLoad
+                    : undefined
+                }
+                customSave={
+                  stateStoring.type === "custom"
+                    ? stateStoring.customSave
+                    : undefined
+                }
+              />
+            )}
             {MemoizedSummary}
             <ColumnFixing enabled={true} />
             <Scrolling
@@ -1735,10 +1755,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                 showCheckBoxesMode={"always"}
               />
             )}
-            {allowGrouping && <Grouping autoExpandAll={autoExpandAll}/>}
-            {groupPanelVisible && (
-              <GroupPanel visible={true} />
-            )}
+            {allowGrouping && <Grouping autoExpandAll={autoExpandAll} />}
+            {groupPanelVisible && <GroupPanel visible={true} />}
             {allowEditing && allowEditing.allow && (
               <Editing
                 mode={editMode}
@@ -1792,7 +1810,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     <button
                       type="button"
                       onClick={() => {
-                        
                         scrollTo();
                       }}
                       className="dark:bg-dark-bg-header dark:text-dark-text flex items-center justify-center w-9 h-9 rounded-full shadow-md hover:shadow-lg focus:outline-none"
@@ -1843,13 +1860,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             <li>
                               <button
                                 className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() => printStatement(
-                                  { 
-                                    orientation: preferences?.orientation ?? "portrait",
-                                    data:memoizedStore,
-                                    clickedItem:"statement"
-                                   }                                
-                                )}
+                                onClick={() =>
+                                  printStatement({
+                                    orientation:
+                                      preferences?.orientation ?? "portrait",
+                                    data: memoizedStore,
+                                    clickedItem: "statement",
+                                  })
+                                }
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
@@ -1861,13 +1879,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                             <li>
                               <button
                                 className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                                onClick={() => printCB(
-                                  { 
-                                    orientation: preferences?.orientation ?? "portrait",
-                                    data:memoizedStore,
-                                    clickedItem:"customer_balance"
-                                   }                                
-                                )}
+                                onClick={() =>
+                                  printCB({
+                                    orientation:
+                                      preferences?.orientation ?? "portrait",
+                                    data: memoizedStore,
+                                    clickedItem: "customer_balance",
+                                  })
+                                }
                               >
                                 <FileUp className="pe-2" />
                                 <span className="text-sm font-semibold ">
@@ -1968,6 +1987,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             {gridCols?.map((column, index) => (
               <Column
+                
                 customizeText={column.customizeText}
                 editorOptions={column.editorOptions}
                 validationRules={column.validationRules}
@@ -2032,6 +2052,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
                     ? column.visibleDynamic(filter)
                     : column.visible || false
                 }
+                sortOrder={column.sortOrder}
+                sortIndex={column.sortIndex}
               />
             ))}
             {/* <Grouping autoExpandAll={true} allowCollapsing={false} /> */}

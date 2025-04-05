@@ -79,6 +79,7 @@ const Urls = {
   data_productcategory: "/Inventory/Data/ProductCategory",
   data_services: "/Inventory/Data/Services",
   data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
+  data_units: "/Inventory/Data/UnitOfMeasures",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",

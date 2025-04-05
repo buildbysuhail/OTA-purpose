@@ -101,8 +101,8 @@ export const ProductMaster: React.FC = React.memo(() => {
     ? [
       <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
           <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
-      <div key="multi_units"><ProductMultiUnitsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="multi_rates"><MultiRatesIndia  formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="multi_units"><ProductMultiUnitsIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="multi_rates"><MultiRatesIndia t={t}  getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="image"><ImageCommon /></div>,
       <div key="others">  <ProductOthersIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="sales"><SalesCommon getFieldProps={getFieldProps}/></div>,
@@ -120,7 +120,7 @@ export const ProductMaster: React.FC = React.memo(() => {
         <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/>
         </div>,
       <div key="multi_units"><ProductMultiUnitsGCC /></div>,
-      <div key="multi_rates"><MultiRatesGcc /></div>,
+      <div key="multi_rates"><MultiRatesIndia t={t}  getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
       <div key="search"><SearchCommon /></div>,
       <div key="image"><ImageCommon /></div>,
       <div key="others"><ProductOthersGcc /></div>,

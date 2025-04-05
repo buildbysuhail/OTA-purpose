@@ -427,6 +427,7 @@ const Products = () => {
                   columns={columns}
                   gridHeader={t("products")}
                   dataUrl={Urls.products}
+                  initialSort={[{ selector: "productCode", desc: false }]}
                   gridId="grd_products"
                   popupAction={toggleProducts}
                   gridAddButtonType="popup"

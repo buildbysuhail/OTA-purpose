@@ -7,7 +7,7 @@ import { ActionType } from "../../../../redux/types";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 import { ProductSummaryFilter } from "./product-summary-master";
 
-const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filter }) => {
+const ProductSummaryReportStockLedger: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean}> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
 
   const columns: DevGridColumn[] = [
@@ -219,7 +219,7 @@ const ProductSummaryReportStockLedger: React.FC<ProductSummaryFilter> = ({ filte
                 method={ActionType.POST}
                 gridId="grd_product_summary_stock_ledger"
                 hideGridAddButton={true}
-                postData={filter}
+                postData={filter.filter}
                 filterHeight={270}
                 filterWidth={600}
                 reload={true}

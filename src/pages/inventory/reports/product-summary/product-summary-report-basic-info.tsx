@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, { SummaryConfig } from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
@@ -39,7 +39,7 @@ interface ProductSummaryReport {
   batchNo: string;
 }
 
-const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
+const ProductSummaryReport: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean}> = ({ filter, setFilter, onReloadChange, reloadBase }) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
 
@@ -258,7 +258,25 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
       width: 100,
     }
   ];
-
+  const onInitialDataLoad = (loadedData: ProductSummaryReport[]) => {
+    updateFilterWithBatchID(loadedData);
+  };
+  const onRowClick = (e: any) => {
+    updateFilterWithBatchID(undefined, e.data);
+  };
+  const updateFilterWithBatchID = (loadedData?: ProductSummaryReport[], rowData?: ProductSummaryReport) => {
+    const productBatchID = rowData?.productBatchID || loadedData?.[0]?.productBatchID;
+  
+    if (productBatchID) {
+      setFilter((prev: any) => ({
+        ...prev,
+        filter: {
+          ...prev.filter,
+          productBatchID,
+        },
+      }));
+    }
+  };
   const customizeSummaryRow = (itemInfo: { value: any }) => {
     const value = itemInfo.value;
     if (value === null || value === undefined || value === "" || isNaN(value)) {
@@ -308,7 +326,6 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
       customizeText: customizeSummaryRow,
     }
   ];
-
   return (
     <Fragment>
       <div className="grid grid-cols-12">
@@ -317,6 +334,7 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={basicInfoSummaryItems}
+
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={basicInfoColumns}
                 gridHeader={t("product_summary_basic_info")}
@@ -324,8 +342,11 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
                 method={ActionType.POST}
                 gridId="grd_product_summary_basic_info"
                 hideGridAddButton={true}
-                postData={filter}
-                reload={true}
+                postData={filter.filter}
+                reload={reloadBase}
+                changeReload={() => {
+                  onReloadChange && onReloadChange();
+                }}
                 heightToAdjustOnWindows={800}
               />
             </div>
@@ -336,9 +357,11 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 summaryItems={batchInfoSummaryItems}
+                onInitialDataLoad={onInitialDataLoad}
+                onRowClick={onRowClick}
                 remoteOperations={{ filtering: false, paging: false, sorting: false }}
                 columns={batchInfoColumns}
-                dataUrl={Urls.product_summary_basic_info}
+                dataUrl={Urls.product_summary_basic_info_batch_details}
                 method={ActionType.POST}
                 gridId="grd_product_summary_batch_info"
                 hideGridAddButton={true}
@@ -349,8 +372,11 @@ const ProductSummaryReport: React.FC<ProductSummaryFilter> = ({ filter }) => {
                 enableScrollButton={false}
                 ShowGridPreferenceChooser={false}
                 showPrintButton={false}
-                // postData={filter}
-                reload={true}
+                postData={filter.filter}
+                reload={reloadBase}
+                changeReload={() => {
+                  onReloadChange && onReloadChange();
+                }}
               />
             </div>
           </div>

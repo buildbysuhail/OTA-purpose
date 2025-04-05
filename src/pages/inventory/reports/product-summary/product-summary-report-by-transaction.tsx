@@ -26,7 +26,7 @@ interface ProductSummaryReportByTransaction {
   netAmount: number;
 }
 
-const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ filter }) => {
+const ProductSummaryReportByTransaction: React.FC<{filter:ProductSummaryFilter;  setFilter: React.Dispatch<React.SetStateAction<any>>; onReloadChange: () => void; reloadBase: boolean; voucherType: string}> = ({ filter, setFilter, onReloadChange, reloadBase, voucherType }) => {
   const { t } = useTranslation("accountsReport");
 
   const columns: DevGridColumn[] = [
@@ -403,7 +403,7 @@ const ProductSummaryReportByTransaction: React.FC<ProductSummaryFilter> = ({ fil
                 method={ActionType.POST}
                 gridId="grd_product_summary_report_by_transaction"
                 hideGridAddButton={true}
-                postData={filter}
+                postData={{...filter.filter, voucherType: voucherType}}
                 // filterHeight={270}
                 // filterWidth={600}
                 reload={true}

@@ -141,7 +141,7 @@ const DailySummaryMaster = ({ getFieldProps, handleFieldChange, formState }: any
               />
               <ERPButton title="Show" onClick={() =>{ 
                 setReload(true)
-              }}></ERPButton>{reload?.toString()}
+              }}></ERPButton>
             </div>
 
             <div className="grid grid-cols-1 gap-3">

@@ -254,7 +254,7 @@ export const QuantityLimit: React.FC = () => {
                         name="quantityLimit"
                         {...getFieldProps("quantityLimit")}
                         value={formState.data.quantityLimit}
-                        label={t("Quantity Limit")}
+                        label={t("quantity_limit")}
                         type="number"
                         className="w-full"
                         onChangeData={(data: any) => handleFieldChange("quantityLimit", parseInt(data.quantityLimit))}
@@ -263,22 +263,22 @@ export const QuantityLimit: React.FC = () => {
             </div>
             <div className="flex justify-end gap-2">
                 <ERPButton
-                    title={t("Delete")}
+                    title={t("delete")}
                     variant="primary"
                     onClick={handleDelete}
                 />
                 <ERPButton
-                    title={t("Load")}
+                    title={t("load")}
                     variant="primary"
                     onClick={handleLoad}
                 />
                 <ERPButton
-                    title={t("Save")}
+                    title={t("save")}
                     variant="primary"
                     onClick={handleAdd}
                 />
                 <ERPButton
-                    title={t("Clear")}
+                    title={t("clear")}
                     variant="primary"
                     onClick={handleClear}
                 />
@@ -298,27 +298,27 @@ export const QuantityLimit: React.FC = () => {
                         allowAdding={false}
                     />
                     <Column
-                        caption="Sl"
+                        caption={t("si")}
                         width={40}
                         cellRender={(data) => data.rowIndex + 1}
                     />
                     <Column
                         dataField="barcode"
                         width={100}
-                        caption={t("Barcode")}
+                        caption={t("barcode")}
                     />
                     <Column
                         dataField="product"
                         width={200}
-                        caption={t("Product")}
+                        caption={t("product")}
                     />
                     <Column
                         dataField="qtyLimit"
                         width={80}
-                        caption={t("QtyLimit")}
+                        caption={t("qty_limit")}
                     />
                     <Column
-                        caption="X"
+                        caption={t("X")}
                         cellRender={renderDeleteCell}
                         width={40}
                     />
@@ -328,7 +328,7 @@ export const QuantityLimit: React.FC = () => {
             <div className="flex items-center mt-2">
                 <ERPCheckbox
                     id="selectAll"
-                    label={t("Select All To Delete")}
+                    label={t("select_all_to_delete")}
                     checked={selectAll}
                     onChange={handleSelectAllToDelete}
                 />

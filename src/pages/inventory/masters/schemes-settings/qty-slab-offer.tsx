@@ -182,7 +182,7 @@ export const QuantitySlabOffer: React.FC = () => {
                     onChangeData={(data: any) =>
                         handleFieldChange("amtPerc", data.amtPerc)
                     }
-                    label={t("amt/perc")}
+                    label={t("amt_perc")}
                     enableClearOption={false}
                     options={[
                         { value: "Amt", label: t("amt") },
@@ -250,7 +250,7 @@ export const QuantitySlabOffer: React.FC = () => {
                     <Column
                         dataField="amtPerc"
                         width={100}
-                        caption={t("amt/perc")}
+                        caption={t("amt_perc")}
                     />
                     <Column
                         dataField="value"
@@ -268,7 +268,7 @@ export const QuantitySlabOffer: React.FC = () => {
                         caption={t("qty_to")}
                     />
                     <Column
-                        caption="X"
+                        caption={t("X")}
                         cellRender={renderDeleteCell}
                         width={40}
                     />
@@ -276,7 +276,7 @@ export const QuantitySlabOffer: React.FC = () => {
             </div>
 
             <div className="flex items-center mt-2">
-                <p className="text-[#F87171] text-sm font-medium mr-auto">* This offer price is only applicable on standard price</p>
+                <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
 
                 <div className="flex items-center">
                     <ERPCheckbox

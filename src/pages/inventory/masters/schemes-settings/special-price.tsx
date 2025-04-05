@@ -115,7 +115,7 @@ export const SpecialPrice: React.FC = () => {
     const renderDeleteCell = (cellData: any) => {
         return (
             <div className="flex justify-center">
-                <button className="text-[#ef4444] font-bold px-2" onClick={() => handleRemoveRow(cellData.data.specialPriceID)}>    X</button>
+                <button className="text-[#ef4444] font-bold px-2" onClick={() => handleRemoveRow(cellData.data.specialPriceID)}>X</button>
             </div>
         );
     };
@@ -147,7 +147,7 @@ export const SpecialPrice: React.FC = () => {
                 <div className="flex items-end gap-4">
                     <ERPInput
                         {...getFieldProps("groupPrice")}
-                        label={t("groupPrice")}
+                        label={t("group_price")}
                         type="number"
                         className="w-full"
                         onChangeData={(data: any) => handleFieldChange("groupPrice", parseFloat(data.groupPrice))}
@@ -173,7 +173,7 @@ export const SpecialPrice: React.FC = () => {
 
                 <ERPInput
                     {...getFieldProps("nameCode")}
-                    label={t("nameCode")}
+                    label={t("name_code")}
                     onChangeData={(data: any) => handleFieldChange("nameCode", data.nameCode)}
                 />
             </div>
@@ -201,14 +201,14 @@ export const SpecialPrice: React.FC = () => {
 
                 <ERPInput
                     {...getFieldProps("stdSalesPrice")}
-                    label={t("stdSalesPrice")}
+                    label={t("std_sales_price")}
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdSalesPrice", parseFloat(data.stdSalesPrice))}
                 />
 
                 <ERPInput
                     {...getFieldProps("stdPurchasePrice")}
-                    label={t("stdPurchasePrice")}
+                    label={t("std_purchase_price")}
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdPurchasePrice", parseFloat(data.stdPurchasePrice))}
                 />

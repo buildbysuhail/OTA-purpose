@@ -7,7 +7,7 @@ import GiftOnBilling from "./gift-on-billing";
 import QuantityLimit from "./quantity-limit";
 import QuantitySlabOffer from "./qty-slab-offer";
 
-const SchemeSettingsMaster = () => {
+const SchemeSettingsSpecial = () => {
   const { t } = useTranslation('inventory');
   const [activeTab, setActiveTab] = useState("specialPrice");
 
@@ -83,4 +83,4 @@ const SchemeSettingsMaster = () => {
   );
 };
 
-export default SchemeSettingsMaster;
+export default SchemeSettingsSpecial;

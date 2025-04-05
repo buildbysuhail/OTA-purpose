@@ -5,6 +5,7 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { FormField } from "../../../../../utilities/form-types";
 import POSFastMovingItems from "../common/fast-mooving";
+import ChangeBarcode from "../common/change-barcode";
 
 const ProductOthersIndia: React.FC<{
     formState: any;
@@ -93,9 +94,9 @@ const ProductOthersIndia: React.FC<{
                     isOpen={true}
                     closeModal={(reload: boolean) => closePopup()}
                     title={t("change_autobarcode")}
-                    content={<div>Hello</div>}
-                    width={780}
-                    height={570}
+                    content={<ChangeBarcode />}
+                    width={400}
+                    height={300}
                     disableOutsideClickClose={false}
                 />
             )}

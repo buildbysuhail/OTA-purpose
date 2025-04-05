@@ -142,7 +142,7 @@ export const FOCScheme: React.FC = () => {
 
                 <ERPInput
                     {...getFieldProps("stdSalesPrice")}
-                    label={t("stdSalesPrice")}
+                    label={t("std_sales_price")}
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdSalesPrice", parseFloat(data.stdSalesPrice))}
                 />
@@ -169,7 +169,7 @@ export const FOCScheme: React.FC = () => {
 
                 <ERPInput
                     {...getFieldProps("stdPurchasePrice")}
-                    label={t("stdPurchasePrice")}
+                    label={t("std_purchase_price")}
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdPurchasePrice", parseFloat(data.stdPurchasePrice))}
                 />

@@ -1,0 +1,363 @@
+import React, { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
+import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
+import { APIClient } from "../../../../helpers/api-client";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+
+const api = new APIClient();
+
+export const initialSchemeSettingsDiscount = {
+    data: {
+        id: 0,
+        sl: 0,
+        pCode: "",
+        product: "",
+        autoBarcode: "",
+        selected: false,
+        isActive: true,
+        isEditable: true,
+        isDeletable: true
+    },
+    validations: {
+        pCode: "",
+        product: ""
+    }
+};
+
+export interface SchemeSettingsDiscountData {
+    id: number;
+    sl: number;
+    pCode: string;
+    product: string;
+    autoBarcode: string;
+    selected: boolean;
+    isActive: boolean;
+    isEditable: boolean;
+    isDeletable: boolean;
+}
+
+export const SchemeSettingsDiscount: React.FC = () => {
+    const { t } = useTranslation('inventory');
+    const [leftGridData, setLeftGridData] = useState<SchemeSettingsDiscountData[]>([]);
+    const [rightGridData, setRightGridData] = useState<SchemeSettingsDiscountData[]>([]);
+    const [isDataLoading, setIsDataLoading] = useState(false);
+    const [productGroupValue, setProductGroupValue] = useState("ACETON");
+    const [schemeValue, setSchemeValue] = useState("jhulhg");
+    const [leftSearchValue, setLeftSearchValue] = useState("");
+    const [rightSearchValue, setRightSearchValue] = useState("");
+    const [selectAllLeft, setSelectAllLeft] = useState(false);
+    const [selectAllRight, setSelectAllRight] = useState(false);
+
+    const {
+        isEdit,
+        handleSubmit,
+        handleFieldChange,
+        handleClear: clearForm,
+        getFieldProps,
+        isLoading,
+        formState,
+    } = useFormManager<SchemeSettingsDiscountData>({
+        initialData: initialSchemeSettingsDiscount,
+        useApiClient: true,
+    });
+
+    const handleLoad = useCallback(async () => {
+        try {
+            setIsDataLoading(true);
+            // Simulate loading data from API
+            // const response = await api.get(Urls.scheme_settings_discount);
+            // if (response && response.data) {
+            //     setLeftGridData(response.data);
+            // }
+            setIsDataLoading(false);
+        } catch (error) {
+            console.error("Error loading data:", error);
+            setIsDataLoading(false);
+        }
+    }, []);
+
+    const handleAddToScheme = useCallback(() => {
+        // Move selected items from left grid to right grid
+        const selectedItems = leftGridData.filter(item => item.selected);
+        if (selectedItems.length === 0) return;
+
+        setRightGridData(prev => [...prev, ...selectedItems]);
+        setLeftGridData(prev => prev.filter(item => !item.selected));
+    }, [leftGridData]);
+
+    const handleRemoveFromScheme = useCallback(() => {
+        // Move selected items from right grid to left grid
+        const selectedItems = rightGridData.filter(item => item.selected);
+        if (selectedItems.length === 0) return;
+
+        setLeftGridData(prev => [...prev, ...selectedItems]);
+        setRightGridData(prev => prev.filter(item => !item.selected));
+    }, [rightGridData]);
+
+    const handleSave = useCallback(() => {
+        // Save logic would go here
+        // api.post(Urls.scheme_settings_discount, rightGridData);
+        console.log("Saving data:", rightGridData);
+    }, [rightGridData]);
+
+    const handleClear = useCallback(() => {
+        clearForm();
+        setRightGridData([]);
+        setSelectAllLeft(false);
+        setSelectAllRight(false);
+        // Reset all selections in left grid
+        setLeftGridData(prev => prev.map(item => ({ ...item, selected: false })));
+    }, [clearForm]);
+
+    const handleClose = useCallback(() => {
+        console.log("Close clicked");
+        // Implementation for close functionality
+    }, []);
+
+    const handleRowSelection = useCallback((gridType: 'left' | 'right', rowId: number, isSelected: boolean) => {
+        if (gridType === 'left') {
+            setLeftGridData(prev =>
+                prev.map(item => item.id === rowId ? { ...item, selected: isSelected } : item)
+            );
+
+            // Update selectAll state
+            const allSelected = leftGridData.every(item =>
+                (item.id === rowId && isSelected) || (item.id !== rowId && item.selected)
+            );
+            setSelectAllLeft(allSelected && leftGridData.length > 0);
+        } else {
+            setRightGridData(prev =>
+                prev.map(item => item.id === rowId ? { ...item, selected: isSelected } : item)
+            );
+
+            // Update selectAll state
+            const allSelected = rightGridData.every(item =>
+                (item.id === rowId && isSelected) || (item.id !== rowId && item.selected)
+            );
+            setSelectAllRight(allSelected && rightGridData.length > 0);
+        }
+    }, [leftGridData, rightGridData]);
+
+    const handleSelectAll = useCallback((gridType: 'left' | 'right', isSelected: boolean) => {
+        if (gridType === 'left') {
+            const newSelectionState = !selectAllLeft;
+            setSelectAllLeft(newSelectionState);
+            setLeftGridData(prev => prev.map(item => ({ ...item, selected: newSelectionState })));
+        } else {
+            const newSelectionState = !selectAllRight;
+            setSelectAllRight(newSelectionState);
+            setRightGridData(prev => prev.map(item => ({ ...item, selected: newSelectionState })));
+        }
+    }, [selectAllLeft, selectAllRight]);
+
+    // Render cell with checkbox for selection
+    const renderSelectionCell = (cellData: any, gridType: 'left' | 'right') => {
+        return (
+            <div className="flex justify-center">
+                <input
+                    type="checkbox"
+                    checked={cellData.data.selected}
+                    onChange={(e) => handleRowSelection(gridType, cellData.data.id, e.target.checked)}
+                />
+            </div>
+        );
+    };
+
+    return (
+        <div className="w-full modal-content flex flex-col gap-4 p-4">
+            {/* Top Section - Dropdowns */}
+            <div className="flex items-center gap-4">
+                <ERPDataCombobox
+                    {...getFieldProps("productGroup")}
+                    field={{
+                        id: "productGroup",
+                        // getListUrl: Urls.data_product_groups,
+                        valueKey: "id",
+                        labelKey: "name"
+                    }}
+                    label={t("product_group")}
+                    value={productGroupValue}
+                    onChangeData={(data: any) => setProductGroupValue(data.productGroup)}
+                />
+                <ERPDataCombobox
+                    {...getFieldProps("scheme")}
+                    field={{
+                        id: "scheme",
+                        // getListUrl: Urls.data_schemes,
+                        valueKey: "id",
+                        labelKey: "name"
+                    }}
+                    label={t("schemes")}
+                    value={schemeValue}
+                    onChangeData={(data: any) => setSchemeValue(data.scheme)}
+                />
+            </div>
+
+            {/* Main Grid Section */}
+            <div className="grid grid-cols-2 gap-4">
+                {/* Left Grid - Add to Scheme */}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-end justify-between gap-2">
+                        <div>
+                            <ERPButton
+                                title={t("add_to_scheme")}
+                                variant="primary"
+                                onClick={handleAddToScheme}
+                            />
+                        </div>
+                        <ERPInput
+                            {...getFieldProps("leftSearch")}
+                            className="w-[200px]"
+                            label={t("search")}
+                            value={leftSearchValue}
+                            onChangeData={(data: any) => setLeftSearchValue(data.leftSearch)}
+                        />
+                    </div>
+
+                    <div className="border">
+                        <DataGrid
+                            dataSource={leftGridData}
+                            showBorders={true}
+                            rowAlternationEnabled={true}
+                            className="w-full">
+                            <Paging defaultPageSize={10} />
+                            <Editing
+                                mode="cell"
+                                allowUpdating={false}
+                                allowDeleting={false}
+                                allowAdding={false}
+                            />
+                            <Column
+                                caption=""
+                                width={40}
+                                cellRender={(cellData) => renderSelectionCell(cellData, 'left')}
+                            />
+                            <Column
+                                dataField="sl"
+                                width={50}
+                                caption={t("si")}
+                            />
+                            <Column
+                                dataField="pCode"
+                                width={100}
+                                caption={t("p_code")}
+                            />
+                            <Column
+                                dataField="product"
+                                width={200}
+                                caption={t("product")}
+                            />
+                            <Column
+                                dataField="autoBarcode"
+                                width={100}
+                                caption={t("auto_barcode")}
+                            />
+                        </DataGrid>
+                    </div>
+                </div>
+
+                {/* Right Grid - Remove from Scheme */}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-end justify-between gap-2">
+                        <div>
+                            <ERPButton
+                                title={t("remove_from_scheme")}
+                                onClick={handleRemoveFromScheme}
+                            />
+                        </div>
+                        <ERPInput
+                            {...getFieldProps("rightSearch")}
+                            className="w-[200px]"
+                            label={t("search")}
+                            value={rightSearchValue}
+                            onChangeData={(data: any) => setRightSearchValue(data.rightSearch)}
+                        />
+                    </div>
+
+                    <div className="border">
+                        <DataGrid
+                            dataSource={rightGridData}
+                            showBorders={true}
+                            rowAlternationEnabled={true}
+                            className="w-full">
+                            <Paging defaultPageSize={10} />
+                            <Editing
+                                mode="cell"
+                                allowUpdating={false}
+                                allowDeleting={false}
+                                allowAdding={false}
+                            />
+                            <Column
+                                caption=""
+                                width={40}
+                                cellRender={(cellData) => renderSelectionCell(cellData, 'right')}
+                            />
+                            <Column
+                                dataField="sl"
+                                width={50}
+                                caption={t("sl")}
+                            />
+                            <Column
+                                dataField="pCode"
+                                width={100}
+                                caption={t("p_code")}
+                            />
+                            <Column
+                                dataField="product"
+                                width={200}
+                                caption={t("product")}
+                            />
+                            <Column
+                                dataField="autoBarcode"
+                                width={100}
+                                caption={t("auto_barcode")}
+                            />
+                        </DataGrid>
+                    </div>
+                </div>
+            </div>
+
+            {/* Select All Checkboxes */}
+            <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                    <ERPCheckbox
+                        label={t("select_all")}
+                        checked={selectAllLeft}
+                        onChangeData={() => handleSelectAll('left', !selectAllLeft)} id={""} />
+                </div>
+                <div className="flex items-center gap-2">
+                    <ERPCheckbox
+                        label={t("select_all")}
+                        checked={selectAllRight}
+                        onChangeData={() => handleSelectAll('right', !selectAllRight)} id={""} />
+                </div>
+            </div>
+
+            {/* Bottom Buttons */}
+            <div className="flex justify-end gap-4 mt-4">
+                <ERPButton
+                    title={t("save")}
+                    variant="primary"
+                    onClick={handleSave}
+                    disabled={isLoading}
+                />
+                <ERPButton
+                    title={t("clear")}
+                    variant="secondary"
+                    onClick={handleClear}
+                />
+                <ERPButton
+                    title={t("close")}
+                    variant="secondary"
+                    onClick={handleClose}
+                />
+            </div>
+        </div>
+    );
+};
+
+export default SchemeSettingsDiscount;

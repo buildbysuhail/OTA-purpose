@@ -3,6 +3,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import { useTranslation } from "react-i18next";
 
 interface ButtonData {
   id: number
@@ -23,7 +24,6 @@ interface FormData {
 }
 
 const POSFastMovingItems: React.FC = () => {
-  // State for the 12 buttons on the left
   const [buttons, setButtons] = useState<ButtonData[]>(
     Array(12)
       .fill(null)
@@ -120,17 +120,11 @@ const POSFastMovingItems: React.FC = () => {
       console.log("Data to send:", apiData);
     }
   };
-
+  const { t } = useTranslation('inventory');
   return (
     <div>
       {/* Content Area */}
-      <div
-        style={{
-          display: "flex",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-        }}
-      >
+      <div className="flex p-5 bg-gray-100 rounded-md">
         {/* Left side - 12 buttons in 3x4 grid */}
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 w-[350px]">
           {buttons.map((button) => (
@@ -146,7 +140,7 @@ const POSFastMovingItems: React.FC = () => {
         <div className="flex flex-col gap-2 rounded-md p-4">
           <div className="flex items-end gap-2">
             <ERPDataCombobox
-              label="Group"
+              label={t("group")}
               id="keypadGroup"
               className="min-w-[250px]"
               value={formData.keypadGroup}
@@ -154,13 +148,13 @@ const POSFastMovingItems: React.FC = () => {
               options={[{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "4", label: "4" }, { value: "5", label: "5" }]}
             />
             <span className="font-medium text-[14px] text-[#333]">
-              Button : {selectedButton}
+              {t("button:")} {selectedButton}
             </span>
           </div>
 
           <div className="flex items-end gap-2">
             <ERPInput
-              label="Barcode"
+              label={t("barcode")}
               className="min-w-[250px]"
               type="text"
               name="barcode"
@@ -170,29 +164,16 @@ const POSFastMovingItems: React.FC = () => {
             />
             <ERPButton
               onClick={handleShow}
-              title="Show"
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#f0f0f0";
-                e.currentTarget.style.borderColor = "#ccc";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#f8f9fa";
-                e.currentTarget.style.borderColor = "#ddd";
-              }}
+              title={t("show")}
+              variant="secondary"
             />
           </div>
 
           <ERPCheckbox
             name="autoBarcode"
-            label="Auto Barcode"
+            label={t("auto_barcode")}
             checked={formData.autoBarcode}
             onChange={handleInputChange}
-            style={{
-              width: "18px",
-              height: "18px",
-              margin: 0,
-              cursor: "pointer",
-            }}
             id={""}
           />
           <ERPInput
@@ -201,7 +182,7 @@ const POSFastMovingItems: React.FC = () => {
             className="max-w-[250px]"
             value={formData.name}
             onChange={handleInputChange}
-            label="Name"
+            label={t("name")}
             id={""}
           />
 
@@ -211,7 +192,7 @@ const POSFastMovingItems: React.FC = () => {
             className="max-w-[250px]"
             value={formData.foreignLanguage}
             onChange={handleInputChange}
-            label="Foreign Language"
+            label={t("foreign_language")}
             id={""}
           />
 
@@ -222,20 +203,13 @@ const POSFastMovingItems: React.FC = () => {
               className="min-w-[250px]"
               value={formData.price}
               onChange={handleInputChange}
-              label="Price"
+              label={t("price")}
               id={""}
             />
             <ERPButton
-              title="Reset"
+              title={t("reset")}
+              variant="secondary"
               onClick={handleReset}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#f0f0f0";
-                e.currentTarget.style.borderColor = "#ccc";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#f8f9fa";
-                e.currentTarget.style.borderColor = "#ddd";
-              }}
             />
           </div>
 
@@ -246,18 +220,13 @@ const POSFastMovingItems: React.FC = () => {
               className="min-w-[250px]"
               value={formData.productShortName}
               onChange={handleInputChange}
-              label="Short Name"
+              label={t("short_name")}
               id={""}
             />
             <ERPButton
-              title="Set"
+              title={t("set")}
               onClick={handleSet}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#006bc0";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#0078d4";
-              }}
+              variant="primary"
             />
           </div>
         </div>

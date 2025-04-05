@@ -137,7 +137,7 @@ const initialProductData: productDto = {
       salesPrice: 0,
       purchasePrice: 0,
       discountPerc: 0,
-      unitID: 0,
+      unitID: 1,
       profitAmt: 0,
       mrp: 0,
       msp: 0

@@ -199,7 +199,18 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   scrollButtons="auto">
                   <Tab className="dark:text-dark-text" label={t("basic_info")} value="basicInfo" />
                   <Tab className="dark:text-dark-text" label={t("stock_ledger")} value="stockLedger" />
-                  <Tab className="dark:text-dark-text" label={t("transaction")} value="transaction" />
+                  <Tab className="dark:text-dark-text" label={t("purchase")} value="purchase" />
+                  <Tab className="dark:text-dark-text" label={t("sales")} value="sales" />
+                  <Tab className="dark:text-dark-text" label={t("purchase_return")} value="purchase_return" />
+                  <Tab className="dark:text-dark-text" label={t("purchase_order")} value="purchase_order" />
+                  <Tab className="dark:text-dark-text" label={t("sales_return")} value="sales_return" />
+                  <Tab className="dark:text-dark-text" label={t("sales_order")} value="sales_order" />
+                  <Tab className="dark:text-dark-text" label={t("damage")} value="damage" />
+                  <Tab className="dark:text-dark-text" label={t("excess")} value="excess" />
+                  <Tab className="dark:text-dark-text" label={t("shortage")} value="shortage" />
+                  <Tab className="dark:text-dark-text" label={t("op_stock")} value="op_stock" />
+                  <Tab className="dark:text-dark-text" label={t("purchase_estimate")} value="purchase_estimate" />
+                  <Tab className="dark:text-dark-text" label={t("others")} value="others" />
                 </Tabs>
                 <div className="pt-2">
                   {
@@ -219,10 +230,98 @@ const applicationSettings = useSelector((state: RootState) => state.ApplicationS
                   }
 
                   {
-                    activeTab === "transaction" && (
+                    activeTab === "purchase" && (
                       <ProductSummaryReportByTransaction
                       filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
                       voucherType={"PI"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "sales" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"SI"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "purchase_return" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"PR"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "purchase_order" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"PO"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "sales_return" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"SR"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "sales_order" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"SO"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "damage" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"DMG"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "excess" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"EX"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "shortage" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"SH"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "op_stock" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"OS"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "purchase_estimate" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"PE"}
+                      />
+                    )
+                  }
+                    {
+                    activeTab === "others" && (
+                      <ProductSummaryReportByTransaction
+                      filter={filter} setFilter={setFilter} onReloadChange={()=> setReload(false)} reloadBase={reload}
+                      voucherType={"OT"}
                       />
                     )
                   }

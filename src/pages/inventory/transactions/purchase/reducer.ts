@@ -334,25 +334,26 @@ const InvTransactionSlice = createSlice({
     },
 
     // Handle changes for the "row" property in the state
-    formStateMaster3HandleFieldChange: (
-      state,
-      action: PayloadAction<{
-        fields: { [fieldId in keyof TransactionMaster3]?: any };
-      }>
-    ) => {
-      const { fields } = action.payload;
+    // formStateMaster3HandleFieldChange: (
+    //   state,
+    //   action: PayloadAction<{
+    //     fields: { [fieldId in keyof TransactionMaster3]?: any };
+    //   }>
+    // ) => {
+    //   const { fields } = action.payload;
 
-      (Object.keys(fields) as (keyof TransactionMaster3)[]).forEach((key) => {
-        const fieldValue = fields[key];
-    const isDateField =
-              (state.transaction.master3[
-                key as keyof TransactionMaster3
-              ] as typeof fieldValue) instanceof Date;
-        // Explicit assertion to satisfy TypeScript
-        (state.transaction.master3[key] as TransactionMaster3[typeof key]) =
-        isDateField ? new Date(fieldValue).toISOString() :fieldValue as TransactionMaster3[typeof key];
-      });
-    },
+    //   (Object.keys(fields) as (keyof TransactionMaster3)[]).forEach((key) => {
+    //     const fieldValue = fields[key];
+    // const isDateField =
+    //           // (state.transaction.master.other[
+    //           (state.transaction.master3[
+    //             key as keyof TransactionMaster3
+    //           ] as typeof fieldValue) instanceof Date;
+    //     // Explicit assertion to satisfy TypeScript
+    //     (state.transaction.master3[key] as TransactionMaster3[typeof key]) =
+    //     isDateField ? new Date(fieldValue).toISOString() :fieldValue as TransactionMaster3[typeof key];
+    //   });
+    // },
 
    
     // Clear the form state to initial values
@@ -486,7 +487,7 @@ export const {
   formStateTransactionAttachmentsRowUpdate,
   formStateTransactionAttachmentsRowRemove,
   formStateMasterHandleFieldChange,
-  formStateMaster3HandleFieldChange,
+  formStateTransactionMaster3HandleFieldChange
 } = InvTransactionSlice.actions;
 interface FormElementsState {
   formElements: {

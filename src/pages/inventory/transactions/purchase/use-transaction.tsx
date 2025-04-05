@@ -21,7 +21,7 @@ import { customJsonParse, modelToBase64Unicode } from "../../../../utilities/jso
 import { isNullOrUndefinedOrZero, isNullOrUndefinedOrEmpty, isEnterKey } from "../../../../utilities/Utils";
 import { BillwiseData } from "../../../accounts/transactions/acc-transaction-types";
 import { ApplicationSettingsType } from "../../../settings/system/application-settings-types/application-settings-types";
-import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, formStateMaster3HandleFieldChange, loadTempRows } from "./reducer";
+import { formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, updateFormElement, formStateTransactionUpdate, clearState, formStateTransactionDetailsRowRemove, formStateTransactionDetailsRowAdd, formStateMasterHandleFieldChange, loadTempRows } from "./reducer";
 import { deleteAccVoucher, unlockTransactionMaster } from "./thunk";
 import { updateTransactionEditMode } from "./transaction-functions";
 import { UserConfig, TransactionFormState, transactionInitialData, TransactionData, Attachments, TransactionMaster, initialTransactionDetailData, TransactionDetail, TransactionFormStateInitialData } from "./transaction-types";

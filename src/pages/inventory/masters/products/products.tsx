@@ -237,7 +237,7 @@ const Products = () => {
         width: 100
       },
       {
-        dataField: "productGroupId",
+        dataField: "productGroupID",
         caption: t("product_group_id"),
         dataType: "number",
         allowSorting: true,

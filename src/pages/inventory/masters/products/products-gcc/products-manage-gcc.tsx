@@ -97,14 +97,14 @@ export const ProductManageGcc: React.FC<{
 
               <div className="flex items-center gap-2">
                 <ERPDataCombobox
-                  {...getFieldProps("product.productGroupId")}
-                  id="productGroupId"
+                  {...getFieldProps("product.productGroupID")}
+                  id="productGroupID"
                   field={{
-                    id: "productGroupId",
+                    id: "productGroupID",
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("product.productGroupId", data.productGroupId)}
+                  onChangeData={(data: any) => handleFieldChange("product.productGroupID", data.productGroupID)}
                   label={t("product_group")}
                   className="w-full"
                   required={true}

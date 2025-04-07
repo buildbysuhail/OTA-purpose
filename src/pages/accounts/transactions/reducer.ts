@@ -69,7 +69,7 @@ const accTransactionSlice = createSlice({
       state.row.bankDate = moment().local().toISOString();
       state.row.narration = "";
       state.row.bankName = "";
-      state.row.projectId = 0;
+      state.row.projectID = 0;
       state.row.projectName = "";
       state.row.costCentreName = "";
       state.row.amount = 0.0;
@@ -298,7 +298,7 @@ const accTransactionSlice = createSlice({
         drCr: state.row.drCr,
         debit: state.row.drCr == "Dr" ? state.row.amount : 0,
         credit: state.row.drCr == "Cr" ? state.row.amount : 0,
-        ledgerCode: state.ledgerData.ledgerCode,
+        // ledgerCode: state.ledgerData.ledgerCode,
       };
       if (state.isRowEdit === true) {
         const index = state.transaction.details.findIndex(

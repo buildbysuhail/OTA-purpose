@@ -497,7 +497,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         dispatch(
           accFormStateHandleFieldChange({
             fields: {
-              ledgerBalance,
+              masterBalance: ledgerBalance,
               groupName: ledgerData?.accGroupName,
               ledgerData: ledgerData,
               ledgerDataLoading: false,
@@ -506,7 +506,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           })
         );
       }
-     
+    
     };
     loadLedgerData();
   }, [formState.masterAccountID]);
@@ -1520,7 +1520,7 @@ debugger;
         visible: false,
       },
       {
-        dataField: "projects",
+        dataField: "projectName",
         caption: t("projects"),
         visible: false,
       },

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -279,8 +279,8 @@ const BankReconciliation = () => {
       console.error("Error in handleSetPending:", error);
     }
   };
-
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] = useMemo(() => [
+  
     {
       dataField: "accTransactionDetailID",
       caption: t("acc_transaction_detail_id"),
@@ -467,7 +467,7 @@ const BankReconciliation = () => {
           ) : null
       ),
     },
-  ];
+  ], [t, getFormattedValue]);
   return (
     <>
       <div className="relative bg-white">

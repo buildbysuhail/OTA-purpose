@@ -1,6 +1,6 @@
 enum localData {
-ledgers = "2SSDKL34",
-costCenters = "2SSASSD134"
+ledgers = "L0FjY291bnRzL0RhdGEvQWNjTGVkZ2Vycy8=",
+costCenters = "L0FjY291bnRzL0RhdGEvQ29zdENlbnRyZXMv"
 }
 
 export default localData;

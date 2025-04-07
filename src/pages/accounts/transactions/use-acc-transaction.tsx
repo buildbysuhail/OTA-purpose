@@ -1095,13 +1095,14 @@ export const useAccTransaction = (
         element.invoiceDate == "" || element.invoiceDate == null
           ? formState.transaction.master.transactionDate
           : element.invoiceDate;
-      element.projectId =
-        (element.projectId ?? 0).toString() == "" ? 0 : element.projectId;
+      element.projectID =
+        (element.projectID ?? 0).toString() == "" ? 0 : element.projectID;
       updatedDetails.push(element);
     }
     return updatedDetails;
   };
   const attachMaster = (): AccTransactionMaster => {
+    debugger
     const { firstDebitLedgerID, firstCreditLedgerID } =
       getFirstDebitCreditLedgerIDs(formState.transaction);
     const master = {
@@ -1383,6 +1384,7 @@ export const useAccTransaction = (
     billwiseDetails?: string,
     totalAmount?: number
   ) => {
+    debugger;
     if (applicationSettings.accountsSettings?.billwiseMandatory) {
       if (!isNullOrUndefinedOrZero(formState.row.ledgerID)) {
         let _drCr = getDrCr(formState.transaction.master.voucherType);

@@ -246,7 +246,7 @@ export interface AccTransactionRow {
   branchId: number;
   costCentreID: number | null;
   costCentreName: string;
-  projectId: number | null;
+  projectID: number | null;
   projectName: string;
 
   bankName: string;
@@ -338,7 +338,7 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   billwiseData: [],
   branchId: 0,
   costCentreID: null,
-  projectId: null,
+  projectID: null,
 
   bankName: "",
   nameOnCheque: "",

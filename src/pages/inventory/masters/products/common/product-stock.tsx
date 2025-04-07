@@ -32,7 +32,7 @@ const StockCommon: React.FC<{
         width: 100,
       },
       {
-        dataField: "date",
+        dataField: "transactionDate",
         caption: t("date"),
         dataType: "string",
         allowSorting: true,
@@ -41,7 +41,7 @@ const StockCommon: React.FC<{
         width: 100,
       },
       {
-        dataField: "particulars",
+        dataField: "partyName",
         caption: t("particulars"),
         dataType: "string",
         allowSorting: true,
@@ -59,7 +59,7 @@ const StockCommon: React.FC<{
         width: 100,
       },
       {
-        dataField: "form",
+        dataField: "voucherForm",
         caption: t("form"),
         dataType: "string",
         allowSorting: true,
@@ -68,7 +68,7 @@ const StockCommon: React.FC<{
         width: 100,
       },
       {
-        dataField: "voucherNo",
+        dataField: "voucherNumber",
         caption: t("voucher_no"),
         dataType: "number",
         allowSorting: true,
@@ -113,7 +113,7 @@ const StockCommon: React.FC<{
         width: 100,
       },
       {
-        dataField: "prefix",
+        dataField: "voucherPrefix",
         caption: t("prefix"),
         dataType: "string",
         allowSorting: true,

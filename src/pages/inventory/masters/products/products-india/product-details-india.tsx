@@ -282,9 +282,9 @@ const ProductDetailsIndia: React.FC<{
           />
 
           <ERPCheckbox
-            {...getFieldProps("product.active")}
+            {...getFieldProps("product.isActive")}
             label={t("is_active_batch")}
-            onChange={(e) => handleFieldChange('product.active', e.target.checked)}
+            onChange={(e) => handleFieldChange('product.isActive', e.target.checked)}
           // onChangeData={(data: productDto) =>
           //   handleFieldChange("product.active", data.active)
           // }

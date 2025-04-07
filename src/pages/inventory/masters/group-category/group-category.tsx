@@ -158,7 +158,7 @@ const GroupCategory = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("group_category")}
-                  dataUrl={Urls.group_category}
+                  dataUrl={Urls.group_category__}
                   gridId="grd_group_category"
                   popupAction={toggleGroupCategory}
                   gridAddButtonType="popup"

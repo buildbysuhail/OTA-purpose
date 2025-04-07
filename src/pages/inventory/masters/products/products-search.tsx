@@ -8,7 +8,7 @@ const SearchGrid = () => {
     const { t } = useTranslation('inventory');
     const columns: DevGridColumn[] = useMemo(() => [
         {
-            dataField: "id",
+            dataField: "productID",
             caption: t("id"),
             dataType: "string",
             allowSorting: true,
@@ -242,7 +242,7 @@ const SearchGrid = () => {
             width: 100,
         },
         {
-            dataField: "HSNCode",
+            dataField: "hsnCode",
             caption: t("hsn_code"),
             dataType: "string",
             allowSorting: true,

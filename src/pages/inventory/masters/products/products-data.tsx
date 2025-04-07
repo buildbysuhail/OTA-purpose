@@ -141,6 +141,18 @@ const initialProductData: productDto = {
       profitAmt: 0,
       mrp: 0,
       msp: 0
+    },
+    {
+      productMultiPriceID: 0,
+      productBatchID: 0,
+      priceCategoryID: 0,
+      salesPrice: 0,
+      purchasePrice: 0,
+      discountPerc: 0,
+      unitID: 2,
+      profitAmt: 0,
+      mrp: 0,
+      msp: 0
     }
   ],
   units: [

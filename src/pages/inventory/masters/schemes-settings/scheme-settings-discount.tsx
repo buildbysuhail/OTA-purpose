@@ -7,6 +7,7 @@ import { useFormManager } from "../../../../utilities/hooks/useFormManagerOption
 import { APIClient } from "../../../../helpers/api-client";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
 
 const api = new APIClient();
 
@@ -150,12 +151,12 @@ export const SchemeSettingsDiscount: React.FC = () => {
     return (
         <div className="w-full modal-content flex flex-col gap-4 p-4">
             {/* Top Section - Dropdowns */}
-            <div className="flex items-center gap-4">
+            <div className="grid grid-cols-6 gap-4">
                 <ERPDataCombobox
                     {...getFieldProps("productGroup")}
                     field={{
                         id: "productGroup",
-                        // getListUrl: Urls.data_product_groups,
+                        getListUrl: Urls.data_productgroup,
                         valueKey: "id",
                         labelKey: "name"
                     }}
@@ -196,6 +197,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
+                            heightToAdjustOnWindows={450}
                             columns={[
                                 {
                                     caption: "",
@@ -235,6 +237,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
                             ShowGridPreferenceChooser={false}
                             showPrintButton={false}
                             className="w-full"
+                            heightToAdjustOnWindows={450}
                             columns={[
                                 {
                                     caption: "",

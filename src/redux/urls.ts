@@ -322,9 +322,9 @@ const Urls = {
   item_wise_purchase_estimate_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseEstimateSummary/",
   item_wise_purchase_quotation_summary: "/Inventory/RptItemwiseReport/ItemwisePurchaseQuotationSummary/",
   product_summary_transaction: "/Inventory/RptInventoryReport/ProductSummaryReportByTransaction/",
-  product_summary_basic_info:"/Inventory/RptInventoryReport/ProductSummaryReportBasicInfo/",
-  product_summary_basic_info_batch_details:"/Inventory/RptInventoryReport/ProductSummaryReportBasicInfoBatchDetails/",
-  product_summary_stock_ledger:"/Inventory/RptInventoryReport/ProductSummaryReportStockLedger/",
+  product_summary_basic_info: "/Inventory/RptInventoryReport/ProductSummaryReportBasicInfo/",
+  product_summary_basic_info_batch_details: "/Inventory/RptInventoryReport/ProductSummaryReportBasicInfoBatchDetails/",
+  product_summary_stock_ledger: "/Inventory/RptInventoryReport/ProductSummaryReportStockLedger/",
   opening_stock: "/Inventory/RptStockReport/OpeningStockReport/",
   stock_transfer: "/Inventory/RptStockReport/StockTransferReport/",
   damage_stock: "/Inventory/RptStockReport/DamageStockReport/",
@@ -375,11 +375,12 @@ const Urls = {
   taxCategory: "/Inventory/TaxCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
-  daily_statement_sales:"/Inventory/RptInventoryDailyStatementReport/DailyStatementReportSales",
-  daily_statement_purchase:"/Inventory/RptInventoryDailyStatementReport/DailyStatementReportPurchase",
+  daily_statement_sales: "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportSales",
+  daily_statement_purchase: "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportPurchase",
   section: "/Inventory/Section/",
-  group_category: "/Inventory/GroupCategory/",
+  group_category__: "/Inventory/Product/SelectProductGroupDetails/",
   payment_receipt_billwise_advice_for_print: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
+  data_taxCategory:"/Inventory/Data/TaxCategory/",
   //Transaction
   // common
 

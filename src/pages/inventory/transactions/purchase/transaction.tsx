@@ -1546,6 +1546,14 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
+  const taxData = [
+    { label: "SGST", value: 0 },
+    { label: "CGST", value: 0 },
+    { label: "IGST", value: 0 },
+    { label: "CESS", value: 0 },
+    { label: "AddCESS", value: 0 },
+  ]
+
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
   //     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -1779,6 +1787,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
                          });
                        }}
                       />
+                      <div>
+                        <span> more </span>
+                      </div>
                      
                     </div>
 
@@ -2012,7 +2023,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               }}
               onChange={(e) =>
                 dispatch(
-                  formStateHandleFieldChange({
+                  formStateMasterHandleFieldChange({
                     fields: { remarks: e.target?.value },
                   })
                 )
@@ -2022,15 +2033,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 formState.formElements.pnlMasters?.disabled
               }
             />
+
             <ERPCheckbox
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="isLocked"
-              label={t(formState.formElements.lb.label)}
+              label={t(formState.formElements.isLocked.label)}
               checked={formState.transaction.master.isLocked}
               onChange={(e) =>
                 dispatch(
-                  formStateHandleFieldChange({
-                    fields: { lb: e.target.checked },
+                  formStateMasterHandleFieldChange({
+                    fields: { isLocked: e.target.checked },
                   })
                 )
               }
@@ -2040,24 +2052,78 @@ const TransactionForm: React.FC<TransactionProps> = ({
               }
               className="text-sm xl:text-base"
             />
-            {/* <ERPCheckbox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="autoCalculation"
-                  label={t(formState.formElements.lb.label)}
-                  checked={formState.transaction.master.autoCalculation}
-                  onChange={(e) =>
-                    dispatch(
-                      formStateHandleFieldChange({
-                        fields: { lb: e.target.checked },
-                      })
-                    )
-                  }
-                  disabled={
-                    formState.formElements.isLocked?.disabled ||
-                    formState.formElements.pnlMasters?.disabled
-                  }
-                  className="text-sm xl:text-base"
-                /> */}
+            <ERPCheckbox
+              localInputBox={formState?.userConfig?.inputBoxStyle}
+              id="autoCalculation"
+              label={t(formState.formElements.autoCalculation.label)}
+              checked={formState.autoCalculation}
+              onChange={(e) =>
+                dispatch(
+                  formStateHandleFieldChange({
+                    fields: { autoCalculation: e.target.checked },
+                  })
+                )
+              }
+              disabled={
+                formState.formElements.autoCalculation?.disabled ||
+                formState.formElements.pnlMasters?.disabled
+              }
+              className="text-sm xl:text-base"
+            />
+
+          <div className="xl:w-[170px] lg:w-[250px]">
+                {/* {formState.formElements.cashPaid.visible && ( */}
+                  <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="hasCashPaid"
+                    className="text-left"
+                    label={t(formState.formElements.hasCashPaid.label)}
+                    checked={formState.transaction.master.hasCashPaid}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: { hasCashPaid: e.target.checked },
+                        })
+                      );
+                      if (e.target.checked) {
+                        focusDiscount();
+                      } else {
+                        focusAmount();
+                      }
+                    }}
+                    disabled={
+                      formState.formElements.hasCashPaid?.disabled ||
+                      formState.formElements.pnlMasters?.disabled
+                    }
+                  />
+                {/* )} */}
+
+                {/* {formState.formElements.cashPaid.visible && ( */}
+                  <ERPInput
+                    // ref={ref}
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="cashPaid"
+                    type="number"
+                    min={0}
+                    // className="!m-0"
+                    noLabel
+                    value={formState.transaction.master.cashPaid}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: { cashPaid: e.target?.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formState.transaction.master.hasCashPaid != true ||
+                      formState.formElements.cashPaid?.disabled ||
+                      formState.formElements.pnlMasters?.disabled
+                    }
+                  />
+                {/* )} */}
+              </div>
+
 
             <ERPDataCombobox
               localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -2131,55 +2197,67 @@ const TransactionForm: React.FC<TransactionProps> = ({
               localInputBox={formState?.userConfig?.inputBoxStyle}
               enableClearOption={false}
               // ref={ref}
-              id="costCentreID"
+              id="supplyType"
               className="min-w-[180px]"
-              label={t(formState.formElements.costCentreID.label)}
-              // data={formState.transaction.master}
-              onSelectItem={(e) => {
-                dispatch(
-                  formStateMasterHandleFieldChange({
-                    fields: {
-                      fromWarehouseID: e.value,
-                    },
-                  })
+              label={t(formState.formElements.supplyType.label)}
+              data={formState.transaction.master}
+              // }}
+              onChangeData={(data) => {
+                handleFieldChange(
+                  "supplyType",
+                  data.supplyType
                 );
-                handleFieldKeyDown("costCentreID", "Enter");
               }}
-              value={formState.transaction.master.costCentreID}
+              options={[  
+                { value: 0, label: "Regular" },
+                { value: 1, label: "Composite" },
+                { value: 2, label: "Unregistered" },
+                { value: 3, label: "Unregistered + RCM" },
+                { value: 4, label: "Foreign non-Resident Taxpayer" },
+                { value: 5, label: "Input Service distributor" },
+                { value: 6, label: "Tax Deductor" },
+                { value: 7, label: "E-commerce Operator" },
+                { value: 8, label: "Government Departments" },
+                { value: 9, label: "SEZ supplies with payment" },
+                { value: 10, label: "SEZ supplies without payment" },
+                { value: 11, label: "Deemed Exp" },
+                { value: 12, label: "Intra-State supplies attracting IGST" },
+              ]}
+              value={formState.transaction.master.supplyType}
               field={{
-                id: "costCentreID",
-                valueKey: "id",
-                labelKey: "name",
-                // getListUrl: Urls.data_costcentres,
+                id: "supplyType",
+                valueKey: "label",
+                labelKey: "label",
+                // getListUrl: Urls.data_CustSupp,
               }}
               disabled={
-                formState.formElements.costCentreID.disabled ||
+                formState.formElements.supplyType.disabled ||
                 formState.formElements.pnlMasters?.disabled
               }
-              options={[
-                { value: "Dr", label: t("Dr") },
-                { value: "Cr", label: t("Cr") },
-              ]}
               disableEnterNavigation
               onKeyDown={(e: any) => {
-                handleKeyDown && handleKeyDown(e, "costCentreID");
+                handleKeyDown && handleKeyDown(e, "supplyType");
               }}
             />
-            {/* <ERPDataCombobox
-                                        {...getFieldProps("drCr")}
-                                        field={{
-                                          id: "drCr",
-                                          valueKey: "value",
-                                          labelKey: "label",
-                                        }}
-                                        onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
-                                        label={t("drcr")}
-                                        enableClearOption={false}
-                                        options={[
-                                          { value: "Dr", label: t("Dr") },
-                                          { value: "Cr", label: t("Cr") },
-                                        ]}
-                                      /> */}
+            <ERPLabel 
+            id="vatAmount"
+            localInputBox={formState?.userConfig?.inputBoxStyle}
+            value={formState.transaction.master.vatAmount}
+            boxed={true}
+            showDropdown={true}
+            dropdownData={taxData}
+            />
+
+          {/* <ERPLabel
+          id="net_amount"
+          label="Net Amount"
+          value="0.00"
+          boxed={true}
+          showDropdown={true}
+          dropdownData={taxData}
+          /> */}
+          
+            
             <ERPInput
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="adjustmentAmount"
@@ -2205,13 +2283,38 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 formState.formElements.pnlMasters?.disabled
               }
             />
+        
+            <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
+                    id="hasroundOff"
+                    className="text-left"
+                    label={t(formState.formElements.roundOff.label)}
+                    checked={formState.transaction.master.hasroundOff}
+                    onChange={(e) => {
+                      dispatch(
+                        formStateMasterHandleFieldChange({
+                          fields: { hasroundOff: e.target.checked },
+                        })
+                      );
+                      if (e.target.checked) {
+                        focusDiscount();  
+                      } else {
+                        focusAmount();
+                      }
+                    }}
+                    disabled={
+                      formState.formElements.hasroundOff?.disabled ||
+                      formState.formElements.pnlMasters?.disabled
+                    }
+                  />
             <ERPInput
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="roundAmount"
               className=""
               type="number"
               //  required={true}
-              label={t(formState.formElements.roundOff.label)}
+              noLabel
+              // label={t(formState.formElements.roundOff.label)}
               value={formState.transaction.master.roundAmount}
               //  ref={ref}
               disableEnterNavigation={true}
@@ -2225,7 +2328,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   })
                 )
               }
+              // disabled={
+              //   formState.formElements.roundAmount?.disabled ||
+              //   formState.formElements.pnlMasters?.disabled
+              // }
               disabled={
+                formState.transaction.master.hasroundOff != true ||
                 formState.formElements.roundAmount?.disabled ||
                 formState.formElements.pnlMasters?.disabled
               }
@@ -2280,6 +2388,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                 formState.formElements.pnlMasters?.disabled
               }
             />
+            /////////
             <ERPInput
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="netAmount"

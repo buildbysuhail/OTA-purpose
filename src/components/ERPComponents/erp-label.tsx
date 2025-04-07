@@ -1,10 +1,21 @@
 "use client"
 
 import React, { forwardRef, memo, useState, useEffect, cloneElement } from "react"
-import { TextField, InputAdornment, type TextFieldProps, type Theme, type SxProps, Typography } from "@mui/material"
+import {
+  TextField,
+  InputAdornment,
+  type TextFieldProps,
+  type Theme,
+  type SxProps,
+  Typography,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material"
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
 import type { RootState } from "../../redux/store"
 import type { inputBox } from "../../redux/slices/app/types"
+import { MoreVertical, Ellipsis } from "lucide-react"
 
 interface ERPLabelProps {
   id: string
@@ -28,6 +39,8 @@ interface ERPLabelProps {
   textAlign?: "left" | "right" | "center"
   info?: string
   type?: string // For number formatting
+  dropdownData?: Array<{ label: string; value: any }>
+  showDropdown?: boolean
 }
 
 const ERPLabel = forwardRef<HTMLDivElement, ERPLabelProps>(
@@ -73,6 +86,17 @@ const ERPLabel = forwardRef<HTMLDivElement, ERPLabelProps>(
     const [isHovered, setIsHovered] = useState(false)
     const handleMouseEnter = () => setIsHovered(true)
     const handleMouseLeave = () => setIsHovered(false)
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+      setAnchorEl(null)
+    }
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -376,7 +400,53 @@ const ERPLabel = forwardRef<HTMLDivElement, ERPLabelProps>(
         InputProps: {
           readOnly: true,
           startAdornment: prefix ? <InputAdornment position="start">{prefix}</InputAdornment> : undefined,
-          endAdornment: suffix ? <InputAdornment position="end">{suffix}</InputAdornment> : undefined,
+          endAdornment: (
+            <>
+              {props.showDropdown && props.dropdownData && props.dropdownData.length > 0 && (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="more"
+                    id={`dropdown-button-mui-${id}`}
+                    aria-controls={open ? "dropdown-menu-mui" : undefined}
+                    aria-expanded={open ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    size="small"
+                    style={{ padding: "2px" }}
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </IconButton>
+                  <Menu
+                    id={`dropdown-menu-mui-${id}`}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": `dropdown-button-mui-${id}`,
+                    }}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    {props.dropdownData?.map((item, index) => (
+                      <MenuItem key={index} onClick={handleClose} dense>
+                        <div className="flex justify-between w-full">
+                          <span>{item.label}</span>
+                          <span className="ml-4">{item.value}</span>
+                        </div>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </InputAdornment>
+              )}
+              {suffix && <InputAdornment position="end">{suffix}</InputAdornment>}
+            </>
+          ),
         },
         fullWidth: true,
         variant: _variant,
@@ -516,13 +586,56 @@ const ERPLabel = forwardRef<HTMLDivElement, ERPLabelProps>(
                 display: "flex",
                 alignItems: "center",
                 border: "1px solid",
+                position: "relative",
                 ...(!prefix &&
                   !suffix && {
                     borderRadius: `${inputBoxState?.borderRadius ?? 5}px`,
                   }),
               }}
             >
-              {formattedValue}
+              <span>{formattedValue}</span>
+              {props.showDropdown && props.dropdownData && props.dropdownData.length > 0 && (
+                <div style={{ position: "absolute", right: "0px", top: "50%", transform: "translateY(-50%)" }}>
+                  <IconButton
+                    aria-label="more"
+                    id={`dropdown-button-${id}`}
+                    aria-controls={open ? "dropdown-menu" : undefined}
+                    aria-expanded={open ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    size="small"
+                    style={{ padding: "2px" }}
+                  >
+                    <Ellipsis  className="h-4 w-4" />
+                  </IconButton>
+                  <Menu
+                    id={`dropdown-menu-${id}`}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": `dropdown-button-${id}`,
+                    }}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    {props.dropdownData.map((item, index) => (
+                      <MenuItem key={index} onClick={handleClose} dense>
+                        <div className="flex justify-between w-full">
+                          <span>{item.label}</span>
+                          <span className="ml-4">{item.value}</span>
+                        </div>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </div>
+              )}
             </div>
           </div>
           {suffix && (

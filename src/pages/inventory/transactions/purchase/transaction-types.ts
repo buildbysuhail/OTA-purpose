@@ -156,6 +156,11 @@ export interface TransactionMaster {
   referenceDate: string; //new
   referenceNumber: string; //new
   particulars: string;//new
+  lb: boolean;//new
+  hasCashPaid: boolean;//new
+  hasroundOff: boolean;//new
+  cashPaid: number;//new
+  supplyType: string;//new
   other: TransactionMaster3;
 }
 export interface TransactionMaster3 {
@@ -493,6 +498,11 @@ export const TransactionMasterInitialData: TransactionMaster = {
   referenceDate: new Date().toISOString(),
   referenceNumber: "",
   particulars: "",
+  lb: true,
+  hasCashPaid: true,
+  hasroundOff: true,
+  cashPaid: 0.0,
+  supplyType: "",
   other: TransactionMaster3InitialData
 }
 
@@ -651,7 +661,6 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   cbWarehouseID: { visible: true, disabled: false, label: "warehouse" },
   remarks: { visible: true, disabled: false, label: "remarks" },
   lb: { visible: true, disabled: false, label: "lb" },
-  autoCalculation: { visible: true, disabled: false, label: "lb" },
   priceCategory: { visible: true, disabled: false, label: "price_category" },
   adjustmentAmount: { visible: true, disabled: false, label: "add_amount_or_jv" },
   roundOff: { visible: true, disabled: false, label: "round_off" },
@@ -659,6 +668,10 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   grandTotalFc: { visible: true, disabled: false, label: "grand_total_fc" },
   netAmount: { visible: true, disabled: false, label: "net_amount" },
   billDiscount: { visible: true, disabled: false, label: "bill_discount" },
+  hasCashPaid: { visible: true, disabled: false, label: "cash_paid" },
+  isLocked: { visible: true, disabled: false, label: "lb" },
+  autoCalculation: { visible: true, disabled: false, label: "auto_calculation" },
+  supplyType: { visible: true, disabled: false, label: "supply_type" },
 
 };
 export type FormElementsState = {

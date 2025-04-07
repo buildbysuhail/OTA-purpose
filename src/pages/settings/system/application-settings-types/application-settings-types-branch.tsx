@@ -2,7 +2,7 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 
 export interface ApplicationBranchSettings {
     maintainMultilanguage__: any;
-    maintainTax: boolean;
+    maintainTaxes: boolean;
     showFinancialYearSelector: boolean;
     countryName: number;
     maintainSynchronization: boolean;
@@ -36,7 +36,7 @@ export interface ApplicationBranchSettings {
     fileAttachmentFolder: string;
   }
   export const ApplicationBranchSettingsInitialState: ApplicationBranchSettings = {
-    maintainTax: true,
+    maintainTaxes: true,
     maintainMultilanguage__: false,
     showFinancialYearSelector: false,
     countryName: Countries.Saudi,

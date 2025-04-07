@@ -173,12 +173,12 @@ const BranchSettingsForm: React.FC = () => {
                 }
               />
               <ERPCheckbox
-                id="maintainTax"
+                id="maintainTaxes"
                 label={t("maintain_tax")}
                 data={formState}
-                checked={formState?.maintainTax}
+                checked={formState?.maintainTaxes}
                 onChangeData={(data) =>
-                  handleFieldChange("maintainTax", data.maintainTax)
+                  handleFieldChange("maintainTaxes", data.maintainTaxes)
                 }
               />
 
@@ -313,7 +313,7 @@ const BranchSettingsForm: React.FC = () => {
                 <ERPCheckbox
                   id="maintainKSA_EInvoice"
                   label={t("maintain_KSA_eInvoice")}
-                  disabled={formState?.maintainTax === false}
+                  disabled={formState?.maintainTaxes === false}
                   data={formState}
                   checked={formState?.maintainKSA_EInvoice}
                   onChangeData={(data) =>

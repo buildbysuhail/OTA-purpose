@@ -8,6 +8,7 @@ import { useNumberFormat } from "../../../../utilities/hooks/use-number-format"
 import moment from "moment"
 import GridId from "../../../../redux/gridId"
 import ItemwisePurchaseSummaryReportFilter, { ItemwisePurchaseSummaryReportFilterInitialState } from "./itemwise-purchase-summary-report-filter"
+import ItemWisePurchaseReturnSummaryFilter, { ItemWisePurchaseReturnSummaryFilterInitialState } from "../itemwise-purchase-return-summary-report/itemwise-purchase-return-summary-filter"
 
 const  ItemwisePurchaseSummaryReport = () => {
   const { t } = useTranslation("accountsReport")
@@ -401,12 +402,25 @@ const  ItemwisePurchaseSummaryReport = () => {
             <div className="px-4 pt-4 pb-2 ">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  summaryItems={summaryItems}
+                  remoteOperations={{
+                    filtering: false,
+                    paging: false,
+                    sorting: false,
+                  }}
                   columns={columns}
-                  filterText="from {fromDate} to {toDate}"
+                  // moreOption
+                  filterText=" From : {fromDate} - {toDate} 
+                  {partyID > 0 && , Party :[party]} 
+                  {supplierID > 0 && ,  Supplier :[supplier]} 
+                  {productGroupID > 0 && , Product Group: [productGroup]} 
+                  {warehouseID > 0 && , Warehouse: [warehouse]} 
+                  {brandID > 0 && , Brand: [brand]}
+                  {salesmanID > 0 && , Sales Man: [salesman]}"
+                  // {salesRouteID > 0 && , Route: [salesRoute]} salesRouteID is always visible false
                   allowGrouping={true}
-                groupPanelVisible={true}
-                remoteOperations={{filtering: false,grouping: false,groupPaging: false,paging: false,sorting: false}}
-              summaryItems={summaryItems}
+                  groupPanelVisible={true}
+                  autoExpandAll={true}
                   gridHeader={t("itemwise_purchase_summary")}
                   dataUrl={Urls.itemwise_purchase_summary}
                   method={ActionType.POST}
@@ -415,8 +429,8 @@ const  ItemwisePurchaseSummaryReport = () => {
                   showFilterInitially={true}
                   filterWidth={750}
                   filterHeight={650}
-                  filterContent={<ItemwisePurchaseSummaryReportFilter />}
-                  filterInitialData={ItemwisePurchaseSummaryReportFilterInitialState}
+                  filterContent={<ItemWisePurchaseReturnSummaryFilter />}
+                  filterInitialData={ItemWisePurchaseReturnSummaryFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 />

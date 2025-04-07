@@ -70,7 +70,7 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
         <ERPCheckbox
           id="maintainKSA_EInvoice"
           label={t("maintain_KSA_eInvoice")}
-          disabled={settings?.branchSettings?.maintainTax === false}
+          disabled={settings?.branchSettings?.maintainTaxes === false}
           data={settings?.branchSettings}
           checked={settings?.branchSettings?.maintainKSA_EInvoice}
           onChangeData={(data) =>

@@ -438,12 +438,12 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("maintain_tax")], filterText),
       element: (
         <ERPCheckbox
-          id="maintainTax"
+          id="maintainTaxes"
           label={t("maintain_tax")}
           data={settings?.branchSettings}
-          checked={settings?.branchSettings?.maintainTax}
+          checked={settings?.branchSettings?.maintainTaxes}
           onChangeData={(data) =>
-            handleFieldChange("branchSettings", "maintainTax", data.maintainTax)
+            handleFieldChange("branchSettings", "maintainTaxes", data.maintainTaxes)
           }
         />
       ),

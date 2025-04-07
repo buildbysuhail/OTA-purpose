@@ -75,7 +75,7 @@ const ItemWisePurchaseReturnSummaryFilter = ({
                     {...getFieldProps("productGroupID")}
                     field={{
                         id: "productGroupID",
-                        getListUrl: Urls.productGroup,
+                        getListUrl: Urls.data_productgroup,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -266,8 +266,8 @@ const ItemWisePurchaseReturnSummaryFilter = ({
         clientSession.isAppGlobal== true && (
                 <ERPCheckbox
                     label={t("category_wise_summary")}
-                    {...getFieldProps("IsCategoryWise")}
-                    onChangeData={(data: any) => handleFieldChange("IsCategoryWise", data.IsCategoryWise)}
+                    {...getFieldProps("isCategoryWise")}
+                    onChangeData={(data: any) => handleFieldChange("isCategoryWise", data.isCategoryWise)}
                 />)}
             </div>
         </div>
@@ -294,5 +294,5 @@ export const ItemWisePurchaseReturnSummaryFilterInitialState = {
     toWarehouseID: 0,
     location: "",
     productCategoryID: 0,
-    IsCategoryWise: false,
+    isCategoryWise: false,
 };

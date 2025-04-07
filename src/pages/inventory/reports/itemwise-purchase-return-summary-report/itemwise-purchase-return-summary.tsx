@@ -38,7 +38,7 @@ const ItemWisePurchaseReturnSummary = () => {
 
   const columns: DevGridColumn[] = useMemo(() => {
     const baseColumns: DevGridColumn[] = [
-      //iscategorywise  groupindex =0 for
+      //iscategorywise  groupindex =0 for category
       {
         dataField: "groupName",
         caption: t("group_name"),
@@ -269,7 +269,7 @@ const ItemWisePurchaseReturnSummary = () => {
               text: value,
               alignment: "right",
               alignmentExcel: { horizontal: "right" },
-            };
+            }; 
           } else {
             return cellElement.data?.totVat == null
               ? 0
@@ -357,7 +357,6 @@ const ItemWisePurchaseReturnSummary = () => {
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
         width: 100,
       },
       {
@@ -366,30 +365,34 @@ const ItemWisePurchaseReturnSummary = () => {
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
         width: 100,
       },
       {
         dataField: "totalTaxAmount",
-        caption: t("total_tax_amount"),
+        caption: t("total_tax"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
-        visible: false,
         width: 100,
       },
-    ];
+    ]; 
     // Filter columns based on the `visible` property
     return baseColumns.filter((column) => {
       // if (column.dataField == "exchangeRate") {
       //   return filter.voucher_form !== "Import";
       // }
-      // if (column.dataField == "uPI" || column.dataField == "cardAmt") {
-      //   return applicationSettings.accountsSettings.allowMultiPayments;
-      // }
-      // if (column.dataField == "printCount") {
-      //   return userSession.dbIdValue == "543140180640";
-      // }
+      if (column.dataField == "totVat") {
+        return applicationSettings.branchSettings.maintainTaxes && !clientSession.isAppGlobal;
+      }
+      if (column.dataField == "branchName") {
+        return userSession.currentBranchId==0;
+      }
+      if (column.dataField == "siNo") {
+        return filter.isCategoryWise == false;
+      }
+      if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
+        return clientSession.isAppGlobal|| filter.isCategoryWise==true;
+      }
       return true;
     });
     // .map((column) => {

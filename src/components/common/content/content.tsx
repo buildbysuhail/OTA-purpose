@@ -155,6 +155,7 @@ import DailySalesStatementReport from "../../../pages/accounts/reports/daily-sta
 import TransactionFormContainer from "../../../pages/inventory/transactions/purchase/transaction-container";
 import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
 import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
+import urls from "../../../redux/urls";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -451,7 +452,9 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/price_list_report" element={<PriceList />} />
         <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport />} />
 
-        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary />} />
+        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} />
+        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} />
+        
         <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
         <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
         <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWisePurchaseQuotationSummary />} />

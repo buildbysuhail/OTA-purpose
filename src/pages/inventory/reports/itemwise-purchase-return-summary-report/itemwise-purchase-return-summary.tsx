@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
@@ -13,7 +13,11 @@ import ItemWisePurchaseReturnSummaryFilter, {
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 
-const ItemWisePurchaseReturnSummary = () => {
+interface ItemWisePurchaseSummaryProps {
+  gridHeader: string;
+  dataUrl: string;
+}
+const ItemWisePurchaseSummary: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,dataUrl}) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
@@ -46,7 +50,6 @@ const ItemWisePurchaseReturnSummary = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-        groupIndex: 0,
       },
       {
         dataField: "siNo",
@@ -390,21 +393,21 @@ const ItemWisePurchaseReturnSummary = () => {
       if (column.dataField == "siNo") {
         return filter.isCategoryWise == false;
       }
-      if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
-        return clientSession.isAppGlobal|| filter.isCategoryWise==true;
-      }
+      // if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
+      //   return clientSession.isAppGlobal|| filter.isCategoryWise==true;
+      // }
       return true;
-    });
-    // .map((column) => {
-    //   if (column.dataField == "uPI" && !clientSession.isAppGlobal) {
-    //     return {
-    //       ...column,
-    //       caption: "QRPay",
-    //     };
-    //   }
-    //   return column;
-    // });
-  }, [t, filter, userSession.dbIdValue]);
+    })
+    .map((column) => {
+      if (column.dataField == "groupName") {
+        column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
+      }
+      if (column.dataField == "category") {
+        column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
+      }
+      return column;
+    }) as DevGridColumn[];
+  }, [t, filter, filter.isCategoryWise, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
@@ -505,8 +508,8 @@ const ItemWisePurchaseReturnSummary = () => {
                 allowGrouping={true}
                 groupPanelVisible={true}
                 autoExpandAll={true}
-                gridHeader={t("item_wise_purchase_return_summary")}
-                dataUrl={Urls.item_wise_purchase_return_summary}
+                gridHeader={t(gridHeader)}
+                dataUrl={dataUrl}
                 hideGridAddButton={true}
                 enablefilter={true}
                 showFilterInitially={true}
@@ -529,4 +532,4 @@ const ItemWisePurchaseReturnSummary = () => {
   );
 };
 
-export default ItemWisePurchaseReturnSummary;
+export default ItemWisePurchaseSummary;

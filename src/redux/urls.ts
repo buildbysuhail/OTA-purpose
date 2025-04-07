@@ -80,6 +80,7 @@ const Urls = {
   data_services: "/Inventory/Data/Services",
   data_mainsalesroute: "/Inventory/Data/MainSalesRoute",
   data_units: "/Inventory/Data/UnitOfMeasures",
+  data_taxCategory:"/Inventory/Data/TaxCategory/",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
@@ -379,8 +380,9 @@ const Urls = {
   daily_statement_purchase: "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportPurchase",
   section: "/Inventory/Section/",
   group_category__: "/Inventory/Product/SelectProductGroupDetails/",
+  group_category: "/Inventory/GroupCategory/",
   payment_receipt_billwise_advice_for_print: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
-  data_taxCategory:"/Inventory/Data/TaxCategory/",
+
   //Transaction
   // common
 

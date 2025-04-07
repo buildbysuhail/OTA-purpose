@@ -577,7 +577,7 @@ const BankReconciliation = () => {
 
             <ErpDevGrid
               showTotalCount={false}
-              key={key}
+              // key={key}
               ref={dataGridRef}
               gridHeader=" "
               columns={columns}

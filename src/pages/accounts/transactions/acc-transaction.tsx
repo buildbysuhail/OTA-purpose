@@ -503,7 +503,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       console.log("initializeFormElements");
-
+debugger;
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -1253,7 +1253,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
-  }, [voucherType, voucherPrefix]);
+  }, [voucherType, voucherPrefix, location.search, voucherNo]);
 
   
   const handleUserConfigFieldChange = (field: keyof AccUserConfig, value: any) => {

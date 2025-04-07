@@ -154,7 +154,7 @@ export const QuantityLimit: React.FC = () => {
 
     return (
         <div className="w-full modal-content flex flex-col gap-4">
-            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-1 items-end gap-3">
+            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
                 <div >
                     <ERPRadio
                         id="department"

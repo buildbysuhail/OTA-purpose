@@ -483,5 +483,6 @@
     "special_schemes": "Special Schemes",
     "listed_product_prices": "Listed Product Prices",
     "daily_statement": "Daily Statement",
-    "schemes_settings_special": "Schemes Settings-Special"
+    "schemes_settings_special": "Schemes Settings - Special",
+    "schemes_settings_discount":"Schemes Settings - Discount"
 }

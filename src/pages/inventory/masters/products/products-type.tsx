@@ -88,8 +88,8 @@ export interface DetailsDto {
   stdPurchasePrice?: number; // MRP: decimal?
   stdSalesPrice?: number; // MRP: decimal?
   basicUnitID: number;
-
   hold?: boolean; // newly added
+  active?:boolean; // newly added
 }
 
 export interface ProductValidationDto {

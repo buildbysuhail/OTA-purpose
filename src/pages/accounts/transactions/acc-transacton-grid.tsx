@@ -351,6 +351,7 @@ const AccTransactionGrid: React.FC<{voucherType?: string
                 gridAddButtonType={"link"}
                 // allowGrouping={true}
                 // groupPanelVisible={true}
+                initialSort={[{ selector: "transactionDate", desc: true }]}
                 remoteOperations={{filtering: true,grouping: true,groupPaging: true,paging: true,sorting: true}}
               // summaryItems={summaryItems}
                 gridAddButtonLink={`${import.meta.env.BASE_URL}accounts/transactions/${transactionType}`}

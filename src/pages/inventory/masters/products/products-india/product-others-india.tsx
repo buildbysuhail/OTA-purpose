@@ -88,7 +88,6 @@ const ProductOthersIndia: React.FC<{
                 />
             )}
 
-            {/* Modal for Change Auto Barcode */}
             {activePopup === "autoBarcode" && (
                 <ERPModal
                     isOpen={true}

@@ -122,7 +122,7 @@ export const SpecialPrice: React.FC = () => {
 
     return (
         <div className="w-full modal-content flex flex-col gap-4">
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-3">
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">
                 <div>
                     <ERPCheckbox
                         {...getFieldProps("isGroup")}
@@ -178,7 +178,7 @@ export const SpecialPrice: React.FC = () => {
                 />
             </div>
 
-            <div className="grid lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-1 gap-3">
+            <div className="grid lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">
                 <ERPInput
                     {...getFieldProps("barcode")}
                     label={t("barcode")}

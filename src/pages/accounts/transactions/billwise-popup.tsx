@@ -761,17 +761,11 @@ console.log(itemInfo);
           <Item location="before">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 dark:bg-[#f2f2f28a] bg-gray-100 rounded-md flex items-center justify-center">
-                {formState.ledgerData?.partyPhoto ? (
-                  <img
+              <img
                     src={ledgerData?.partyPhoto || profile}
                     alt="Ledger"
                     className="w-8 h-8 object-cover rounded"
                   />
-                ) : (
-                  <div className="text-lg font-medium text-gray-600">
-                    {formState.ledgerData?.name?.[0] || "-"}
-                  </div>
-                )}
               </div>
               <div>
                 <div className="text-sm font-medium text-gray-900">

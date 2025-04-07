@@ -22,7 +22,7 @@ const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(({
           localInputBox={formState?.userConfig?.inputBoxStyle}
           id="project"
           label={t(formState.formElements.projectId.label)}
-          // value={formState.row.projectId}
+          value={formState.row.projectID}
           options={
             formState.row.ledgerID != undefined && formState.row.ledgerID != 0
               ? undefined
@@ -39,7 +39,7 @@ const AccProject = React.forwardRef<HTMLInputElement, AccProjectProps>(({
             dispatch(
               accFormStateRowHandleFieldChange({
                 fields: {
-                  projectId: e.value,
+                  projectID: e.value,
                   projectName: e.label,
                 },
               })

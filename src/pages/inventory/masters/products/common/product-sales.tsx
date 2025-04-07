@@ -8,7 +8,7 @@ import { FormField } from "../../../../../utilities/form-types";
 
 const SalesCommon: React.FC<{
     getFieldProps: (fieldId: string, type?: string) => FormField;
-  }> = React.memo(({getFieldProps}) => {
+}> = React.memo(({ getFieldProps }) => {
     const { t } = useTranslation('inventory');
     const columns: DevGridColumn[] = useMemo(() => [
         {
@@ -91,8 +91,8 @@ const SalesCommon: React.FC<{
                 columns={columns}
                 gridHeader={t("sales")}
                 dataUrl={`${Urls.products}SelectProductPurchaseSummary`}
-      method={ActionType.POST}
-      postData={{ productID: getFieldProps("batch.productID").value }}
+                method={ActionType.POST}
+                postData={{ productID: getFieldProps("batch.productID").value }}
                 gridId="grd_salesGcc"
                 heightToAdjustOnWindows={800}
                 hideDefaultExportButton={true}

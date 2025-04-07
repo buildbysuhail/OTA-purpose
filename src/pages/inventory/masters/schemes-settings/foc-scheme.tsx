@@ -113,7 +113,7 @@ export const FOCScheme: React.FC = () => {
 
     return (
         <div className="w-full modal-content flex flex-col gap-4">
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-3">
+            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 max-sm:grid-cols-1 gap-3">
                 <ERPDataCombobox
                     {...getFieldProps("scheme")}
                     field={{
@@ -146,9 +146,7 @@ export const FOCScheme: React.FC = () => {
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdSalesPrice", parseFloat(data.stdSalesPrice))}
                 />
-            </div>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-3">
                 <ERPInput
                     {...getFieldProps("itemBarcode")}
                     label={t("item_barcode")}
@@ -173,9 +171,7 @@ export const FOCScheme: React.FC = () => {
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("stdPurchasePrice", parseFloat(data.stdPurchasePrice))}
                 />
-            </div>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-3">
                 <div className="flex items-end gap-2">
                     <ERPInput
                         {...getFieldProps("nameCode")}
@@ -288,6 +284,7 @@ export const FOCScheme: React.FC = () => {
             </div>
 
             <div>
+                {/* <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 max-sm:grid-cols-1 gap-3"> */}
                 <ERPInput
                     {...getFieldProps("searchBarcodeToRemove")}
                     label={t("search_barcode_to_remove")}

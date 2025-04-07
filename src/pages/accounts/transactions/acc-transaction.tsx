@@ -407,7 +407,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               fields: {
                 ledgerBalance,
                 groupName: ledgerData?.accGroupName,
-                ledgerData,
+                ledgerData: ["DN", "CN"].includes(formState.transaction.master.voucherType)
+                  ? undefined
+                  : ledgerData,
                 ledgerDataLoading: false,
               },
             })
@@ -482,20 +484,29 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
     const loadLedgerData = async () => {
-      const ledgerBalance =
-        formState.masterAccountID > 0
-          ? await api.getAsync(
-              `${Urls.get_ledger_balance}${formState.masterAccountID ?? 0}`
-            )
-          : 0;
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            masterBalance: ledgerBalance,
-            ledgerBalanceLoading: false,
-          },
-        })
-      );
+      const _drcr = getDrCr(formState.transaction.master.voucherType);
+      if(["DN", "CN"].includes(formState.transaction.master.voucherType) && formState.masterAccountID > 0) {
+        const [ledgerBalance, ledgerData] = await Promise.all([
+          (formState.masterAccountID ?? 0) > 0
+            ? api.getAsync(`${Urls.get_ledger_balance}${formState.masterAccountID ?? 0}`)
+            : 0,
+          api.getAsync(
+            `${Urls.ledgerDataForTransaction}?LedgerId=${formState.masterAccountID}&DrCr=${_drcr}`
+          ),
+        ]);
+        dispatch(
+          accFormStateHandleFieldChange({
+            fields: {
+              masterBalance: ledgerBalance,
+              groupName: ledgerData?.accGroupName,
+              ledgerData: ledgerData,
+              ledgerDataLoading: false,
+              ledgerBalanceLoading: false,
+            },
+          })
+        );
+      }
+    
     };
     loadLedgerData();
   }, [formState.masterAccountID]);
@@ -503,7 +514,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     const initializeFormElements = async () => {
       console.log("initializeFormElements");
-
+debugger;
       const isForeignCurrencyVisible =
         applicationSettings.accountsSettings?.maintainMultiCurrencyTransactions;
       const isProjectIdVisible =
@@ -1253,7 +1264,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     if (voucherNo != undefined && voucherNo > 0) {
       dispatch(setUserRight({ userSession: userSession, hasRight: hasRight }));
     }
-  }, [voucherType, voucherPrefix]);
+  }, [voucherType, voucherPrefix, location.search, voucherNo]);
 
   
   const handleUserConfigFieldChange = (field: keyof AccUserConfig, value: any) => {
@@ -1509,7 +1520,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         visible: false,
       },
       {
-        dataField: "projects",
+        dataField: "projectName",
         caption: t("projects"),
         visible: false,
       },

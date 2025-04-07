@@ -3,38 +3,35 @@ import DataGrid, { Column, Editing, Paging } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../../redux/urls";
 import { useTranslation } from "react-i18next";
-import initialProductData from "../products-data";
 import { PathValue, productDto, ProductFieldPath, SupplierProductsInputDto } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 
 const SuppliersCommon: React.FC<{
-    formState: any;
-    handleFieldChange: <Path extends ProductFieldPath>(
-        fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
-        value?: PathValue<productDto, Path>
-      ) => void;
-    
-    getFieldProps: (fieldId: string, type?: string) => FormField;
-  }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
-    const supplierProducts = 
-      {
-        ledgerID: 0,
-        refCode: "",
-        supplierCode: '',
-        supplier: '',
-      };
+  formState: any;
+  handleFieldChange: <Path extends ProductFieldPath>(
+    fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
+    value?: PathValue<productDto, Path>
+  ) => void;
+  getFieldProps: (fieldId: string, type?: string) => FormField;
+}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+  const supplierProducts =
+  {
+    ledgerID: 0,
+    refCode: "",
+    supplierCode: '',
+    supplier: '',
+  };
   const [data, setData] = useState<SupplierProductsInputDto>(supplierProducts);
   const handleAdd = () => {
     let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
-    handleFieldChange("supplierProducts",[...nutritionData, data])
+    handleFieldChange("supplierProducts", [...nutritionData, data])
     setData(supplierProducts);
-};
-const handleRemove = (rowId: number) => {
+  };
+  const handleRemove = (rowId: number) => {
     let nutritionData = getFieldProps("supplierProducts").value as SupplierProductsInputDto[];
-    handleFieldChange("supplierProducts",[...nutritionData?.filter((_, index) => index !== rowId)])
+    handleFieldChange("supplierProducts", [...nutritionData?.filter((_, index) => index !== rowId)])
   };
 
   const { t } = useTranslation('inventory')
@@ -51,10 +48,10 @@ const handleRemove = (rowId: number) => {
             required={false}
             onChange={(e) =>
               setData((prev: any) => ({
-                  ...prev,
-                  supplierCode: e.target.value,
-                }))
-          }
+                ...prev,
+                supplierCode: e.target.value,
+              }))
+            }
             className="w-full"
           />
 
@@ -76,22 +73,22 @@ const handleRemove = (rowId: number) => {
                   supplier: e.name,
                 }
               })
-              }
+            }
             className="w-full"
           />
 
           <ERPInput
-           id="supplier_product_code"
-           value={data.refCode}
+            id="supplier_product_code"
+            value={data.refCode}
             label={t("supplier_product_code")}
             placeholder={t("enter_product_code")}
             required={false}
             onChange={(e) =>
               setData((prev: any) => ({
-                  ...prev,
-                  refCode: e.target.value,
-                }))
-              }
+                ...prev,
+                refCode: e.target.value,
+              }))
+            }
             className="w-full"
           />
 
@@ -105,10 +102,11 @@ const handleRemove = (rowId: number) => {
         {/* DataGrid Section */}
         <div className="p-4 rounded-md shadow">
           <DataGrid
-             dataSource={getFieldProps("supplierProducts").value }
+            dataSource={getFieldProps("supplierProducts").value}
             showBorders={true}
             rowAlternationEnabled={true}
-            className="w-full">
+            className="w-full"
+          >
 
             <Paging defaultPageSize={5} />
 
@@ -119,20 +117,26 @@ const handleRemove = (rowId: number) => {
               allowAdding={false}
             />
 
-            <Column dataField="supplierCode" caption={t("supplier_code")} />
-            <Column dataField="supplier" caption={t("supplier")} />
-            <Column dataField="refCode" caption={t("reference_code")} />
+            <Column
+              dataField="supplierCode"
+              caption={t("supplier_code")}
+            />
+
+            <Column
+              dataField="supplier"
+              caption={t("supplier")}
+            />
+
+            <Column
+              dataField="refCode"
+              caption={t("reference_code")}
+            />
 
             <Column
               caption={t("remove")}
               width={80}
               cellRender={(cellData) => (
-                <a
-                className="cursor-pointer text-red-600 hover:text-red-800 font-semibold"
-                onClick={() => handleRemove(cellData.rowIndex)}
-              >
-                X
-              </a>
+                <a className="cursor-pointer text-[#EF4444] hover:text-[#B91C1C] font-semibold" onClick={() => handleRemove(cellData.rowIndex)}>  X</a>
               )}
             />
           </DataGrid>

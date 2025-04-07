@@ -353,5 +353,15 @@
     "set": "تعيين",
     "barcode_(to_be_replaced)": "الباركود (سيتم استبداله)",
     "new_barcode": "باركود جديد",
-    "update": "تحديث"
+    "update": "تحديث",
+
+    "multi_factor": "عامل متعدد",
+    "sale_price": "سعر البيع",
+    "description_fl": "الوصف FL",
+    "uom": "وحدة القياس",
+    "mb": "ميغابايت",
+    "multi_barcode": "رمز شريطي متعدد",
+    "cancel": "إلغاء",
+    "nutrients": "المغذيات",
+    "value_per_serving": "القيمة لكل حصة"
 }

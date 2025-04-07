@@ -1,28 +1,25 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
-import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import { RefreshCcw, Plus } from "lucide-react";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import initialProductData from "../products-data";
-import { productDto } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
-import Urls from "../../../../../redux/urls";
+
 export const ProductManageIndia: React.FC<{
   formState: any;
   handleFieldChange: (
     fields:
       | string
       | {
-          [fieldId: string]: any;
-        },
+        [fieldId: string]: any;
+      },
     value?: any
-  )=> void;
+  ) => void;
 
   getFieldProps: (fieldId: string, type?: any) => FormField;
-}> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
 
   const { t } = useTranslation("inventory");
 
@@ -42,7 +39,7 @@ export const ProductManageIndia: React.FC<{
 
         <div className="flex gap-1">
           <div className="grid grid-cols-1 gap-1 border border-[#ccc] rounded-md p-2 w-1/2">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-wrap items-end gap-4">
               <div className="flex items-center gap-2">
                 <ERPInput
                   {...getFieldProps("product.productCode")}
@@ -59,9 +56,9 @@ export const ProductManageIndia: React.FC<{
               </div>
 
               <div className="flex items-center gap-4">
-              <ERPCheckbox
+                <ERPCheckbox
                   {...getFieldProps("product.manual")} // Notice the type hint
-                  label={t("manual")}       
+                  label={t("manual")}
                   onChange={(e) => handleFieldChange('product.manual', e.target.checked)}
                 />
                 <ERPButton
@@ -93,7 +90,7 @@ export const ProductManageIndia: React.FC<{
               </button>
             </div>
 
-            <div className="grid grid-cols-2 items-center gap-1">
+            <div className="grid max-lg:grid-cols-2 md:grid-cols-1 items-center gap-1">
               <div className="flex items-center gap-1">
                 <ERPDataCombobox
                   {...getFieldProps("product.productCategoryID")}
@@ -191,7 +188,7 @@ export const ProductManageIndia: React.FC<{
                 className="w-full"
                 onChangeData={(data: any) => handleFieldChange("product.unitQty", data.product.unitQty)}
               />
-            </div> 
+            </div>
 
             <div className="flex items-center justify-between mt-2">
               <ERPCheckbox
@@ -240,7 +237,7 @@ export const ProductManageIndia: React.FC<{
                 {...getFieldProps("product.isWeighingScaleItem")}
                 label={t("is_weighing_scale_item")}
                 onChange={(e) => handleFieldChange('product.isWeighingScaleItem', e.target.checked)}
-                // onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.product.isWeighingScaleItem)}
+              // onChangeData={(data: any) => handleFieldChange("product.isWeighingScaleItem", data.product.isWeighingScaleItem)}
               />
             </div>
           </div>
@@ -334,7 +331,7 @@ export const ProductManageIndia: React.FC<{
                 label={t("batch_criteria")}
                 className="w-1/4"
                 onChange={(e) => handleFieldChange('product.batchCriteria', e.target.checked)}
-                // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
+              // onChangeData={(data: any) => handleFieldChange("product.batchCriteria", data.product.batchCriteria)}
               />
 
               <ERPDataCombobox
@@ -352,10 +349,9 @@ export const ProductManageIndia: React.FC<{
             </div>
 
             <div className="grid grid-cols-2 items-end gap-2">
-             
               <ERPDataCombobox
                 {...getFieldProps("product.productType")}
-                id= "productType"
+                id="productType"
                 field={{
                   id: "productType",
                   required: true,
@@ -363,9 +359,9 @@ export const ProductManageIndia: React.FC<{
                   valueKey: "value",
                   labelKey: "label",
                 }}
-                onChangeData={(data: any) => {handleFieldChange("product.productType", data.productType)}}
+                onChangeData={(data: any) => { handleFieldChange("product.productType", data.productType) }}
                 label={t("product_type")}
-                options={[{ value: "Inventory", label: t("inventory") },]} 
+                options={[{ value: "Inventory", label: t("inventory") },]}
               />
 
               <div className="flex items-center gap-2">
@@ -378,7 +374,7 @@ export const ProductManageIndia: React.FC<{
                   {...getFieldProps("product.details")}
                   label={t("details")}
                   onChange={(e) => handleFieldChange('product.details', e.target.checked)}
-                  // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
+                // onChangeData={(data: any) => handleFieldChange("product.details", data.product.details)}
                 />
               </div>
             </div>

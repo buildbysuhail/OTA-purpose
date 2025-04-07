@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
-import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import DataGrid, { Column } from "devextreme-react/data-grid";
 import { FormField } from "../../../../../utilities/form-types";
@@ -16,7 +15,7 @@ interface NutrientOption {
 interface NutritionDataItem {
     id: number;
     nutrient: string;
-    valuePerServing: string;
+    valuePerServing: number;
 }
 
 const nutrientOptions: NutrientOption[] = [
@@ -32,70 +31,70 @@ const nutrientOptions: NutrientOption[] = [
 
 const initialNutrientData: ProductNutrientsInputDto = {
     nutrients: "",
-    valuePerServing: ""
+    valuePerServing: 0
 };
+
 const NutritionFactsIndia: React.FC<{
     formState: any;
     handleFieldChange: <Path extends ProductFieldPath>(
         fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },
         value?: PathValue<productDto, Path>
-      ) => void;
-    
+    ) => void;
     getFieldProps: (fieldId: string, type?: string) => FormField;
-  }> = React.memo(({formState,handleFieldChange,getFieldProps}) => {
+}> = React.memo(({ formState, handleFieldChange, getFieldProps }) => {
+
     const { t } = useTranslation('inventory');
-    
     const [nutrition, setNutrition] = useState<ProductNutrientsInputDto>(initialNutrientData);
+
     const handleAddNutrient = () => {
         let nutritionData = getFieldProps("nutrients").value as ProductNutrientsInputDto[];
-        handleFieldChange("nutrients",[...nutritionData, nutrition])
+        handleFieldChange("nutrients", [...nutritionData, nutrition]);
         setNutrition(initialNutrientData);
     };
+
     const handleRemoveNutrient = (rowId: number) => {
         let nutritionData = getFieldProps("nutrients").value as ProductNutrientsInputDto[];
-        handleFieldChange("nutrients",[...nutritionData?.filter((_, index) => index !== rowId)])
-      };
+        handleFieldChange("nutrients", [...nutritionData?.filter((_, index) => index !== rowId)]);
+    };
+
     return (
         <div className="border border-gray-200 rounded-md p-4">
             <div className="flex items-center gap-4 mb-4">
                 <div className="flex items-end gap-4">
                     <ERPDataCombobox
-                    id="nutrient"
-                    value={nutrition.valuePerServing}
+                        id="nutrient"
+                        value={nutrition.nutrients}
                         field={{
                             id: "nutrient",
                             valueKey: "id",
                             labelKey: "name",
                         }}
-                        label="Nutrients"
+                        label={t("nutrients")}
                         options={nutrientOptions}
-                        onChange={(e) =>
-                           {
-                            debugger;
-                            setNutrition((prev: any) => ({
+                        onChange={(e) => {
+                            setNutrition((prev) => ({
                                 ...prev,
                                 nutrients: e.value,
-                              }))
-                           }
-                        }
+                            }));
+                        }}
                     />
 
                     <ERPInput
-                    id="percentage"
-                    value={nutrition.valuePerServing}
+                        id="percentage"
+                        value={nutrition.valuePerServing}
                         label="%"
                         onChange={(e) =>
-                            setNutrition((prev: any) => ({
+                            setNutrition((prev) => ({
                                 ...prev,
-                                valuePerServing: e.target.value,
-                              }))
+                                valuePerServing: Number(e.target.value), 
+                            }))
                         }
                         className="w-32"
                     />
 
                     <ERPButton
                         onClick={handleAddNutrient}
-                        title="Add"
+                        title={t("add")}
                         variant="primary"
                     />
                 </div>
@@ -103,25 +102,29 @@ const NutritionFactsIndia: React.FC<{
 
             <div className="mt-2">
                 <DataGrid
-                    dataSource={getFieldProps("nutrients").value }
+                    dataSource={getFieldProps("nutrients").value}
                     showBorders={true}
                     columnAutoWidth={true}
                     rowAlternationEnabled={true}
                     height="300">
-                    <Column dataField="nutrients" dataType="string" caption="Nutrients" />
-                    <Column dataField="valuePerServing" caption="Value Per Serving" />
                     <Column
-                        caption="Remove"
+                        dataField="nutrients"
+                        dataType="string"
+                        caption={t("nutrients")}
+                    />
+
+                    <Column
+                        dataField="valuePerServing"
+                        caption={t("value_per_serving")}
+                    />
+
+                    <Column
+                        caption={t("remove")}
                         width={80}
                         cellRender={(cellData) => (
-                            <a
-      className="cursor-pointer text-red-600 hover:text-red-800 font-semibold"
-      onClick={() => handleRemoveNutrient(cellData.rowIndex)}
-    >
-      X
-    </a>
+                            <a className="cursor-pointer text-[#EF4444] hover:text-[#B91C1C] font-semibold" onClick={() => handleRemoveNutrient(cellData.rowIndex)}>X</a>
                         )}
-                        />
+                    />
                 </DataGrid>
             </div>
         </div>

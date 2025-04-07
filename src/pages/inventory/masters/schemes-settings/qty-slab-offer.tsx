@@ -158,7 +158,7 @@ export const QuantitySlabOffer: React.FC = () => {
                 />
             </div>
 
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 max-sm:grid-cols-1 items-end gap-3">
                 <ERPDataCombobox
                     {...getFieldProps("itemName")}
                     label={t("item_name")}
@@ -275,9 +275,8 @@ export const QuantitySlabOffer: React.FC = () => {
                 </DataGrid>
             </div>
 
-            <div className="flex items-center mt-2">
+            <div className="flex flex-row max-md:flex-col items-center mt-2">
                 <p className="text-[#F87171] text-sm font-medium mr-auto">{t("this_offer_price_is_only_applicable_on_standard_price")}</p>
-
                 <div className="flex items-center">
                     <ERPCheckbox
                         checked={selectAllToDelete}

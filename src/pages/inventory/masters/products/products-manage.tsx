@@ -14,13 +14,11 @@ import ProductDetailsIndia from "./products-india/product-details-india";
 import ProductManageIndia from "./products-india/products-manage-india";
 import ProductManageGcc from "./products-gcc/products-manage-gcc";
 import ProductDetailsGcc from "./products-gcc/product-details-gcc";
-import ProductReOrderIndia from "./products-india/product-re-order-india";
 import ProductOthersIndia from "./products-india/product-others-india";
 import ProductOthersGcc from "./products-gcc/product-others-gcc";
 import ProductNotesGcc from "./products-gcc/product-notes-gcc";
 import ProductMultiUnitsIndia from "./products-india/product-multi-units-india";
 import ProductMultiUnitsGCC from "./products-gcc/product-multi-units-gcc";
-import MultiRatesGcc from "./products-gcc/products-multi-rates-gcc";
 import MultiRatesIndia from "./products-india/product-multi-rates-india";
 import NutritionFactsIndia from "./products-india/product-nutrition-facts-india";
 import SearchCommon from "./common/product-search";
@@ -34,10 +32,10 @@ import PromotionCommon from "./common/product-promotion";
 export const ProductMaster: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { t } = useTranslation("inventory");debugger;  
+  const { t } = useTranslation("inventory"); debugger;
   const { isEdit, handleSubmit, handleClear, isLoading, handleClose, formState, handleFieldChange, getFieldProps } =
-  
-  useFormManager<productDto>({
+
+    useFormManager<productDto>({
       url: Urls.products,
       onClose: useCallback(
         () => dispatch(toggleProducts({ isOpen: false, key: null, reload: false })),
@@ -51,7 +49,7 @@ export const ProductMaster: React.FC = React.memo(() => {
       useApiClient: true,
       keyField: 'productID',
       initialData: {
-        data: initialProductData,        
+        data: initialProductData,
       },
     });
 
@@ -99,42 +97,41 @@ export const ProductMaster: React.FC = React.memo(() => {
   // Define tab content in the desired order for each country
   const tabContents = isIndia
     ? [
-      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-          <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
-      <div key="multi_units"><ProductMultiUnitsIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="multi_rates"><MultiRatesIndia t={t}  getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="details">  <ProductDetailsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} /></div>,
+      <div key="multi_units"><ProductMultiUnitsIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+      <div key="multi_rates"><MultiRatesIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="image"><ImageCommon /></div>,
-      <div key="others">  <ProductOthersIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="sales"><SalesCommon getFieldProps={getFieldProps}/></div>,
-      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps}/></div>,
-      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="others">  <ProductOthersIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+      <div key="sales"><SalesCommon getFieldProps={getFieldProps} /></div>,
+      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps} /></div>,
+      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       // <div key="re_order">  <ProductReOrderIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="promotion_details"><PromotionCommon getFieldProps={getFieldProps}></PromotionCommon></div>,
       <div key="search"><SearchCommon /></div>,
-      <div key="nutrition_facts"><NutritionFactsIndia   formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="nutrition_facts"><NutritionFactsIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
     ]
     : [
-      <div key="details" className="flex flex-col gap-4 border border-gray-200 rounded-md p-2">
-        <ProductManageGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/> 
-        <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/>
-        </div>,
+      <div key="details">
+        <ProductManageGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
+        <ProductDetailsGcc formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} />
+      </div>,
       <div key="multi_units"><ProductMultiUnitsGCC t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
-      <div key="multi_rates"><MultiRatesIndia t={t}  getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="multi_rates"><MultiRatesIndia t={t} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="search"><SearchCommon /></div>,
       <div key="image"><ImageCommon /></div>,
       <div key="others"><ProductOthersGcc /></div>,
-      <div key="sales"><SalesCommon getFieldProps={getFieldProps}/></div>,
-      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps}/></div>,
-      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
-      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/></div>,
+      <div key="sales"><SalesCommon getFieldProps={getFieldProps} /></div>,
+      <div key="purchase"><PurchaseCommon getFieldProps={getFieldProps} /></div>,
+      <div key="stock"><StockCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
+      <div key="suppliers"><SuppliersCommon formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /></div>,
       <div key="notes"><ProductNotesGcc /></div>,
     ];
 
   return (
     <div className="w-full modal-content">
       <div className="flex flex-col gap-1">
-        {isIndia ? <ProductManageIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange}/> : ""}
+        {isIndia ? <ProductManageIndia formState={formState} getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} /> : ""}
         <ERPTab
           tabs={getTabs()}
           activeTab={activeTab}

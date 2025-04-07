@@ -11,8 +11,8 @@ const StockCommon: React.FC<{
     fields:
       | string
       | {
-          [fieldId: string]: any;
-        },
+        [fieldId: string]: any;
+      },
     value?: any
   ) => void;
 
@@ -121,8 +121,7 @@ const StockCommon: React.FC<{
         allowFiltering: true,
         width: 100,
       },
-    ],
-    [t]
+    ], [t]
   );
 
   const handleShowClick = () => {
@@ -131,25 +130,25 @@ const StockCommon: React.FC<{
 
   return (
     <div className="grid grid-cols-1 gap-3">
-    <ErpDevGrid
-      columns={columns}
-      gridHeader={t("stock")}
-      dataUrl={`${Urls.products}SelectItemStockSummary`}
-      method={ActionType.POST}
-      postData={{ productBatchID: getFieldProps("batch.productBatchID").value }}
-      gridId="grd_stockGcc"
-      heightToAdjustOnWindows={800}
-      hideDefaultExportButton={true}
-      hideDefaultSearchPanel={true}
-      hideGridAddButton={true}
-      hideGridHeader={true}
-      enableScrollButton={false}
-      ShowGridPreferenceChooser={false}
-      showPrintButton={false}
-      allowSearching={false}
-      allowExport={false}
-    />
-  </div>
+      <ErpDevGrid
+        columns={columns}
+        gridHeader={t("stock")}
+        dataUrl={`${Urls.products}SelectItemStockSummary`}
+        method={ActionType.POST}
+        postData={{ productBatchID: getFieldProps("batch.productBatchID").value }}
+        gridId="grd_stockGcc"
+        heightToAdjustOnWindows={800}
+        hideDefaultExportButton={true}
+        hideDefaultSearchPanel={true}
+        hideGridAddButton={true}
+        hideGridHeader={true}
+        enableScrollButton={false}
+        ShowGridPreferenceChooser={false}
+        showPrintButton={false}
+        allowSearching={false}
+        allowExport={false}
+      />
+    </div>
   );
 });
 

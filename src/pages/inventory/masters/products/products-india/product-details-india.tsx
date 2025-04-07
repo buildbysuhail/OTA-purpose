@@ -4,17 +4,11 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import ERPDateInput from "../../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import { Plus } from "lucide-react";
-import { useFormManager } from "../../../../../utilities/hooks/useFormManagerOptions";
-import initialProductData from "../products-data";
 import { PathValue, productDto, ProductFieldPath } from "../products-type";
-import { useTranslation } from "react-i18next";
 import { FormField } from "../../../../../utilities/form-types";
 
 // Primitive types we don’t recurse into
-
-     
 const ProductDetailsIndia: React.FC<{
-  
   formState: any;
   handleFieldChange: <Path extends ProductFieldPath>(
     fields: Path | { [fieldId in Path]?: PathValue<productDto, Path> },

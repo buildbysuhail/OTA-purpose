@@ -16,8 +16,9 @@ import { RootState } from "../../../../redux/store";
 interface ItemWisePurchaseSummaryProps {
   gridHeader: string;
   dataUrl: string;
+  gridId: string;
 }
-const ItemWisePurchaseSummary: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,dataUrl}) => {
+const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,dataUrl,gridId}) => {
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(
@@ -393,9 +394,9 @@ const ItemWisePurchaseSummary: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,da
       if (column.dataField == "siNo") {
         return filter.isCategoryWise == false;
       }
-      // if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
-      //   return clientSession.isAppGlobal|| filter.isCategoryWise==true;
-      // }
+      if (column.dataField == "totalTaxAmount" ||column.dataField == "brandName"||column.dataField == "category") {
+        return clientSession.isAppGlobal|| filter.isCategoryWise==true;
+      }
       return true;
     })
     .map((column) => {
@@ -532,4 +533,4 @@ const ItemWisePurchaseSummary: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,da
   );
 };
 
-export default ItemWisePurchaseSummary;
+export default ItemWiseSummaryReport;

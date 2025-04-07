@@ -148,7 +148,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report', icon: IoScaleOutline },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report', icon: GiCargoShip },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report', icon: MdOutlineAnalytics },
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_tax`, type: 'link', active: false, selected: false, title: 'purchase_tax', icon: AiOutlineFileText },
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_tax_vat`, type: 'link', active: false, selected: false, title: 'purchase_tax', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_order_transit_report`, type: 'link', active: false, selected: false, title: 'purchase_order_transit_report', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_monthwise_purchase_summary`, type: 'link', active: false, selected: false, title: 'party_monthwise_purchase_summary', icon: AiOutlineFileText },
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/credit_purchase_summary`, type: 'link', active: false, selected: false, title: 'credit_purchase_summary', icon: AiOutlineFileText },

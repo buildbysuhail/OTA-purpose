@@ -156,6 +156,7 @@ import TransactionFormContainer from "../../../pages/inventory/transactions/purc
 import ItemwisePurchaseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-summary-report/itemwise-purchase-summary-report";
 import TestInvMaster from "../../../pages/inventory/masters/test/test-inv-master-";
 import urls from "../../../redux/urls";
+import ItemWiseSummaryReport from "../../../pages/inventory/reports/itemwise-purchase-return-summary-report/itemwise-purchase-return-summary";
 
 const PriceList = lazy(() => import("../../../pages/inventory/reports/price-list/price-list-report"));
 const StockLedger = lazy(() => import("../../../pages/inventory/reports/stock-ledger/stock-ledger-report"));
@@ -437,7 +438,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/balance_sheet_detailed" element={<BalancesheetVertical />} />
         {/* <Route  path="/accounts/payable_aging"  element={<AccountPayableAgingReport />}/>
         <Route  path="/accounts/receivable_aging"  element={<AccountReceivableAgingReport />}/> */}
-
         {/* Reports - Accounts */}
         {/* Reports - Inventory */}
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
@@ -450,14 +450,14 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_estimate_summary" element={<PurchaseEstimateSummary />} />
         <Route path="/inventory/purchase_order_summary" element={<PurchaseOrderSummary />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
-        <Route path="/inventory/itemwise_purchase_summary" element={<ItemwisePurchaseSummaryReport />} />
+        <Route path="/inventory/itemwise_purchase_summary" element={<ItemWiseSummaryReport dataUrl={urls.itemwise_purchase_summary} gridHeader="itemwise_purchase_summary" gridId="grd_itemwise_purchase_summary"/>} />
 
-        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} />
-        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} />
+        <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_return_summary} gridHeader="item_wise_purchase_return_summary" gridId="grd_item_wise_purchase_return_summary"/>} />
+        {/* <Route path="/inventory/itemwise_purchase_return_summary" element={<ItemWisePurchaseReturnSummary dataUrl={urls.item_wise_purchase_return_summary} gridHeader="" />} /> */}
         
-        <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWisePurchaseOrderSummary />} />
-        <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWisePurchaseEstimateSummary />} />
-        <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWisePurchaseQuotationSummary />} />
+        <Route path="/inventory/itemwise_purchase_order_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_order_summary} gridHeader="item_wise_purchase_order_summary" gridId="grd_item_wise_purchase_order_summary"/>} />
+        <Route path="/inventory/itemwise_purchase_estimate_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_estimate_summary} gridHeader="item_wise_purchase_estimate_summary"gridId="grd_item_wise_purchase_estimate_summary"/>} />
+        <Route path="/inventory/itemwise_purchase_quotation_summary" element={<ItemWiseSummaryReport dataUrl={urls.item_wise_purchase_quotation_summary} gridHeader="item_wise_purchase_quotation_summary" gridId="grd_item_wise_purchase_quotation_summary"/>} />
         <Route path="/inventory/product_summary_master" element={<ProductSummaryMaster />} />
         <Route path="/inventory/stock_transfer_report" element={<StockTransfer />} />
         <Route path="/inventory/damage_stock_report" element={<DamageStock />} />
@@ -480,7 +480,7 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        <Route path="/inventory/purchase_tax" element={<PurchaseTaxReport />} />
+        <Route path="/inventory/purchase_tax_vat" element={<PurchaseTaxReport />} />
         <Route path="/inventory/purchase_order_transit_report" element={<PurchaseOrderTransitReport />} />
         <Route path="/inventory/party_monthwise_purchase_summary" element={<PartyMonthwisePurchaseSummaryReport />} />
         <Route path="/inventory/credit_purchase_summary" element={<CreditPurchaseSummaryReport />} />

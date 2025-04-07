@@ -23,7 +23,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
     isLoading,
     handleClose
   } = useFormManager<GroupCategoryData>({
-    url: Urls.group_category,
+    url: Urls.group_category__,
     onClose: useCallback(() => dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.groupCategory.key,

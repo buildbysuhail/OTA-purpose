@@ -1569,7 +1569,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     { label: "IGST", value: 0 },
     { label: "CESS", value: 0 },
     { label: "AddCESS", value: 0 },
-  ]
+  ];
 
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
@@ -1709,111 +1709,106 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   : "grid grid-cols-2 gap-8 !mt-[35px]"
               }
             >
-             
+              <>
+                {/* Expanded View - First Row */}
+                <div className="flex flex-wrap items-center gap-1">
+                  <AccVoucherPrefix
+                    ref={voucherNumberRef}
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    t={t}
+                  />
+                  <AccVoucherNo
+                    ref={voucherNumberRef}
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleKeyDown={handleKeyDown}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    t={t}
+                  />
+                  <ReferenceNumber
+                    formState={formState}
+                    dispatch={dispatch}
+                    handleLoadByRefNo={handleLoadByRefNo}
+                    ref={refNoRef}
+                    t={t}
+                  />
+                  <ReferenceDate
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                  />
+                  <TransactionDate
+                    formState={formState}
+                    dispatch={dispatch}
+                    t={t}
+                  />
+                  <Employee
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                  <DebitAccount
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                  <Project
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                    handleFieldKeyDown={handleFieldKeyDown}
+                  />
+                  <InvoiceValue
+                    dispatch={dispatch}
+                    formState={formState}
+                    t={t}
+                    handleKeyDown={handleKeyDown}
+                  />
+                </div>
                 <>
-                  {/* Expanded View - First Row */}
-                  <div className="flex flex-wrap items-center gap-1">
-                    <AccVoucherPrefix
-                      ref={voucherNumberRef}
-                      formState={formState}
-                      dispatch={dispatch}
+                  <div
+                    className={
+                      formState.userConfig?.isExpanded
+                        ? "flex flex-wrap gap-1 leading-none"
+                        : "flex flex-wrap items-center gap-4 leading-none"
+                    }
+                  >
+                    <LedgerCode
+                      ref={ledgerCodeRef}
                       handleKeyDown={handleKeyDown}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      t={t}
-                    />
-                    <AccVoucherNo
-                      ref={voucherNumberRef}
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleKeyDown={handleKeyDown}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      t={t}
-                    />
-                    <ReferenceNumber
-                      formState={formState}
-                      dispatch={dispatch}
-                      handleLoadByRefNo={handleLoadByRefNo}
-                      ref={refNoRef}
-                      t={t}
-                    />
-                    <ReferenceDate
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                    />
-                    <TransactionDate
                       formState={formState}
                       dispatch={dispatch}
                       t={t}
                     />
-                    <Employee
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
+                    <PartyLedger
+                      ref={ledgerIdRef}
                       handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <DebitAccount
-                      dispatch={dispatch}
-                      formState={formState}
-                      t={t}
+                      triggerEffect={triggerEffect}
                       handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <Project
-                      dispatch={dispatch}
                       formState={formState}
-                      t={t}
-                      handleKeyDown={handleKeyDown}
-                      handleFieldKeyDown={handleFieldKeyDown}
-                    />
-                    <InvoiceValue
                       dispatch={dispatch}
-                      formState={formState}
                       t={t}
-                      handleKeyDown={handleKeyDown}
+                      setIsPartyDetailsOpen={() => {
+                        setIsPartyDetailsOpen((prev: any) => {
+                          debugger;
+                          return !prev;
+                        });
+                      }}
                     />
-                  </div>
-                  <>
-                    <div
-                      className={
-                        formState.userConfig?.isExpanded
-                          ? "flex flex-wrap gap-1 leading-none"
-                          : "flex flex-wrap items-center gap-4 leading-none"
-                      }
-                    >
-                      <LedgerCode
-                        ref={ledgerCodeRef}
-                        handleKeyDown={handleKeyDown}
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                      />
-                      <PartyLedger
-                       ref={ledgerIdRef}
-                       handleFieldKeyDown={handleFieldKeyDown}
-                       triggerEffect={triggerEffect}
-                       handleKeyDown={handleKeyDown}
-                       formState={formState}
-                       dispatch={dispatch}
-                       t={t}
-                       setIsPartyDetailsOpen={() => {
-                         setIsPartyDetailsOpen((prev: any) => {
-                           debugger;
-                           return !prev;
-                         });
-                       }}
-                      />
-                      <div>
-                        <span> more </span>
-                      </div>
-                     
+                    <div>
+                      <span> more </span>
                     </div>
-
-                   
-                  </>
+                  </div>
                 </>
-              
+              </>
             </div>
           </div>
           <div
@@ -1859,10 +1854,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             <ErpDevGrid
               key={key}
               GridPreferenceChooserTrance
-              heightToAdjustOnWindows={
-                formState.userConfig?.gridHeight ??
-                 700 
-              }
+              heightToAdjustOnWindows={formState.userConfig?.gridHeight ?? 700}
               summaryItems={summaryItems}
               ref={erpGridRef}
               keyExpr="slNo"
@@ -2001,30 +1993,26 @@ const TransactionForm: React.FC<TransactionProps> = ({
               handleFieldKeyDown={handleFieldKeyDown}
             />
 
-          <RemarksInput
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            handleKeyDown={handleKeyDown}
-          />
-            <IsLockedCheckbox
+            <RemarksInput
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              handleKeyDown={handleKeyDown}
+            />
+            <IsLockedCheckbox formState={formState} dispatch={dispatch} t={t} />
+            <AutoCalculationCheckbox
               formState={formState}
               dispatch={dispatch}
               t={t}
             />
-          <AutoCalculationCheckbox
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-          />
 
-                <CashPaidSection
-                  formState={formState}
-                  dispatch={dispatch}
-                  t={t}
-                  focusDiscount={focusDiscount}
-                  focusAmount={focusAmount}
-                />
+            <CashPaidSection
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              focusDiscount={focusDiscount}
+              focusAmount={focusAmount}
+            />
 
             <PriceCategoryCombobox
               formState={formState}
@@ -2050,13 +2038,12 @@ const TransactionForm: React.FC<TransactionProps> = ({
               handleFieldKeyDown={handleFieldKeyDown}
             />
 
-
-          <VatAmountLabel
-            formState={formState}
-            dispatch={dispatch}
-            t={t}
-            taxData={taxData}
-          />
+            <VatAmountLabel
+              formState={formState}
+              dispatch={dispatch}
+              t={t}
+              taxData={taxData}
+            />
 
             <AdjustmentAmountInput
               formState={formState}
@@ -2106,20 +2093,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
               handleKeyDown={handleKeyDown}
             />
 
-            <GrandTotalLabel
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-            />
+            <GrandTotalLabel formState={formState} dispatch={dispatch} t={t} />
 
-            
-            <NetTotalLabel
-              formState={formState}
-              dispatch={dispatch}
-              t={t}
-            />
-
-           
+            <NetTotalLabel formState={formState} dispatch={dispatch} t={t} />
           </div>
         </div>
 

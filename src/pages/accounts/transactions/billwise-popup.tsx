@@ -876,7 +876,7 @@ console.log(itemInfo);
           allowSelection={true}
           selectionMode={"multiple"}
           allowSelectAll={false}
-          allowKeyboardNavigation={true}
+          keyboardNavigation={{enabled: true}}
         >
           {/* Add Summary for "Amount" column */}
         </ERPDevGrid>

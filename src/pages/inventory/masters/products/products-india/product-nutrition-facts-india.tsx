@@ -12,12 +12,6 @@ interface NutrientOption {
     name: string;
 }
 
-interface NutritionDataItem {
-    id: number;
-    nutrient: string;
-    valuePerServing: number;
-}
-
 const nutrientOptions: NutrientOption[] = [
     { id: "Protein", name: "Protein" },
     { id: "Carbohydrates", name: "Carbohydrates" },

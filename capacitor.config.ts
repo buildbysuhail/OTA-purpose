@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
+  appId: 'com.polosys.app',
   appName: 'polosys-erp',
-  webDir: 'dist'
+  webDir: 'build'
 };
 
 export default config;

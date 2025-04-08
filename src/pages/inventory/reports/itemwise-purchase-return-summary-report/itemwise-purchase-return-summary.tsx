@@ -1,4 +1,4 @@
-import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid, {
   SummaryConfig,
@@ -399,15 +399,17 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
       }
       return true;
     })
-    .map((column) => {
-      if (column.dataField == "groupName") {
-        column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
-      }
-      if (column.dataField == "category") {
-        column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
-      }
-      return column;
-    }) as DevGridColumn[];
+    // .map((column) => {
+    //   debugger;
+    //   if (column.dataField == "groupName") {
+    //     column.groupIndex = filter.isCategoryWise == true ? undefined : 0 ;
+    //   }
+    //   if (column.dataField == "category") {
+    //     column.groupIndex = filter.isCategoryWise == true ? 0 : undefined ;
+    //   }
+    //   return column;
+    // }) as DevGridColumn[]
+    ;
   }, [t, filter, filter.isCategoryWise, userSession.dbIdValue]);
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
@@ -482,7 +484,19 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
       customizeText: customizeSummaryRow,
     },
   ];
-
+  
+    const dataGridRef = useRef<any>(null);
+  useEffect(() => {
+    const gridInstance = dataGridRef.current?.instance();
+    if (gridInstance) {
+      gridInstance.clearGrouping(); // Explicitly clear existing grouping
+      gridInstance.columnOption(
+        filter.isCategoryWise ? "category" : "groupName",
+        "groupIndex",
+        0
+      );
+    }
+  }, [filter.isCategoryWise]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -490,6 +504,7 @@ const ItemWiseSummaryReport: FC<ItemWisePurchaseSummaryProps>= ({gridHeader,data
           <div className="px-4 pt-4 pb-2">
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
+              ref={dataGridRef}
                 summaryItems={summaryItems}
                 remoteOperations={{
                   filtering: false,

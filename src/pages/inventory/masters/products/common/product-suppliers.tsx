@@ -37,70 +37,78 @@ const SuppliersCommon: React.FC<{
   const { t } = useTranslation('inventory')
 
   return (
-    <div className="border border-[#ccc] inline-block rounded-md p-4">
+    <div className="border border-[#ccc] rounded-md p-4 w-full">
       <div className="flex flex-col gap-4">
-        <div className="flex items-end gap-4">
-          <ERPInput
-            id="nutrient"
-            value={data.supplierCode}
-            label={t("supplier_code")}
-            placeholder={t("enter_supplier_code")}
-            required={false}
-            onChange={(e) =>
-              setData((prev: any) => ({
-                ...prev,
-                supplierCode: e.target.value,
-              }))
-            }
-            className="w-full"
-          />
-
-          <ERPDataCombobox
-            id="supplier_name"
-            value={data.ledgerID}
-            label={t("supplier_name")}
-            field={{
-              getListUrl: Urls.data_CustSupp,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChange={(e) =>
-              setData((prev: any) => {
-                debugger;
-                return {
+        <div className="flex flex-wrap gap-4">
+          <div className="flex-1 min-w-[250px]">
+            <ERPInput
+              id="supplier_code"
+              value={data.supplierCode}
+              label={t("supplier_code")}
+              placeholder={t("enter_supplier_code")}
+              required={false}
+              onChange={(e) =>
+                setData((prev: any) => ({
                   ...prev,
-                  ledgerID: e.value,
-                  supplier: e.name,
-                }
-              })
-            }
-            className="w-full"
-          />
+                  supplierCode: e.target.value,
+                }))
+              }
+              className="w-full"
+            />
+          </div>
 
-          <ERPInput
-            id="supplier_product_code"
-            value={data.refCode}
-            label={t("supplier_product_code")}
-            placeholder={t("enter_product_code")}
-            required={false}
-            onChange={(e) =>
-              setData((prev: any) => ({
-                ...prev,
-                refCode: e.target.value,
-              }))
-            }
-            className="w-full"
-          />
+          <div className="flex-1 min-w-[250px]">
+            <ERPDataCombobox
+              id="supplier_name"
+              value={data.ledgerID}
+              label={t("supplier_name")}
+              field={{
+                getListUrl: Urls.data_CustSupp,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onChange={(e) =>
+                setData((prev: any) => {
+                  return {
+                    ...prev,
+                    ledgerID: e.value,
+                    supplier: e.name,
+                  }
+                })
+              }
+              className="w-full"
+            />
+          </div>
 
-          <ERPButton
-            title={t("add")}
-            variant="primary"
-            onClick={handleAdd}
-          />
+          <div className="flex-1 min-w-[250px] max-w-[374px]">
+            <ERPInput
+              id="supplier_product_code"
+              value={data.refCode}
+              label={t("supplier_product_code")}
+              placeholder={t("enter_product_code")}
+              required={false}
+              onChange={(e) =>
+                setData((prev: any) => ({
+                  ...prev,
+                  refCode: e.target.value,
+                }))
+              }
+              className="w-full"
+            />
+          </div>
+
+          <div className="flex items-end min-w-[100px] mb-1">
+            <ERPButton
+              title={t("add")}
+              variant="primary"
+              onClick={handleAdd}
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* DataGrid Section */}
-        <div className="p-4 rounded-md shadow">
+        <div className="rounded-md shadow overflow-x-auto w-full">
           <DataGrid
             dataSource={getFieldProps("supplierProducts").value}
             showBorders={true}

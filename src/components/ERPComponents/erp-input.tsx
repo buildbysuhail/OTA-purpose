@@ -787,66 +787,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             </div>
           
 
-              {/* <div className="relative flex justify-between">
-                      {!noLabel && (
-                        <label
-                        className={`capitalize text-left rtl:text-right dark:!text-dark-label ${appState?.mode == "dark"
-                          ? "#000"
-                          : `rgb(${inputBoxState?.labelColor})`
-                          } ${labelClassName}`}
-                          style={{
-                            fontSize: _customSize
-                              ? _customSize === "sm"
-                                ? "11px"
-                                : _customSize === "md"
-                                ? "13px"
-                                : _customSize === "lg"
-                                ? "14px"
-                                : `${inputBoxState?.labelFontSize}px`
-                              : `14px`,
-                            color:
-                              appState?.mode === "dark"
-                                ? "rgb(225,224,224)"
-                                : inputBoxState?.labelColor
-                                ? `rgb(${inputBoxState?.labelColor})`
-                                : "rgb(84,84,84)",
-                            transform:
-                              _customSize === "customize"
-                                ? `translate(${inputBoxState?.adjustA ?? 10}px, ${
-                                    inputBoxState?.adjustB ?? 10
-                                  }px) scale(1)`
-                                : `translate( 1px,3px) scale(1)`,
-                          }}
-                        >
-                          <span style={{ whiteSpace: "nowrap" }}>
-                            {`${iLabel}${labelDirection === "horizontal" ? "" : ""}`}
-                            {required && !noLabel && <span className="dark:text-red text-red">*</span>}
-                            {labelDirection === "horizontal" && ":"}
-                          </span>
-                        </label>
-                      )}
-                      <div
-                        className=" "
-                        style={{
-                          fontSize: _customSize
-                            ? _customSize === "sm"
-                              ? "11px"
-                              : _customSize === "md"
-                              ? "13px"
-                              : _customSize === "lg"
-                              ? "14px"
-                              : `${inputBoxState?.labelFontSize}px`
-                            : `14px`,
-                        }}
-                      >
-                        {labelInfo &&
-                          cloneElement(
-                            labelInfo,
-                            labelInfoProps ? { labelInfoProps: labelInfoProps } : {}
-                          )}
-                      </div>
-                    </div> */}
-
           <div className={`flex ${labelDirection === "vertical" ? "" : "basis-2/3"}`} >
             {prefix && (
               <div

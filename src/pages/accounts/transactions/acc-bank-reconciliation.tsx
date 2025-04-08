@@ -223,7 +223,7 @@ const BankReconciliation = () => {
         return;
       }
   
-      const res = await api.postAsync(Urls.bankReconciliation, forUpdate);
+      const res = await api.postAsync(`${Urls.bankReconciliation}ForUpdate`, forUpdate);
   
       handleResponse(res, () => {
         ERPAlert.show({
@@ -254,7 +254,7 @@ const BankReconciliation = () => {
             : null,
         }));
   
-      const res = await api.postAsync(Urls.bankReconciliation, changeToPending);
+      const res = await api.postAsync(`${Urls.bankReconciliation}SetToPending`, changeToPending);
   
       handleResponse(res, () => {
         ERPAlert.show({

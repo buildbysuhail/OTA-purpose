@@ -27,7 +27,7 @@ interface LoadingState {
   exportToExcel: boolean;
   show: boolean;
   save: boolean;
-  print: boolean;
+  changeToPending: boolean;
 }
 const api = new APIClient();
 const BankReconciliation = () => {
@@ -52,7 +52,7 @@ const BankReconciliation = () => {
     exportToExcel: false,
     show: false,
     save: false,
-    print: false,
+    changeToPending: false,
   });
 
   const { t } = useTranslation("transaction");
@@ -214,18 +214,7 @@ const BankReconciliation = () => {
             : null,
         }));
   
-      // Step 2: Items marked as clicked (changeToPending)
-      const changeToPending = gridData
-        .filter((item: any) => item.clicked === true)
-        .map((item: any) => ({
-          accTransactionDetailID: item.accTransactionDetailID,
-          chequeDate: item.bankDate
-            ? moment(item.bankDate, "YYYY/MM/DD").local().format("YYYY-MM-DD")
-            : null,
-        }));
-  
-      // Check if there's anything to send
-      if (forUpdate.length === 0 && changeToPending.length === 0) {
+      if (forUpdate.length === 0 ) {
         ERPAlert.show({
           icon: "info",
           text: t("no_changes_detected"),
@@ -234,13 +223,7 @@ const BankReconciliation = () => {
         return;
       }
   
-      // Step 3: Call API with both arrays
-      const payload = {
-        forUpdate,
-        changeToPending,
-      };
-  
-      const res = await api.postAsync(Urls.bankReconciliation, payload);
+      const res = await api.postAsync(Urls.bankReconciliation, forUpdate);
   
       handleResponse(res, () => {
         ERPAlert.show({
@@ -254,6 +237,37 @@ const BankReconciliation = () => {
       console.error("Error saving changes:", error);
     } finally {
       setLoading((prev) => ({ ...prev, save: false }));
+    }
+  };
+  const handleChangeToPending = async () => {
+    setLoading((prev) => ({ ...prev, changeToPending: true }));
+  
+    try {
+      const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
+  
+      const changeToPending = gridData
+        .filter((item: any) => item.clicked === true)
+        .map((item: any) => ({
+          accTransactionDetailID: item.accTransactionDetailID,
+          chequeDate: item.bankDate
+            ? moment(item.bankDate, "YYYY/MM/DD").local().format("YYYY-MM-DD")
+            : null,
+        }));
+  
+      const res = await api.postAsync(Urls.bankReconciliation, changeToPending);
+  
+      handleResponse(res, () => {
+        ERPAlert.show({
+          icon: "success",
+          text: t("changes_saved_successfully"),
+          title: t("success"),
+        });
+        handleShow();
+      });
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    } finally {
+      setLoading((prev) => ({ ...prev, changeToPending: false }));
     }
   };
   const handleSetPending = async (cellInfo: any, __data: any) => {
@@ -590,11 +604,11 @@ const BankReconciliation = () => {
       } finally {
       }
     }
-    if (e.newData.selected === true && key === "selected") {
-      e.newData.bankDate =
+    if (key === "selected") {
+      e.newData.bankDate = e.newData.selected === true ?
         dateChangeState === "today"
           ? moment().local().format("DD/MM/YYYY")
-          : e.oldData.chequeDate;
+          : e.oldData.chequeDate : null;
     }
   };
   return (
@@ -771,6 +785,12 @@ const BankReconciliation = () => {
                 <ERPButton
                   title={t("save")}
                   onClick={handleSave}
+                  variant="primary"
+                  className="w-24"
+                />
+                <ERPButton
+                  title={t("Change To Pending")}
+                  onClick={handleChangeToPending}
                   variant="primary"
                   className="w-24"
                 />

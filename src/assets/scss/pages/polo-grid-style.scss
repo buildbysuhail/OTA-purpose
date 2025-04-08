@@ -631,7 +631,11 @@ $dark-grid-selection: #000000;
   //   display: none;
   // }
 
-  .dx-datagrid-rowsview td:last-child {
+  // .dx-datagrid-rowsview td:last-child {
+  //   padding-right: 21px !important;
+  // }
+
+  .actions-padding {
     padding-right: 21px !important;
   }
 

@@ -29,23 +29,18 @@ interface LoadingState {
   save: boolean;
   changeToPending: boolean;
 }
+
 const api = new APIClient();
 const BankReconciliation = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const { getFormattedValue } = useNumberFormat();
-
   const [data, setData] = useState<any>();
   const [key, setKey] = useState<number>(100000);
   const [prevData, setPrevData] = useState<any>();
   const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
-  const [formState, setFormState] = useState<FormState>({
-    showReconciled: false,
-    selectedBankId: -2,
-  });
-  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">(
-    "today"
-  );
+  const [formState, setFormState] = useState<FormState>({ showReconciled: false, selectedBankId: -2, });
+  const [dateChangeState, setDateChangeState] = useState<"today" | "cheque">("today");
   const [reload, setReload] = useState<boolean>(false);
   const [loading, setLoading] = useState<LoadingState>({
     setAllDate: false,
@@ -58,21 +53,10 @@ const BankReconciliation = () => {
   const { t } = useTranslation("transaction");
   const dataGridRef = useRef<any>(null);
   const btnSaveRef = useRef<HTMLButtonElement>(null);
-  const goToPreviousPage = () => {
-    window.history.back();
-  };
-
-  const handleReconciledChange = (checked: boolean) => {
-    setFormState((prev) => ({ ...prev, showReconciled: checked }));
-  };
-
-  const handleBankSelection = (value: number | null) => {
-    setFormState((prev) => ({ ...prev, selectedBankId: value }));
-  };
-
-  const handleBankDateTypeChange = (type: "today" | "cheque") => {
-    setDateChangeState(type);
-  };
+  const goToPreviousPage = () => { window.history.back(); };
+  const handleReconciledChange = (checked: boolean) => { setFormState((prev) => ({ ...prev, showReconciled: checked })); };
+  const handleBankSelection = (value: number | null) => { setFormState((prev) => ({ ...prev, selectedBankId: value })); };
+  const handleBankDateTypeChange = (type: "today" | "cheque") => { setDateChangeState(type); };
 
   useEffect(() => {
     handleShow();
@@ -107,22 +91,19 @@ const BankReconciliation = () => {
 
   const handleSetAllDate = async () => {
     setLoading((prev) => ({ ...prev, setAllDate: true }));
-  
+
     try {
       const gridInstance = dataGridRef.current?.instance();
       if (!gridInstance) return;
-  
       const dataSourceItems = gridInstance.getDataSource().items();
-  
       // Combine existing selectedKeys with items having selected == true
       const selectedIdsFromData = dataSourceItems
         .filter((item: any) => item.selected === true)
         .map((item: any) => item.id);
-  
       const combinedSelectedKeys = Array.from(
         new Set([...(selectedKeys || []), ...selectedIdsFromData])
       );
-  
+
       if (combinedSelectedKeys.length === 0) {
         ERPAlert.show({
           icon: "warning",
@@ -131,12 +112,12 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       const newDate =
         dateChangeState === "today"
           ? moment().local().format("DD/MM/YYYY")
           : null;
-  
+
       combinedSelectedKeys.forEach((selectedId: any) => {
         const rowIndex = dataSourceItems.findIndex((item: any) => item.id === selectedId);
         if (rowIndex !== -1) {
@@ -148,9 +129,8 @@ const BankReconciliation = () => {
           );
         }
       });
-  
+
       await gridInstance.saveEditData();
-  
       ERPAlert.show({
         icon: "success",
         text: t("dates_updated_successfully"),
@@ -168,8 +148,7 @@ const BankReconciliation = () => {
     try {
       const _data = await api.getAsync(
         Urls.bankReconciliation,
-        `LedgerID=${formState.selectedBankId ?? 0}&IsReconciled=${
-          formState.showReconciled
+        `LedgerID=${formState.selectedBankId ?? 0}&IsReconciled=${formState.showReconciled
         }`
       );
       const rows = _data.map((row: any, index: number) => ({
@@ -193,10 +172,8 @@ const BankReconciliation = () => {
 
   const handleSave = async () => {
     setLoading((prev) => ({ ...prev, save: true }));
-  
     try {
       const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
-  
       // Step 1: Items with bankDate changes (for update)
       debugger;
       const forUpdate = gridData
@@ -213,8 +190,7 @@ const BankReconciliation = () => {
             ? moment(item.bankDate, "YYYY/MM/DD").local().format("YYYY-MM-DD")
             : null,
         }));
-  
-      if (forUpdate.length === 0 ) {
+      if (forUpdate.length === 0) {
         ERPAlert.show({
           icon: "info",
           text: t("no_changes_detected"),
@@ -222,9 +198,8 @@ const BankReconciliation = () => {
         });
         return;
       }
-  
+
       const res = await api.postAsync(`${Urls.bankReconciliation}ForUpdate`, forUpdate);
-  
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
@@ -241,10 +216,8 @@ const BankReconciliation = () => {
   };
   const handleChangeToPending = async () => {
     setLoading((prev) => ({ ...prev, changeToPending: true }));
-  
     try {
       const gridData = dataGridRef.current?.instance().getDataSource().items() || [];
-  
       const changeToPending = gridData
         .filter((item: any) => item.clicked === true)
         .map((item: any) => ({
@@ -253,9 +226,8 @@ const BankReconciliation = () => {
             ? moment(item.bankDate, "YYYY/MM/DD").local().format("YYYY-MM-DD")
             : null,
         }));
-  
+
       const res = await api.postAsync(`${Urls.bankReconciliation}SetToPending`, changeToPending);
-  
       handleResponse(res, () => {
         ERPAlert.show({
           icon: "success",
@@ -339,9 +311,6 @@ const BankReconciliation = () => {
         dataField: "selected",
         caption: "",
         dataType: "boolean",
-        allowSorting: false,
-        allowSearch: false,
-        allowFiltering: false,
         allowEditing: true,
         width: 100,
         visible: true,
@@ -408,9 +377,8 @@ const BankReconciliation = () => {
         width: 100,
         cellRender: (cellInfo: any) => (
           <span
-            className={`${
-              cellInfo.data.isSummary == true ? "text-red font-bold" : ""
-            }`}
+            className={`${cellInfo.data.isSummary == true ? "text-red font-bold" : ""
+              }`}
           >
             {cellInfo.data.particulars}
           </span>
@@ -437,11 +405,10 @@ const BankReconciliation = () => {
         width: 100,
         cellRender: (cellInfo: any) => (
           <span
-            className={`${
-              cellInfo.data.isSummary == true
-                ? "text-red font-bold text-right"
-                : "text-right"
-            }`}
+            className={`${cellInfo.data.isSummary == true
+              ? "text-red font-bold text-right"
+              : "text-right"
+              }`}
           >
             {cellInfo.data.isSummary == true
               ? getFormattedValue(cellInfo.data.debit)
@@ -459,11 +426,10 @@ const BankReconciliation = () => {
         width: 100,
         cellRender: (cellInfo: any) => (
           <span
-            className={`${
-              cellInfo.data.isSummary == true
-                ? "text-red font-bold text-right"
-                : "text-right"
-            }`}
+            className={`${cellInfo.data.isSummary == true
+              ? "text-red font-bold text-right"
+              : "text-right"
+              }`}
           >
             {cellInfo.data.isSummary == true
               ? getFormattedValue(cellInfo.data.credit)
@@ -577,9 +543,6 @@ const BankReconciliation = () => {
         dataField: "clicked",
         caption: "",
         dataType: "boolean",
-        allowSorting: false,
-        allowSearch: false,
-        allowFiltering: false,
         allowEditing: true,
         width: 100,
         visible: true,
@@ -630,14 +593,10 @@ const BankReconciliation = () => {
                 </button>
               </div> */}
 
-              <div
-                className="group relative inline-flex flex-col items-center"
-                title={t("close")}
-              >
+              <div className="group relative inline-flex flex-col items-center" title={t("close")}>
                 <button
                   className="flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg  bg-gray-100 p-3 rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={goToPreviousPage}
-                >
+                  onClick={goToPreviousPage}>
                   <X className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
                 </button>
               </div>
@@ -740,7 +699,6 @@ const BankReconciliation = () => {
               data={data}
               keyExpr="id"
               // stateStoring={{enabled: true, type:"localStorage",storageKey:"grd_bank_reconciliation_str"}}
-
               keyboardNavigation={{
                 editOnKeyPress: true, // overrides default
                 enterKeyAction: "startEdit", // overrides default
@@ -763,36 +721,28 @@ const BankReconciliation = () => {
               editMode="cell"
               pageSize={40}
               loadPanelEnabled={false}
-              // allowSelection={true}
-              // selectionMode={"multiple"}
+            // allowSelection={true}
+            // selectionMode={"multiple"}
             />
-            
 
             <div
-              className="fixed bottom-0 left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg border-t dark:border-dark-border shadow-lg"
-              style={{
-                boxShadow:
-                  "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
-              }}
-            >
-              <div className="w-full mx-auto flex items-center gap-4 justify-end">
+              className="flex items-center justify-end h-[65px] z-10 fixed bottom-0  left-0 right-0 z-10 px-4 py-2 bg-white dark:bg-dark-bg shadow-lg full-available-width lg:px-8 py-2 md:px-2"
+              style={{ boxShadow: "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)", }}>
+              <div className="flex items-center gap-4">
                 <ERPButton
                   ref={btnSaveRef}
                   title={t("close")}
                   onClick={goToPreviousPage}
-                  className="w-24"
                 />
                 <ERPButton
                   title={t("save")}
                   onClick={handleSave}
                   variant="primary"
-                  className="w-24"
                 />
                 <ERPButton
-                  title={t("Change To Pending")}
+                  title={t("change_to_pending")}
                   onClick={handleChangeToPending}
                   variant="primary"
-                  className="w-24"
                 />
               </div>
             </div>

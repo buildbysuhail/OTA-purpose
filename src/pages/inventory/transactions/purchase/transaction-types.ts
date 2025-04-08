@@ -499,8 +499,8 @@ export const TransactionMasterInitialData: TransactionMaster = {
   referenceNumber: "",
   particulars: "",
   lb: true,
-  hasCashPaid: true,
-  hasroundOff: true,
+  hasCashPaid: false,
+  hasroundOff: false,
   cashPaid: 0.0,
   supplyType: "",
   other: TransactionMaster3InitialData
@@ -575,7 +575,7 @@ export interface TransactionFormState {
   lb?: boolean;
   autoCalculation?: boolean;
   priceCategory: string;
-  netAmount: number;
+  netTotal: number;
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   voucherPrefix: { visible: true, disabled: true, label: "prefix" },
@@ -672,6 +672,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   isLocked: { visible: true, disabled: false, label: "lb" },
   autoCalculation: { visible: true, disabled: false, label: "auto_calculation" },
   supplyType: { visible: true, disabled: false, label: "supply_type" },
+  totTax: { visible: true, disabled: false, label: "tot_tax" },
+  grandTotal: { visible: true, disabled: false, label: "grand_total" },
+  netTotal: { visible: true, disabled: false, label: "net_total" },
 
 };
 export type FormElementsState = {
@@ -756,7 +759,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   foreignCurrency: false,
   enableDebitAccount: false,
   enableTaxNumber: false,
-  netAmount: 0
+  netTotal: 0
 }
 export interface PrintTransProps {
   masterAccount: string;

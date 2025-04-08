@@ -31,6 +31,7 @@ interface ERPDateInputProps {
   onChangeData?: (data: any) => void;
   onKeyDown?: (e: any) => void;
   onKeyUp?: (e: any) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   disableEnterNavigation?: boolean;
   defaultValue?: string;
   value?: any;
@@ -67,6 +68,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
       onKeyDown,
       disableEnterNavigation = false,
       onKeyUp,
+      onBlur,
       defaultValue,
       value,
       type = "date",
@@ -458,6 +460,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(
             onChange={handleChangeNormal}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
+            onBlur={onBlur}
             disableEnterNavigation={disableEnterNavigation}
             required={required}
             readOnly={readonly}

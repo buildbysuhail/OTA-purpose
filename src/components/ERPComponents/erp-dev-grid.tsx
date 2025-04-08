@@ -92,6 +92,18 @@ export interface SummaryConfig {
   customizeText?: (itemInfo: { value: any }) => string;
 }
 
+interface KeyboardNavigationProps {
+  editOnKeyPress?: boolean;
+  enabled?: boolean;
+  enterKeyAction?: 'startEdit' | 'moveFocus';
+  enterKeyDirection?: 'none' | 'column' | 'row';
+}
+const defaultKeyboardNavigation: KeyboardNavigationProps = {
+  editOnKeyPress: true,
+  enabled: true,
+  enterKeyAction: 'startEdit',
+  enterKeyDirection: 'column',
+};
 type FilterOperation =
   | "="
   | "<>"
@@ -150,7 +162,7 @@ interface ERPDevGridProps {
     operation: FilterOperation;
   }>;
   allowSorting?: boolean;
-  allowKeyboardNavigation?: boolean;
+  keyboardNavigation?: KeyboardNavigationProps;
   allowSearching?: boolean;
   allowResizing?: boolean;
   showFilterRow?: boolean;
@@ -508,7 +520,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       allowSorting = true,
       allowSearching = true,
       allowResizing = true,
-      allowKeyboardNavigation = false,
+      keyboardNavigation = defaultKeyboardNavigation,
       showFilterRow = true,
       remoteOperations = true,
       condition,
@@ -1655,6 +1667,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
         >
           <DataGrid
             // wordWrapEnabled={wordWrapEnabled}
+            loadPanel={{enabled:loadPanelEnabled}}
+            onRowUpdating={onRowUpdating}
             rtlEnabled={appState?.dir === "rtl"}
             ref={gridRef}
             onInitialized={onGridReady}
@@ -1748,12 +1762,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
             )}
 
             {allowSearching && <SearchPanel visible={true} />}
-            {allowKeyboardNavigation && (
-              <KeyboardNavigation
-                editOnKeyPress={true}
-                enterKeyAction={"startEdit"}
-                enterKeyDirection={"column"}
-              />
+            {KeyboardNavigation && (
+             <KeyboardNavigation {...keyboardNavigation} />
             )}
             <FilterRow visible={showFilterRow} />
             <HeaderFilter visible={false} />
@@ -1998,7 +2008,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
 
             {gridCols?.map((column, index) => (
               <Column
-                
+              buttons={column?.buttons}
                 customizeText={column.customizeText}
                 editorOptions={column.editorOptions}
                 validationRules={column.validationRules}

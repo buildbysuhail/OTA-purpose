@@ -1,24 +1,10 @@
-import React, { useEffect, useState } from "react";
-import DataGrid, {
-  Column,
-  Editing,
-  KeyboardNavigation,
-  Paging,
-  RemoteOperations,
-  Scrolling,
-} from "devextreme-react/data-grid";
+import React, { useState } from "react";
+import DataGrid, { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling, } from "devextreme-react/data-grid";
 import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-combobox";
-import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import Urls from "../../../../../redux/urls";
-import {
-  PathValue,
-  productDto,
-  ProductFieldPath,
-  ProductUnitInputDto,
-} from "../products-type";
-import initialProductData from "../products-data";
+import { PathValue, productDto, ProductFieldPath, ProductUnitInputDto, } from "../products-type";
 import { FormField } from "../../../../../utilities/form-types";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../../components/ERPComponents/erp-submit-button";
@@ -55,23 +41,21 @@ const ProductMultiUnitsIndia: React.FC<{
     unit: string;
     data: { unit: string; barcode: String }[];
   }>({ index: 0, open: false, unit: "", data: [] });
-  
   //   useEffect(() => {
   //     setUnits(getFieldProps("units").value as ProductUnitInputDto[]);
   //   }, []);
   const handleAddUnit = () => {
-   
-
     setUnit(unitDAta);
-    
-    handleFieldChange("units",[...getFieldProps("units").value, unit])
+    handleFieldChange("units", [...getFieldProps("units").value, unit])
   };
+
   const handleRemoveUnit = (rowId: number) => {
-    handleFieldChange("units",[...getFieldProps("units").value?.filter((_: any, index: any) => index !== rowId)])
+    handleFieldChange("units", [...getFieldProps("units").value?.filter((_: any, index: any) => index !== rowId)])
     // setUnits((prev: any) => {
     //   return [...prev?.filter((_: any, index: any) => index !== rowId)];
     // });
   };
+
   const setMultiBarcode = (rowId: number) => {
     const units = getFieldProps("units").value
     const barcodesString = units[rowId].multiBarcodes ?? "";
@@ -82,13 +66,13 @@ const ProductMultiUnitsIndia: React.FC<{
 
     const data =
       barcodeArray == undefined ||
-      barcodeArray == null ||
-      barcodeArray.length == 0
+        barcodeArray == null ||
+        barcodeArray.length == 0
         ? [{ unit: units[rowId].unit ?? "", barcode: "" }]
         : barcodeArray.map((barcode: any) => ({
-            unit: units[rowId].unit ?? "",
-            barcode,
-          }));
+          unit: units[rowId].unit ?? "",
+          barcode,
+        }));
     setOpenMB({
       index: rowId,
       open: true,
@@ -96,30 +80,33 @@ const ProductMultiUnitsIndia: React.FC<{
       data: data,
     });
   };
+
   const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
     e.isHighlighted = true;
   };
+
   const getBarcodeStringFromArray = (barcodeArray: any[]): string => {
     return barcodeArray
       .map((item) => item.barcode.trim())
       .filter((barcode) => barcode.length > 0) // remove empty barcodes
       .join(",");
   };
+
   const handleSaveMB = () => {
     const barcodeString = getBarcodeStringFromArray(openMB.data);
     const units = getFieldProps("units").value
     // Assuming units state or form update
     const updatedUnits = [...units];
     updatedUnits[openMB.index].multiBarcodes = barcodeString;
-  
     handleFieldChange("units", updatedUnits);
     setOpenMB((prev: any) => ({
-        data: [],
-        index:0,
-        open: false,
-        unit:""
+      data: [],
+      index: 0,
+      open: false,
+      unit: ""
     }))
   };
+
   return (
     <div className="border border-[#ccc] inline-block rounded-md p-4">
       <div className="flex flex-col gap-4">
@@ -127,7 +114,7 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPDataCombobox
             id="unitID"
             value={unit.unitID}
-            label="Unit"
+            label={t("unit")}
             field={{
               id: "unitID",
               getListUrl: Urls.data_units,
@@ -147,8 +134,7 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="multiFactor"
             value={unit.multiFactor}
-            label="Multi Factor"
-            placeholder="e.g. 10"
+            label={t("multi_factor")}
             type="number"
             onChange={(e) =>
               setUnit((prev) => ({
@@ -162,8 +148,8 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="barCode"
             value={unit.barCode}
-            label="Barcode"
-            placeholder="Barcode"
+            label={t("barcode")}
+            placeholder={t("barcode")}
             onChange={(e) =>
               setUnit((prev) => ({
                 ...prev,
@@ -176,8 +162,7 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="salesPrice"
             value={unit.salesPrice}
-            label="Sale Price"
-            placeholder="e.g. 120"
+            label={t("sale_price")}
             type="number"
             onChange={(e) =>
               setUnit((prev) => ({
@@ -191,8 +176,7 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="mrp"
             value={unit.mrp}
-            label="MRP"
-            placeholder="e.g. 212"
+            label={t("mrp")}
             type="number"
             onChange={(e) =>
               setUnit((prev) => ({
@@ -206,8 +190,7 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="msp"
             value={unit.msp}
-            label="MSP"
-            placeholder="MSP"
+            label={t("msp")}
             type="number"
             onChange={(e) =>
               setUnit((prev) => ({
@@ -221,8 +204,8 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="description"
             value={unit.description}
-            label="Description"
-            placeholder="Description"
+            label={t("description")}
+            placeholder={t("description")}
             onChange={(e) =>
               setUnit((prev) => ({
                 ...prev,
@@ -235,8 +218,8 @@ const ProductMultiUnitsIndia: React.FC<{
           <ERPInput
             id="descriptionFL"
             value={unit.descriptionFL}
-            label="Description FL"
-            placeholder="Description FL"
+            label={t("description_fl")}
+            placeholder={t("description_fl")}
             onChange={(e) =>
               setUnit((prev) => ({
                 ...prev,
@@ -245,7 +228,12 @@ const ProductMultiUnitsIndia: React.FC<{
             }
             className="w-full"
           />
-          <ERPButton title="Add" variant="primary" onClick={handleAddUnit} />
+
+          <ERPButton
+            title={t("add")}
+            variant="primary"
+            onClick={handleAddUnit}
+          />
         </div>
 
         {/* DataGrid Section */}
@@ -257,85 +245,95 @@ const ProductMultiUnitsIndia: React.FC<{
             rowAlternationEnabled={true}
             className="w-full"
             onSaving={(e) => {
-                debugger;
-                const _unts = getFieldProps("units").value;
-                if (e.changes.length > 0) {
-                  const changes = e.changes[0];
-                  if (changes.type === 'update') {
-                    const updatedUnits = [..._unts];
-                    const index = _unts.findIndex((u: any) => u.unitID === changes.key?.unitID);
-                    updatedUnits[index] = {
-                      ...updatedUnits[index],
-                      ...changes.data,
-                    };
-                    // setUnits(updatedUnits);
-                    handleFieldChange("units",[...updatedUnits])
-                  }
+              debugger;
+              const _unts = getFieldProps("units").value;
+              if (e.changes.length > 0) {
+                const changes = e.changes[0];
+                if (changes.type === 'update') {
+                  const updatedUnits = [..._unts];
+                  const index = _unts.findIndex((u: any) => u.unitID === changes.key?.unitID);
+                  updatedUnits[index] = {
+                    ...updatedUnits[index],
+                    ...changes.data,
+                  };
+                  // setUnits(updatedUnits);
+                  handleFieldChange("units", [...updatedUnits])
                 }
-              }}
+              }
+            }}
           >
             <Paging defaultPageSize={5} />
 
             <Editing
               mode="cell"
               allowUpdating={true}
-              //   allowDeleting={true}
-              //   allowAdding={false}
+            //allowDeleting={true}
+            //allowAdding={false}
             />
+
             <KeyboardNavigation
               editOnKeyPress={true}
               enterKeyAction={"startEdit"}
               enterKeyDirection={"row"}
             />
-            <Column dataField="unit" caption="UOM" />
+
+            <Column
+              dataField="unit"
+              caption={t("uom")}
+            />
+
             <Column
               dataField="multiFactor"
-              caption="Multi Factor"
+              caption={t("multi_factor")}
               dataType="number"
               allowEditing
             />
-            <Column dataField="barCode" allowEditing caption="Barcode" />
+
+            <Column
+              dataField="barCode"
+              allowEditing
+              caption={t("barcode")}
+            />
+
             <Column
               dataField="salePrice"
               allowEditing
-              caption="Sale Price"
+              caption={t("sale_price")}
               dataType="number"
             />
+
             <Column
               dataField="mrp"
-              caption="MRP"
+              caption={t("mrp")}
               dataType="number"
               allowEditing
             />
+
             <Column
               dataField="msp"
               allowEditing
-              caption="MSP"
+              caption={t("msp")}
               dataType="number"
             />
+
             <Column
               dataField="description"
               allowEditing
-              caption="Description"
+              caption={t("description")}
             />
+
             <Column
               dataField="descriptionFL"
               allowEditing
-              caption="Description FL"
+              caption={t("description_fl")}
             />
 
-            {/* New MB column with ERPCheckbox */}
             <Column
               dataField="mb"
-              caption="MB"
+              caption={t("mb")}
               dataType="boolean"
               cellRender={(cellData) => (
-                <a
-                  className="cursor-pointer text-red-600 hover:text-red-800 font-semibold"
-                  onClick={() => setMultiBarcode(cellData.rowIndex)}
-                >
-                  X
-                </a>
+                <a className="cursor-pointer text-[#e53e3e] hover:text-[#c53030] font-semibold" onClick={() => setMultiBarcode(cellData.rowIndex)}>X</a>
               )}
             />
 
@@ -350,12 +348,12 @@ const ProductMultiUnitsIndia: React.FC<{
 
         {/* Default Units Section */}
         <div className="p-4 rounded-md shadow">
-          <h2 className="text-xl font-semibold mb-4">Default Units</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("default_units")}</h2>
           <div className="grid grid-cols-6 gap-4">
             <ERPDataCombobox
               {...getFieldProps("batch.defSalesUnitID")}
               id="defSalesUnitID"
-              label="Sales"
+              label={t("sales")}
               field={{
                 id: "defSalesUnitID",
                 getListUrl: Urls.data_units,
@@ -370,7 +368,7 @@ const ProductMultiUnitsIndia: React.FC<{
             <ERPDataCombobox
               {...getFieldProps("batch.defPurchaseUnitID")}
               id="defPurchaseUnitID"
-              label="Purchase"
+              label={t("purchase")}
               field={{
                 id: "defPurchaseUnitID",
                 getListUrl: Urls.data_units,
@@ -388,7 +386,7 @@ const ProductMultiUnitsIndia: React.FC<{
             <ERPDataCombobox
               {...getFieldProps("batch.defReportUnitID")}
               id="defReportUnitID"
-              label="Report"
+              label={t("report")}
               field={{
                 id: "defReportUnitID",
                 getListUrl: Urls.data_units,
@@ -403,6 +401,7 @@ const ProductMultiUnitsIndia: React.FC<{
           </div>
         </div>
       </div>
+
       {openMB.open && (
         <ERPModal
           isOpen={openMB.open}
@@ -411,8 +410,8 @@ const ProductMultiUnitsIndia: React.FC<{
           }
           title={t("multi_barcode")}
           content={
-            <div>   
-             <DataGrid
+            <div>
+              <DataGrid
                 dataSource={openMB.data}
                 height={300}
                 key="barcode"
@@ -422,7 +421,7 @@ const ProductMultiUnitsIndia: React.FC<{
                 onEditorPrepared={(e) => {
                   if (e.parentType === "dataRow") {
                     const currentRowData = e.row?.data;
-                    if (!currentRowData || !currentRowData.unit || currentRowData.unit.trim() === "" ) {
+                    if (!currentRowData || !currentRowData.unit || currentRowData.unit.trim() === "") {
                       e.editorElement.setAttribute("disabled", "true");
                       e.editorElement.setAttribute("title", "Enter a valid unit to enable editing.");
                     } else {
@@ -440,17 +439,24 @@ const ProductMultiUnitsIndia: React.FC<{
                       e.editorElement.addEventListener("keydown", barcodeKeyDownHandler);
                     }
                   }
-                }}
-                
-              >
+                }}>
+
                 <KeyboardNavigation
                   editOnKeyPress={true}
                   enterKeyAction={"moveFocus"}
                   enterKeyDirection={"column"}
                 />
+
                 <Paging pageSize={100} />
+
                 <Scrolling mode="standard" />
-                <RemoteOperations filtering={false} sorting={false} paging={false} />
+
+                <RemoteOperations
+                  filtering={false}
+                  sorting={false}
+                  paging={false}
+                />
+
                 <Column
                   dataField="unit"
                   caption={t("unit")}
@@ -458,6 +464,7 @@ const ProductMultiUnitsIndia: React.FC<{
                   dataType="string"
                   width={150}
                 />
+
                 <Column
                   dataField="barcode"
                   caption={t("barcode")}
@@ -465,6 +472,7 @@ const ProductMultiUnitsIndia: React.FC<{
                   allowEditing={true}
                   minWidth={150}
                 />
+
                 <Editing
                   allowUpdating={true}
                   allowAdding={false}
@@ -477,19 +485,24 @@ const ProductMultiUnitsIndia: React.FC<{
           width={780}
           height={570}
           disableOutsideClickClose={false}
-            footer={(
-              <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
-                <ERPSubmitButton type="reset" onClick={() =>   setOpenMB({ index: 0, open: false, unit: "", data: [] })} className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]" >
-                  {t("cancel")}
-                </ERPSubmitButton>
-                <ERPSubmitButton type="button" className=" max-w-[115px]"
-                  variant="primary"
-                  onClick={handleSaveMB}
-                  >
-                  {t("save")}
-                </ERPSubmitButton>
-              </div>
-            )}
+          footer={(
+            <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0  w-full  flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white  border-t  z-10  pr-[10px] rounded-b-md">
+              <ERPSubmitButton
+                type="reset"
+                onClick={() => setOpenMB({ index: 0, open: false, unit: "", data: [] })}
+                className=" dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]">
+                {t("cancel")}
+              </ERPSubmitButton>
+
+              <ERPSubmitButton
+                type="button"
+                className=" max-w-[115px]"
+                variant="primary"
+                onClick={handleSaveMB}>
+                {t("save")}
+              </ERPSubmitButton>
+            </div>
+          )}
         />
       )}
     </div>

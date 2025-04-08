@@ -298,9 +298,7 @@ export const ProductManageIndia: React.FC<{
                 className="flex-1 min-w-[120px]"
                 onChangeData={(data: any) => handleFieldChange("product.displayCost", data.product.displayCost)}
               />
-            </div>
-
-            <div className="flex flex-wrap gap-1">
+              
               <ERPInput
                 {...getFieldProps("product.mrp")}
                 label={t("mrp")}

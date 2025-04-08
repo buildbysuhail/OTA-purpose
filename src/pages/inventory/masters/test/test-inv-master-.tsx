@@ -5,8 +5,9 @@ import ERPInput from "../../../../components/ERPComponents/erp-input"
 import { useState, useEffect, useMemo } from "react"
 import { Loader2, Plus, Search } from "lucide-react"
 import React from "react"
-import DataGrid, { ColumnDefinition } from "./dataGrid"
-
+import DataGrid, { type ColumnDefinition } from "./dataGrid"
+import GridPreferenceChooser from "../../../../components/ERPComponents/erp-gridpreference"
+import type { DevGridColumn, GridPreference, ColumnPreference } from "../../../../components/types/dev-grid-column"
 
 export interface User1 {
   id: string
@@ -33,54 +34,23 @@ const TestInvMaster = () => {
   const [data, setData] = useState<User1[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(true)
-
-  // Initial data load simulation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setData(generateDummyData(10))
-      setIsLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Add new dummy data
-  const handleAddData = () => {
-    const newData = generateDummyData(1)[0]
-    setData((prevData) => [newData, ...prevData])
-  }
-
-  // Update data (for inline editing)
-  const handleUpdateData = (updatedUser: User1) => {
-    setData((prevData) => prevData.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
-  }
-
-  // Filter data based on search term
-  const filteredData = useMemo(() => {
-    return data.filter((user) => {
-      const searchTermLower = searchTerm.toLowerCase()
-      return (
-        user.name.toLowerCase().includes(searchTermLower) ||
-        user.email.toLowerCase().includes(searchTermLower) ||
-        user.role.toLowerCase().includes(searchTermLower) ||
-        user.status.toLowerCase().includes(searchTermLower)
-      )
-    })
-  }, [data, searchTerm])
+  const [gridPreferences, setGridPreferences] = useState<GridPreference | null>(null)
 
   // Column definitions with proper typing
-  const columns: ColumnDefinition<User1>[] = [
+  const allColumns: ColumnDefinition<User1>[] = [
     {
       field: "name",
       header: "Name",
       type: "text",
       editable: true,
+      width: "150px",
     },
     {
       field: "email",
       header: "Email",
       type: "text",
       editable: true,
+      width: "200px",
     },
     {
       field: "role",
@@ -88,6 +58,7 @@ const TestInvMaster = () => {
       type: "select",
       options: ["Admin", "User", "Editor", "Viewer"],
       editable: true,
+      width: "120px",
     },
     {
       field: "status",
@@ -95,7 +66,8 @@ const TestInvMaster = () => {
       type: "select",
       options: ["Active", "Inactive", "Pending"],
       editable: true,
-      formatter: (value:any) => (
+      width: "120px",
+      formatter: (value: any) => (
         <span
           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
             value === "Active"
@@ -114,8 +86,135 @@ const TestInvMaster = () => {
       header: "Last Login",
       type: "date",
       editable: true,
+      width: "150px",
     },
   ]
+
+  // Convert ColumnDefinition to DevGridColumn for GridPreferenceChooser
+  const gridColumns: DevGridColumn[] = allColumns.map((col) => ({
+    dataField: col.field as string,
+    caption: col.header,
+    width: col.width ? Number.parseInt(col.width.replace("px", "")) : 150,
+    dataType: mapColumnTypeToDataType(col.type),
+    alignment: "left" as "left" | "center" | "right", // Explicitly type as union
+    isLocked: !col.editable,
+    showInPdf: true,
+    allowEditing: col.editable,
+    allowSorting: true,
+    allowResizing: true,
+    allowFiltering: true,
+    visible: true,
+  }))
+
+  // Helper function to map column types
+  function mapColumnTypeToDataType(type: string | undefined): DevGridColumn["dataType"] {
+    switch (type) {
+      case "number":
+        return "number"
+      case "date":
+        return "date"
+      case "select":
+      case "text":
+      default:
+        return "string"
+    }
+  }
+
+  // Initial data load simulation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setData(generateDummyData(100))
+      setIsLoading(false)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Load preferences from localStorage on component mount
+  useEffect(() => {
+    const savedPreferences = localStorage.getItem(`gridPreferences_test-inv-master`)
+    if (savedPreferences) {
+      try {
+        setGridPreferences(JSON.parse(savedPreferences))
+      } catch (error) {
+        console.error("Error parsing saved grid preferences:", error)
+      }
+    }
+  }, [])
+
+  // Add new dummy data
+  const handleAddData = () => {
+    const newData = generateDummyData(1)[0]
+    setData((prevData) => [newData, ...prevData])
+  }
+
+  // Update data (for inline editing)
+  const handleUpdateData = (updatedUser: User1) => {
+    setData((prevData) => prevData.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
+  }
+
+  // Handle grid preference changes
+  const handleApplyPreferences = (preferences: GridPreference) => {
+    setGridPreferences(preferences)
+    // Save preferences to localStorage
+    localStorage.setItem(`gridPreferences_test-inv-master`, JSON.stringify(preferences))
+  }
+
+  // Filter data based on search term
+  const filteredData = useMemo(() => {
+    return data.filter((user) => {
+      const searchTermLower = searchTerm.toLowerCase()
+      return (
+        user.name.toLowerCase().includes(searchTermLower) ||
+        user.email.toLowerCase().includes(searchTermLower) ||
+        user.role.toLowerCase().includes(searchTermLower) ||
+        user.status.toLowerCase().includes(searchTermLower)
+      )
+    })
+  }, [data, searchTerm])
+
+  // Apply preferences to columns
+  const visibleColumns = useMemo(() => {
+    if (!gridPreferences || !gridPreferences.columnPreferences) {
+      return allColumns
+    }
+
+    // Create a map for quick lookup
+    const prefMap = new Map<string, ColumnPreference>()
+    gridPreferences.columnPreferences.forEach((pref) => {
+      prefMap.set(pref.dataField, pref)
+    })
+
+    // Filter out hidden columns and apply width
+    const visibleCols = allColumns
+      .filter((col) => {
+        const pref = prefMap.get(col.field as string)
+        return !pref || pref.visible !== false
+      })
+      .map((col) => {
+        const pref = prefMap.get(col.field as string)
+        if (pref) {
+          return {
+            ...col,
+            width: pref.width ? `${pref.width}px` : col.width,
+            editable: pref.readOnly ? false : col.editable, // Apply readOnly from preferences
+            // You could map other properties here if needed
+          }
+        }
+        return col
+      })
+
+    // Sort columns based on displayOrder
+    return visibleCols.sort((a, b) => {
+      const prefA = prefMap.get(a.field as string)
+      const prefB = prefMap.get(b.field as string)
+
+      const orderA = prefA ? prefA.displayOrder : 999
+      const orderB = prefB ? prefB.displayOrder : 999
+
+      return orderA - orderB
+    })
+  }, [gridPreferences])
 
   return (
     <div className="m-4">
@@ -131,14 +230,21 @@ const TestInvMaster = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <ERPButton
-          type="button"
-          className="primary shrink-0"
-          loading={isLoading}
-          startIcon={<Plus className="h-4 w-4 mr-2" />}
-          onClick={handleAddData}
-          title="Add Record"
-        />
+        <div className="flex items-center gap-2">
+          <GridPreferenceChooser
+            gridId="test-inv-master"
+            columns={gridColumns}
+            onApplyPreferences={handleApplyPreferences}
+          />
+          <ERPButton
+            type="button"
+            className="primary shrink-0"
+            loading={isLoading}
+            startIcon={<Plus className="h-4 w-4 mr-2" />}
+            onClick={handleAddData}
+            title="Add Record"
+          />
+        </div>
       </div>
 
       {isLoading ? (
@@ -146,7 +252,7 @@ const TestInvMaster = () => {
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : (
-        <DataGrid data={filteredData} columns={columns} keyField="id" onUpdateData={handleUpdateData} />
+        <DataGrid data={filteredData} columns={visibleColumns} keyField="id" onUpdateData={handleUpdateData} />
       )}
     </div>
   )

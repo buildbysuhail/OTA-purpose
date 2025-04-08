@@ -4,6 +4,8 @@ import { useState, Fragment, useRef, type KeyboardEvent, useEffect, type ReactNo
 import { Listbox, Transition } from "@headlessui/react"
 import ERPInput from "../../../../components/ERPComponents/erp-input"
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input"
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox"
+
 import { Check, ChevronDown } from "lucide-react"
 import { dateTrimmer } from "../../../../utilities/Utils"
 
@@ -214,9 +216,9 @@ export default function DataGrid<T extends DataItem>({
               onChange={(e) => handleEditChange(rowId, field, e.target.value)}
               value={
                 editValues[rowId]?.[column.field]
-                  ? new Date(editValues[rowId]?.[column.field] as string).toISOString().slice(0, 16)
+                  ? new Date(editValues[rowId]?.[column.field] as string).toISOString().slice(0, 10)
                   : value
-                    ? new Date(value as string).toISOString().slice(0, 16)
+                    ? new Date(value as string).toISOString().slice(0, 10)
                     : ""
               }
               id={`date-${rowId}`}
@@ -233,59 +235,26 @@ export default function DataGrid<T extends DataItem>({
           const options = column.options.map((opt) => (typeof opt === "string" ? { value: opt, label: opt } : opt))
 
           return (
-            <Listbox
+            <ERPDataCombobox
+              noLabel
+              id={`${field}-${rowId}`}
+              field={{
+                id: `${field}-${rowId}`,
+                required: true,
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              onChange={(e) => {
+                // Handle the selected value correctly
+                handleEditChange(rowId, field, e.target.value)
+              }}
               value={editValues[rowId]?.[column.field] ?? value}
-              onChange={(newValue) => handleEditChange(rowId, field, newValue)}
-            >
-              <div className="relative">
-                <Listbox.Button
-                  className="relative w-full h-8 cursor-default rounded-md bg-background py-1.5 pl-3 pr-10 text-left text-sm shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none"
-                  ref={(el) => (inputRefs.current[refKey] = el)}
-                  onKeyDown={(e) => handleKeyDown(e, rowId)}
-                  onBlur={() => handleBlur(rowId)}
-                >
-                  <span className="block truncate">
-                    {options.find((opt) => opt.value === (editValues[rowId]?.[column.field] ?? value))?.label || value}
-                  </span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                    <ChevronDown className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                  </span>
-                </Listbox.Button>
-                <Transition
-                  as={Fragment}
-                  leave="transition ease-in duration-100"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-background py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    {options.map((option) => (
-                      <Listbox.Option
-                        key={option.value}
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                            active ? "bg-muted text-primary" : "text-gray-900"
-                          }`
-                        }
-                        value={option.value}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
-                              {option.label}
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary">
-                                <Check className="h-4 w-4" aria-hidden="true" />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </Listbox>
+              className="h-8"
+              options={options}
+              onBlur={() => handleBlur(rowId)}
+              onKeyDown={(e) => handleKeyDown(e, rowId)}
+              ref={(el) => (inputRefs.current[refKey] = el)}
+            />
           )
 
         default:
@@ -348,7 +317,7 @@ export default function DataGrid<T extends DataItem>({
                 <tr key={String(item[keyField])} className="hover:bg-gray-50">
                   {columns.map((column, colIndex) => (
                     <td
-                    key={`${String(item[keyField])}-${String(column.field)}`}
+                      key={`${String(item[keyField])}-${String(column.field)}`}
                       className={`p-3 px-4 border-b ${colIndex < columns.length - 1 ? "border-r" : ""} border-gray-100`}
                     >
                       {renderDefaultCell(item, column)}
